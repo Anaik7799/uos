@@ -1,0 +1,106 @@
+{
+  "schema": "uos.telegram-native-final-verification.v1",
+  "observed_at": "2026-10-11T13:25:26Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "NATIVE_VERIFY3",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "verdict": "DEVELOPMENT_COMPONENT_PASS",
+  "runtime_admission": "NOT_GRANTED",
+  "source_manifest": [
+    {
+      "path": "dune",
+      "sha256": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661"
+    },
+    {
+      "path": "dune-project",
+      "sha256": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7"
+    },
+    {
+      "path": "telegram_store.ml",
+      "sha256": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630"
+    },
+    {
+      "path": "telegram_store_main.ml",
+      "sha256": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc"
+    },
+    {
+      "path": "telegram_store_test.ml",
+      "sha256": "4625d13983c36e67b04724f93e832a8e11df2711505240bbee812797ad3e01b4"
+    },
+    {
+      "path": "20261011-1354-telegram_store_wire_v4.json",
+      "sha256": "b0d6d92d2860f13e6f7922c239e6687637a5368a5ee0c34875894d0fc547dfec"
+    }
+  ],
+  "private_evidence": "var/recovery-runtime/20261011-1323-native-final/",
+  "binary": {
+    "path": "var/recovery-runtime/20261011-1323-native-final/_build/default/telegram_store_main.exe",
+    "sha256": "2cf64d7a24da0e9c1dc7ace920b3f119447e6b0de3e75a8f7ee74e37930156ec"
+  },
+  "validation": {
+    "supplied_suite": {
+      "assertions": 174,
+      "actual_pass_lines": 174
+    },
+    "independent_parser": {
+      "passed": 1560,
+      "failed": 0,
+      "failures": []
+    },
+    "independent_framed": {
+      "passed": 11,
+      "failed": 0
+    },
+    "independent_unicode": {
+      "passed": 6,
+      "failed": 0
+    },
+    "actual_kill": {
+      "stages": 5,
+      "assertions": 27,
+      "output": "PASS stage barrier reached 0\nPASS SIGKILL observed 0\nPASS init no partial schema 0\nPASS stage barrier reached 1\nPASS SIGKILL observed 1\nPASS init no partial schema 1\nPASS stage barrier reached 2\nPASS SIGKILL observed 2\nPASS receipt old or committed 2\nPASS generation atomic 2\nPASS seed version atomic 2\nPASS second row atomic 2\nPASS seed bytes atomic 2\nPASS stage barrier reached 3\nPASS SIGKILL observed 3\nPASS receipt old or committed 3\nPASS generation atomic 3\nPASS seed version atomic 3\nPASS second row atomic 3\nPASS seed bytes atomic 3\nPASS stage barrier reached 4\nPASS SIGKILL observed 4\nPASS receipt old or committed 4\nPASS generation atomic 4\nPASS seed version atomic 4\nPASS second row atomic 4\nPASS seed bytes atomic 4\nPASS independent 5 actual kill barriers and 27 assertions\n"
+    },
+    "exceptions": {
+      "expected": "between/precommit sqlite_error and no receipt;postcommit commit_uncertain with receipt",
+      "output": "between_rows response=ERROR:sqlite_error committed_receipt=false\npre_commit response=ERROR:sqlite_error committed_receipt=false\npost_commit response=ERROR:commit_uncertain committed_receipt=true\n"
+    }
+  },
+  "resolved": [
+    "Injective version2 digest and replay controls",
+    "Atomic initialization and apply with persistent receipts",
+    "Strict UTF8 JSON and decoded Unicode key equality",
+    "Optional-field type rejection and exact wire schemas",
+    "Ancestor symlink/foreign-writable path rejection",
+    "Commit-stage finite redacted exception outcomes",
+    "Explicit depth64 including empty terminal containers"
+  ],
+  "retained_failure_receipts": [
+    "governance/planning/20261011-1216-telegram-native-baseline-independent-review.json",
+    "governance/planning/20261011-1202-telegram-native-independent-review.json",
+    "governance/planning/20261011-1319-telegram-native-verify2.json",
+    "governance/planning/20261011-1305-telegram-native-verify3-interim.json"
+  ],
+  "limits": [
+    "Component development acceptance only; Gleam consumer, actual authority/service integration and release not accepted.",
+    "Actual process kills do not prove powerloss behavior; main database256MiB bound does not bound WAL/SHM/directory size.",
+    "Same-UID cooperative filesystem trust; no hostile-host isolation claim.",
+    "Schema/wire and executable invariant tests are machine-verifiable specifications, not whole-program formal proof.",
+    "Peer direct-shell deviations and timestamp erratum remain visible; root independent commands ran through compiled Gleam bounded harness.",
+    "Small launcher var/recovery-runtime/20261011-1318-native-verify3/gleam-bound aids harness invocation; literal argv and invalid deadline tested, no effect authority."
+  ],
+  "forecast_resolution": {
+    "prior": "docs/journal/20261011-1224-telegram-recovery-verification-update.md",
+    "event": "Native independent refusal+kill verification passes before14:15UTC",
+    "probability": 0.65,
+    "outcome": 1,
+    "brier_score": 0.1225,
+    "resolved_at": "2026-10-11T13:25:26Z"
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ]
+}

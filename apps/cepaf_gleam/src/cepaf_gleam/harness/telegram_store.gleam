@@ -1,3 +1,10 @@
+import cepaf_gleam/harness/telegram_action_proposal as proposal
+import cepaf_gleam/harness/telegram_tool_command as tool_command
+import cepaf_gleam/harness/telegram_cancellation as cancellation
+import cepaf_gleam/harness/telegram_cancellation_record as cancellation_record
+import cepaf_gleam/harness/telegram_action_intent as action_intent
+import cepaf_gleam/harness/telegram_commands as commands
+import cepaf_gleam/harness/telegram_memory_command as memory_command
 //// High-assurance durable storage consumer for Telegram bot runtime v2.
 //// Spec: uos.telegram-durable-store-corrected-development-spec.v1
 //// Wire: uos.telegram-store-wire-v4.v1
@@ -1117,6 +1124,7 @@ pub fn commit_prefix(
                 && stored_inbox.user_id == proposed.user_id
                 && stored_inbox.text_hash == proposed.text_hash
                 && case stored_inbox.status, proposed.status {
+                  ledger.InboxRejected("withdrawn_by_requester"), ledger.InboxPending -> True
                   ledger.InboxRejected(x), ledger.InboxRejected(y) -> x == y
                   ledger.InboxRejected(_), _ | _, ledger.InboxRejected(_) ->
                     False
@@ -1432,7 +1440,7 @@ pub fn commit_result(
   worker: String,
   epoch: Int,
 ) -> Result(CommitResultResult, StoreError) {
-  commit_result_extended(config, bot_id, operation_id, expected_generation, inbox_record, inbox_version, inbox_sha, payloads, worker, epoch, [], [], 0)
+  commit_result_extended(config, bot_id, operation_id, expected_generation, inbox_record, inbox_version, inbox_sha, payloads, worker, epoch, [], [], 0, 0)
 }
 
 fn commit_result_extended(
@@ -1449,6 +1457,7 @@ fn commit_result_extended(
   extra_read_set: List(codec.ReadSetAssertion),
   extra_changes: List(codec.Change),
   extra_reserved_rows: Int,
+  extra_reserved_receipts: Int,
 ) -> Result(CommitResultResult, StoreError) {
   use _ <- result.try(
     case
@@ -1583,7 +1592,7 @@ fn commit_result_extended(
   ]
 
   let read_set = list.append(base_read_set, extra_read_set)
-  let res_delta = codec.ReservationDelta(rows: -17 - extra_reserved_rows, receipts: -1)
+  let res_delta = codec.ReservationDelta(rows: -17 - extra_reserved_rows, receipts: -1 - extra_reserved_receipts)
   let summary_json =
     json.object([
       #("op", json.string("commit_result")),
@@ -2594,7 +2603,717 @@ pub fn commit_conversation_result(
     [ctx_assert, budget_assert],
     extra_changes,
     res.reserved_context_rows,
+    0,
   )
+}
+
+pub opaque type MemoryObservation {
+  MemoryObservation(
+    config: transport.LocalConfiguration, generation: Int,
+    record: ledger.InboxRecord, version: Int, sha: String,
+    worker: String, epoch: Int, context: conv.Context,
+    context_row: codec.RowResult, input_row: codec.RowResult,
+    response: memory_command.Reply,
+  )
+}
+
+pub fn memory_reply(observation: MemoryObservation) -> String {
+  observation.response.text
+}
+
+/// Read only. The service must recheck its live authority before committing.
+pub fn prepare_memory_command(
+  config: transport.LocalConfiguration, generation: Int,
+  record: ledger.InboxRecord, version: Int, sha: String,
+  worker: String, epoch: Int,
+) -> Result(MemoryObservation, StoreError) {
+  use _ <- result.try(case ledger.valid_record(record)
+    && record.status == ledger.InboxProcessing(worker, epoch)
+    && version > 0 && files.digest(codec.encode_inbox_record(record)) == sha {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("invalid_memory_inbox_binding"))
+  })
+  let scope = conv.Scope(record.bot_id, record.chat_id, record.user_id)
+  use key <- result.try(conv.context_key(scope) |> result.map_error(StoreInvariantError))
+  let input_key = codec.input_key(record.request_id)
+  use #(observed_generation, rows) <- result.try(read_keys(config, [key,input_key]))
+  use _ <- result.try(case observed_generation == generation && list.length(rows) == 2 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("memory_generation_or_rows_mismatch"))
+  })
+  use ctx_row <- result.try(find_read_row(rows,key))
+  use input_row <- result.try(find_read_row(rows,input_key))
+  use raw_input <- result.try(codec.decode_row_value(input_row) |> result.map_error(StoreDecodeError))
+  use #(request, bot, update, verdict) <- result.try(codec.decode_input_verdict(raw_input)
+    |> result.map_error(StoreDecodeError))
+  use raw <- result.try(case verdict {
+    guard.AcceptedEnvelope(
+      update_id: upd, message_id: mid, chat_id: chat, user_id: user,
+      text_hash: hash, raw_text: text, bot_id: vbot, callback_query_id: None, ..
+    ) -> case request == record.request_id && bot == record.bot_id
+      && update == record.update_id && upd == record.update_id && vbot == record.bot_id
+      && mid == record.message_id && chat == record.chat_id && user == record.user_id
+      && hash == record.text_hash && files.digest(text) == record.text_hash {
+      True -> Ok(text)
+      False -> Error(StoreInvariantError("memory_input_record_mismatch"))
+    }
+    _ -> Error(StoreInvariantError("memory_input_not_accepted_message"))
+  })
+  use context <- result.try(case ctx_row.exists {
+    False -> Ok(conv.Context(scope,[]))
+    True -> {
+      use encoded <- result.try(codec.decode_row_value(ctx_row) |> result.map_error(StoreDecodeError))
+      conv.decode_context(encoded,scope) |> result.map_error(StoreDecodeError)
+    }
+  })
+  // Syntax errors become useful, non-mutating replies; malformed state above fails closed.
+  let response = case memory_command.reply(raw,context) {
+    Ok(reply) -> reply
+    Error(usage) -> memory_command.Reply(usage,False)
+  }
+  Ok(MemoryObservation(config,generation,record,version,sha,worker,epoch,
+    context,ctx_row,input_row,response))
+}
+
+/// Clear and its durable confirmation are one CAS transaction; quota is untouched.
+pub fn commit_memory_result(
+  observation: MemoryObservation, payloads: List(String),
+) -> Result(CommitResultResult, StoreError) {
+  let o = observation
+  use _ <- result.try(case string.join(payloads,"") == o.response.text {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("memory_reply_payload_mismatch"))
+  })
+  use changes <- result.try(case o.response.clear && o.context_row.exists {
+    False -> Ok([])
+    True -> {
+      use empty <- result.try(conv.encode_context(conv.Context(o.context.scope,[]))
+        |> result.map_error(StoreInvariantError))
+      Ok([codec.Change(o.context_row.key,o.context_row.version,o.context_row.sha256,
+        codec.encode_canonical_base64(empty))])
+    }
+  })
+  commit_result_extended(o.config,o.record.bot_id,"op-result-" <> o.record.request_id,
+    o.generation,o.record,o.version,o.sha,payloads,o.worker,o.epoch,
+    [row_read_assertion(o.context_row.key,o.context_row),
+      row_read_assertion(o.input_row.key,o.input_row)],changes,0,0)
+}
+
+pub opaque type CancellationReservation {
+  CancellationReservation(
+    config: transport.LocalConfiguration,
+    generation: Int,
+    inbox: ledger.InboxRecord,
+    inbox_version: Int,
+    inbox_sha: String,
+    worker: String,
+    epoch: Int,
+    saved: cancellation_record.RecoveryRecord,
+    saved_row: codec.RowResult,
+  )
+}
+
+pub fn cancellation_record_value(
+  res: CancellationReservation,
+) -> cancellation_record.RecoveryRecord {
+  res.saved
+}
+
+pub fn cancellation_generation(res: CancellationReservation) -> Int {
+  res.generation
+}
+
+pub fn cancellation_key(request_id: String) -> String {
+  "cancellation/" <> request_id
+}
+
+fn cancellation_context(
+  config: transport.LocalConfiguration,
+  generation: Int,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  worker: String,
+  epoch: Int,
+) -> Result(#(List(codec.RowResult), String), StoreError) {
+  use _ <- result.try(
+    case
+      ledger.valid_record(inbox)
+      && inbox.status == ledger.InboxProcessing(worker, epoch)
+      && version > 0
+      && generation >= 0
+      && files.digest(codec.encode_inbox_record(inbox)) == sha
+    {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("invalid_cancellation_inbox"))
+    },
+  )
+  let ik = codec.inbox_key(inbox.request_id)
+  let ak = codec.authority_key(inbox.request_id)
+  let pk = codec.input_key(inbox.request_id)
+  let ck = cancellation_key(inbox.request_id)
+  use #(observed, rows) <- result.try(read_keys(config, [ik, ak, pk, ck]))
+  use _ <- result.try(case observed == generation && list.length(rows) == 4 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("cancellation_generation_mismatch"))
+  })
+  use ir <- result.try(find_read_row(rows, ik))
+  use ar <- result.try(find_read_row(rows, ak))
+  use pr <- result.try(find_read_row(rows, pk))
+  use _ <- result.try(
+    case
+      ir.exists
+      && ir.version == version
+      && ir.sha256 == sha
+      && ar.exists
+      && pr.exists
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(StoreInvariantError("cancellation_context_missing_or_stale"))
+    },
+  )
+  use auth_raw <- result.try(
+    codec.decode_row_value(ar) |> result.map_error(StoreDecodeError),
+  )
+  use auth <- result.try(
+    codec.decode_authority_value(auth_raw) |> result.map_error(StoreDecodeError),
+  )
+  use _ <- result.try(
+    case
+      auth.request_id == inbox.request_id
+      && auth.bot_id == inbox.bot_id
+      && auth.worker == worker
+      && auth.epoch == epoch
+    {
+      True -> Ok(Nil)
+      False -> Error(StoreInvariantError("cancellation_authority_mismatch"))
+    },
+  )
+  use input_raw <- result.try(
+    codec.decode_row_value(pr) |> result.map_error(StoreDecodeError),
+  )
+  use #(request_id, bot_id, update_id, verdict) <- result.try(
+    codec.decode_input_verdict(input_raw) |> result.map_error(StoreDecodeError),
+  )
+  use text <- result.try(case verdict {
+    guard.AcceptedEnvelope(
+      bot_id: b,
+      chat_id: c,
+      user_id: u,
+      update_id: n,
+      message_id: m,
+      text_hash: h,
+      raw_text: text,
+      ..,
+    ) -> {
+      case
+        request_id == inbox.request_id
+        && bot_id == inbox.bot_id
+        && update_id == inbox.update_id
+        && b == inbox.bot_id
+        && c == inbox.chat_id
+        && u == inbox.user_id
+        && n == inbox.update_id
+        && m == inbox.message_id
+        && h == inbox.text_hash
+        && files.digest(text) == h
+      {
+        True -> Ok(text)
+        False -> Error(StoreInvariantError("cancellation_input_mismatch"))
+      }
+    }
+    _ -> Error(StoreInvariantError("cancellation_input_not_accepted"))
+  })
+  Ok(#(rows, text))
+}
+
+fn cancellation_matches_input(
+  saved: cancellation_record.RecoveryRecord,
+  inbox: ledger.InboxRecord,
+  text: String,
+) -> Bool {
+  let b = cancellation_record.binding(saved)
+  b.bot_id == inbox.bot_id
+  && b.chat_id == inbox.chat_id
+  && b.user_id == inbox.user_id
+  && b.update_id == inbox.update_id
+  && case commands.parse(text) {
+    Ok(invocation) ->
+      invocation.definition.canonical == "/tool"
+      && cancellation_command_matches(cancellation_record.intent(saved),text)
+    Error(_) -> False
+  }
+}
+
+/// Persist exact approved bytes before effect. This stores data only; callers
+/// must recheck current approval/profile/canonical fences at the effect boundary.
+/// Uncertain store commits must reconcile through existing PendingOperation.
+pub fn persist_cancellation(
+  config: transport.LocalConfiguration,
+  generation: Int,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  worker: String,
+  epoch: Int,
+  prepared: cancellation.Prepared,
+) -> Result(CancellationReservation, StoreError) {
+  let saved = cancellation.recovery_record(prepared)
+  use #(rows, text) <- result.try(cancellation_context(
+    config,
+    generation,
+    inbox,
+    version,
+    sha,
+    worker,
+    epoch,
+  ))
+  use _ <- result.try(
+    case
+      cancellation_matches_input(saved, inbox, text)
+      && cancellation_record.binding(saved).worker == worker
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(StoreInvariantError("cancellation_request_binding_mismatch"))
+    },
+  )
+  let key = cancellation_key(inbox.request_id)
+  use prior <- result.try(find_read_row(rows, key))
+  case prior.exists {
+    True -> {
+      use raw <- result.try(
+        codec.decode_row_value(prior) |> result.map_error(StoreDecodeError),
+      )
+      use original <- result.try(
+        cancellation_record.decode(raw) |> result.map_error(StoreDecodeError),
+      )
+      use _ <- result.try(
+        case cancellation_record.same_request(saved, original) {
+          True -> Ok(Nil)
+          False -> Error(StoreInvariantError("cancellation_request_collision"))
+        },
+      )
+      Ok(CancellationReservation(
+        config,
+        generation,
+        inbox,
+        version,
+        sha,
+        worker,
+        epoch,
+        original,
+        prior,
+      ))
+    }
+    False -> {
+      let raw = cancellation_record.encode(saved)
+      let change = codec.Change(key, 0, "", codec.encode_canonical_base64(raw))
+      let summary =
+        json.object([
+          #("op", json.string("persist_cancellation")),
+          #("request_id", json.string(inbox.request_id)),
+          #(
+            "request_hash",
+            json.string(cancellation_record.request_hash(saved)),
+          ),
+        ])
+        |> json.to_string
+      use applied <- result.try(execute_apply(
+        config,
+        inbox.bot_id,
+        "op-cancellation-" <> inbox.request_id,
+        generation,
+        list.map(rows, fn(row) { row_read_assertion(row.key, row) }),
+        [change],
+        codec.ReservationDelta(0, 0),
+        summary,
+      ))
+      let row =
+        codec.RowResult(
+          key,
+          True,
+          1,
+          codec.encode_canonical_base64(raw),
+          files.digest(raw),
+        )
+      Ok(CancellationReservation(
+        config,
+        applied.receipt.generation,
+        inbox,
+        version,
+        sha,
+        worker,
+        epoch,
+        saved,
+        row,
+      ))
+    }
+  }
+}
+
+/// Restore only read-only recovery data. No approval or executable Prepared is
+/// reconstructed. Original bytes remain immutable across process restarts.
+pub fn load_cancellation(
+  config: transport.LocalConfiguration,
+  generation: Int,
+  inbox: ledger.InboxRecord,
+  version: Int,
+  sha: String,
+  worker: String,
+  epoch: Int,
+) -> Result(CancellationReservation, StoreError) {
+  use #(rows, text) <- result.try(cancellation_context(
+    config,
+    generation,
+    inbox,
+    version,
+    sha,
+    worker,
+    epoch,
+  ))
+  use row <- result.try(find_read_row(rows, cancellation_key(inbox.request_id)))
+  use raw <- result.try(
+    codec.decode_row_value(row) |> result.map_error(StoreDecodeError),
+  )
+  use saved <- result.try(
+    cancellation_record.decode(raw) |> result.map_error(StoreDecodeError),
+  )
+  use _ <- result.try(case cancellation_matches_input(saved, inbox, text) {
+    True -> Ok(Nil)
+    False ->
+      Error(StoreInvariantError("cancellation_recovery_binding_mismatch"))
+  })
+  Ok(CancellationReservation(
+    config,
+    generation,
+    inbox,
+    version,
+    sha,
+    worker,
+    epoch,
+    saved,
+    row,
+  ))
+}
+
+/// Commit a fixed truthful reply only after exact historical lookup confirms
+/// the persisted request. Absence, rejection and malformed results leave the
+/// inbox unresolved and do not become permission to repeat the effect.
+pub fn commit_cancellation_lookup(
+  res: CancellationReservation,
+  response: String,
+  observed_utc_ms: Int,
+) -> Result(CommitResultResult, StoreError) {
+  use outcome <- result.try(
+    cancellation.decode_recovery_response(res.saved, response, observed_utc_ms)
+    |> result.map_error(StoreDecodeError),
+  )
+  use payload <- result.try(case outcome {
+    cancellation.LeaseRevoked(_, _, True) ->
+      Ok(
+        "Cancellation recorded: the job lease was revoked. Worker termination is not confirmed.",
+      )
+    _ -> Error(StoreInvariantError("cancellation_outcome_unresolved"))
+  })
+  commit_result_extended(
+    res.config,
+    res.inbox.bot_id,
+    "op-cancellation-result-" <> res.inbox.request_id,
+    res.generation,
+    res.inbox,
+    res.inbox_version,
+    res.inbox_sha,
+    [payload],
+    res.worker,
+    res.epoch,
+    [row_read_assertion(res.saved_row.key, res.saved_row)],
+    [],
+    0,
+    0,
+  )
+}
+
+/// Atomic reply-authority handoff after read-only history reconciliation.
+/// Caller must establish current writer authority and predecessor quiescence.
+pub fn commit_cancellation_lookup_for(
+  res: CancellationReservation,
+  response: String,
+  observed_utc_ms: Int,
+  new_worker: String,
+  new_epoch: Int,
+) -> Result(CommitResultResult, StoreError) {
+  case new_worker == res.worker && new_epoch == res.epoch {
+    True -> commit_cancellation_lookup(res, response, observed_utc_ms)
+    False -> {
+      use _ <- result.try(
+        case
+          ledger.valid_worker(new_worker, new_epoch)
+          && new_epoch > res.epoch
+          && observed_utc_ms >= 0
+          && observed_utc_ms <= 9_007_199_254_740_991
+        {
+          True -> Ok(Nil)
+          False ->
+            Error(
+              StoreInvariantError("invalid_cancellation_authority_transfer"),
+            )
+        },
+      )
+      use outcome <- result.try(
+        cancellation.decode_recovery_response(
+          res.saved,
+          response,
+          observed_utc_ms,
+        )
+        |> result.map_error(StoreDecodeError),
+      )
+      use payload <- result.try(case outcome {
+        cancellation.LeaseRevoked(_, _, True) ->
+          Ok(
+            "Cancellation recorded: the job lease was revoked. Worker termination is not confirmed.",
+          )
+        _ -> Error(StoreInvariantError("cancellation_outcome_unresolved"))
+      })
+      let auth_key = codec.authority_key(res.inbox.request_id)
+      use #(observed, auth_rows) <- result.try(read_keys(res.config, [auth_key]))
+      use auth_row <- result.try(case observed == res.generation, auth_rows {
+        True, [r] ->
+          case r.exists {
+            True -> Ok(r)
+            False -> Error(StoreInvariantError("authority_row_missing"))
+          }
+        _, _ -> Error(StoreInvariantError("cancellation_generation_mismatch"))
+      })
+      use auth_raw <- result.try(
+        codec.decode_row_value(auth_row)
+        |> result.map_error(StoreDecodeError),
+      )
+      use auth <- result.try(
+        codec.decode_authority_value(auth_raw)
+        |> result.map_error(StoreDecodeError),
+      )
+      use _ <- result.try(
+        case
+          auth.request_id == res.inbox.request_id
+          && auth.bot_id == res.inbox.bot_id
+          && auth.worker == res.worker
+          && auth.epoch == res.epoch
+        {
+          True -> Ok(Nil)
+          False -> Error(StoreInvariantError("cancellation_authority_mismatch"))
+        },
+      )
+      let new_auth =
+        codec.AuthorityRecord(
+          res.inbox.request_id,
+          res.inbox.bot_id,
+          new_worker,
+          new_epoch,
+          observed_utc_ms,
+        )
+      let authority_change =
+        codec.Change(
+          key: auth_key,
+          expected_version: auth_row.version,
+          expected_sha256: auth_row.sha256,
+          new_value_base64: codec.encode_canonical_base64(
+            codec.encode_authority_value(new_auth),
+          ),
+        )
+      commit_result_extended(
+        res.config,
+        res.inbox.bot_id,
+        "op-cancellation-result-" <> res.inbox.request_id,
+        res.generation,
+        res.inbox,
+        res.inbox_version,
+        res.inbox_sha,
+        [payload],
+        res.worker,
+        res.epoch,
+        [row_read_assertion(res.saved_row.key, res.saved_row)],
+        [authority_change],
+        0,
+        0,
+      )
+    }
+  }
+}
+
+/// Pending proposal data has a separate namespace from executed cancellation history.
+pub fn proposal_key(request_id:String) -> String { "action-proposal/" <> request_id }
+
+/// Save exact signable bytes or append receipts without claiming the inbox,
+/// granting execution authority, or creating cancellation history.
+pub fn save_proposal(config:transport.LocalConfiguration,generation:Int,
+  inbox:ledger.InboxRecord,value:proposal.Proposal) -> Result(Int,StoreError) {
+  let binding=proposal.binding(value)
+  use _ <- result.try(case ledger.valid_record(inbox)
+    && inbox.status==ledger.InboxPending && generation>=0
+    && proposal.request_id(value)==inbox.request_id
+    && binding.bot_id==inbox.bot_id && binding.chat_id==inbox.chat_id
+    && binding.user_id==inbox.user_id && binding.update_id==inbox.update_id {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_identity_refused"))
+  })
+  let key=proposal_key(inbox.request_id)
+  use #(observed,rows) <- result.try(read_keys(config,[
+    codec.inbox_key(inbox.request_id),codec.input_key(inbox.request_id),
+    codec.authority_key(inbox.request_id),cancellation_key(inbox.request_id),key]))
+  use #(stored,input,prior) <- result.try(case rows {
+    [stored,input,authority,cancel,prior] if observed==generation -> {
+      case stored.exists && input.exists && !authority.exists && !cancel.exists
+        && stored.sha256==files.digest(codec.encode_inbox_record(inbox)) {
+        True -> Ok(#(stored,input,prior))
+        False -> Error(StoreInvariantError("proposal_context_refused"))
+      }
+    }
+    _ -> Error(StoreInvariantError("proposal_generation_refused"))
+  })
+  use raw <- result.try(codec.decode_row_value(input) |> result.map_error(StoreDecodeError))
+  use #(id,bot,update,verdict) <- result.try(
+    codec.decode_input_verdict(raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case verdict {
+    guard.AcceptedEnvelope(bot_id:b,chat_id:c,user_id:u,update_id:n,
+      message_id:m,text_hash:h,raw_text:text,callback_query_id:None,..) -> {
+      case id==inbox.request_id && bot==inbox.bot_id && update==inbox.update_id
+        && b==bot && c==inbox.chat_id && u==inbox.user_id && n==update
+        && m==inbox.message_id && h==inbox.text_hash && files.digest(text)==h
+        && proposal_input_matches(value,text) {
+        True -> Ok(Nil)
+        False -> Error(StoreInvariantError("proposal_input_refused"))
+      }
+    }
+    _ -> Error(StoreInvariantError("proposal_input_refused"))
+  })
+  let _=stored
+  let encoded=proposal.encode(value)
+  use unchanged <- result.try(case prior.exists {
+    False -> case proposal.receipts(value)==[] {
+      True -> Ok(False)
+      False -> Error(StoreInvariantError("proposal_initial_receipts_refused"))
+    }
+    True -> {
+      use raw <- result.try(codec.decode_row_value(prior) |> result.map_error(StoreDecodeError))
+      use previous <- result.try(proposal.decode(raw) |> result.map_error(StoreDecodeError))
+      case proposal.extends(previous,value) {
+        True -> Ok(raw==encoded)
+        False -> Error(StoreInvariantError("proposal_replacement_refused"))
+      }
+    }
+  })
+  case unchanged {
+    True -> Ok(generation)
+    False -> {
+      let change=codec.Change(key,prior.version,prior.sha256,codec.encode_canonical_base64(encoded))
+      let summary=json.object([#("op",json.string("save_action_proposal")),
+        #("request_id",json.string(inbox.request_id)),
+        #("intent_digest",json.string(action_intent.digest(proposal.intent(value)))),
+        #("receipt_count",json.int(list.length(proposal.receipts(value))))]) |> json.to_string
+      use applied <- result.try(execute_apply(config,inbox.bot_id,
+        "op-proposal-" <> files.digest(encoded),generation,
+        list.map(rows,fn(r){row_read_assertion(r.key,r)}),[change],
+        codec.ReservationDelta(0,0),summary))
+      Ok(applied.receipt.generation)
+    }
+  }
+}
+fn proposal_input_matches(p:proposal.Proposal,text:String) -> Bool {
+  cancellation_command_matches(proposal.intent(p),text)
+}
+fn cancellation_command_matches(intent:action_intent.Intent,text:String) -> Bool {
+  case commands.parse(text) {
+    Ok(inv) if inv.definition.canonical=="/tool" ->
+      case tool_command.parse(inv.args),tool_command.parse(action_intent.command_args(intent)) {
+        Ok(tool_command.CancelLease(job,reason)),Ok(tool_command.CancelLease(expected_job,expected_reason)) ->
+          job==expected_job && reason==expected_reason
+        _,_ -> False
+      }
+    _ -> False
+  }
+}
+
+
+/// Requester withdrawal is a local data transition, never native effect authority.
+/// Original Pending -> Rejected, query result/outbox, and the original reservation
+/// release are one generation-bound CAS. Proposal and input history stay intact.
+pub fn commit_proposal_withdrawal(
+  config:transport.LocalConfiguration,generation:Int,query:ledger.InboxRecord,
+  version:Int,sha:String,worker:String,epoch:Int,original_id:String,
+  payloads:List(String),
+) -> Result(CommitResultResult,StoreError) {
+  use _ <- result.try(case ledger.valid_record(query)
+    && query.request_id==ledger.make_request_id(query.bot_id,query.update_id)
+    && original_id!=query.request_id && original_id!="" && string.byte_size(original_id)<=64 {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  })
+  use #(observed,rows) <- result.try(read_keys(config,[
+    codec.inbox_key(original_id),codec.input_key(original_id),
+    codec.authority_key(original_id),cancellation_key(original_id),
+    codec.result_key(original_id),codec.input_key(query.request_id)]))
+  use _ <- result.try(case observed==generation {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_generation_changed"))
+  })
+  use #(original_row,input_row,query_input) <- result.try(case rows {
+    [inbox,input,authority,cancel,reply,query_input]
+      if inbox.exists && input.exists && query_input.exists
+        && !authority.exists && !cancel.exists && !reply.exists ->
+      Ok(#(inbox,input,query_input))
+    [_,_,_,_,_,_] -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+    _ -> Error(StoreInvariantError("proposal_withdrawal_snapshot_invalid"))
+  })
+  use raw <- result.try(codec.decode_row_value(original_row) |> result.map_error(StoreDecodeError))
+  use original <- result.try(codec.decode_inbox_record(raw) |> result.map_error(StoreDecodeError))
+  use _ <- result.try(case ledger.valid_record(original)
+    && original.request_id==original_id
+    && original_id==ledger.make_request_id(original.bot_id,original.update_id)
+    && original.bot_id==query.bot_id && original.chat_id==query.chat_id
+    && original.user_id==query.user_id && original.status==ledger.InboxPending {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  })
+  use original_text <- result.try(withdrawal_bound_input(original,input_row))
+  use query_text <- result.try(withdrawal_bound_input(query,query_input))
+  let original_is_cancel=case commands.parse(original_text) {
+    Ok(inv) if inv.definition.canonical=="/tool" -> case tool_command.parse(inv.args) {
+      Ok(tool_command.CancelLease(_,_)) -> True
+      _ -> False
+    }
+    _ -> False
+  }
+  use _ <- result.try(case original_is_cancel
+    && guard.classify_directive(query_text)==guard.PreservedDirective("/approval_manage",["withdraw",original_id]) {
+    True -> Ok(Nil)
+    False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  })
+  let rejected=ledger.InboxRecord(..original,status:ledger.InboxRejected("withdrawn_by_requester"))
+  let change=codec.Change(original_row.key,original_row.version,original_row.sha256,
+    codec.encode_canonical_base64(codec.encode_inbox_record(rejected)))
+  commit_result_extended(config,query.bot_id,"op-result-"<>query.request_id,
+    generation,query,version,sha,payloads,worker,epoch,
+    list.map(rows,fn(row){row_read_assertion(row.key,row)}),[change],18,63)
+}
+fn withdrawal_bound_input(inbox:ledger.InboxRecord,row:codec.RowResult) -> Result(String,StoreError) {
+  use raw <- result.try(codec.decode_row_value(row) |> result.map_error(StoreDecodeError))
+  use #(id,bot,update,verdict) <- result.try(
+    codec.decode_input_verdict(raw) |> result.map_error(StoreDecodeError))
+  case verdict {
+    guard.AcceptedEnvelope(bot_id:b,chat_id:c,user_id:u,update_id:n,
+      message_id:m,text_hash:h,raw_text:text,directive:directive,callback_query_id:None) -> {
+      case id==inbox.request_id && bot==inbox.bot_id && update==inbox.update_id
+        && b==bot && c==inbox.chat_id && u==inbox.user_id && n==update
+        && m==inbox.message_id && h==inbox.text_hash && files.digest(text)==h
+        && directive==guard.classify_directive(text) {
+        True -> Ok(text)
+        False -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+      }
+    }
+    _ -> Error(StoreInvariantError("proposal_withdrawal_refused"))
+  }
 }
 
 //// Mini clear is a distinct operation namespace, never a fabricated Telegram update.

@@ -1,0 +1,41 @@
+{
+  "schema": "uos.telegram-lifecycle-wip-observation.v1",
+  "observed_at": "2026-10-11T18:03:39.278Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 3,
+  "classification": "WIP_OBSERVATION_NOT_COMPLETE_CANDIDATE_REVIEW",
+  "status": "HOLD_PENDING_REGISTRATION_AND_RECOVERY_IMPLEMENTATION",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "frozen": "var/recovery-runtime/20261011-1800-lifecycle-registration-review/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "c391bbbe66d7351f82045261facbb1cc907f52812c9aa4cd1f9ba735fde74011"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+      "frozen": "var/recovery-runtime/20261011-1800-lifecycle-registration-review/src/telegram_lifecycle_ffi.erl",
+      "sha256": "a8214a84cd4a52b4df3b2cd362f26c7756c34260067140b29250780f03da7643"
+    }
+  ],
+  "actual_result": "Public read_and_verify_prelaunch_control accepted typed ControlRegistration with service_epoch=-7 and registered_at_us=-1 when four string fields matched.",
+  "test_evidence": {
+    "path": "var/recovery-runtime/20261011-1800-lifecycle-registration-review/results.txt",
+    "sha256": "041709416fff471614340392863aade9d79814bbb7871e8b79331b4c8c57c16d"
+  },
+  "effects": "Synthetic private JSON read only; no systemd start/stop, storage worker, Telegram network call or production change.",
+  "scope_limits": [
+    "A complete new lifecycle candidate has not been handed off; findings apply only to these observed source bytes.",
+    "Rejecting negative integers alone would not establish durable ownership.",
+    "Existing API does not carry unit/slice invocation and store incarnation in registration; cleanup function still receives caller-supplied names/DB/hashes. Full implementation must bind actual launch ownership before permitting any worker."
+  ],
+  "required_next": "AGY implements accepted service contract: durable exact registration, unknown-writer HOLD before database workers, retained PendingOperation and state on all errors, verified matching lifecycle cleanup before reconciliation.",
+  "runtime_admission": "NOT_GRANTED",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l6",
+    "#zero-muda"
+  ]
+}

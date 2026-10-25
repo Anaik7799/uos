@@ -1,0 +1,143 @@
+{
+  "schema": "uos.telegram-parser-independent-review.v1",
+  "verdict": "ACCEPT_DEVELOPMENT_OBSERVATION_ONLY",
+  "reviewer": {
+    "worker": "codex-telegram-20261011",
+    "session": "01a0f051-84d4-7be0-be4b-2c1055e89dd3",
+    "plan": "uos/telegram-tools/20261011-1115",
+    "task": "PARSER_REVIEW",
+    "attempt": 1
+  },
+  "sources": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928"
+    }
+  ],
+  "suite": {
+    "status": "PASS",
+    "authority": "NONE",
+    "baseline_checks": 375,
+    "adversarial_checks": 32903,
+    "independent_dag_scenarios": 32768,
+    "package": {
+      "status": "PASS",
+      "local_paths_checked": 39,
+      "authority": "REPORT_ONLY",
+      "runtime_enforcement": "NOT_ASSERTED",
+      "global_skill_dependency": false
+    },
+    "runtime_admission": "NOT_GRANTED",
+    "live_agent_tests": "UNRUN"
+  },
+  "cli_cases": [
+    {
+      "case": "missing_plan",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "reclaim payload must be a JSON object with plan_id and bindings"
+    },
+    {
+      "case": "unknown_fields",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "reclaim payload must contain exactly {plan_id, bindings} with no unknown or alias fields"
+    },
+    {
+      "case": "wrong_plan",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "plan_id in bindings does not match portfolio plan_id"
+    },
+    {
+      "case": "numeric_deadline",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "lease_until_ns must be a decimal string, not a number"
+    },
+    {
+      "case": "overflow",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "lease_until_ns overflow or non-decimal"
+    },
+    {
+      "case": "duplicate_fields",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "duplicate JSON object key"
+    },
+    {
+      "case": "out_of_set",
+      "exit": 1,
+      "status": "HOLD",
+      "rule": "RP-INVALID",
+      "detail": "selected task must be a member of reclaim bindings set"
+    }
+  ],
+  "legacy_refusals": [
+    {
+      "case": "ordinary",
+      "exit": 1,
+      "status": "HOLD",
+      "expired_refusals": [
+        {
+          "rule": "RP-SA-PLAN",
+          "task_id": "FORMAL_FIX",
+          "severity": "HOLD",
+          "detail": "executing lease is missing or expired at this observation",
+          "next_check": "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."
+        },
+        {
+          "rule": "RP-SA-PLAN",
+          "task_id": "STORE_TRANSPORT_REVIEW",
+          "severity": "HOLD",
+          "detail": "executing lease is missing or expired at this observation",
+          "next_check": "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."
+        }
+      ]
+    },
+    {
+      "case": "single_reclaim",
+      "exit": 1,
+      "status": "HOLD",
+      "expired_refusals": [
+        {
+          "rule": "RP-SA-PLAN",
+          "task_id": "STORE_TRANSPORT_REVIEW",
+          "severity": "HOLD",
+          "detail": "executing lease is missing or expired at this observation",
+          "next_check": "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."
+        }
+      ]
+    }
+  ],
+  "findings_resolved": [
+    "R1 required exact plan and binding shapes; no file guessing or aliases.",
+    "R2 rejected malformed identity/decimal deadlines/duplicates and out-of-set selected task; full suite retains other holds.",
+    "Actual active task/attempt plus coordinator claims observed for final parser correction; earlier process deviations retained in prior receipt."
+  ],
+  "limits": [
+    "Report-only observation grants no lease, execution authority, production release or system admission.",
+    "Fresh complete-plan risk ranking and worker/effect reconciliation still required before actual recovery.",
+    "Canonical sequential claims and ordinary exact-owner active checks required before task effects.",
+    "Source review and private fixtures do not establish race-free distributed authority."
+  ],
+  "admission": false,
+  "production_effects": false,
+  "observed_utc": "2026-10-11T11:54:14.880Z"
+}

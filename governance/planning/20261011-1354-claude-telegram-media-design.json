@@ -1,0 +1,628 @@
+{
+  "artifact": "uos.telegram.media_design.v1",
+  "artifact_id": "20261011-1354-claude-telegram-media-design",
+  "produced_utc": "2026-10-11T13:18:54Z",
+  "timestamp_prefix": "20261011-1354",
+  "author_session": "claude-telegram-20261011",
+  "sa_plan": {
+    "plan_id": "uos/telegram-runtime/20261001-1150",
+    "task_id": "MEDIA_DESIGN",
+    "attempt": 1,
+    "worker": "claude-telegram-20261011",
+    "lease_duration_ns": "3600000000000",
+    "lease_until_ns": "1791728025380062888",
+    "authority_note": "Sa-plan is the sole execution authority (SC-JIDOKA-001, SC-SA-PLAN-001). This artifact is an advisory implementation design for AGY. It grants no admission, no deploy authority and no effect authority."
+  },
+  "status": "REVIEW_DELIVERED",
+  "admission": "NOT_GRANTED",
+  "scope": {
+    "in_scope": "Source-read resolution of Telegram media family F8 (photo, document, audio, voice, video) across parsing, download, upload, storage and render; and an implementation design for the missing parts.",
+    "out_of_scope": [
+      "Runtime execution, network calls, real Telegram sends",
+      "Package installation or toolchain provisioning",
+      "Browser tests (root completed MINI_HTTP_AUDIT 12:55:25; not repeated)",
+      "Native source/test observation (root refreshed NATIVE_FIX2 12:59:17; not repeated)",
+      "Credentials or private data of any kind",
+      "Edits to any source file, JJ mutations, or other agents' task states"
+    ],
+    "method": "All source acquisition ran through the compiled Gleam bounded wrapper cepaf_gleam@harness@development:bounded/3 -> ecology_capability_ffi:run_bounded, invoking /usr/bin/grep under a 25000 ms bound, driven by escript under the pinned OTP 29 (toolchains/nix-profile/bin/escript -> /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5). No Python. Bodies were read, not markers counted.",
+    "method_deviation": {
+      "deviation_1_otp": {
+        "observed": "The first bounded invocation in this task failed with \"corrupt atom table\" because escript resolved to the host /usr/bin/escript (OTP 27) while apps/cepaf_gleam/build/dev/erlang/*/ebin holds OTP 29 beams.",
+        "repair": "Re-invoked under toolchains/nix-profile/bin/escript (OTP 29, /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5). Recorded per SC-NIX-DEVENV-001 invariant 4, which bars the host OTP 27."
+      },
+      "deviation_2_direct_bash": {
+        "observed": "Root observed direct Bash ls/grep/cat reads in Herdr during this task. That observation is correct and this record is corrected to match it. I do NOT claim every native command in this task ran through the Gleam bounded wrapper.",
+        "what_ran_through_bounded": "The four substantive source sweeps and body reads: SW-1 (786 hit lines), the six-file media body read, the inbound-type/FFT/transport-absence sweep, and the chat-action/wiring sweep. These were driven by $SCRATCH/media.erl, media2.erl, media3.erl and media4.erl, each calling cepaf_gleam@harness@development:bounded/3 -> ecology_capability_ffi:run_bounded against /usr/bin/grep under a 25000 ms bound.",
+        "what_ran_as_direct_bash": [
+          "sed -n on telegram_simulator.gleam:75-100 to read the _file_id stub",
+          "grep on tools/telegram_client.ml for media identifiers",
+          "grep on cognitive_worker.gleam for media identifiers",
+          "ls and cat of the scratchpad escript files",
+          "readlink/ls to locate the OTP 29 escript after the atom-table failure",
+          "sed and grep over the saved tool-result file to filter build/ noise out of SW-2",
+          "sha256sum and wc -l to compute the evidence_base hashes and line counts",
+          "date -u to observe the host clock for the timestamp prefix",
+          "ls and find to locate the prior artifact directory",
+          "node to validate this JSON and to apply this amendment"
+        ],
+        "mitigation": "Each of the three substantive direct-Bash findings (the _file_id stub, the telegram_client.ml help-line hit, the cognitive_worker query_voice_status arm) was independently re-derived through the bounded wrapper afterwards and agrees. The remaining direct commands are hashing, clock, path discovery and JSON validation, not source analysis.",
+        "forward_commitment": "Subsequent native execution in this plan uses the existing compiled cepaf_gleam@harness@development:bounded/3, per root instruction.",
+        "classification": "Execution deviation, preserved. Not a finding, not repaired retroactively, and not to be read as evidence that the bounded path was used uniformly."
+      }
+    }
+  },
+  "evidence_base": {
+    "note": "sha256 truncated to 16 hex chars; line counts are wc -l at read time.",
+    "sources": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+        "sha256_16": "73faffe64cc643b8",
+        "lines": 555
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_simulator.gleam",
+        "sha256_16": "452a420b08ba86d0",
+        "lines": 257
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_creative.gleam",
+        "sha256_16": "544ed1528d28dd32",
+        "lines": 251
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_collab.gleam",
+        "sha256_16": "35f964a46a124900",
+        "lines": 250
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+        "sha256_16": "9ca5070ea2c84ecc",
+        "lines": 2806
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256_16": "2dfab99f1bb7495d",
+        "lines": 697
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256_16": "dfde4dd433732679",
+        "lines": 261
+      },
+      {
+        "path": "tools/telegram_client.ml",
+        "sha256_16": "a0842a5799fe313b",
+        "lines": 879
+      }
+    ],
+    "sweeps": [
+      {
+        "id": "SW-1",
+        "pattern": "file_id|file_unique_id|getFile|file_path|download|photo|voice|audio|document|video|sticker|animation|mime_type|caption|thumbnail|upload",
+        "roots": [
+          "apps/cepaf_gleam/src",
+          "tools"
+        ],
+        "hit_lines": 786,
+        "telegram_surface_distribution": {
+          "harness/telegram_collab.gleam": 24,
+          "harness/telegram_simulator.gleam": 16,
+          "harness/telegram.gleam": 7,
+          "harness/cognitive_worker.gleam": 5,
+          "harness/telegram_creative.gleam": 4,
+          "harness/telegram_openrouter.gleam": 2,
+          "tools/telegram_client.ml": 1,
+          "harness/telegram_transaction_runner.gleam": 1
+        },
+        "noise_note": "The bulk of the 786 hits are unrelated UI/browser/static-serving code (webui_browser_suite.ml 67, shell.gleam 55, router.gleam static file serving, ooda_shruti_copilot, tri_agent_monitor, mcp/authz). Marker counts across the whole tree would have been meaningless here; the family was resolved by reading the 60 Telegram-surface hit bodies."
+      },
+      {
+        "id": "SW-2",
+        "pattern": "multipart|form-data|boundary=|sendPhoto|sendDocument|sendAudio|sendVoice|sendVideo|sendMediaGroup|sendChatAction",
+        "roots": [
+          "apps",
+          "tools",
+          "engines"
+        ],
+        "source_hits_excluding_build": 7,
+        "finding": "673 of the raw hits are inside build/ artefacts of the vendored Wisp library (wisp@simulate.erl multipart_body/3) and are not UOS source. Of the 7 source hits: tools/telegram_client.ml:375 sendChatAction (an indicator, carries no bytes); two Gleam tests named multipart_uncertainty_permutations_test / multipart_pending_permutations_test in telegram_delivery_ledger_test.gleam, where 'multipart' means multiple delivery parts and not MIME multipart; three 'boundary' hits that are String.rindex line ')' parenthesis matching in telegram_store_transport_guardian.ml and ecology_process.ml; and one comment in sa_plan_mail.ml about multipart email. ZERO MIME multipart and ZERO Bot API media send method exist in UOS source."
+      }
+    ]
+  },
+  "f8_resolution": {
+    "prior_state": "In the 20261011-1244 behavioural inventory the media family F8 was recorded as 'UNRESOLVED - NOT ASSERTED EITHER WAY'. This task resolves it.",
+    "verdict": "ABSENT_AS_CAPABILITY, PRESENT_AS_COMMAND_SURFACE, AND MISREPRESENTED_IN_OUTPUT",
+    "distinction_applied": "Per root's correction of 2026-10-11: present pure logic, absent adapter, and unverified running service are three different facts. A fourth is recorded here: present output text asserting a computation that no code performs.",
+    "layers": [
+      {
+        "layer": "L1 inbound parsing",
+        "state": "ABSENT",
+        "evidence": "telegram.gleam:27-36 — InboundMessage has exactly six fields: update_id, message_id, chat_id, from_user, text, timestamp_ms. There is no photo, document, audio, voice, video, sticker, animation, caption, mime_type, file_size or file_id field. A Telegram media update therefore has no representable shape in UOS; its media payload cannot be parsed because there is nowhere to put it.",
+        "falsifier": "Add a media field to InboundMessage and the Gleam compiler will name every construction site that must change. Today there are none to change."
+      },
+      {
+        "layer": "L1 file identity",
+        "state": "ABSENT",
+        "evidence": "The only occurrence of file_id in the entire Telegram surface is telegram_simulator.gleam:84, '_file_id: String,' — a parameter of simulate_photo_upload. The leading underscore is Gleam's unused-binding marker: the value is discarded. telegram_simulator.gleam:86-93 constructs InboundMessage with text: caption and never references it. simulate_voice_memo likewise discards _duration_s (line 67) and takes the transcription as the speech_text argument, so no transcription is produced.",
+        "falsifier": "Remove the underscore from _file_id and the compiler reports an unused variable, proving no read path exists."
+      },
+      {
+        "layer": "L2 download (getFile -> file_path -> /file/bot<token>/<path>)",
+        "state": "ABSENT",
+        "evidence": "SW-1 and SW-2 find zero getFile call and zero Telegram-sense file_path anywhere in UOS source. tools/telegram_client.ml (879 lines, the only module that actually speaks the Bot API) implements getUpdates at :312/:319, answerCallbackQuery at :388, deleteMessage at :365, sendChatAction at :375 and setMessageReaction at :377 — and no file method. The single media-shaped string in that file is a --help line at :742 listing 'upload_photo' as an example chat action.",
+        "falsifier": "grep for getFile across apps, tools and engines excluding build/: zero."
+      },
+      {
+        "layer": "L2 upload / send",
+        "state": "ABSENT",
+        "evidence": "Zero sendPhoto, sendDocument, sendAudio, sendVoice, sendVideo or sendMediaGroup in UOS source (SW-2). Zero MIME multipart encoder. telegram_client.ml's telegram_call marshals `Assoc JSON only, which cannot carry a file upload.",
+        "falsifier": "SW-2 restricted to non-build paths returns 7 hits, none of them a media send."
+      },
+      {
+        "layer": "L3 processing",
+        "state": "PRESENT_BUT_DEGENERATE_AND_TEST_ONLY",
+        "evidence": "Two functions accept bytes. telegram_simulator.gleam:97-115 simulate_acoustic_fft(sample_bytes: BitArray) computes bit_array.byte_size and branches only on size > 0, returning hardcoded AcousticSpectrum(1240, 14, 42.5, True) or all-zeros. It performs no transform of any kind. telegram_simulator.gleam:118-123 simulate_vision_inspection(image_bytes, target_bay) discards the bytes outright — 'let _ = bit_array.byte_size(image_bytes)' — and switches on target_bay. Both are called ONLY from apps/cepaf_gleam/test/telegram_simulator_test.gleam:170,174,182,188. There are zero production callers.",
+        "falsifier": "grep simulate_acoustic_fft|simulate_vision_inspection across src and test: 2 definitions in src, 4 call sites all in test, 0 call sites in src."
+      },
+      {
+        "layer": "L4 storage",
+        "state": "ABSENT",
+        "evidence": "No media blob store, no retention policy, no size accounting. cognitive_worker.gleam:2659-2660 writes var/telegram/evaluations/*.json — model evaluation records, not media bytes, and reached by no media path.",
+        "falsifier": "No field in any Telegram type holds a BitArray outside the two test-only simulator functions."
+      },
+      {
+        "layer": "L5 render / reply",
+        "state": "PRESENT, AND ASSERTS UNPERFORMED COMPUTATION",
+        "evidence": "Media-referencing commands are routed and do produce replies, but each reply is a fixed string. telegram_creative.gleam:86-110 handle_acoustic takes the first positional arg as an opaque label (default 'audio-exhaust-sample') and returns text asserting 'DSP Kernel: Native ZigVM 1024-point Fourier FFT Spectrogram', 'Harmonic Peak: 1,240 Hz with 14 Hz modulation flutter', 'Fault: Ball-bearing race pitting on Exhaust Fan #2 (Confidence: 94.2%)' and 'Projected RUL: 72 +/- 6 hours'. No FFT runs; no ZigVM call occurs; the AcousticProfile at :93-99 is a literal constructor. telegram_creative.gleam:55-74 handle_rack_cv (default 'photo-chassis-01') asserts 'processed by MAX/Mojo ViT model', 'Chassis Detected: 2U 24-Bay NVMe Storage Enclosure', 'Blinking Amber LED isolated on Bay 3'. telegram_collab.gleam:80-91 handle_whiteboard (default 'photo-whiteboard-session') asserts 'processed via MAX/Mojo ViT' and 'Extracted Topology: 4-State Finite State Machine' with states Idle, QuorumPending, Draining, Isolated. No MAX, Mojo or ViT invocation exists on any of these paths.",
+        "severity": "HIGHEST_IN_FAMILY",
+        "hazard": "This is STPA loss L-1, false conformance, at the operator-facing boundary: an operator reading 'Confidence: 94.2%' and 'Projected RUL: 72 +/- 6 hours' about a physical bearing receives a fabricated measurement presented as a diagnostic result. The failure is not a missing feature; it is a truthful-output violation (constitutional axiom Psi-5, ground-truth observed data over model assertion)."
+      }
+    ],
+    "honest_arm": {
+      "site": "cognitive_worker.gleam:2395-2397",
+      "arm": "query_voice_status",
+      "returns": "{\"status\":\"UNOBSERVED\",\"voice_subsystem\":\"SIL-6 Offline Voice (VAD/Silero/Sherpa-ONNX)\",\"backend\":\"NOT_IMPLEMENTED\",\"observed_in_query\":false}",
+      "assessment": "This is the one media-adjacent arm that declares its own absence, and it is the correct pattern. It resolves root's hint that the narrow cognitive search sees help text plus an UNOBSERVED voice status: the hint was accurate, and the UNOBSERVED status is the code telling the truth about itself. Every other media arm should be made to behave like this one before any media transport is built.",
+      "recommendation": "Adopt query_voice_status as the template for T0."
+    },
+    "command_inventory_touching_media": {
+      "note": "Routed arms in telegram.gleam whose own help text or handler body references an image, audio or document artifact. All take List(String) and treat argument zero as an opaque label.",
+      "arms": [
+        {
+          "cmd": "/rack-cv",
+          "handler": "telegram_creative.handle_rack_cv",
+          "claims": "MAX/Mojo ViT image analysis"
+        },
+        {
+          "cmd": "/acoustic",
+          "handler": "telegram_creative.handle_acoustic",
+          "claims": "ZigVM 1024-point FFT, 94.2% confidence, RUL 72h"
+        },
+        {
+          "cmd": "/whiteboard",
+          "handler": "telegram_collab.handle_whiteboard",
+          "claims": "MAX/Mojo ViT FSM extraction"
+        },
+        {
+          "cmd": "/sidecar",
+          "handler": "telegram_collab.handle_sidecar",
+          "claims": "MAX/Mojo sub-vocal audio chime"
+        },
+        {
+          "cmd": "/voice-roll-call",
+          "handler": "telegram_collab.handle_voice_roll_call",
+          "claims": "vocal tract biometric quorum authentication"
+        },
+        {
+          "cmd": "/babel",
+          "handler": "telegram_collab.handle_babel",
+          "claims": "Streaming Whisper -> Neural MT -> Kokoro TTS under 120 ms"
+        },
+        {
+          "cmd": "/pair-voice",
+          "handler": "telegram_collab.handle_pair_voice",
+          "claims": "hands-free spoken queries and audio test feedback"
+        },
+        {
+          "cmd": "/acoustic-hud",
+          "handler": "telegram_collab.handle_acoustic_hud",
+          "claims": "binaural audio stream"
+        },
+        {
+          "cmd": "/handover",
+          "handler": "telegram_collab.handle_handover",
+          "claims": "audio podcast compilation"
+        },
+        {
+          "cmd": "/retro",
+          "handler": "telegram_collab.handle_retro",
+          "claims": "converts voice debates to ZK ADRs"
+        },
+        {
+          "cmd": "/gameday",
+          "handler": "telegram_collab.handle_gameday",
+          "claims": "team voice channel drill"
+        }
+      ],
+      "count": 11,
+      "biometric_note": "/voice-roll-call is the gravest of the eleven: its help text at telegram.gleam:155 offers vocal biometric authentication of 2oo3 constitutional votes. A constitutional vote authenticated by a function that reads no audio is an authorisation bypass by construction. It must be denied at the guard, not merely labelled unsupported."
+    }
+  },
+  "reusable_adapters": {
+    "principle": "Nothing in the media design needs new identity, idempotency, authorisation or ledger machinery. All four already exist and were independently verified in this review sequence. Media must enter through them, not beside them.",
+    "reuse": [
+      {
+        "adapter": "telegram_delivery_ledger.gleam",
+        "sha256_16": "2dfab99f1bb7495d",
+        "reuse_for": "Media request identity and replay safety.",
+        "existing_mechanism": "make_request_id at :94; valid_record at :101; ingest_single at :194-218 where a repeated insert returns the existing record rather than a duplicate; same_identity at :179-186 comparing seven fields; Watermark at :44 with :175 refusing an offset regression; record_result at :366; recover_request at :614.",
+        "correction_recorded": "In my 20261011-1244 artifact I asserted this ledger had NO IDEMPOTENCY. That was wrong and was retracted in 20261011-1247. The root cause was mine: I grep'd for the words dedup and idempot, and zero dedup markers does not mean no idempotency. The mechanism is there and it is what media should reuse.",
+        "media_binding": "A media unit of work is keyed by (update_id, message_id, file_unique_id). file_unique_id, not file_id, because Telegram documents file_id as not stable across bots while file_unique_id is stable and cannot be used to download — which is exactly the right property for a dedup key."
+      },
+      {
+        "adapter": "telegram_ingress_guard.gleam",
+        "sha256_16": "dfde4dd433732679",
+        "reuse_for": "Argument-level authorisation of media commands.",
+        "existing_mechanism": "classify_directive at :117-147 is argument-level, not identity-level: it fixes tool names for /doctor and /plan, allowlists /tool to query_doctor|query_saplan and returns DeniedMutation otherwise, and returns explicit DeniedMutation for /approval, /andon, /resuscitate, /chaos, /rotate_keys, /repro, /merge and /zigvm.",
+        "correction_recorded": "I earlier described this guard as 'identity only'. Root corrected that; the correction stands and is the reason the guard is the right place for the media deny list.",
+        "known_gap": "The only canonical caller is telegram_delivery_ledger.gleam:138. Whether the guard is wired into the S1 dispatch path that telegram.gleam:245-254 uses remains UNKNOWN to me (see unresolved U-2). If it is not, a deny added here has no effect on those arms, and T0 must fix the wiring before relying on it."
+      },
+      {
+        "adapter": "development.bounded/3 -> ecology_capability_ffi:run_bounded",
+        "reuse_for": "Every media decode, transcode and inspection step.",
+        "rationale": "Media decoding is the classic untrusted-parser attack surface. A bounded, timeout-enforced, reaped subprocess is the admitted UOS pattern for exactly this, and canonical policy section 5.5 requires blocking work to sit in a supervised isolated daemon rather than a NIF. No media bytes should ever be decoded inside the BEAM or inside a NIF.",
+        "bound": "This review itself used the wrapper under a 25000 ms bound; media steps need far tighter bounds (see bounds table)."
+      },
+      {
+        "adapter": "cognitive_worker.gleam query_voice_status",
+        "reuse_for": "The observable-unsupported-state response shape.",
+        "rationale": "It already emits status UNOBSERVED, backend NOT_IMPLEMENTED and observed_in_query false. Generalise this record rather than invent a new one."
+      },
+      {
+        "adapter": "tools/telegram_client.ml",
+        "sha256_16": "a0842a5799fe313b",
+        "reuse_for": "The Bot API transport seam, if and only if it is the surviving transport.",
+        "existing_mechanism": "telegram_call with `Assoc JSON payloads; getUpdates at :312/:319; offset persisted via set_db_preference \"telegram_poll_offset\" at :546; sendChatAction at :375.",
+        "correction_recorded": "I earlier claimed the poller and callbacks were ABSENT. That was a path-scope error: I searched src/cepaf_gleam and this file is under tools/. Retracted.",
+        "media_limit": "telegram_call cannot carry an upload: a JSON `Assoc body cannot express multipart/form-data. A media send therefore needs a new, separate upload path and must not be bolted onto telegram_call.",
+        "unresolved": "Whether this binary runs as a supervised service in any UOS deployment is UNKNOWN to me (U-1)."
+      }
+    ]
+  },
+  "missing_pieces": {
+    "note": "Ordered by the risk-prioritisation SOP: safety class first, then criticality x STPA x FMEA x dependency x impact. T0 is a P1 hold-class repair and must land before any transport work.",
+    "items": [
+      {
+        "id": "T0",
+        "title": "Make the eleven media arms observably unsupported, and deny the biometric arm",
+        "class": "P1",
+        "depends_on": [],
+        "why_first": "Until this lands, every later improvement sits behind an operator-facing surface that fabricates diagnostics. Building transport first would make the fabrication harder to see, not easier.",
+        "change": "For each of the eleven arms, replace the fabricated findings block with the query_voice_status shape: a typed MediaUnsupported record carrying capability name, backend NOT_IMPLEMENTED, observed false, and the reason. Keep the command routed and keep its help text, but strip every asserted measurement — the 94.2% confidence, the 72 +/- 6 hour RUL, the detected chassis model, the extracted FSM states, the sub-120 ms pipeline latency. Separately, add /voice-roll-call to the guard's explicit DeniedMutation list at classify_directive, because an unauthenticated path offering to authenticate a constitutional vote must fail closed rather than reply politely.",
+        "non_goal": "Do not delete the commands. Their existence is not the defect; their fabricated output is.",
+        "size": "Five files, no new types beyond one record, no transport."
+      },
+      {
+        "id": "T1",
+        "title": "Typed media descriptor on the inbound boundary",
+        "class": "P2",
+        "depends_on": [
+          "T0"
+        ],
+        "change": "Extend InboundMessage with an optional media field of a new sum type MediaRef, carrying kind (Photo | Document | Audio | Voice | Video | Sticker | Animation | Unsupported(String)), file_unique_id, file_id, declared_size_bytes, declared_mime, declared_duration_s and caption. Every field is what the sender declared and must be named as declared, never trusted. Parsing is total: an unrecognised media kind becomes Unsupported(raw_kind) and is never silently dropped and never treated as text.",
+        "law_obligations": [
+          "A media update with an unknown kind parses to Unsupported and is reported, not discarded.",
+          "A media update with no caption does not become an empty-text command.",
+          "declared_mime is never used to choose a decoder (see sniffing rule in safety)."
+        ]
+      },
+      {
+        "id": "T2",
+        "title": "Bounded download adapter",
+        "class": "P2",
+        "depends_on": [
+          "T1"
+        ],
+        "change": "A getFile -> file_path -> download path, executed through development.bounded, enforcing the bounds table before a single byte is fetched: reject on declared_size_bytes over the per-kind cap without issuing the request, then enforce the same cap again on the actual stream and abort mid-transfer when exceeded, because the declared size is attacker-controlled.",
+        "critical_detail": "The download URL is https://api.telegram.org/file/bot<TOKEN>/<file_path> — the bot token is in the URL path. See credential_secrecy; this single fact drives three of the five secrecy rules."
+      },
+      {
+        "id": "T3",
+        "title": "Bounded content inspection, replacing the degenerate simulators",
+        "class": "P2",
+        "depends_on": [
+          "T2"
+        ],
+        "change": "Either wire real decode behind a bounded daemon, or keep the simulators and rename them so they cannot be mistaken for measurement. simulate_acoustic_fft must not keep a name claiming an FFT while branching on byte_size > 0; simulate_vision_inspection must not keep a name claiming inspection while discarding its bytes. If real analysis is wanted, MAX/Mojo is the admitted tier (canonical policy 5.1 item 5) and Python stays confined to services/inference/max.",
+        "law_obligations": [
+          "A function whose name asserts a transform either performs it or is renamed. Pinned by a test that feeds two different non-empty byte strings and requires different outputs from anything named *_fft."
+        ]
+      },
+      {
+        "id": "T4",
+        "title": "Bounded media storage with explicit retention",
+        "class": "P3",
+        "depends_on": [
+          "T2"
+        ],
+        "change": "Content-addressed store keyed by sha256 of the fetched bytes, with a declared retention horizon, a total-bytes ceiling, and fail-closed refusal when the ceiling is reached. Never store under a sender-supplied name."
+      },
+      {
+        "id": "T5",
+        "title": "Upload path, only if a use case survives review",
+        "class": "P3",
+        "depends_on": [
+          "T2",
+          "T4"
+        ],
+        "change": "A separate multipart/form-data sender, not an extension of telegram_call. Deliberately last: no reviewed UOS use case currently requires the bot to send media, and an unused upload path is an attack surface with no benefit."
+      }
+    ]
+  },
+  "bounds": {
+    "principle": "Every bound is enforced twice where the sender controls the input: once on the declared value before any work, and once on the observed value during the work. A single check on a declared value is not a bound.",
+    "size_caps_bytes": {
+      "photo": 10485760,
+      "voice": 5242880,
+      "audio": 26214400,
+      "document": 26214400,
+      "video": 52428800,
+      "sticker": 1048576,
+      "animation": 10485760,
+      "unsupported": 0,
+      "note": "These are UOS policy caps, chosen to sit at or below Telegram's own download ceiling so the cap is always ours and never inherited. The exact Bot API download limit is an external fact I did not verify in this read-only task (U-4); if the official limit is lower than a cap above, the lower value wins."
+    },
+    "deadlines_ms": {
+      "getFile_metadata": 3000,
+      "download_stream_total": 15000,
+      "inspection_subprocess": 5000,
+      "store_write": 2000,
+      "end_to_end_media_unit": 25000
+    },
+    "counts": {
+      "max_media_units_per_update": 1,
+      "max_concurrent_downloads_global": 2,
+      "max_media_units_per_chat_per_hour": 20,
+      "max_total_stored_bytes": 1073741824
+    },
+    "type_allowlist_rule": "Allowlist by magic-byte sniff of the fetched prefix, never by declared_mime and never by file extension. A declared image/png that sniffs as something else is rejected and reported as a mismatch, which is itself a signal worth recording."
+  },
+  "safety_requirements": {
+    "identity": [
+      "A media unit's identity is (update_id, message_id, file_unique_id). file_unique_id is the dedup key because it is stable and is not usable for download; file_id is carried for the fetch only and is not an identity.",
+      "Media identity flows through the existing ledger's make_request_id and same_identity, so a redelivered update cannot cause a second download.",
+      "A media unit below the ledger watermark is not re-fetched. Reuse the :175 offset-regression refusal; do not add a second watermark."
+    ],
+    "credential_secrecy": [
+      "The Telegram file download URL embeds the bot token in its path. Therefore: a media URL is a credential, and the existing redaction rules that cover tokens must be extended to cover any string matching /file/bot<...>/.",
+      "A media URL is never logged, never put in a telemetry span, never written to the ledger, never included in an error message, and never surfaced to an operator. Store file_path and reconstruct the URL at the moment of the request.",
+      "Downloads carry the token only in the URL path to api.telegram.org and nowhere else; no media URL is ever handed to a subprocess as an argv element, because argv is world-readable in /proc.",
+      "The bounded inspection subprocess receives a local file descriptor or path, never a URL and never the token.",
+      "EXISTING DEFECT, carried forward from my 20261011-1302 surface plan as B3 and still unrepaired: gateway/telegram.gleam:120 places #(\"token\", json.string(state.bot_token)) inside MCP-over-Zenoh params, which publishes the bot token onto the mesh. Media work must not build on that path until B3 is fixed, because a media design that assumes token confidentiality while B3 stands is designing against a false premise."
+    ],
+    "untrusted_content_no_execution": [
+      "Fetched bytes are data. They are never executed, never eval'd, never passed to a shell, and never used to construct a command line.",
+      "No decoder runs in the BEAM or in a NIF. Decoding runs in a bounded, reaped subprocess so that a malicious file crashes a sandbox rather than the supervisor. This follows canonical policy 5.1 item 4 (native kernels are short, deterministic and non-blocking) and the Mirage ephemeral-sandbox invariant.",
+      "Sender-supplied strings are never used as filesystem paths. Storage names are derived from the content sha256 only. A caption containing ../ or a NUL must not be able to name a file.",
+      "A caption or media label echoed into a reply is escaped for the Markdown parse mode in use. This is an EXISTING LIVE DEFECT, not a hypothetical: telegram_creative.gleam:70-71 and :103-104, and telegram_collab.gleam:87-88, interpolate the sender's raw argument directly between Markdown emphasis markers. A caption containing backtick or asterisk characters can therefore break out of the intended formatting today, before any media feature is added.",
+      "The existing Hermes zero-trust interceptor already traps embedded NUL bytes (code -2) and raw SQL (code -3) on MCP dispatch. Media metadata must traverse that interceptor rather than a parallel path."
+    ],
+    "consent_and_config": [
+      "Media ingestion is OFF by default. It is enabled per chat, not globally, and the enablement is configuration, not a runtime command, so no operator can turn it on from a chat message.",
+      "A media unit from a chat without consent is answered with the observable-unsupported record and is never downloaded. Refusing before fetching is the whole point: fetching first and discarding later has already copied the bytes.",
+      "Biometric capability is a separate and stricter class. /voice-roll-call offers voice biometric authentication of constitutional votes; no voice sample may ever be used as an authentication factor without an explicit, separately recorded authorisation, and until then the arm is denied at the guard rather than served.",
+      "Retention is declared and enforced, and a stored media unit is deletable on request."
+    ],
+    "observable_unsupported_states": {
+      "shape": {
+        "capability": "string, e.g. media.photo.download",
+        "status": "UNSUPPORTED | UNOBSERVED | DISABLED_BY_CONFIG | DENIED_BY_POLICY | BOUND_EXCEEDED",
+        "backend": "NOT_IMPLEMENTED | BOUNDED_SUBPROCESS | MAX_MOJO",
+        "observed": "bool, false unless this response reflects a fresh observation",
+        "reason": "string, operator-readable",
+        "bound_exceeded": "optional { bound: string, declared: int, cap: int }"
+      },
+      "rule": "Every state above is reported. None of them is ever rendered as a plausible-looking result. BOUND_EXCEEDED in particular must say which bound and what the numbers were, so an operator can tell a policy refusal from a failure.",
+      "template": "cognitive_worker.gleam:2395-2397 query_voice_status is the existing instance of this shape and should be the literal template."
+    }
+  },
+  "acceptance": {
+    "positive": [
+      {
+        "id": "P-1",
+        "for": "T0",
+        "test": "Each of the eleven media arms returns a MediaUnsupported record with backend NOT_IMPLEMENTED and observed false.",
+        "oracle": "Exact-string assertion per arm, so a future fabricated-findings regression fails the suite."
+      },
+      {
+        "id": "P-2",
+        "for": "T0",
+        "test": "No media arm's reply contains a numeric confidence, a remaining-useful-life figure, a detected hardware model, or an extracted state list.",
+        "oracle": "Regex refusal over the eleven replies: this is the law that pins the defect this task found."
+      },
+      {
+        "id": "P-3",
+        "for": "T1",
+        "test": "A photo update parses to MediaRef(Photo, ...) preserving file_unique_id and declared_size_bytes.",
+        "oracle": "Hand-built update fixture; no network."
+      },
+      {
+        "id": "P-4",
+        "for": "T1",
+        "test": "An update with an unrecognised media kind parses to Unsupported(raw_kind) and is reported.",
+        "oracle": "Fixture with a synthetic kind."
+      },
+      {
+        "id": "P-5",
+        "for": "T2",
+        "test": "A media unit within every bound downloads once and stores once; a redelivery of the same update downloads zero additional times.",
+        "oracle": "Existing ledger same_identity at :179-186; download counter must read 1 after two ingests."
+      },
+      {
+        "id": "P-6",
+        "for": "T4",
+        "test": "Two different senders uploading identical bytes produce one stored object.",
+        "oracle": "Content-addressed sha256 key."
+      }
+    ],
+    "negative": [
+      {
+        "id": "N-1",
+        "for": "T2",
+        "test": "declared_size_bytes above the per-kind cap yields BOUND_EXCEEDED and issues NO network request.",
+        "oracle": "Request counter must be zero, not merely the result rejected."
+      },
+      {
+        "id": "N-2",
+        "for": "T2",
+        "test": "A stream that declares a size under the cap but actually exceeds it is aborted mid-transfer.",
+        "oracle": "This is the mutant that kills a single-check implementation: a design that trusts the declared size passes N-1 and fails N-2."
+      },
+      {
+        "id": "N-3",
+        "for": "T2",
+        "test": "A declared image/png whose fetched prefix sniffs as something else is rejected as a mismatch and the mismatch is recorded.",
+        "oracle": "Magic-byte oracle independent of the decoder."
+      },
+      {
+        "id": "N-4",
+        "for": "all",
+        "test": "No log line, telemetry span, ledger row or error message anywhere contains /file/bot or the token bytes.",
+        "oracle": "Byte-level scan of all emitted output during the full media suite. This is the credential-secrecy falsifier and must run over emitted bytes, not over source."
+      },
+      {
+        "id": "N-5",
+        "for": "T4",
+        "test": "A caption containing ../, a NUL, or a shell metacharacter cannot influence the stored path or reach a command line.",
+        "oracle": "Store path must equal the content sha256 regardless of caption; argv capture must show no caption-derived element."
+      },
+      {
+        "id": "N-6",
+        "for": "T0",
+        "test": "A media label containing backtick and asterisk characters cannot alter the reply's Markdown structure.",
+        "oracle": "Escaping assertion. This test FAILS against today's code at telegram_creative.gleam:70-71, :103-104 and telegram_collab.gleam:87-88 — it is a regression test for a live defect, and it is expected to be red until T0 lands."
+      },
+      {
+        "id": "N-7",
+        "for": "consent",
+        "test": "A media unit from a chat without consent is answered DISABLED_BY_CONFIG and no fetch occurs.",
+        "oracle": "Request counter zero."
+      },
+      {
+        "id": "N-8",
+        "for": "policy",
+        "test": "/voice-roll-call returns DeniedMutation from the guard and never reaches a handler.",
+        "oracle": "classify_directive unit test alongside the existing /zigvm and /approval deny cases."
+      },
+      {
+        "id": "N-9",
+        "for": "T3",
+        "test": "Two different non-empty byte inputs to anything named with fft must produce different outputs.",
+        "oracle": "Kills the current simulate_acoustic_fft, which returns identical constants for every non-empty input. Expected red until T3."
+      }
+    ],
+    "recovery": [
+      {
+        "id": "R-1",
+        "test": "A download aborted by deadline or bound leaves no partial object in the store and no half-written ledger row.",
+        "oracle": "Store listing and ledger row count unchanged after the abort."
+      },
+      {
+        "id": "R-2",
+        "test": "A crashed inspection subprocess is reaped, does not take down the supervisor, and the media unit ends in a reported failure state rather than a silent one.",
+        "oracle": "Process-tree check plus terminal-state assertion. Reuse recover_request at ledger :614."
+      },
+      {
+        "id": "R-3",
+        "test": "After a restart mid-media-unit, the unit is either completed once or reported failed once, never duplicated.",
+        "oracle": "Existing ledger idempotency; download counter must not exceed 1 across the restart."
+      },
+      {
+        "id": "R-4",
+        "test": "With the store at its total-bytes ceiling, a new media unit is refused with BOUND_EXCEEDED and the existing store is not evicted to make room.",
+        "oracle": "Fail closed, do not silently discard retained evidence."
+      }
+    ],
+    "mutation_targets": [
+      "Trust declared_size_bytes and skip the stream-side check — must be killed by N-2.",
+      "Choose the decoder from declared_mime — must be killed by N-3.",
+      "Include the download URL in an error message — must be killed by N-4.",
+      "Key the store on the caption instead of the content hash — must be killed by N-5.",
+      "Return a plausible AcousticSpectrum instead of UNSUPPORTED — must be killed by P-2."
+    ]
+  },
+  "unresolved": [
+    {
+      "id": "U-1",
+      "fact": "Whether tools/telegram_client.ml runs as a supervised service in any UOS deployment.",
+      "state": "UNKNOWN",
+      "why": "Determining it needs runtime observation, which this task excludes.",
+      "resolving_test": "Inspect the OTP supervision tree for a child spawning this executable, and check for a systemd or devenv unit referencing it. A source read cannot settle it."
+    },
+    {
+      "id": "U-2",
+      "fact": "Whether telegram_ingress_guard.classify_directive is wired into the S1 dispatch path used by telegram.gleam:245-254.",
+      "state": "UNKNOWN",
+      "why": "The only canonical caller I found is telegram_delivery_ledger.gleam:138; I did not establish which dispatch path production uses.",
+      "impact": "If unwired, the T0 deny of /voice-roll-call has no effect on the routed arm. T0 must verify the wiring, not assume it.",
+      "resolving_test": "Trace the call graph from the getUpdates consumer to process_inbound_message and assert the guard is on every edge."
+    },
+    {
+      "id": "U-3",
+      "fact": "Whether any of the eleven media arms has ever been reachable by a real Telegram user.",
+      "state": "UNKNOWN",
+      "why": "Depends on U-1. If the client never ran, the fabricated findings were never delivered to an operator and the finding is a latent defect rather than a realised one. I will not assert either reading.",
+      "note": "The severity of the output defect does not depend on this: the code is in the tree and would fabricate on first use."
+    },
+    {
+      "id": "U-4",
+      "fact": "The exact current Bot API download size ceiling and the stability guarantees of file_id versus file_unique_id.",
+      "state": "UNVERIFIED_EXTERNAL",
+      "why": "Verifying it means fetching official Telegram documentation, which I did not do because no claim in this design depends on the external number — every cap here is a UOS policy cap.",
+      "rule": "If the official limit is lower than any cap in the bounds table, the lower value wins."
+    },
+    {
+      "id": "U-5",
+      "fact": "Whether a reviewed UOS use case needs the bot to SEND media at all.",
+      "state": "UNKNOWN",
+      "why": "No such use case appeared in any source I read. T5 is therefore deliberately last and conditional.",
+      "recommendation": "Do not build T5 until a use case is named."
+    }
+  ],
+  "limits": [
+    "This is a source read. Nothing here is a runtime observation, and no claim in it constitutes two-key verification.",
+    "Absence claims are scoped to what the sweeps covered: apps, tools and engines, excluding build artefacts. SW-2 found 673 build-directory hits from a vendored library; a narrower path scope would have produced a confident wrong answer, which is the error class that cost me four retractions earlier in this sequence.",
+    "An @external or native-call count is not proof of effect; several FFI facades in this tree are stubs (c3i_nif.erl returns literal JSON for plan_status, system_health and zenoh_get). No media claim here rests on a call count.",
+    "The eleven-arm inventory is bounded by the arms whose help text or body references media. An arm that handles media without naming it would be missed; I found no evidence of one, and I do not claim its absence.",
+    "This artifact is advisory. Review delivered is not approval. Admission remains NOT_GRANTED.",
+    "Prior artifacts in this sequence, including 20261011-1244, 20261011-1247 and 20261011-1302, are preserved unmodified. This file supersedes none of them; it resolves the one family 1244 left open.",
+    "Per root: no unsupported-feature downgrade counts as completion. T0 in this design is a truthfulness repair, not media capability; the family closes only on T1-T4 acceptance.",
+    "The direct-Bash execution deviations are recorded in scope.method_deviation. This artifact does not claim uniform use of the Gleam bounded path."
+  ],
+  "prior_artifacts": [
+    "governance/planning/20261011-1123-claude-telegram-plan-review.json",
+    "governance/planning/20261011-1134-claude-telegram-plan-review-erratum.json",
+    "governance/planning/20261011-1213-claude-telegram-inventory-review.json",
+    "governance/planning/20261011-1222-claude-telegram-inventory-review-erratum.json",
+    "governance/planning/20261011-1244-claude-telegram-behavioural-inventory.json",
+    "governance/planning/20261011-1247-claude-telegram-inventory-correction.json",
+    "governance/planning/20261011-1302-claude-telegram-surface-plan.json"
+  ],
+  "root_coordination": {
+    "adoption_plan": "governance/planning/20261011-1355-telegram-integration-adoption.json",
+    "note": "Root adopted a concrete plan creating nine canonical tasks covering Mini App, command families, media, gateway and staged E2E. MEDIA_DESIGN source review remains mine; this artifact is its deliverable and is scoped to the media family only. No whole-repo expansion was performed.",
+    "renamed_task": "The native parser tiny correction is now NATIVE_DEPTH_FIX. Completed receipts, including 20261011-1244, 1247 and 1302, stay immutable.",
+    "completion_semantics_constraint": {
+      "rule": "Per root: no unsupported-feature downgrade counts as completion.",
+      "consequence_for_this_design": "T0 is therefore explicitly NOT completion of the media family. Making the eleven arms observably unsupported repairs a truthfulness defect (STPA L-1, false conformance) and removes a fabricated-measurement hazard. It delivers zero media capability. The media family is completed only by T1 through T4 with their positive, negative and recovery acceptance green. T0 must not be recorded as closing F8.",
+      "anti_pattern_named": "Replacing a fabricated result with an honest UNSUPPORTED record and then reporting the family as done would convert a truthfulness repair into a false completion claim, which is the same loss class as the defect it fixes."
+    },
+    "mini_app_auth_clarification": {
+      "root_text": "Public static shell allowed only without operational data; sensitive APIs require initData plus allowlisted identity, and typed authority for actions.",
+      "bearing_on_my_prior_finding": "This supersedes the open question in my 20261011-1302 surface plan finding B2 (mini-app auth enforced at one call site). Under the clarified rule, ui/wisp/mini_app_routes.gleam route/0 at :18-49 is admissible as a public static shell ONLY if every one of its 14 routes, and its catch-all _ -> dashboard_view() default, renders no operational data. That is a per-route obligation, not a blanket permission, and the catch-all is the specific risk: a route added later inherits dashboard_view() by default rather than failing closed.",
+      "media_consequence": "A media viewer or thumbnail surface is operational data by definition. It therefore may not live on the public static shell and requires initData verification plus an allowlisted identity, and any media action requires typed authority. No media route may rely on the catch-all default.",
+      "not_asserted": "I did not re-read mini_app_routes.gleam in this task and make no new claim about which of the 14 routes currently carry operational data. That audit belongs to the Mini App task, not to MEDIA_DESIGN."
+    }
+  }
+}

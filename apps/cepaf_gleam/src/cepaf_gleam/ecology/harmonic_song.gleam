@@ -267,15 +267,15 @@ pub fn render_song_ascii_sparkline(song: SwarmSong) -> String {
 
 /// Render pure SVG Spectrogram waveform for WebUI displays (Zero-Muda, no foreign NIFs).
 pub fn render_song_svg(song: SwarmSong) -> String {
-  let width = 600
-  let height = 120
+  let width = int.max(600, 60 + list.length(song.voices) * 26)
+  let height = 160
   let consonance_pct = float.round(song.harmonic_consonance *. 100.0)
 
   let voice_bars =
     list.index_map(song.voices, fn(v, idx) {
       let x = 40 + idx * 26
       let bar_h = float.round(v.amplitude *. 70.0)
-      let y = 90 - bar_h
+      let y = 130 - bar_h
       "<rect x=\""
       <> int.to_string(x)
       <> "\" y=\""
@@ -285,7 +285,7 @@ pub fn render_song_svg(song: SwarmSong) -> String {
       <> "\" fill=\"#00d4ff\" opacity=\"0.85\" rx=\"2\"/>"
       <> "<text x=\""
       <> int.to_string(x + 9)
-      <> "\" y=\"105\" font-size=\"10\" fill=\"#8899a6\" text-anchor=\"middle\">"
+      <> "\" y=\"145\" font-size=\"10\" fill=\"#8899a6\" text-anchor=\"middle\">"
       <> v.swara
       <> "</text>"
     })
@@ -301,7 +301,7 @@ pub fn render_song_svg(song: SwarmSong) -> String {
   <> song.raga_name
   <> " ♪"
   <> "</text>\n"
-  <> "  <text x=\"420\" y=\"25\" font-size=\"12\" fill=\"#ffd700\">"
+  <> "  <text x=\"20\" y=\"47\" font-size=\"12\" fill=\"#ffd700\">"
   <> "Beat "
   <> int.to_string(song.beat_number)
   <> "/16 ("
@@ -309,7 +309,7 @@ pub fn render_song_svg(song: SwarmSong) -> String {
   <> ") | C: "
   <> int.to_string(consonance_pct)
   <> "%</text>\n"
-  <> "  <line x1=\"20\" y1=\"90\" x2=\"580\" y2=\"90\" stroke=\"#1f293d\" stroke-width=\"1\"/>\n"
+  <> "  <line x1=\"20\" y1=\"130\" x2=\"580\" y2=\"130\" stroke=\"#1f293d\" stroke-width=\"1\"/>\n"
   <> voice_bars
   <> "\n</svg>"
 }

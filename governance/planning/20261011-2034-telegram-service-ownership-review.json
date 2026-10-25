@@ -1,0 +1,55 @@
+{
+  "schema": "uos.telegram-service-ownership-review.v1",
+  "observed_at": "2026-10-11T20:33:57.636Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "attempt": 6,
+  "status": "OUTSIDE_UNIT_REFUSAL_PASS_SERVICE_INTEGRATION_HOLD",
+  "authority": "NONE",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+      "sha256": "47731a7856c1844f875d91a6f2d691fbeb179f43a7b89c56c179cbf982e47001"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/observer_policy.gleam",
+      "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+      "sha256": "88dfdafce0a89bf0f2e5828ba8a1af79770d416166b7f1d457689c86b9ecfbaf"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/sa_plan_observer_ffi.erl",
+      "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+    }
+  ],
+  "observations": [
+    {
+      "fixture": "tail unit, actual caller VM outside unit",
+      "result": "refused_non_worker_executable_in_unit",
+      "log": "var/recovery-runtime/20261011-2032-service-owner-probe/probe.log",
+      "sha256": "35f53eb50fd5896ed549e89a34c10784af9f3bb846f013767e68611af639e3ed"
+    },
+    {
+      "fixture": "actual separate Erlang VM unit, calling VM outside unit",
+      "result": "cgroup_membership_mismatch",
+      "log": "var/recovery-runtime/20261011-2032-service-owner-probe/probe-erlang.log",
+      "sha256": "a9727c2d2782609d0bf35ce18c335a5d8f360eb86ec9207c42ac50fa76a4692f"
+    }
+  ],
+  "cleanup": {
+    "stop_unit": "guardian timeout",
+    "stop_slice": "guardian timeout",
+    "automatic_retry": false,
+    "subsequent_read_only_observation": "unit not-found/inactive, MainPID0; owned slice inactive/dead with no ControlGroup",
+    "meaning": "uncertain stop result was not relabeled as cleanup receipt; later observation confirms private fixtures no longer running"
+  },
+  "limitations": [
+    "Candidate changed after old handoff: this review binds newly frozen private47731a78 adapter and88dfdafc FFI",
+    "Not the earlier340904d5 adapter; preserve historical HOLD finding separately",
+    "No actual writer-inside-unit positive or crash recovery verified yet",
+    "Private regular file identity fixture does not test SQLite transactions",
+    "TimeoutStopSec and kill policy not explicitly finite in launcher; command timeout does not bound managed unit teardown",
+    "No full service acceptance or global admission"
+  ]
+}

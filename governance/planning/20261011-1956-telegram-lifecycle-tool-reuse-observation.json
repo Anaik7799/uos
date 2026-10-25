@@ -1,0 +1,26 @@
+{
+  "observed_command": [
+    "--exe",
+    "/usr/bin/systemctl",
+    "--sha256",
+    "6394f5e8df92878184de9d4dfb7ac242471cb09daf89d23be4e81ae17e9c03b2",
+    "--deadline-ms",
+    "2500",
+    "--max-bytes",
+    "16384",
+    "--",
+    "--user",
+    "--no-pager",
+    "show",
+    "uos-tg-store-test-codex-nonexistent-readonly.service",
+    "--property=LoadState,ActiveState,InvocationID"
+  ],
+  "systemctl": {
+    "path": "/usr/bin/systemctl",
+    "sha256": "6394f5e8df92878184de9d4dfb7ac242471cb09daf89d23be4e81ae17e9c03b2"
+  },
+  "result": "{ok,{observation,<<\"child_exited\">>,<<\"confirmed\">>,0,\n                 <<\"LoadState=not-found\\nActiveState=inactive\\nInvocationID=\\n\">>}}\n",
+  "exit": 0,
+  "scope": "Read-only command transport capability probe; not lifecycle mutation/cleanup acceptance",
+  "observed_at": "2026-10-11T19:56:13.966Z"
+}

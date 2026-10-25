@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-10-11T18:05:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SERVICE_IMPL",
+  "attempt": 1,
+  "worker": "agy-telegram-20261011",
+  "slice": "slice-1-client-lifecycle-fencing",
+  "status": "SLICE_VERIFIED_TASK_OPEN",
+  "components_implemented": [
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam",
+    "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+    "apps/cepaf_gleam/src/telegram_http_test_fixture.erl",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+    "apps/cepaf_gleam/src/telegram_lifecycle_ffi.erl",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+    "apps/cepaf_gleam/test/telegram_service_slice1_test.gleam"
+  ],
+  "verification_results": {
+    "slice1_suite": {
+      "module": "telegram_service_slice1_test",
+      "total_tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "cases": [
+        "http_fixture_normal_delivery_test",
+        "http_fixture_get_updates_test",
+        "http_fixture_proven_rejection_forbidden_test",
+        "http_fixture_proven_rejection_bad_request_test",
+        "http_fixture_ambiguous_bad_gateway_test",
+        "http_fixture_ambiguous_wrong_chat_test",
+        "http_fixture_ambiguous_socket_drop_test",
+        "lifecycle_poka_yoke_unit_name_test",
+        "lifecycle_writer_gate_test",
+        "service_authority_lease_missing_test",
+        "service_authority_lease_expired_test",
+        "service_authority_lease_epoch_mismatch_test",
+        "service_writer_hold_bars_polling_test"
+      ]
+    },
+    "ledger_regression": {
+      "module": "telegram_delivery_ledger_test",
+      "total_tests": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "ingress_guard_regression": {
+      "module": "telegram_ingress_guard_test",
+      "total_tests": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "preflight": {
+      "total_checks": 31,
+      "passed": 31,
+      "failed": 0
+    }
+  },
+  "product_source_closure_8_of_8": {
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced",
+    "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+    "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "native/ocaml/telegram_store/telegram_store.ml": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630"
+  },
+  "invariant_commitments": {
+    "zero_live_network_calls": true,
+    "local_loopback_only": true,
+    "product_sources_frozen": true,
+    "service_task_remains_open": true
+  }
+}

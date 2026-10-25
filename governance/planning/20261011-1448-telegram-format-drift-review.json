@@ -1,0 +1,59 @@
+{
+  "observed_at": "2026-10-11T14:11:48Z",
+  "old_revision": "4f199d53",
+  "method": "Pinned Gleam1.16 format --stdin applied independently to old and current bytes; no source rewriting",
+  "rows": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+      "expected_old_sha": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89",
+      "observed_old_sha": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89",
+      "current_sha": "87aec5662385833d9def1d519f53f27bbdd2bc39def801a0c96c2aab1449181d",
+      "old_matches_expected": true,
+      "formatted_equal": true,
+      "canonical_sha": "87aec5662385833d9def1d519f53f27bbdd2bc39def801a0c96c2aab1449181d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "expected_old_sha": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18",
+      "observed_old_sha": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18",
+      "current_sha": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
+      "old_matches_expected": true,
+      "formatted_equal": true,
+      "canonical_sha": "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "expected_old_sha": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9",
+      "observed_old_sha": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9",
+      "current_sha": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+      "old_matches_expected": true,
+      "formatted_equal": true,
+      "canonical_sha": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+      "expected_old_sha": "340a955452c1a3bf1b62202fce286bb5aaa73659ecd63e52289cbe2df876685d",
+      "observed_old_sha": "340a955452c1a3bf1b62202fce286bb5aaa73659ecd63e52289cbe2df876685d",
+      "current_sha": "21e0a9f6a673157f5997025f3c09351fa9acc98f264a666a55ae4bfc0f43ac8f",
+      "old_matches_expected": true,
+      "formatted_equal": true,
+      "canonical_sha": "21e0a9f6a673157f5997025f3c09351fa9acc98f264a666a55ae4bfc0f43ac8f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "expected_old_sha": "515a0f1fae9a787eba99dc3223ed1272eb66df56a974b59cf6f547a120bc2e98",
+      "observed_old_sha": "515a0f1fae9a787eba99dc3223ed1272eb66df56a974b59cf6f547a120bc2e98",
+      "current_sha": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace",
+      "old_matches_expected": true,
+      "formatted_equal": true,
+      "canonical_sha": "33443aa5f71f287700b1bfb8f9f6889caea0fa76da6625ed05e624f4f5c48ace"
+    }
+  ],
+  "status": "FORMATTING_EQUIVALENCE_OBSERVED",
+  "runtime_admission": "NOT_GRANTED",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "notes": [
+    "Scope-wide formatting changed5 risk-bound sources at14:08:24; output equality after pinned formatter observed against exact prior hashes.",
+    "This equivalence repairs source observation bindings, not historical receipt hashes or deployment authority."
+  ]
+}

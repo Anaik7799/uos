@@ -1,0 +1,29 @@
+{
+  "observed_at": "2026-10-12T02:12:06Z",
+  "status": "QUIESCENCE_OBSERVED_RECLAIM_ONLY",
+  "bindings": [
+    {
+      "task_id": "FORMAL_FIX",
+      "worker": "codex-telegram-20261011",
+      "attempt": 3,
+      "lease_until_ns": "1791752573602044117"
+    },
+    {
+      "task_id": "SERVICE_DRAFT_REVIEW",
+      "worker": "codex-telegram-20261011",
+      "attempt": 6,
+      "lease_until_ns": "1791752099179610487"
+    },
+    {
+      "task_id": "SERVICE_IMPL",
+      "worker": "agy-telegram-20261011",
+      "attempt": 6,
+      "lease_until_ns": "1791754904787263175"
+    }
+  ],
+  "root_observation": "No loaded uos-tg-store-test-* or app-uos_tg_test* units at02:10Z; root prior bounded processes completed; unchanged maina8ad",
+  "peer_observation": "Actual AGY954b9a82 acknowledged expired set and no background daemons/runners, waiting for new claim",
+  "source_files_reread": 83,
+  "authority": "Existing Sa-plan exact expired-claim replacement only; no task execution until all replacements and current active checks pass",
+  "runtime_admission": "NOT_GRANTED"
+}

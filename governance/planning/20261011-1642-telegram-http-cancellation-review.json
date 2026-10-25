@@ -1,0 +1,66 @@
+{
+  "schema": "uos.telegram-http-cancellation-review.v1",
+  "observed_at": "2026-10-11T16:37:42Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "http": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938",
+    "ffi": "1560a13de344ff539a93b6ed5c307617cfca0c4cbefcb83417058a4ffe664231"
+  },
+  "observations": [
+    {
+      "case": "17 HTTP semantic/privacy/body-bound/ordinary-timeout regressions",
+      "status": "PASS"
+    },
+    {
+      "case": "slow body drip total deadline",
+      "status": "NO_FALSE_DELIVERY",
+      "detail": "80ms config returns ambiguous timeout after127ms; real server observes closure. Cleanup latency still outside advertised deadline."
+    },
+    {
+      "case": "valid fragmented response headers",
+      "status": "FAIL",
+      "detail": "80ms config hangs more than1500ms in hackney_conn:stop/proc_lib:stop/gen:do_call from reap_client; captured exact stack. Probe watchdog kills only its own request child. Outer earlier probe reached55s launcher timeout."
+    },
+    {
+      "case": "successful keepalive connection cleanup",
+      "status": "PASS",
+      "detail": "Corrected fixture drains full request body; server observes closed while request worker remains alive. No connection leak claimed."
+    }
+  ],
+  "test_erratum": "Initial cleanup fixture mistook unread request-body bytes for a peer-close observation. That result is superseded by cleanup2; source/output preserved. No unmanaged probe process remained after bounded launcher termination.",
+  "peer_review": "Actual Claude review delivered HOLD; root found historical-FFI hash mixing, unproved emptyhash init success, incomplete actor reading, database registration ordering and unnecessary new index design. Corrections requested; initial bytes preserved here.",
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/manifest.json",
+      "sha256": "ef7e725990f016e299c62fea4e84f53475bc959f410c1f245725c948f3b6b311"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/results.txt",
+      "sha256": "9bb45c8a6fb2aeceea40145f01bb6d223b40cbdd1dee9edaff2b843dc512bb53"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/service_http_cleanup.erl",
+      "sha256": "491f6cc22719cf12d257df3c0e1b3489b7cffb254c2f5dc6576877bc5e65d7bf"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/cleanup-results.txt",
+      "sha256": "df5f9d434faac1f626d7bf10a40ca4d4d92e9c226871a7152c0f64048da3a7a6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/service_http_cleanup2.erl",
+      "sha256": "75722c920eb8abcd1eacc026339cf57cad5f52b06291aa137bf6449abea89877"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/cleanup2-results.txt",
+      "sha256": "6b16a6fcbf07ba643f64b4db839f3e97566200e0475d258aa91cac9c43507709"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1629-http-review-v4/claude-review-first.json",
+      "sha256": "132ecabb6f9353d790e24b878448d191e92984f28e513920939f6d4a43a87352"
+    }
+  ]
+}

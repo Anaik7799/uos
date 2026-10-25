@@ -1,0 +1,81 @@
+{
+  "observed_at": "2026-10-12T02:53:50Z",
+  "plan": "uos/telegram-reclaim-tool/20261012-0226",
+  "task": "REPAIR",
+  "worker": "agy-telegram-reclaim-20261012",
+  "attempt": 1,
+  "status": "REPAIR_COMPLETE",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "source_manifest": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/reclaim_metadata.ml",
+      "sha256": "d9b3042531db325d27b7e583c0d2958c47b3ac55be080004acb56fd3229d0b05"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "0475b1aafc0235d6c42cf2aaa7e1cc06c6177bdb0fe6fb53405bc2aa698161ca"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "sha256": "6bbee14590cc7e8bf1507a114325592ab6cb298ff858981533e646cf59eedcfb"
+    },
+    {
+      "path": "governance/planning/20261012-0226-telegram-reclaim-tool-risk.json",
+      "sha256": "3cb49a46324d1fc8c49e7fc153fc8d689dd2b6221c97a8ec5233630f9a2b535d"
+    }
+  ],
+  "findings_resolved": [
+    {
+      "id": "META-01",
+      "severity": "critical",
+      "fix": "Reused exact Checker.reclaim_set_projection and Checker.reclaim_matches preconditions verbatim. Refuses executing rows with completed_at or result present.",
+      "validation": "Adversarial test rejects executing row with completion result with exact message."
+    },
+    {
+      "id": "META-02",
+      "severity": "high",
+      "fix": "Enforced unique task IDs in portfolio records. Enforced raw-bytes and SHA-256 digest stability of the portfolio file across the observation window.",
+      "validation": "Adversarial tests reject duplicate portfolio task IDs and reject mid-observation portfolio mutation."
+    },
+    {
+      "id": "META-03",
+      "severity": "high",
+      "fix": "Bounded whole-operation monotonic duration to 5000ms including initial and ending clock reads, database reads, and JSON serialization. Added Unix SIGALRM 5s process execution deadline with cleanup. Added test overrun falsifier.",
+      "validation": "Adversarial test with clock delay 5.1s rejected with observation exceeded 5000ms deadline."
+    },
+    {
+      "id": "META-04",
+      "severity": "high",
+      "fix": "Replaced predicate checks with actual active check evaluation producing RP-ACTIVE-OWNER findings on wrong worker or attempt. Verified old-vs-new CLI preflight equivalence on tied portfolio. Added active WAL testing with separate writer verifying frame and main byte invariance.",
+      "validation": "NC-18 through NC-20 updated to test exact active check findings, cost tie non-regression on reclaim projection, and active WAL byte invariance."
+    },
+    {
+      "id": "META-05",
+      "severity": "medium",
+      "fix": "Enforced strict single schema {plan_id, bindings} with exact keys {expected_new_attempt, previous_attempt, previous_lease_until_ns, task_id, worker}. Enforced previous_attempt < 1000000. Removed permissive file-path fallback.",
+      "validation": "Adversarial tests reject alias keys, missing fields, file-path bindings, and exhausted previous_attempt 1000000."
+    }
+  ],
+  "verification_results": {
+    "baseline_checks": 375,
+    "adversarial_checks": 32953,
+    "independent_dag_scenarios": 32768,
+    "package_checks": 39,
+    "suite_status": "PASS"
+  },
+  "live_observation": {
+    "receipt": "governance/planning/20261012-0255-telegram-reclaim-metadata-observe-receipt.json",
+    "status": "METADATA_OBSERVATION_PASS",
+    "selection": "NOT_EVALUATED",
+    "authority": "NONE",
+    "snapshot_sha256": "2ef24c1f07e70921095e14088c9941c125a45994760d28e073df4e09efebd9b6",
+    "elapsed_monotonic_seconds": 0.058156895
+  },
+  "quiescence": "All 3 original runtime claims remain expired and untouched. Zero main mutations.",
+  "receipt_preservation": "Previous receipt governance/planning/20261012-0238-telegram-reclaim-metadata-observe-receipt.json preserved as pre-fix evidence."
+}

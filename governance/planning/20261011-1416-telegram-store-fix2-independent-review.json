@@ -1,0 +1,110 @@
+{
+  "schema": "uos.telegram-store-fix2-independent-review.v1",
+  "observed_at": "2026-10-11T14:26:16.916Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "attempt": 1,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "observed_at": "2026-10-11T14:22:05.550Z",
+    "sources": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "sha256": "fca8610b850a9aab11990966acd3dd4bfddc45553c7b9d78e48f79dc4b44c9e9"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "sha256": "f93275892ac06b24e4d15d4e108a8e6701a88cb3b340250096319ddbf2428d05"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+        "sha256": "6864cfa0fafeaff7dab5d78666646b875b3af470f441254e589b3789c0c9782b"
+      }
+    ]
+  },
+  "fresh_build": "Gleam1.16 compile-package and pinnedOTP29 private source closure, two FFI files",
+  "results": {
+    "prior_probes": 26,
+    "prior_probes_passed": 26,
+    "depth_cases_passed": 7,
+    "multi_request_reservation_isolation": "PASS:126receipt/36row ->63receipt/18row ->0/0",
+    "new_reproduced_failures": [
+      "Valid replay after Processing refused",
+      "Valid replay after ResultReady refused",
+      "Valid replay after Completed refused"
+    ],
+    "boundedness_observation": "20000 unique JSON object keys in208895bytes accepted ~999760us; list duplicate search quadratic",
+    "recovery_gap": "Absent operation stays Unknown regardless of caller Bool: safe refusal, no demonstrated recovery"
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/regression-results.txt",
+      "sha256": "90c55e7a8f0492799d59294c8efaf6e2433415e17896505dbdaf25a472cc77c8"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/parser-results.txt",
+      "sha256": "22448e74507d71b6338c8f799bf0776203ef4bb3b4ff2522157d3a01aecaa946"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/extended-results.txt",
+      "sha256": "8485f2b35c501687ebfb7ae35de957a0a4505eddcc88e4ff8c42eadc1106f958"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/multi-results.txt",
+      "sha256": "2e79d0173a3a57b7585bbe8f22af990ceb2ee97b0f4f0e860e5ca9fa4732d098"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/store_independent.erl",
+      "sha256": "1b052663075a0a45e3c6d6b3252d48928f54e840c8ce801ff35ae7b71738dcf8"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/store_boundary.erl",
+      "sha256": "4747f88a0129e73d27a3ef403376b361ed3f1cece1b40cfe9ec1650808b4fbac"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/store_extended.erl",
+      "sha256": "10e42a9bb57921eb6f0767cefd66bac550d9e9d63808875697f0c8a628ca120d"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/store_multi.erl",
+      "sha256": "410d18cbcf9a80eaedcd20b18ea64041c8966825ba7556476a38271b1e423d09"
+    }
+  ],
+  "root_causes": [
+    "Mutable execution status incorrectly participates in immutable input replay identity",
+    "Duplicate scan lacks scalable algorithm/container budget",
+    "No actual writer-quiescence proof delivered"
+  ],
+  "required": [
+    "Preserve current inbox status on equal immutable input replay including completed and hold",
+    "Bound JSON nodes/members and duplicate handling",
+    "Actual transport or supervisor quiescence receipt followed by fenced operation lookup"
+  ],
+  "limits": [
+    "Private DBs/synthetic identities only",
+    "No Telegram external sends",
+    "No live deployment or main bookmark change",
+    "Historical failing candidates preserved"
+  ]
+}

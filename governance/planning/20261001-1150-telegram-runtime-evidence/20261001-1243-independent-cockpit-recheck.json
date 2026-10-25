@@ -1,0 +1,74 @@
+{
+  "schema": "uos.independent-cockpit-recheck.v1",
+  "observed_utc": "2026-10-01T12:43:40Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COCKPIT_REVIEW2",
+  "attempt": 1,
+  "verdict": "PASS_SCOPED_DEVELOPMENT",
+  "application_admitted": false,
+  "production_changed": false,
+  "prior_hold": "20261001-1237-independent-cockpit-review.json",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam",
+      "sha256": "3d9dd1a995cc646f95f092d547cb35444cac1dfb84c55cd48d6cf3afa7d5746c"
+    },
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "7e426d5154fab4f579abdf8cc0ec03a8aeda7df14db220effdbeedf9856f90e5"
+    }
+  ],
+  "binary": {
+    "path": "var/recovery-runtime/20261001-1239-cockpit-fix2/restoration_browser_check",
+    "sha256": "bcb001a951bb6802afd11fbf7ad0879fbdeefe4aed9760ce1644e77b5c458ac2"
+  },
+  "resolution": "shell.gleam224 returns after theme setup for recovery root, before any legacy timers, synthetic heartbeat/activity/proof handlers or dashboard polling. Dedicated snapshot client remains independent. Helper rejects all /api/ requests for route / and checks absent health/activity/help/proof/range, exercises Alt+Shift+P and observes10.1seconds.",
+  "independent_tests": {
+    "policy_falsifiers": 18,
+    "status": "PASS",
+    "command": "var/recovery-runtime/20261001-1239-cockpit-fix2/restoration_browser_check --selftest",
+    "hashes": "Two changed source hashes and compiled binary hash independently matched."
+  },
+  "reviewed_author_browser_observations": [
+    {
+      "url": "http://nas-1.tail55d152.ts.net:49157/",
+      "width": 390,
+      "status": "PASS",
+      "elapsed_seconds": 11.468298071,
+      "source_sha256": "7e426d5154fab4f579abdf8cc0ec03a8aeda7df14db220effdbeedf9856f90e5",
+      "findings": [],
+      "legacy_poll_seconds": 10.1,
+      "blocked_requests": 0,
+      "socket_attempts": 0
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:49157/",
+      "width": 1280,
+      "status": "PASS",
+      "elapsed_seconds": 11.655230897,
+      "source_sha256": "7e426d5154fab4f579abdf8cc0ec03a8aeda7df14db220effdbeedf9856f90e5",
+      "findings": [],
+      "legacy_poll_seconds": 10.1,
+      "blocked_requests": 0,
+      "socket_attempts": 0
+    }
+  ],
+  "visual_review": {
+    "viewed": [
+      "20261001-1240-cockpit-mobile/20261001-1048-viewport.png",
+      "20261001-1240-cockpit-desktop/20261001-1048-viewport.png"
+    ],
+    "observation": "Both responsive layouts readable. Recorded snapshot explicitly STALE or clock mismatch. Synthetic top-right heartbeat absent; demo disabled. Static C3I branding dot retained and not treated as observed health."
+  },
+  "limits": [
+    "Positive private browser observations reviewed from exact-source parent receipts; not independently rerun in this bounded recheck.",
+    "Previous independent17policy/6offline controls and Mirage visual inspection retained; new18policy includes root dashboard-GET refusal.",
+    "Other routes retain historical legacy shell behaviors outside this repair scope.",
+    "No production acceptance, global admission or accessibility certification. No source/runtime/task mutations."
+  ],
+  "tags": [
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

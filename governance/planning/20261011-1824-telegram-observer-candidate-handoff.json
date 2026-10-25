@@ -1,0 +1,129 @@
+{
+  "schema": "uos.telegram-observer-candidate.v1",
+  "observed_at": "2026-10-11T18:35:24.185Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "OBSERVER_COMPLETION",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "BUILT_EXECUTED_TESTED_INDEPENDENT_AGY_REVIEW_PENDING",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate_directory": "/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1826-codex-observer-completion",
+  "provenance": "Actual Claude partial candidate copied after quota exhaustion; source manifest preserves all original bytes. Root amended native signal/reap receipts, strict classification and bounds, real overflow test, portable pinned build, deterministic BEAM compilation. Original Claude task/files unchanged.",
+  "sources": [
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/build.sh",
+      "sha256": "060b0c070ddca7f49f3fc2ee2cd40d611b019cf72194d8e71fe16c4d910d59e6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/build.js",
+      "sha256": "d3d7f65c46692319d0486609a70e8813792df98b8c1f0ead6ace42d41b055798"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/UPSTREAM_PINS.txt",
+      "sha256": "5d4d97edac7320fcb71e63a9a540345bc31f262acf7077695d9b9040bf72b5d6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/src/priority.ml",
+      "sha256": "86c2138c2a149908b05466f2c9befcafe13e414a8ab4405229ac152655b3b724"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/src/bounded.ml",
+      "sha256": "fd78167db257d863415ea9ceb6399662e2ce24b46cc15a7b0cc04ea57e23b13f"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/src/live_plan.ml",
+      "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/src/sa_plan_observer.ml",
+      "sha256": "b0f443e62e3bbd5504900616c5c2810e054e4fe2bd671f1824d36f8889ae203b"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/src/obs_guardian.ml",
+      "sha256": "4ddae78d954989511c79196ab5d508ab362c2cf4efa704eb9950603c70be58e4"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/ffi/sa_plan_observer_ffi.erl",
+      "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/gleam/src/observer_policy.gleam",
+      "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+    }
+  ],
+  "binaries": [
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/_build/default/src/sa_plan_observer.exe",
+      "sha256": "5b9dab694c7486f39decb0f3db4238b74753941a659106d5e12fee3c0fe656e2"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/_build/default/src/obs_guardian.exe",
+      "sha256": "b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be"
+    }
+  ],
+  "tests": {
+    "receipt_tests": 11,
+    "lifetime_tests": 6,
+    "root_completion_tests": 9,
+    "all_protocol_tests_pass": true,
+    "native_cli_tests": {
+      "total": 19,
+      "passed": 18,
+      "preserved_original_failure": "byte_preservation_main_and_wal_STRICT on a cold SQLite WAL database",
+      "disposition": "Strict physical sidecar invariance is not promised by READONLY SQLite. Active-WAL visibility, logical snapshot digest, main and WAL bytes were separately observed. See https://www.sqlite.org/wal.html#read_only_databases"
+    },
+    "reproducibility": "Two native executables and two deterministic BEAM modules identical after fresh-directory source-only rebuild",
+    "caller_and_runner_death": "No observed child survivors; runner death returns cleanup_unknown, never asserted confirmed",
+    "actual_overflow": "Real native child exceeds payload limit; confirmed reap and output_exceeds_bound",
+    "child_signal": "Actual self-SIGKILL fixture; waitpid-observed reap and observer_signalled",
+    "unrelated_mailbox": "Preserved"
+  },
+  "limits": [
+    "Private development tool only; no service/release/global admission.",
+    "No guarantee of cleanup after arbitrary guardian suspension or kernel failure: unconfirmed cleanup remains unknown and service must hold.",
+    "OCaml self SIGALRM can be delayed in blocking C SQLite calls; native guardian enforces the external deadline.",
+    "Guardian reap budget can extend after request deadline; adapter uses bounded grace and returns unknown if no valid receipt.",
+    "Trusted cooperative local filesystem/account assumption; byte pins are not a hostile-writer sandbox.",
+    "Historical producer overflow test using yes only observed option refusal; replaced in root copy by native overflow_writer and exact output_exceeds_bound assertion.",
+    "Observed Broken pipe diagnostic during intentional runner death preserved in log; no success/cleanup proof inferred.",
+    "Initial BEAM rebuild path metadata differed; original evidence retained and deterministic compiler setting fixes all four final byte comparisons."
+  ],
+  "integration_contract": {
+    "entrypoint": "observer_policy.observe(ObserveRequest(...)) -> Result(Observation,String)",
+    "success": "Observation(guardian_result,cleanup,child_exit,payload); payload is observer JSON only",
+    "cli": "--db ABS --plan ID [--task ID] [--deadline-ms N]",
+    "pins": "Configuration must pin BOTH observer and guardian binary hashes; basename is insufficient.",
+    "authority": "Observation reports NONE. Caller must validate returned plan/task/worker/attempt and current lease plus independent coordinator session/resource/epoch. Recheck trusted current time AFTER observations and every blocking wait before the next effect.",
+    "placement": "AGY review then durable development source/tool placement under its SERVICE_IMPL scope; do not use old --db-path invocation or old unowned Erlang observer. Preserve accepted store sources and common risk validator."
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/original-claude-source-manifest.json",
+      "sha256": "0420b8ea09d93441fc64cdbe9655fb6f402a57b6543afd27fb7c6c3745ab422a"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/build-manifest.json",
+      "sha256": "dca526e04129807e35e0c88132455eec70ac8de81ba4de178c1ea2be3fdccb85"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/observer-suite-results.txt",
+      "sha256": "d41bbe25053649fc3d4b713bc4f562826da956ef14e2e11c09a658203816a7d5"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/final-protocol-tests.txt",
+      "sha256": "7d9d538f246cde0c5308d1f78519a1f886abe7bd9d82937e467d2bbafd5099e6"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/deterministic-protocol-tests.txt",
+      "sha256": "04e6e871f015eea6b7a23e870d53ea15c5a6c857b15ea3ce51a3ccf2cc6f790a"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/reproducibility.json",
+      "sha256": "bfa7acf0a17938be56b6c9c309b41dfaab00720c4aa15a71c19d67b13b123236"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1826-codex-observer-completion/reproducibility2.json",
+      "sha256": "bccf0e5d1951af362b1a1e2d6e91c16dc4649d08366601e62669404bf7f7e82e"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "uos.independent-telegram-authority-recheck.v1",
+  "observed_at": "2026-10-01T12:18:06Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "AUTH_REVIEW2",
+  "attempt": 1,
+  "candidate": "1ffb92320c7f2453a87f765f52137d2d3f18feed",
+  "verdict": "HOLD_MIGRATION_BOUNDARY_AND_ATOMICITY",
+  "source_manifest": [
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam",
+      "sha256": "ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam",
+      "sha256": "06ef90020b4fc3f0e5524dc914712c906785ef1da35145437805dd0bbb37c6f0"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_store_cli.gleam",
+      "sha256": "dd62b6be5a3aacad6648e03cedc778949c1d6cc9d84443f6f61799ce41cc6a96"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_sync_cli.gleam",
+      "sha256": "90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "a64adb585fd02fbb9b8cca1cfe0c8d7d7a8f8f410d8d58ae32f9f6e0cea0f728"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+      "sha256": "d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a"
+    },
+    {
+      "path": ".uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/test/session_provider_service_test.gleam",
+      "sha256": "cdc8a3685c7b8bce49ab77f29ee5f38d2370bb8db601410c48c28506f835376d"
+    }
+  ],
+  "prior_hold": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1155-independent-authority-review-hold.json",
+  "closed_protocol_findings": [
+    "AUTH-P1-WIRE-EXPIRY",
+    "AUTH-P2-DECIMAL",
+    "AUTH-P2-PRIVATE-ERRORS",
+    "AUTH-P2-ARGV-IDENTITY-BOUNDS"
+  ],
+  "remaining_findings": [
+    {
+      "id": "AUTH2-P1-MIGRATION-ALIAS",
+      "severity": "P1",
+      "file": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "lines": [
+        1062,
+        1063,
+        1065
+      ],
+      "problem": "Public migration API does not validate exact regular/nonalias/private target. A private DB with real D.recovery-lock refuses direct migration but a symlink alias to the same DB migrates successfully by testing alias.recovery-lock instead.",
+      "observed": "DIRECT_HELD Error coordinator_recovery_in_progress; ALIAS_HELD Ok Nil; entirely private /tmp fixture.",
+      "fix": "Core API must independently enforce exact private staging path, validated nonce, owned0700 real directory,0600regular DB,nlinks1,no lexical/ancestor/symlink aliases and exact lock/generation location before writable open. No reliance on CLI-only checks."
+    },
+    {
+      "id": "AUTH2-P1-MIGRATION-TRANSACTION",
+      "severity": "P1",
+      "file": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "lines": [
+        1074,
+        1088,
+        1095,
+        1097,
+        1106,
+        1111
+      ],
+      "problem": "Pre-verification/old trigger/head reads happen before BEGIN IMMEDIATE, while postverification/history equality happen after COMMIT. Concurrent writes can invalidate the checked prestate; a failed postcondition cannot roll back the already-committed trigger replacement.",
+      "fix": "Within one BEGIN IMMEDIATE: verify exact metadata, nonempty ledger, all guards/digests/replay, accepted v1/v2 trigger, capture byte-exact journal; change only known v1; verify exact poststate and identical journal before COMMIT. Generation/recovery lock recheck immediately before commit via transactionally; every failure rolls back. Already-v2 branch must undergo same bounded validation."
+    },
+    {
+      "id": "AUTH2-P1-OPERATIONAL-CLI",
+      "severity": "P1",
+      "file": "apps/uos_swarm/src/session_store_cli.gleam",
+      "lines": [
+        211,
+        212,
+        214,
+        326
+      ],
+      "problem": "New operational CLI migration route accepts any exact absolute path including canonical coordinator; it has no private-stage restriction or independently reviewed live schema-transition authority.",
+      "fix": "Remove operational CLI route/help. Expose only narrow explicit development/staged migration core API. Production later activates a reviewed staged candidate through separately authorized controller; no automatic live schema upgrade."
+    }
+  ],
+  "tests": {
+    "protocol_eunit_passed": 8,
+    "provider_eunit_passed": 2,
+    "independent_genuine_wire": [
+      "Private old-provider DB created; explicit migration preserved exact journal bytes.",
+      "Actual service register receipt decoded.",
+      "Actual runtime claim epoch1 decoded.",
+      "Actual release epoch1 with expires_boot_us0 decoded.",
+      "Actual re-claim epoch2 and renew epoch2 decoded."
+    ],
+    "recovery_hold_alias_falsifier": "FAILED as detailed above",
+    "transaction_race": "SOURCE-INSPECTION finding; no nondeterministic timing experiment claimed",
+    "transcript": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1218-independent-authority-recheck-tests.txt"
+  },
+  "accepted_migration_direction": "Recognizing exactly both historical and service trigger definitions preserves old-store verification while refusing unknown definitions. Dedicated staged API is appropriate after listed fixes.",
+  "next_acceptance": [
+    "Existing valid old-schema private DB opens/replays without implicit upgrade; service registration refuses until explicit staged migration.",
+    "Direct/parent symlink,hardlink,wrong owner/mode/path/canonical target and recovery marker refusal before any change.",
+    "Unknown/no-op trigger, corrupt digest,empty ledger and interrupted/postcheck failure preserve original schema/history.",
+    "Inside-transaction journal-byte equality plus all five exact guards and repeat migration idempotence.",
+    "Real wire epoch2/refusal tests remain passing; do not import sibling older pure ingress/ledger over root accepted v2 files."
+  ],
+  "limits": [
+    "No canonical database, Telegram, service, task or source mutation.",
+    "All DB mutations were explicit disposable private tests; fixtures preserved.",
+    "No formal migration race or production admission proof is claimed.",
+    "Whole service authority/risk/persistence/release remains separate."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

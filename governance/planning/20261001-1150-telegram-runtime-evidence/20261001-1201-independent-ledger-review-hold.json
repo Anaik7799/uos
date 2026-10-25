@@ -1,0 +1,98 @@
+{
+  "schema": "uos.independent-telegram-ledger-review.v1",
+  "observed_at": "2026-10-01T12:01:49Z",
+  "reviewer": "codex-admission-review-20261001",
+  "task_worker": "codex-telegram-admission-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "LEDGER_REVIEW",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "scope": "Four frozen pure ingress/ledger files; independent source review and pure compiled tests only.",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "fd5cb7d6a69f21c182f434e9c81665a10001d6af338ce19320ef875f72736b7e"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "1305d1c32de5d796d1eae76cde548cc5cbb7444fb1c0f3e5680589abbb3da212"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "a3226734ef543de74aa724ade27b33d24095ac76bf84eadea7cdfc94f2d6372b"
+    }
+  ],
+  "findings": [
+    {
+      "id": "LEDGER-P1-OLD-UNSEEN",
+      "severity": "P1",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "lines": [
+        292,
+        312,
+        321
+      ],
+      "problem": "do_batch permits previously unseen update IDs below the committed watermark. Observed watermark101 plus existing update100 receiving update99 produced a new InboxPending99 with no error.",
+      "fix": "For update_id below last_committed_offset require exactly one retained valid matching identity; otherwise refuse without insertion or watermark advance. Preserve exact retained duplicates and collision refusal; no pruning/tombstone assumptions."
+    },
+    {
+      "id": "LEDGER-P2-RECOVERY-STATES",
+      "severity": "P2",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "lines": [
+        603,
+        610,
+        611
+      ],
+      "problem": "recover_request sends every status through validate_result. Valid Pending with no chunks becomes HOLD; valid Rejected tombstone with no chunks becomes HOLD with zero message/chat/user and is thereafter invalid as a normal record.",
+      "fix": "Validate record, then preserve valid InboxPending/InboxRejected with empty chunks. Refuse inconsistent nonempty result on these states. Keep Processing-without-result HOLD and never turn Processing into Pending. Preserve existing HOLD/Completed uncertainty semantics."
+    },
+    {
+      "id": "LEDGER-P2-RESULT-IDENTITY",
+      "severity": "P2",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "lines": [
+        339,
+        439,
+        445
+      ],
+      "problem": "Digest covers request_id, bot_id, chat_id and payloads but omits immutable message_id, user_id and text_hash. Independently mutating each of those three fields in a valid ready record leaves validate_result Ok with original chunks/digest.",
+      "fix": "Bind complete immutable ingress identity in the canonical result digest (or a canonical ingress-identity digest). Version documented schema; update independent reference and mutation controls. Mutable worker/status/timestamps need not become identity."
+    }
+  ],
+  "tests": {
+    "focused_eunit_passed": 40,
+    "novel_positive_controls": {
+      "equal_id_collision_permutations": 6,
+      "terminal_uncertainty_refuses_completion_and_retry": 5,
+      "exact_below_watermark_duplicate": "retains watermark"
+    },
+    "novel_failure_controls": [
+      "Below-watermark unseen update becomes Pending",
+      "Pending empty recovery becomes HOLD",
+      "Rejected empty recovery becomes invalid non-rejected HOLD",
+      "message_id mutation accepted with original result",
+      "user_id mutation accepted with original result",
+      "text_hash mutation accepted with original result"
+    ],
+    "source_hashes_match": true,
+    "transcript": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1201-independent-ledger-tests.txt"
+  },
+  "accepted_limits": [
+    "Ingress required numeric/security fields, allowlist pair, sender_chat and bot refusals, bounded text/payload and truthful command denials passed scoped tests.",
+    "Whole chunk-set validation, ordering, digest payload immutability, wrong sender worker/epoch and uncertainty controls work within tested pure transitions.",
+    "No source edits, task mutations, database/network/Telegram/runtime effects or production admission.",
+    "Durable atomic IO, canonical task/resource fences, trusted transport response correlation and live service testing remain adapter/release obligations.",
+    "The original development receipt uses the same descriptive reviewer identity string for another implementing agent; this review was independently delegated to this recovery_review agent, which did not author these four files."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ]
+}

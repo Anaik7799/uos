@@ -1,0 +1,64 @@
+======================== EUnit ========================
+module 'telegram_authority_protocol_test'
+  telegram_authority_protocol_test: identifier_validation_test...[0.016 s] ok
+  telegram_authority_protocol_test: coordinator_argv_builders_test...ok
+  telegram_authority_protocol_test: coordinator_response_decoder_test...[0.003 s] ok
+  telegram_authority_protocol_test: strict_positive_decimal_parser_test...ok
+  telegram_authority_protocol_test: saplan_argv_builders_test...ok
+  telegram_authority_protocol_test: saplan_claim_response_decoder_test...ok
+  telegram_authority_protocol_test: private_sentinel_non_disclosure_test...ok
+  telegram_authority_protocol_test: risk_adapter_protocol_fail_closed_test...ok
+  [done in 0.043 s]
+=======================================================
+  All 8 tests passed.
+
+
+======================== EUnit ========================
+module 'session_provider_service_test'
+  session_provider_service_test: provider_parse_and_render_test...[0.003 s] ok
+  session_provider_service_test: isolated_db_service_registration_and_replay_test...[0.062 s] ok
+  [done in 0.071 s]
+=======================================================
+  2 tests passed.
+
+
+MIGRATION_HISTORY_EXACT /tmp/uos-auth2-wire-1790857017338915/events.sqlite3
+ACTUAL_WIRE {"ok":true,"operation_id":"claim-one","operation":"claim","sequence":3,"duplicate":false,"epoch":1,"expires_boot_us":122236240000,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"} DECODE {coordinator_receipt,
+                                                                                                                                                                                                                                                  true,
+                                                                                                                                                                                                                                                  <<"claim-one">>,
+                                                                                                                                                                                                                                                  <<"claim">>,
+                                                                                                                                                                                                                                                  1,
+                                                                                                                                                                                                                                                  122236240000}
+ACTUAL_WIRE {"ok":true,"operation_id":"release-one","operation":"release","sequence":4,"duplicate":false,"epoch":1,"expires_boot_us":0,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"} DECODE {coordinator_receipt,
+                                                                                                                                                                                                                                           true,
+                                                                                                                                                                                                                                           <<"release-one">>,
+                                                                                                                                                                                                                                           <<"release">>,
+                                                                                                                                                                                                                                           1,
+                                                                                                                                                                                                                                           0}
+ACTUAL_WIRE {"ok":true,"operation_id":"claim-two","operation":"claim","sequence":5,"duplicate":false,"epoch":2,"expires_boot_us":122236250000,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"} DECODE {coordinator_receipt,
+                                                                                                                                                                                                                                                  true,
+                                                                                                                                                                                                                                                  <<"claim-two">>,
+                                                                                                                                                                                                                                                  <<"claim">>,
+                                                                                                                                                                                                                                                  2,
+                                                                                                                                                                                                                                                  122236250000}
+ACTUAL_WIRE {"ok":true,"operation_id":"renew-two","operation":"renew","sequence":6,"duplicate":false,"epoch":2,"expires_boot_us":122236250000,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"} DECODE {coordinator_receipt,
+                                                                                                                                                                                                                                                  true,
+                                                                                                                                                                                                                                                  <<"renew-two">>,
+                                                                                                                                                                                                                                                  <<"renew">>,
+                                                                                                                                                                                                                                                  2,
+                                                                                                                                                                                                                                                  122236250000}
+
+
+PRIVATE_PATH /tmp/uos-auth2-guard-1790857039181921/events.sqlite3
+DIRECT_HELD {error,{refused_error,<<"coordinator_recovery_in_progress">>}}
+ALIAS_HELD {ok,nil}
+
+
+.uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb
+.uos-workspaces/agy-telegram-admission-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam 06ef90020b4fc3f0e5524dc914712c906785ef1da35145437805dd0bbb37c6f0
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_store_cli.gleam dd62b6be5a3aacad6648e03cedc778949c1d6cc9d84443f6f61799ce41cc6a96
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/session_sync_cli.gleam 90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam a64adb585fd02fbb9b8cca1cfe0c8d7d7a8f8f410d8d58ae32f9f6e0cea0f728
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a
+.uos-workspaces/agy-telegram-admission-20261001/apps/uos_swarm/test/session_provider_service_test.gleam cdc8a3685c7b8bce49ab77f29ee5f38d2370bb8db601410c48c28506f835376d
+TIME 2026-10-01T12:18:06Z

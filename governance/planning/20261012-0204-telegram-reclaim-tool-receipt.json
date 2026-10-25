@@ -1,0 +1,51 @@
+{
+  "schema": "uos.telegram-reclaim-tool-verification.v1",
+  "observed_at": "2026-10-12T02:39:00Z",
+  "plan": "uos/telegram-reclaim-tool/20261012-0226",
+  "task": "IMPL",
+  "worker": "agy-telegram-reclaim-20261012",
+  "attempt": 1,
+  "verdict": "PASS_SCOPED_STAGED_DEVELOPMENT",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "source_manifest": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/reclaim_metadata.ml",
+      "sha256": "d06a11d75bdc127ccf5d3250db6630965470135605a51351ba35795db92d6fa4",
+      "observed_at": "2026-10-12T02:37:00Z"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be",
+      "observed_at": "2026-10-12T02:37:00Z"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "6193bcc872fdc4ba77e4a110d384e20f45eba64b12b370824adcb657a75ed76e",
+      "observed_at": "2026-10-12T02:37:00Z"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "sha256": "6bbee14590cc7e8bf1507a114325592ab6cb298ff858981533e646cf59eedcfb",
+      "observed_at": "2026-10-12T02:37:00Z"
+    }
+  ],
+  "validation": {
+    "fresh_compile": "PASS (dune build ./validate.exe)",
+    "baseline_checks": 375,
+    "adversarial_checks": 32938,
+    "independent_dag_scenarios": 32768,
+    "package_checks": 39,
+    "opt_e_controls": "20/20 PASS (NC-01 through NC-20)",
+    "nc19_non_regression": "PASS (--reclaim-set-preflight preserved and still holds on RP-COST-TIE)",
+    "nc20_zero_writes": "PASS (SQLite main db SHA-256 byte-for-byte identical before/after)",
+    "live_metadata_observation": "PASS (FORMAL_FIX, SERVICE_DRAFT_REVIEW, SERVICE_IMPL exact set observed with selection=NOT_EVALUATED and authority=NONE)"
+  },
+  "receipt_ref": "governance/planning/20261012-0238-telegram-reclaim-metadata-observe-receipt.json",
+  "limits": [
+    "Reclaim metadata observation only; does not grant execution authority or work admission.",
+    "Selection, rank and priority were NOT evaluated by this verb.",
+    "Actual reclaim of the 3 expired tasks remains deferred to canonical planning.",
+    "All effect authority remains NONE."
+  ]
+}

@@ -16,8 +16,8 @@ pub fn nif_runtime_available() -> Bool
 /// Historical declarations with no executable runtime binding are retained in
 /// the catalog as unavailable, and excluded from operational tools/list.
 pub const unavailable_tools = [
-  "control_loop", "safety_status", "run_selfcheck",
-  "registry_status", "run_gate", "zk_search", "sa_bridge_submit", "vault_status",
+  "control_loop", "safety_status", "run_selfcheck", "registry_status",
+  "run_gate", "zk_search", "sa_bridge_submit", "vault_status",
   "vault_list_secrets", "vault_policy_get", "vault_audit_tail", "vault_health",
 ]
 

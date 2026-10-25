@@ -1,0 +1,1224 @@
+{
+  "schema": "uos.claude-telegram-behavioural-inventory.v1",
+  "observed_utc": "2026-10-11T12:35:44Z",
+  "supersedes_nothing": "Additive. Preserves governance/planning/20261011-1213 review and 20261011-1222 erratum unmodified.",
+  "author": {
+    "actor": "claude-telegram-20261011",
+    "coordinator_session_uuid": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "authority": "uos/telegram-runtime/20261001-1150 INVENTORY_REVIEW attempt 1 RETAINED",
+    "model_self_report": "Claude Opus 5 SELF-REPORT grade E3, cannot certify admission"
+  },
+  "preserved_predecessors": {
+    "review_1213": {
+      "path": "governance/planning/20261011-1213-claude-telegram-inventory-review.json",
+      "sha256": "c60ef31168e8c73dc03d3f60bb0e54c6e65f0c2ec4da7f4846427a64deb48027"
+    },
+    "erratum_1222": {
+      "path": "governance/planning/20261011-1222-claude-telegram-inventory-review-erratum.json",
+      "sha256": "1156af40f3cda168130ec62bc6fbf530c75f3b07a5199be3b42d93ed16a3bf3c"
+    }
+  },
+  "extraction_provenance": {
+    "all_native_commands_via": "cepaf_gleam@harness@development:bounded/3 (compiled beam), subprocesses /usr/bin/grep and /usr/bin/cat, timeout 20000ms. No direct shell for source acquisition.",
+    "scripts": [
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/extract.erl (arm regex)",
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/fetch.erl (16 sources via bounded)",
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/classify3.js (reachability)"
+    ],
+    "arm_regex": "^[[:space:]]*\"/[a-z_-]+\"([[:space:]]*\\|[[:space:]]*\"/[a-z_-]+\")*[[:space:]]*->",
+    "totals_reproduced": "79 arms, 89 literal tokens, 77 unique directives, 12 dual-routed"
+  },
+  "classifier_method_and_its_three_corrections": {
+    "final_method": "Per module, parse @external declarations to obtain the FFI primitive set. Build a local call graph. An arm is effectful iff its dispatch target transitively reaches a SHELL or HTTP FFI within depth 6. Mutating vs reading is then decided by SQL/HTTP verb tokens in the reachable body.",
+    "ffi_primitives_found": {
+      "telegram": [
+        "os_cmd",
+        "system_time_nanos"
+      ],
+      "cognitive_worker": [
+        "os_cmd",
+        "system_time_nanos",
+        "http_get",
+        "http_put",
+        "+3 more"
+      ],
+      "telegram_ops": [
+        "os_cmd"
+      ],
+      "telegram_creative": [],
+      "telegram_collab": []
+    },
+    "correction_1": "First attempt keyed on module-qualified calls and returned 35 INDETERMINATE. Wrong: too coarse.",
+    "correction_2": "Second attempt classified 70/79 as STATIC_CLAIM. WRONG. It missed os_cmd because os_cmd is an UNQUALIFIED local function; my regex only saw module.fn( patterns. Same failure class as the hyphen charset in the 1222 erratum: the pattern could not see the thing that mattered.",
+    "correction_3": "Final method reads the @external set from source rather than guessing names, and follows the call graph. Spot-checked against three bodies read by hand (query_saplan_tasks shells sqlite3, query_cluster_status shells curl, handle_zigvm shells and returns real output).",
+    "honesty_note": "Three wrong classifiers in one task. The numbers below are the third attempt, each headline spot-checked against a hand-read body. Treat the method as the claim and re-run it rather than trusting the totals."
+  },
+  "headline": {
+    "arms": 79,
+    "literal_tokens": 89,
+    "unique_directives": 77,
+    "STATIC_CLAIM": 71,
+    "ACTUAL_READ": 5,
+    "ACTUAL_CONTROL": 3,
+    "effectful_total": 8,
+    "finding": "71 of 79 arms (90%) reach NO shell and NO HTTP primitive. They construct and return formatted markdown. Only 8 arms reach a real effect, all via os_cmd SHELL; zero reach http_get/http_put.",
+    "implication": "A completion percentage computed over the command surface would be measuring text templates. Per the no-unsupported-fallback rule these 71 are NOT implementations of the capability their text asserts."
+  },
+  "acceptance_groups": {
+    "G1_STATIC_TEXT": {
+      "count": 71,
+      "definition": "Arm reaches no FFI. Returns formatted text only.",
+      "completion_obligation": "POSITIVE: asserted text renders for an authorised sender. NEGATIVE: unauthorised sender receives a refusal, not the text. RECOVERY: not applicable, no state is touched - record NotApplicable(no effect) rather than a vacuous pass.",
+      "acceptance_warning": "These must NOT be counted as feature implementations. Each either needs a real backend or an explicit downgrade to a documented informational command.",
+      "members": [
+        {
+          "surface": "S1",
+          "line": 111,
+          "literals": [
+            "/start",
+            "/help"
+          ],
+          "target": "(inline block)",
+          "body_lines": "111..168",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 171,
+          "literals": [
+            "/storage"
+          ],
+          "target": "query_storage_status",
+          "body_lines": "473..481",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 173,
+          "literals": [
+            "/dark"
+          ],
+          "target": "handle_dark_cockpit",
+          "body_lines": "482..490",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 175,
+          "literals": [
+            "/andon"
+          ],
+          "target": "handle_andon_halt",
+          "body_lines": "491..510",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 185,
+          "literals": [
+            "/checklist"
+          ],
+          "target": "query_checklist_status",
+          "body_lines": "546..556",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 187,
+          "literals": [
+            "/cockpit"
+          ],
+          "target": "(inline block)",
+          "body_lines": "187..197",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 198,
+          "literals": [
+            "/approval"
+          ],
+          "target": "(inline block)",
+          "body_lines": "198..217",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 218,
+          "literals": [
+            "/resuscitate"
+          ],
+          "target": "telegram_ops.handle_resuscitate",
+          "body_lines": "16..37",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 219,
+          "literals": [
+            "/chaos"
+          ],
+          "target": "telegram_ops.handle_chaos",
+          "body_lines": "38..63",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 220,
+          "literals": [
+            "/repro"
+          ],
+          "target": "telegram_ops.handle_repro",
+          "body_lines": "64..84",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 221,
+          "literals": [
+            "/merge"
+          ],
+          "target": "telegram_ops.handle_merge",
+          "body_lines": "85..101",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 222,
+          "literals": [
+            "/bisect"
+          ],
+          "target": "telegram_ops.handle_bisect",
+          "body_lines": "102..118",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 223,
+          "literals": [
+            "/escalate"
+          ],
+          "target": "telegram_ops.handle_escalate",
+          "body_lines": "119..134",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 224,
+          "literals": [
+            "/rotate-keys"
+          ],
+          "target": "telegram_ops.handle_rotate_keys",
+          "body_lines": "135..151",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 225,
+          "literals": [
+            "/mesh"
+          ],
+          "target": "telegram_ops.handle_mesh",
+          "body_lines": "152..170",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 226,
+          "literals": [
+            "/migrate"
+          ],
+          "target": "telegram_ops.handle_migrate",
+          "body_lines": "171..187",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 227,
+          "literals": [
+            "/adr"
+          ],
+          "target": "telegram_ops.handle_adr",
+          "body_lines": "188..208",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 228,
+          "literals": [
+            "/blast-radius"
+          ],
+          "target": "telegram_ops.handle_blast_radius",
+          "body_lines": "209..224",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 231,
+          "literals": [
+            "/pacing"
+          ],
+          "target": "telegram_creative.handle_pacing",
+          "body_lines": "14..33",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 232,
+          "literals": [
+            "/whatif",
+            "/simulate"
+          ],
+          "target": "telegram_creative.handle_whatif",
+          "body_lines": "34..54",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 233,
+          "literals": [
+            "/rack-cv"
+          ],
+          "target": "telegram_creative.handle_rack_cv",
+          "body_lines": "55..85",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 234,
+          "literals": [
+            "/acoustic"
+          ],
+          "target": "telegram_creative.handle_acoustic",
+          "body_lines": "86..119",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 235,
+          "literals": [
+            "/rewind"
+          ],
+          "target": "telegram_creative.handle_rewind",
+          "body_lines": "120..142",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 236,
+          "literals": [
+            "/postmortem"
+          ],
+          "target": "telegram_creative.handle_postmortem",
+          "body_lines": "143..164",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 237,
+          "literals": [
+            "/finops",
+            "/budget"
+          ],
+          "target": "telegram_creative.handle_finops",
+          "body_lines": "165..176",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 238,
+          "literals": [
+            "/eco-schedule"
+          ],
+          "target": "telegram_creative.handle_eco_schedule",
+          "body_lines": "177..195",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 239,
+          "literals": [
+            "/radar"
+          ],
+          "target": "telegram_creative.handle_radar",
+          "body_lines": "196..208",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 240,
+          "literals": [
+            "/canvas"
+          ],
+          "target": "telegram_creative.handle_canvas",
+          "body_lines": "209..218",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 241,
+          "literals": [
+            "/lockbox"
+          ],
+          "target": "telegram_creative.handle_lockbox",
+          "body_lines": "219..236",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 242,
+          "literals": [
+            "/export-audit"
+          ],
+          "target": "telegram_creative.handle_export_audit",
+          "body_lines": "237..252",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 245,
+          "literals": [
+            "/sidecar"
+          ],
+          "target": "telegram_collab.handle_sidecar",
+          "body_lines": "14..31",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 246,
+          "literals": [
+            "/voice-roll-call"
+          ],
+          "target": "telegram_collab.handle_voice_roll_call",
+          "body_lines": "32..58",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 247,
+          "literals": [
+            "/babel"
+          ],
+          "target": "telegram_collab.handle_babel",
+          "body_lines": "59..79",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 248,
+          "literals": [
+            "/whiteboard"
+          ],
+          "target": "telegram_collab.handle_whiteboard",
+          "body_lines": "80..99",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 249,
+          "literals": [
+            "/socratic"
+          ],
+          "target": "telegram_collab.handle_socratic",
+          "body_lines": "100..118",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 250,
+          "literals": [
+            "/handover"
+          ],
+          "target": "telegram_collab.handle_handover",
+          "body_lines": "119..138",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 251,
+          "literals": [
+            "/pair-voice"
+          ],
+          "target": "telegram_collab.handle_pair_voice",
+          "body_lines": "139..155",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 252,
+          "literals": [
+            "/exec-brief"
+          ],
+          "target": "telegram_collab.handle_exec_brief",
+          "body_lines": "156..174",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 253,
+          "literals": [
+            "/commitments"
+          ],
+          "target": "telegram_collab.handle_commitments",
+          "body_lines": "175..190",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 254,
+          "literals": [
+            "/acoustic-hud"
+          ],
+          "target": "telegram_collab.handle_acoustic_hud",
+          "body_lines": "191..207",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 255,
+          "literals": [
+            "/retro"
+          ],
+          "target": "telegram_collab.handle_retro",
+          "body_lines": "208..232",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 256,
+          "literals": [
+            "/gameday"
+          ],
+          "target": "telegram_collab.handle_gameday",
+          "body_lines": "233..251",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 259,
+          "literals": [
+            "/aspects"
+          ],
+          "target": "(inline block)",
+          "body_lines": "259..264",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S1",
+          "line": 265,
+          "literals": [
+            "/ecology"
+          ],
+          "target": "(inline block)",
+          "body_lines": "265..279",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 290,
+          "literals": [
+            "/start",
+            "/help"
+          ],
+          "target": "(inline block)",
+          "body_lines": "290..326",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 327,
+          "literals": [
+            "/status"
+          ],
+          "target": "(inline block)",
+          "body_lines": "327..339",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 340,
+          "literals": [
+            "/health"
+          ],
+          "target": "(inline block)",
+          "body_lines": "340..352",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 366,
+          "literals": [
+            "/task"
+          ],
+          "target": "(inline block)",
+          "body_lines": "366..379",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 380,
+          "literals": [
+            "/search"
+          ],
+          "target": "(inline block)",
+          "body_lines": "380..393",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 394,
+          "literals": [
+            "/immune"
+          ],
+          "target": "(inline block)",
+          "body_lines": "394..406",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 407,
+          "literals": [
+            "/fmea"
+          ],
+          "target": "(inline block)",
+          "body_lines": "407..419",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 420,
+          "literals": [
+            "/ha"
+          ],
+          "target": "(inline block)",
+          "body_lines": "420..432",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 433,
+          "literals": [
+            "/zenoh"
+          ],
+          "target": "(inline block)",
+          "body_lines": "433..445",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 446,
+          "literals": [
+            "/inference"
+          ],
+          "target": "(inline block)",
+          "body_lines": "446..458",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 459,
+          "literals": [
+            "/verify",
+            "/verification"
+          ],
+          "target": "(inline block)",
+          "body_lines": "459..471",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 472,
+          "literals": [
+            "/rete"
+          ],
+          "target": "(inline block)",
+          "body_lines": "472..485",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 486,
+          "literals": [
+            "/km"
+          ],
+          "target": "(inline block)",
+          "body_lines": "486..498",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 499,
+          "literals": [
+            "/wiki"
+          ],
+          "target": "(inline block)",
+          "body_lines": "499..512",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 513,
+          "literals": [
+            "/zk"
+          ],
+          "target": "(inline block)",
+          "body_lines": "513..526",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 527,
+          "literals": [
+            "/storage",
+            "/nvme"
+          ],
+          "target": "(inline block)",
+          "body_lines": "527..539",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 565,
+          "literals": [
+            "/cockpit"
+          ],
+          "target": "(inline block)",
+          "body_lines": "565..588",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 589,
+          "literals": [
+            "/approval"
+          ],
+          "target": "(inline block)",
+          "body_lines": "589..618",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 619,
+          "literals": [
+            "/doctor",
+            "/ev"
+          ],
+          "target": "(inline block)",
+          "body_lines": "619..631",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 637,
+          "literals": [
+            "/checklist"
+          ],
+          "target": "(inline block)",
+          "body_lines": "637..657",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 658,
+          "literals": [
+            "/aspects"
+          ],
+          "target": "(inline block)",
+          "body_lines": "658..673",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 674,
+          "literals": [
+            "/ecology"
+          ],
+          "target": "(inline block)",
+          "body_lines": "674..689",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 690,
+          "literals": [
+            "/board"
+          ],
+          "target": "(inline block)",
+          "body_lines": "690..702",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 703,
+          "literals": [
+            "/peers"
+          ],
+          "target": "(inline block)",
+          "body_lines": "703..715",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 716,
+          "literals": [
+            "/memory"
+          ],
+          "target": "(inline block)",
+          "body_lines": "716..768",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 769,
+          "literals": [
+            "/messages",
+            "/history"
+          ],
+          "target": "(inline block)",
+          "body_lines": "769..791",
+          "effects": [],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 792,
+          "literals": [
+            "/tool",
+            "/action"
+          ],
+          "target": "(inline block)",
+          "body_lines": "792..811",
+          "effects": [],
+          "refusal_path": false
+        }
+      ]
+    },
+    "G2_REAL_READ": {
+      "count": 5,
+      "definition": "Arm transitively reaches os_cmd and performs a read-shaped command.",
+      "completion_obligation": "POSITIVE: real value observed and rendered. NEGATIVE: backend unreachable yields an explicit failure, not a fabricated value. RECOVERY: timeout or partial output leaves no partial claim.",
+      "members": [
+        {
+          "surface": "S1",
+          "line": 169,
+          "literals": [
+            "/status"
+          ],
+          "target": "query_cluster_status",
+          "body_lines": "319..378",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": true
+        },
+        {
+          "surface": "S1",
+          "line": 177,
+          "literals": [
+            "/zigvm"
+          ],
+          "target": "handle_zigvm",
+          "body_lines": "379..421",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": true
+        },
+        {
+          "surface": "S1",
+          "line": 181,
+          "literals": [
+            "/sutra"
+          ],
+          "target": "query_sutra_status",
+          "body_lines": "459..472",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": true
+        },
+        {
+          "surface": "S1",
+          "line": 183,
+          "literals": [
+            "/zk"
+          ],
+          "target": "query_zk",
+          "body_lines": "511..545",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": true
+        },
+        {
+          "surface": "S2",
+          "line": 632,
+          "literals": [
+            "/agy"
+          ],
+          "target": "(inline block)",
+          "body_lines": "632..636",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": false
+        }
+      ]
+    },
+    "G3_REAL_CONTROL": {
+      "count": 3,
+      "definition": "Arm transitively reaches os_cmd with mutating tokens.",
+      "completion_obligation": "POSITIVE: authorised effect occurs once. NEGATIVE: forged sender, forged session, expired Sa-plan task or unauthorised tool each produce an explicit refusal BEFORE the shell call. RECOVERY: interrupted mid-effect leaves no partial state and is resumable.",
+      "highest_risk": "These are the only arms that can change anything, and they do it by STRING-CONCATENATED SHELL. See injection finding.",
+      "members": [
+        {
+          "surface": "S1",
+          "line": 179,
+          "literals": [
+            "/plan"
+          ],
+          "target": "query_saplan_tasks",
+          "body_lines": "422..458",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": true
+        },
+        {
+          "surface": "S2",
+          "line": 353,
+          "literals": [
+            "/plan",
+            "/tasks"
+          ],
+          "target": "(inline block)",
+          "body_lines": "353..365",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": false
+        },
+        {
+          "surface": "S2",
+          "line": 540,
+          "literals": [
+            "/zigvm"
+          ],
+          "target": "(inline block)",
+          "body_lines": "540..564",
+          "effects": [
+            "SHELL"
+          ],
+          "refusal_path": true
+        }
+      ]
+    },
+    "not_a_shadow_queue": "These groups are evidence, not tasks. Group tracking belongs in canonical Sa-plan. This artifact creates no tasks."
+  },
+  "dual_routing": {
+    "dual_literals": 12,
+    "behaviourally_divergent": 3,
+    "divergences": [
+      {
+        "literal": "/status",
+        "S1": "ACTUAL_READ (query_cluster_status shells curl to :6167)",
+        "S2": "STATIC_CLAIM (hardcoded text)",
+        "hazard": "Same user command returns live state on one surface and a fixed string on the other."
+      },
+      {
+        "literal": "/zigvm",
+        "S1": "ACTUAL_READ",
+        "S2": "ACTUAL_CONTROL",
+        "hazard": "Same command is a read on one surface and a mutation on the other. This is the most serious divergence found: authorisation reasoning that holds for the read surface does not hold for the control surface."
+      },
+      {
+        "literal": "/zk",
+        "S1": "ACTUAL_READ",
+        "S2": "STATIC_CLAIM",
+        "hazard": "Live read versus fixed text."
+      }
+    ],
+    "agreeing": [
+      "/start",
+      "/help",
+      "/storage",
+      "/plan",
+      "/checklist",
+      "/cockpit",
+      "/approval",
+      "/aspects",
+      "/ecology"
+    ],
+    "required_decision": "Per-directive surface ownership must be recorded before any completion claim. Three of twelve shared commands currently mean different things depending on which router serves the update."
+  },
+  "injection_finding": {
+    "id": "B1",
+    "severity": "HIGH",
+    "observation": "All 8 effectful arms reach os_cmd, whose argument is built by string concatenation of user-supplied text.",
+    "evidence": [
+      "harness/telegram.gleam:422..458 query_saplan_tasks builds: sqlite3 var/sa-plan/uos.sqlite3 \"<sql>\" and shells it",
+      "harness/telegram.gleam:379..421 handle_zigvm builds: tools/zigvm eval \"<expr>\" from string.join(rest, \" \") of user args",
+      "harness/telegram.gleam:319..378 query_cluster_status shells curl"
+    ],
+    "assessment": "handle_zigvm interpolates USER ARGUMENT TEXT into a shell string that is then executed. The ingress guard (261 lines, 10 allowlist markers, 12 deny markers) gates WHO may send, not WHAT the argument may contain. Sender allowlisting is not argument sanitisation.",
+    "required_negative_test": "A permitted sender supplying shell metacharacters in /zigvm arguments must be refused before os_cmd is reached.",
+    "scope_limit": "I did NOT execute any injection. This is a source-structure finding from reading the concatenation and the FFI declaration."
+  },
+  "non_command_surfaces": [
+    {
+      "surface": "non_command_conversation",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "line_count": 2806,
+      "markers": {
+        "fallthrough": 17,
+        "openrouter": 21,
+        "memory": 35
+      },
+      "externals": 7,
+      "public_fns": 39,
+      "status": "PRESENT",
+      "detail": "17 fall-through arms, 21 openrouter/gemma markers, 35 memory markers in cognitive_worker. Conversation routes to a model path with conversation memory.",
+      "obligation": "POSITIVE model reply bounded by budget; NEGATIVE unauthorised sender refused before any model call; RECOVERY no partial memory write on failure."
+    },
+    {
+      "surface": "callback_query",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "line_count": 2806,
+      "markers": {
+        "callback": 0
+      },
+      "externals": 7,
+      "public_fns": 39,
+      "status": "ABSENT",
+      "detail": "ZERO callback_query or callback_data occurrences anywhere under src/cepaf_gleam. Inline-keyboard callbacks are NOT handled.",
+      "obligation": "Cannot be accepted as a feature. Either implement or remove from any inventory claiming it."
+    },
+    {
+      "surface": "attachments_media",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "line_count": 2806,
+      "markers": {
+        "photo": 6
+      },
+      "externals": 7,
+      "public_fns": 39,
+      "status": "PARTIAL",
+      "detail": "6 photo/voice/audio/document/video/file_id markers only. No ingestion pipeline observed.",
+      "obligation": "Enumerate per media type; absent types must be declared absent."
+    },
+    {
+      "surface": "mini_app_routes",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/telegram/auth.gleam",
+      "line_count": 559,
+      "markers": {
+        "hmac": 9,
+        "initdata": 28,
+        "ttl": 9
+      },
+      "externals": 0,
+      "public_fns": 6,
+      "status": "PRESENT, REFRESHED",
+      "detail": "telegram/auth.gleam now 559 lines with 9 hmac/sha256, 28 init_data and 9 auth_date/ttl markers. Root reports 72 tests independently PASS.",
+      "obligation": "Bound as baseline with root repair receipt referenced; I did not read, edit or test it."
+    },
+    {
+      "surface": "outbound_outbox",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_outbound.gleam",
+      "line_count": 355,
+      "markers": {
+        "send": 3,
+        "chunk": 25,
+        "redact": 5,
+        "fallback": 6
+      },
+      "externals": 2,
+      "public_fns": 8,
+      "status": "PRESENT",
+      "detail": "3 sendMessage/api.telegram.org, 25 chunk, 5 redact, 6 fallback markers; 2 FFI. Chunking, redaction and a plaintext fallback exist.",
+      "obligation": "POSITIVE send; NEGATIVE denied serial redacted before transport (already law-covered); RECOVERY fallback path must not double-send."
+    },
+    {
+      "surface": "delivery_ledger",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "line_count": 697,
+      "markers": {
+        "states": 27,
+        "dedupe": 0
+      },
+      "externals": 0,
+      "public_fns": 11,
+      "status": "PRESENT BUT NO IDEMPOTENCY",
+      "detail": "697 lines, 27 state markers, and ZERO dedup/idempotency markers.",
+      "obligation": "A delivery ledger without idempotency cannot distinguish a retry from a second delivery. This is a gap, not a style issue."
+    },
+    {
+      "surface": "ingress_guard",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "line_count": 261,
+      "markers": {
+        "allowlist": 10,
+        "deny": 12
+      },
+      "externals": 0,
+      "public_fns": 7,
+      "status": "PRESENT",
+      "detail": "261 lines, 10 allowlist, 12 deny markers.",
+      "obligation": "Gates sender identity only. Does NOT sanitise arguments - see B1."
+    },
+    {
+      "surface": "poller_service",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_simulator.gleam",
+      "line_count": 257,
+      "markers": {
+        "poll": 0
+      },
+      "externals": 0,
+      "public_fns": 6,
+      "status": "ABSENT",
+      "detail": "ZERO getUpdates or long-poll offset occurrences anywhere under src/cepaf_gleam. telegram_simulator.gleam has no poll markers.",
+      "obligation": "There is no observed Telegram poller. Any claim of a running single-poller service is unsupported by source."
+    },
+    {
+      "surface": "store_transport",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "line_count": 34,
+      "markers": {
+        "external": 1
+      },
+      "externals": 1,
+      "public_fns": 2,
+      "status": "THIN",
+      "detail": "34 lines, 1 FFI, 2 public fns. AGY claimed 158 lines.",
+      "obligation": "Transport has an independent 18-test receipt; the Gleam side is a 34-line facade."
+    },
+    {
+      "surface": "gateway_surface",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram.gleam",
+      "line_count": 145,
+      "markers": {
+        "routes": 4,
+        "webhook": 1
+      },
+      "externals": 0,
+      "public_fns": 4,
+      "status": "NOT A COMMAND ROUTER",
+      "detail": "145 lines, 4 public fns, 1 webhook marker, zero slash literals.",
+      "obligation": "Must not be counted as command surface."
+    }
+  ],
+  "agy_reconciliation_final": {
+    "line_counts": "0 of 30 correct (unchanged).",
+    "hashes": "30 of 30 correct (unchanged).",
+    "stated_total_contradiction": "total_commands_audited 77 versus capability_matrix length 97 (unchanged). Note 77 coincidentally equals the true unique-directive count, but the matrix it summarises holds 97 rows and 91 distinct directives.",
+    "ghosts": "11 unfounded chat directives plus 14 miscategorised /mini-app route paths.",
+    "uncovered": "11 source directives absent from the matrix, of which 7 are aliases and 4 are genuine primaries.",
+    "nine_false_ghosts_retracted_in_1222": "/acoustic-hud /blast-radius /eco-schedule /exec-brief /export-audit /pair-voice /rack-cv /rotate-keys /voice-roll-call - real, my regex error.",
+    "overall": "AGY structural claims about WHICH files matter are sound (hashes). Its quantitative claims are not usable. Most importantly, no AGY claim distinguishes a formatted string from a real effect, which this artifact shows is the dominant property of the surface: 90% static."
+  },
+  "native_findings_retained": {
+    "C1_digest": "RETAINED and ESCALATED. Root executed the collision against actual apply and it was ACCEPTED AS A REPLAY (receipt governance/planning/20261011-1216-telegram-native-baseline-independent-review.json, 85 fresh baseline tests, plus ancestor symlink, duplicate read-set and unknown field accepted). My earlier scope limit of formulation-only no longer applies. NOT reproduced by me.",
+    "C2_init": "RETAINED: initialize_new performs DDL plus five insert_meta with no BEGIN/COMMIT.",
+    "C3_capacity": "RETAINED: reservation_delta is bounded storage capacity (20 rows / 64 receipts), NOT business credits. Bounds and invalid_reservation_delta must be preserved; rename at most.",
+    "new_native_work": "AGY native work proceeds in a new directory and does not touch these sources."
+  },
+  "auth_binding": {
+    "observed_now": {
+      "sha256": "1514b26366e1665c831fa8f8600ee82d778327e5365098c5580ebce218521c45",
+      "line_count": 559
+    },
+    "root_reported_final": "06a1c8ad with 72 tests independently PASS",
+    "divergence_explained": "My observed hash differs from root's reported final because root is formatting two auth files as review cleanup and stated the hash WILL refresh again with the same semantics. Recorded, not reconciled by me.",
+    "my_claim": "Bound as baseline with the known repair receipt referenced. I did NOT read, edit or test auth.gleam and claim NO fresh accepted auth."
+  },
+  "residuals": [
+    "Classifier is a reachability heuristic with depth bound 6, not a compiler analysis. Three headline rows were hand-verified; the remaining 76 were not individually read.",
+    "Mutating-versus-reading split inside the 8 effectful arms rests on verb tokens in the reachable body, not on observed runtime effect.",
+    "Non-command surfaces are characterised by source markers and public-function counts, not by per-function behavioural reading.",
+    "No suite executed, no build, no native apply, no Telegram send, no injection attempted, no auth read.",
+    "Per-directive ownership for the 12 dual-routed commands is unresolved and is a decision, not a finding.",
+    "The 33-record portfolio count remains quoted from root."
+  ],
+  "limits": [
+    "Source reading only, acquired through development.bounded/3.",
+    "Model identity is a self-report, barred from certifying admission.",
+    "Inventory delivered is not approval. No whole-system admission, no new EV."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l6",
+    "#fractal-l9",
+    "#zero-muda",
+    "#stamp-stpa"
+  ]
+}

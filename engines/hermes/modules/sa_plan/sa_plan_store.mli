@@ -116,6 +116,21 @@ type task_view = {
   attempt : int;
 }
 
+type job_cancellation = {
+  mapping_id : string;
+  effect_id : string;
+  intent_sha256 : string;
+  owner : string;
+  lease_id : string;
+  fencing_token : int64;
+  target_job_id : string;
+  target_worker : string;
+  target_attempt : int;
+  target_lease_until_ns : int64;
+  reason : string;
+  expires_at_ns : int64;
+}
+
 type job_state =
   | Job_available
   | Job_executing
@@ -238,6 +253,11 @@ type session_observation_store_outcome =
   | Observation_reconciliation of session_reconciliation
 
 val open_db : string -> (t, string) Result.t
+
+(** Open an existing exact-v7 store without creating a file, initializing DDL or
+    migrating schema. Missing/old/future/corrupt stores refuse. The caller must
+    protect the path and directory; this is not principal authentication. *)
+val open_existing : string -> (t, string) Result.t
 val close : t -> unit
 val schema_version : t -> int
 
@@ -342,6 +362,49 @@ val claim_bridge_lease :
   now_ns:int64 ->
   lease_ns:int64 ->
   (bridge_lease, string) Result.t
+
+(** [bind_bridge_to_claimed_task store ~mapping_id ~owner ~expected_attempt
+    ~lease_id ~now_ns ~lease_ns] binds a Telegram cancellation bridge lease to
+    an already-claimed canonical [Sa_plan] task without mutating, creating,
+    reclaiming, or advancing the canonical task row or its attempt counter.
+
+    Laws:
+    - Canonical task non-mutation: never creates, mutates, reclaims, or advances
+      [sa_plan_task] or its [attempt]; [claim_bridge_lease] remains unchanged.
+    - Atomic observation and write: executes inside [transaction store]
+      ([BEGIN IMMEDIATE]), covering [mapping_id] lookup, live canonical task
+      ([worker = owner], [attempt = expected_attempt], [state = 'executing'],
+      [lease_until_ns]) observation, prior bridge inspection, and bridge write.
+    - Preconditions: requires valid non-empty identities ([mapping_id], [owner],
+      [lease_id]) without leading/trailing whitespace, [expected_attempt > 0],
+      [now_ns >= 0L], and positive [lease_ns > 0L] with overflow-checked
+      [expires_at_ns] via [lease_deadline ~worker:owner ~now_ns ~lease_ns].
+      Mapping must exist with domain [Sa_plan] and materialized plan/task IDs.
+    - Canonical task lease envelope: [sa_plan_task] must be in state
+      ['executing'] for [owner] at [expected_attempt] with SQLite [INT]
+      [lease_until_ns > now_ns] and [lease_until_ns >= expires_at_ns] (requested
+      bridge expiry beyond the canonical task lease is rejected, never clamped;
+      NULL/non-INT or stale/wrong-owner/wrong-attempt rows refuse with a named
+      redacted error).
+    - Bridge exclusivity and fencing: any existing live bridge row
+      ([expires_at_ns > now_ns]) unconditionally refuses even for the same
+      [owner] (callers resolve ambiguous prior outcomes via [find_bridge_lease]);
+      missing prior starts at [fencing_token = 1L]; expired prior requires
+      [0L < fencing_token < Int64.max_value] and advances to [fencing_token + 1L].
+      No existing row is altered on any refusal.
+    - Write effect and trust boundary: writes only [sa_plan_bridge_lease] with
+      [task_attempt = Some expected_attempt]. This is a trusted bounded store
+      operation, not runtime/signature admission; live callers must still hold
+      current coordinator, time, and profile fences. *)
+val bind_bridge_to_claimed_task
+  :  t
+  -> mapping_id:string
+  -> owner:string
+  -> expected_attempt:int
+  -> lease_id:string
+  -> now_ns:int64
+  -> lease_ns:int64
+  -> (bridge_lease, string) result
 
 val find_bridge_lease :
   t -> mapping_id:string -> (bridge_lease option, string) Result.t
@@ -533,6 +596,34 @@ val cancel_job :
   now_ns:int64 ->
   (job_view, string) Result.t
 
+(** Atomic database mechanics for a caller already authorized by the Gleam
+    control plane. This function does NOT authenticate reviewer/operator
+    signatures, prove synchronized time, stop processes, or cancel tasks.
+    It is intentionally not exposed by the CLI or Telegram dispatcher.
+
+    Law: within one BEGIN IMMEDIATE transaction, both the mapped task's original
+    attempt and its bridge lease must still be current. The request deadline
+    must be future and at most 300 seconds from supplied [now_ns]. The exact
+    target id (not an alias), designated worker, lease owner, attempt and lease
+    deadline must match an executing job in the mapped plan namespace.
+    Only then is the job cancelled and its lease cleared, atomically with a
+    durable bridge command receipt. Designated [worker] is retained.
+
+    The namespaced command key is ["cancel-job:" ^ effect_id]. The store hashes
+    all request fields plus the mapped plan/task in fixed, typed JSON order.
+    Identical replay under the SAME current authority returns the original
+    receipt without writing, only if the cancelled postcondition and original
+    receipt payload still match. Changed request fields, missing/changed
+    target state, an independently cancelled job, stale authority and malformed
+    inputs return Error without a partial transition.
+    Idempotency is scoped to mapping_id plus effect_id; neither hashes nor
+    receipts prove approval authenticity. Expired/new-lease reconciliation
+    must use a separately authorized read, not a fresh cancellation.
+    All strings, counters and times are bounded before mutation. *)
+val cancel_job_once :
+  t -> job_cancellation -> now_ns:int64 ->
+  (bridge_command_receipt, string) Result.t
+
 val list_jobs : t -> queue:string option -> (job_view list, string) Result.t
 
 val start_workflow :
@@ -575,3 +666,44 @@ val workflow_history :
   t -> id_or_name:string -> (workflow_event list, string) Result.t
 
 val list_workflows : t -> (workflow_view list, string) Result.t
+
+(** Read-only historical cancellation receipt reconciliation. Matches the full
+    original request digest and fixed receipt payload under its canonical mapping.
+    The original request may be expired and its controller lease replaced.
+    This does not authenticate a caller, observe current job/process state,
+    extend authority, or authorize retrying an effect. A trusted read adapter
+    must authenticate and scope the caller before invoking it. *)
+val lookup_job_cancellation :
+  t -> job_cancellation -> now_ns:int64 ->
+  (bridge_command_receipt option, string) Result.t
+
+(** Bounded read-only snapshot of an executing job target eligible for a
+    fenced cancellation approval proposal. *)
+type cancellation_target = {
+  job_id : string;
+  target_worker : string;
+  target_attempt : int;
+  target_lease_until_ns : int64;
+}
+
+(** [inspect_cancellation_target_observed store ~mapping_id ~owner ~lease_id
+    ~fencing_token ~target_job_id ~observe_now] validates bounded ASCII tokens
+    and a positive fence, enters an immediate SQLite transaction before calling
+    [observe_now ()] once, and verifies that [mapping_id] is a canonical
+    [Sa_plan] mapping whose current bridge lease and executing task match
+    [owner], [lease_id], [fencing_token], and original bounded [task_attempt]
+    with strictly future expiries at the observed nonnegative timestamp.
+    Queries only [id, worker, attempt, lease_owner, lease_until_ns, state] for
+    the exact [target_job_id] within the mapped plan prefix without loading
+    private [args] or [result] columns or mutating state. Returns
+    [Error "cancellation_target_refused"] on any validation, lookup, SQL, or
+    exception failure. *)
+val inspect_cancellation_target_observed :
+  t ->
+  mapping_id:string ->
+  owner:string ->
+  lease_id:string ->
+  fencing_token:int64 ->
+  target_job_id:string ->
+  observe_now:(unit -> int64) ->
+  (cancellation_target, string) result

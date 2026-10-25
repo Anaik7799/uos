@@ -1,0 +1,64 @@
+{
+  "schema": "uos.telegram-store-quiescence-proposal.v1",
+  "authored_at": "2026-10-11T14:31:00Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "status": "PROPOSED_FOR_REVIEW",
+  "title": "Dual-Ring Witness and Generation Fencing Architecture for Safe Store Operation Reconciliation",
+  "problem_statement": "telegram_store_transport_ffi request/6 maps catch, DOWN, port_close, overflow, and nonzero exit into uncertainty, where port_close can precede unobserved guardian cleanup. A caller-supplied Bool is not proof of writer quiescence, while returning safe Unknown indefinitely contains risk but prevents automated crash recovery. A rigorous, non-aliasing proof of writer quiescence and in-flight cancellation is required before an operation can be reconciled as absent.",
+  "architecture": {
+    "ring_1_guardian_process_witness": {
+      "name": "Process Witness and Reap Proof",
+      "mechanism": "The OTP supervisor and native transport guardian maintain an explicit process witness contract over the backend worker process.",
+      "states": [
+        {
+          "condition": "Clean Worker Exit Before Commit",
+          "evidence": "Exit code 124 (timeout) or 125 (buffer overflow) captured by guardian with monotonic timestamp, reaped process PID, and explicit drain confirmation."
+        },
+        {
+          "condition": "Crash or Unclean Termination",
+          "evidence": "Exit code 126 or port DOWN detected; guardian sends SIGKILL to process tree, reaps child zombies, and executes an exclusive flock check on the SQLite DB/WAL files to confirm zero active file locks."
+        }
+      ],
+      "receipt_structure": {
+        "schema": "uos.telegram-quiescence-witness.v1",
+        "worker_pid": "Int",
+        "worker_generation": "Int",
+        "exit_status": "Int",
+        "wal_quiesced": "Bool",
+        "reaped_at_ms": "Int",
+        "witness_sha256": "String"
+      }
+    },
+    "ring_2_storage_generation_fence": {
+      "name": "Atomic Generation Fencing Barrier",
+      "mechanism": "Absence cannot be verified by passive read alone because a delayed or preempted worker could commit after the read. The store provides an atomic generation barrier command.",
+      "protocol": [
+        "1. Caller requests reconcile_operation_absence(config, bot_id, operation_id, candidate_digest, witness_receipt).",
+        "2. Transport validates Ring 1 witness_receipt (proving the worker that owned the operation is dead and reaped).",
+        "3. Transport issues an atomic barrier command: 'fence_and_verify_absence(operation_id, expected_generation)'.",
+        "4. The native SQLite engine begins an immediate exclusive transaction: queries receipt table for operation_id.",
+        "5. If operation_id is present: returns {present, receipt} (reconciled as committed).",
+        "6. If operation_id is absent: the engine bumps store generation (gen = gen + 1) and commits a barrier tombstone. Any delayed write from the old worker will fail CAS with stale_generation.",
+        "7. The store returns {reconciled_absent, new_generation}."
+      ]
+    }
+  },
+  "formal_invariants": [
+    {
+      "id": "INV-QUIESCENCE-01",
+      "statement": "No operation shall transition from Uncertain to ReconciledAbsent without both a valid Ring 1 process reap witness and a successful Ring 2 generation bump barrier."
+    },
+    {
+      "id": "INV-QUIESCENCE-02",
+      "statement": "A zombie or delayed worker process cannot commit an operation after a Ring 2 fence has committed, because its expected_generation will strictly precede the fenced generation."
+    },
+    {
+      "id": "INV-QUIESCENCE-03",
+      "statement": "Caller-supplied assertions (e.g. Bool flags) are strictly rejected as admission evidence; only cryptographically digest-bound receipts from the guardian and storage barrier are admitted."
+    }
+  ],
+  "implementation_scope": "Design proposal only; implementation deferred until peer review and acceptance by Codex and Root."
+}

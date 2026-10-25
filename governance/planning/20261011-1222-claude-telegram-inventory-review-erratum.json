@@ -1,0 +1,1192 @@
+{
+  "schema": "uos.claude-telegram-inventory-review-erratum.v1",
+  "observed_utc": "2026-10-11T12:22:39Z",
+  "erratum_to": {
+    "artifact": "governance/planning/20261011-1213-claude-telegram-inventory-review.json",
+    "sha256": "c60ef31168e8c73dc03d3f60bb0e54c6e65f0c2ec4da7f4846427a64deb48027",
+    "disposition": "PRESERVED IMMUTABLE AND NOT EDITED (INV-PROV-03). Additive linked erratum."
+  },
+  "author": {
+    "actor": "claude-telegram-20261011",
+    "coordinator_session_uuid": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "authority": "uos/telegram-runtime/20261001-1150 INVENTORY_REVIEW attempt 1 RETAINED, state executing, lease_until_ns 1791724421264207836",
+    "model_self_report": "Claude Opus 5 SELF-REPORT, grade E3, cannot certify admission"
+  },
+  "extraction_provenance": {
+    "requirement": "Counts are not asserted. They are reproduced by a recorded executable extraction run THROUGH the compiled Gleam wrapper.",
+    "wrapper": {
+      "module": "cepaf_gleam@harness@development",
+      "fn": "bounded/3",
+      "beam": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@development.beam",
+      "load_method": "code:add_paths(filelib:wildcard(apps/cepaf_gleam/build/dev/erlang/*/ebin)) plus the same for apps/uos_swarm, per root",
+      "subprocess": "/usr/bin/grep invoked BY the wrapper with timeout 20000ms, not direct shell"
+    },
+    "regex_POSIX_ERE": "^[[:space:]]*\"/[a-z_-]+\"([[:space:]]*\\|[[:space:]]*\"/[a-z_-]+\")*[[:space:]]*->",
+    "charset_note": "[a-z_-]. Root supplied [a-z-]; widened to retain underscore. My ORIGINAL regex was [a-z_] and silently dropped every hyphenated literal.",
+    "script": "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/extract.erl",
+    "raw_outputs": [
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/S1_arms.txt",
+      "/tmp/claude-1000/-home-an-NAS-setup/a65088e0-0f2b-497e-bd5c-97eeed9c3594/scratchpad/S2_arms_all.txt"
+    ],
+    "wrapper_reported": "S1 arm-lines=49 S2 arm-lines=30"
+  },
+  "retractions": [
+    {
+      "id": "R1",
+      "severity": "MATERIAL - FALSE ACCUSATION AGAINST AGY",
+      "retracted": "Prior review listed 34 ghost directives including /rack-cv /eco-schedule /export-audit /voice-roll-call /pair-voice /exec-brief /acoustic-hud /blast-radius /rotate-keys as invented by AGY.",
+      "correction": "ALL NINE ARE REAL LITERALS IN SOURCE. My regex charset [a-z_] excluded the hyphen, so every hyphenated command was invisible to my extraction and then mis-reported as fabricated.",
+      "dropped_literals": [
+        "/acoustic-hud",
+        "/blast-radius",
+        "/eco-schedule",
+        "/exec-brief",
+        "/export-audit",
+        "/pair-voice",
+        "/rack-cv",
+        "/rotate-keys",
+        "/voice-roll-call"
+      ],
+      "impact": "Ghost count falls 34 to 25. AGY is owed this correction: nine accusations were artifacts of my tooling, not defects in its artifact.",
+      "lesson": "A coverage claim is only as sound as its extraction charset. I published a 37 percent fabrication rate computed with a regex that could not see nine real commands."
+    },
+    {
+      "id": "R2",
+      "severity": "MATERIAL",
+      "retracted": "Prior review reported S1 as 43 tokens / 40 arms and the union as 68 with 13 dual-routed.",
+      "correction": "Anchored per-arm extraction yields S1 = 49 arms / 52 tokens (arms span 111..265 inside the 99..278 window); S2 = 30 arms / 37 tokens, ALL inside 275..848 with zero outside; union = 77; dual-routed = 12.",
+      "agreement": "These reproduce the figures root stated independently, exactly."
+    },
+    {
+      "id": "R3",
+      "severity": "METHOD",
+      "retracted": "Prior review counted S2 whole-file tokens (38) and asserted /acoustic as an S2 route located in a helper outside 275..848.",
+      "correction": "A string occurrence in a helper does NOT establish a case arm. Anchored extraction finds ZERO S2 arms outside 275..848. /acoustic is NOT an S2 route and NOT dual-routed. The dual set is 12, not 13.",
+      "principle": "A route is established by a dispatch arm, never by a reference to a literal."
+    }
+  ],
+  "corrected_enumeration": {
+    "S1": {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+      "line_count": 555,
+      "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337",
+      "window": "99..278, observed arms span 111..265",
+      "arms": 49,
+      "tokens": 52,
+      "alias_arms": 3,
+      "dispatch_profile": {
+        "INLINE_BLOCK": 5,
+        "LOCAL_FN": 9,
+        "DELEGATED_MODULE": 35
+      },
+      "delegate_modules": [
+        "telegram_ops",
+        "telegram_creative",
+        "telegram_collab"
+      ],
+      "rows": [
+        {
+          "surface": "S1",
+          "line": 111,
+          "literals": [
+            "/start",
+            "/help"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S1",
+          "line": 169,
+          "literals": [
+            "/status"
+          ],
+          "alias": false,
+          "dispatch_target": "query_cluster_status",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 171,
+          "literals": [
+            "/storage"
+          ],
+          "alias": false,
+          "dispatch_target": "query_storage_status",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 173,
+          "literals": [
+            "/dark"
+          ],
+          "alias": false,
+          "dispatch_target": "handle_dark_cockpit",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 175,
+          "literals": [
+            "/andon"
+          ],
+          "alias": false,
+          "dispatch_target": "handle_andon_halt",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 177,
+          "literals": [
+            "/zigvm"
+          ],
+          "alias": false,
+          "dispatch_target": "handle_zigvm",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 179,
+          "literals": [
+            "/plan"
+          ],
+          "alias": false,
+          "dispatch_target": "query_saplan_tasks",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 181,
+          "literals": [
+            "/sutra"
+          ],
+          "alias": false,
+          "dispatch_target": "query_sutra_status",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 183,
+          "literals": [
+            "/zk"
+          ],
+          "alias": false,
+          "dispatch_target": "query_zk",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 185,
+          "literals": [
+            "/checklist"
+          ],
+          "alias": false,
+          "dispatch_target": "query_checklist_status",
+          "dispatch_class": "LOCAL_FN"
+        },
+        {
+          "surface": "S1",
+          "line": 187,
+          "literals": [
+            "/cockpit"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S1",
+          "line": 198,
+          "literals": [
+            "/approval"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S1",
+          "line": 218,
+          "literals": [
+            "/resuscitate"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_resuscitate",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 219,
+          "literals": [
+            "/chaos"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_chaos",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 220,
+          "literals": [
+            "/repro"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_repro",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 221,
+          "literals": [
+            "/merge"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_merge",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 222,
+          "literals": [
+            "/bisect"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_bisect",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 223,
+          "literals": [
+            "/escalate"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_escalate",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 224,
+          "literals": [
+            "/rotate-keys"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_rotate_keys",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 225,
+          "literals": [
+            "/mesh"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_mesh",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 226,
+          "literals": [
+            "/migrate"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_migrate",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 227,
+          "literals": [
+            "/adr"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_adr",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 228,
+          "literals": [
+            "/blast-radius"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_ops.handle_blast_radius",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 231,
+          "literals": [
+            "/pacing"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_pacing",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 232,
+          "literals": [
+            "/whatif",
+            "/simulate"
+          ],
+          "alias": true,
+          "dispatch_target": "telegram_creative.handle_whatif",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 233,
+          "literals": [
+            "/rack-cv"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_rack_cv",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 234,
+          "literals": [
+            "/acoustic"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_acoustic",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 235,
+          "literals": [
+            "/rewind"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_rewind",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 236,
+          "literals": [
+            "/postmortem"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_postmortem",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 237,
+          "literals": [
+            "/finops",
+            "/budget"
+          ],
+          "alias": true,
+          "dispatch_target": "telegram_creative.handle_finops",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 238,
+          "literals": [
+            "/eco-schedule"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_eco_schedule",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 239,
+          "literals": [
+            "/radar"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_radar",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 240,
+          "literals": [
+            "/canvas"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_canvas",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 241,
+          "literals": [
+            "/lockbox"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_lockbox",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 242,
+          "literals": [
+            "/export-audit"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_creative.handle_export_audit",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 245,
+          "literals": [
+            "/sidecar"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_sidecar",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 246,
+          "literals": [
+            "/voice-roll-call"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_voice_roll_call",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 247,
+          "literals": [
+            "/babel"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_babel",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 248,
+          "literals": [
+            "/whiteboard"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_whiteboard",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 249,
+          "literals": [
+            "/socratic"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_socratic",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 250,
+          "literals": [
+            "/handover"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_handover",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 251,
+          "literals": [
+            "/pair-voice"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_pair_voice",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 252,
+          "literals": [
+            "/exec-brief"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_exec_brief",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 253,
+          "literals": [
+            "/commitments"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_commitments",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 254,
+          "literals": [
+            "/acoustic-hud"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_acoustic_hud",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 255,
+          "literals": [
+            "/retro"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_retro",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 256,
+          "literals": [
+            "/gameday"
+          ],
+          "alias": false,
+          "dispatch_target": "telegram_collab.handle_gameday",
+          "dispatch_class": "DELEGATED_MODULE"
+        },
+        {
+          "surface": "S1",
+          "line": 259,
+          "literals": [
+            "/aspects"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S1",
+          "line": 265,
+          "literals": [
+            "/ecology"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        }
+      ]
+    },
+    "S2": {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+      "line_count": 2806,
+      "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c",
+      "handle_directive_at": 275,
+      "window": "275..848",
+      "arms": 30,
+      "tokens": 37,
+      "alias_arms": 7,
+      "dispatch_profile": {
+        "INLINE_BLOCK": 30
+      },
+      "dispatch_finding": "ALL 30 S2 arms are inline blocks with zero delegation. S2 concentrates behaviour in one 2806-line module while S1 delegates 35 of 49 arms to three focused modules. Opposite structural choices over overlapping command sets.",
+      "rows": [
+        {
+          "surface": "S2",
+          "line": 290,
+          "literals": [
+            "/start",
+            "/help"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 327,
+          "literals": [
+            "/status"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 340,
+          "literals": [
+            "/health"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 353,
+          "literals": [
+            "/plan",
+            "/tasks"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 366,
+          "literals": [
+            "/task"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 380,
+          "literals": [
+            "/search"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 394,
+          "literals": [
+            "/immune"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 407,
+          "literals": [
+            "/fmea"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 420,
+          "literals": [
+            "/ha"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 433,
+          "literals": [
+            "/zenoh"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 446,
+          "literals": [
+            "/inference"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 459,
+          "literals": [
+            "/verify",
+            "/verification"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 472,
+          "literals": [
+            "/rete"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 486,
+          "literals": [
+            "/km"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 499,
+          "literals": [
+            "/wiki"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 513,
+          "literals": [
+            "/zk"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 527,
+          "literals": [
+            "/storage",
+            "/nvme"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 540,
+          "literals": [
+            "/zigvm"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 565,
+          "literals": [
+            "/cockpit"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 589,
+          "literals": [
+            "/approval"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 619,
+          "literals": [
+            "/doctor",
+            "/ev"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 632,
+          "literals": [
+            "/agy"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 637,
+          "literals": [
+            "/checklist"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 658,
+          "literals": [
+            "/aspects"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 674,
+          "literals": [
+            "/ecology"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 690,
+          "literals": [
+            "/board"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 703,
+          "literals": [
+            "/peers"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 716,
+          "literals": [
+            "/memory"
+          ],
+          "alias": false,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 769,
+          "literals": [
+            "/messages",
+            "/history"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        },
+        {
+          "surface": "S2",
+          "line": 792,
+          "literals": [
+            "/tool",
+            "/action"
+          ],
+          "alias": true,
+          "dispatch_target": "(inline block)",
+          "dispatch_class": "INLINE_BLOCK"
+        }
+      ]
+    },
+    "union": {
+      "distinct": 77,
+      "directives": [
+        "/acoustic",
+        "/acoustic-hud",
+        "/action",
+        "/adr",
+        "/agy",
+        "/andon",
+        "/approval",
+        "/aspects",
+        "/babel",
+        "/bisect",
+        "/blast-radius",
+        "/board",
+        "/budget",
+        "/canvas",
+        "/chaos",
+        "/checklist",
+        "/cockpit",
+        "/commitments",
+        "/dark",
+        "/doctor",
+        "/ecology",
+        "/eco-schedule",
+        "/escalate",
+        "/ev",
+        "/exec-brief",
+        "/export-audit",
+        "/finops",
+        "/fmea",
+        "/gameday",
+        "/ha",
+        "/handover",
+        "/health",
+        "/help",
+        "/history",
+        "/immune",
+        "/inference",
+        "/km",
+        "/lockbox",
+        "/memory",
+        "/merge",
+        "/mesh",
+        "/messages",
+        "/migrate",
+        "/nvme",
+        "/pacing",
+        "/pair-voice",
+        "/peers",
+        "/plan",
+        "/postmortem",
+        "/rack-cv",
+        "/radar",
+        "/repro",
+        "/resuscitate",
+        "/rete",
+        "/retro",
+        "/rewind",
+        "/rotate-keys",
+        "/search",
+        "/sidecar",
+        "/simulate",
+        "/socratic",
+        "/start",
+        "/status",
+        "/storage",
+        "/sutra",
+        "/task",
+        "/tasks",
+        "/tool",
+        "/verification",
+        "/verify",
+        "/voice-roll-call",
+        "/whatif",
+        "/whiteboard",
+        "/wiki",
+        "/zenoh",
+        "/zigvm",
+        "/zk"
+      ]
+    },
+    "dual_routed": {
+      "count": 12,
+      "directives": [
+        "/approval",
+        "/aspects",
+        "/checklist",
+        "/cockpit",
+        "/ecology",
+        "/help",
+        "/plan",
+        "/start",
+        "/status",
+        "/storage",
+        "/zigvm",
+        "/zk"
+      ],
+      "note": "/acoustic REMOVED versus the prior review, see R3.",
+      "hazard": "12 user-visible commands resolve on two surfaces with opposite dispatch structure. Per-directive ownership must be decided before any completion claim."
+    }
+  },
+  "corrected_coverage_vs_agy": {
+    "source_union": 77,
+    "agy_distinct_claimed": 91,
+    "ghost_total": 25,
+    "ghost_chat_directives": {
+      "count": 11,
+      "directives": [
+        "/standup",
+        "/review",
+        "/test",
+        "/saplan",
+        "/policy",
+        "/telemetry",
+        "/audit",
+        "/recheck",
+        "/ledger",
+        "/session",
+        "/state"
+      ],
+      "note": "These remain unfound in either arm set. The /standup /review /test named by root are among them and are CONFIRMED absent."
+    },
+    "ghost_mini_app_routes": {
+      "count": 14,
+      "note": "14 /mini-app/* entries are HTTP route paths listed as chat directives, a category error in the matrix independent of whether the routes exist. Not fabrication."
+    },
+    "uncovered": {
+      "count": 11,
+      "directives": [
+        "/action",
+        "/budget",
+        "/dark",
+        "/history",
+        "/nvme",
+        "/simulate",
+        "/storage",
+        "/sutra",
+        "/tasks",
+        "/verification",
+        "/zigvm"
+      ],
+      "alias_subset": [
+        "/budget alias of /finops S1:237",
+        "/simulate alias of /whatif S1:232",
+        "/tasks alias of /plan S2:353",
+        "/verification alias of /verify S2:459",
+        "/nvme alias of /storage S2:527",
+        "/history alias of /messages S2:769",
+        "/action alias of /tool S2:792"
+      ],
+      "genuinely_absent_primaries": [
+        "/dark S1:173",
+        "/storage S1:171",
+        "/sutra S1:181",
+        "/zigvm S1:177"
+      ],
+      "note": "7 of 11 are ALIASES whose primary AGY did list. They still owe rows because a user types the alias, but calling them wholly missing overstated it. The four primaries root named are genuine misses."
+    },
+    "revised_assessment": "AGY matrix carries 11 unfounded chat directives and 14 miscategorised routes out of 91, and omits 4 real primaries plus 7 aliases. Line counts remain 0/30 correct and the 77-versus-97 contradiction stands. The inventory remains unusable as an evidence base, but the fabrication rate I published was inflated by my own extraction defect."
+  },
+  "alias_arms_detail": {
+    "S1": [
+      {
+        "line": 111,
+        "literals": [
+          "/start",
+          "/help"
+        ]
+      },
+      {
+        "line": 232,
+        "literals": [
+          "/whatif",
+          "/simulate"
+        ]
+      },
+      {
+        "line": 237,
+        "literals": [
+          "/finops",
+          "/budget"
+        ]
+      }
+    ],
+    "S2": [
+      {
+        "line": 290,
+        "literals": [
+          "/start",
+          "/help"
+        ]
+      },
+      {
+        "line": 353,
+        "literals": [
+          "/plan",
+          "/tasks"
+        ]
+      },
+      {
+        "line": 459,
+        "literals": [
+          "/verify",
+          "/verification"
+        ]
+      },
+      {
+        "line": 527,
+        "literals": [
+          "/storage",
+          "/nvme"
+        ]
+      },
+      {
+        "line": 619,
+        "literals": [
+          "/doctor",
+          "/ev"
+        ]
+      },
+      {
+        "line": 769,
+        "literals": [
+          "/messages",
+          "/history"
+        ]
+      },
+      {
+        "line": 792,
+        "literals": [
+          "/tool",
+          "/action"
+        ]
+      }
+    ],
+    "finding": "10 alias arms carry 19 tokens for 10 routes. An inventory keyed on route rather than literal loses 9 user-typable names."
+  },
+  "per_directive_behaviour_status": {
+    "delivered": "Per-arm dispatch CLASS and TARGET for all 79 arms (S1 49 plus S2 30), machine-extracted with the arm line captured.",
+    "not_delivered": "The behavioural classification root requires, STATIC_CLAIM versus ACTUAL_READ versus ACTUAL_CONTROL versus REFUSAL, needs reading each dispatch target body. 44 distinct targets across four modules. NOT DONE in this pass.",
+    "honest_position": "dispatch_class is a STRUCTURAL fact about where control goes. It is NOT a behavioural claim. I will not present the 35 DELEGATED_MODULE rows as evidence that those commands do real work.",
+    "next_unit": "Classify the 9 S1 LOCAL_FN targets and the 35 delegated targets by reading each body, then the 30 S2 inline blocks."
+  },
+  "non_command_surfaces": {
+    "status": "STILL NOT ENUMERATED",
+    "outstanding": [
+      "non-command conversation",
+      "callback queries",
+      "attachments and media",
+      "mini-app routes and auth",
+      "outbox",
+      "poller, service and store"
+    ],
+    "reason": "Bounded time was spent reproducing the corrected arm extraction and retracting R1."
+  },
+  "cross_references_not_reproduced_by_me": {
+    "native_baseline": {
+      "receipt": "governance/planning/20261011-1216-telegram-native-baseline-independent-review.json",
+      "root_findings_referenced": "85 fresh baseline tests; actual apply ACCEPTED a digest collision AS A REPLAY; ancestor symlink, duplicate read-set and unknown field all accepted; STORE_KERNEL_REVIEW completed HOLD.",
+      "my_position": "NOT REPRODUCED BY ME, referenced only. It materially STRENGTHENS my C1: my prior scope limit said formulation collision only with no native execution. Root executed it and the collision was ACCEPTED AS A REPLAY, so C1 is live at apply time, not merely a formulation defect."
+    },
+    "auth": {
+      "candidate_hash_per_root": "68344039 UNVERIFIED",
+      "my_position": "Old auth receipt preserved. I claim no fresh accepted auth and did not read, edit or test auth.gleam."
+    }
+  },
+  "freshness_expectation": {
+    "active_check_12_17_06": "HOLD with 7 RP-EVIDENCE findings, all one cause: SHA-256 mismatch on telegram/auth.gleam",
+    "root_repair": "Root repaired the portfolio source observation at 12:17:54.",
+    "expectation": "Further auth edits by AGY MAY cause further HOLD. Per root this is EXPECTED. I will request freshness repair ONLY at final handoff and will never force-pass.",
+    "completion": "NOT COMPLETING INVENTORY_REVIEW in this pass. Per-directive behaviour and the non-command surfaces remain outstanding."
+  },
+  "limits": [
+    "Source and artifact reading only; extraction executed through development.bounded/3.",
+    "No suite executed, no build, no native apply, no Telegram send, no auth read.",
+    "dispatch_class is structural, not behavioural.",
+    "Erratum delivered is not approval. No whole-system admission, no new EV."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l9",
+    "#zero-muda",
+    "#stamp-stpa"
+  ]
+}

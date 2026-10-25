@@ -1,0 +1,265 @@
+{
+  "schema": "uos.cockpit-visual-interaction-development.v1",
+  "observed_utc": "2026-10-01T12:27:11Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COCKPIT_FIX",
+  "worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "implementer": "codex-admission-review-20261001",
+  "status": "SCOPED_DEVELOPMENT_PRIVATE_BROWSER_PASS",
+  "application_admitted": false,
+  "production_changed": false,
+  "supersedes_source_manifest": [
+    "20261001-1256-cockpit-development.json",
+    "20261001-1207-cockpit-containment-supplement.json"
+  ],
+  "source_and_binary_manifest": [
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "c5894cea3325e9a818db02fafdb7613c5b23a06ba99c0aea63cf9d10f25e707c"
+    },
+    {
+      "path": "apps/cepaf_gleam/priv/static/dashboard-grid.js",
+      "sha256": "df21fa7009fab7389014cd3ca70f36df8cb3ec8028a657713f63622461fdd176"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam",
+      "sha256": "36a482d3c1a2158e5271507d388c39a91397fa02ff0ed4c8115c9da949ae4376"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/restoration_browser_probe.gleam",
+      "sha256": "c07e3595df21fbdceb516b9f85d8b28ebc2b39ba27a33fdff8bdabdf8ab7a12c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam",
+      "sha256": "37b52449b5c43d574b054d2541269e9e731e18e7f1cd2b56b18ace92c07f69b9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam",
+      "sha256": "2b8076b46763ee02a52e7416744c2ff697bd96b51b92cf7f59f2306a2a7728ac"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1203-cockpit-build/restoration_browser_check",
+      "sha256": "6b098f390e7fd1fb8f80b3ba7ec1d82d9141519439f82653fc3efd7a87cd2279"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "mirage-mobile-table-contrast",
+      "fix": "Scoped explicit light text/dark cell colors and readable spacing; tables scroll locally within the page width.",
+      "validation": "390px private profile PASS; full screenshot independently viewed and table text readable."
+    },
+    {
+      "id": "apparent-desktop-horizontal-scrollbar",
+      "corrected_rca": "The broad blue bar was an injected input[type=range] simulated timeline, not a native horizontal scrollbar. Historical observations retained.",
+      "fix": "Shared shell omits this simulation input when the recovery root is present. Existing TEST CYCLE stays disabled in recovery client.",
+      "validation": "Actual browser asserts no range input, disabled demo control, absent onclick and expected label. Screenshots confirm bar removed."
+    },
+    {
+      "id": "cockpit-mobile-layout",
+      "fix": "Local wrapping view controls, bounded search field, fixed-layout task table with wrapping text.",
+      "validation": "390px and1280px container bounding boxes fit viewport; both screenshots inspected."
+    }
+  ],
+  "validation": {
+    "gleam_build": "PASS; known unused dashboard imports/helpers and existing work_stealing warning remain",
+    "native_build": "PASS; existing mtime.clock.os deprecation",
+    "policy_falsifiers": 17,
+    "actual_offline_browser_negative_controls": 6,
+    "profiles": [
+      {
+        "url": "http://nas-1.tail55d152.ts.net:49157/mirage",
+        "width": 390,
+        "status": "PASS",
+        "observed_utc_seconds": 1790857603.688469,
+        "checks": {
+          "HTTP200_exact_response_URL": true,
+          "response_url": "http://nas-1.tail55d152.ts.net:49157/mirage",
+          "http_status": 200,
+          "body_has_content": true,
+          "no_route_fallback": true,
+          "exact_final_URL": true,
+          "visible_route_heading": true,
+          "links_present": true,
+          "one_mirage_requirements": true,
+          "mirage_five_requirement_domains": true,
+          "mirage_18_exact_unverified": true,
+          "mirage_no_blanket_green": true,
+          "mirage_provenance_extension": true,
+          "mirage_provenance_text": true,
+          "checklist_profile": "MIRAGE_UNVERIFIED_REQUIREMENTS_WITH_PROVENANCE",
+          "mirage_projection_scope": true,
+          "profile_container_within_viewport": true,
+          "mirage_table_within_viewport": true,
+          "body_geometry": {
+            "x": 8,
+            "y": -3025,
+            "width": 374,
+            "height": 4848.375
+          },
+          "no_page_errors": true,
+          "page_errors": [],
+          "headings": [
+            "MirageOS Migration Projection Cockpit",
+            "Runtime observation",
+            "Model-derived telemetry (not live)",
+            "Projection summary",
+            "Hypervisor & Solo5 Hardware Probe",
+            "Configured migration candidates",
+            "Non-negotiable boundaries"
+          ],
+          "no_forbidden_requests": true,
+          "no_socket_attempts": true,
+          "socket_attempts": 0,
+          "blocked_request_count": 0,
+          "blocked_requests": [],
+          "controller_source_unchanged": true
+        },
+        "screenshots": [
+          {
+            "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1230-mirage-mobile/20261001-1048-page.png",
+            "sha256": "2ce64f311586a7c8ea13851e39cce0ac12699526828e75d9dc7bf0cf8883b391"
+          }
+        ]
+      },
+      {
+        "url": "http://nas-1.tail55d152.ts.net:49157/",
+        "width": 390,
+        "status": "PASS",
+        "observed_utc_seconds": 1790857603.869115,
+        "checks": {
+          "HTTP200_exact_response_URL": true,
+          "response_url": "http://nas-1.tail55d152.ts.net:49157/",
+          "http_status": 200,
+          "body_has_content": true,
+          "no_route_fallback": true,
+          "exact_final_URL": true,
+          "visible_route_heading": true,
+          "links_present": true,
+          "one_canonical_checklist": true,
+          "visible_checklist_summary": true,
+          "canonical_checklist_keyboard_toggle": true,
+          "five_domains_plus_provenance": true,
+          "18_exact_visible_UNRUN_requirements": true,
+          "provenance_visible": true,
+          "no_receipts_honest": true,
+          "one_recovery_root": true,
+          "cockpit_observation_scope": true,
+          "cockpit_snapshot_received": true,
+          "cockpit_observation_time": true,
+          "no_simulated_timeline": true,
+          "local_filter_empty": true,
+          "local_filter_restore": true,
+          "local_evidence_view": true,
+          "evidence_truthful_scope": true,
+          "local_tasks_restored": true,
+          "simulation_control_disabled": true,
+          "profile_container_within_viewport": true,
+          "body_geometry": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 8115.84375
+          },
+          "no_page_errors": true,
+          "page_errors": [],
+          "headings": [
+            "Indrajaal Swarm Dashboard"
+          ],
+          "no_forbidden_requests": true,
+          "no_socket_attempts": true,
+          "socket_attempts": 0,
+          "blocked_request_count": 0,
+          "blocked_requests": [],
+          "controller_source_unchanged": true
+        },
+        "screenshots": [
+          {
+            "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1230-cockpit-mobile/20261001-1048-page.png",
+            "sha256": "eac7ba82c0119fe2647d7c8e59a09fc0dd431dce72fc300aad2c7fac5ded6fc9"
+          }
+        ]
+      },
+      {
+        "url": "http://nas-1.tail55d152.ts.net:49157/",
+        "width": 1280,
+        "status": "PASS",
+        "observed_utc_seconds": 1790857603.930825,
+        "checks": {
+          "HTTP200_exact_response_URL": true,
+          "response_url": "http://nas-1.tail55d152.ts.net:49157/",
+          "http_status": 200,
+          "body_has_content": true,
+          "no_route_fallback": true,
+          "exact_final_URL": true,
+          "visible_route_heading": true,
+          "links_present": true,
+          "one_canonical_checklist": true,
+          "visible_checklist_summary": true,
+          "canonical_checklist_keyboard_toggle": true,
+          "five_domains_plus_provenance": true,
+          "18_exact_visible_UNRUN_requirements": true,
+          "provenance_visible": true,
+          "no_receipts_honest": true,
+          "one_recovery_root": true,
+          "cockpit_observation_scope": true,
+          "cockpit_snapshot_received": true,
+          "cockpit_observation_time": true,
+          "no_simulated_timeline": true,
+          "local_filter_empty": true,
+          "local_filter_restore": true,
+          "local_evidence_view": true,
+          "evidence_truthful_scope": true,
+          "local_tasks_restored": true,
+          "simulation_control_disabled": true,
+          "profile_container_within_viewport": true,
+          "body_geometry": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 4390.953125
+          },
+          "no_page_errors": true,
+          "page_errors": [],
+          "headings": [
+            "Indrajaal Swarm Dashboard"
+          ],
+          "no_forbidden_requests": true,
+          "no_socket_attempts": true,
+          "socket_attempts": 0,
+          "blocked_request_count": 0,
+          "blocked_requests": [],
+          "controller_source_unchanged": true
+        },
+        "screenshots": [
+          {
+            "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1230-cockpit-desktop/20261001-1048-page.png",
+            "sha256": "2f525a4307308b673f1228bbb472befd564958f748f7ac1e3e76ad8ad1bbe0e0"
+          }
+        ]
+      }
+    ],
+    "local_interactions": [
+      "Fill unmatched task filter and assert zero data rows.",
+      "Clear filter and assert original rows restored.",
+      "Click Evidence, assert table absent and truthful evidence disclaimer present.",
+      "Click Tasks and assert original rows restored.",
+      "Keyboard-expand verification requirement accordions."
+    ],
+    "traffic": "No operational controls activated; zero page errors, blocked requests and socket attempts in all3profiles.",
+    "listener": "Authorized exact private restoration_browser_probe, 127.0.0.1:49157,25second selfexit with30second outer bound and trap/wait cleanup."
+  },
+  "remaining_scope": [
+    "Production deployment and production ecology browser profile remain unverified/unsupported.",
+    "This is scoped read-only recovery usability, not whole-system or accessibility certification.",
+    "Mirage broad tables intentionally use local horizontal scrolling. Container and first-table geometry checked; no whole-document pixel/contrast proof.",
+    "Earlier restoration dashboard private profile PASS remains recorded separately; unchanged corresponding static page/probe source, not rerun in this3profile set.",
+    "Snapshot contents are public mutable observations, not compiled source truth. Final observed task count51 and snapshot time12:25:29UTC."
+  ],
+  "preserved_evidence": "All previous HOLD, compile/CAS/ARGMAX failures, DOM-only receipts and screenshot artifacts retained. One oversized follow-up replacement was rejected before any write; bounded exact-fragment replacements succeeded.",
+  "tags": [
+    "#fractal-l3",
+    "#zero-muda",
+    "#checklist-nav"
+  ]
+}

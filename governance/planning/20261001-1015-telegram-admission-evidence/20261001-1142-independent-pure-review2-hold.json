@@ -1,0 +1,109 @@
+{
+  "schema": "uos.telegram-pure-review.v1",
+  "timestamp_utc": "2026-10-01T11:37:42Z",
+  "tags": [
+    "#fractal-l5",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "PURE_REVIEW2",
+  "worker": "codex-admission-review-20261001",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "candidate": "e7819064172abde21e81eff7fa80b11ec3154fb8",
+  "source_bindings": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "aff2c264ebc7c394642b5b4437ffeb7d3681cd20f97e91e8547dd103b48509c1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "b450a82b47682ea9cdd5cfaefed02149a9705e4ffedebcddea24c6b26c5e208b"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "ace78567150557d0076ec5e499c68c20b0a15ded93b35600e1b2501f9ca0c2fd"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "76c1e30997304bd7ee517073f394ecd39609dc461a50785aa2d41da58f098419"
+    }
+  ],
+  "source_match": "Empty JJ diff over four reviewed files before build and after probes; hashes stable.",
+  "scope": "Offline pure Telegram ingress and ledger behavior only.",
+  "validation": {
+    "active_check": "ACTIVE_OBSERVATION_PASS 2026-10-01T11:36:08Z",
+    "assessment_sha256": "678160c2f25a99499890cbd9846a09bb24038f66f3750e4914b13b3510e2b263",
+    "build": "Pinned sibling gleam build PASS existing dependencies, no downloads observed.",
+    "independent_eunit_count": 26,
+    "independent_eunit_result": "All 26 tests passed.",
+    "probe_result": "Independent direct calls reproduce seven observations grouped into four findings; actual assertions and output preserved.",
+    "evidence": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1142-independent-pure-review2-evidence.json"
+  },
+  "findings": [
+    {
+      "id": "PURE2-01",
+      "priority": "P1",
+      "function": "ingest_batch",
+      "counterexample": "Starting watermark100 and empty inbox, batch [accepted100A,accepted100B with different hash] returns watermark101, one retained row and a collision. Sorting did not prevalidate an equal-ID group before acknowledging it.",
+      "minimal_fix": "Prevalidate each equal update-ID group for complete identity equality before ingesting any representative or advancing past that ID. Conflicting groups halt at the group's offset with no conflicting representative committed. Validate against existing inbox too; retain legitimate integer gaps.",
+      "regressions": [
+        "Adjacent and nonadjacent equal-ID conflicts in both orders from empty and existing inbox.",
+        "Mixed accepted/rejected duplicates and differing rejection identity.",
+        "Exact repeated duplicates remain idempotent and can advance once; later IDs cannot skip unresolved group."
+      ]
+    },
+    {
+      "id": "PURE2-02",
+      "priority": "P1",
+      "function": "handle_restart",
+      "counterexample": "Same request has delivered chunk0/2 and uncertain chunk1/2. [delivered,uncertain] produces InboxCompleted(delivered:777); reversing list order yields InboxHold. A wrong-chat delivered chunk with the same request ID also completes inbox. Source uses list.find and fabricates completion digest strings delivered:<id>/outbox_pending.",
+      "minimal_fix": "Aggregate all chunks for the request. Validate chat and bot/request linkage, consistent bounded total, unique complete index coverage and durable result digest/identity before recovering. Any uncertain/failed/inconsistent/missing set must hold. Pending valid result needs explicit result-ready/delivery-pending state rather than fabricated completion digest. Never re-execute an existing result. Completion requires validated complete aggregate; preserve actual digest. Keep worker/epoch and durable CAS checks at effectful adapter boundary.",
+      "regressions": [
+        "All permutations of delivered/pending/sending/uncertain/failed multipart snapshots give equivalent safe disposition.",
+        "Missing/duplicate indices, inconsistent totals, wrong chat/request/bot, orphan result and invalid digest hold.",
+        "Valid complete delivered set and valid pending result recover distinctly without new execution or blind send retry."
+      ]
+    },
+    {
+      "id": "PURE2-03",
+      "priority": "P2",
+      "function": "evaluate_update / ingest_single / validate_chunk / complete_inbox_task",
+      "counterexample": "Configured bot0 and pair(chat0,user-3), update-1/message0 with missing chat.type and is_bot fields yields accepted envelope, inbox and valid worker claim. Empty payload with total_chunks1000000000 is claimable. Completion accepts not-a-digest.",
+      "minimal_fix": "Validate required numeric identity/schema fields before accepted envelope (positive bot/user/message; legal update ID; nonzero chat), no security-relevant malformed-field defaults. Check nonempty payload and documented finite chunk ceiling, and enforce the actual digest representation. Use checked/opaque validated inputs or enforce validation at each exported state transition; preserve refused state and offset.",
+      "regressions": [
+        "Boundary and boundary+1 identity/payload/chunk values; missing is_bot/chat type and invalid chat kind.",
+        "Allow legitimate negative group chat IDs and valid Telegram update-ID range.",
+        "Valid digest shape passes; malformed/empty digest and invalid request records refuse."
+      ]
+    },
+    {
+      "id": "PURE2-04",
+      "priority": "P2",
+      "function": "classify_directive.is_valid_empty_args",
+      "counterexample": "/tool query_doctor {} is accepted but semantically identical /tool query_doctor { } is refused because only literal {} is recognized.",
+      "minimal_fix": "Parse optional argument text as exactly an empty JSON object, with legal JSON whitespace. Absence of arguments may remain the documented shorthand. Refuse malformed/non-object/nonempty JSON rather than discarding it.",
+      "regressions": [
+        "{}, { }, and multiline/tab JSON whitespace empty objects accepted.",
+        "Blank explicit/non-object/array/nonempty malformed forms handled according to explicit grammar; no arbitrary argument removal."
+      ]
+    }
+  ],
+  "positive_controls": [
+    "Changed chat and changed bot identity duplicates refuse.",
+    "Descending batch containing collision against existing row halts at100.",
+    "1001-row intake accepts exactly1000, preserves first refused offset1001.",
+    "Empty owner/zero epoch/empty completion digest refuse.",
+    "Wrong owner, wrong epoch and terminal reconciliation return Error.",
+    "Single sending chunk recovers UNCERTAIN; corresponding inbox holds and both execution/send retry refuse.",
+    "Nonempty tool arguments refuse; no-arg and literal{} succeed; /action refuses.",
+    "Previously invalid empty-ID/negative-index/zero-total/oversize chunk refuses claim."
+  ],
+  "limitations": [
+    "Pure constructor/status transitions are not canonical task authorization, transactional durability or process fencing.",
+    "No SQLite, Telegram transport, real private messages, live polling, network calls or production service tests performed.",
+    "No source/runtime/task/main mutations by reviewer; parent completes task after acknowledgement.",
+    "Prior HOLD evidence preserved; passing26 supplied tests do not establish acceptance."
+  ]
+}

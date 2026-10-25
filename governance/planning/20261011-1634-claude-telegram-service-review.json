@@ -1,0 +1,399 @@
+{
+  "artifact": "uos.telegram.service_review.v1",
+  "author_session": "claude-telegram-service-20261011",
+  "verdict": "REVIEW_DELIVERED_WITH_HOLD",
+  "hold_scope": "HOLD on two paths: the authority fence (F1) and the HTTP end-to-end bound (F2 plus F10). The service must not take HTTP side effects while authorization is a caller-supplied string shape, and no bounded-HTTP claim is admissible while teardown is unbounded.",
+  "admission": "NOT_GRANTED",
+  "not_claimed": "Service implementation is NOT complete. No test was executed by me. No runtime behaviour was observed by me. No mathematical result is claimed. No blanket green or checklist pass is asserted.",
+  "sa_plan": {
+    "plan_id": "uos/telegram-runtime/20261001-1150",
+    "task_id": "CLAUDE_SERVICE_REVIEW",
+    "worker": "claude-telegram-service-20261011",
+    "attempt": 1,
+    "lease_until_ns": "1791739349571583156",
+    "lease_duration_ns": "3600000000000",
+    "preflight": "PREFLIGHT_PASS 16:22:23Z, 0 findings, P1/768, assessment_sha256 7ad8735f4bc53b70375c61065ba32362fb062299f01116b67bedd42e5040d727",
+    "active_check_pre_work": "ACTIVE_OBSERVATION_PASS 16:22:54Z, 0 findings, sa_plan snapshot 336ec425084803e3fd9725925a4d982efd422476757144d273223a025f67691c",
+    "coordinator": {
+      "db": "var/coordination/tri-agent/coordinator.sqlite3",
+      "register_seq": 530,
+      "heartbeat_seq": 531,
+      "claim_seq": 532,
+      "claim_epoch": 1,
+      "resource": "task:CLAUDE_SERVICE_REVIEW"
+    }
+  },
+  "role": "Read-only independent design/code review. AGY is the product implementer. No product or runtime edit was made.",
+  "sha_closure": {
+    "discipline": "Every finding below is attributed to the exact bytes named here. Where a file moved during the review, both hashes are given and the finding is bound to the one actually read.",
+    "observation_revision": "jj suukkrkqkwuv / 4b6fea72f2a6 (read with --ignore-working-copy; no snapshot taken)",
+    "governance_artifacts": {
+      "20261011-1558-telegram-service-development-adoption.json": "98b7b290535e37f66061411ce6a7cb33f2e59648759785308f57f6023a5d08ea",
+      "20261011-1656-telegram-service-draft-runtime-findings.json": "f639a5923e90c0e8250b6793158addbd4e14f3966d32a51a14c68bba4e5dbb4f",
+      "20261011-1606-telegram-lifecycle-feasibility.json": "2b102f3a6301129e87c08d0b38b5ce840b50838de82875e396381f31483041ee",
+      "20261011-1351-telegram-authority-fresh-verification.json": "ed7ce71050af1ff9234aed23abd84aa618212398e80044062320cc0979ae3ca9"
+    },
+    "root_sources_read": {
+      "telegram_service.gleam": {
+        "sha256_16": "a5cac0eaa670940a",
+        "lines": 675,
+        "coverage": "lines 1-300 read in full; delivery region 431-563 read by targeted extraction. NOT fully read."
+      },
+      "telegram_http_client.gleam": {
+        "sha256_16": "7833b8d8658df983",
+        "lines": 355,
+        "note": "matches root's stated HTTP repair hash 7833b8d8"
+      },
+      "telegram_lifecycle_ffi.erl": {
+        "sha256_16": "88625cab13593ae1",
+        "lines": 157
+      },
+      "telegram_ingress_guard.gleam": {
+        "sha256_16": "dfde4dd433732679",
+        "lines": 261
+      },
+      "telegram_delivery_ledger.gleam": {
+        "sha256_16": "2dfab99f1bb7495d",
+        "lines": 697
+      }
+    },
+    "files_that_MOVED_during_this_review": [
+      {
+        "path": "apps/cepaf_gleam/src/telegram_http_ffi.erl",
+        "hash_at_first_observation": "1c69515890ef901e655aecd3d74dffc58a2e6e123b95b4e2f656e7fd9d69d345",
+        "hash_on_rehash": "1560a13de344ff539a93b6ed5c307617cfca0c4cbefcb83417058a4ffe664231",
+        "my_error": "I read the root path AFTER it had been repaired and attributed its absolute-deadline behaviour to hash 1c695158, which I had hashed earlier. That is a hash-closure violation: initial hash followed by a moving file. Root caught it. Corrected by rehashing root and reading the frozen candidate bytes directly.",
+        "binding": "F2 is bound to the FROZEN bytes at var/recovery-runtime/20261011-1623-http-review-v3/src/telegram_http_ffi.erl, verified sha256 1c69515890ef901e655aecd3d74dffc58a2e6e123b95b4e2f656e7fd9d69d345. The root file 1560a13d is a NEW candidate awaiting fresh tests."
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam",
+        "root_hash_now": "68b40f61666c85e30bc9c0663de1a2db124949753a4795e356f80ed792d15d9f",
+        "frozen_candidate_hash": "efd21d2f557f6223f5b431ca673c7fe600daa3fc64a986e0c9a9bd77297b97d7",
+        "binding": "F3 is bound to the FROZEN efd21d2f, which is what the probe loaded. Root 68b40f61 already contains the repair and is a new candidate awaiting fresh tests."
+      }
+    ],
+    "frozen_candidate": {
+      "dir": "var/recovery-runtime/20261011-1623-http-review-v3",
+      "load_path_note": "Root states the frozen execution load path prioritizes the private build/ebin. Findings therefore bind to src/ bytes whose beams are in that private ebin, not to live root files.",
+      "service_http_review.erl": "a0fcb29c798befd5",
+      "service_http_deadline.erl": "c4f2781b5d505236",
+      "http-results.txt": "c079a4a36c675294",
+      "src/telegram_http_ffi.erl": "1c695158",
+      "src/.../telegram_lifecycle_adapter.gleam": "efd21d2f"
+    },
+    "hackney": {
+      "pinned": "3.2.1",
+      "outer_checksum": "1D9260C31B7C910B63E6B3929D296F18BA3D8217EF01800989AFCFCC77776AFE",
+      "audited": false,
+      "note": "Pin observed in apps/cepaf_gleam/manifest.toml:24. Hackney internals were NOT audited."
+    },
+    "frozen_candidate_v4": {
+      "dir": "var/recovery-runtime/20261011-1629-http-review-v4",
+      "note": "Supersedes the v3 deadline probe for cleanup behaviour. cleanup1 fixture (service_http_cleanup.erl 491f6cc22719cf12 / cleanup-results.txt df5f9d434faac1f6) failed to drain the request body, is SUPERSEDED, and is preserved.",
+      "service_http_cleanup2.erl": "75722c920eb8abcd",
+      "cleanup2-results.txt": "6b16a6fcbf07ba64",
+      "results.txt": "9bb45c8a6fb2aece",
+      "service_http_deadline.erl": "c4f2781b5d505236",
+      "service_http_boundaries.erl": "b7b5aaabe3493d79",
+      "manifest.json": "ef7e725990f016e2",
+      "gleam.toml": "d14edc0bcb49c849"
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "title": "Authority fencing is a string-shape predicate, not an owner observation. Three independent defects, one of which root has not stated.",
+      "class": "P1",
+      "severity": "HIGHEST",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 213-300",
+      "observed": "validate_canonical_lease/3 (1) blacklists four fixture strings - invented-lease, fake-lease, mock, empty - then (2) accepts ANY lease_id beginning coord-, sa-plan- or lease-, then (3) compares lease.valid_until_us against a now_us PARAMETER, then (4) refuses worker_id equal to invented-service-worker or beginning fake. verify_authority/2 adds epoch equality against config.epoch and re-checks expiry against the same caller-supplied now_us.",
+      "independent_assessment": [
+        "D-a NO CANONICAL LOOKUP. Nothing in this path reads the sa-plan store or the coordinator database. There is no observation of current owner, attempt, epoch, state or expiry. A lease_id is a string the caller chose; prefix shape is not provenance. This confirms root's statement.",
+        "D-b TRUSTED CLOCK IS ALSO CALLER-SUPPLIED. This is additional to root's note and is the sharper defect. now_us is a function parameter threaded from the caller into both the expiry test in validate_canonical_lease and the one in verify_authority. A caller passing now_us = 0 satisfies valid_until_us > now_us for ANY positive expiry, including one long past. So even a correct canonical lease could not be fenced by this code, because the comparison's reference point is attacker-chosen. Repairing the lookup without also removing the clock parameter leaves the fence defeated.",
+        "D-c WORKER IDENTITY IS A NAMING CONVENTION. string.starts_with(worker_id, \"fake\") denies a prefix, not an identity. Any worker_id not starting with fake is accepted without being compared to the canonical claim holder.",
+        "D-d set_authority/2 IS PUBLIC AND UNVALIDATED. It writes Some(lease) into state with no check at all. Validation happens only later, in verify_authority, against the caller-supplied clock. So authority enters the state unconditionally."
+      ],
+      "disconfirmation": "Competing hypothesis H2: the prefix allowlist is a thin shim over a real lookup performed elsewhere, so the predicate is adequate in context. REFUTED: validate_canonical_lease's full body is self-contained with no store, FFI or provider call, and verify_authority adds only arithmetic on values already in state. There is no second gate on the path from set_authority to the delivery pipeline. Competing hypothesis H3: epoch equality against config.epoch supplies the missing binding. REFUTED: config.epoch is itself part of the caller-constructed ServiceConfiguration, so this compares two caller-supplied numbers.",
+      "mechanism_for_root_observation": "This is the mechanism by which a public AuthorityLease reached HTTP without a canonical claim: construct AuthorityLease(lease_id: \"coord-anything\", epoch: config.epoch, valid_until_us: 1), call set_authority, then drive a delivery step with now_us = 0.",
+      "explicitly_not_proof": "The current test suite's change from one set of fixture strings to another is NOT evidence that this fence works. A blacklist of known-bad inputs cannot establish that the remaining input space is authorized. Any review treating an updated fake-string test as authority proof would be asserting the converse error."
+    },
+    {
+      "id": "F2",
+      "title": "Frozen HTTP FFI resets the timeout on every received chunk, so the configured bound does not bound the request.",
+      "class": "P1",
+      "bound_to": "FROZEN var/recovery-runtime/20261011-1623-http-review-v3/src/telegram_http_ffi.erl sha256 1c69515890ef901e655aecd3d74dffc58a2e6e123b95b4e2f656e7fd9d69d345",
+      "observed": "No Deadline term exists anywhere in these bytes. execute_request binds Timeout = TimeoutMs and passes Timeout unchanged through stream_response (after Timeout at lines 98 and 108) into collect_chunks (line 113 signature, recursion at line 131, after Timeout at line 133). Each receive therefore gets a FULL fresh Timeout.",
+      "quantified_bound": "Actual worst case is Timeout x (2 + chunk_count): one full Timeout for status, one for headers, one per chunk. chunk_count is controlled by the remote peer and bounded only by MaxBytes, since a chunk may be one byte. At the probe's MaxBytes of 65536 a peer sending 1-byte chunks just under each window extends an '80 ms' configuration to roughly 87 minutes. The configured value is not a bound on the request; it is a bound on inter-chunk idleness.",
+      "measured": "service_http_deadline.erl (c4f2781b5d505236) drives 6 chunks each preceded by timer:sleep(40) against timeout_ms 80 and records result delivered at elapsed 294 ms. Each 40 ms wait fits inside a fresh 80 ms window, so every chunk is accepted and the stream completes normally.",
+      "process_finding_this_exposes": "http-results.txt (c079a4a36c675294) records timeout_bound actual={{ambiguous_outcome,timeout},14} violation=false. A passing single-shot timeout test coexists with a total-deadline violation of 3.7x. The existing observable is strictly coarser than the property it is believed to verify: one slow response is bounded, a slow DRIP is not. This is the same defect class as an earlier finding in this plan and must be fixed in the permanent suite, not only in the implementation.",
+      "current_root_candidate": "apps/cepaf_gleam/src/telegram_http_ffi.erl is now 1560a13de344ff53 and DOES compute Deadline = StartTime + TimeoutMs once, recompute Remaining per receive, and reap plus drain on timeout with a bounded after 0. I observed those bytes only. Per root this is a NEW candidate awaiting fresh tests, and I assert no verification of it.",
+      "residuals_in_the_new_candidate": [
+        "MIN_TIMEOUT_MS is 1, so a 1 ms policy floor is admissible; combined with connect_timeout equal to the same value this makes legitimate requests fail rather than be bounded.",
+        "There is still no chunk-count bound, only a byte bound. An absolute deadline makes this survivable but a chunk-count cap is cheap and bounds mailbox pressure.",
+        "{recv_timeout, Timeout} remains per-receive at the hackney layer. Harmless beneath an outer absolute deadline, but it means hackney may return its own timeout earlier than the deadline, so error attribution should not assume the outer bound fired."
+      ],
+      "superseded_note": "F2 remains correct for the frozen 1c695158 body-drip defect, and root reports 1560a13d fixes that classification. F2 is NOT the whole property: see F10, which shows the same end-to-end bound still violated at teardown in 1560a13d."
+    },
+    {
+      "id": "F3",
+      "title": "Frozen lifecycle adapter accepts any unit name with the right prefix, bypassing both its own character check and the FFI regex.",
+      "class": "P1",
+      "bound_to": "FROZEN .../src/cepaf_gleam/harness/telegram_lifecycle_adapter.gleam sha256 efd21d2f557f6223f5b431ca673c7fe600daa3fc64a986e0c9a9bd77297b97d7 lines 86-98",
+      "observed": "validate_test_unit_name/1 in the frozen bytes is prefix-only: starts_with(unit_name, test_unit_prefix) -> Ok(unit_name). There is no length check, no character check, and NO call to ffi_validate_test_unit_name. The FFI's TEST_UNIT_REGEX therefore never runs on this path, so the FFI comment claiming wildcards and semicolons are 'permanently forbidden' describes a predicate that is not reached.",
+      "measured": "service_http_review.erl line 43 calls the adapter with <<\"uos-tg-store-test-*;fake\">> and line 44 flags violation when element(1,J) =:= ok. Result: actual={ok,<<\"uos-tg-store-test-*;fake\">>} violation=true. This is the only violation=true in the probe output.",
+      "severity_bounded_honestly": "This is NOT shell injection. telegram_lifecycle_ffi:run_command/2 dispatches via an Erlang port with an argument list, so * and ; are passed as literal argv elements and are not interpreted by a shell. The actual loss is defence-in-depth on the stated constraint that only vetted uos-tg-store-test- units are ever touched: an arbitrary suffix reaches systemctl argv, and the module's own isolation claim rests on a validation that the frozen path skips. I am deliberately not escalating this to an injection claim, having overclaimed a comparable finding earlier in this plan.",
+      "current_root_candidate": "Root 68b40f61 adds the length bound, an explicit allowed-character set over the remainder, and delegation to the FFI. Observed bytes only; awaiting fresh tests."
+    },
+    {
+      "id": "F4",
+      "title": "The quiescence gate can be satisfied vacuously: empty expected hashes in storage_config make any receipt's hashes match.",
+      "class": "P2",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 86-118, 136-157",
+      "observed": "init_service validates a cleanup_receipt by comparing receipt_store_db_path against ffi_storage_config_db_path, then comparing worker and guardian hashes. Both hash comparisons are written as case expected { \"\" -> True; expected -> actual == expected }. An empty expected value is treated as a WILDCARD, not as a misconfiguration.",
+      "consequence": "With a storage_config carrying an empty worker_sha or guardian_sha, any receipt passes the binary-identity check. The receipt then suppresses the unquiesced-crash determination: records in InboxProcessing are counted as held but do NOT set the crash flag (line 141-144), so initial_writer_state becomes ServiceWriterClean instead of ServiceWriterHold. The fail-closed quiescence gate is bypassed while appearing to have been checked.",
+      "relation_to_root": "Root reports that an ordinary caller file minted a fake cleanup receipt. F4 is the independent structural reason a minted receipt is load-bearing: the only thing standing between a forged receipt and a cleared writer hold is a hash comparison that is permitted to be vacuous. UnitCleanupReceipt being an opaque type restricts construction to the adapter module, but opacity is a compile-time constraint within the project and is not provenance.",
+      "falsifier": "Construct a storage_config with worker_sha = \"\" and a receipt whose worker_hash is arbitrary; assert init_service returns ServiceWriterHold. Today it returns ServiceWriterClean."
+    },
+    {
+      "id": "F5",
+      "title": "No durable store incarnation or guardian association survives VM death; the hold is explicitly in-memory.",
+      "class": "P2",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 10, 46-57, 159-169",
+      "observed": "The module header names the gate an in-memory ServiceWriterHold. ServiceState carries config, authority, writer_state, watermark, watermark_version, watermark_sha, expected_generation and in_flight_poll. There is no incarnation identifier, no unit invocation id, and no guardian association field. Across VM death the writer_state is lost and is re-derived from store records on the next init_service.",
+      "assessment": "Re-derivation is the right shape, but it is only as sound as the receipt gate, so F5 inherits F4's defect. The requested property - a durable registered unit, store incarnation and guardian association that survives VM death - is NOT implemented. The association exists solely as configuration-time hashes compared at startup, which cannot distinguish a restart of the same incarnation from a different writer presenting the same configuration."
+    },
+    {
+      "id": "F6",
+      "title": "Startup recovery enumerates the inbox only. An in-flight send is neither retried nor quarantined after a crash.",
+      "class": "P2",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 128-133, 181-207, 431-563",
+      "observed": "init_service calls scan_all_inbox_records and nothing else. The delivery pipeline is commit_sending -> bounded POST -> commit_outcome with three terminal outcomes including a genuine OutboxUncertain state (lines 544-563), which is correct design. But no outbox scan exists at startup.",
+      "consequence": "A VM death between commit_sending (line 448) and commit_outcome leaves the record in OutboxSending permanently. Nothing at startup observes it, so it is never advanced to OutboxUncertain and never retried. The SENDING uncertainty is represented in the type system and then lost at the one point where it matters.",
+      "falsifier": "Commit a send, kill the VM before commit_outcome, restart, and assert the record appears in RecoveryResult and is terminalized as OutboxUncertain with a recovered reason. Today RecoveryResult counts inbox records only."
+    },
+    {
+      "id": "F7",
+      "title": "The inbox scan is neither generation-coherent nor bounded, despite being labelled both.",
+      "class": "P2",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a lines 181-207",
+      "observed": "scan_all_inbox_records pages by Some(last_rec.request_id) at page size 64 and terminates when a page is short. Each call returns its own gen, and the function returns the gen of the LAST page while accumulating records read under earlier, possibly different, generations. There is no comparison of gen across pages. Separately there is no cap on total records or page count, and accumulation is list.append(acc, records) inside the recursion.",
+      "assessment": "Two distinct defects behind one name. (a) Coherence: a concurrent generation bump mid-scan yields a mixed-generation record set labelled with the final generation, and the comment at line 8 claims generation-coherent enumeration. (b) Boundedness: list.append in a loop is quadratic in the number of pages, and nothing bounds the scan, so a large inbox contradicts the bounded claim in the module header and can dominate startup.",
+      "falsifier": "Bump the store generation between page 1 and page 2 and assert the scan refuses with generation_changed_during_scan rather than returning a blended set. Separately assert a configured maximum page count is enforced."
+    },
+    {
+      "id": "F8",
+      "title": "No OTP owner, queue or cancellation. The staged code is component-only, as root states.",
+      "class": "P3",
+      "bound_to": "telegram_service.gleam a5cac0eaa670940a",
+      "observed": "gleam/otp/actor and process.Subject are imported. Within the regions I read - lines 1-300 in full and the delivery region 431-563 by extraction - no actor is started and no Subject is used. Concurrency control is in_flight_poll: Bool, a single-flight flag inside a value, and ServiceStepResult is a synchronous step-at-a-time return.",
+      "consequence": "There is no owner process holding the fence, no bounded queue, and no way to cancel an in-flight HTTP call. Pending context for a request that is mid-flight at cancellation time is not represented, so an absolute deadline in the FFI can abandon a request without the service knowing which commit state it was in.",
+      "uncertainty": "Scoped claim. I did NOT read all 675 lines. The absence of an actor is asserted only for the regions read and is marked UNCERTAIN, not ABSENT."
+    },
+    {
+      "id": "F9",
+      "title": "Out-of-range message_id is consistent between HTTP decode and ledger; the resulting Ambiguous classification is defensible, not a defect.",
+      "class": "P3-NOTE",
+      "observed": "telegram_http_client.gleam 7833b8d8 line 146 gates Delivered on guard.valid_positive_id(payload.message_id); telegram_delivery_ledger.gleam 2dfab99f line 114 gates valid_record on the same predicate. telegram_ingress_guard.gleam dfde4dd4 lines 63-65 define it as value > 0 && value <= max_identity. So the HTTP bound and the ledger bound are the same predicate, not two bounds that can disagree.",
+      "probe": "http-results.txt records huge_message actual={ambiguous_outcome,invalid_success_fields_in_200_ok} violation=false, alongside negative_message and false_ok with the same classification.",
+      "assessment": "Root reports 9 runtime failures in the private v2 probes involving a huge message_id beyond the ledger bound. In the v3 frozen output that case is classified consistently and the probe flags no violation, so the v2 finding appears addressed at this layer. I record this as consistency observed in v3, NOT as repair verified, since I ran nothing. The choice of AmbiguousOutcome over a determinate rejection is defensible: the local representability failure is determinate, but the remote side effect may well have occurred, so quarantine is the sound outcome. No change recommended."
+    },
+    {
+      "id": "F10",
+      "title": "The absolute deadline bounds the receive loop but NOT teardown: reap_client performs a synchronous infinity-timeout hackney:close, so cancellation is unbounded.",
+      "class": "P1",
+      "severity": "HIGHEST_IN_NEW_CANDIDATE",
+      "bound_to": "apps/cepaf_gleam/src/telegram_http_ffi.erl sha256 1560a13de344ff539a93b6ed5c307617cfca0c4cbefcb83417058a4ffe664231 lines 184-194, with evidence from FROZEN var/recovery-runtime/20261011-1629-http-review-v4 (service_http_cleanup2.erl 75722c920eb8abcd, cleanup2-results.txt 6b16a6fcbf07ba64)",
+      "observed": "reap_client/1 is: try hackney:close(ClientRef) catch _:_ -> ok end, then drain_messages(ClientRef). hackney:close descends into hackney_conn:stop -> proc_lib:stop -> sys:send_system_msg -> gen:do_call. proc_lib:stop defaults to an infinity timeout, so this is a synchronous call with no bound. The try/catch catches exceptions; it does not bound duration. drain_messages is correctly bounded with after 0, but it runs AFTER the unbounded call.",
+      "measured": "cleanup2-results.txt records slow_headers_exceeded_1500ms_under_80ms_config violation=true with the stack gen:do_call/4 <- sys:send_system_msg/3 <- proc_lib:stop/3. A valid fragmented-header response under an 80 ms configuration blocked more than 1500 ms inside cleanup. Root reports an earlier outer run reaching the 55 s launcher timeout, and no leftover test process was observed. The server finished a valid response, so this is not a server-side fault.",
+      "why_this_defeats_the_F2_repair": "F2 established that the request phase needed an absolute deadline, and 1560a13d supplies one. F10 shows the deadline is enforced only until the moment the code decides to stop. The exit path itself is then unbounded, so the end-to-end property - this call returns within TimeoutMs plus a tolerance - is still false. An absolute deadline over the receive loop plus an infinity-timeout teardown is not a bounded operation. The two findings are the same property measured at two different points, which is exactly why the single-shot timeout observable could not see either.",
+      "additional_scope_defect": "Deadline is computed before application:ensure_all_started(hackney) and before hackney:request, so bootstrap and connect fall inside the accounted window, but nothing ENFORCES the deadline during them: ensure_all_started is unbounded and hackney:request is a synchronous call governed only by its own connect_timeout option. The deadline is therefore accounted across bootstrap and connect but not enforced there. Root states the deadline must cover bootstrap and connect; it currently covers them only arithmetically.",
+      "explicitly_not_claimed": "No connection leak is claimed. cleanup2-results.txt records keepalive_peer_after_full_request={error,closed} violation=false, i.e. the peer was observed closed on the success path. That control PASSES and I assert no leak."
+    }
+  ],
+  "old_receipt_vs_changing_candidate": {
+    "requested_distinction": "Root asked that old receipt findings be distinguished from the moving candidate.",
+    "repaired_in_current_root_awaiting_fresh_tests": [
+      "HTTP per-chunk timeout reset (F2): frozen 1c695158 defective; root 1560a13d implements an absolute deadline plus bounded drain. Untested by me.",
+      "Unit-name validation (F3): frozen efd21d2f defective; root 68b40f61 implements length, character and FFI delegation. Untested by me."
+    ],
+    "NOT_repaired_and_present_in_current_root_bytes": [
+      "F1 authority fencing, in a5cac0eaa670940a as read this session, including the caller-supplied clock which root had not yet named.",
+      "F4 vacuous receipt hash match.",
+      "F5 absent durable incarnation association.",
+      "F6 absent outbox recovery.",
+      "F7 scan coherence and boundedness.",
+      "F8 absent OTP owner and cancellation."
+    ],
+    "method_warning": "Because two files moved mid-review, a finding stated against a path rather than a hash is worthless in this plan. Every finding above names the hash it was read from."
+  },
+  "correction_design": {
+    "D1": {
+      "for": "F1",
+      "priority": 1,
+      "title": "Replace the string predicate with a live provider observation and an internal trusted clock",
+      "types": "pub type OwnerObservation { OwnerObservation(plan_id: String, task_id: String, worker: String, attempt: Int, epoch: Int, state: String, lease_until_ns: Int, observed_at_ns: Int, source: String) } and pub type AuthorityProvider { AuthorityProvider(observe: fn(String, String) -> Result(OwnerObservation, String)) }",
+      "steps": [
+        "Delete all four fixture-string special cases, the coord-/sa-plan-/lease- prefix allowlist, and the starts_with(worker_id, \"fake\") check. A blacklist and a prefix are not authorization and their presence invites exactly the false-proof this review must avoid.",
+        "Implement observe as a bounded adapter that actually reads canonical state: the sa-plan store for owner/attempt/state/lease, and the coordinator database for the resource claim and epoch. It must fail closed on unreachable, malformed or ambiguous responses.",
+        "Obtain now_ns INSIDE the fence from a trusted clock read, never as a parameter. Keep a Clock provider for tests but make the production binding non-injectable by callers of verify_authority. This is the F1 D-b repair and is independent of the lookup.",
+        "Fence predicate: state == executing AND worker == config.worker_id AND attempt == config.attempt AND epoch == config.epoch AND lease_until_ns > now_ns + guard_margin_ns. Add attempt to ServiceConfiguration; it is absent today.",
+        "Make set_authority private, or require an OwnerObservation value that only the provider can mint, so authority cannot be written into state unvalidated.",
+        "Re-fence immediately before EACH side effect - every poll and every send - rather than once per step, because a lease can expire between the check and the call."
+      ],
+      "falsifiers": {
+        "positive": "A genuinely claimed task with matching worker, attempt and epoch and an unexpired lease yields Ok, demonstrated against the real store.",
+        "refusal_shape": "lease_id \"coord-x\" with no canonical row yields Error. This is the direct F1 falsifier and must be a permanent test.",
+        "refusal_attempt": "Correct worker and epoch but attempt off by one yields Error.",
+        "refusal_clock": "A caller passing now_us = 0 cannot revive an expired lease; the fence consults its own clock and refuses. This test fails against today's code.",
+        "refusal_state": "A canonical row in state available or completed yields Error even with a live-looking lease.",
+        "crash": "Provider process unreachable or timing out yields Error and never Ok; assert no HTTP call is attempted."
+      }
+    },
+    "D2": {
+      "for": "F2",
+      "priority": 2,
+      "title": "Keep the absolute deadline, add a chunk bound, and replace the coarse timeout observable",
+      "steps": [
+        "Adopt the 1560a13d shape: one Deadline from a monotonic read, Remaining recomputed per receive, reap plus bounded drain on every exit path.",
+        "Add a chunk-count bound alongside MaxBytes and return a distinct error for it, so mailbox pressure is bounded independently of byte size.",
+        "Raise MIN_TIMEOUT_MS above 1 to a value that cannot make a legitimate connect fail.",
+        "Assert error attribution distinguishes the outer deadline from a hackney recv_timeout, since both can produce timeout."
+      ],
+      "falsifiers": {
+        "positive": "A fast multi-chunk response is delivered intact and the accumulated body equals the fixture.",
+        "refusal_slowdrip": "N chunks each sleeping S where N*S exceeds the configured timeout yields ambiguous_outcome timeout AND elapsed <= timeout + tolerance. This is the permanent replacement for the coarse timeout_bound case and it is the test whose absence let F2 pass review.",
+        "refusal_onebyte": "A peer emitting 1-byte chunks indefinitely is terminated at the deadline, not at MaxBytes.",
+        "crash": "After any timeout the caller mailbox contains no residual hackney_response message, proving the drain ran."
+      }
+    },
+    "D3": {
+      "for": "F3",
+      "priority": 3,
+      "title": "One validation path only",
+      "steps": [
+        "Gleam must delegate to a single FFI predicate and must not have an Ok return that skips it.",
+        "Add a rejection table as permanent tests: *, ;, space, newline, .., /, a 17-byte name, an 81-byte name, and a bare prefix."
+      ],
+      "falsifiers": {
+        "refusal": "Every row of the table yields Error from the adapter, not only from the FFI.",
+        "positive": "A well-formed uos-tg-store-test-<alnum> name is accepted."
+      }
+    },
+    "D4": {
+      "for": "F4",
+      "priority": 4,
+      "title": "Forbid vacuous hash matching",
+      "steps": [
+        "Treat an empty expected worker or guardian sha as a configuration ERROR at init, not as a wildcard.",
+        "Bind the receipt to a persisted store incarnation id, so a receipt is valid only for the incarnation it quiesced."
+      ],
+      "falsifiers": {
+        "refusal": "Empty expected sha yields a configuration error; a receipt whose hashes do not match yields ServiceWriterHold.",
+        "crash": "In-flight records with a receipt from a DIFFERENT incarnation yield Hold."
+      }
+    },
+    "D5": {
+      "for": "F5",
+      "priority": 5,
+      "title": "Persist the incarnation and guardian association",
+      "steps": [
+        "Write incarnation_id, guardian_sha and unit invocation id into the store when it is opened; compare on every init; mismatch yields Hold.",
+        "Carry the incarnation in ServiceState so a later writer cannot present the same configuration and be mistaken for the same incarnation."
+      ],
+      "falsifiers": {
+        "positive": "A clean restart of the same incarnation clears to Clean.",
+        "refusal": "A different writer with identical configuration yields Hold."
+      }
+    },
+    "D6": {
+      "for": "F6",
+      "priority": 6,
+      "title": "Symmetric bounded outbox recovery",
+      "steps": [
+        "Add scan_all_outbox_records mirroring the inbox scan, with the D7 coherence and bound fixes applied to both.",
+        "Any OutboxSending observed at startup is terminalized as OutboxUncertain with reason recovered_in_flight_send and counted in RecoveryResult."
+      ],
+      "falsifiers": {
+        "positive": "A crash between commit_sending and commit_outcome surfaces exactly one recovered record.",
+        "refusal": "Recovery never re-POSTs a record whose outcome is unknown; assert zero HTTP calls during recovery.",
+        "crash": "Two consecutive crash-restarts do not duplicate the record or double-count it."
+      }
+    },
+    "D7": {
+      "for": "F7",
+      "priority": 7,
+      "title": "Make the scan actually coherent and actually bounded",
+      "steps": [
+        "Compare gen across every page; on change abort with generation_changed_during_scan and retry a bounded number of times.",
+        "Cap total records and page count, and accumulate with a reversed list to remove the quadratic append."
+      ],
+      "falsifiers": {
+        "refusal": "A generation bump between pages aborts rather than blending.",
+        "positive": "A scan under a stable generation returns every record exactly once.",
+        "crash": "An inbox exceeding the cap yields an explicit bound error, not a slow success."
+      }
+    },
+    "D8": {
+      "for": "F8",
+      "priority": 8,
+      "title": "Bounded OTP owner with real cancellation and pending context",
+      "steps": [
+        "One owner actor holds the fence and serializes poll and delivery; it is the only writer.",
+        "Bounded mailbox or explicit queue with a declared capacity and a documented shed policy.",
+        "Each HTTP call runs in a monitored child; the owner cancels on deadline and treats the result as uncertain.",
+        "Persist pending context (request_id plus commit state) BEFORE the call so a cancelled request is recoverable by D6."
+      ],
+      "falsifiers": {
+        "positive": "A cancelled in-flight send terminalizes as OutboxUncertain with its request_id intact.",
+        "refusal": "The queue at capacity sheds explicitly rather than growing.",
+        "crash": "Killing the HTTP child leaves the owner alive and the record terminal."
+      }
+    },
+    "D9": {
+      "for": "F10",
+      "priority": 2,
+      "title": "Bounded cancellation: never call a synchronous infinity close on the deadline path",
+      "steps": [
+        "Remove hackney:close from the timeout path. At the deadline, do not ask the connection process to stop politely.",
+        "Own the connection explicitly: identify the exact request/connection worker pid, monitor it, and terminate it with a bounded sequence - exit(Pid, kill) then receive the DOWN with a bounded after. Kill is appropriate on the deadline path because a polite stop is exactly the unbounded operation being removed.",
+        "If a graceful close is wanted on the SUCCESS path only, keep it there and give it its own small bound; the success path already shows the peer closing, so it needs no forced teardown.",
+        "Make the deadline cover bootstrap and connect by enforcement, not only arithmetic: run application:ensure_all_started at service start so it cannot consume a request budget, and bound the synchronous hackney:request phase by running it in a monitored child the owner can kill at the deadline.",
+        "Drain only after termination is confirmed, keeping the existing after 0 bound.",
+        "Return a distinct error for a cancelled-at-deadline request so it is not conflated with a peer timeout, since the F2 residuals already note that attribution ambiguity."
+      ],
+      "falsifiers": {
+        "positive": "A normal request completes and the peer is observed closed, matching the existing keepalive control which must keep passing.",
+        "refusal_slow_headers": "Fragmented valid headers under an 80 ms configuration return within 80 ms plus tolerance. This is the cleanup2 case and it currently fails at over 1500 ms.",
+        "refusal_total": "Measured wall time from call to return never exceeds TimeoutMs plus tolerance across every fixture: fast, slow-drip, slow-headers, one-byte chunks, and a peer that never responds. This is the end-to-end property that F2 and F10 jointly show is not yet held, and it must be asserted on ELAPSED TIME, not on the returned classification.",
+        "crash": "After a deadline cancellation the owned connection process is dead (assert is_process_alive on the recorded pid), the caller mailbox holds no hackney_response message, and no process is leaked.",
+        "bootstrap": "With the hackney application not yet started, the first request still returns within its deadline or fails closed, proving bootstrap is not inside the request budget."
+      }
+    }
+  },
+  "prioritization_rationale": "Ordered by the risk SOP: safety class before score. F1 is P1 and blocks the effect boundary, because an unauthorized side effect is the loss this plan exists to prevent and its repair is independent of every other item. F2 and F3 are P1 but already have candidate repairs in root, so their remaining cost is test design rather than implementation. F4 through F7 are P2 correctness and durability repairs that determine whether recovery is trustworthy. F8 is P3 structural work that should follow the fence, since an owner process around an unsound fence adds concurrency to an unauthorized path. F10 is added at P1 immediately after F1: it is a live defect in the CURRENT candidate rather than in superseded bytes, and it re-opens the very property the F2 repair was believed to close.",
+  "uncertainty": [
+    "U-1 I executed no test and observed no runtime behaviour. Every statement is a source reading at a named hash.",
+    "U-2 telegram_service.gleam was not read in full: 300 of 675 lines in full plus a targeted extraction of 431-563. F8's absence claim is scoped to those regions and is UNCERTAIN, not ABSENT.",
+    "U-3 The four governance artifacts were hashed but not read line by line in this pass; their claims are not relied on for any finding above, which rest on source bytes.",
+    "U-4 Root candidates 1560a13d and 68b40f61 are observed bytes only. I assert no verification of either and they require fresh tests.",
+    "U-5 Hackney 3.2.1 internals were not audited; the pin and checksum were observed in manifest.toml only.",
+    "U-6 Whether the frozen private build/ebin beams were compiled from exactly the src/ bytes I read is asserted by root's load-path statement, not independently verified by me. Beam hashes are recorded for closure.",
+    "U-7 I did not determine whether any delivery path is reachable from a running service, so no claim is made about realised versus latent exposure for F1.",
+    "U-8 I did not execute the v4 cleanup fixtures. F10 rests on root-supplied measurements plus my own reading of reap_client at 1560a13d and the recorded stack in cleanup2-results.txt 6b16a6fcbf07ba64."
+  ],
+  "residuals": [
+    "R-1 F1 remains open in current root bytes and is the stated HOLD.",
+    "R-2 The coarse timeout observable (F2 process finding) will keep passing until the slow-drip falsifier is added; adding the implementation without the test leaves the plan unable to detect a regression.",
+    "R-3 F4 and F5 together mean quiescence across VM death is not yet trustworthy even after F2 and F3 are repaired.",
+    "R-4 Two files moved during a read-only review inside one hour. Any future finding in this plan should be stated against a hash, and candidate directories should be treated as the authority for what was tested.",
+    "R-5 My own hash-closure violation (reading a moving root file and attributing it to an earlier hash) is recorded in sha_closure.files_that_MOVED_during_this_review and was corrected only because root caught it.",
+    "R-6 F10 is open in the current root candidate 1560a13d. The HTTP bound is therefore still not established end to end, and no bounded-HTTP claim should be made until the elapsed-time falsifier in D9 passes.",
+    "R-7 Three candidate generations (v3 1c695158, root 1560a13d, v4 cleanup fixtures) were in play during a single review hour. The reviewable unit in this plan is a frozen candidate directory, not a source path."
+  ],
+  "deviations": [
+    "V-1 All execution in this task used the mandated launcher var/recovery-runtime/20261011-1318-native-verify3/gleam-bound, except node for JSON parsing and validation and the heredoc writes of these two artifacts.",
+    "V-2 One python3 invocation was used to format a preflight result in the immediately preceding task and is recorded there; no Python was used in this task.",
+    "V-3 jj was read with --ignore-working-copy to avoid a working-copy snapshot, which would have been a mutation.",
+    "V-4 Prior direct-Bash deviations from MEDIA_DESIGN remain recorded in the 1354 artifact and are not re-litigated here."
+  ]
+}

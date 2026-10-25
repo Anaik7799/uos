@@ -1,0 +1,65 @@
+{
+  "observed_at": "2026-10-12T03:46:23.996Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261012",
+  "attempt": 7,
+  "status": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "product_source": "Frozen9eb32d service; same frozen product as0320 source-manifest; no product edits",
+  "findings": [
+    {
+      "id": "AUTO-02",
+      "criticality": "critical",
+      "status": "REPRODUCED_TWICE",
+      "cases": [
+        "HTTP400 rejection",
+        "socket-drop ambiguity"
+      ],
+      "fault": "Private native recovery worker triggers existing test_hook_fail_apply_after_commit only on op-outcome-fail-/op-outcome-unc-; fault marker observed in both cases",
+      "observed": "Actual SQLite generation7 after committed outcome, actor generation3, writer_state clean and pending_operation_present false. Both assertions requiring preserved pending context fail.",
+      "expected": "Preserve exact PendingOperation, enter writer HOLD; no subsequent writer/send before proved reconciliation."
+    },
+    {
+      "id": "AUTO-06",
+      "criticality": "high",
+      "status": "REPRODUCED",
+      "observed": "supervisor:which_children actual count1; adopted architecture requires4. Owned supervisor shutdown confirmed."
+    },
+    {
+      "id": "TEST-IPC",
+      "criticality": "medium",
+      "status": "REPRODUCED_TEST_HARNESS_DEFECT",
+      "observed": "Second test runner crashed in json:decode with unexpected_end while concurrently reading non-atomically written cmd.json. Private fixture uses temp+rename; subsequent intended test reached outcome branch.",
+      "mitigation": "Atomic publication of command and response fixture JSON; do not relabel harness startup failure as product falsifier."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "var/recovery-runtime/20261012-0344-service-uncertainty-independent/marked-outcome-tests.json",
+      "sha256": "b4c9f720fda24555e5c9901d8bf8604e0000ee9a528dfe2a648dd688d461588f"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0344-service-uncertainty-independent/cleanup3.json",
+      "sha256": "cb3d93357ee08232f16e21075ee66cd3ea186cf201e35f7dc9d7d03f71dec2e2"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0337-service-baseline-independent/supervisor-count-falsifier.json",
+      "sha256": "09ee871d19b090c30641049f6219dd0a6c4fc23ff92876318c41e3a6a59fc54a"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0344-service-uncertainty-independent/package/src/telegram_service_e2e_test.gleam",
+      "sha256": "cba482f716125d437e7a2306670126182f6862b90c260343a0c79cd6d15ae128"
+    },
+    {
+      "path": "var/recovery-runtime/20261012-0344-service-uncertainty-independent/native/telegram_store_recovery_worker.ml",
+      "sha256": "a3b739c6f0cc04fe6d902dbd90afc4c1d3f22c0ca61aef7eb2e58f1e6bbaefde"
+    }
+  ],
+  "preserved_first_attempts": [
+    "var/recovery-runtime/20261012-0344-service-uncertainty-independent/tests.json",
+    "var/recovery-runtime/20261012-0344-service-uncertainty-independent/ambiguity-after-ipc-repair.json"
+  ],
+  "fixture_corrections": "Initialized Hackney in root VM; fixed socket fixture mode to drop; atomic fixture command publication. Changes confined to private tests, not frozen product.",
+  "cleanup": "All exact root0337 and root0344 units/slices empty after cleanup; no live Telegram messages."
+}

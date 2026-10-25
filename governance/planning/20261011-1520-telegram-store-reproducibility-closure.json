@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "contract": "SC-PROVENANCE-001",
+  "document_id": "governance/planning/20261011-1520-telegram-store-reproducibility-closure.json",
+  "generated_at_utc": "2026-10-11T15:20:23Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 2,
+  "state": "executing",
+  "readiness": "ready_for_root_independent_acceptance",
+  "product_source_closure": {
+    "status": "FROZEN_MATCH",
+    "accepted_count": 8,
+    "matching_count": 8,
+    "manifest": {
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced",
+      "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+      "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+      "native/ocaml/telegram_store/telegram_store.ml": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630"
+    }
+  },
+  "in_tree_reproducible_test_fixtures": {
+    "status": "PROMOTED_IN_TREE",
+    "manifest": {
+      "tools/validation/telegram_store_recovery_worker.ml": {
+        "purpose": "TEST ONLY - promoted root v3 recovery worker with fault injection",
+        "sha256": "d6d1cc6211c467eb32e6e7225ca41d271a14556db8f605ad70170304eb71da8d"
+      },
+      "tools/validation/build_recovery_fixtures.sh": {
+        "purpose": "TEST ONLY - pinned build runner via in-project opam-ocaml toolchain without external packages",
+        "mode": "755",
+        "sha256": "23bcccf04edbabc4077498441c586dd65d875bcf9b9fa01cef1813f9e57d8441"
+      },
+      "tools/validation/telegram_store_recovery_manifest.json": {
+        "purpose": "TEST ONLY - generated fixture descriptor binding binary paths and hashes",
+        "sha256": "47c51213b979e0474b3c938490a95305fd7b18c11e68c832585fc2996b7fb1e6"
+      },
+      "tools/validation/telegram_store_recovery_worker.exe": {
+        "purpose": "TEST ONLY - compiled recovery worker binary",
+        "sha256": "70a3afbbf4fe241f6c8eb9107761e09f19a2c9678353daf5edd7aec64fe2757d"
+      },
+      "tools/telegram_store_transport_guardian.exe": {
+        "purpose": "Tracked in-tree transport guardian binary",
+        "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+      },
+      "apps/cepaf_gleam/test/telegram_store_test.gleam": {
+        "purpose": "In-tree store test suite updated to point to reproducible tools/ fixtures",
+        "sha256": "c0853d6b7a826426fb104d76fb77bd3f4b1a9b4cc92b4ebf17a5a2ff3fc10c98"
+      }
+    },
+    "retained_private_evidence": [
+      "var/recovery-runtime/20261011-1501-store-recovery-fixtures-v3/",
+      "var/recovery-runtime/20261011-1418-store-fix2-review/"
+    ]
+  },
+  "test_execution_verification": {
+    "store_eunit_31_tests": {
+      "command": "erl -noshell -pa build/dev/erlang/*/ebin -eval 'eunit:test(telegram_store_test)'",
+      "result": "PASS",
+      "passed": 31,
+      "failed": 0,
+      "launcher": "gleam-bound"
+    },
+    "transport_eunit_18_tests": {
+      "command": "erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -eval 'eunit:test(telegram_store_transport_test)'",
+      "result": "PASS",
+      "passed": 18,
+      "failed": 0,
+      "launcher": "gleam-bound"
+    },
+    "preflight_31_checks": {
+      "command": "bash tools/preflight",
+      "result": "PASS",
+      "passed": 31,
+      "failed": 0,
+      "tracked_tools_tree": "341 source files tracked, 0 untracked",
+      "launcher": "gleam-bound"
+    },
+    "risk_priority_active_check": {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20261011-1155-telegram-reclaim-risk.json STORE_FIX2 agy-telegram-20261011 2",
+      "result": "PASS",
+      "launcher": "gleam-bound"
+    }
+  },
+  "process_deviation_and_enforcement_accounting": {
+    "historical_deviation_record": "During turn 14:47 UTC after context reset, direct shell invocations occurred. We do not claim 'zero raw shell mutations ever'.",
+    "post_correction_containment": "All subsequent commands, compiles, test runs, and verification gates were executed strictly under the Gleam supervisor launcher (/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1318-native-verify3/gleam-bound) satisfying SC-HARNESS-MCP.",
+    "vcs_discipline": "All VCS inspections and operations used standalone Jujutsu (jj). Zero Git mutations occurred."
+  },
+  "lifecycle_transition_boundary": {
+    "current_task": "STORE_FIX2",
+    "current_task_state": "executing",
+    "action": "leave_attempt_executing_for_root_acceptance",
+    "next_task": "SERVICE_IMPL",
+    "next_task_constraint": "DO NOT CLAIM OR START UNTIL ROOT INDEPENDENT ACCEPTANCE IS GRANTED"
+  }
+}

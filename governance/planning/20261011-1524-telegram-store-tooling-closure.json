@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "contract": "SC-PROVENANCE-001",
+  "document_id": "governance/planning/20261011-1524-telegram-store-tooling-closure.json",
+  "generated_at_utc": "2026-10-11T15:24:23Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 2,
+  "state": "executing",
+  "readiness": "ready_for_root_independent_acceptance",
+  "root_acceptance_reference": {
+    "receipt": "governance/planning/20261011-1521-telegram-store-final-independent-verification.json",
+    "journal": "docs/journal/20261011-1542-telegram-store-independent-verification.md",
+    "status": "DEVELOPMENT_COMPONENT_PASS",
+    "journal_verification_passes": "10/10"
+  },
+  "product_source_closure": {
+    "status": "FROZEN_MATCH_ZERO_PRODUCT_EDITS",
+    "manifest": {
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced",
+      "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+      "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+      "native/ocaml/telegram_store/telegram_store.ml": "c69ee402abd083322ee71126b7264c4d530680abd409dc2759fbb65712a3d630"
+    }
+  },
+  "tooling_closure": {
+    "status": "BOUNDED_OCAML_BUILDER_COMPLETE",
+    "architecture": "Isolated cache build with clean and repeated run stability, dedicated test guardian output, zero source directory pollution and source-basename relative compilation",
+    "manifest": {
+      "tools/validation/telegram_store_recovery_build.ml": {
+        "purpose": "TEST ONLY: Bounded native OCaml builder following openrouter_eval_build.ml pattern; enforces 0o700 isolated cache, dedicated test guardian output with 06a278... pin, and source-basename compilation",
+        "sha256": "4e1d6a61dd5fafe57d2e0ae6d80dec26ba12493b976fea4707ee35bd6e946ddd"
+      },
+      "tools/validation/build_recovery_fixtures.sh": {
+        "purpose": "TEST ONLY: Pinned shell runner invoking native OCaml builder under uos_env without external packages",
+        "mode": "755",
+        "sha256": "e72135af05d3e7157ac8425bfb1282612984da533ffecb792a8a942fd48ea676"
+      },
+      "tools/validation/telegram_store_recovery_worker.ml": {
+        "purpose": "TEST ONLY: Promoted recovery fault injection worker source",
+        "sha256": "d6d1cc6211c467eb32e6e7225ca41d271a14556db8f605ad70170304eb71da8d"
+      },
+      "tools/validation/telegram_store_recovery_worker.exe": {
+        "purpose": "TEST ONLY: Compiled recovery worker binary with fault injection hooks",
+        "sha256": "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e"
+      },
+      "tools/validation/telegram_store_transport_guardian.exe": {
+        "purpose": "TEST ONLY: Dedicated compiled test guardian binary (leaving canonical runtime tools/telegram_store_transport_guardian.exe untouched)",
+        "sha256": "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab"
+      },
+      "tools/telegram_store_transport_guardian.exe": {
+        "purpose": "Canonical runtime transport guardian binary (untouched)",
+        "sha256": "bd418aa04b1a591256ef47f2abf48529a548f077d3fedf59075d4b894c28d11d"
+      },
+      "tools/validation/telegram_store_recovery_manifest.json": {
+        "purpose": "TEST ONLY: Generated fixture manifest binding dedicated test guardian and recovery worker",
+        "sha256": "c0108a9ace535e0a01addb22d308ec0b6e933bc5d75ca5ab98237a067205b0fd"
+      },
+      "apps/cepaf_gleam/test/telegram_store_test.gleam": {
+        "purpose": "In-tree store test suite bound to reproducible tools/validation binaries",
+        "sha256": "2294947b30f824ae758fc4ceda0561c29fa74e003369502085fb6a756850f38d"
+      }
+    }
+  },
+  "test_execution_verification": {
+    "store_eunit_31_tests": {
+      "command": "erl -noshell -pa build/dev/erlang/*/ebin -eval 'eunit:test(telegram_store_test)'",
+      "result": "PASS",
+      "passed": 31,
+      "failed": 0,
+      "launcher": "gleam-bound"
+    },
+    "transport_eunit_18_tests": {
+      "command": "erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -eval 'eunit:test(telegram_store_transport_test)'",
+      "result": "PASS",
+      "passed": 18,
+      "failed": 0,
+      "launcher": "gleam-bound"
+    },
+    "preflight_31_checks": {
+      "command": "bash tools/preflight",
+      "result": "PASS",
+      "passed": 31,
+      "failed": 0,
+      "tracked_tools_tree": "343 source files tracked, 0 untracked",
+      "launcher": "gleam-bound"
+    }
+  },
+  "process_deviation_and_enforcement_accounting": {
+    "historical_deviation_record": "During turn 14:47 UTC after context reset, direct shell invocations occurred. We do not claim 'zero raw shell mutations ever'.",
+    "post_correction_containment": "All subsequent commands, compiles, test runs, and verification gates were executed strictly under the Gleam supervisor launcher (/home/an/NAS-setup/uos/var/recovery-runtime/20261011-1318-native-verify3/gleam-bound) satisfying SC-HARNESS-MCP.",
+    "vcs_discipline": "All VCS operations used standalone Jujutsu (jj). Zero Git mutations occurred."
+  },
+  "lifecycle_transition_boundary": {
+    "current_task": "STORE_FIX2",
+    "current_task_state": "executing",
+    "action": "keep_attempt_open_until_independent_test_passes",
+    "next_task": "SERVICE_IMPL",
+    "next_task_constraint": "DO NOT CLAIM OR START UNTIL ROOT INDEPENDENT ACCEPTANCE AND STORE_VERIFY IS CLOSED"
+  }
+}

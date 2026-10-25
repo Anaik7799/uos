@@ -1,0 +1,90 @@
+{
+  "schema": "uos.independent-staged-provider-review.v1",
+  "observed_at": "2026-10-01T12:26:56Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "AUTH_REVIEW3",
+  "attempt": 1,
+  "candidate": "77d937dc460721966ce47a2ff04d70327e44e3c3",
+  "parent": "1ffb92320c7f2453a87f765f52137d2d3f18feed",
+  "empty_child_observed": "667ead5b37325f839d00878ae13250c7cc4e02d1",
+  "verdict": "PASS_SCOPED_STAGED_DEVELOPMENT",
+  "source_manifest": [
+    {
+      "sha256": "ff5e365a34c14c2fe419e426a88d0bbda5a3e7a7eed61517adbe0d7949fb04cb",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_authority_protocol.gleam"
+    },
+    {
+      "sha256": "06ef90020b4fc3f0e5524dc914712c906785ef1da35145437805dd0bbb37c6f0",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/cepaf_gleam/test/telegram_authority_protocol_test.gleam"
+    },
+    {
+      "sha256": "3b1c7c25b904367112f584862ee27175356fed49c608f2decc4f4c60cb47410c",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_store_cli.gleam"
+    },
+    {
+      "sha256": "90c297c6a72bf15ae756704c3f199333a67c5df2c778ba668eadec8b1804c49f",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/session_sync_cli.gleam"
+    },
+    {
+      "sha256": "f85548fef153d88a85e4032b3985759e11691db6bdcc1cdcc2e66872ded27a38",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_store.gleam"
+    },
+    {
+      "sha256": "d1c825ce33917132cf019434a15d7fed9d2ae627fa3dcfac311b1986fe75778a",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+    },
+    {
+      "sha256": "10b0b8a36795d8de1dd28c2fee162b8e3dac831995da31e0abf7b78d487b863b",
+      "path": ".uos-workspaces/codex-telegram-authority-20261001/apps/uos_swarm/test/session_provider_service_test.gleam"
+    }
+  ],
+  "closes_findings": [
+    "AUTH2-P1-MIGRATION-ALIAS",
+    "AUTH2-P1-MIGRATION-TRANSACTION",
+    "AUTH2-P1-OPERATIONAL-CLI"
+  ],
+  "prior_hold_preserved": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1218-independent-authority-recheck-hold.json",
+  "source_review": {
+    "path": "Core API enforces exact /tmp/uos-telegram-provider-stage-<bounded nonce>/coordinator.sqlite3, root-owned sticky real /tmp, real owned0700 stage, owned0600regular DB,nlinks1; rechecks inode/dev inside transaction. Alias checks reside in the core function, not just a caller.",
+    "transaction": "BEGIN IMMEDIATE now encloses schema, full verification, nonempty history, exact v1/v2 trigger, journal bytes/head/count snapshot, trigger replacement and postverification/history equality. Existing transactionally rechecks lock/generation immediately before COMMIT and rolls back errors.",
+    "cli": "Operational migration route and help removed.",
+    "protocol": "Previously accepted protocol source/test hashes unchanged; earlier genuine register/claim/release/epoch2/renew evidence remains scoped to those bytes."
+  },
+  "tests": {
+    "private_provider_eunit_passed": 6,
+    "independent_additional_controls": 3,
+    "additional_controls": [
+      "Empty verified-schema DB refused.",
+      "No-op events_payload trigger refused; exact original trigger SQL set and event body/digest rows preserved.",
+      "Corrupt stored digest with original guard restored refused; exact original trigger SQL set and event body/digest rows preserved."
+    ],
+    "existing_controls": [
+      "Old provider replay and old/new exact guard verification",
+      "Service registration refused before explicit migration and succeeds after",
+      "Migration idempotence",
+      "Operational-path strings and removed CLI reject before DB access",
+      "Lexical/file/directory symlink and hardlink refusals",
+      "Recovery hold refusal including aliases",
+      "Directory/file permission refusal",
+      "Full journal bytes/head preservation"
+    ],
+    "source_hashes_match": true,
+    "transcript": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1226-independent-staged-provider-tests.txt"
+  },
+  "findings": [],
+  "limits": [
+    "No canonical DB opened or mutated. Negative operational-path strings were rejected by prefix/CLI parsing before any DB access.",
+    "All DB writes/fault injections were disposable private stage tests; no source or task mutation.",
+    "Same-UID cooperative filesystem boundary only; no hostile same-user race isolation or physical power-loss proof.",
+    "The inherited coordinator FFI remains NORMAL sync and this is a private development migration API, not a production durability/activation grant.",
+    "Generation/transaction placement reviewed in source; no timed concurrent replacement or post-DDL crash injection was claimed.",
+    "Canonical activation requires separately reviewed staged candidate, live state ownership and immutable release checks.",
+    "Do not overwrite root's separately accepted v2 pure ingress/ledger with older sibling copies. Global admission/EV status unchanged."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#zero-muda"
+  ]
+}

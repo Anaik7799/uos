@@ -1,0 +1,1504 @@
+{
+  "schema": "uos.telegram.goal-dashboard.v1",
+  "observed_at": "2026-10-12T02:31:22.115Z",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "plans": [
+    {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "status": "OBSERVED",
+      "authority": "NONE",
+      "observed_at": "2026-10-12T02:28:46Z",
+      "snapshot_sha256": "2ef24c1f07e70921095e14088c9941c125a45994760d28e073df4e09efebd9b6",
+      "tasks": [
+        {
+          "task_id": "AUTH_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856804794524427",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AUTH_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857480927424241",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW2"
+          ]
+        },
+        {
+          "task_id": "AUTH_REFRESH",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791725802667992001",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW3"
+          ]
+        },
+        {
+          "task_id": "AUTH_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855891412062687",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "AUTH_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857168498507551",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_FIX"
+          ]
+        },
+        {
+          "task_id": "AUTH_REVIEW3",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857940967893271",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_FIX2"
+          ]
+        },
+        {
+          "task_id": "CLAUDE_SERVICE_REVIEW",
+          "state": "completed",
+          "worker": "claude-telegram-service-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791737022029114429",
+          "result_present": true,
+          "dependencies": [
+            "STORE_VERIFY"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790857943232204985",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "COCKPIT_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858569160908039",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_REVIEW"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858336003483168",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_FIX"
+          ]
+        },
+        {
+          "task_id": "COCKPIT_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858755680630192",
+          "result_present": true,
+          "dependencies": [
+            "COCKPIT_FIX2"
+          ]
+        },
+        {
+          "task_id": "COMMAND_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "INTEGRATION_DESIGN",
+            "SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "COMMAND_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "COMMAND_IMPL"
+          ]
+        },
+        {
+          "task_id": "FEATURE_INVENTORY",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791720681816439811",
+          "result_present": true,
+          "dependencies": [
+            "TOOLS_RESUME"
+          ]
+        },
+        {
+          "task_id": "FORMAL_CANDIDATE_REVIEW",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791753645444169482",
+          "result_present": true,
+          "dependencies": [
+            "FORMAL_GATES"
+          ]
+        },
+        {
+          "task_id": "FORMAL_FIX",
+          "state": "executing",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": "1791752573602044117",
+          "attempt": 3,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "FORMAL_GATES"
+          ]
+        },
+        {
+          "task_id": "FORMAL_GATES",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858510069308043",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "GATEWAY_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "INTEGRATION_DESIGN",
+            "SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "GATEWAY_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "GATEWAY_IMPL"
+          ]
+        },
+        {
+          "task_id": "HTTP_ABORT_DESIGN",
+          "state": "completed",
+          "worker": "claude-telegram-http-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791737999274811718",
+          "result_present": true,
+          "dependencies": [
+            "CLAUDE_SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "HTTP_ABORT_FIX",
+          "state": "completed",
+          "worker": "claude-telegram-http-fix-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791738719991824467",
+          "result_present": true,
+          "dependencies": [
+            "HTTP_ABORT_DESIGN"
+          ]
+        },
+        {
+          "task_id": "HTTP_ACCEPTANCE_REPAIR",
+          "state": "completed",
+          "worker": "claude-telegram-http-repair-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791740639383233537",
+          "result_present": true,
+          "dependencies": [
+            "HTTP_ABORT_FIX"
+          ]
+        },
+        {
+          "task_id": "INTEGRATION_DESIGN",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791724701408487230",
+          "result_present": true,
+          "dependencies": [
+            "MINI_HTTP_AUDIT",
+            "SURFACE_PLAN"
+          ]
+        },
+        {
+          "task_id": "INVENTORY_CORRECTION",
+          "state": "completed",
+          "worker": "claude-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791722640477458337",
+          "result_present": true,
+          "dependencies": [
+            "INVENTORY_REVIEW"
+          ]
+        },
+        {
+          "task_id": "INVENTORY_REVIEW",
+          "state": "completed",
+          "worker": "claude-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791722267956245918",
+          "result_present": true,
+          "dependencies": [
+            "FEATURE_INVENTORY"
+          ]
+        },
+        {
+          "task_id": "LEDGER_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856403838796363",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "LEDGER_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856266059358888",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "LEDGER_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856560694901187",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_FIX"
+          ]
+        },
+        {
+          "task_id": "MEDIA_ADOPTION",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791727115212129302",
+          "result_present": true,
+          "dependencies": [
+            "INTEGRATION_DESIGN",
+            "MEDIA_DESIGN"
+          ]
+        },
+        {
+          "task_id": "MEDIA_CORRECTION",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1791730654228656259",
+          "result_present": true,
+          "dependencies": [
+            "MEDIA_DESIGN"
+          ]
+        },
+        {
+          "task_id": "MEDIA_DESIGN",
+          "state": "completed",
+          "worker": "claude-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791725029511404474",
+          "result_present": true,
+          "dependencies": [
+            "SURFACE_PLAN"
+          ]
+        },
+        {
+          "task_id": "MEDIA_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "INTEGRATION_DESIGN",
+            "MEDIA_DESIGN",
+            "SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "MEDIA_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "MEDIA_IMPL"
+          ]
+        },
+        {
+          "task_id": "MINI_API_CANDIDATE",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791748148318702058",
+          "result_present": true,
+          "dependencies": [
+            "INTEGRATION_DESIGN",
+            "MINI_AUTH_VERIFY"
+          ]
+        },
+        {
+          "task_id": "MINI_API_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "INTEGRATION_DESIGN",
+            "MINI_AUTH_VERIFY"
+          ]
+        },
+        {
+          "task_id": "MINI_API_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "MINI_API_IMPL"
+          ]
+        },
+        {
+          "task_id": "MINI_AUTH_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791721628957172466",
+          "result_present": true,
+          "dependencies": [
+            "MINI_AUTH_REVIEW"
+          ]
+        },
+        {
+          "task_id": "MINI_AUTH_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791720631444802981",
+          "result_present": true,
+          "dependencies": [
+            "TOOLS_RESUME"
+          ]
+        },
+        {
+          "task_id": "MINI_AUTH_VERIFY",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791722010744087321",
+          "result_present": true,
+          "dependencies": [
+            "MINI_AUTH_FIX"
+          ]
+        },
+        {
+          "task_id": "MINI_HTTP_AUDIT",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791723325448598091",
+          "result_present": true,
+          "dependencies": [
+            "MINI_AUTH_VERIFY"
+          ]
+        },
+        {
+          "task_id": "NATIVE_DEPTH_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791725137680902672",
+          "result_present": true,
+          "dependencies": [
+            "NATIVE_FIX3"
+          ]
+        },
+        {
+          "task_id": "NATIVE_FIX2",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791723637301239127",
+          "result_present": true,
+          "dependencies": [
+            "NATIVE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "NATIVE_FIX3",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791724563073934813",
+          "result_present": true,
+          "dependencies": [
+            "NATIVE_VERIFY2"
+          ]
+        },
+        {
+          "task_id": "NATIVE_REPAIR",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1791722604207412314",
+          "result_present": true,
+          "dependencies": [
+            "FEATURE_INVENTORY"
+          ]
+        },
+        {
+          "task_id": "NATIVE_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791722779877296067",
+          "result_present": true,
+          "dependencies": [
+            "NATIVE_REPAIR"
+          ]
+        },
+        {
+          "task_id": "NATIVE_VERIFY2",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791724001681380900",
+          "result_present": true,
+          "dependencies": [
+            "NATIVE_FIX2"
+          ]
+        },
+        {
+          "task_id": "NATIVE_VERIFY3",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791725163453368338",
+          "result_present": true,
+          "dependencies": [
+            "NATIVE_FIX3"
+          ]
+        },
+        {
+          "task_id": "OBSERVER_COMPLETION",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791744703359744322",
+          "result_present": true,
+          "dependencies": [
+            "STORE_VERIFY"
+          ]
+        },
+        {
+          "task_id": "RETURN",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "COCKPIT_REVIEW",
+            "SERVICE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SERVICE_DRAFT_REVIEW",
+          "state": "executing",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": "1791752099179610487",
+          "attempt": 6,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_VERIFY"
+          ]
+        },
+        {
+          "task_id": "SERVICE_IMPL",
+          "state": "executing",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": "1791754904787263175",
+          "attempt": 6,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SERVICE_OBSERVER_TOOL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "STORE_VERIFY"
+          ]
+        },
+        {
+          "task_id": "SERVICE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "SERVICE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_DESIGN",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856676523550132",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "STORE_DESIGN_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790856948136244086",
+          "result_present": true,
+          "dependencies": [
+            "STORE_DESIGN"
+          ]
+        },
+        {
+          "task_id": "STORE_DRAFT_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1791732091897081557",
+          "result_present": true,
+          "dependencies": [
+            "STORE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791727330473812040",
+          "result_present": true,
+          "dependencies": [
+            "STORE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_FIX2",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1791732915920709188",
+          "result_present": true,
+          "dependencies": [
+            "STORE_FIX"
+          ]
+        },
+        {
+          "task_id": "STORE_IMPL",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791726051285080439",
+          "result_present": true,
+          "dependencies": [
+            "AUTH_REVIEW2",
+            "LEDGER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_KERNEL",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858879266463763",
+          "result_present": true,
+          "dependencies": [
+            "LEDGER_REVIEW2",
+            "STORE_DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_KERNEL_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791721074748336712",
+          "result_present": true,
+          "dependencies": [
+            "STORE_KERNEL"
+          ]
+        },
+        {
+          "task_id": "STORE_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791726642948417219",
+          "result_present": true,
+          "dependencies": [
+            "STORE_IMPL"
+          ]
+        },
+        {
+          "task_id": "STORE_TOOL_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791733032781687027",
+          "result_present": true,
+          "dependencies": [
+            "STORE_FIX2"
+          ]
+        },
+        {
+          "task_id": "STORE_TRANSPORT",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790858625145537400",
+          "result_present": true,
+          "dependencies": [
+            "STORE_DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "STORE_TRANSPORT_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1791720047135137008",
+          "result_present": true,
+          "dependencies": [
+            "STORE_TRANSPORT"
+          ]
+        },
+        {
+          "task_id": "STORE_VERIFY",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791733035161030438",
+          "result_present": true,
+          "dependencies": [
+            "STORE_FIX",
+            "STORE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "SURFACE_PLAN",
+          "state": "completed",
+          "worker": "claude-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791723754121155499",
+          "result_present": true,
+          "dependencies": [
+            "INVENTORY_CORRECTION"
+          ]
+        },
+        {
+          "task_id": "TELEGRAM_E2E",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "COMMAND_REVIEW",
+            "FORMAL_FIX",
+            "GATEWAY_REVIEW",
+            "MEDIA_REVIEW",
+            "MINI_API_REVIEW",
+            "SERVICE_REVIEW",
+            "STORE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "TELEGRAM_VCS_GUARD",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1791744788794621848",
+          "result_present": true,
+          "dependencies": [
+            "STORE_VERIFY"
+          ]
+        },
+        {
+          "task_id": "TOOLS_RESUME",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791720084002224030",
+          "result_present": true,
+          "dependencies": []
+        }
+      ]
+    },
+    {
+      "plan_id": "uos/telegram-admission/20261001-1015",
+      "status": "OBSERVED",
+      "authority": "NONE",
+      "observed_at": "2026-10-12T02:28:47Z",
+      "snapshot_sha256": "aab851438e791e7215ed680f8d0fff8a9abec8a8fd3bd5030299f777f69c4240",
+      "tasks": [
+        {
+          "task_id": "ADMISSION",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "ADMISSION_AUDIT",
+            "BROWSER",
+            "TELEGRAM_ACCEPT"
+          ]
+        },
+        {
+          "task_id": "ADMISSION_AUDIT",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790852388044186233",
+          "result_present": true,
+          "dependencies": [
+            "INTAKE"
+          ]
+        },
+        {
+          "task_id": "ADMISSION_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 2,
+          "completed_at_ns": "1790854581919898715",
+          "result_present": true,
+          "dependencies": [
+            "ADMISSION_AUDIT"
+          ]
+        },
+        {
+          "task_id": "ADMISSION_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855120878533127",
+          "result_present": true,
+          "dependencies": [
+            "ADMISSION_FIX",
+            "SYMBIOSIS_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AGY_AUTH",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855422369535197",
+          "result_present": true,
+          "dependencies": [
+            "DESIGN_REVIEW2"
+          ]
+        },
+        {
+          "task_id": "AGY_DESIGN_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790852464936126917",
+          "result_present": true,
+          "dependencies": [
+            "DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AGY_IMPL",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "DESIGN_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AGY_PURE",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790853372726170531",
+          "result_present": true,
+          "dependencies": [
+            "AGY_DESIGN_FIX"
+          ]
+        },
+        {
+          "task_id": "AGY_PURE_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790854498828839926",
+          "result_present": true,
+          "dependencies": [
+            "PURE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "AGY_RCA",
+          "state": "completed",
+          "worker": "agy-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790851399883659873",
+          "result_present": true,
+          "dependencies": [
+            "INTAKE"
+          ]
+        },
+        {
+          "task_id": "BROWSER",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790852789922038749",
+          "result_present": true,
+          "dependencies": [
+            "INTAKE"
+          ]
+        },
+        {
+          "task_id": "BROWSER_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790852792670884775",
+          "result_present": true,
+          "dependencies": [
+            "INTAKE"
+          ]
+        },
+        {
+          "task_id": "BROWSER_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790854495811500617",
+          "result_present": true,
+          "dependencies": [
+            "BROWSER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "BROWSER_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790853295115450783",
+          "result_present": true,
+          "dependencies": [
+            "BROWSER_FIX"
+          ]
+        },
+        {
+          "task_id": "BROWSER_REVIEW2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855046082326439",
+          "result_present": true,
+          "dependencies": [
+            "BROWSER_FIX2"
+          ]
+        },
+        {
+          "task_id": "CLOSE",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "ADMISSION"
+          ]
+        },
+        {
+          "task_id": "DESIGN_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790851760528258164",
+          "result_present": true,
+          "dependencies": [
+            "AGY_RCA"
+          ]
+        },
+        {
+          "task_id": "DESIGN_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790852883489799241",
+          "result_present": true,
+          "dependencies": [
+            "AGY_DESIGN_FIX"
+          ]
+        },
+        {
+          "task_id": "DOCTOR_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855282094129423",
+          "result_present": true,
+          "dependencies": [
+            "ADMISSION_REVIEW"
+          ]
+        },
+        {
+          "task_id": "DOCTOR_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855464435030429",
+          "result_present": true,
+          "dependencies": [
+            "DOCTOR_FIX"
+          ]
+        },
+        {
+          "task_id": "INTAKE",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790850612340041646",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "PREP",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "SOURCE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "PURE_FIX2",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790855562198243289",
+          "result_present": true,
+          "dependencies": [
+            "PURE_REVIEW2"
+          ]
+        },
+        {
+          "task_id": "PURE_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790853882219384655",
+          "result_present": true,
+          "dependencies": [
+            "AGY_PURE"
+          ]
+        },
+        {
+          "task_id": "PURE_REVIEW2",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790854783914703741",
+          "result_present": true,
+          "dependencies": [
+            "AGY_PURE_FIX"
+          ]
+        },
+        {
+          "task_id": "RELEASE",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "RELEASE_REVIEW"
+          ]
+        },
+        {
+          "task_id": "RELEASE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "PREP"
+          ]
+        },
+        {
+          "task_id": "SOURCE_REVIEW",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "AGY_IMPL",
+            "BROWSER"
+          ]
+        },
+        {
+          "task_id": "STATUS",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790851360259995765",
+          "result_present": true,
+          "dependencies": [
+            "INTAKE",
+            "SYMBIOSIS_AUDIT"
+          ]
+        },
+        {
+          "task_id": "SYMBIOSIS_AUDIT",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790850851448173385",
+          "result_present": true,
+          "dependencies": [
+            "INTAKE"
+          ]
+        },
+        {
+          "task_id": "SYMBIOSIS_FIX",
+          "state": "completed",
+          "worker": "codex-telegram-admission-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790854021423153520",
+          "result_present": true,
+          "dependencies": [
+            "DESIGN_REVIEW",
+            "SYMBIOSIS_AUDIT"
+          ]
+        },
+        {
+          "task_id": "SYMBIOSIS_REVIEW",
+          "state": "completed",
+          "worker": "codex-admission-review-20261001",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1790854492763402095",
+          "result_present": true,
+          "dependencies": [
+            "SYMBIOSIS_FIX"
+          ]
+        },
+        {
+          "task_id": "TELEGRAM_ACCEPT",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "RELEASE"
+          ]
+        }
+      ]
+    },
+    {
+      "plan_id": "uos/telegram-tools/20261011-1115",
+      "status": "OBSERVED",
+      "authority": "NONE",
+      "observed_at": "2026-10-12T02:29:39Z",
+      "snapshot_sha256": "cd251f73717a844ddb75490f96d1318b789d3ab35670340fbaadb3a55906bc96",
+      "tasks": [
+        {
+          "task_id": "AGY_PLAN",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791717699925353188",
+          "result_present": true,
+          "dependencies": [
+            "PLAN"
+          ]
+        },
+        {
+          "task_id": "CLAUDE_PLAN",
+          "state": "completed",
+          "worker": "claude-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791718365513529889",
+          "result_present": true,
+          "dependencies": [
+            "AGY_PLAN"
+          ]
+        },
+        {
+          "task_id": "PARSER_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791719514468309804",
+          "result_present": true,
+          "dependencies": [
+            "TOOLS_REVIEW"
+          ]
+        },
+        {
+          "task_id": "PARSER_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791719655189964841",
+          "result_present": true,
+          "dependencies": [
+            "PARSER_FIX"
+          ]
+        },
+        {
+          "task_id": "PLAN",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791717495388023305",
+          "result_present": true,
+          "dependencies": []
+        },
+        {
+          "task_id": "RECOVER",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791719853727724248",
+          "result_present": true,
+          "dependencies": [
+            "PARSER_REVIEW"
+          ]
+        },
+        {
+          "task_id": "REPORT",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791721699916812989",
+          "result_present": true,
+          "dependencies": [
+            "RECOVER"
+          ]
+        },
+        {
+          "task_id": "REPORT2",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791723556661595170",
+          "result_present": true,
+          "dependencies": [
+            "REPORT"
+          ]
+        },
+        {
+          "task_id": "TOOLS_FIX",
+          "state": "completed",
+          "worker": "agy-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791718892709932845",
+          "result_present": true,
+          "dependencies": [
+            "CLAUDE_PLAN"
+          ]
+        },
+        {
+          "task_id": "TOOLS_REVIEW",
+          "state": "completed",
+          "worker": "codex-telegram-20261011",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791719059744722419",
+          "result_present": true,
+          "dependencies": [
+            "TOOLS_FIX"
+          ]
+        }
+      ]
+    },
+    {
+      "plan_id": "uos/telegram-resume/20261012-0216",
+      "status": "OBSERVED",
+      "authority": "NONE",
+      "observed_at": "2026-10-12T02:29:40Z",
+      "snapshot_sha256": "6928e45dab019c524f464f332371d5bb46b7d742c655b426ab618c98b7c78097",
+      "tasks": [
+        {
+          "task_id": "DASHBOARD",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "RECOVER"
+          ]
+        },
+        {
+          "task_id": "RECOVER",
+          "state": "executing",
+          "worker": "codex-telegram-20261012",
+          "lease_until_ns": "1791777475703283246",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "REVIEW"
+          ]
+        },
+        {
+          "task_id": "REVIEW",
+          "state": "completed",
+          "worker": "claude-telegram-resume-20261012",
+          "lease_until_ns": null,
+          "attempt": 1,
+          "completed_at_ns": "1791771764803486513",
+          "result_present": true,
+          "dependencies": []
+        }
+      ]
+    },
+    {
+      "plan_id": "uos/telegram-reclaim-tool/20261012-0226",
+      "status": "OBSERVED",
+      "authority": "NONE",
+      "observed_at": "2026-10-12T02:29:41Z",
+      "snapshot_sha256": "7f5ec4c4850208762a72102b042db1ea41a2bf640bcfd9daf9afafd567e2a557",
+      "tasks": [
+        {
+          "task_id": "IMPL",
+          "state": "executing",
+          "worker": "agy-telegram-reclaim-20261012",
+          "lease_until_ns": "1791775671647908737",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        },
+        {
+          "task_id": "REPORT",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "VERIFY"
+          ]
+        },
+        {
+          "task_id": "VERIFY",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": [
+            "IMPL"
+          ]
+        }
+      ]
+    },
+    {
+      "plan_id": "uos/telegram-dashboard/20261012-0230",
+      "status": "OBSERVED",
+      "authority": "NONE",
+      "observed_at": "2026-10-12T02:29:42Z",
+      "snapshot_sha256": "9dca2c0febd114761e8a5ca5ed678e331a80600b90b6540e42d9b4620b4d4b67",
+      "tasks": [
+        {
+          "task_id": "PUBLISH",
+          "state": "executing",
+          "worker": "codex-telegram-20261012",
+          "lease_until_ns": "1791775760182315409",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ]
+    }
+  ]
+}

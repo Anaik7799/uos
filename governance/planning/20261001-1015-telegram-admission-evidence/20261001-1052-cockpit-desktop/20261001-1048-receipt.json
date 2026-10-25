@@ -1,0 +1,36 @@
+{
+  "schema": "uos.restoration-browser-observation.v1",
+  "observed_utc_seconds": 1790851812.189606,
+  "status": "HOLD",
+  "url": "http://nas-1.tail55d152.ts.net:4100/",
+  "viewport_width": 1280,
+  "source_sha256": "c898691ae086e91c9340da333c064fe930b9d1e4d37eca6a519ff19743ba5dcc",
+  "elapsed_seconds": 1.487358905,
+  "application_admitted": false,
+  "observations": {
+    "body_has_content": true,
+    "heading_present": true,
+    "links_present": true,
+    "checklist_details_present": false,
+    "body_geometry": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1280.0,
+      "height": 9325.1875
+    },
+    "no_page_errors": true,
+    "page_errors": [],
+    "headings": [ "Indrajaal Swarm Dashboard" ],
+    "no_external_requests": true,
+    "blocked_external_requests": 0,
+    "controller_source_unchanged": true
+  },
+  "screenshots": [
+    {
+      "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1015-telegram-admission-evidence/20261001-1052-cockpit-desktop/20261001-1048-page.png",
+      "sha256": "1bc6899743d996a88bd8ba26a43a91616b25711585281ddde5c3093499e0e17d"
+    }
+  ],
+  "findings": [ "checklist_details_present" ],
+  "limits": "One route and viewport. Read-only navigation and local accordion keyboard interaction; no control activation, accessibility certification or global admission. Visual review is separate."
+}

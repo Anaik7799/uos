@@ -1,0 +1,190 @@
+{
+  "schema": "uos.formal-fix-development.v1",
+  "observed_utc": "2026-10-01T12:51:06Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "FORMAL_FIX",
+  "worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "implementer": "codex-admission-review-20261001",
+  "status": "COMPILER_REPAIRS_PASS_FLOAT_ASSURANCE_HOLD",
+  "application_admitted": false,
+  "production_changed": false,
+  "source_manifest": [
+    {
+      "path": "formal/lean/Algebraic_Atlas_Intent.lean",
+      "sha256": "6f768b23a98424ba85efea9b36685f6b065298e120c93e73f66e4775a72f0ae3",
+      "finding": "Boolean equality simplification and Nat complement bound; original intended statements unchanged."
+    },
+    {
+      "path": "formal/lean/Autoscaler_Stability.lean",
+      "sha256": "bba4ddf4a9fe05e902782e2ec4bc7c52756335a3e9d274c56bc5cfa60886b9c4",
+      "finding": "Replace unavailable push_neg with bounded arithmetic proof; statement unchanged."
+    },
+    {
+      "path": "formal/lean/CRDT_Lattice_Algebra.lean",
+      "sha256": "e6640bd569991c13da243ee612de8fd13a5516e03d6fcb528fa809912a49aa12",
+      "finding": "Replace over-splitting idempotence with simplification; statement unchanged."
+    },
+    {
+      "path": "formal/lean/CRDT_SEC.lean",
+      "sha256": "5b15f41a5915876ce7f0a336c1079b8f30d2780763dd4162c3d24dc832eee75d",
+      "finding": "Repair branch splitting, idempotence and associativity/commutativity rewrite sequence; statements unchanged."
+    },
+    {
+      "path": "formal/lean/Century_Harmony.lean",
+      "sha256": "7e24cf959dc73e9e01f9684a5d6643642c972748dc888c109a446a6f3901b962",
+      "finding": "Repair Boolean consensus/drive safety proofs. Retire unrestricted Float equilibrium theorem as explicit unproved proposition; infinite gamma counterexample."
+    },
+    {
+      "path": "formal/lean/Chaos_Containment.lean",
+      "sha256": "7133abc4bcfe8a992a9674f415f54b4fb7cae13c440c2a66849e56f57c15da2f",
+      "finding": "Use propositional hazard hypothesis directly, avoiding Prop/Bool mismatch; statement unchanged."
+    },
+    {
+      "path": "formal/lean/Topos_Heyting_Double_Category_Transmutation.lean",
+      "sha256": "af1bbb36f9ca4a4caa92e659e014914e52df12fb2c18412f9df2dc352ade32b0",
+      "finding": "Exhaustive finite four-degree Heyting proof and constructive case split; remove unsupported tactic/recursive simplification; statements unchanged."
+    },
+    {
+      "path": "formal/lean/TwoLattice_Concurrency.lean",
+      "sha256": "47157a1f33af78caa2e166fa3a811af3d62b1049061ca11db34677b31b0bbc0d",
+      "finding": "Repair hypothesis naming/order and arithmetic capacity branches; statements unchanged."
+    },
+    {
+      "path": "formal/lean/WorkStealing_Fairness.lean",
+      "sha256": "7f9d62aeaa1423dffd5b98833b25e0159fc9a025464921f86dc07ae1e1ae3322",
+      "finding": "Replace unavailable set tactic with explicit quota bound followed by conservation arithmetic; statement unchanged."
+    },
+    {
+      "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+      "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+      "finding": "Remove tactic after goal already closed; statement unchanged."
+    },
+    {
+      "path": "formal/lean/Denotational_Atlas_Cohomology.lean",
+      "sha256": "70d74fe26ba1f55ada66d9562de2d3a80d0504cb3bbbe46e4054aa587864d4f9",
+      "finding": "Remove three sorry-backed theorem declarations; retain each original universal claim as explicitly unproved proposition. Actual Float overflow and finite rounding counterexamples; remaining intent safety theorems unchanged."
+    },
+    {
+      "path": "formal/lean/Denotational_Intent_Design.lean",
+      "sha256": "fb22176481eff687b8265a606a8db3cfddca4cdff94935d9834c94afb5cdd069",
+      "finding": "Exhaustive StateBot cases and simplified hypotheses prove transitivity; statement unchanged."
+    },
+    {
+      "path": "formal/lean/Denotational_Intent_Functor.lean",
+      "sha256": "d368b386c25646c0cbbd145506e406f400498825bdbb507530c99a49f19df3c4",
+      "finding": "Simplify exact monadic definitions and semantic guard cases instead of stale BEq lemma/partial unfolding; statements unchanged."
+    },
+    {
+      "path": "formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean",
+      "sha256": "5dfa67ff35c50dddbb009ca971fce00c9760536ff5b883dfa7289ae9cb8521a7",
+      "finding": "Fold simplification and Nat multiplication monotonicity replace unavailable/redundant tactics; statements unchanged."
+    },
+    {
+      "path": "formal/lean/IntentSafety.lean",
+      "sha256": "e38bac4849c96c2a742486e02fd4df2e16c71d62340f13ce2c7b20bb52203035",
+      "finding": "Rename implicit result identifier id to resultId to avoid collision with function id, then prove Boolean guard complement. Intended quantified storage-safety statement retained; old declaration was ill-typed."
+    },
+    {
+      "path": "formal/lean/Lyapunov_Stability.lean",
+      "sha256": "3f63aba3c49402c49c97a330706d728ed9d12dd1922df2e36edff1dc70ba2a4a",
+      "finding": "Retire false unrestricted Float equilibrium theorem as explicit unproved proposition; infinite input counterexample. Conditional throttle theorem unchanged."
+    },
+    {
+      "path": "formal/lean/OODA_Convergence.lean",
+      "sha256": "22caaf967ad423aaebceaeb880f56103c9a5244bd10b5b124e132e96b4bc87ca",
+      "finding": "Simplify transition definitions/hypotheses instead of executing tactics after closed goals; statements unchanged."
+    },
+    {
+      "path": "formal/lean/POODAVR_FPrime_Semantics.lean",
+      "sha256": "63d18700d4153ee9a014cc1423eb5c2a1aac3d4096089cd793ea0e958f4bf77b",
+      "finding": "Simplify complete unsafe transition and remove redundant reflexivity tactic; statements unchanged."
+    }
+  ],
+  "preservation": {
+    "original_source_prefix": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1247-original-",
+    "files": 18,
+    "semantics": "Exact original UTF8 source bytes copied through Gleam files before edit; original compiler logs and every follow-up failure retained."
+  },
+  "validation": {
+    "toolchain": "Pinned Lean4.33.0 e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550; no downloads/dependencies",
+    "affected_files_elaborated": 18,
+    "retained_theorems_axiom_audited": 81,
+    "audit": "Candidate source copied exactly with #print axioms for every theorem;18files compiled, each bounded7s+1s kill grace,6file batches behind55s Gleam guardian.",
+    "axiom_inventory": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "new_custom_axioms": 0,
+    "sorry_dependencies": 0,
+    "remaining_sorry_placeholders": 0,
+    "unproved_universal_claims": 5,
+    "whole_corpus": "Only18owned affected files rechecked here. Earlier53 passing files and Quint evidence remain parent observations, not repeated here.",
+    "audit_source_prefix": "20261001-1254-axiom-audit-",
+    "audit_log_dir": "var/recovery-runtime/20261001-1249-formal-fix",
+    "transcript": "20261001-1206-formal-fix-transcript.txt"
+  },
+  "counterexamples": {
+    "execution": "Actual candidate functions copied byte-for-byte into bounded Lean #eval fixtures; UInt64 bit patterns avoid decimal display rounding. Runtime numerical counterexamples, not new kernel proof declarations.",
+    "atlas_identity": {
+      "i": "2^2048",
+      "x": 1,
+      "actual_bits": "9221120237041090560",
+      "claimed_rhs_bits": "4607182418800017408",
+      "cause": "Float conversion overflow; infinity/infinity yields NaN"
+    },
+    "atlas_cocycle": {
+      "i": 0,
+      "j": 2,
+      "k": 4,
+      "x": 0.1,
+      "lhs_bits": "4602678819172646913",
+      "rhs_bits": "4602678819172646912",
+      "residual_bits": "4368491638549381120",
+      "cause": "Finite IEEE rounding; false even within ten chart indices."
+    },
+    "lyapunov": {
+      "input": "positive infinity",
+      "actual_bits": "9221120237041090560",
+      "claimed_zero_bits": "0"
+    },
+    "century": {
+      "state": "process_val=setpoint=integral_acc=0.0",
+      "gamma": "positive infinity",
+      "actual_bits": "9221120237041090560",
+      "claimed_zero_bits": "0"
+    },
+    "positive_controls": "Finite identity, exactly representable cocycle, finite Lyapunov and finite equilibrium controls all observed true.",
+    "fixture_prefix": "20261001-1255-actual-counterexamples-"
+  },
+  "assurance_hold": {
+    "claims": [
+      "transition_identity_unproved_claim",
+      "transition_cocycle_unproved_claim",
+      "h1_cohomology_vanishing_unproved_claim",
+      "composite_energy_equilibrium_unproved_claim",
+      "lyapunov_equilibrium_unproved_claim"
+    ],
+    "disposition": "Original quantified statements remain visible as Prop-valued definitions, explicitly NOT theorems. No weakened statement is represented as equivalent proof. Formal numerical contract requires a separately reviewed exact-number model or explicit finite/error-bound specification before assurance can pass.",
+    "limitations": [
+      "Lean elaboration and standard logical axioms establish only these mathematical models, not current implementation refinement, physical control stability, system health or global admission.",
+      "Existing high-level theorem names/comments may describe stronger architectural ideas than their small model statements prove; no broad semantic audit of all71files performed.",
+      "Some unchanged proofs use unused model assumptions and compile warnings; these do not imply runtime validation.",
+      "Initial0.1 roundtrip0->2->0 was a passing negative control, not a counterexample. Exhaustive finite chart search found actual0->2->4 mismatch.",
+      "One generated finite-search fixture had a Unicode binary-literal encoding error; failed artifact retained and ASCII successor executed successfully."
+    ]
+  },
+  "effects": {
+    "runtime": false,
+    "canonical_db": false,
+    "network": false,
+    "new_packages": false,
+    "source_outside_18": false
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l8",
+    "#zero-muda"
+  ]
+}

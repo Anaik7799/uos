@@ -127,3 +127,13 @@ pub fn backend_failure_is_not_empty_history_test() {
   let assert Ok(config)=h.configuration("333444:x",[h.Grant(42,42)])
   h.observe(config,read,fn(_) { Error("backend failed") },fn(){1000}) |> should.equal(Error("backend failed"))
 }
+
+pub fn mixed_history_projection_preserves_order_and_source_test() {
+  let id="0123456789abcdef0123456789abcdef"
+  let ctx=conv.Context(scope(),[conv.Turn(1,"Telegram Q","Telegram A"),conv.MiniTurn(id,"Mini Q","Mini A"),conv.Turn(2,"Later Q","Later A")])
+  let assert Ok(api.Observed(_,_,fields))=h.from_rows(scope(),3,rows(ctx),1000)
+  dict.get(fields,"Stored exchanges") |> should.equal(Ok("3"))
+  dict.get(fields,"Exchange 01 update 1 · 1 You · 01") |> should.equal(Ok("Telegram Q"))
+  dict.get(fields,"Exchange 02 Mini request "<>id<>" · 1 You · 01") |> should.equal(Ok("Mini Q"))
+  dict.get(fields,"Exchange 03 update 2 · 2 Assistant · 01") |> should.equal(Ok("Later A"))
+}

@@ -92,17 +92,7 @@ theorem leq_refl (s : StateBot) : s ≤ s := by
 
 /-- Transitivity of StateBot lattice order -/
 theorem leq_trans (a b c : StateBot) (h1 : a ≤ b) (h2 : b ≤ c) : a ≤ c := by
-  cases a <;> cases b <;> cases c
-  · simp [LE.le, leq]
-  · simp [LE.le, leq]
-  · contradiction
-  · contradiction
-  · simp [LE.le, leq]
-  · simp [LE.le, leq]
-  · contradiction
-  · cases h1
-    cases h2
-    simp [LE.le, leq]
+  cases a <;> cases b <;> cases c <;> simp_all [LE.le, leq]
 
 /-- Denotational Semantic Valuation Function: D[[ Intent ]] (State) -> StateBot -/
 def evaluate (i : Intent) (s : State) : StateBot :=

@@ -1,0 +1,63 @@
+{
+  "status": "METADATA_OBSERVATION_PASS",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "selection": "NOT_EVALUATED",
+  "selection_reason": "Reclaim metadata observation only; does not evaluate dispatch selection or work priority.",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "observed_at": "2026-10-12T02:53:19Z",
+  "completed_at": "2026-10-12T02:53:19Z",
+  "elapsed_monotonic_seconds": 0.058156895,
+  "clock_start": {
+    "source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 8.9433e-05,
+    "uncertainty_seconds": 0.021887352500000002,
+    "reference_age_seconds": 132.01222157478333,
+    "stratum": 3
+  },
+  "clock_end": {
+    "source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 8.943199999999999e-05,
+    "uncertainty_seconds": 0.0218874085,
+    "reference_age_seconds": 132.06651949882507,
+    "stratum": 3
+  },
+  "snapshot_sha256": "2ef24c1f07e70921095e14088c9941c125a45994760d28e073df4e09efebd9b6",
+  "sa_plan_database": {
+    "path": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "mode": "READONLY",
+    "query_only": true,
+    "writes": "NONE",
+    "wal_housekeeping_note": "SQLite reader housekeeping may touch -shm read marks per wal.html"
+  },
+  "bindings_count": 3,
+  "bindings": [
+    {
+      "task_id": "FORMAL_FIX",
+      "worker": "codex-telegram-20261011",
+      "previous_attempt": 3,
+      "previous_lease_until_ns": "1791752573602044117",
+      "expected_new_attempt": 4
+    },
+    {
+      "task_id": "SERVICE_DRAFT_REVIEW",
+      "worker": "codex-telegram-20261011",
+      "previous_attempt": 6,
+      "previous_lease_until_ns": "1791752099179610487",
+      "expected_new_attempt": 7
+    },
+    {
+      "task_id": "SERVICE_IMPL",
+      "worker": "agy-telegram-20261011",
+      "previous_attempt": 6,
+      "previous_lease_until_ns": "1791754904787263175",
+      "expected_new_attempt": 7
+    }
+  ],
+  "limits": [
+    "Reclaim metadata observation only; does not grant execution authority or work admission.",
+    "Selection, rank, and work priority were NOT evaluated.",
+    "Observation is not atomic with a later Sa-plan task claim; recheck authority and fencing then.",
+    "Snapshot is confined to one complete plan; no global optimum is asserted."
+  ]
+}

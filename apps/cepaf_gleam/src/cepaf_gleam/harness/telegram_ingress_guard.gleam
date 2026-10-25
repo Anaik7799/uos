@@ -3,9 +3,13 @@
 
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
+import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/telegram_rete_report as rete
+import cepaf_gleam/harness/telegram_verification_report as verification
 import gleam/dict
 import gleam/dynamic/decode
+import cepaf_gleam/harness/telegram_knowledge_report as knowledge
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -124,21 +128,72 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
         let name = invocation.definition.canonical
         let args = invocation.args
         case name {
+          "/approval" -> approval_directive(args)
           "/doctor" -> read_directive("query_doctor", args)
+          "/rete" -> case rete.canonicalize(args) {
+            Ok(facts)->PreservedDirective("/rete",[facts])
+            Error(_)->DeniedMutation("/rete","Supply comma-separated watchdog, mesh_running, e_stop, high_drift or divergent boolean facts; evaluation grants no authority.")
+          }
+          "/checklist" -> read_directive("query_checklist",args)
+          "/aspects" -> case verification.valid_scope("aspects",args) {
+            True->PreservedDirective("/aspects",[args])
+            False->DeniedMutation("/aspects","Use /aspects or /aspects A01 through A17.")
+          }
+          "/storage" -> read_directive("query_storage", args)
+          "/ecology" -> read_directive("query_ecology", args)
+          "/sutra" -> read_directive("query_matrix_versions", args)
+          "/status" | "/health" -> read_directive("query_system_health", args)
+          "/fmea" -> case read_directive("query_fmea",args) {
+            DirectReadTool(_) -> DirectReadTool("query_fmea")
+            _ -> case task_command.parse_task_id(args) {
+              Ok(task) -> PreservedDirective("/fmea",[task])
+              Error(_) -> DeniedMutation("/fmea","Use /fmea or /fmea <task_id>; source and plan are fixed.")
+            }
+          }
+          "/search" -> case knowledge.validate_query(args) {
+            Ok(query) -> PreservedDirective("/search",[query])
+            Error(_) -> DeniedMutation(name,"Use a literal query of at most 128 bytes.")
+          }
+          "/wiki" | "/zk" | "/km" -> {
+            let view = case name { "/wiki" -> "wiki" "/zk" -> "zk" _ -> "all" }
+            case knowledge.validate_query(args) {
+              Ok(query) -> PreservedDirective("/knowledge",[view,query])
+              Error(_) -> DeniedMutation(name,"Use a literal query of at most 128 bytes.")
+            }
+          }
+          "/peers" -> read_directive("query_peers", args)
+          "/board" -> read_directive("query_board", args)
+          "/zigvm" -> case args {
+            "" | "version" -> DirectReadTool("query_zigvm_version")
+            _ -> DeniedMutation("/zigvm", "Only version observation is available; evaluation is not integrated.")
+          }
           "/plan" -> read_directive("query_saplan", args)
           "/task" -> case task_command.parse_task_id(args) {
             Ok(task_id) -> PreservedDirective("/task", [task_id])
             Error(_) -> DeniedMutation("/task", "Usage: /task <task_id>; reads only the configured plan.")
           }
           "/tool" -> {
-            let #(tool, tail) = case string.split_once(args, " ") {
-              Ok(#(t, a)) -> #(t, string.trim(a))
-              Error(_) -> #(args, "")
-            }
-            case tool {
-              "query_doctor" | "query_saplan" -> read_directive(tool, tail)
-              "" -> UnknownDirective("/tool")
-              _ -> DeniedMutation(tool, "Tool has no admitted Telegram adapter.")
+            case tool_command.parse(args) {
+              Ok(tool_command.CancelLease(job,reason)) -> PreservedDirective("/cancel_job_lease",[job,reason])
+              Ok(tool_command.Help) -> PreservedDirective("/tool_help", [])
+              Ok(tool_command.Doctor) -> DirectReadTool("query_doctor")
+              Ok(tool_command.Rete(facts)) -> PreservedDirective("/rete",[facts])
+              Ok(tool_command.Checklist) -> DirectReadTool("query_checklist")
+              Ok(tool_command.Aspects(selector)) -> PreservedDirective("/aspects",[selector])
+              Ok(tool_command.Storage) -> DirectReadTool("query_storage")
+              Ok(tool_command.Ecology) -> DirectReadTool("query_ecology")
+              Ok(tool_command.Matrix) -> DirectReadTool("query_matrix_versions")
+              Ok(tool_command.SystemHealth) -> DirectReadTool("query_system_health")
+              Ok(tool_command.Fmea("")) -> DirectReadTool("query_fmea")
+              Ok(tool_command.Fmea(task)) -> PreservedDirective("/fmea",[task])
+              Ok(tool_command.Search(query)) -> PreservedDirective("/search",[query])
+              Ok(tool_command.Knowledge(view,query)) -> PreservedDirective("/knowledge",[view,query])
+              Ok(tool_command.Peers) -> DirectReadTool("query_peers")
+              Ok(tool_command.Board) -> DirectReadTool("query_board")
+              Ok(tool_command.KernelVersion) -> DirectReadTool("query_zigvm_version")
+              Ok(tool_command.Plan) -> DirectReadTool("query_saplan")
+              Ok(tool_command.Task(task_id)) -> PreservedDirective("/task", [task_id])
+              Error(reason) -> DeniedMutation("/tool", reason)
             }
           }
           _ -> case invocation.definition.kind {
@@ -286,5 +341,35 @@ fn evaluate_identified(
               )
           }
       }
+  }
+}
+fn approval_request_id(id:String) -> Bool {
+  string.byte_size(id)>3 && string.byte_size(id)<=64 && string.starts_with(id,"tg-")
+    && list.all(string.to_graphemes(string.drop_start(id,3)),fn(c){string.contains("0123456789-",c)})
+}
+fn approval_directive(args:String) -> ParsedDirective {
+  case args {
+    "" | "list" -> PreservedDirective("/approval",[])
+    _ -> case string.split(args," ") {
+      [id] -> case approval_request_id(id) {
+        True -> PreservedDirective("/approval",[id])
+        False -> DeniedMutation("/approval","Usage: /approval [request_id], propose <request_id>, withdraw <request_id>, or submit <request_id> <role> <signed_receipt>.")
+      }
+      ["withdraw",id] -> case approval_request_id(id) {
+        True -> PreservedDirective("/approval_manage",["withdraw",id])
+        False -> DeniedMutation("/approval","Invalid request identifier.")
+      }
+      ["propose",id] if id!="" -> case approval_request_id(id) {
+        True -> PreservedDirective("/approval_manage",["propose",id])
+        False -> DeniedMutation("/approval","Invalid request identifier.")
+      }
+      ["submit",id,role,token] -> case approval_request_id(id)
+        && list.contains(["codex","agy","claude","operator"],role)
+        && token!="" && string.byte_size(token)<=8192 {
+        True -> PreservedDirective("/approval_manage",["submit",id,role,token])
+        False -> DeniedMutation("/approval","Invalid signed receipt submission.")
+      }
+      _ -> DeniedMutation("/approval","Use propose, submit, or withdraw with an exact request identifier; unsigned approve text cannot authorize an action.")
+    }
   }
 }

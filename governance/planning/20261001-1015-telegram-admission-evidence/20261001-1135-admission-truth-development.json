@@ -1,0 +1,64 @@
+{
+  "schema": "uos.admission-truth-development.v1",
+  "observed_at": "2026-10-01T11:35:23Z",
+  "task": "ADMISSION_FIX",
+  "attempt": 2,
+  "status": "DEVELOPMENT_TESTED_PENDING_REVIEW",
+  "source_manifest": [
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha256": "7802d109c883f3075a86d7b2565a1613ceeb1902304047145f543d9bdc85b4cb"
+    },
+    {
+      "path": "tools/uos/test/admission_truth_test.gleam",
+      "sha256": "2e73f62e98dd41fa1cabe6b69bd5709ab94b9c2b5b1181537514a9c22fe86081"
+    },
+    {
+      "path": "tools/uos/test/exit_status_test.gleam",
+      "sha256": "0ed3324f839d58c2604782bc4a0d661bcd69c1c7ad84180a4946419aee987da8"
+    },
+    {
+      "path": "tools/uos/test/gate_verdict_test.gleam",
+      "sha256": "73056e7d1d10f9f11daba6785ba101da96d46c884cdad8239a161101c0426d47"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "f63e583a676182464c06eb74d48d3efdd8513747b742218ef68e86616d322fa6"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/sa_plan_bridge_test.gleam",
+      "sha256": "458294cf15210a6e68e8fb5c43d9ace67b2b74faaae8c8f25549ff83dec2e7a0"
+    },
+    {
+      "path": "governance/capability-inventory/skills.toml",
+      "sha256": "7c55a050fe527e27cb36b5d6df081701eb28e4e4705bba0ff6af0a1a7df30c74"
+    },
+    {
+      "path": "contracts/evidence/20261001-1135-admission-claim-integrity-spec.json",
+      "sha256": "d6dfb79b5662ffe3bb30b874c0c21b6f33f415bfea051011c759d56ffde4383a"
+    }
+  ],
+  "scope": "38 legacy artifact gate branches considered; actual changed claims failclosed, existing already-HOLD Mirage branches retained. DMC/TCM/checklist/KM/Rocha inventory scoped, aggregate ratification removed,17aspectstatesunknown,5residualskillstateshistorical.",
+  "tests": {
+    "cli": {
+      "passed": 20,
+      "log": "var/recovery-runtime/20261001-1134-uos-admission-tests.log"
+    },
+    "bridge": {
+      "passed": 12,
+      "log": "var/recovery-runtime/20261001-1134-bridge-tests.log"
+    },
+    "builds": [
+      "var/recovery-runtime/20261001-1134-uos-build.log",
+      "var/recovery-runtime/20261001-1134-cepaf-build2.log"
+    ],
+    "preserved_failure": "var/recovery-runtime/20261001-1134-cepaf-build.log unsupported list.range corrected"
+  },
+  "authority_incident": "Taskattempt1 released without source effects after riskfilecontent_bound; repeated citationlists compacted with same10sourcebindings/scores; preflight and activechecks PASS before attempt2 edits",
+  "limitations": [
+    "Actual behavior/formal/dependency gates remain to execute and review",
+    "No new production cutover or Telegram end-to-end acceptance",
+    "Cockpit dashboard script/socket classification and live browser acceptance pending",
+    "EV94..109 remain NOT_ADMITTED"
+  ]
+}

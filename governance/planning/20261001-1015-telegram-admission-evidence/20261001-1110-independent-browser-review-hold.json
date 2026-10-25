@@ -1,0 +1,136 @@
+{
+  "schema": "uos.independent-browser-source-review.v1",
+  "observed_at_utc": "2026-10-01T11:10:50Z",
+  "reviewer": "codex-admission-review-20261001",
+  "verdict": "HOLD",
+  "scope": "Eight frozen UI/helper/probe source files, existing three screenshots and matching observation receipts; independent read-only source/visual review",
+  "task": {
+    "plan": "uos/telegram-admission/20261001-1015",
+    "task": "BROWSER_REVIEW",
+    "worker": "codex-admission-review-20261001",
+    "attempt": 1,
+    "delegation": "Parent reports preflight and active PASS at 11:07 UTC; task resource epoch1; no reviewer task mutation."
+  },
+  "runtime_admission": "NOT_GRANTED",
+  "main_or_production_authority": false,
+  "source_hashes": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/homeostasis_http.gleam",
+      "sha256": "a4c73360a3265e5aa0490f6681a8a7d76e01c99c15444a67a9dd7c4ee4b6926e"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam",
+      "sha256": "8681c22e657f8f6cdc1d109dd859d8f3eb8eada59e3d11b1bc1db7322ae04110"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/web/server.gleam",
+      "sha256": "cb471382ecca55dbe34aa018f38077ad2f04db358c14facd25aa483b83490a80"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/verification_requirements.gleam",
+      "sha256": "929870866338bc31f151110578b61e2cd93fe7915140f83dc91bca20676e815a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam",
+      "sha256": "e128b20416a5dba7228b7e23186d75a4197a7160d8c6e7baf6d9365f3147b689"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/harmonic_song.gleam",
+      "sha256": "d163fcdf1cfb0ad19261fb41114190e5f75706f6964782b164d0f7297cb33b08"
+    },
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "9489cae5a1d95672d79d7d124cb9c7e7cbd7ad77d95e64032483380430c0745f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/restoration_browser_probe.gleam",
+      "sha256": "701f019afed56a41520f48e19559322d1444e9f0e1d56b4ddd39384da5b22eaa"
+    }
+  ],
+  "all_eight_match_development_receipt": true,
+  "development_receipt": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1106-browser-recovery-development.json",
+  "findings": [
+    {
+      "id": "UI1",
+      "severity": "P1",
+      "title": "Browser helper does not enforce its read-only request boundary",
+      "evidence": [
+        "tools/validation/restoration_browser_check.ml:1-3",
+        "tools/validation/restoration_browser_check.ml:44-49"
+      ],
+      "detail": "Interception matches only HTTP(S) URLs outside the exact origin. All same-origin paths and methods bypass the callback, and WebSocket schemes are outside that regex. Therefore page-generated same-origin POST/control requests and unclassified socket traffic are not refused by this helper. No such live effect is asserted to have occurred.",
+      "remedy": "Intercept all page/context network requests, allow only GET for an explicit finite read-only document/API/static dependency closure, abort every other request before dispatch, and refuse or explicitly fence WebSocket/service-worker paths. Record refused requests truthfully. Add controlled same-origin POST, forbidden GET/control path, external URL, redirect and socket negative tests; do not rerun live helper before boundary fixed."
+    },
+    {
+      "id": "UI2",
+      "severity": "P1",
+      "title": "Browser PASS does not prove route identity, status or checklist",
+      "evidence": [
+        "tools/validation/restoration_browser_check.ml:49-68",
+        "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1103-private-terminal-mobile/20261001-1048-receipt.json",
+        "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1106-private-chart-final/20261001-1048-receipt.json"
+      ],
+      "detail": "goto response status is discarded. Generic h1/h2, links, text length and any details element suffice. The first details is toggled regardless of identity. Terminal navigation 'Component views' and chart 'Fixture evidence' both produce checklist_details_present=true. Receipt headings also enumerate hidden component content, so a heading's presence alone does not establish visible route content.",
+      "remedy": "Check actual HTTP status, final URL/path and visible route-specific markers. Identify canonical checklist structurally (stable selector), verify visible expected 18 distinct requirement IDs plus five domains/provenance and honest labels, and toggle its own summary. Chart fixture must have a separate explicitly fixture-only assertion profile. Add 404/500-but-content, wrong-page-200, hidden-heading, navigation-only-details, missing/duplicate-requirement and redirected-route falsifiers."
+    },
+    {
+      "id": "UI3",
+      "severity": "P2",
+      "title": "Terminal homeostasis page still omits the visible required checklist",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/web/homeostasis_http.gleam:32-44",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam:599",
+        "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1103-private-terminal-mobile/20261001-1048-page.png"
+      ],
+      "detail": "Homeostasis HTML directly wraps the component-filtered HUD rather than the shared shell/checklist. The full terminal screenshot ends after the runtime-identity link and has no visible verification checklist/provenance block. Its navigation details fooled UI2.",
+      "remedy": "Render the shared checklist outside homeostasis component filtering for every HTML page variant, without changing JSON/plain-text/SSE formats. Verify terminal, each component filter, evolution/components, and default view at desktop/mobile; preserve the missing-checklist receipt."
+    }
+  ],
+  "accepted_by_inspection": [
+    "Canonical server routes exact homeostasis allowlist through shared transport before generic fallback; both HTTP and HTTPS builders use routed_handler at server.gleam:1218-1253.",
+    "Shared transport rejects non-GET methods and reports review executed=false/no authority; SSE is bounded to120 snapshots per connection. Total connection/rate budgets and transitive data implementation were outside this eight-file review.",
+    "New verification_requirements lists exactly18 requirements across5 domains plus provenance; explicitly UNRUN with no candidate-bound receipts, no fabricated PASS.",
+    "Indrajaal adapter delegates to shared transport; no duplicated operational policy added in that file.",
+    "Populated chart screenshot shows separate title, beat and bar rows with correct UTF-8 and26 visible bars; mobile homeostasis screenshots retain UNKNOWN and control-authority NONE labels."
+  ],
+  "visual_observations": [
+    {
+      "path": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1103-private-evolution-mobile/20261001-1048-viewport.png",
+      "viewport": 390,
+      "observed": "Top viewport readable with wrapping navigation and explicit observed-versus-unavailable data; no whole-page or whole-product accessibility conclusion."
+    },
+    {
+      "path": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1103-private-terminal-mobile/20261001-1048-page.png",
+      "viewport": 390,
+      "observed": "Full terminal text fits visible mobile width; UNKNOWN fields and NONE authority explicit; required checklist absent from visible page."
+    },
+    {
+      "path": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1106-private-chart-final/20261001-1048-viewport.png",
+      "viewport": 1280,
+      "observed": "Explicit simulated fixture, title/beat/bars separate and glyphs correct. Repeated Dha1 labels are tightly adjacent; mobile chart layout not inspected."
+    }
+  ],
+  "tests": {
+    "independent_test_runs": 0,
+    "independent_live_browser_runs": 0,
+    "independent_source_hash_checks": 8,
+    "independent_images_viewed": 3,
+    "existing_browser_receipts_read": 3,
+    "parent_reported_only": {
+      "cepaf_eunit": 35,
+      "indrajaal_eunit": 7,
+      "native_mutants": 14
+    },
+    "reason_not_rerun": "Source and preserved visual evidence already establish concrete blockers. Parent test counts lacked persisted focused transcripts; they are not represented as independently rerun PASS."
+  },
+  "limits": [
+    "Source review and three screenshots are scoped evidence, not release/main/production admission.",
+    "Private probe starts no control actors and cannot establish production loaded source/runtime identity, live control fencing, failover or Telegram behavior.",
+    "No new listener, process test, network probe, source edit, dependency install, task mutation or production change was performed.",
+    "Browser page_errors are not full console/resource/error coverage. CSS/image/script failures, all accessibility requirements, SSE lifecycle and mobile chart require separate actual checks.",
+    "Underlying HUD/data/router/native dependencies were outside the eight-file source scope; this review does not certify their entire implementation.",
+    "Source hashes bind the frozen working files, not an independently verified JJ candidate revision.",
+    "Existing misleading PASS receipts and initial invalid chart fixtures must remain preserved; corrected subsequent evidence must not rewrite their outcomes."
+  ],
+  "next": "Parent creates separately authorized BROWSER_FIX2 for these focused corrections, binds frozen descendant plus tests, and requests affected-path independent re-review before release or live browser acceptance."
+}

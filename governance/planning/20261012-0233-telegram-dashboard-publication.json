@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-10-12T02:31:59.386Z",
+  "plan_id": "uos/telegram-dashboard/20261012-0230",
+  "task": "PUBLISH",
+  "worker": "codex-telegram-20261012",
+  "attempt": 1,
+  "artifacts": [
+    {
+      "path": "docs/journal/20261012-0231-telegram-goal-dashboard.md",
+      "sha256": "650340aa3592d288de84ca834d1f6f5396ed7634b1475c51ed0a9924078a61d8"
+    },
+    {
+      "path": "governance/planning/20261012-0231-telegram-goal-task-snapshot.json",
+      "sha256": "5410f19e14e669c68b89b7ba97511738be0697269da9c097d0bb66d6621ccc8e"
+    }
+  ],
+  "status": "SCOPED_PUBLICATION_VERIFIED",
+  "journal_check": "10/10 PASS after preserving initial forecast-marker failure in report",
+  "http_status": 200,
+  "full_goal": "INCOMPLETE",
+  "runtime_admission": "NOT_GRANTED",
+  "snapshot_is_atomic_across_plans": false
+}

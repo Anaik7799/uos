@@ -1,0 +1,123 @@
+Independent admission review; existing compiled code, no rebuild/download/production effects.
+
+CLI: eunit:test([admission_truth_test,exit_status_test,status_truth_test,uos_test,mirage_gates_truth_test],[verbose])
+
+======================== EUnit ========================
+module 'admission_truth_test'
+  admission_truth_test: artifact_only_gates_refuse_admission_test...[0.011 s] ok
+  admission_truth_test: artifact_only_domains_refuse_admission_test...ok
+  [done in 0.017 s]
+module 'exit_status_test'
+  exit_status_test: unknown_gate_returns_exit_code_1_test...ok
+  exit_status_test: artifact_gate_cannot_claim_verification_test...ok
+  exit_status_test: doctor_returns_exit_code_1_when_unverifiable_cycles_exist_test...[0.009 s] ok
+  exit_status_test: mirage_gates_fail_closed_without_behavioral_and_formal_evidence_test...ok
+  [done in 0.021 s]
+module 'status_truth_test'
+  status_truth_test: unobserved_runtime_status_cannot_return_success_test...ok
+  status_truth_test: cli_process_preserves_failure_exit_status_test...[0.120 s] ok
+  [done in 0.126 s]
+module 'uos_test'
+  uos_test: parse_status_test...ok
+  uos_test: parse_gate_test...ok
+  uos_test: parse_doctor_test...ok
+  uos_test: parse_dmc_check_test...ok
+  uos_test: parse_tcm_check_test...ok
+  uos_test: parse_timestamp_check_test...ok
+  uos_test: timestamp_regex_valid_test...ok
+  uos_test: timestamp_regex_invalid_test...ok
+  uos_test: parse_help_test...ok
+  [done in 0.027 s]
+module 'mirage_gates_truth_test'
+  mirage_gates_truth_test: mirage_core_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  mirage_gates_truth_test: mirage_migration_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  mirage_gates_truth_test: mirage_prod_inventory_is_complete_and_cli_returns_hold_exit_1_test...ok
+  [done in 0.009 s]
+=======================================================
+  All 20 tests passed.
+
+
+Bridge: eleven explicit pure functions from sa_plan_bridge_test; omitted sa_plan_cli_status_query_test.
+
+======================== EUnit ========================
+sa_plan_bridge_test: all_17_aspects_coverage_test...[0.004 s] ok
+sa_plan_bridge_test: actor_ecosystem_catalog_test...ok
+sa_plan_bridge_test: planning_task_claim_and_completion_test...ok
+sa_plan_bridge_test: oban_job_queue_and_lock_test...ok
+sa_plan_bridge_test: temporal_durable_execution_and_replay_test...ok
+sa_plan_bridge_test: tcm_13d_vector_integrity_test...ok
+sa_plan_bridge_test: json_serialization_test...[0.002 s] ok
+sa_plan_bridge_test: fractal_jidoka_enforcement_test...[0.013 s] ok
+sa_plan_bridge_test: tps_poka_yoke_validation_test...[0.001 s] ok
+sa_plan_bridge_test: zenoh_jidoka_and_topic_test...ok
+sa_plan_bridge_test: aspect_catalog_does_not_claim_runtime_admission_test...ok
+=======================================================
+  All 11 tests passed.
+
+
+Direct present-inventory observation: main:execute({gate,<<"G-CHECKLIST">>}), main:execute(dmc_check), main:execute(checklist); each asserted return 1.
+
+Evaluating UOS Gate: G-CHECKLIST
+  [INVENTORY] G-CHECKLIST: declared source predicate matched; runtime/formal verification UNRUN
+Evaluating DMC (Deterministic Memory Coherence & Mathematical Core):
+  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] DMC: declared artifact present; behavior/proof UNRUN
+Evaluating UOS Comprehensive Verification Checklist (SC-CHECKLIST-001):
+Domain 1: Metadata, Timestamp & Tailscale Navigation
+  [INVENTORY] CHK-01-TIME: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-02-TAIL: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-03-FRACT: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-04-KM: declared artifact present; behavior/proof UNRUN
+Domain 2: Zero-Muda Purity & Hardware Storage Safety
+  [INVENTORY] CHK-05-MUDA: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-06-GRAPH: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-07-DRIVE: declared artifact present; behavior/proof UNRUN
+Domain 3: Testing Gold Standard & Mathematical Gates
+  [INVENTORY] CHK-08-C1C8: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-09-MATH: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-10-9MOD: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-11-REGR: declared artifact present; behavior/proof UNRUN
+Domain 4: Cross-Language Control & Observability
+  [INVENTORY] CHK-12-GLEAM: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-13-HERMES: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-14-ZIGVM: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-15-MAX: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-16-OTEL: declared artifact present; behavior/proof UNRUN
+Domain 5: Tri-Sovereign Governance & VCS Purity
+  [INVENTORY] CHK-17-SOV: declared artifact present; behavior/proof UNRUN
+  [INVENTORY] CHK-18-JJ: declared artifact present; behavior/proof UNRUN
+
+Summary: 18/18 Declared artifacts present (not verification) (PASS)
+Checklist result: HOLD; current behavior and formal evidence not evaluated
+
+
+Missing-manifest falsifier: cwd /, absolute existing tools/uos BEAM paths, main:execute(doctor). No files were created or removed.
+
+UOS Doctor: FAIL - governance/ev-manifest.tsv is absent or empty; nothing could be checked.
+  inventory (artifact present):   0
+  MISSING (artifact declared, absent): 0
+  unverifiable (no artifact declared): 0
+  not admitted (above EV-93 ceiling): 0
+
+NOTE: an existing artifact is NOT two-key admission. It shows a record is present,
+      not that runtime behaviour and a formal specification were verified at a
+      revision. For computed admission run: bash tools/km-gate --ev-admission <rev>
+
+UOS Doctor result: PASS - 0/0 EV cycles have their declared artifact present.
+OBSERVED_DOCTOR_RETURN=0
+
+
+Exact source hashes
+
+tools/uos/src/main.gleam 7802d109c883f3075a86d7b2565a1613ceeb1902304047145f543d9bdc85b4cb
+tools/uos/test/admission_truth_test.gleam 2e73f62e98dd41fa1cabe6b69bd5709ab94b9c2b5b1181537514a9c22fe86081
+tools/uos/test/exit_status_test.gleam 0ed3324f839d58c2604782bc4a0d661bcd69c1c7ad84180a4946419aee987da8
+tools/uos/test/gate_verdict_test.gleam 73056e7d1d10f9f11daba6785ba101da96d46c884cdad8239a161101c0426d47
+apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam f63e583a676182464c06eb74d48d3efdd8513747b742218ef68e86616d322fa6
+apps/cepaf_gleam/test/sa_plan_bridge_test.gleam 458294cf15210a6e68e8fb5c43d9ace67b2b74faaae8c8f25549ff83dec2e7a0
+governance/capability-inventory/skills.toml 7c55a050fe527e27cb36b5d6df081701eb28e4e4705bba0ff6af0a1a7df30c74
+contracts/evidence/20261001-1135-admission-claim-integrity-spec.json d6dfb79b5662ffe3bb30b874c0c21b6f33f415bfea051011c759d56ffde4383a
+TIME 2026-10-01T11:41:31Z

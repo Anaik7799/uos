@@ -57,6 +57,8 @@ let normalize argv =
         rewrite argv "--job-claim" 3
     | ("job" | "oban"), Some "complete" -> rewrite argv "--job-complete" 3
     | ("job" | "oban"), Some "list" -> rewrite argv "--job-list" 3
+    | ("job" | "oban"), Some "cancel-once" -> rewrite argv "--job-cancel-once" 3
+    | ("job" | "oban"), Some "cancellation-result" -> rewrite argv "--job-cancellation-result" 3
     | ("workflow" | "temporal"), Some "start" ->
         rewrite argv "--workflow-start" 3
     | ("workflow" | "temporal"), Some "activity" ->
@@ -118,7 +120,7 @@ let required_arguments = function
   | "--job-enqueue" -> Some 5
   | "--job-claim" -> Some 2
   | "--job-complete" -> Some 5
-  | "--job-list" -> Some 0
+  | "--job-list" | "--job-cancel-once" | "--job-cancellation-result" -> Some 0
   | "--workflow-start" -> Some 4
   | "--workflow-activity" -> Some 5
   | "--workflow-complete" | "--workflow-fail" -> Some 2
@@ -141,6 +143,9 @@ let validate argv =
           Error
             (Printf.sprintf "%s requires at least %d argument(s)" argv.(1)
                required)
+        else if (argv.(1) = "--job-cancel-once" || argv.(1) = "--job-cancellation-result")
+                && supplied <> 0 then
+          Error "cancellation commands take only bounded JSON on stdin"
         else if (match argv.(1) with
           | "--claim" -> String.trim argv.(2) = "" || argv.(2).[0] = '-'
           | "--job-claim" -> String.trim argv.(3) = "" || argv.(3).[0] = '-'

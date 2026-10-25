@@ -4,6 +4,7 @@
 //// with the result/outbox. A failed model call must not call append().
 import cepaf_gleam/harness/telegram_ingress_guard as guard
 import cepaf_gleam/harness/telegram_commands as commands
+import gleam/dict
 import gleam/dynamic/decode
 import gleam/int
 import gleam/json
@@ -22,6 +23,7 @@ pub type Scope {
 }
 pub type Turn {
   Turn(update_id: Int, prompt: String, reply: String)
+  MiniTurn(request_id: String, prompt: String, reply: String)
 }
 pub type Context {
   Context(scope: Scope, turns: List(Turn))
@@ -66,8 +68,22 @@ fn safe_text(text: String, maximum: Int) -> Bool {
   })
 }
 
+/// Disjoint source identities; never synthesize Telegram update IDs for Mini requests.
+pub fn turn_identity(turn: Turn) -> String {
+  case turn {
+    Turn(id, ..) -> "telegram:" <> int.to_string(id)
+    MiniTurn(id, ..) -> "mini:" <> id
+  }
+}
+pub fn valid_mini_request_id(id: String) -> Bool {
+  string.byte_size(id) == 32
+  && list.all(string.to_graphemes(id), fn(c) { string.contains("0123456789abcdef", c) })
+}
 fn valid_turn(turn: Turn) -> Bool {
-  guard.valid_update_id(turn.update_id)
+  case turn {
+    Turn(id, ..) -> guard.valid_update_id(id)
+    MiniTurn(id, ..) -> valid_mini_request_id(id)
+  }
   && safe_text(turn.prompt, 4096) && safe_text(turn.reply, 8192)
 }
 
@@ -80,7 +96,7 @@ fn history_bytes(turns: List(Turn)) -> Int {
 pub fn valid_context(context: Context) -> Bool {
   valid_scope(context.scope) && list.length(context.turns) <= max_turns
   && list.all(context.turns, valid_turn)
-  && list.length(list.unique(list.map(context.turns, fn(t) { t.update_id }))) == list.length(context.turns)
+  && list.length(list.unique(list.map(context.turns, turn_identity))) == list.length(context.turns)
   && history_bytes(context.turns) <= max_history_text_bytes
 }
 
@@ -99,7 +115,7 @@ pub fn append(context: Context, turn: Turn) -> Result(Context, String) {
     True -> Ok(Nil)
     False -> Error("invalid_conversation_state")
   })
-  case list.find(context.turns, fn(t) { t.update_id == turn.update_id }) {
+  case list.find(context.turns, fn(t) { turn_identity(t) == turn_identity(turn) }) {
     Ok(existing) -> case existing == turn {
       True -> Ok(context)
       False -> Error("conversation_update_collision")
@@ -111,11 +127,23 @@ pub fn append(context: Context, turn: Turn) -> Result(Context, String) {
 }
 
 fn turn_json(turn: Turn) -> json.Json {
-  json.object([
-    #("update_id", json.int(turn.update_id)),
-    #("prompt", json.string(turn.prompt)),
-    #("reply", json.string(turn.reply)),
-  ])
+  let identity = case turn {
+    Turn(id, ..) -> #("update_id", json.int(id))
+    MiniTurn(id, ..) -> #("request_id", json.string(id))
+  }
+  json.object([identity,
+    #("prompt", json.string(turn.prompt)), #("reply", json.string(turn.reply))])
+}
+fn is_mini(turn: Turn) -> Bool {
+  case turn { MiniTurn(..) -> True Turn(..) -> False }
+}
+fn v2_turn_json(turn: Turn) -> json.Json {
+  let identity = case turn {
+    Turn(id, ..) -> [#("kind", json.string("telegram")), #("update_id", json.int(id))]
+    MiniTurn(id, ..) -> [#("kind", json.string("mini")), #("request_id", json.string(id))]
+  }
+  json.object(list.append(identity, [
+    #("prompt", json.string(turn.prompt)), #("reply", json.string(turn.reply))]))
 }
 
 pub fn encode_context(context: Context) -> Result(String, String) {
@@ -123,12 +151,13 @@ pub fn encode_context(context: Context) -> Result(String, String) {
     True -> Ok(Nil)
     False -> Error("invalid_conversation_state")
   })
+  let has_mini = list.any(context.turns, is_mini)
   let raw = json.object([
-    #("schema", json.string("uos.telegram.conversation.v1")),
+    #("schema", json.string(case has_mini { True -> "uos.telegram.conversation.v2" False -> "uos.telegram.conversation.v1" })),
     #("bot_id", json.int(context.scope.bot_id)),
     #("chat_id", json.int(context.scope.chat_id)),
     #("user_id", json.int(context.scope.user_id)),
-    #("turns", json.array(context.turns, turn_json)),
+    #("turns", json.array(context.turns, case has_mini { True -> v2_turn_json False -> turn_json })),
   ]) |> json.to_string
   case string.byte_size(raw) <= max_context_json_bytes {
     True -> Ok(raw)
@@ -143,6 +172,29 @@ fn turn_decoder() -> decode.Decoder(Turn) {
   decode.success(Turn(id, prompt, reply))
 }
 
+fn v2_turn_decoder() -> decode.Decoder(Turn) {
+  use fields <- decode.then(decode.dict(decode.string, decode.dynamic))
+  use kind <- decode.field("kind", decode.string)
+  use prompt <- decode.field("prompt", decode.string)
+  use reply <- decode.field("reply", decode.string)
+  let expected = case kind { "mini" -> "request_id" _ -> "update_id" }
+  let keys = dict.keys(fields) |> list.sort(string.compare)
+  case keys == list.sort(["kind",expected,"prompt","reply"], string.compare) {
+    False -> decode.failure(Turn(0,"",""), "exact v2 turn fields")
+    True -> case kind {
+      "telegram" -> {
+        use id <- decode.field("update_id", decode.int)
+        decode.success(Turn(id,prompt,reply))
+      }
+      "mini" -> {
+        use id <- decode.field("request_id", decode.string)
+        decode.success(MiniTurn(id,prompt,reply))
+      }
+      _ -> decode.failure(Turn(0,"",""), "telegram or mini kind")
+    }
+  }
+}
+
 pub fn decode_context(raw: String, expected: Scope) -> Result(Context, String) {
   use _ <- result.try(case string.byte_size(raw) <= max_context_json_bytes && valid_scope(expected) {
     True -> Ok(Nil)
@@ -153,12 +205,12 @@ pub fn decode_context(raw: String, expected: Scope) -> Result(Context, String) {
     use bot <- decode.field("bot_id", decode.int)
     use chat <- decode.field("chat_id", decode.int)
     use user <- decode.field("user_id", decode.int)
-    use turns <- decode.field("turns", decode.list(turn_decoder()))
+    use turns <- decode.field("turns", decode.list(case schema { "uos.telegram.conversation.v2" -> v2_turn_decoder() _ -> turn_decoder() }))
     decode.success(#(schema, Context(Scope(bot, chat, user), turns)))
   }
   use #(schema, context) <- result.try(json.parse(raw, decoder)
     |> result.replace_error("invalid_conversation_json"))
-  case schema == "uos.telegram.conversation.v1"
+  case { schema == "uos.telegram.conversation.v1" || schema == "uos.telegram.conversation.v2" }
     && context.scope == expected && valid_context(context) {
     True -> Ok(context)
     False -> Error("conversation_scope_or_state_mismatch")

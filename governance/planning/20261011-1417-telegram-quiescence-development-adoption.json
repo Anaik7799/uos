@@ -1,0 +1,39 @@
+{
+  "schema": "uos.telegram-quiescence-development-adoption.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "status": "DEVELOPMENT_DESIGN_ADOPTED_WITH_BINDING_CORRECTIONS",
+  "runtime_admission": "NOT_GRANTED",
+  "proposal_path": "governance/planning/20261011-1645-telegram-store-quiescence-proposal-v2.json",
+  "corrections": [
+    "Use fresh host UTC for evidence timestamps; proposal authored_at14:45Z was future relative to root observation around14:38Z and is not observation evidence.",
+    "Observed guardian exit0 ALSO supplies cleanup evidence, including valid framed transport response that later fails domain decoding. Exit124 is deadline cleanup;125 general failure cleanup. Neither determines whether COMMIT happened.126 is cleanup unknown, not specifically a SIGTERM timeout.",
+    "Actual Gleam opaque type with private constructor; not a public Erlang tuple/map masquerading as unforgeable external authorization. Cooperative local-account boundary remains explicit.",
+    "Bind proof to exact DB/native/guardian config plus canonical request bytes; store owns exact operationID and canonical apply digest context.",
+    "Retain original uncertain-operation context and cleanup proof across lookup failures. A cleanup proof for a later lookup cannot replace proof for the original apply.",
+    "No new native protocol or SQLite schema. Existing generation CAS remains required.",
+    "Implement reusable transport/store proof path first; single-flight supervised owner is mandatory SERVICE_IMPL integration, no runtime opening before service review."
+  ],
+  "suggested_api": [
+    "exchange_with_cleanup(config,request): TransportObservation includes body outcome and Option(CleanupProof), constructor private in transport",
+    "StoreError retains opaque PendingOperation for uncertain apply or invalid domain response, binding request and optional cleanup evidence",
+    "reconcile_pending(config,pending): verifies original proof/config/context, then exact lookup; matching receipt=>Committed, absent=>Absent, conflicting=>error/HOLD, unknown cleanup=>Unknown",
+    "Legacy Bool API remains conservative Unknown and is not promoted to authority"
+  ],
+  "acceptance": [
+    "Actual precommit-kill/timeout plus pinned guardian cleanup => absent",
+    "Actual postcommit-lost-response plus cleanup => original matching receipt",
+    "Exit0 response/domain-decode failure retains cleanup for reconciliation",
+    "126, missing exit, helper DOWN/timeout/catch never mint cleanup proof",
+    "Wrong config/database/native hash/operation/digest or substituted later-lookup witness refused",
+    "No automatic native write retry or Telegram send",
+    "Existing source regressions, maximum lifecycle and transport18-case suite still pass"
+  ],
+  "residuals": [
+    "Service single-flight and restart/cgroup handling pending",
+    "Observed process-group cleanup is within existing cooperative guardian boundary; escaping descendant containment needs service cgroup",
+    "No release/admission/main merge from this development design"
+  ],
+  "observed_at": "2026-10-11T14:39:17.862Z",
+  "proposal_sha256": "34fe7b2c05a612e6b456ea17a6091404d394ab39565ceadfbc650b006149048e"
+}

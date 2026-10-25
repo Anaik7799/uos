@@ -1,0 +1,2669 @@
+[
+  {
+    "actor": "codex-telegram-20261011",
+    "assessment_id": "telegram-tools-plan-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Use genuine discovered AGY session; obtain explicit ACK without inventing identity.",
+        "Restore bounded Gleam dispatch using canonical Sa-plan and fresh risk/task/resource fences.",
+        "Record tool interface, task handoff and remaining gaps; no production effects."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Prepare concrete plan and collect actual AGY/Gemini and Claude review; no Telegram implementation or release until old task authority is repaired",
+      "supersedes": null
+    },
+    "dependencies": [],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "planning",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Prepare concrete plan and collect actual AGY/Gemini and Claude review; no Telegram implementation or release until old task authority is repaired",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "PLAN",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "agy-telegram-20261011",
+    "assessment_id": "telegram-tools-agy_plan-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Use genuine discovered AGY session; obtain explicit ACK without inventing identity.",
+        "Restore bounded Gleam dispatch using canonical Sa-plan and fresh risk/task/resource fences.",
+        "Record tool interface, task handoff and remaining gaps; no production effects."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Prepare concrete plan and collect actual AGY/Gemini and Claude review; no Telegram implementation or release until old task authority is repaired",
+      "supersedes": null
+    },
+    "dependencies": [
+      "PLAN"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "planning",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Prepare concrete plan and collect actual AGY/Gemini and Claude review; no Telegram implementation or release until old task authority is repaired",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "AGY_PLAN",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "claude-telegram-20261011",
+    "assessment_id": "telegram-tools-claude_plan-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Use genuine discovered AGY session; obtain explicit ACK without inventing identity.",
+        "Restore bounded Gleam dispatch using canonical Sa-plan and fresh risk/task/resource fences.",
+        "Record tool interface, task handoff and remaining gaps; no production effects."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Prepare concrete plan and collect actual AGY/Gemini and Claude review; no Telegram implementation or release until old task authority is repaired",
+      "supersedes": null
+    },
+    "dependencies": [
+      "AGY_PLAN"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "planning",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Prepare concrete plan and collect actual AGY/Gemini and Claude review; no Telegram implementation or release until old task authority is repaired",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "CLAUDE_PLAN",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "agy-telegram-20261011",
+    "assessment_id": "telegram-tools-tools_fix-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Exact expired set bindings include plan task original worker attempt decimal-string deadline; complete nonempty distinct bounded set must equal observed expired rows.",
+        "Reject stale or changed plan/evidence, omitted extra duplicate foreign live missing-deadline completed/result-bearing bindings; no ordinary active/preflight relaxation.",
+        "Batch observation grants no effect authority. Canonical claims remain existing Sa-plan operations; no original task executes until fresh exact-owner active checks pass.",
+        "Existing single reclaim behavior and adversarial tests remain unchanged; add set and parser negative regression coverage; full risk-priority --all must pass.",
+        "Preserve capacity bounds and original review bytes. Linked erratum corrects AGY model self-report and unsupported consumer-accounting claim."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "AGY implements bounded exact-set expired-reclaim OBSERVATION ONLY in risk checker, with negative tests. No task DB mutation, no runtime effects, no expiry waiver. Canonical source edits serialized to checker.ml, validate.ml, adversarial.ml; receipt JSON records review corrections. Existing compiled Gleam adapters are reused.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "CLAUDE_PLAN"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "implementation",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "AGY implements bounded exact-set expired-reclaim OBSERVATION ONLY in risk checker, with negative tests. No task DB mutation, no runtime effects, no expiry waiver. Canonical source edits serialized to checker.ml, validate.ml, adversarial.ml; receipt JSON records review corrections. Existing compiled Gleam adapters are reused.",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+          "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+          "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b",
+          "observed_at": "2026-10-11T12:23:00Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "TOOLS_FIX",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "codex-telegram-20261011",
+    "assessment_id": "telegram-tools-tools_review-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Use genuine discovered AGY session; obtain explicit ACK without inventing identity.",
+        "Restore bounded Gleam dispatch using canonical Sa-plan and fresh risk/task/resource fences.",
+        "Record tool interface, task handoff and remaining gaps; no production effects."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Independently review AGY exact-set recovery checker, rerun suite and parser refusal tests; reject missing plan identity. No live recovery or production effects.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "TOOLS_FIX"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "review",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Independently review AGY exact-set recovery checker, rerun suite and parser refusal tests; reject missing plan identity. No live recovery or production effects.",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+          "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+          "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b",
+          "observed_at": "2026-10-11T12:23:00Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "TOOLS_REVIEW",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "agy-telegram-20261011",
+    "assessment_id": "telegram-tools-parser_fix-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Exact expired set bindings include plan task original worker attempt decimal-string deadline; complete nonempty distinct bounded set must equal observed expired rows.",
+        "Reject stale or changed plan/evidence, omitted extra duplicate foreign live missing-deadline completed/result-bearing bindings; no ordinary active/preflight relaxation.",
+        "Batch observation grants no effect authority. Canonical claims remain existing Sa-plan operations; no original task executes until fresh exact-owner active checks pass.",
+        "Existing single reclaim behavior and adversarial tests remain unchanged; add set and parser negative regression coverage; full risk-priority --all must pass.",
+        "Preserve capacity bounds and original review bytes. Linked erratum corrects AGY model self-report and unsupported consumer-accounting claim."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Repair strict plan-bound JSON parser and missing negative tests per independent review ea558a06; same3source files; no runtime effects",
+      "supersedes": null
+    },
+    "dependencies": [
+      "TOOLS_REVIEW"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "implementation",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Repair strict plan-bound JSON parser and missing negative tests per independent review ea558a06; same3source files; no runtime effects",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+          "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+          "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b",
+          "observed_at": "2026-10-11T12:23:00Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "PARSER_FIX",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "codex-telegram-20261011",
+    "assessment_id": "telegram-tools-parser_review-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Exact expired set bindings include plan task original worker attempt decimal-string deadline; complete nonempty distinct bounded set must equal observed expired rows.",
+        "Reject stale or changed plan/evidence, omitted extra duplicate foreign live missing-deadline completed/result-bearing bindings; no ordinary active/preflight relaxation.",
+        "Batch observation grants no effect authority. Canonical claims remain existing Sa-plan operations; no original task executes until fresh exact-owner active checks pass.",
+        "Existing single reclaim behavior and adversarial tests remain unchanged; add set and parser negative regression coverage; full risk-priority --all must pass.",
+        "Preserve capacity bounds and original review bytes. Linked erratum corrects AGY model self-report and unsupported consumer-accounting claim."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Independently verify parser repair, complete-plan recovery checks and ordinary refusals",
+      "supersedes": null
+    },
+    "dependencies": [
+      "PARSER_FIX"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "review",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Independently verify parser repair, complete-plan recovery checks and ordinary refusals",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+          "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+          "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b",
+          "observed_at": "2026-10-11T12:23:00Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "PARSER_REVIEW",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "codex-telegram-20261011",
+    "assessment_id": "telegram-tools-recover-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "Exact expired set bindings include plan task original worker attempt decimal-string deadline; complete nonempty distinct bounded set must equal observed expired rows.",
+        "Reject stale or changed plan/evidence, omitted extra duplicate foreign live missing-deadline completed/result-bearing bindings; no ordinary active/preflight relaxation.",
+        "Batch observation grants no effect authority. Canonical claims remain existing Sa-plan operations; no original task executes until fresh exact-owner active checks pass.",
+        "Existing single reclaim behavior and adversarial tests remain unchanged; add set and parser negative regression coverage; full risk-priority --all must pass.",
+        "Preserve capacity bounds and original review bytes. Linked erratum corrects AGY model self-report and unsupported consumer-accounting claim."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Fresh worker/effect reconciliation; exact-set observation; canonical sequential claims with no task effects until all expired rows reclaimed and exact-owner active checks pass",
+      "supersedes": null
+    },
+    "dependencies": [
+      "PARSER_REVIEW"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "implementation",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Fresh worker/effect reconciliation; exact-set observation; canonical sequential claims with no task effects until all expired rows reclaimed and exact-owner active checks pass",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "6e3b1f9c12517563c1ca647ec61864d1b1fc465db6efc13a695a47dda5008c6f",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+          "sha256": "a631758abc8aac5468fa3228d8e82be8bb401c5996baa32ea3f0a572a8818928",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+          "observed_at": "2026-10-11T12:23:00Z"
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+          "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b",
+          "observed_at": "2026-10-11T12:23:00Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "RECOVER",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "codex-telegram-20261011",
+    "assessment_id": "telegram-report-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "13-section journal with exact evidence grades and residuals, no false system admission",
+        "Status table includes as-is/to-be/task/status/risk/criticality/mitigation and full Tailnet evidence links",
+        "Run applicable journal mechanical checks and preserve failed findings"
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Truthful timestamped status dashboard/journal for completed development recovery and remaining Telegram work, no deployment or admission.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "RECOVER"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:23:00Z",
+    "phase": "review",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Truthful timestamped status dashboard/journal for completed development recovery and remaining Telegram work, no deployment or admission.",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "REPORT",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  },
+  {
+    "actor": "codex-telegram-20261011",
+    "assessment_id": "telegram-recovery-report2-20261011",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "13sectioncurrentjournal withas-is/to-be taskstatus riskcriticality mitigations.",
+        "Exacttimestamped evidence links and actualtask snapshot; noallfeatures/admissionclaim.",
+        "Source/riskfailuresandpeerretractions preserved.",
+        "Journal/checklist/diagram/servedbody checks truthful; forecastupdate retainsprior."
+      ],
+      "alternatives": [
+        "Canonical authenticated dispatch with durable requests: preferred subject to review.",
+        "Caller-supplied authority or completed grants: rejected.",
+        "Historical EV counts as admission: rejected."
+      ],
+      "assumptions": [
+        "Cooperative local Unix-account trust boundary; no remote IAM claim."
+      ],
+      "budget": "Pinned local tools; bounded development discovery, one hour leases; no package downloads, production changes or Telegram sends.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "MCP exposes four read-only tools, but compiled Gleam Herdr discovery succeeded and identified idle AGY session954b9a82 in a UOS sibling workspace.",
+        "No coordinator lease exists; old task execution labels do not prove active workers.",
+        "Source observations do not prove runtime admission."
+      ],
+      "falsifier": "Any fabricated success, authority bypass, stale lease execution, or degraded managed runtime",
+      "forecast": "Scoped changes become independently reviewable; global gates may expose further gaps.",
+      "residuals": [
+        "Live outbound acceptance requires an explicitly authorized test recipient/message.",
+        "Full global admission includes all applicable formal/runtime/provenance gates, not a relabel of component acceptance."
+      ],
+      "reviewer": "Independent Codex review; actual AGY implementation peer.",
+      "rollback": "Preserve main83dca039 and f080822e capsule; runtime rollback needs finite independent review.",
+      "summary": "Publish actual auth72plus768plus8 verification, native124positiveand6independentfailures, and17routebrowseraudit, with explicit pending work",
+      "supersedes": null
+    },
+    "dependencies": [
+      "REPORT"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "tools/telegram_client.ml"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Missing verified dispatch blocks the requested capability release.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Sequential critical path from authority design through independent release verification.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "tools/telegram_client.ml",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: plausible fabricated authority or success can cause major evidence damage.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "tools/telegram_client.ml"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "One critical cognitive service gains usable bounded tools.",
+        "value": 3
+      },
+      "stpa": {
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Runtime authority and truthful result feedback must precede opening the route.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Telegram identity and payload fields do not prove canonical execution authority",
+        "controls": "Authenticated allowlisted ingress, canonical per-request tasks, current leases, scoped dispatch and independently observed refusals",
+        "det": 3,
+        "effect": "Unauthorized actions or replies to a wrong recipient",
+        "id": "FM-TG-AUTHORITY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Shared request deletion or premature processed marking loses or duplicates messages",
+        "controls": "Durable per-request acknowledgement, explicit uncertain outcomes, bounded retries with stable identity",
+        "det": 3,
+        "effect": "Lost operator intent or misleading delivery success",
+        "id": "FM-TG-DELIVERY",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Historical component counts and quarantined EV claims substituted for current admission",
+        "controls": "Independent gate inventory, candidate-bound formal/runtime evidence; retain NOT_ADMITTED until obligations satisfied",
+        "det": 3,
+        "effect": "False system-wide assurance",
+        "id": "FM-GLOBAL-CLAIM",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 3,
+    "observed_at": "2026-10-11T12:56:15Z",
+    "phase": "review",
+    "plan_id": "uos/telegram-tools/20261011-1115",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-10-11T11:13:03Z",
+    "schema_version": 1,
+    "scope": "Publish actual auth72plus768plus8 verification, native124positiveand6independentfailures, and17routebrowseraudit, with explicit pending work",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "AGENTS.md",
+          "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram_client.ml",
+          "sha256": "a0842a5799fe313b070e50273eb74b9daf40361f09b0a3116fd52d2deae1c1f5"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/telegram-harness-dispatch",
+          "sha256": "801cc69aeb765a613697392b31e01e21e0dc8cad080cb7713a8a3e437bdadad1"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram.gleam",
+          "sha256": "73faffe64cc643b8daf5995af6e8b90b2f7a3f882d7ee509900f8a86e20d1337"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam",
+          "sha256": "9ca5070ea2c84eccdc1ae5be368b2fcd6a92287e282ec1b03562609b7b66f37c"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/direct_read_dispatch.gleam",
+          "sha256": "82e21213e22134e37ff0e30be20ac6b6af4a23868efd6c48c8145a4d3b660a89"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "sha256": "e4eb85d57cceaea3fad4bfb8c5e84bdaeba4fc84c0d5dc3838635595c8c6de18"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/validation/release_browser_capture.ml",
+          "sha256": "15184a72059eabaecc8c5bf887d6445f4f731060c13915af0cbc75cddfb615d7"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "tools/km_provenance/km_gate.ml",
+          "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+        },
+        {
+          "observed_at": "2026-10-11T12:23:00Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "path": "governance/planning/20261011-1217-telegram-mini-http-audit.json",
+          "sha256": "b291d4637c14f8ce72fdfd1999bd8af4b65e436041933ec031cd2db995925651",
+          "observed_at": "2026-10-11T12:56:15Z"
+        },
+        {
+          "path": "governance/planning/20261011-1202-telegram-native-independent-review.json",
+          "sha256": "30a1019d58b5e0c620edfdd79fc06065c3e48322863facb8357349d8da9ed4ae",
+          "observed_at": "2026-10-11T12:56:15Z"
+        },
+        {
+          "path": "governance/planning/20261011-1228-telegram-auth-independent-verification.json",
+          "sha256": "a8ce790734ee5abf5f96a83144df446d30ccc91cbdf31ec903a8af642d0f9949",
+          "observed_at": "2026-10-11T12:56:15Z"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Observed read-only JJ snapshot 4f199d53; parent main83dca039; existing dirty changes preserved; ten baseline source hashes reread."
+    },
+    "stpa_analysis": {
+      "control_action": "Accept Telegram intents, deliver truthful bounded results and evaluate current system admission",
+      "controller": "Gleam task and integration controller",
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Implement verified bounded operation and visible failure",
+          "context": "Required diagnostic dispatch remains unavailable",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Verify canonical identity/task and truthful executor result; deny unsupported mutations",
+          "context": "Caller fields or static handlers masquerade as authorization or execution",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Fresh effect-time fence and independently reviewed immutable release",
+          "context": "Authority expires or changes between admission and execution; release precedes review",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Stable request identity and bounded task lifecycle; no blind retries",
+          "context": "Repeated requests outlive task or create duplicate side effects",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "REPORT2",
+    "task_state": "completed",
+    "valid_until": "2026-10-11T14:30:00Z"
+  }
+]

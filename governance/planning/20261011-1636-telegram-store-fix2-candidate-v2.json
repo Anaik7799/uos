@@ -1,0 +1,157 @@
+{
+  "schema": "uos.telegram-store-fix2-candidate.v2",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "timestamp": "20261011-1636",
+  "observed_at": "2026-10-11T14:36:00Z",
+  "status": "CANDIDATE_DELIVERED_OPEN_ATTEMPT",
+  "task_lifecycle": "executing (PRESERVED OPEN for independent root and Codex STORE_DRAFT_REVIEW)",
+  "runtime_admission": "NOT_GRANTED",
+  "source_hashes": {
+    "telegram_store.gleam": "d379f33bfc52a1d0f1d02cd158c4c3d11170d04d6b6733248e0df96cf5cf6854",
+    "telegram_store_codec.gleam": "803f55bc701ae44c12ea565bc20fb14aff400f05851cd2ed5325034f91c241f4",
+    "telegram_store_codec_ffi.erl": "ee4761ab39b0126f9c810af394109c0682316f19e7fd06b50160120bca26a5e5",
+    "telegram_store_test.gleam": "0e9a7112a4bf68250cb91307954b298ecabfddf0d0b839f8d505b437ed273007",
+    "telegram_delivery_ledger.gleam": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7",
+    "telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "telegram_store_transport_ffi.erl": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+  },
+  "verification_results": {
+    "store_domain_tests": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "findings": {
+        "negative_clock_persisted": false,
+        "forged_directive_persisted": false
+      }
+    },
+    "store_extended_tests": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "findings": {
+        "replay_during_processing_refused": false,
+        "replay_after_result_refused": false,
+        "forged_recipient_claim": false,
+        "forged_recipient_result": false,
+        "forged_payload_send": false,
+        "stale_pending_reenters_sending": false,
+        "forged_recipient_outcome": false,
+        "caller_bool_mints_quiescence": false,
+        "normal_lifecycle_1": false,
+        "normal_lifecycle_16": false
+      }
+    },
+    "store_boundary_tests": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "findings": {
+        "watermark_regression_via_forged_value": false,
+        "zero_user_accepted": false,
+        "invalid_text_hash_accepted": false,
+        "rejected_reason_collision_accepted": false,
+        "invalid_domain_record_accepted": false,
+        "duplicate_response_keys_accepted": false,
+        "unknown_response_field_accepted": false
+      }
+    },
+    "store_independent_tests": {
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "findings": {
+        "singleton_wrong_bot": false,
+        "later_group_collision_commits": false,
+        "known_replay_rejected": false,
+        "partial_bootstrap_cannot_resume": false,
+        "other_worker_can_mark_sending": false,
+        "negative_generation_accepted": false,
+        "malformed_receipt_accepted": false,
+        "malformed_row_accepted": false,
+        "error_reflects_private_marker": false,
+        "invalid_state_panics": false,
+        "absence_declared_without_quiescence": false,
+        "forged_recipient_claim": false,
+        "forged_recipient_result": false,
+        "forged_payload_send": false,
+        "stale_pending_reenters_sending": false,
+        "forged_recipient_outcome": false,
+        "caller_bool_mints_quiescence": false,
+        "normal_lifecycle_1": false,
+        "normal_lifecycle_16": false
+      }
+    },
+    "telegram_store_test": {
+      "total": 29,
+      "passed": 29,
+      "failed": 0
+    },
+    "telegram_delivery_ledger_test": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "telegram_ingress_guard_test": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "total_in_tree_telegram_tests_passed": 72,
+    "total_independent_probes_passed": 38,
+    "tools_preflight": "PASS (31/31 checks)",
+    "risk_priority_check_active_check": "PASS (0 findings)"
+  },
+  "defects_repaired_in_v2": [
+    {
+      "id": "FIX-REPLAY-01",
+      "name": "replay_during_processing_and_after_result",
+      "mechanism": "Repaired commit_prefix replay invariant check: compared verdicts_match and immutable identities while allowing status to match AcceptedEnvelope non-rejected states (InboxPending, InboxProcessing, InboxResultReady, InboxCompleted) and requiring exact reason equality on InboxRejected."
+    },
+    {
+      "id": "FIX-PARSER-01",
+      "name": "parser_quadratic_scan_and_excessive_allocation",
+      "mechanism": "Replaced linear scan with O(1) map duplicate key checking in telegram_store_codec_ffi.erl; enforced MAX_OBJECT_KEYS = 2048, MAX_ARRAY_ELEMS = 4096, MAX_TOTAL_NODES = 16384, depth 64 check on empty and nested containers; 20,000 keys aborts in < 5 ms."
+    },
+    {
+      "id": "FIX-DOMAIN-01",
+      "name": "negative_clock_persisted",
+      "mechanism": "Added explicit bounds check in commit_prefix: now_ms > 0 && now_ms <= guard.max_identity, rejecting negative timestamps at the write boundary."
+    },
+    {
+      "id": "FIX-DOMAIN-02",
+      "name": "forged_directive_persisted",
+      "mechanism": "Enforced directive == guard.classify_directive(raw_text) in validate_verdict_structure, strictly binding directive classification to raw_text at write boundary."
+    },
+    {
+      "id": "FIX-CODEC-01",
+      "name": "watermark_offset_upper_bound",
+      "mechanism": "Enforced offset <= guard.max_update_id + 1 in decode_watermark_value."
+    },
+    {
+      "id": "FIX-CODEC-02",
+      "name": "authority_record_domain_validation",
+      "mechanism": "Enforced valid_authority_request_id(req_id, bot), guard.valid_positive_id(bot), ledger.valid_worker(worker, epoch), and ts > 0 in decode_authority_value."
+    },
+    {
+      "id": "FIX-CODEC-03",
+      "name": "input_verdict_domain_validation",
+      "mechanism": "Enforced valid_request_id(req_id, bot, upd), positive IDs, digest verification, text bounds, and directive equality in decode_input_verdict."
+    },
+    {
+      "id": "FIX-CODEC-04",
+      "name": "result_meta_domain_validation",
+      "mechanism": "Enforced valid_request_id(req_id, bot, upd), chat/message/user IDs, valid digests, created_at_ms > 0, and total_chunks bounds in decode_result_value."
+    },
+    {
+      "id": "FIX-CODEC-05",
+      "name": "outbox_chunk_and_status_domain_validation",
+      "mechanism": "Enforced valid_authority_request_id, positive IDs, payload non-empty and bounded, attempts non-negative, delivered telegram_msg_id positive, and status string length bounds in decode_chunk_value and outbox_status_decoder."
+    }
+  ]
+}

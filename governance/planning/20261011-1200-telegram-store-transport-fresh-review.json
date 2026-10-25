@@ -1,0 +1,101 @@
+{
+  "schema": "uos.telegram-store-transport-fresh-review.v1",
+  "verdict": "PASS_SCOPED_DEVELOPMENT_TRANSPORT",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_TRANSPORT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "source_and_binary_manifest": [
+    {
+      "path": "tools/telegram_store_transport_guardian.ml",
+      "sha256": "9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+      "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+      "sha256": "f57a35c144e2b9bd900f38440e4b9590efe1bc47afec159301013c55e8bcf8f9"
+    },
+    {
+      "path": "tools/validation/telegram_store_transport_fixture.ml",
+      "sha256": "8957b7cca9ff29f0f31c80028bf6231e0211a12ffee6e83266d82077f1c73697"
+    },
+    {
+      "path": "tools/validation/telegram_store_transport_test.erl",
+      "sha256": "d93204a1ce1b5fede355bbe01e8bc0de5589ed3aa0d761173dea802654e376db"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "d4d4dfc204d815fa23617d70ac0d4779cf8c86119ca6d89948c52cca5c1f6210"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1238-store-transport/guardian",
+      "sha256": "08ff5d388d2b73a93ab5008b4ebe9819c3b8945253a96d9bea8db8c896535918"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1238-store-transport/fixture",
+      "sha256": "6714aed10b649a2cc7d69dec00f18e98110ceff4a907ae9c2de0147acab9aae9"
+    }
+  ],
+  "prior_review": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1247-independent-store-transport-review.json",
+  "recovery": "governance/planning/20261011-1157-telegram-expired-claim-recovery.json",
+  "fresh_build": "Pinned OTP29 erlc compiled current FFI and test source into new private directory; guardian and fixture binary hashes match previously reviewed source/binary manifest.",
+  "execution": {
+    "status": "PASS",
+    "tests": 18,
+    "transcript": "var/recovery-runtime/20261011-1159-store-transport/20261011-1159-tests.log",
+    "fixed_deadline_seconds": 5.014,
+    "scope": [
+      "EOF-dependent echo completes",
+      "maximum1048576 framed request/response",
+      "body1048573 rejected before spawn",
+      "empty input rejected",
+      "truncated response",
+      "trailing response/private marker redacted",
+      "output flood",
+      "invalid UTF8 output",
+      "nonzero worker exit",
+      "hash mismatch",
+      "five-second fixed deadline under output drip",
+      "descendant cleanup on normal leader exit",
+      "trailing input",
+      "truncated input deadline",
+      "oversized header",
+      "actual typed Gleam constructor/exchange",
+      "timeout process-group cleanup",
+      "caller-death process-group cleanup"
+    ],
+    "transcript_sha256": "7b3d61406eb926f3ea9b467fdc8efa38e689109ce65c5efda6114d56c682ae18"
+  },
+  "limitations": [
+    "Tests use compiled EOF-sensitive fixture, not native SQLite; no canonical DB writes or Telegram traffic occurred.",
+    "Success body remains untrusted domain input until strict codec validation. No automatic retry.",
+    "Uncertain does not certify that no operation committed or that cleanup completed. Native worker must be observed quiescent before receipt lookup/reconciliation; CleanupUnknown remains a hold.",
+    "Only direct child is reaped; descendants deliberately creating sessions require service cgroup. No hostile same-UID filesystem/path isolation claim.",
+    "Caller-death test uses100ms delay and absence of delayed marker, not explicit child-start acknowledgement or exhaustive PID census. Source monitor/EOF path inspected; this is bounded cooperative evidence, not exhaustive lifecycle proof.",
+    "No physical quota, power-loss durability, actual native-worker compatibility, service release or global admission proved."
+  ],
+  "application_admitted": false,
+  "production_changed": false,
+  "observed_utc": "2026-10-11T12:00:46.836Z",
+  "loaded_binary_manifest": [
+    {
+      "path": "var/recovery-runtime/20261011-1159-store-transport/telegram_store_transport_ffi.beam",
+      "sha256": "60fe046bf901a04969d4fb53f0a592971d8a8b3c06230dbdfe6009d320e726ba"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1159-store-transport/telegram_store_transport_test.beam",
+      "sha256": "b6a61cd62c74896bfd5702f37984335f7a615f23863aa2c60cf54214c40ea065"
+    },
+    {
+      "path": "apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@harness@telegram_store_transport.beam",
+      "sha256": "406caf01e1c35e20616f16a339871a1bdcbd51a151aad71d354049199300134e"
+    }
+  ]
+}

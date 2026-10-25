@@ -127,7 +127,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Substrate & Hardware Safety",
       "Infrastructure",
       "NixOS & Rust spec.rs",
-      "Active",
+      "DeclaredUnverified",
       "Host NVMe HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736 lock",
     ),
     AspectRecord(
@@ -135,7 +135,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Standalone Jujutsu Monorepo",
       "Version Control",
       "Jujutsu .jj/ CLI",
-      "Active",
+      "DeclaredUnverified",
       "Pure .jj/ standalone repo with zero native Git mutations",
     ),
     AspectRecord(
@@ -143,7 +143,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Zero-Muda Purity",
       "Governance",
       "SC-MUDA-001 Policy",
-      "Active",
+      "DeclaredUnverified",
       "0 Bevy, 0 Graphite, 0 foreign NIF shared libraries",
     ),
     AspectRecord(
@@ -151,7 +151,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Gleam/OTP Supervision & Actors",
       "Supervision",
       "uos_sup.gleam & OTP 29",
-      "Active",
+      "DeclaredUnverified",
       "Root 4-domain supervisor, Prajna circuit breakers, Lyapunov proofs",
     ),
     AspectRecord(
@@ -159,15 +159,15 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Deterministic Runtime Engine",
       "Kernel",
       "ZigVM & VFS backend",
-      "Active",
-      "Descriptor-relative, race-free, symlink-aware VFS (8/8 laws)",
+      "DeclaredUnverified",
+      "Descriptor-relative VFS requirement; current eight-law evidence unverified",
     ),
     AspectRecord(
       6,
       "Formal Evidence & Analysis",
       "Evidence Plane",
       "Hermes OCaml & Gospel",
-      "Active",
+      "DeclaredUnverified",
       "Gospel contracts, Z3 queries, SQLite WAL append ledgers",
     ),
     AspectRecord(
@@ -175,7 +175,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Mathematical Authority",
       "Formal Proof",
       "Lean 4 & Quint",
-      "Active",
+      "DeclaredUnverified",
       "13D Traceability coordinate conservation & TwoLattice_STM proofs",
     ),
     AspectRecord(
@@ -183,7 +183,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Biosemiotic Cybernetics",
       "Control Theory",
       "Rocha Semiotics",
-      "Active",
+      "DeclaredUnverified",
       "Decoupled semiotic cut, feedback loops, cybernetic regulators",
     ),
     AspectRecord(
@@ -191,7 +191,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Quarantined AI Inference",
       "Inference Tier",
       "Modular MAX / Mojo",
-      "Active",
+      "DeclaredUnverified",
       "Supervised Python daemon communicating via length-delimited JSON-RPC",
     ),
     AspectRecord(
@@ -199,7 +199,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Mesh Telemetry & Communication",
       "Network Plane",
       "Zenoh pub/sub mesh",
-      "Active",
+      "DeclaredUnverified",
       "OTel-over-Zenoh (OoZ) and MCP-over-Zenoh (MoZ) fractal backplane",
     ),
     AspectRecord(
@@ -207,7 +207,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Agent Event Bus Protocol",
       "Agent Plane",
       "AG-UI 32-Event Spec",
-      "Active",
+      "DeclaredUnverified",
       "Lifecycle, Text, Tool, State, Activity, Reasoning, Special categories",
     ),
     AspectRecord(
@@ -215,15 +215,15 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Declarative UI Component Catalog",
       "Presentation",
       "A2UI Catalog",
-      "Active",
-      "233 verified JSON component specifications across 22 domains",
+      "DeclaredUnverified",
+      "Historical A2UI catalog; current component behavior unverified",
     ),
     AspectRecord(
       13,
       "Multi-Interface Accessibility",
       "Interface Tier",
       "Penta-Stack UI",
-      "Active",
+      "DeclaredUnverified",
       "Lustre Web (4100), Wisp REST API (4100), ANSI TUI CLI simultaneously",
     ),
     AspectRecord(
@@ -231,7 +231,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Universal Tailscale FQDN Web Navigation",
       "Network Routing",
       "Tailscale FQDN",
-      "Active",
+      "DeclaredUnverified",
       "Direct clickable links to http://nas-1.tail55d152.ts.net:4100",
     ),
     AspectRecord(
@@ -239,15 +239,15 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Comprehensive Verification Checklist",
       "Quality Assurance",
       "SC-CHECKLIST-001",
-      "Active",
-      "5 Domains, 18 Checkpoints 100% green on all views and docs",
+      "DeclaredUnverified",
+      "18 required checkpoints plus provenance; per-view behavior unverified",
     ),
     AspectRecord(
       16,
       "Knowledge Management Triad",
       "Knowledge Plane",
       "KM Triad (Wiki, ZK, Ontology)",
-      "Active",
+      "DeclaredUnverified",
       "Hermes Wiki, ZigVM ZK (ADR-001..047), C3I Living Ontology",
     ),
     AspectRecord(
@@ -255,7 +255,7 @@ pub fn all_17_aspects() -> List(AspectRecord) {
       "Sa-Plan Durable Execution & Workflow Engine",
       "Execution Plane",
       "Sa-Plan OCaml & Gleam Bridge",
-      "Active",
+      "DeclaredUnverified",
       "12 Test suites, 235 formal laws, Oban jobs, Temporal recovery",
     ),
   ]
@@ -790,10 +790,14 @@ pub fn complete_temporal_workflow(
 // High-Level Verification & Coverage Aggregates
 // =============================================================================
 
+/// Structural catalog coverage only. No runtime, formal or admission assertion.
 pub fn verify_17_aspects_coverage() -> Bool {
   let aspects = all_17_aspects()
-  list.length(aspects) == 17
-  && list.all(aspects, fn(a) { a.status == "Active" && a.id > 0 && a.id <= 17 })
+  list.map(aspects, fn(a) { a.id })
+  == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  && list.all(aspects, fn(a) {
+    a.status == "DeclaredUnverified" && a.name != ""
+  })
 }
 
 pub fn verify_actor_ecosystem_completeness() -> Bool {

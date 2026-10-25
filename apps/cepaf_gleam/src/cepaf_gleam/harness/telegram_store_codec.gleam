@@ -1121,6 +1121,8 @@ pub fn decode_inbox_record(
       schema == "uos.telegram-inbox-record.v2"
       && ledger.valid_record(record)
       && case st {
+        ledger.InboxRejected("withdrawn_by_requester") ->
+          guard.valid_positive_id(msg) && guard.valid_chat_id(chat) && guard.valid_positive_id(usr)
         ledger.InboxRejected(_) -> msg == 0 && chat == 0 && usr == 0
         _ -> True
       }

@@ -1,0 +1,46 @@
+{
+  "schema": "uos.telegram-native-fix2-erratum.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1300",
+  "predecessor_receipt": "governance/planning/20261011-1247-agy-native-fix2.json",
+  "status": "COMPLETED_AWAITING_INDEPENDENT_VERIFY",
+  "runtime_admission": "NOT_GRANTED",
+  "actual_runtime_pass_counts_observation": {
+    "summary": "Observation of actual runtime stdout from native/ocaml/telegram_store/_build/default/telegram_store_test.exe executed under uos_env.",
+    "total_pass_lines_observed": 175,
+    "observed_breakdown_by_header": [
+      { "suite": "pre_suite_check", "observed_pass_lines": 1 },
+      { "suite": "1. Initialize New & Security Controls", "observed_pass_lines": 15 },
+      { "suite": "2. Read Keys & Read Inbox Index", "observed_pass_lines": 18 },
+      { "suite": "3. Apply Operations, CAS & Idempotency", "observed_pass_lines": 16 },
+      { "suite": "4. Capacity & Reservation Accounting", "observed_pass_lines": 4 },
+      { "suite": "5. Bounds, Values & Max 16x4096 Chunks", "observed_pass_lines": 7 },
+      { "suite": "6. Advanced Integrity & Hardening", "observed_pass_lines": 13 },
+      { "suite": "7. Redacted Error Codes & Framing", "observed_pass_lines": 6 },
+      { "suite": "8. Binary Pipe Framing (telegram_store_main)", "observed_pass_lines": 14 },
+      { "suite": "9. Injective Digest & Collision Resistance", "observed_pass_lines": 7 },
+      { "suite": "10. Ancestor Path Confinement & Symlink Rejection", "observed_pass_lines": 3 },
+      { "suite": "11. Duplicate Keys, Canonical Bot ID & Version/Hash Invariants", "observed_pass_lines": 13 },
+      { "suite": "12. Strict JSON Schemas & Unknown Field Rejection", "observed_pass_lines": 7 },
+      { "suite": "13. Commit Uncertainty & Reconciliation", "observed_pass_lines": 12 },
+      { "suite": "14. Storage Capacity & Reservation Bounds", "observed_pass_lines": 3 },
+      { "suite": "15. N7 Strict Optional Field Types", "observed_pass_lines": 9 },
+      { "suite": "16. N8 Strict UTF-8 & Standard JSON", "observed_pass_lines": 6 },
+      { "suite": "17. N9 Ancestor Path Confinement & Sticky Exemption", "observed_pass_lines": 3 },
+      { "suite": "18. N10 Transaction Exception Safety", "observed_pass_lines": 3 },
+      { "suite": "19. N11 Actual SIGKILL Crash Recovery Barriers", "observed_pass_lines": 15 }
+    ],
+    "independent_review_reproducer_result": {
+      "script": "var/recovery-runtime/20261011-1244-native-independent/independent-review.cjs",
+      "executable": "native/ocaml/telegram_store/_build/default/telegram_store_main.exe",
+      "total_tests": 11,
+      "passed": 11,
+      "failed": 0
+    }
+  }
+}

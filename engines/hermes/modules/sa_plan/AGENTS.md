@@ -11,13 +11,13 @@ Read `AGENTS.md` at the repository root first; it governs. This file records wha
 
 | | |
 |---|---:|
-| libraries / executables declared | 16 |
-| implementation files (`.ml`) | 17 |
-| interfaces (`.mli`) | 9 |
+| libraries / executables declared | 17 |
+| implementation files (`.ml`) | 19 |
+| interfaces (`.mli`) | 11 |
 | test executables | 0 |
 | dune files | 2 |
 
-**Declared:** `sa_plan`, `sa_plan_main`, `sa_plan_observation_main`, `sa_plan_test`, `test_sa_plan_c3i_reference`, `test_sa_plan_cli`, `test_sa_plan_control_plane`, `test_sa_plan_durable`, `test_sa_plan_leases`, `test_sa_plan_materialize`, `test_sa_plan_observability`, `test_sa_plan_observability_kpi`, `test_sa_plan_observation`, `test_sa_plan_preflight`, `test_sa_plan_reconcile`, `test_sa_plan_safety`
+**Declared:** `sa_plan`, `sa_plan_cancel_worker`, `sa_plan_main`, `sa_plan_observation_main`, `sa_plan_test`, `test_sa_plan_c3i_reference`, `test_sa_plan_cli`, `test_sa_plan_control_plane`, `test_sa_plan_durable`, `test_sa_plan_leases`, `test_sa_plan_materialize`, `test_sa_plan_observability`, `test_sa_plan_observability_kpi`, `test_sa_plan_observation`, `test_sa_plan_preflight`, `test_sa_plan_reconcile`, `test_sa_plan_safety`
 
 ## Depends on
 
@@ -28,6 +28,7 @@ Read `AGENTS.md` at the repository root first; it governs. This file records wha
 - `sa_plan`
 - `sqlite3`
 - `time_now`
+- `unix`
 - `yojson`
 
 A dependency added to a dune file appears here on the next regeneration. If it does not, the guide was not regenerated — that is the only way these two can disagree.

@@ -1,0 +1,72 @@
+{
+  "schema": "uos.telegram-pure-development.v1",
+  "observed_at": "2026-10-01T11:50:47Z",
+  "tags": [
+    "#fractal-l5",
+    "#fractal-l3",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "plan": "uos/telegram-admission/20261001-1015",
+  "task": "PURE_FIX2",
+  "task_worker": "codex-telegram-admission-20261001",
+  "attempt": 1,
+  "implementer": "codex-admission-review-20261001 delegated by task owner",
+  "status": "IMPLEMENTED_TESTED_PENDING_INDEPENDENT_REVIEW",
+  "workspace": "/home/an/NAS-setup/uos",
+  "base_pure_candidate": "e7819064172abde21e81eff7fa80b11ec3154fb8",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+      "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+      "sha256": "fd5cb7d6a69f21c182f434e9c81665a10001d6af338ce19320ef875f72736b7e"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_ingress_guard_test.gleam",
+      "sha256": "1305d1c32de5d796d1eae76cde548cc5cbb7444fb1c0f3e5680589abbb3da212"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_delivery_ledger_test.gleam",
+      "sha256": "a3226734ef543de74aa724ade27b33d24095ac76bf84eadea7cdfc94f2d6372b"
+    }
+  ],
+  "scope": "Only four pure Telegram source/test files changed. No consumer integration, IO adapter, database, service, task, main or sibling mutation.",
+  "changes": [
+    "Equal-update-ID groups are compared before any representative is inserted or offset advances. Rejection fingerprints and accepted identity are validated; unidentified, mixed-bot, corrupt existing queues and oversized batches refuse.",
+    "Required Telegram security fields and numeric bounds are explicit. Negative group chat IDs remain valid. Malformed/unidentifiable updates cannot become fabricated update0 tombstones. Trusted local bot configuration is propagated without claiming transport authentication.",
+    "Bot-scoped request IDs and validated records/chunks; bounded workers/epochs, queue1000, batch1000, payload4096bytes, result16chunks. Empty payloads, invalid digest/state/attempt fields and forged accepted text hashes refuse.",
+    "record_result produces InboxResultReady and full OutboxChunk set with real SHA256 of schema/request/bot/chat/ordered payload JSON. No free-form completion digest. Send/reconcile/complete validate complete identity, unique index coverage, consistent totals and immutable digest.",
+    "Recovery is one bounded request at a time and aggregates every chunk. Pending durable output is result-ready; all delivered yields completed with original digest; uncertain/failed/inconsistent/missing output holds. Interrupted processing never becomes pending. Impossible send order is refused.",
+    "Optional read arguments parse as an actual empty JSON object with legal JSON whitespace. Nonempty/nonobject/malformed arguments refuse; unsupported mutations truthfully deny."
+  ],
+  "api_notes": {
+    "removed": "Old create_outbox_chunk, handle_restart and free-form complete_inbox_task signatures replaced; no existing consumers integrated.",
+    "new": "record_result(record,payloads,worker,epoch); claim_outbox_send(record,chunks,index,worker,epoch); reconcile_send_outcome(record,chunks,index,http_status,ok,remote_chat_id,remote_msg_id,worker,epoch); complete_inbox_task(record,chunks); recover_request(record,chunks).",
+    "ingress": "RejectedUpdate now carries update_id,bot_id,envelope_hash,reason; UnidentifiedRejection has no commit identity.",
+    "request_id": "tg-<positive_bot_id>-<nonnegative_update_id>",
+    "digest_schema": "uos.telegram-result.v1 canonical json.object ordered fields schema,request_id,bot_id,chat_id,payloads",
+    "adapter_obligations": "Persist record and entire result set atomically with durable IO; enforce actual canonical task/coordinator/clock and process fences; correlate transport response with same request/chunk; group only matching bounded request rows; stop-preserve uncertain effects. Pure values do not provide authentication, IAM, durable CAS or replay protection against an uncooperative writer."
+  },
+  "validation": {
+    "risk": "ACTIVE_OBSERVATION_PASS 2026-10-01T11:41:31Z parent-owned PURE_FIX2 attempt1,10snapshotbindings; authorityNONE/runtimeNOT_GRANTED.",
+    "prior_red_evidence": "20261001-1142-independent-pure-review2-hold.json and corresponding evidence preserve reproducible predecessor defects.",
+    "build": "Pinned canonical gleam build PASS existing dependencies, no downloads observed.",
+    "format": "gleam format --check exact4files PASS.",
+    "tests": 40,
+    "test_command": "Fresh pinned erl +S2:2 +A2 -noshell; code:add_paths canonical cepaf build ebin; eunit:test([telegram_ingress_guard_test,telegram_delivery_ledger_test],[verbose]); via Gleam development.bounded.",
+    "coverage": "16 ingress +24 ledger tests. Includes exact predecessor collisions, all6permutations of3chunk uncertainty/pending/delivered sets, simple fixed expected prefix/hold outcomes, independent digest schema encoding, numerical/payload/chunk boundaries, sender identity variants and failure refusals.",
+    "test_evidence": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1147-pure-fix2-tests.json",
+    "preserved_failures": "First compile decode.subfield arity error; second compile list.at unavailable and comparison precedence error; corrected before successful build. All transcripts retained. Initial38tests passed, additional two corrupt-state guards added then40passed.",
+    "warning": "Unrelated existing unused RandomVictim import in work_stealing_test.gleam preserved."
+  },
+  "limitations": [
+    "Implementation author cannot provide independent acceptance of this candidate; parent/recovery reviewer must review exact hashes.",
+    "Pure model only: no live Telegram/SQLite/polling/network/service or durable crash tests.",
+    "Queue includes all retained records; retention/pruning requires separately reviewed adapter policy.",
+    "Identity ranges and16chunk result ceiling are intentionally finite local policy; no generalized Telegram coverage asserted.",
+    "No runtime/global admission or EV change."
+  ]
+}

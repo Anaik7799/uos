@@ -29,7 +29,8 @@ pub fn view() -> String {
   let probe = mirage_hypervisor.read_probe_receipt()
   let telem = sample_telemetry_state(probe)
 
-  "<div class=\"uos-mirage-cockpit\" style=\"padding:1.5rem;background:#0a0e17;color:#e0e6ed\">"
+  "<div class=\"uos-mirage-cockpit\" style=\"box-sizing:border-box;width:100%;max-width:100%;overflow-x:auto;padding:1.5rem;background:#0a0e17;color:#e0e6ed\">"
+  <> "<style>.uos-mirage-cockpit{overflow-wrap:anywhere}.uos-mirage-cockpit table{display:block;overflow-x:auto;max-width:100%;color:#e0e6ed;background:#0a0e17}.uos-mirage-cockpit th,.uos-mirage-cockpit td{color:#e0e6ed;background:#0a0e17;border-bottom:1px solid #34435b;padding:.5rem;min-width:6rem}.uos-mirage-cockpit th{color:#b7c7db}.uos-mirage-cockpit code{color:#e0e6ed;background:transparent}@media(max-width:480px){.uos-mirage-cockpit{padding:.75rem!important}.uos-mirage-cockpit section{padding:.75rem!important}.uos-mirage-cockpit table{font-size:.875rem}}</style>"
   <> "<header><h1 style=\"color:#00d4aa\">MirageOS Migration Projection Cockpit</h1>"
   <> "<p>Configured candidate model. Runtime health, deployment, SIL certification, and admission are unverified.</p>"
   <> "<p><strong>Evidence scope:</strong> static_migration_projection &middot; <strong>Deployment admission:</strong> NOT_VERIFIED</p></header>"
@@ -101,7 +102,7 @@ fn render_checklist() -> String {
       "CHK-18-JJ",
     ],
   )
-  <> "</details>"
+  <> "<details class=\"verification-provenance\"><summary>Provenance boundary</summary><p>EV ceiling93; EV94..109 NOT_ADMITTED. No new EV identifier.</p></details></details>"
 }
 
 fn checklist_domain(name: String, checks: List(String)) -> String {
@@ -343,7 +344,7 @@ pub fn render_telemetry_stream(state: MirageTelemetryState) -> String {
 
   "<section style=\"border:1px solid #64b5f6;padding:1rem;margin:1rem 0;background:#0d1420;border-radius:6px\">"
   <> "<div style=\"display:flex;justify-content:space-between;align-items:center\">"
-  <> "<h2 style=\"color:#64b5f6;margin:0\">Live Unikernel Telemetry &amp; AG-UI SSE Stream</h2>"
+  <> "<h2 style=\"color:#64b5f6;margin:0\">Model-derived telemetry (not live)</h2>"
   <> "<span style=\"background:#14241d;color:#00d4aa;border:1px solid #00d4aa;padding:0.25rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:bold\">"
   <> "PASS RATE: "
   <> float.to_string(pass_rate_pct)
@@ -353,7 +354,7 @@ pub fn render_telemetry_stream(state: MirageTelemetryState) -> String {
   <> int.to_string(state.total_runs)
   <> ")</span></div>"
   <> "<p style=\"color:#8899a6;font-size:0.85rem;margin:0.5rem 0 1rem 0\">"
-  <> "Streaming telemetry over AG-UI 32-event protocol (<code>ToolCallResult</code> &amp; <code>StateDelta</code>) and Zenoh topic <code>indrajaal/otel/spans/mirage/telemetry</code>.</p>"
+  <> "Model values derived from historical receipts; durations are configured examples, not observed measurements. No live stream is connected. Protocol target: AG-UI 32-event protocol (<code>ToolCallResult</code> &amp; <code>StateDelta</code>) and Zenoh topic <code>indrajaal/otel/spans/mirage/telemetry</code>.</p>"
   <> "<table style=\"width:100%;border-collapse:collapse;font-size:0.85rem\">"
   <> "<thead><tr style=\"border-bottom:1px solid #1e2a3a;text-align:left;color:#8899a6\">"
   <> "<th style=\"padding:0.5rem\">Tender</th><th style=\"padding:0.5rem\">Unikernel Name</th><th style=\"padding:0.5rem\">Boot Duration (µs)</th><th style=\"padding:0.5rem\">Exit Code</th><th style=\"padding:0.5rem\">Status</th>"

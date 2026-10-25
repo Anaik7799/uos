@@ -1,0 +1,10 @@
+{
+  "guardian": {
+    "path": "tools/validation/telegram_store_transport_guardian.exe",
+    "sha256": "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab"
+  },
+  "recovery_worker": {
+    "path": "tools/validation/telegram_store_recovery_worker.exe",
+    "sha256": "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e"
+  }
+}

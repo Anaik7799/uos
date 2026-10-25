@@ -1,0 +1,91 @@
+{
+  "schema": "uos.telegram-store-domain-review-addendum.v1",
+  "observed_at": "2026-10-11T14:30:17.548Z",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "status": "HOLD",
+  "candidate": {
+    "observed_at": "2026-10-11T14:22:05.550Z",
+    "sources": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam",
+        "sha256": "fca8610b850a9aab11990966acd3dd4bfddc45553c7b9d78e48f79dc4b44c9e9"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam",
+        "sha256": "f93275892ac06b24e4d15d4e108a8e6701a88cb3b340250096319ddbf2428d05"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam",
+        "sha256": "2dfab99f1bb7495d9d12d6076ffa1260d8fbf3bd3a8973e575deb62e723325b7"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam",
+        "sha256": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam",
+        "sha256": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl",
+        "sha256": "89b3ed24c6cf35f6db4db20e639ffe5e3d939cea5fce2941e78a45702e44e2f0"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/telegram_store_codec_ffi.erl",
+        "sha256": "6864cfa0fafeaff7dab5d78666646b875b3af470f441254e589b3789c0c9782b"
+      }
+    ]
+  },
+  "observations": [
+    "commit_prefix with now_ms=-1 persisted unreadable-domain inbox",
+    "accepted raw text and stored directive classification can disagree",
+    "Authority/Chunk/Watermark/Input/ResultMeta decoders accept invalid domain instances"
+  ],
+  "root_cause": "Validation is scattered and incomplete; public typed constructors are incorrectly treated as validated evidence. A valid database-byte CAS does not establish domain invariants.",
+  "fractal_rca": {
+    "L0": "Admission remains denied while behavioral evidence fails",
+    "L1": "Review acceptance must use state transitions and negative cases, not supplied-test count",
+    "L2": "Canonical task leases identify executor but do not prove bytes correct",
+    "L3": "Service must own clock, ingress authentication, execution fencing and recovery",
+    "L4": "Store write boundary must validate every immutable identity and domain field",
+    "L5": "Codec must reject malformed persisted domain values uniformly",
+    "L6": "Transport quiescence must be observed and bound to exact operation",
+    "L7": "Native atomic CAS passes scoped tests, domain semantics intentionally owned above it",
+    "L8": "Private synthetic fault fixtures demonstrate failures without live effects",
+    "L9": "Receipt hashes retain every failing candidate and do not overwrite history"
+  },
+  "acceptance": [
+    "Each versioned domain schema has valid control and invalid-field boundaries",
+    "All write entrypoints refuse malformed values before any mutation",
+    "Replay survives Pending/Processing/ResultReady/Completed/Hold with unchanged immutable input",
+    "Domain timestamp and classification bindings enforced"
+  ],
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/domain-results.txt",
+      "sha256": "712a268897f665059bcd5a10ab44c8aff7fa56fa7ddb1e0f2ac18112b987b5ce"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/domain-test-setup-error.txt",
+      "sha256": "735d93386c03c46ee20806fe5f48f58e0d50db61bfe3cb3349ddf9c7176a9742"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/codec-domain-results.txt",
+      "sha256": "043d175d6644ea300b26741a10e1c9a7bceab0fce834a4c67f342a7da1aa23a4"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1418-store-fix2-review/store_domain.erl",
+      "sha256": "40eeb1122c1a62d4680b04b4e1a7ec4bde821c740c6ed78e32dd21253009dba0"
+    }
+  ],
+  "limitations": [
+    "Initial probe used wrong read_inbox_records arity; retained separately, corrected in rerun",
+    "No arbitrary tool execution or live production corruption established",
+    "Architecture ownership remains Gleam; no raw SQL in product domain API"
+  ]
+}

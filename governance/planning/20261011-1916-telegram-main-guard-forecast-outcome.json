@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-10-11T19:15:38.708Z",
+  "forecast_origin": "docs/journal/20261011-1849-telegram-vcs-guard-completion.md",
+  "horizon": "2026-10-11T19:15:00Z",
+  "p": 0.8,
+  "outcome": 1,
+  "brier": 0.04,
+  "observations": {
+    "main": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+    "immutable_heads": "builtin_immutable_heads() | main"
+  },
+  "scope": "Readonly JJ readback after horizon; source/feature release remains unadmitted"
+}

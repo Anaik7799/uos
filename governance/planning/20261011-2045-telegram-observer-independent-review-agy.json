@@ -1,0 +1,100 @@
+{
+  "schema": "uos.telegram-observer-review-adoption-ack.v1",
+  "observed_at": "2026-10-11T18:48:30Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "SERVICE_IMPL",
+  "worker": "agy-telegram-20261011",
+  "attempt": 4,
+  "lease_status": {
+    "lease_until_ns": "1791745890886433084",
+    "risk_portfolio_observed_at": "2026-10-11T18:36:39Z",
+    "risk_portfolio_valid_until": "2026-10-11T19:21:39Z",
+    "hashes_unchanged": 76,
+    "canonical_tasks_matched": 68
+  },
+  "observer_candidate_review": {
+    "handoff_document": {
+      "path": "governance/planning/20261011-1824-telegram-observer-candidate-handoff.json",
+      "sha256": "ed6cd9d749971956306ad9cb29f18d85004cd9e987107c2196e05ce137a4a039",
+      "producer_task": "OBSERVER_COMPLETION",
+      "producer_worker": "codex-telegram-20261011"
+    },
+    "verdict": "ACK_ADOPTED_IN_DEVELOPMENT_SCOPE",
+    "runtime_admission": "NOT_GRANTED",
+    "verified_binaries": [
+      {
+        "role": "sa_plan_observer",
+        "path": "tools/validation/sa_plan_observer.exe",
+        "sha256": "5b9dab694c7486f39decb0f3db4238b74753941a659106d5e12fee3c0fe656e2"
+      },
+      {
+        "role": "obs_guardian",
+        "path": "tools/validation/obs_guardian.exe",
+        "sha256": "b7bab1a85ffa3689a2548ff28a391e659c0537104dec7be0f774bae1820ec4be"
+      }
+    ],
+    "verified_sources": [
+      {
+        "path": "tools/validation/sa_plan_observer.ml",
+        "sha256": "b0f443e62e3bbd5504900616c5c2810e054e4fe2bd671f1824d36f8889ae203b"
+      },
+      {
+        "path": "tools/validation/obs_guardian.ml",
+        "sha256": "4ddae78d954989511c79196ab5d508ab362c2cf4efa704eb9950603c70be58e4"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/sa_plan_observer_ffi.erl",
+        "sha256": "a535c803b17ed74de0f1cb9d54828439b92d434e41e86a6db529554304c280a6"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/observer_policy.gleam",
+        "sha256": "e806d04dc52e3f71b1ceb5fd5bd93cb6d8a81c1a3cc5539600a5658132c9a4ec"
+      }
+    ],
+    "limits_acknowledged": [
+      "Private development tool only; no service/release/global admission.",
+      "No guarantee of cleanup after arbitrary guardian suspension or kernel failure: unconfirmed cleanup remains unknown and service must hold.",
+      "OCaml self SIGALRM can be delayed in blocking C SQLite calls; native guardian enforces the external deadline.",
+      "Guardian reap budget can extend after request deadline; adapter uses bounded grace and returns cleanup_unknown if no valid receipt.",
+      "Trusted cooperative local filesystem/account assumption; byte pins are not a hostile-writer sandbox.",
+      "Cold SQLite WAL physical sidecar creation (-wal/-shm) expected per SQLite WAL specification; active-WAL visibility, logical snapshot digest, and content invariance verified."
+    ]
+  },
+  "vcs_guard_acknowledgement": {
+    "status": "ACKNOWLEDGED",
+    "observation_ref": {
+      "path": "governance/planning/20261011-1746-telegram-vcs-guard-observation.json",
+      "sha256": "862eb4eba7807e6c4e89211256ad75bb588d48f8c4ad3231857e255fbc71880c"
+    },
+    "immutable_main_configured": true,
+    "immutable_heads_rule": "builtin_immutable_heads() | main",
+    "config_path": "/home/an/.config/jj/repos/797c18a8a6d06a90b41a/config.toml",
+    "observation_rule": "MUST use --ignore-working-copy for observations to prevent mutable working-copy snapshotting",
+    "task_disposition": "TELEGRAM_VCS_GUARD task eligible for closure by sovereign coordinator"
+  },
+  "service_task_hold_notice": {
+    "status": "HOLD",
+    "reasons": [
+      "Lifecycle registration lacks exact unit/slice invocation and store-incarnation binding",
+      "Service test timeout preserved and visible (package-level gleam test runs whole cepaf_gleam suite and exceeds 30s development launcher bound without budget inflation; isolated eunit module suites pass 25/25)",
+      "Service implementation remains open in executing state under attempt 4; no premature completion"
+    ]
+  },
+  "test_evidence": {
+    "slice1_suite": "20/20 PASS (telegram_service_slice1_test)",
+    "e2e_suite": "5/5 PASS (telegram_service_e2e_test)",
+    "store_suites": "74/74 PASS (store, ledger, ingress)",
+    "preflight": "31/31 PASS (tools/preflight)",
+    "risk_suite": "PASS (375 baseline, 32903 adversarial)"
+  },
+  "frozen_product_sources_8_of_8": {
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store.gleam": "1ff14388482746192e5f7c5c3ab92bb7ee43a7fc6bd88a67a253da3ecd84aced",
+    "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl": "33300cea70930c20d9be0a35feb602f28469f1ea0d15560d608a7504d771a26f",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_delivery_ledger.gleam": "b1023527ba445cef5a1370a0356985d29a03b118b58f7aa81747ad2cc5f46a96",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_ingress_guard.gleam": "dfde4dd433732679b7c9cbb33b8793941d9575a577a07c6dc20d00108626de3e",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_codec.gleam": "d0e0a91b7520f85bc51a7d5a5c61a12ed40908a2191c3f4249884512ac32d362",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_store_transport.gleam": "72e7700669f2ed9b18021fe4eede7c51ab5f3b3c51490863d8146ae3738f0dd1",
+    "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_http_client.gleam": "7833b8d8658df9831426476ae0b27186f05d2e17be24a96800ffe79657899938",
+    "apps/cepaf_gleam/src/telegram_http_ffi.erl": "22946c335d1bdf1b2f196a2dcd3d78be9aaf3aa2e5401766ba5a1d8548f1eb47"
+  }
+}

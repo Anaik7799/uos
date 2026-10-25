@@ -1,0 +1,88 @@
+{
+  "schema": "uos.telegram-durable-store-design.v1",
+  "observed_at": "2026-10-01T12:10:07Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "STORE_DESIGN",
+  "status": "PROPOSED_FOR_INDEPENDENT_DEVELOPMENT_REVIEW",
+  "production_authority": "NONE",
+  "existing_evidence": [
+    "apps/cepaf_gleam/src/cepaf_gleam/db/sqlite.gleam delegates direct esqlite3 calls with no observed FULL-sync/readback contract.",
+    "apps/uos_swarm/src/session_store_ffi.erl sets synchronous=NORMAL and busy_timeout30000; do not reuse as Telegram durability evidence.",
+    "apps/cepaf_gleam/src/ecology_capability_ffi.erl already uses process-group guardian with timeout/output cap and framed input for MAX; reuse bounded process lifecycle rather than new ad-hoc shell orchestration."
+  ],
+  "boundary": {
+    "policy": "Gleam owns Telegram schemas, identity checks, pure state transitions, canonical authority/fences, retries and dispatch. Native worker is a bounded isolated SQLite storage facade only.",
+    "worker": "Prebuilt pinned OCaml executable under native/ocaml or Hermes owned module, launched per bounded request under existing process-group guardian from OTP. No shell, compilation, network, service-control policy, arbitrary SQL or arbitrary executable choice exposed to Telegram.",
+    "transport": "Add narrowly typed storage facade over guardian framed input. Finite request/response JSON schemas, binary32 length, explicit byte/output/deadline bounds. Native errors are finite redacted codes. Existing MAX limits/behavior unchanged."
+  },
+  "data_model": {
+    "kind": "Atomic bounded key/value rows plus append-only operation receipts; schema and SQL fixed in native facade. Gleam codec validates every loaded domain value and immutable identity.",
+    "keys": [
+      "meta/bot_identity",
+      "meta/next_offset",
+      "inbox/<request_id>",
+      "request/<request_id>/input",
+      "request/<request_id>/authority",
+      "request/<request_id>/result",
+      "request/<request_id>/chunk/<index>"
+    ],
+    "row": "key, version, canonical_value_bytes, sha256. Version and hash compare-and-swap for every changed row; create requires absent. No delete operation.",
+    "operations": [
+      "initialize new private DB with exact schema identity; existing unknown schema refuses",
+      "read bounded explicit keys or bounded inbox index; explicit missing rows",
+      "atomic apply fixed list of expected-version/hash changes with stable operation_id and whole request digest; replay same op/same digest returns durable original receipt; same op/different digest refuses"
+    ],
+    "atomicity": [
+      "inbox raw input/record and watermark commit in one transaction, only after whole accepted prefix model validation",
+      "result record and every chunk commit together before any network send",
+      "outbox SENDING commits before HTTP; verified outcome commits after HTTP; ambiguous storage response is reconciled by operation_id before any further effect",
+      "no network, risk subprocess, task CLI or model IO inside transaction"
+    ]
+  },
+  "bounds": {
+    "request_bytes": 262144,
+    "response_bytes": 1048576,
+    "transaction_changes": 128,
+    "value_bytes": 98304,
+    "rows": 20000,
+    "retained_requests": 1000,
+    "receipts": 20000,
+    "db_max_bytes": 268435456,
+    "worker_timeout_ms": 5000,
+    "sqlite_busy_timeout_ms": 250,
+    "semantics": "Reject before mutation when a bound is exceeded. FULL durable history is retained; initial implementation has no pruning or deleting API. Bound stops are visible and never advance offset."
+  },
+  "durability": [
+    "Dedicated local private state directory owned by service user0700; DB/WAL/SHM0600, no state in repository source tracking.",
+    "PRAGMA journal_mode=WAL, synchronous=FULL, foreign_keys=ON and bounded busy_timeout; query effective values and refuse mismatches.",
+    "Initialize exact schema with transactional metadata; no implicit migration of unknown schema. Transactions use BEGIN IMMEDIATE and fixed parameterized statements.",
+    "Explicit operation receipt and state changes in same transaction. COMMIT success is only acknowledged after real commit return. Crash/timeout before response means unknown until exact op receipt is reread.",
+    "No generic checkpoint, VACUUM, delete, repair or external tree operation in production facade.",
+    "Assume trusted same Unix-account writers and truthful filesystem flushes; no claim of resilience against malicious same-UID replacement or broken hardware."
+  ],
+  "authority": [
+    "Storage facade grants no Telegram or task effect authority; Gleam checks current service singleton/runtime/task fences and budget before every transition.",
+    "Domain state contains actual request plan/task/attempt, coordinator epochs, owner and result digest; never reconstruct defaults.",
+    "Outbox generation/version checks prevent concurrent send claim; once SENDING is durable, any crash recovery becomes UNCERTAIN and no automatic resend.",
+    "Service process lifetime singleton and stable operation IDs are required; competing updates with stale versions refuse."
+  ],
+  "tests": [
+    "Real isolated file DB pragma readbacks, process restart and exact row/hash recovery.",
+    "Conflicting CAS and duplicate op replay, operation collision, missing/unknown schema, bounds, permission/path refusal, finite private error codes.",
+    "Kill child before transaction, between row updates, before COMMIT and after COMMIT before response; state is old or fully new; op receipt reconciles ambiguity.",
+    "Parallel conflicting commits yield exactly one accepted transition; no torn inbox/watermark or result/chunks.",
+    "Reopen SENDING and UNCERTAIN snapshots through accepted Gleam recovery model; prove no new HTTP action and no reexecution after immutable result.",
+    "No assertion that process-kill equals actual power-loss hardware validation; FULL setting assumes filesystem honors flush."
+  ],
+  "review_decision_needed": [
+    "Accept this minimal bounded native storage protocol or identify simpler existing isolated facade with equivalent measured guarantees.",
+    "Check proposed row/output limits against maximum16chunk payload and100-update Telegram batches; split only at committed-prefix boundaries.",
+    "Confirm exact immutable release closure and OTP worker launch pins before production implementation."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#zero-muda"
+  ]
+}

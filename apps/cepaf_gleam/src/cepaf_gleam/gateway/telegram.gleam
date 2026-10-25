@@ -37,7 +37,8 @@ pub fn start(bot_token: String, chat_id: String) {
           io.println("  [ok] Listening for critical spans on: " <> topic)
           listen_loop(state)
         }
-        Error(reason) -> io.println("  [!] Gateway subscription unavailable: " <> reason)
+        Error(reason) ->
+          io.println("  [!] Gateway subscription unavailable: " <> reason)
       }
     }
     Error(e) -> {

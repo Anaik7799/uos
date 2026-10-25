@@ -1,0 +1,91 @@
+{
+  "schema": "uos.telegram-native-fix2.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_FIX2",
+  "worker": "agy-telegram-20261011",
+  "attempt": 1,
+  "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+  "observed_model": "gemini-3.8-flash-high",
+  "timestamp": "20261011-1247",
+  "status": "COMPLETED_AWAITING_INDEPENDENT_VERIFY",
+  "runtime_admission": "NOT_GRANTED",
+  "baseline_reference": ".uos-workspaces/agy-telegram-admission-20261001/native/ocaml/telegram_store (commit 709c4b0) preserved untouched",
+  "target_directory": "native/ocaml/telegram_store",
+  "source_and_binary_hashes": {
+    "dune": "3b2d2967a1fccab825780ce5bbadab670b41f29297daa7ffb6beaa95412dd661",
+    "dune_project": "9a9ee74e4e431faafde4824a5828e0a92ffa1f4d0d0342c90661b6adad6678a7",
+    "telegram_store_ml": "31d19eb6755e1ab9e1b3c7b3750fe4269cdc1b73887c37638352c8964e4cd1aa",
+    "telegram_store_main_ml": "c538e237cfc44cce9b23c1d4a970b141ede56a2cdd8dcd73d05ffa08d4b59cfc",
+    "telegram_store_test_ml": "642398668dcfa75523c0082ceb884f3da1895237cbf68a8bc33cae6969c557e1",
+    "wire_spec_v2_json": "c9d615a86288e118276671ac74849d53a6ac67abfb88c6b87842592e439bd124",
+    "telegram_store_main_exe": "50ba519801c2a4c290277164b9c567ea023e18109b872dbc73f41cba8bd1d231"
+  },
+  "defects_resolved": {
+    "N7_strict_optional_field_types": {
+      "summary": "Strict type checking on optional fields distinguishing absent/null from invalid present values. Rejects db_path: 42, expected_sha256: 42 (both at version 0 and version > 0, in read_set and changes), non-string after_key, non-integer limit with invalid_request or invalid_schema error rather than silently defaulting or ignoring.",
+      "status": "RESOLVED"
+    },
+    "N8_strict_utf8_and_standard_json": {
+      "summary": "Added RFC 3629 pure OCaml Unicode scalar UTF-8 validator and recursive-descent RFC 8259 standard JSON validator. Rejects raw wire keys with non-UTF-8 bytes (0xFF), base64-decoded values that are non-UTF-8 or non-JSON, and non-JSON summary_json ('NOT_JSON'). Enforces rejection of Yojson syntax extensions, single-quoted strings, unquoted keys, unescaped control characters, lone surrogates, trailing garbage, and duplicate decoded object keys.",
+      "status": "RESOLVED"
+    },
+    "N9_ancestor_path_confinement_and_sticky_exemption": {
+      "summary": "Restricted ancestor permission check so that every ancestor directory up to root must be non-group-writable and non-other-writable (st_perm land 0o022 == 0) regardless of whether owner UID matches current UID. Rejects own-UID 0777 ancestor. Only exact root-owned sticky /tmp (st_uid == 0 && st_perm land 0o1000 != 0) is exempt. Immediate parent directory must still be private 0700 owned by current UID.",
+      "status": "RESOLVED"
+    },
+    "N10_transaction_exception_safety": {
+      "summary": "Introduced with_prepared_stmt wrapper utilizing Fun.protect to guarantee Sqlite3.finalize on all 15 SQL statements even when bindings or steps raise OCaml exceptions. Wrapped all transaction blocks (initialize_new, read_keys, read_inbox_index, lookup_operation, apply) in try ... with traps executing ROLLBACK. Any exception or failure during COMMIT returns explicit commit_uncertain error code.",
+      "status": "RESOLVED"
+    },
+    "N11_actual_sigkill_crash_recovery_barriers": {
+      "summary": "Introduced internal stage_barrier type (Init_after_ddl, Init_after_meta, Apply_between_rows, Apply_pre_commit, Apply_post_commit_pre_reply) executed via internal trigger_stage_hook function, not exposed to CLI arguments, JSON payloads, or environment variables. Verified via Unix.fork () and child SIGKILL injection in tests that uncommitted transactions are cleanly rolled back by SQLite WAL upon reopen, and post-commit pre-reply crashes allow durable receipt recovery via lookup_operation.",
+      "status": "RESOLVED"
+    }
+  },
+  "test_execution_summary": {
+    "total_assertions": 154,
+    "passed": 154,
+    "failed": 0,
+    "baseline_passed": 124,
+    "new_fix2_assertions_passed": 30,
+    "independent_review_reproducer": {
+      "script": "var/recovery-runtime/20261011-1244-native-independent/independent-review.cjs",
+      "executable": "native/ocaml/telegram_store/_build/default/telegram_store_main.exe",
+      "total_tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "prior_baseline_result": "5 passed, 6 failed",
+      "current_result": "11 passed, 0 failed"
+    },
+    "suites": [
+      { "suite": "1. Initialize New & Security Controls", "assertions": 14, "status": "PASS" },
+      { "suite": "2. Read Keys & Read Inbox Index", "assertions": 13, "status": "PASS" },
+      { "suite": "3. Apply Operations, CAS & Idempotency", "assertions": 14, "status": "PASS" },
+      { "suite": "4. Capacity & Reservation Accounting", "assertions": 3, "status": "PASS" },
+      { "suite": "5. Bounds, Values & Max 16x4096 Chunks", "assertions": 6, "status": "PASS" },
+      { "suite": "6. Advanced Integrity & Hardening", "assertions": 12, "status": "PASS" },
+      { "suite": "7. Redacted Error Codes & Framing", "assertions": 5, "status": "PASS" },
+      { "suite": "8. Binary Pipe Framing (telegram_store_main)", "assertions": 18, "status": "PASS" },
+      { "suite": "9. Injective Digest & Collision Resistance", "assertions": 7, "status": "PASS" },
+      { "suite": "10. Ancestor Path Confinement & Symlink Rejection", "assertions": 3, "status": "PASS" },
+      { "suite": "11. Duplicate Keys, Canonical Bot ID & Version/Hash Invariants", "assertions": 13, "status": "PASS" },
+      { "suite": "12. Strict JSON Schemas & Unknown Field Rejection", "assertions": 6, "status": "PASS" },
+      { "suite": "13. Commit Uncertainty & Reconciliation", "assertions": 10, "status": "PASS" },
+      { "suite": "14. Storage Capacity & Reservation Bounds", "assertions": 2, "status": "PASS" },
+      { "suite": "15. N7 Strict Optional Field Types", "assertions": 8, "status": "PASS" },
+      { "suite": "16. N8 Strict UTF-8 & Standard JSON", "assertions": 5, "status": "PASS" },
+      { "suite": "17. N9 Ancestor Path Confinement & Sticky Exemption", "assertions": 2, "status": "PASS" },
+      { "suite": "18. N10 Transaction Exception Safety", "assertions": 2, "status": "PASS" },
+      { "suite": "19. N11 Actual SIGKILL Crash Recovery Barriers", "assertions": 13, "status": "PASS" }
+    ]
+  },
+  "process_and_provenance_notes": {
+    "execution_harness": "cepaf_gleam@harness@development:bounded/3 under OTP 29 uos_env",
+    "tooling_truth": "Source edits to telegram_store.ml, telegram_store_test.ml, and 20261011-1247-telegram_store_wire_v2.json were performed via direct file write/replace tools. All compilations and test suite runs were executed via OCaml dune under uos_env in Gleam bounded harness. The independent reproduction review was executed via Node.js bounded subprocess. ZERO Python executed.",
+    "fencing_and_leases": {
+      "task_claim": "task:uos-telegram-runtime-NATIVE_FIX2",
+      "root_workspace_lease": "workspace:/home/an/NAS-setup/uos",
+      "sibling_workspace_lease": "workspace:/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930"
+    }
+  }
+}

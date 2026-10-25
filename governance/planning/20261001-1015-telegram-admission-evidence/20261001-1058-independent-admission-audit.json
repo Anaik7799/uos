@@ -1,0 +1,559 @@
+{
+  "schema": "uos.independent-global-admission-gap-audit.v1",
+  "reviewer": "codex-admission-review-20261001",
+  "scope": "Bounded read-only source and gate-effect audit; own receipt publication only",
+  "verdict": "HOLD_GLOBAL_ADMISSION",
+  "runtime_admission": "NOT_GRANTED",
+  "task": {
+    "plan": "uos/telegram-admission/20261001-1015",
+    "task": "ADMISSION_AUDIT",
+    "worker": "codex-admission-review-20261001",
+    "attempt": 1,
+    "authority_receipt": "governance/planning/20261001-1015-telegram-admission-evidence/20261001-1054-admission_audit-active-check.json",
+    "receipt_observed_at": "2026-10-01T10:50:57Z",
+    "lease_until_ns": "1790855454140499445",
+    "task_mutated": false
+  },
+  "candidate": {
+    "parent_reported_main": "83dca039",
+    "revision_independently_requeried": false,
+    "source_bindings": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+      },
+      {
+        "path": "tools/uos/src/main.gleam",
+        "sha256": "9805f332edf1b8ddb565688a91e86ba6e59c11a60c6ca6bdc499f6a671916c83"
+      },
+      {
+        "path": "tools/km_provenance/km_gate.ml",
+        "sha256": "d58cd1be6984a086bddb9b98488a61e100e235593560774b016e17de461f55d6"
+      },
+      {
+        "path": "tools/km_provenance/km_ev.ml",
+        "sha256": "eb5d31b88bc62cc0a648bec4b56c5173f8506bc7c3c05b2ecb834e3e03b852b1"
+      },
+      {
+        "path": "tools/km_provenance/km_chain.ml",
+        "sha256": "2652a41ff591a0326ea137451f9df42b8bfc7dbef8c8e93ce300d8a6e88991c7"
+      },
+      {
+        "path": "tools/km-gate",
+        "sha256": "da4a7443113b3adc74a99be3f2770262b5b29cb9e56ace0f7955c708b210d50c"
+      },
+      {
+        "path": "tools/uos-cli",
+        "sha256": "3f48be71a04b82ba6a4d18fa6b47089591975963d65f0aa26f214ab382524c06"
+      },
+      {
+        "path": "tools/preflight",
+        "sha256": "abf3ca8d82639908347a65dc31123dd1f6eb3c8de3c72483051c66b690fc543d"
+      },
+      {
+        "path": "tools/atlas-check",
+        "sha256": "e03eb7cc6c20528e49bb2ddaa278275189e8c95bb9011e1a2e2ef05784efdef7"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "sha256": "f52f86be86959b12688d916add26ca3b30bd43436a7182ea3a7086998618761a"
+      },
+      {
+        "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+        "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+      },
+      {
+        "path": "contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md",
+        "sha256": "41ac275f60df527344094d810be47886e0f7c789c095e4e718d138bacefb8f14"
+      },
+      {
+        "path": "contracts/rules/comprehensive-checklist-contract.md",
+        "sha256": "99e894c849d0b652eac5e8099a1f494e5e4ee012af82e8036d5d3769a41cb44f"
+      }
+    ]
+  },
+  "observations": {
+    "source_reads": "Installed uos_gleam.read_file",
+    "hash_reads": "Compiled cepaf_gleam@harness@files read/digest",
+    "actual_gates_executed": [],
+    "live_mcp_inventory": {
+      "declared": 65,
+      "unavailable": 12,
+      "declared_unprobed": 53,
+      "all_admission": "unknown"
+    },
+    "baseline_runtime": "Not reprobed in this source audit; historical scoped recovery acceptance not global admission"
+  },
+  "findings": [
+    {
+      "id": "A1",
+      "severity": "P1",
+      "title": "Global ratification banner exceeds aggregate coverage",
+      "evidence": [
+        "tools/uos/src/main.gleam:2592-2661",
+        "tools/uos/src/main.gleam:2653"
+      ],
+      "remedy": "Return scoped outcomes with explicit inventory/executed/verified states and obligation completeness; remove ratification claim from CLI aggregate; global admission requires independent signed/identified decision bound to candidate, exact artifacts and all applicable requirements."
+    },
+    {
+      "id": "A2",
+      "severity": "P1",
+      "title": "Presence or constants are labeled proof, enforcement or safety",
+      "evidence": [
+        "tools/uos/src/main.gleam:316-319",
+        "tools/uos/src/main.gleam:2063-2091",
+        "tools/uos/src/main.gleam:2095-2116",
+        "tools/uos/src/main.gleam:2273-2330",
+        "tools/uos/src/main.gleam:379-398",
+        "tools/uos/src/main.gleam:1029-1056"
+      ],
+      "remedy": "Keep old evidence; change executable claims to INVENTORY and require real negative/positive proof/test/runtime receipts for each declared property."
+    },
+    {
+      "id": "A3",
+      "severity": "P1",
+      "title": "17-aspect coverage checks catalog shape and hardcoded Active labels",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:123-260",
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:793-796"
+      ],
+      "remedy": "Separate aspect catalog from candidate-bound applicability/verdict/evidence/authority. Check unique IDs and complete requirement mapping; UNKNOWN/UNRUN/FAIL must block full compliance."
+    },
+    {
+      "id": "A4",
+      "severity": "P1",
+      "title": "Live MCP catalog explicitly lacks complete capability evidence",
+      "evidence": [
+        "Observed installed mcp_capability_inventory:65 declared,12 unavailable,53 declared_unprobed; all admission unknown; runtime_admission not_granted; effect_authority false"
+      ],
+      "remedy": "Inventory rules/skills/plugins/MCP/agents/manuals and map each applicable capability to bounded actual acceptance; declare unavailable capabilities, reject unsupported invocations; do not treat installation/discovery as enforcement."
+    },
+    {
+      "id": "A5",
+      "severity": "P1",
+      "title": "Global formal/runtime/provenance acceptance cannot be derived from scoped restored-runtime evidence",
+      "evidence": [
+        "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md:13-18,48-51,69-83",
+        "contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md:12-23",
+        "tools/uos/src/main.gleam:183-205",
+        "tools/km_provenance/km_ev.ml:41-53"
+      ],
+      "remedy": "Build exact obligation ledger; preserve EV94..109 NOT_ADMITTED and forbid new EV IDs. Fresh behavior plus actual machine-verifiable formal evidence plus independent sovereign decision are distinct from chain integrity or filenames."
+    },
+    {
+      "id": "A6",
+      "severity": "P2",
+      "title": "Named governing formal manifest locator unresolved",
+      "evidence": [
+        "AGENTS.md governing reference docs/design/2026-09-05-uos-formal-mandate-spec.json",
+        "Installed read_file returned Error reading file: enoent"
+      ],
+      "remedy": "Resolve and review current authoritative replacement locator; record missing historical reference without fabricating manifest coverage."
+    }
+  ],
+  "aspects": [
+    {
+      "id": 1,
+      "name": "Substrate & Hardware Safety",
+      "required": "Candidate-bound Rust interlock positive/negative tests for denied OS serial 25503L801736; non-destructive host inventory; no physical wipe test.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:125",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 2,
+      "name": "Standalone Jujutsu Monorepo",
+      "required": "Exact candidate/tree/manifests and clean integration ancestry; no Git mutation; preserved quarantined history.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:133",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 3,
+      "name": "Zero-Muda Purity",
+      "required": "Actual source/dependency/runtime exclusion inventory for Bevy/Graphite and native ABI/language boundaries; exclusions remain explicit.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:141",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 4,
+      "name": "Gleam/OTP Supervision & Actors",
+      "required": "Observed OTP/ERTS, root supervision, crash/restart budgets and fencing/lease expiry/refusal/replay tests on isolated fixtures.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:149",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 5,
+      "name": "Deterministic Runtime Engine",
+      "required": "Actual pinned ZigVM build/execution, VFS laws against implementation, bounded symlink/race/descriptor-negative tests; OCaml model alone insufficient.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:157",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 6,
+      "name": "Formal Evidence & Analysis",
+      "required": "Pinned Hermes/Gospel/Z3 invocation receipts, bounded solver lifecycle/control assertion, ledger chain/trigger/integrity verification, real parity oracles.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:165",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 7,
+      "name": "Mathematical Authority",
+      "required": "Actual pinned Lean and Quint proof/model executions, declared assumptions/axioms and bounds, no sorry/Admitted/unsupported/timeout treated as proof.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:173",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 8,
+      "name": "Biosemiotic Cybernetics",
+      "required": "Candidate-bound control-state and feedback behavior, POODAVR stages, freshness/dead-man/Prajna/Lyapunov falsifiers.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:181",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 9,
+      "name": "Quarantined AI Inference",
+      "required": "Immutable supervised MAX/Mojo identity, real graph output, bounded length-delimited protocol and failure cleanup; free-model price/cost/deadline evidence when applicable.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:189",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 10,
+      "name": "Mesh Telemetry & Communication",
+      "required": "Real scoped publish/query transport and loss/error behavior; truthful unsupported subscriptions/native paths; nonzero trace/span/time/source identity.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:197",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 11,
+      "name": "Agent Event Bus Protocol",
+      "required": "Actual AG-UI schema/ordering/reconnect/isolation behavior across required 32-event contract; no forged evidence or message deletion.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:205",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 12,
+      "name": "Declarative UI Component Catalog",
+      "required": "Map required catalog entries to executable rendered behavior; 233 inventory entries do not prove 233 verified components.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:213",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 13,
+      "name": "Multi-Interface Accessibility",
+      "required": "Candidate-bound actual browser/REST/TUI/SSE parity, real content and interactions/accessibility/errors/disconnects; human acceptance separately observed or UNRUN.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:221",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "required": "Actual links and navigation over authorized Tailnet FQDNs, private-stage identity and negative routing cases; no public fetch.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:229",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "required": "Explicit per-page/doc 18 checkpoints plus provenance domain, C1-C8, four measured mathematical gates and nine modality receipts; no hardcoded greens.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:237",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 16,
+      "name": "Knowledge Management Triad",
+      "required": "Wiki/ZK/ontology references/index/quarantine completeness, actual link/transclusion checks, chain/entropy metrics; corpus quality distinct from admission.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:245",
+      "blocking_if_applicable": true
+    },
+    {
+      "id": 17,
+      "name": "Sa-Plan Durable Execution & Workflow Engine",
+      "required": "Actual canonical task/attempt/lease and separate runtime/integration resource fencing; concurrent/expired-owner/refusal/recovery tests; no inference from Active catalog.",
+      "status": "UNKNOWN_IN_THIS_AUDIT",
+      "catalog_evidence": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:253",
+      "blocking_if_applicable": true
+    }
+  ],
+  "gate_effect_matrix": [
+    {
+      "command": "installed uos_gleam.read_file / mcp_capability_inventory",
+      "classification": [
+        "READ_ONLY"
+      ],
+      "executed": true,
+      "coverage": "Source content and declarative tool inventory only; no operational proof."
+    },
+    {
+      "command": "bash tools/uos-cli verify-all",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "POTENTIAL_PRODUCTION_DB_ACCESS",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "25 heterogeneous children; sums exit statuses and prints global ratification; wrapper gleam run may build/resolve packages; transitive side effects not fully audited.",
+      "next": "Do not execute as global admission. First replace global banner with scoped aggregate and require exact obligation receipts."
+    },
+    {
+      "command": "bash tools/uos-cli gate G-ZERO-MUDA",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Child is unconditional PASS (main.gleam:316-319), so no purity evidence.",
+      "next": "Use independently checked source/dependency/runtime inventory; retain inventory/admission distinction."
+    },
+    {
+      "command": "bash tools/uos-cli dmc-check / tcm-check / checklist / gate G-CHECKLIST / gate G-JOURNAL",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Inspected arms read file presence; wrapper may build/resolve. DMC prints proved, TCM enforced, checklist verified without executing those obligations.",
+      "next": "Invoke pinned compiled report-only inventory only after labeling it honestly; use actual proof/test/linter/browser obligations separately."
+    },
+    {
+      "command": "bash tools/uos-cli doctor",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Manifest inventory; missing/unverifiable/not-admitted tracked; >93 not admitted. Not a runtime or sovereign admission test."
+    },
+    {
+      "command": "bash tools/preflight --json --quiet",
+      "classification": [
+        "DEVELOPMENT_SCRATCH",
+        "POSSIBLE_VCS_METADATA_EFFECTS",
+        "UNRESOLVED_TRANSITIVE_WRAPPER_EFFECTS"
+      ],
+      "executed": false,
+      "coverage": "Creates temp files, executes many tool probes and pinned Z3/Quint checks, invokes jj without ignore-working-copy in tracking/revision paths; full identity arms skipped.",
+      "next": "Use authorized isolated development scope after resolver/wrapper closure review; cannot call strictly read-only."
+    },
+    {
+      "command": "bash tools/preflight --full",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Adds nix flake check and devenv test with no offline constraint; needs realized closures/Tailnet fetch policy before execution."
+    },
+    {
+      "command": "bash tools/preflight --max-age N",
+      "classification": [
+        "READ_ONLY_INTENDED"
+      ],
+      "executed": false,
+      "coverage": "Reads cached receipt and hashes checker/resolver. Does not rerun behavior or prove current candidate. Exact code only inspected."
+    },
+    {
+      "command": "bash tools/atlas-check",
+      "classification": [
+        "READ_ONLY_WRAPPER_INTENT",
+        "UNRESOLVED_NATIVE_CHECKER_EFFECTS"
+      ],
+      "executed": false,
+      "coverage": "Requires existing compiled checker, observes OTP/ERTS/root; conformance/honesty permits recorded UNKNOWN. Native checker transitive effects not fully audited here."
+    },
+    {
+      "command": "bash tools/km-gate --gate",
+      "classification": [
+        "DEVELOPMENT_SCRATCH",
+        "PRODUCTION_DB_OPEN_READWRITE"
+      ],
+      "executed": false,
+      "coverage": "Wrapper builds isolated /tmp Dune executable, observes JJ with ignore-working-copy; opens existing canonical cycles DB using NO_CREATE, not READONLY. Chain, no-mint manifest, gap/duplicate, entropy, index/quarantine checks; not EV admission.",
+      "next": "Prefer separately reviewed read-only oracle or isolated consistent copy for analysis; do not assume no WAL/SHM effects."
+    },
+    {
+      "command": "bash tools/km-gate --ev-admission REVISION",
+      "classification": [
+        "DEVELOPMENT_SCRATCH",
+        "PRODUCTION_DB_OPEN_READWRITE"
+      ],
+      "executed": false,
+      "coverage": "Separate REPORT_ONLY legacy evidence report with observed workspace revision. km_ev.ml:41-53 refuses all legacy rows, even with both references present. No sovereign admission or policy ceiling mutation."
+    },
+    {
+      "command": "bash tools/km-gate --ev-record / --append / --merge-hold / --publish",
+      "classification": [
+        "PRODUCTION_EVIDENCE_OR_PROJECTION_EFFECTS",
+        "DEVELOPMENT_SCRATCH"
+      ],
+      "executed": false,
+      "coverage": "Not read-only diagnostics; canonical records/projections may change. Excluded from audit and require separate typed authority."
+    },
+    {
+      "command": "bash tools/uos-cli gate G-MIRAGE / G-MIRAGE-MIGRATE / G-MIRAGE-PROD",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Current named gate implementation explicitly HOLD/exit nonzero even complete inventory because no candidate-bound behavior/formal receipts (main:183-205). Legitimate global blocker if capability required."
+    },
+    {
+      "command": "bash tools/uos-cli --selfcheck-vfs / --selfcheck-sa-plan / --selfcheck-mirage / --selfcheck-mirage-migration / --selfcheck-mirage-prod",
+      "classification": [
+        "DEVELOPMENT_TEST_OR_SCRATCH",
+        "POTENTIAL_PRODUCTION_DB_ACCESS",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Invoke existing compiled suites with bounds; Sa-plan also invokes canonical status wrapper. Test transitive filesystem/process effects require individual source review and isolation. Model green not implementation/admission."
+    },
+    {
+      "command": "bash tools/uos-cli --selfcheck-inference",
+      "classification": [
+        "DEVELOPMENT_PROCESS_EFFECTS",
+        "UNRESOLVED_DEPENDENCY_OR_NETWORK_RISK",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "main:3257-3259 invokes ambient python3 max_worker.py --selfcheck, source presence plus reported output. Does not bind immutable MAX environment or OTP supervision. Review worker closure before execution."
+    },
+    {
+      "command": "bash tools/uos-cli --webui-browser-suite",
+      "classification": [
+        "DEVELOPMENT_BROWSER_EFFECTS",
+        "POTENTIAL_PRODUCTION_HTTP_EFFECTS",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Existing tools/webui_browser_suite invoked if present at main:3542-3556; transitive target actions not audited. Exact CLI spelling must be confirmed from parser before execution.",
+      "next": "Use finite approved Tailnet target/read-only browser scenario; authorized send/click actions separately scoped."
+    },
+    {
+      "command": "bash tools/risk-priority-check --all / --preflight PORT TASK / --active-check PORT TASK WORKER ATTEMPT",
+      "classification": [
+        "DEVELOPMENT_BUILD_OR_SCRATCH",
+        "READ_ONLY_OBSERVATION_INTENT"
+      ],
+      "executed": false,
+      "coverage": "Required authority/risk observations, not authority. This audit relied on parent-provided active receipt, inspected exact receipt bytes; wrapper closure not re-audited."
+    },
+    {
+      "command": "nix build --offline path:./ops/release#default / nix develop --offline path:./ops/release",
+      "classification": [
+        "DEVELOPMENT_PROVISION_EFFECTS",
+        "DOWNLOAD_RISK"
+      ],
+      "executed": false,
+      "coverage": "Release SOP commands; offline alone cannot prevent fixed-output builder downloads. Require already-realized closures or approved Tailnet fetch path."
+    },
+    {
+      "command": "Actual Lean/Quint/Gospel/Z3, journal lint, release verifier and browser commands per obligation",
+      "classification": [
+        "NOT_YET_EFFECT_AUDITED"
+      ],
+      "executed": false,
+      "coverage": "Required families, not an invented ready command list. Pin exact executable/argv/source/input/timeout/output path and review effects before scheduling."
+    },
+    {
+      "command": "Telegram live dispatch / service deployment / runtime cutover / admission record",
+      "classification": [
+        "PRODUCTION_EFFECTS"
+      ],
+      "executed": false,
+      "coverage": "Separate canonical ready task, effect-time authority, reviewed exact candidate/config, destination authorization, idempotency/recovery and independent postconditions required."
+    }
+  ],
+  "required_global_evidence": {
+    "obligation_schema": [
+      "stable requirement ID and exact governing source/version",
+      "applicability with reviewed N/A rationale",
+      "exact candidate/source/dependency/toolchain/artifact/config identity",
+      "state inventory/implemented/built/executed/passed/verified/admitted",
+      "actual command/argv/effect class and bounded execution inputs",
+      "result/exit/output hashes/host/boot/PID/run ID/clock/freshness",
+      "positive and negative controls, model bounds and assumptions",
+      "independent reviewer and admission decision scope",
+      "unknown/stale/failed counterevidence and recovery constraints"
+    ],
+    "checklist": {
+      "domains": "18 checkpoints plus provenance domain; conflicting historical five/six-domain descriptions need truthful mapping",
+      "C1_C8": [
+        "structure",
+        "health badges",
+        "data grids",
+        "timeline",
+        "interactive",
+        "dark cockpit",
+        "AI advisory",
+        "action interlock"
+      ],
+      "math": [
+        "Shannon entropy >=2.50 bits",
+        "CCM >=90.0% (definition/denominator must be established, not inferred from name)",
+        "trajectory divergence D_EA <=10.0%",
+        "ITQS >=0.85"
+      ],
+      "modalities": [
+        "unit",
+        "system",
+        "TDD",
+        "BDD",
+        "performance",
+        "scalability",
+        "property",
+        "fuzz",
+        "chaos"
+      ],
+      "evidence": "contracts/rules/comprehensive-checklist-contract.md:24-54; checked boxes are policy claims, not observations"
+    },
+    "cross_cutting": [
+      "Canonical Sa-plan readiness/attempt/lease, risk STPA four-UCA/FMEA assessment, integration/runtime ownership and effect fencing",
+      "External source quiescence, exact revision/dirty/sanitized manifest, two-key ingestion; preserve quarantine and exclude secret/runtime DB/cache/model bytes",
+      "Pin toolchains and already-realized closure; no implicit downloads; storage serial interlock and Zero-Muda constraints",
+      "Gleam owns intents/policy, bounded native kernels and daemon isolation, actual refusal/replay/budget tests",
+      "Candidate-bound GUI/TUI/API/SSE and genuine authorized Telegram/AGY behavior; actual human acceptance remains UNRUN until observed",
+      "Immutable release/identity/startup/advancing counters/readiness, tested recovery and bounded failover where applicable",
+      "13-section SC-JOURNAL-v3 closure and seven-engine evidence, exact served publication distinct from local file",
+      "Policy ceiling EV93 retained; EV94..109 quarantined NOT_ADMITTED; no new numbers; chain integrity does not redeem provenance"
+    ]
+  },
+  "recommended_sequence": [
+    "First repair false-green classification/aggregator under reviewed source task; regress missing, forged, stale, inventory-only and unsupported receipts to HOLD.",
+    "Construct a finite obligation inventory covering all17 aspects and active rules/skills/plugins/MCP/agents/SOP/manuals; preserve historical claims as inert evidence.",
+    "Audit each exact gate's transitive effects and offline closure; run only eligible bounded development tests with source/candidate-bound positive and negative controls.",
+    "Perform independently reviewed immutable release and authorized live Telegram/AGY/browser/runtime acceptance under separate effect authority; preserve all failures.",
+    "Reconcile formal/runtime evidence for every applicable global obligation; independent sovereign admission decision only if none remain UNKNOWN/UNRUN/FAIL/STALE. Otherwise publish explicit HOLD without new EV IDs."
+  ],
+  "uncertainty": [
+    "No blanket verify-all or proof/build/test/production command was run.",
+    "This is a bounded core-policy/gate audit, not exhaustive inspection of every repository file, plugin or external skill.",
+    "Wrapper classification does not assert absence of transitive effects in uninspected executables.",
+    "Main revision was parent-provided; reviewed source hashes independently bind observed files.",
+    "No actual browser, Telegram, service health, model inference or manual human acceptance was newly observed here.",
+    "Current km_ev legacy path intentionally refuses admission; no claim it still promotes merely present evidence files.",
+    "Scope and source may change after this observation; recheck hashes and effect-time authority before next execution."
+  ],
+  "observed_at_utc": "2026-10-01T10:58:59Z",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l9",
+    "#zero-muda"
+  ],
+  "source_link": "http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261001-1015-telegram-admission-evidence/"
+}

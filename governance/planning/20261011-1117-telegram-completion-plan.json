@@ -1,0 +1,117 @@
+{
+  "schema": "uos.telegram-completion-plan.v1",
+  "observed_utc": "2026-10-11T11:17:00Z",
+  "status": "PROPOSED_FOR_AGY_AND_CLAUDE_REVIEW",
+  "authority_plan": "uos/telegram-tools/20261011-1115",
+  "task": "PLAN",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "operator_scope": "Complete all Telegram-related features; actual AGY executes tasks; AGY/Gemini and Claude review the plan; find or create required tools.",
+  "baseline": {
+    "main": "83dca0394346564356920f066b3924858144107f",
+    "working_snapshot": "4f199d53",
+    "preserve_dirty_work": true,
+    "telegram_runtime_plan": "uos/telegram-runtime/20261001-1150",
+    "parent_plan": "uos/telegram-admission/20261001-1015",
+    "admission": "NOT_GRANTED"
+  },
+  "observations": [
+    "Actual compiled Gleam herdr_sync_cli discovery works. AGY w2:p9/session954b9a82-15dc-4bd5-ae31-dd9670e583ca idle in UOS sibling; actual model banner Gemini3.8Flash, must explicitly ACK identity. Claude w2:p2/sessiona65088e0-0f2b-497e-bd5c-97eeed9c3594 idle in NAS-setup parent; --allow-parent is exact documented exception; enforce UOS-only review.",
+    "Canonical runtime plan26tasks including newly recorded TOOLS_RESUME. FORMAL_FIX and STORE_TRANSPORT_REVIEW have expired October1leases. Ordinary preflight fails closed for both; single-task reclaim exemption cannot handle a second expired task. Do not forge actor, time, assessment state or completion.",
+    "Existing tools include task-scoped successor_mcp requiring independently reviewed launcher grant; historical bootstrap identity is not reusable. Four UI-exposed MCP tools are read-only, but local compiled Gleam CLI adapters are usable under latest explicit tool-recovery instruction.",
+    "Storage transport independently accepted October1 (18tests) but stale; AGY native candidate709c4b0 has85reportedassertions and unresolved six residuals. Canonical native storage source is absent; preserve AGY candidate and test independently.",
+    "Source read confirms nontransactional initialization; digest uses unescaped newline/colon fields while key_valid checks length only; COMMIT errors return generic error. These need disconfirmation/repair before storage integration."
+  ],
+  "review_questions": [
+    "Does scoped bootstrap reuse of compiled Gleam CLI, with canonical Sa-plan task and independent review, preserve harness ownership? Identify any missing finite adapter or source/tool pin.",
+    "Propose minimal safe recovery for multiple expired tasks: exact original plan/task/worker/attempt/deadline set, atomic observations, no authority from projection, canonical claim afterward, owner/quiescence proof and independent negative tests. Do not waive ordinary active checks.",
+    "Are Telegram feature inventory, trust boundaries, persistent state machine, resource bounds, failure handling and acceptance sufficient? Identify omitted feature families without conflating declarations with working features.",
+    "Is the source/native/runtime integration order safe? Separate private development tests, real Telegram acceptance, production release and main integration."
+  ],
+  "stages": [
+    {
+      "id": "T0",
+      "owner": "Codex coordinator; AGY implementer; Claude reviewer",
+      "action": "Restore finite tool execution and exact expired-claim recovery after both plan reviews.",
+      "acceptance": "Fresh clock/preflight, true AGY+Claude ACKs, reviewed narrowly scoped recovery, foreign/live/stale/mismatched attempts refused; no direct DB edits; old failure receipts preserved."
+    },
+    {
+      "id": "T1",
+      "owner": "AGY",
+      "action": "Inventory every canonical Telegram command and feature path in harness/telegram*, gateway/telegram, telegram/{auth,theme,types}, mini-app routes, client and legacy poller. Produce supported/partial/unimplemented matrix and finite acceptance case per supported feature.",
+      "acceptance": "Inventory includes direct doctor/plan commands, help/status, formatting/chunking, conversation/collaboration flows, attachments/multimodal, inline callbacks and mini-app authentication where actually implemented; no placeholder succeeds. Expand Sa-plan tasks where implementation needed."
+    },
+    {
+      "id": "T2",
+      "owner": "AGY; independent Codex review",
+      "action": "Repair native store candidate and regenerate exact source/test evidence.",
+      "acceptance": "Atomic schema+metadata init; unambiguous length-prefixed or canonical typed digest; strict bounded IDs/hash/duplicate-readset/JSON; explicit uncertain COMMIT; capacity ownership; configured path confinement. Exact decoded JSON assertions, crash/replay and error fault injection on private DBs; no production DB mutation."
+    },
+    {
+      "id": "T3",
+      "owner": "AGY; independent review",
+      "action": "Implement strict Gleam domain codec and durable store consumer behind existing bounded transport.",
+      "acceptance": "Full request/result/delivery identity, transactional batch-prefix+offset, no HTTP in DB transaction, no skipped or duplicated work, resource reservations attributed/reconciled, restart states/uncertain operations quarantined without blind retry."
+    },
+    {
+      "id": "T4",
+      "owner": "AGY; independent review",
+      "action": "Wire supervised single-poller Telegram service, numeric bot/chat/user allowlist, per-request canonical tasks and current authority checks, finite tool dispatch, durable outbox.",
+      "acceptance": "One authorized poller; deny forged sender/session/tool/expired task; no credential/private-body logs; bounded queue/payload/HTTP/deadline/circuit breaker; accept delivery only for matching chat and positive message ID. Crash-during-send remains UNCERTAIN; administrative reconciliation explicit."
+    },
+    {
+      "id": "T5",
+      "owner": "AGY execution; Codex/Claude review",
+      "action": "Complete inventory feature gaps and private end-to-end acceptance through actual service and simulated Telegram transport.",
+      "acceptance": "Every promised feature has positive, negative and recovery cases; actual native store+Gleam service+canonical private authority tested together, not pure mocks alone. Mini-app/browser features receive mobile/desktop rendering and interaction evidence where applicable."
+    },
+    {
+      "id": "T6",
+      "owner": "AGY preparation; independent release reviewer",
+      "action": "Prepare immutable candidate, finite release grant, legacy-poller quiescence, backup, rollback and staging acceptance.",
+      "acceptance": "Exact artifact/OTP/control IDs and tests; legacy polling/shared-bus cannot duplicate consumer; secrets remain local; no release before independent PASS."
+    },
+    {
+      "id": "T7",
+      "owner": "AGY bounded release; independent runtime reviewer",
+      "action": "Execute accepted release and actual authorized operator Telegram acceptance; verify startup/restart and error recovery.",
+      "acceptance": "Existing configured numeric recipient must be validated and actual test-message scope authorized. No default inferred recipient or bulk send. Observe request→canonical dispatch→durable matching reply; preserve failure receipts; no success inferred from send attempt."
+    },
+    {
+      "id": "T8",
+      "owner": "Codex sole integration writer",
+      "action": "Merge stabilized applicable Telegram changes with standalone JJ after review, publish journal/manual/dashboard and close tasks.",
+      "acceptance": "Preserve unrelated dirty work and all original branches/evidence. Main inclusion is not global admission. EV93ceiling unchanged; unrelated global formal blockers remain explicit."
+    }
+  ],
+  "risk": {
+    "class": "P1",
+    "S": 4,
+    "O": 3,
+    "Det": 3,
+    "RPN": 36,
+    "priority": 768,
+    "uca_controls": [
+      "Missing action: visible explicit failure and pending work.",
+      "Unsafe provided action: numeric identity and finite scope/task guards.",
+      "Wrong timing: fresh effect-time task/runtime/source/clock fences.",
+      "Excess duration: finite leases/bounds and no blind retry."
+    ]
+  },
+  "execution_tools": {
+    "existing": [
+      "Gleam herdr_sync_cli discover/read/prompt",
+      "Gleam development.bounded native adapter",
+      "Gleam session_store_cli",
+      "Canonical tools/sa-plan",
+      "Gleam successor_mcp/admission/operations",
+      "Pinned native storage transport"
+    ],
+    "needed": "Review whether durable finite CLI client launcher and multi-expired-task reclaim observation adapter are needed. User authorizes development tool creation, not reusing stale grants or weakening checks."
+  },
+  "limits": [
+    "This is a plan proposal, not a release grant.",
+    "Separate tool-recovery plan does not clear HOLD on the existing runtime plan.",
+    "Model review is advisory; independent source/test review and effect-time checks remain mandatory."
+  ]
+}

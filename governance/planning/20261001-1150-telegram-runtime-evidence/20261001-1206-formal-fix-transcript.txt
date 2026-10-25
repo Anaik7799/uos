@@ -1,0 +1,259 @@
+FIRST REPAIR CHECKS
+Algebraic_Atlas_Intent 0
+Autoscaler_Stability 0
+formal/lean/Autoscaler_Stability.lean:21:46: warning: Variable name `h_le` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h_le
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+CRDT_Lattice_Algebra 0
+CRDT_SEC 0
+Century_Harmony 1
+formal/lean/Century_Harmony.lean:36:3: error: unknown tactic
+formal/lean/Century_Harmony.lean:33:38: error: unsolved goals
+s : SwarmNodeState
+gamma : Float
+h_err : s.process_val = s.setpoint
+h_int : s.integral_acc = 0.0
+\u22a2 (s.setpoint - s.setpoint) * (s.setpoint - s.setpoint) + gamma * (0.0 * 0.0) = 0.0
+formal/lean/Century_Harmony.lean:81:71: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+Chaos_Containment 0
+
+Topos_Heyting_Double_Category_Transmutation 0
+TwoLattice_Concurrency 0
+formal/lean/TwoLattice_Concurrency.lean:90:5: warning: Variable name `hwf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hwf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+WorkStealing_Fairness 0
+Criticality_Utility_STPA_FMEA_Evolution 0
+formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:101:5: warning: Variable name `h_o` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h_o
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:101:37: warning: Variable name `h_d` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h_d
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+Denotational_Intent_Design 0
+Denotational_Intent_Functor 0
+
+Five_More_Cycles_Category_Theoretic_Transmutation 0
+IntentSafety 0
+OODA_Convergence 0
+POODAVR_FPrime_Semantics 0
+formal/lean/POODAVR_FPrime_Semantics.lean:60:4: warning: Variable name `other` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _other
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+
+
+FINAL FLOAT-FILE CHECKS
+Century_Harmony 0
+Lyapunov_Stability 0
+Denotational_Atlas_Cohomology 0
+
+
+ALL18 AXIOM AUDITS
+formal/lean/Algebraic_Atlas_Intent.lean 0
+'UOS.Atlas.cocycle_morphism_composition' depends on axioms: [propext, Quot.sound]
+'UOS.Atlas.denotational_intent_safety' depends on axioms: [propext]
+'UOS.Atlas.denotational_causal_monotonicity' depends on axioms: [propext]
+formal/lean/Autoscaler_Stability.lean 0
+governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1254-axiom-audit-Autoscaler_Stability.lean:21:46: warning: Variable name `h_le` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h_le
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+'UOS.Autoscaler.worker_bounds_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UOS.Autoscaler.token_conservation' depends on axioms: [propext, Quot.sound]
+'UOS.Autoscaler.queue_bounded_under_capacity' depends on axioms: [propext, Quot.sound]
+formal/lean/CRDT_Lattice_Algebra.lean 0
+'UOS.CRDT.lww_join_idempotent' depends on axioms: [propext, Quot.sound]
+'UOS.CRDT.counter_join_comm' depends on axioms: [propext]
+'UOS.CRDT.counter_join_assoc' depends on axioms: [propext]
+'UOS.CRDT.counter_join_monotone_left' depends on axioms: [propext]
+'UOS.CRDT.counter_join_monotone_right' depends on axioms: [propext]
+formal/lean/CRDT_SEC.lean 0
+'UOS.CRDT.nat_max_comm' depends on axioms: [propext, Quot.sound]
+'UOS.CRDT.nat_max_assoc' depends on axioms: [propext, Quot.sound]
+'UOS.CRDT.nat_max_idem' depends on axioms: [propext, Quot.sound]
+'UOS.CRDT.lww_merge_idem' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UOS.CRDT.sec_order_independence_2' depends on axioms: [propext, Quot.sound]
+'UOS.CRDT.sec_order_independence_3' depends on axioms: [propext, Quot.sound]
+'UOS.CRDT.lww_monotonic_timestamp' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/Century_Harmony.lean 0
+'UOS.CenturyHarmony.unanimous_implies_2oo3' depends on axioms: [propext]
+'UOS.CenturyHarmony.safe_dispatch_guarantees_drive_lock' depends on axioms: [propext]
+formal/lean/Chaos_Containment.lean 0
+'UOS.Chaos.fault_injection_preserves_constitutional_safety' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UOS.Chaos.hot_reload_restores_lyapunov_stability' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UOS.Chaos.catastrophic_fault_trips_andon' depends on axioms: [propext, Classical.choice, Quot.sound]
+
+formal/lean/Topos_Heyting_Double_Category_Transmutation.lean 0
+'UOS.ToposDoubleCategory.heyting_algebra_subobject_classifier_soundness' does not depend on any axioms
+'UOS.ToposDoubleCategory.constructive_epistemic_truth_monotonicity' does not depend on any axioms
+'UOS.ToposDoubleCategory.incomplete_telemetry_safe_classification' depends on axioms: [propext, Quot.sound]
+'UOS.ToposDoubleCategory.dirichlet_topos_internal_compatibility' depends on axioms: [propext, Quot.sound]
+'UOS.ToposDoubleCategory.double_category_horizontal_composition' depends on axioms: [propext]
+'UOS.ToposDoubleCategory.double_category_vertical_migration_span' depends on axioms: [propext]
+'UOS.ToposDoubleCategory.double_cell_interchange_law' depends on axioms: [propext, Quot.sound]
+'UOS.ToposDoubleCategory.zero_downtime_hot_upgrade_invariance' does not depend on any axioms
+'UOS.ToposDoubleCategory.two_lattice_topos_isolation' does not depend on any axioms
+'UOS.ToposDoubleCategory.stamp_hazard_topos_interlock' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/TwoLattice_Concurrency.lean 0
+governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1254-axiom-audit-TwoLattice_Concurrency.lean:90:5: warning: Variable name `hwf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hwf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+'UOS.Concurrency.pull_task_preserves_wf' does not depend on any axioms
+'UOS.Concurrency.complete_task_preserves_wf' does not depend on any axioms
+'UOS.Concurrency.divergent_adaptation_monotone_contract' does not depend on any axioms
+'UOS.Concurrency.adapt_capacity_preserves_wf' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/WorkStealing_Fairness.lean 0
+'UOS.WorkStealing.steal_preserves_task_conservation' depends on axioms: [propext, Quot.sound]
+'UOS.WorkStealing.steal_quota_bounded_by_half' depends on axioms: [propext]
+'UOS.WorkStealing.non_empty_donor_yields_work' depends on axioms: [propext]
+formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean 0
+governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1254-axiom-audit-Criticality_Utility_STPA_FMEA_Evolution.lean:101:5: warning: Variable name `h_o` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h_o
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1254-axiom-audit-Criticality_Utility_STPA_FMEA_Evolution.lean:101:37: warning: Variable name `h_d` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h_d
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+'UOS.CriticalitySTPAEvolution.criticality_utility_bounded_product' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.criticality_utility_monotonic_allocation' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.stpa_uca_fourfold_completeness' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.stpa_safety_control_loop_invariance' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.fmea_rpn_monadic_contraction' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.fmea_severity_boundedness' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.evolutionary_fitness_monotonic_growth' depends on axioms: [propext]
+'UOS.CriticalitySTPAEvolution.poodavr_risk_integrated_contraction' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.two_lattice_risk_audit_isolation' does not depend on any axioms
+'UOS.CriticalitySTPAEvolution.stamp_hazard_storage_hard_denial' does not depend on any axioms
+formal/lean/Denotational_Atlas_Cohomology.lean 0
+'UOS.Cohomology.root_os_nvme_fail_closed' depends on axioms: [propext]
+'UOS.Cohomology.bottom_absorption' depends on axioms: [propext]
+formal/lean/Denotational_Intent_Design.lean 0
+'UOS.Denotational.leq_refl' depends on axioms: [propext]
+'UOS.Denotational.leq_trans' depends on axioms: [propext]
+'UOS.Denotational.safety_fail_closed_non_sa_plan' depends on axioms: [propext]
+'UOS.Denotational.safety_fail_closed_drive_lock' depends on axioms: [propext]
+'UOS.Denotational.safety_fail_closed_guardian_veto' depends on axioms: [propext]
+'UOS.Denotational.bottom_propagation' depends on axioms: [propext]
+
+formal/lean/Denotational_Intent_Functor.lean 0
+'UOS.Denotational.Monad.bottom_absorption' does not depend on any axioms
+'UOS.Denotational.Monad.unauthorized_fails_closed' depends on axioms: [propext]
+'UOS.Denotational.Monad.root_drive_lock_fails_closed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'UOS.Denotational.Monad.unapproved_dal_a_fails_closed' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean 0
+'UOS.ComprehensiveTransmutation.sheaf_cohomology_h0_global_section_soundness' depends on axioms: [propext, Quot.sound]
+'UOS.ComprehensiveTransmutation.sheaf_cohomology_h1_anomaly_detection' depends on axioms: [propext, Quot.sound]
+'UOS.ComprehensiveTransmutation.swarm_operad_associative_composition' depends on axioms: [propext, Quot.sound]
+'UOS.ComprehensiveTransmutation.swarm_operad_deadlock_free_delegation' does not depend on any axioms
+'UOS.ComprehensiveTransmutation.monoidal_closed_compiler_internal_hom' depends on axioms: [propext, Quot.sound]
+'UOS.ComprehensiveTransmutation.kan_extension_left_universal_property' depends on axioms: [propext]
+'UOS.ComprehensiveTransmutation.kan_extension_right_universal_property' depends on axioms: [propext, Quot.sound]
+'UOS.ComprehensiveTransmutation.poodavr_operadic_loop_invariance' depends on axioms: [propext, Quot.sound]
+'UOS.ComprehensiveTransmutation.two_lattice_operadic_audit_isolation' does not depend on any axioms
+'UOS.ComprehensiveTransmutation.stamp_hazard_operad_root_interlock' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+formal/lean/IntentSafety.lean 0
+'UOS.IntentSafety.storage_serial_lock_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/Lyapunov_Stability.lean 0
+'UOS.Stability.divergent_state_triggers_minimal_concurrency' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/OODA_Convergence.lean 0
+'UOS.OODA.andon_active_halts_phase' depends on axioms: [propext]
+'UOS.OODA.verify_to_observe_increments_cycle' depends on axioms: [propext]
+'UOS.OODA.remediation_restores_progress' depends on axioms: [propext, Classical.choice, Quot.sound]
+formal/lean/POODAVR_FPrime_Semantics.lean 0
+governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1254-axiom-audit-POODAVR_FPrime_Semantics.lean:60:4: warning: Variable name `other` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _other
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+'UOS.POODAVR.orient_fails_closed_on_hazard' does not depend on any axioms
+'UOS.POODAVR.act_unreachable_on_hazard' depends on axioms: [propext]
+'UOS.POODAVR.verify_epoch_monotonic' does not depend on any axioms
+'UOS.POODAVR.fprime_7stage_cycle_preservation' does not depend on any axioms
+
+
+ACTUAL CANDIDATE FLOAT COUNTEREXAMPLES
+Denotational_Atlas_Cohomology
+("actual_identity_overflow_bits", 9221120237041090560, 4607182418800017408)
+("actual_finite_cocycle_bits", 4602678819172646913, 4602678819172646912)
+("actual_finite_residual_bits", 4368491638549381120)
+("positive_finite_identity_control", true)
+("positive_exact_cocycle_control", true)
+
+Century_Harmony
+("actual_equilibrium_infinite_gamma_bits", 9221120237041090560, 0)
+("positive_finite_equilibrium_control", true)
+
+Lyapunov_Stability
+("actual_lyapunov_infinity_bits", 9221120237041090560, 0)
+("positive_finite_lyapunov_control", true)
+
+
+EXPLORATORY COUNTEREXAMPLES AND PRESERVED FIXTURE FAILURE
+("atlas_identity_overflow", 9221120237041090560, 4607182418800017408)
+("atlas_cocycle_rounding", 4591870180066957722, 4591870180066957722)
+("atlas_residual_rounding", 0.000000)
+("atlas_residual_infinity", NaN)
+("lyapunov_infinity", 9221120237041090560, 0)
+("century_infinite_gamma_zero_error", 9221120237041090560, 0)
+
+backend_exit:1
+governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1251-finite-float-counterexamples.lean:3:27: error: expected token
+
+[(0, 2, 4, 4602678819172646913, 4602678819172646912, 4368491638549381120),
+ (0, 2, 6, 4604480259023595112, 4604480259023595111, 4368491638549381120),
+ (0, 2, 8, 4606281698874543310, 4606281698874543309, 4368491638549381120),
+ (0, 2, 9, 4607182418800017409, 4607182418800017408, 4372995238176751616),
+ (0, 4, 2, 4599075939470750515, 4599075939470750516, 13587360075776786432),
+ (0, 4, 5, 4603579539098121011, 4603579539098121012, 13591863675404156928),
+ (0, 4, 6, 4604480259023595110, 4604480259023595111, 13591863675404156928),
+ (0, 5, 4, 4602678819172646913, 4602678819172646912, 4368491638549381120)]
+
+
+FINAL SOURCE HASHES
+20261001-1206|2026-10-01T12:51:06Z
+6f768b23a98424ba85efea9b36685f6b065298e120c93e73f66e4775a72f0ae3  formal/lean/Algebraic_Atlas_Intent.lean
+bba4ddf4a9fe05e902782e2ec4bc7c52756335a3e9d274c56bc5cfa60886b9c4  formal/lean/Autoscaler_Stability.lean
+e6640bd569991c13da243ee612de8fd13a5516e03d6fcb528fa809912a49aa12  formal/lean/CRDT_Lattice_Algebra.lean
+5b15f41a5915876ce7f0a336c1079b8f30d2780763dd4162c3d24dc832eee75d  formal/lean/CRDT_SEC.lean
+7e24cf959dc73e9e01f9684a5d6643642c972748dc888c109a446a6f3901b962  formal/lean/Century_Harmony.lean
+7133abc4bcfe8a992a9674f415f54b4fb7cae13c440c2a66849e56f57c15da2f  formal/lean/Chaos_Containment.lean
+af1bbb36f9ca4a4caa92e659e014914e52df12fb2c18412f9df2dc352ade32b0  formal/lean/Topos_Heyting_Double_Category_Transmutation.lean
+47157a1f33af78caa2e166fa3a811af3d62b1049061ca11db34677b31b0bbc0d  formal/lean/TwoLattice_Concurrency.lean
+7f9d62aeaa1423dffd5b98833b25e0159fc9a025464921f86dc07ae1e1ae3322  formal/lean/WorkStealing_Fairness.lean
+359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb  formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean
+70d74fe26ba1f55ada66d9562de2d3a80d0504cb3bbbe46e4054aa587864d4f9  formal/lean/Denotational_Atlas_Cohomology.lean
+fb22176481eff687b8265a606a8db3cfddca4cdff94935d9834c94afb5cdd069  formal/lean/Denotational_Intent_Design.lean
+d368b386c25646c0cbbd145506e406f400498825bdbb507530c99a49f19df3c4  formal/lean/Denotational_Intent_Functor.lean
+5dfa67ff35c50dddbb009ca971fce00c9760536ff5b883dfa7289ae9cb8521a7  formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean
+e38bac4849c96c2a742486e02fd4df2e16c71d62340f13ce2c7b20bb52203035  formal/lean/IntentSafety.lean
+3f63aba3c49402c49c97a330706d728ed9d12dd1922df2e36edff1dc70ba2a4a  formal/lean/Lyapunov_Stability.lean
+22caaf967ad423aaebceaeb880f56103c9a5244bd10b5b124e132e96b4bc87ca  formal/lean/OODA_Convergence.lean
+63d18700d4153ee9a014cc1423eb5c2a1aac3d4096089cd793ea0e958f4bf77b  formal/lean/POODAVR_FPrime_Semantics.lean

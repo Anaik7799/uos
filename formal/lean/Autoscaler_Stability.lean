@@ -29,16 +29,7 @@ theorem worker_bounds_invariant (min_w max_w target : Nat) (h_le : min_w <= max_
     let res := clamp_workers min_w max_w target h_le
     min_w <= res ∧ res <= max_w := by
   dsimp [clamp_workers]
-  split
-  · rename_i h_lt
-    exact ⟨Nat.le_refl min_w, h_le⟩
-  · split
-    · rename_i h_nlt h_gt
-      omega
-    · rename_i h_nlt h_ngt
-      push_neg at h_nlt
-      push_neg at h_ngt
-      exact ⟨h_nlt, h_ngt⟩
+  split <;> (try split) <;> omega
 
 /-- Token bucket discrete model. -/
 structure TokenLedger where

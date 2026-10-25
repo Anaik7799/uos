@@ -1,0 +1,105 @@
+{
+  "schema": "uos.claude-telegram-plan-review-erratum.v1",
+  "observed_utc": "2026-10-11T11:34:00Z",
+  "erratum_to": {
+    "artifact": "governance/planning/20261011-1123-claude-telegram-plan-review.json",
+    "sha256": "c3da9502e28f8ed0a6e0d4f6a3f9d9b17f97cf88e0cc410bfddb679b51c33afa",
+    "disposition": "PRESERVED IMMUTABLE AND NOT EDITED. This erratum is additive per INV-PROV-03."
+  },
+  "author": {
+    "actor": "claude-telegram-20261011",
+    "session_id": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "authority": "uos/telegram-tools/20261011-1115 CLAUDE_PLAN attempt 1, already completed; this erratum is advisory and claims no new task",
+    "trigger": "Root correction, independently verified before acceptance"
+  },
+
+  "retraction": {
+    "retracted_text": "t0_minimal_recommendation.step_1_clear_the_observation_hold described checker.ml reclaim as 'Exact-set, per-task' and step_2 concluded 'no_change_needed'.",
+    "verdict": "BOTH WRONG. The existing reclaim is a SINGLE binding, not a set. The 'no change needed' conclusion is falsified by a committed negative test.",
+    "my_error": "I read reclaim_matches in isolation and inferred set semantics from the fact that it matches one task exactly. I did not read its CALLER. The predicate is exact per binding; the plumbing admits exactly one binding.",
+    "independently_verified_evidence": {
+      "checker.ml:171-172": "let exact_reclaim = Option.fold ~none:false ~some:(fun binding -> reclaim_matches ~now_ns binding t) reclaim — Option.fold over ONE optional binding. For any other expired executing task the guard at 173-175 still fires 'executing lease is missing or expired at this observation'.",
+      "validate.ml:104": "let run_audit ?active ?reclaim path selected — ?reclaim is a single (task,worker,attempt,lease) tuple, not a list.",
+      "validate.ml:244-245": "| [_;\"--reclaim-preflight\";path;task;worker;attempt;lease] -> run_audit ~reclaim:(task,worker,int_of_string attempt,Int64.of_string lease) path (Some task) — scalar arguments, one task.",
+      "adversarial.ml:192-194": "check \"reclaim preserves other expired task HOLD\" (Checker.coherence ~reclaim:binding ~now_ns:1000L [executing;other_exec] [expired;{expired with id=\"b\"}] <> []) — a COMMITTED test asserting that with TWO expired tasks the non-bound one STILL holds."
+    },
+    "consequence_for_our_case": "uos/telegram-runtime/20261001-1150 has TWO expired executing tasks. A single-binding --reclaim-preflight can exempt at most one; the other necessarily yields HOLD. My step 1 cannot pass for either task, because neither can be preflighted without the other holding. The existing mechanism is INSUFFICIENT and a bounded adapter IS required."
+  },
+
+  "what_survives_from_the_original_review": [
+    "C1 non-injective compute_request_digest — UNAFFECTED, collision independently reproduced, key_valid length-only at telegram_store.ml:692.",
+    "C2 non-transactional initialize_new — UNAFFECTED.",
+    "C3 reservation_delta is bounded storage-capacity accounting, AGY characterisation overstated, bounds must not be removed — UNAFFECTED.",
+    "C4 AGY model self-report conflict, E3/F6, barred from certifying admission — UNAFFECTED.",
+    "C5 Telegram rate constants unverified — UNAFFECTED.",
+    "C6 census 17 completed / 7 available / 2 executing; reclaim is not resolution and the plan is independently blocked by seven undone tasks — UNAFFECTED and now MORE load-bearing, because the recovery is costlier than I stated while the completion benefit remains zero.",
+    "Step 2 sa_plan_store.ml:2198-2280 CAS admits expired-executing and increments attempt — STILL CORRECT as a claim mechanism. What was wrong was concluding that NOTHING needed building.",
+    "Step 3 quiescence evidence prerequisite — STILL REQUIRED and unchanged. Expiry is a point-in-time observable; liveness is a property.",
+    "RAW SQL RESET and BLANKET EXPIRY WAIVER remain REFUSED."
+  ],
+
+  "corrected_t0": {
+    "verdict": "A MINIMAL SET-OBSERVATION ADAPTER IS REQUIRED. Still no SQL reset and no expiry waiver.",
+    "adapter_specification": {
+      "name": "set-scoped read-only expired reclaim observation",
+      "owner": "AGY implements; root tests independently",
+      "surface_change": "Generalise ?reclaim from a single binding to a BINDING SET, threaded through Checker.coherence, Checker.reclaim_projection and Validate.run_audit, with a new CLI form carrying the full list. The existing single-binding CLI form SHOULD remain, so current callers and the committed adversarial expectations for the one-binding case stay meaningful.",
+      "acceptance_predicates": [
+        "FULL-PLAN COMPLETENESS: the supplied set must equal EXACTLY the set of expired executing tasks in the plan at observation. A missing expired row is refused; an extra binding is refused. This is the property that makes a set safe where a sequence of single exemptions would not be.",
+        "REJECT MISSING: any expired executing task in live plan with no binding -> HOLD, named.",
+        "REJECT EXTRA: any binding whose task is not an expired executing row -> HOLD, named.",
+        "REJECT LIVE: a binding whose lease > now_ns -> HOLD. Unexpired means not reclaimable.",
+        "REJECT DUPLICATE: two bindings for the same task_id -> HOLD.",
+        "REJECT MISMATCHED: per-binding, retain the full existing reclaim_matches quadruple exactly — id, worker, attempt in [1,1000000), lease > 0 and <= now_ns and = t.lease, t.completed = None, not t.result_present.",
+        "PRESERVE EVERY OTHER HOLD: dependency divergence, plan completeness, available-task ownership inconsistency and completion-record validity must continue to fire. The adversarial checks 'reclaim preserves changed dependencies HOLD' and 'reclaim preserves full plan completeness HOLD' must still pass unchanged.",
+        "NO ELIGIBILITY GRANT: a reclaimed-observed task must remain ineligible for ranking, preserving 'reclaim does not make blocked task eligible'.",
+        "ORDINARY PATHS UNCHANGED: --preflight and --active-check keep strict behaviour with no reclaim argument. No change to their semantics."
+      ],
+      "immutability_requirement": "Capture an immutable BEFORE plan snapshot at observation and an AFTER snapshot, both digested, and refuse if the live plan changed between them — generalising validate.ml:129 'Sa-plan changed during reclaim preflight' to the whole set rather than one binding.",
+      "effect_discipline": [
+        "The adapter is READ-ONLY. It creates no lease and makes no expired attempt executable — the invariant stated in checker.ml:134-136 must be preserved verbatim for the set form.",
+        "Then: canonical sequential claims ONLY, via tools/sa-plan task claim, one task at a time.",
+        "NO task effects of any kind until EVERY expired row in the set has been reclaimed.",
+        "After all reclaims, run an exact NEW-OWNER --active-check per task with the new worker and new attempt. The old owner must never appear in an active check."
+      ],
+      "required_negative_tests": [
+        "two expired tasks, set of two -> PASS (the case the current single binding cannot express)",
+        "two expired tasks, set of one -> HOLD naming the missing task",
+        "set containing one live task -> HOLD",
+        "set containing a duplicate task_id -> HOLD",
+        "set with a correct task but wrong attempt, wrong worker, or off-by-one lease -> HOLD",
+        "set correct but a dependency uncompleted -> HOLD retained",
+        "set correct but plan incomplete -> HOLD retained",
+        "plan mutated between before/after snapshot -> HOLD",
+        "after reclaim, active-check with the ORIGINAL worker -> HOLD"
+      ]
+    },
+    "exact_expired_quadruple_list_for_this_plan": {
+      "plan_id": "uos/telegram-runtime/20261001-1150",
+      "observed_now_ns": "1791718104174550086",
+      "completeness_claim": "At observation these are ALL AND ONLY the expired executing rows in this plan: 26 tasks total, 17 completed, 7 available, 2 executing. The adapter must independently re-derive this set and refuse if it differs.",
+      "bindings": [
+        {"task_id": "FORMAL_FIX", "worker": "codex-telegram-admission-20261001", "attempt": 1, "lease_until_ns": "1790862250536791626", "expired_days_approx": 9},
+        {"task_id": "STORE_TRANSPORT_REVIEW", "worker": "codex-admission-review-20261001", "attempt": 1, "lease_until_ns": "1790862377544275998", "expired_days_approx": 9}
+      ],
+      "ns_representation_warning": "lease values are given as STRINGS. They exceed 2^53 and a JSON number loses precision — I demonstrated this defect on myself earlier in this plan by truncating 1791721501749362265 to ...200 in JS."
+    },
+    "unchanged_prerequisite": "Quiescence evidence for codex-telegram-admission-20261001 and codex-admission-review-20261001 is STILL BLOCKING and is not satisfied by the adapter. The adapter changes what the gate can express, not what is known about the old owners."
+  },
+
+  "process_finding": {
+    "id": "P1",
+    "observation": "This is the second time in this plan that reading a predicate without reading its caller produced a wrong conclusion of mine. The first was Object.assign over a value whose type I had not checked. Both were caught by someone else, not by me.",
+    "generalisation": "A guard's strength is a property of the call site, not of the predicate. reclaim_matches is exact; the plumbing is single. Quoting the predicate and calling the mechanism 'exact-set' conflated the two.",
+    "mitigation_for_reviewers": "When citing a guard as sufficient, cite its caller and its negative tests, not the predicate alone. The committed adversarial.ml test contradicted my conclusion and was available to me before I wrote it."
+  },
+
+  "limits": [
+    "Source reading only. No build, no test execution, no native apply, no SQL write, no claim on FORMAL_FIX or STORE_TRANSPORT_REVIEW.",
+    "No shared portfolio mutation and no production mutation.",
+    "The adapter specification is UNIMPLEMENTED and UNTESTED by me; it is advisory.",
+    "Deviations from the original review stand unamended: python3 misuse, no development.bounded wrapper, --active-check not run by me, and the shared-portfolio corruption I caused and root repaired.",
+    "Erratum delivered != approval. No admission."
+  ],
+  "tags": ["#fractal-l0", "#fractal-l3", "#fractal-l9", "#zero-muda", "#stamp-stpa"]
+}

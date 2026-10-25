@@ -1,0 +1,386 @@
+{
+  "schema": "uos.telegram-numeric-candidate.v1",
+  "observed_at": "2026-10-11T20:29:48.652Z",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "FORMAL_FIX",
+  "attempt": 3,
+  "worker": "codex-telegram-20261011",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-telegram-formal-20261011",
+  "change_id": "uuuxtmoltkvqsnwxyvxkswuurmzurrrx",
+  "candidate_commit": "d75fe43304baf32f611cf775a510e676535f0dc1",
+  "parent_main": "a8adcc6958e5c2378678b56adf9d5d14f44f02b3",
+  "status": "TESTED_CANDIDATE_PENDING_INDEPENDENT_REVIEW",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/lyapunov_proof.gleam",
+      "sha256": "5007fab49c37780896ad9a26fa5a250fb39ab66da15549dfc8b176b214cd18a9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/sheaf_cohomology.gleam",
+      "sha256": "7b9c6b066562e8d2b8b20fe739900a70dc1f614da7bc6bff68bcd99b05dea209"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ha_lyapunov_proof_test.gleam",
+      "sha256": "0f74c528afcb7b01e506b665ab211a933d73949e0f6d419366548c3e317f9ea2"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/numeric_contract_test.gleam",
+      "sha256": "6c355119d2633ccb7f4ce37cf88c73f890a81baeda7d85009442b3ee86bfb155"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/numeric_legacy_boundary_test.gleam",
+      "sha256": "465c1a9e4263634a244850dc1d3dffbd9f541ffb22d6b4dcdd9472c1110329f1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/sheaf_cohomology_test.gleam",
+      "sha256": "625e32f77958914daef1006907f40dbfa4f1ae0be559f36a77b6e926e04eec02"
+    },
+    {
+      "path": "formal/lean/AgenticCoordination.lean",
+      "sha256": "7ab1e32798b593e5e5f0b18b15a27002a913df00655393427705059d34542316"
+    },
+    {
+      "path": "formal/lean/AgenticJournal.lean",
+      "sha256": "77f0012ef4327106a62b4db3a583058f183c849755e710470f43b0c0ae92f8cd"
+    },
+    {
+      "path": "formal/lean/Algebraic_Atlas_Intent.lean",
+      "sha256": "6f768b23a98424ba85efea9b36685f6b065298e120c93e73f66e4775a72f0ae3"
+    },
+    {
+      "path": "formal/lean/All_Features_Runtime_Implementation.lean",
+      "sha256": "a312062b9b23a7df78332a24829fa0eb65aba3c052caf7b763d260535b8153ef"
+    },
+    {
+      "path": "formal/lean/Autoscaler_Stability.lean",
+      "sha256": "bba4ddf4a9fe05e902782e2ec4bc7c52756335a3e9d274c56bc5cfa60886b9c4"
+    },
+    {
+      "path": "formal/lean/BrowserStateMachineInvariants.lean",
+      "sha256": "634cdbe8f239f4480b97d98ecbc9aac126ec6f073edb179212d43603ea58c87c"
+    },
+    {
+      "path": "formal/lean/Burst_Work_Stealing_And_RDMA_Offload.lean",
+      "sha256": "542be3a40c556a377c4a764245d8acfdb5b3aea4036ab895c9fc9290d2f32096"
+    },
+    {
+      "path": "formal/lean/CRDT_Lattice_Algebra.lean",
+      "sha256": "e6640bd569991c13da243ee612de8fd13a5516e03d6fcb528fa809912a49aa12"
+    },
+    {
+      "path": "formal/lean/CRDT_SEC.lean",
+      "sha256": "5b15f41a5915876ce7f0a336c1079b8f30d2780763dd4162c3d24dc832eee75d"
+    },
+    {
+      "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+      "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859"
+    },
+    {
+      "path": "formal/lean/Century_Harmony.lean",
+      "sha256": "7e24cf959dc73e9e01f9684a5d6643642c972748dc888c109a446a6f3901b962"
+    },
+    {
+      "path": "formal/lean/Chaos_Containment.lean",
+      "sha256": "7133abc4bcfe8a992a9674f415f54b4fb7cae13c440c2a66849e56f57c15da2f"
+    },
+    {
+      "path": "formal/lean/ConcurrentFractalReload.lean",
+      "sha256": "29ca6dbfcdc2c5a693bfb909186bd77b5217ae58ec9446fb52049c95cb67e4d4"
+    },
+    {
+      "path": "formal/lean/Constitutional_Invariants.lean",
+      "sha256": "092d83e5d15448f103f8067a5f1665ec9bba72df78b9df6d2f24658abb85466c"
+    },
+    {
+      "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+      "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb"
+    },
+    {
+      "path": "formal/lean/Denotational_Atlas_Cohomology.lean",
+      "sha256": "70d74fe26ba1f55ada66d9562de2d3a80d0504cb3bbbe46e4054aa587864d4f9"
+    },
+    {
+      "path": "formal/lean/Denotational_Intent_Design.lean",
+      "sha256": "fb22176481eff687b8265a606a8db3cfddca4cdff94935d9834c94afb5cdd069"
+    },
+    {
+      "path": "formal/lean/Denotational_Intent_Functor.lean",
+      "sha256": "d368b386c25646c0cbbd145506e406f400498825bdbb507530c99a49f19df3c4"
+    },
+    {
+      "path": "formal/lean/DynamicHotReload.lean",
+      "sha256": "6263efcf24dd082a9dd1edf049f89629d581062a942003edf807148d4555297e"
+    },
+    {
+      "path": "formal/lean/Ecology_Capability_Twin.lean",
+      "sha256": "2178270d36e406ec0003f0edd4576a2ba023b26a8c0af49ce4346769acc698af"
+    },
+    {
+      "path": "formal/lean/Evolutionary_Categorical_Composability.lean",
+      "sha256": "73ef686866dbe047cc14dc79cc70336f5d959aef39e733903ef8f8ea6818420a"
+    },
+    {
+      "path": "formal/lean/Fast_OODA_Convergence.lean",
+      "sha256": "5ce6875352cb16e29b81463ed576e11be2f46ed9b9d9a93f201828e495164bf0"
+    },
+    {
+      "path": "formal/lean/Fifteen_Evolutionary_Cycles.lean",
+      "sha256": "d749cd9e791f4933d9f9f847beaf8dc1c340fdcad4ba562ac2154e31a24c1bf7"
+    },
+    {
+      "path": "formal/lean/Fifteen_SciViz_Regression_Cycles.lean",
+      "sha256": "86ac281219729f65a23064eb49aade775d1e814c518199e871321bd417e3a363"
+    },
+    {
+      "path": "formal/lean/Fifteen_Unbounded_Fractal_Aspect_Passes.lean",
+      "sha256": "a216e0ef7b37d262b268bb1b47f584c0c772eea32eeb7dd40daf2a5343f9c2ac"
+    },
+    {
+      "path": "formal/lean/Five_BDD_Demo_Evolutionary_Cycles.lean",
+      "sha256": "a3eb8db63329f8850c657805cd854efe58c9aa9f8b1d1ae048570c6883b9338e"
+    },
+    {
+      "path": "formal/lean/Five_Component_Deep_Design_Evolutionary_Cycles.lean",
+      "sha256": "db1a11a2f9a5d30b7a257840ce91dbb7b575f0e0c496e39f03215a2cc862609b"
+    },
+    {
+      "path": "formal/lean/Five_Component_Inventory_And_Requirements_Cycles.lean",
+      "sha256": "f1f14f8df2f31286a06a9fb04cb1d60112140c0c0385436c8181bace43a774de"
+    },
+    {
+      "path": "formal/lean/Five_Control_Center_Evolutionary_Cycles.lean",
+      "sha256": "fa3f2e215f210b265ae763a78d8361063239decf8f4dcb32b209b2bce8942a7a"
+    },
+    {
+      "path": "formal/lean/Five_Cycle_Category_Theoretic_Transmutation.lean",
+      "sha256": "8fcff3dd93ae91e4c8cf8c8d6b0ff55eb9746ce7eaa9cc8648fdf59a748a02da"
+    },
+    {
+      "path": "formal/lean/Five_Denotational_FPrime_Evolutionary_Cycles.lean",
+      "sha256": "9e5af0b9b5f642e6747dd2401e77abbff21084c3542b1e153fcc8894e3cd7752"
+    },
+    {
+      "path": "formal/lean/Five_Fractal_Hierarchical_Denotational_Cycles.lean",
+      "sha256": "73c112eeece2e52ec8dc8e08769ddea50c48b6abbeb30ec59b423a16d01c0a8c"
+    },
+    {
+      "path": "formal/lean/Five_Lustre_WebUI_Evolutionary_Cycles.lean",
+      "sha256": "749de9c86d0603c4a1df07fbc2f37fc3437f960e43e2841656fab7e0588b83ae"
+    },
+    {
+      "path": "formal/lean/Five_More_Cycles_Category_Theoretic_Transmutation.lean",
+      "sha256": "5dfa67ff35c50dddbb009ca971fce00c9760536ff5b883dfa7289ae9cb8521a7"
+    },
+    {
+      "path": "formal/lean/Five_SciViz_Library_Evolutionary_Cycles.lean",
+      "sha256": "dd07b270511b2e4aa20deb6f3e0cee9039ff02b5dd92a9783a79c33052ee1668"
+    },
+    {
+      "path": "formal/lean/Fractal_Holonic_Composability.lean",
+      "sha256": "3f2a862ef23ab1dea5bf2de8c60120e74d22ccbadc6d015bbce7cce8244fc19e"
+    },
+    {
+      "path": "formal/lean/Fractal_Triad_Matrix_Invariants.lean",
+      "sha256": "4f3817cccf486326ca58f5a95c23573ae4b0d07f6e3e643ae2207ea3fb28b975"
+    },
+    {
+      "path": "formal/lean/Full_Feature_Testing_Invariants.lean",
+      "sha256": "060daa591bb73be84be11a278a856ade61829d3f8769ad2b9afb147c37f972c0"
+    },
+    {
+      "path": "formal/lean/GGPlot2_Denotational_Atlas.lean",
+      "sha256": "cab401e2ae633e6feb58f82dfef328bfe54e5c342b5e2c66213fe37f59b860ad"
+    },
+    {
+      "path": "formal/lean/GGPlot2_Extensions_Verification.lean",
+      "sha256": "1764a6eda6fdcf2c2e74b418e310cff2a25bb4b621e54d59444aac51f22f0b06"
+    },
+    {
+      "path": "formal/lean/Gospel_Rete_Consistency.lean",
+      "sha256": "01b62c0f47c9105e9d9d0f163b5795ffc8d69fcf20c333e68917d5f1cfa7d4f7"
+    },
+    {
+      "path": "formal/lean/Homeostasis_Evolution.lean",
+      "sha256": "edc6dd4757979097fd4142e2783a19bb8cb898a0a7f5d7a503a6d599abc1eced"
+    },
+    {
+      "path": "formal/lean/IntentSafety.lean",
+      "sha256": "e38bac4849c96c2a742486e02fd4df2e16c71d62340f13ce2c7b20bb52203035"
+    },
+    {
+      "path": "formal/lean/KnowledgeGraphTopology.lean",
+      "sha256": "2c663d92ba670f9eb67a57cdcd90b208aa33da25b056f097f5ab969f8deeee60"
+    },
+    {
+      "path": "formal/lean/LinkGraphInvariants.lean",
+      "sha256": "98ff8046fcc00691fa3fdb6215d02792b74e9101b2b8686c78d52e1abec3996f"
+    },
+    {
+      "path": "formal/lean/Lyapunov_Stability.lean",
+      "sha256": "3f63aba3c49402c49c97a330706d728ed9d12dd1922df2e36edff1dc70ba2a4a"
+    },
+    {
+      "path": "formal/lean/Master_Feature_Composability_Evolution.lean",
+      "sha256": "a126679b133a94fc12c418282432323ead1c1e8cf483cba831672e6d49397c5c"
+    },
+    {
+      "path": "formal/lean/MirageReceiptAdmission.lean",
+      "sha256": "a6ed1b1adb82ea863d53b86182c391da37db826069a17cc3b1e3cc629b91953f"
+    },
+    {
+      "path": "formal/lean/OODA_Convergence.lean",
+      "sha256": "22caaf967ad423aaebceaeb880f56103c9a5244bd10b5b124e132e96b4bc87ca"
+    },
+    {
+      "path": "formal/lean/POODAVR_FPrime_Mapping.lean",
+      "sha256": "763d99f108f10969b643adf1f82b1ebc462b55c61c484a06c3fecbe558af70ca"
+    },
+    {
+      "path": "formal/lean/POODAVR_FPrime_Semantics.lean",
+      "sha256": "63d18700d4153ee9a014cc1423eb5c2a1aac3d4096089cd793ea0e958f4bf77b"
+    },
+    {
+      "path": "formal/lean/Predictive_Forecasting_Categorical_Semantics.lean",
+      "sha256": "e12fb6c967909af3ff72fc72e70d04392e3050516e750e953395eb7b32e0178f"
+    },
+    {
+      "path": "formal/lean/Preflight_Verdict_Algebra.lean",
+      "sha256": "3816879830d34c63bc40af0a09b4cc73cdc660ff4c17a135bebc73996265642d"
+    },
+    {
+      "path": "formal/lean/Quorum_Consensus.lean",
+      "sha256": "5a319c43793dc8fe821aa0fb7afb5ef2fb9ee95973149f6ba271b1138c9c647a"
+    },
+    {
+      "path": "formal/lean/RAG_Cache_Consistency.lean",
+      "sha256": "c8b0a16e900f5f6a4f94c8ae572270b4fb41ba31bab2cecf840632c5901074a7"
+    },
+    {
+      "path": "formal/lean/SciViz_167_Comprehensive.lean",
+      "sha256": "938758b21aa4ade9db04d86d4cf1960b5d3874587da1d810cbc695ff1d6cde71"
+    },
+    {
+      "path": "formal/lean/SciViz_All_167_Complete.lean",
+      "sha256": "3227a6c8ee058b2ff3beb242db03d2e733d3e02565e879d4187ac9eadee6bb3d"
+    },
+    {
+      "path": "formal/lean/SciViz_Browser_Verification_Invariants.lean",
+      "sha256": "40b196f0439d9f3d4931989c3ee18a2f5eeda4727eee93e96f6db283d6c98965"
+    },
+    {
+      "path": "formal/lean/SciViz_Fifteen_Modalities_Verification.lean",
+      "sha256": "dd592e6c9f99a7d5f1f6d845e8135c10d32b3f8d0312f96498e812d27ee97f3f"
+    },
+    {
+      "path": "formal/lean/SciViz_Interactive_Filtering.lean",
+      "sha256": "b440013cf94b189070df1bc0ad53b46fb2df8b3ccc02307dd8249a9d495cbb14"
+    },
+    {
+      "path": "formal/lean/Sheaf_Presheaf.lean",
+      "sha256": "9b8d0f35eda1b429ec1fb7c2b36600833310069b23eeb207efad0166bd2acb2d"
+    },
+    {
+      "path": "formal/lean/Substrate_Categorical_Mechanics.lean",
+      "sha256": "83ed198afb58d8cbec1c8bbd5c03242e55aff8c792251498d6c425ebebddb10e"
+    },
+    {
+      "path": "formal/lean/Systemic_Categorical_Composability.lean",
+      "sha256": "472614f9cc044f8dd18a75e5ee395f96e79ec1cc1ddb033f6b862a1dec4fb34a"
+    },
+    {
+      "path": "formal/lean/Telegram_Numeric_Contract.lean",
+      "sha256": "3969bf06d22de7203a7be875764e5fba3aa48e62a614efaca8cb1d7de186a53a"
+    },
+    {
+      "path": "formal/lean/Telegram_Numeric_Counterexamples.lean",
+      "sha256": "280ea7e679b74eb81366c0a8297e3def0ca9752a9f94ff2de528c87883fb784a"
+    },
+    {
+      "path": "formal/lean/Topos_Heyting_Double_Category_Transmutation.lean",
+      "sha256": "af1bbb36f9ca4a4caa92e659e014914e52df12fb2c18412f9df2dc352ade32b0"
+    },
+    {
+      "path": "formal/lean/Traceability.lean",
+      "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c"
+    },
+    {
+      "path": "formal/lean/TriLanguage_Zenoh_ETS_Invariants.lean",
+      "sha256": "13cda6c4974690258e2069a0848dd786742314880d3a08b0763920451fdfcc78"
+    },
+    {
+      "path": "formal/lean/TwoLattice_Concurrency.lean",
+      "sha256": "47157a1f33af78caa2e166fa3a811af3d62b1049061ca11db34677b31b0bbc0d"
+    },
+    {
+      "path": "formal/lean/TwoLattice_STM.lean",
+      "sha256": "bc0a280b22516a5b0b3cd57c3572f10db484564f74bd74fc8cf97be7ce64b9ef"
+    },
+    {
+      "path": "formal/lean/UnifiedWebSemantics.lean",
+      "sha256": "97b6e4e1d9c5bf2bda43bd6c967b4a3f151b711b1b639af363de0c1a4d247f84"
+    },
+    {
+      "path": "formal/lean/Universal_Categorical_Composability.lean",
+      "sha256": "860184362f88b21211955167bfa36c575209a909c299b99f335eeb7809362ad7"
+    },
+    {
+      "path": "formal/lean/WorkStealing_Fairness.lean",
+      "sha256": "7f9d62aeaa1423dffd5b98833b25e0159fc9a025464921f86dc07ae1e1ae3322"
+    },
+    {
+      "path": "tools/validation/telegram_numeric_axioms.js",
+      "sha256": "61b480d78dbe8bb7aea5525977170a9eb0dad1566e964ba0ba2ef5811aa92a96"
+    },
+    {
+      "path": "tools/validation/telegram_numeric_candidate.js",
+      "sha256": "7df984af0e2a4a380b0783c27ad6e46133ddbc6d927336472adcaf55cecfcd31"
+    },
+    {
+      "path": "tools/validation/telegram_numeric_lean.js",
+      "sha256": "738abaf9e6e72603db9927669baf948cd0a20b9f54782a16c74ec6f95fbf1d49"
+    }
+  ],
+  "verification": {
+    "corpus": {
+      "path": "var/recovery-runtime/20261011-2028-numeric-bound-lean/results.json",
+      "sha256": "f2b11438a48dcca7c004aa1e52a6d6d509ab05cd2a54c45b025867a0d4599a6a",
+      "passed": 73
+    },
+    "axioms": {
+      "path": "var/recovery-runtime/20261011-2028-numeric-bound-lean/axiom-results.json",
+      "sha256": "bae30028ffaab5105b7bb448d9a1409a70fb21c2fa1d0cabee777d2416c326f6",
+      "modules": 73,
+      "theorem_closures": 4048,
+      "allowed_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    "runtime": {
+      "path": "var/recovery-runtime/20261011-2026-numeric-reviewed-comments/results.json",
+      "sha256": "5d80a2ab3444cf723b99305b084545a2532efdbd20beaefe1afb2b0122c5817c",
+      "passed": 51
+    },
+    "baseline": "var/recovery-runtime/20261011-2018-numeric-baseline-final/results.json",
+    "mutants": [
+      "var/recovery-runtime/20261011-2018-numeric-mutant-empty-final/results.json",
+      "var/recovery-runtime/20261011-2018-numeric-mutant-scale-final/results.json"
+    ]
+  },
+  "negative_evidence": [
+    "var/recovery-runtime/20261011-2004-formal-numeric-candidate/lean-initial.log",
+    "var/recovery-runtime/20261011-2010-numeric-baseline/results.json",
+    "var/recovery-runtime/20261011-2010-numeric-candidate/results.json"
+  ],
+  "limits": [
+    "Exact rational model does not prove Float identities; five preserved claims are kernel-disproved",
+    "Bounded finite observation is not global cohomology or physical asymptotic stability",
+    "Public legacy kernels retain documented preconditions; no production caller migrated",
+    "Private component build reuses existing compiled dependency metadata",
+    "Independent review, global gates and main integration remain pending"
+  ],
+  "journal": "docs/journal/20261011-2029-telegram-numeric-candidate-journal.md"
+}

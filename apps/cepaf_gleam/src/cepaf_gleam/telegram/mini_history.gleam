@@ -82,7 +82,11 @@ pub fn chunks(text: String) -> List(String) {
 }
 
 fn turn_fields(turn: conv.Turn, index: Int) -> List(#(String, String)) {
-  let prefix = "Exchange " <> pad(index + 1) <> " update " <> int.to_string(turn.update_id)
+  let source = case turn {
+    conv.Turn(id, ..) -> " update " <> int.to_string(id)
+    conv.MiniTurn(id, ..) -> " Mini request " <> id
+  }
+  let prefix = "Exchange " <> pad(index + 1) <> source
   list.append(
     list.index_map(chunks(turn.prompt), fn(text, part) { #(prefix <> " · 1 You · " <> pad(part + 1), text) }),
     list.index_map(chunks(turn.reply), fn(text, part) { #(prefix <> " · 2 Assistant · " <> pad(part + 1), text) }),

@@ -1,0 +1,69 @@
+{
+  "observed_at": "2026-10-11T17:17:11.024Z",
+  "task": "SERVICE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 2,
+  "verdict": "HOLD",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate": {
+    "path": "var/recovery-runtime/20261011-1705-claude-http-abort-fix/src/telegram_http_ffi_candidate.erl",
+    "sha256": "91aec85bc02469c83e10e8bda6001e73174b922ef9f6f91ff5b771cdef4ce436"
+  },
+  "evidence": [
+    {
+      "path": "var/recovery-runtime/20261011-1712-http-candidate-review/manifest.json",
+      "sha256": "64995ba511aa9ead0410623d7807ad525617a38e7e80fb9b885631c7a2af85be"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1712-http-candidate-review/cold-unreached-results.txt",
+      "sha256": "d99bd99791baf65af6fdc6f56aa165729ddb1c0979f4a1c6a57939c61ac48186"
+    },
+    {
+      "path": "var/recovery-runtime/20261011-1712-http-candidate-review/warm-results.txt",
+      "sha256": "8734f70eb6d7df94d717ab3291a285e4e117966745fc7d50ce99b5902ae5a2eb"
+    }
+  ],
+  "findings": [
+    {
+      "id": "NORMAL_CLOSE",
+      "actual": "Valid complete HTTP200 with Connection:close returns ambiguous_outcome tuple conn_down normal; guardian consumes connection termination before worker delivers parsed result",
+      "status": "REPRODUCED"
+    },
+    {
+      "id": "FFI_ERROR_TYPE",
+      "actual": "answer_callback_query crashes badarg formatting {conn_down,normal} as binary; request/6 promises String error",
+      "status": "REPRODUCED"
+    },
+    {
+      "id": "EARLY_PUBLISH",
+      "actual": "finish/6 sends http_result before cleanup; not a verified-cleanup response",
+      "status": "SOURCE_OBSERVED"
+    },
+    {
+      "id": "SILENT_REAP_UNKNOWN",
+      "actual": "reap/1 and await_down/2 return ok when DOWN was not confirmed",
+      "status": "SOURCE_OBSERVED"
+    },
+    {
+      "id": "HANDOFF_DEADLINE",
+      "actual": "fixed1000ms handoff independent of request deadline",
+      "status": "SOURCE_OBSERVED"
+    }
+  ],
+  "limits": [
+    "Cold run omitted required bootstrap and is preserved as unreachability, not response-semantic evidence",
+    "Warm run reached actual responses, then callback failure stopped later cases; no blanket17-case pass",
+    "Historical lifecycle dependency is not current lifecycle evidence",
+    "Private candidate not adopted into root HTTP source"
+  ],
+  "forecast_resolution": {
+    "source": "docs/journal/20261011-1601-telegram-recovery-dashboard.md",
+    "probability": 0.6,
+    "horizon": "2026-10-11T17:15:00Z",
+    "event": "Current HTTP orphan falsifier passes against newly frozen AGY candidate",
+    "outcome": 0,
+    "brier": 0.36,
+    "reason": "By horizon root AGY candidate b7011269 still fails orphan test; Claude candidate has independent response/type failures and is not adopted",
+    "no_reinterpretation": "A producer-only prototype pass does not satisfy specified AGY candidate acceptance"
+  }
+}

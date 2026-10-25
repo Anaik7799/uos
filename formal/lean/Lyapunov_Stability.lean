@@ -13,11 +13,10 @@ namespace UOS.Stability
 def lyapunov_V (x : Float) (x_star : Float) : Float :=
   (x - x_star) * (x - x_star)
 
-/-- Equilibrium property: V(x*) = 0. -/
-theorem lyapunov_equilibrium (x_star : Float) :
-    lyapunov_V x_star x_star = 0.0 := by
-  dsimp [lyapunov_V]
-  ring_nf
+/-- UNPROVED / FALSE for unrestricted Float: infinity-infinity is NaN.
+    Historical universal claim retained as a proposition, not proof evidence. -/
+def lyapunov_equilibrium_unproved_claim : Prop :=
+  ∀ x_star : Float, lyapunov_V x_star x_star = 0.0
 
 /-- Discrete-time contraction step invariant. -/
 def is_contractive_step (v_curr : Float) (v_next : Float) (alpha : Float) : Prop :=

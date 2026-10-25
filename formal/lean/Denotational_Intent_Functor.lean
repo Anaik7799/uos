@@ -102,34 +102,19 @@ theorem bottom_absorption (i : Intent) :
 /-- Theorem: Unauthorized Execution Fails Closed to Bottom -/
 theorem unauthorized_fails_closed (i : Intent) (s : State) (hAuth : i.authority ≠ "sa-plan") :
     evaluateMonadic i (some s) = none := by
-  unfold evaluateMonadic bindState validateAuthority
-  have hCond : (i.authority == "sa-plan") = false := by
-    apply beq_eq_false_iff_ne.mpr hAuth
-  simp [hCond]
+  simp [evaluateMonadic, bindState, validateAuthority, hAuth, MState]
 
 /-- Theorem: Root NVMe Drive Mutation Fails Closed to Bottom -/
 theorem root_drive_lock_fails_closed (i : Intent) (s : State) (hDrive : i.targetDriveSerial = "25503L801736") :
     evaluateMonadic i (some s) = none := by
-  unfold evaluateMonadic bindState validateStorageLock
-  by_cases hAuth : i.authority == "sa-plan"
-  · simp [hAuth]
-    have hCond : (i.targetDriveSerial == "25503L801736") = true := by
-      apply beq_eq_true_iff_eq.mpr hDrive
-    simp [hCond]
-  · simp [hAuth]
+  by_cases h : i.authority = "sa-plan"
+  all_goals simp [evaluateMonadic, bindState, validateAuthority, validateStorageLock, h, hDrive, MState]
 
 /-- Theorem: Unapproved DAL-A Criticality Fails Closed to Bottom -/
 theorem unapproved_dal_a_fails_closed (i : Intent) (s : State) (hCrit : i.criticality = "DAL-A") (hGuard : i.guardianApproved = false) :
     evaluateMonadic i (some s) = none := by
-  unfold evaluateMonadic bindState validateGuardian
-  by_cases hAuth : i.authority == "sa-plan"
-  · simp [hAuth]
-    by_cases hDrive : i.targetDriveSerial == "25503L801736"
-    · simp [hDrive]
-    · simp [hDrive]
-      have hCritCond : (i.criticality == "DAL-A") = true := by
-        apply beq_eq_true_iff_eq.mpr hCrit
-      simp [hCritCond, hGuard]
-  · simp [hAuth]
+  by_cases ha : i.authority = "sa-plan"
+  all_goals by_cases hd : i.targetDriveSerial = "25503L801736"
+  all_goals simp [evaluateMonadic, bindState, validateAuthority, validateStorageLock, validateGuardian, ha, hd, hCrit, hGuard, MState]
 
 end UOS.Denotational.Monad

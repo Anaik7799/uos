@@ -1,0 +1,50 @@
+{
+  "schema": "uos.telegram-store-boundary-addendum.v1",
+  "observed_at": "2026-10-11T14:06:30Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "worker": "codex-telegram-20261011",
+  "attempt": 1,
+  "status": "HOLD",
+  "extends": "governance/planning/20261011-1431-telegram-store-draft-review.json",
+  "candidate": "Frozen consumer6f2d5e06 and codecfe9343b7; fresh private build",
+  "test_source": "var/recovery-runtime/20261011-1401-store-draft/store_boundary.erl",
+  "test_output": "var/recovery-runtime/20261011-1401-store-draft/boundary-results.txt",
+  "test_output_sha256": "6368636ccc2a1959949825d3fbe79830c47efbe841fb4d25922b338040a31e82",
+  "additional_cases": [
+    [
+      "watermark",
+      "Forged Watermark0 with actual offset11 version/hash accepts update5 and regresses persisted offset to6. Bind watermark encoded value to expected SHA too."
+    ],
+    [
+      "ingress-user",
+      "AcceptedEnvelope user_id0 persisted; validate all domain IDs, not only bot/update."
+    ],
+    [
+      "ingress-hash",
+      "AcceptedEnvelope text_hash bad persisted; validate hash format and actual raw_text digest, text bounds and directive."
+    ],
+    [
+      "replay-identity",
+      "RejectedUpdate same envelope hash but reason-a changed to reason-b accepted as known replay; bind persisted input verdict, not only InboxRecord fields."
+    ],
+    [
+      "domain-codec",
+      "Inbox record unrelated request ID, empty worker, epoch0 decoded successfully. Strict domain validators needed, not schema string alone."
+    ],
+    [
+      "duplicate-fields",
+      "Initializer response with duplicate generation fields accepted; strict JSON object key uniqueness required."
+    ],
+    [
+      "unknown-fields",
+      "Initializer response with unknown field accepted; exact response schemas required under adopted strict protocol."
+    ]
+  ],
+  "classification": "These extend the existing trust-boundary failure families; not seven unrelated root causes.",
+  "runtime_admission": "NOT_GRANTED",
+  "limits": [
+    "Private synthetic inputs only; no Telegram network traffic.",
+    "Typed public constructors are not an authority proof. Production ingress guard remains an additional independent control."
+  ]
+}

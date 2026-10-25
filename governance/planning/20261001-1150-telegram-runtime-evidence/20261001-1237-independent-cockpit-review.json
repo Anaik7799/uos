@@ -1,0 +1,112 @@
+{
+  "schema": "uos.independent-cockpit-review.v1",
+  "observed_utc": "2026-10-01T12:37:26Z",
+  "reviewer": "codex-admission-review-20261001",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "task": "COCKPIT_REVIEW",
+  "attempt": 1,
+  "verdict": "HOLD",
+  "application_admitted": false,
+  "production_changed": false,
+  "manifest_path": "governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1211-cockpit-visual-interaction-final.json",
+  "manifest_sha256": "287d40cb586745541317ce76d793edf080311f8d63548502de73b9dadf1d27e9",
+  "source_and_binary_manifest": [
+    {
+      "path": "tools/validation/restoration_browser_check.ml",
+      "sha256": "c5894cea3325e9a818db02fafdb7613c5b23a06ba99c0aea63cf9d10f25e707c"
+    },
+    {
+      "path": "apps/cepaf_gleam/priv/static/dashboard-grid.js",
+      "sha256": "df21fa7009fab7389014cd3ca70f36df8cb3ec8028a657713f63622461fdd176"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam",
+      "sha256": "36a482d3c1a2158e5271507d388c39a91397fa02ff0ed4c8115c9da949ae4376"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/restoration_browser_probe.gleam",
+      "sha256": "c07e3595df21fbdceb516b9f85d8b28ebc2b39ba27a33fdff8bdabdf8ab7a12c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam",
+      "sha256": "37b52449b5c43d574b054d2541269e9e731e18e7f1cd2b56b18ace92c07f69b9"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam",
+      "sha256": "2b8076b46763ee02a52e7416744c2ff697bd96b51b92cf7f59f2306a2a7728ac"
+    },
+    {
+      "path": "var/recovery-runtime/20261001-1203-cockpit-build/restoration_browser_check",
+      "sha256": "6b098f390e7fd1fb8f80b3ba7ec1d82d9141519439f82653fc3efd7a87cd2279"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P2",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/shell.gleam",
+      "lines": [
+        339,
+        390,
+        396,
+        400,
+        540,
+        546,
+        555,
+        560
+      ],
+      "problem": "Recovery scope guard removes only simulated range input. Shared enhancement still unconditionally renders green pulsing Mesh heartbeat without an observed heartbeat; performs legacy dashboard polling and announces Live data system active irrespective of response. Alt+Shift handler constructs random PROOF overlays on card elements. These behaviors contradict the recovery view's explicitly unverified live health/provenance scope.",
+      "fix": "When uos-recovery-cockpit is present, skip the legacy simulation, synthetic proof, live status and legacy polling enhancement block. Keep ordinary theme/navigation only if separately needed. Do not alter other routes in this bounded repair.",
+      "acceptance": [
+        "Root private profiles at390/1280 retain snapshot filter/Evidence/Tasks and18+provenance checks.",
+        "Assert absent c3i-health-dot and synthetic proof affordance; no dashboard polling request from recovery root over at least one polling interval.",
+        "Exercise Alt+Shift and confirm no synthetic PROOF overlay; no simulation timeline or enabled demo controls.",
+        "Preserve Mirage scoped contrast and existing network redirect/method/socket guards."
+      ]
+    }
+  ],
+  "independent_tests": {
+    "policy_falsifiers": {
+      "passed": 17,
+      "command": "var/recovery-runtime/20261001-1203-cockpit-build/restoration_browser_check --selftest"
+    },
+    "offline_browser_negative_controls": {
+      "passed": 6,
+      "command": "toolchains/opam-ocaml/bin/ocaml -I +unix tools/ecology_process.ml 30000 1048576 merged /home/an/NAS-setup/uos/var/recovery-runtime/20261001-1203-cockpit-build/restoration_browser_check --browser-selftest /opt/google/chrome/chrome",
+      "output": "PASS actual offline browser POST\nPASS actual offline browser forbiddenGET\nPASS actual offline browser externalGET\nPASS actual offline browser redirect\nPASS actual offline browser status500\nPASS actual offline browser wrongpage\nPASS 6 actual offline browser falsifiers\n"
+    },
+    "private_positive_profiles": "Author receipts examined; not independently rerun during this review."
+  },
+  "visual_review": {
+    "viewed": [
+      {
+        "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1230-mirage-mobile/20261001-1048-page.png",
+        "sha256": "2ce64f311586a7c8ea13851e39cce0ac12699526828e75d9dc7bf0cf8883b391"
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1230-cockpit-mobile/20261001-1048-page.png",
+        "sha256": "eac7ba82c0119fe2647d7c8e59a09fc0dd431dce72fc300aad2c7fac5ded6fc9"
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/governance/planning/20261001-1150-telegram-runtime-evidence/20261001-1230-cockpit-desktop/20261001-1048-page.png",
+        "sha256": "2f525a4307308b673f1228bbb472befd564958f748f7ac1e3e76ad8ad1bbe0e0"
+      }
+    ],
+    "observed": "Mirage light-on-dark tables readable; local wide-table scroll retained. Cockpit mobile/desktop recorded-task layout and explicit unverified requirements visible; snapshot framing truthful apart from shared-shell live affordance."
+  },
+  "limits": [
+    "No production deployment, operational API writes, canonical DB access or task changes.",
+    "No accessibility certification or whole-document contrast/layout proof.",
+    "Network helper counts forbidden requests and page errors; allowlisted dashboard GET can still occur and fail without causing HOLD.",
+    "Snapshot is mutable public recorded evidence, not active-agent/runtime admission.",
+    "Current six source SHA256 independently re-read and matched. Binary hash checked separately via bounded sha256sum because files.read refused binary file bound."
+  ],
+  "preserved_review_failures": [
+    "First hash batch reused Erlang bound variable B and failed after first digest; corrected batch matched all six source digests.",
+    "files.read refused the binary with regular_single_link_file_bound; did not bypass file read policy or modify source."
+  ],
+  "tags": [
+    "#fractal-l3",
+    "#zero-muda",
+    "#checklist-nav"
+  ]
+}

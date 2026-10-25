@@ -48,18 +48,16 @@ def scaleFactor (i j : Nat) : Float :=
 def transitionMorphism (i j : Nat) (x : Float) : Float :=
   x * scaleFactor i j
 
-/-- Theorem 1: Identity Morphism phi_ii(x) = x -/
-theorem transition_identity (i : Nat) (x : Float) :
-  transitionMorphism i i x = x * 1.0 := by
-  dsimp [transitionMorphism, scaleFactor]
-  have h : (Float.ofNat i + 1.0) / (Float.ofNat i + 1.0) = 1.0 := by sorry
-  rw [h]
+/-- UNPROVED / FALSE for unrestricted Nat indices: Float conversion may
+    overflow; infinity/infinity gives NaN. Retained proposition, NOT theorem. -/
+def transition_identity_unproved_claim : Prop :=
+  ∀ (i : Nat) (x : Float), transitionMorphism i i x = x * 1.0
 
-/-- Theorem 2: Cocycle Law phi_jk (phi_ij x) = phi_ik x -/
-theorem transition_cocycle (i j k : Nat) (x : Float) :
-  transitionMorphism j k (transitionMorphism i j x) = transitionMorphism i k x := by
-  dsimp [transitionMorphism, scaleFactor]
-  sorry
+/-- UNPROVED / FALSE even for indices0,2,4 and finite x=0.1:
+    rounding gives different output bits. Not replaced by an equivalent proof. -/
+def transition_cocycle_unproved_claim : Prop :=
+  ∀ (i j k : Nat) (x : Float),
+    transitionMorphism j k (transitionMorphism i j x) = transitionMorphism i k x
 
 /-- Čech 1-Coboundary delta phi (i, j, k) -/
 def cechCoboundary (i j k : Nat) (x : Float) : Float :=
@@ -67,11 +65,10 @@ def cechCoboundary (i j k : Nat) (x : Float) : Float :=
   let rhs := transitionMorphism i k x
   lhs - rhs
 
-/-- Theorem 3: Vanishing First Cohomology H^1(Atlas, F) = 0 -/
-theorem h1_cohomology_vanishing (i j k : Nat) (x : Float) :
-  cechCoboundary i j k x = 0.0 := by
-  dsimp [cechCoboundary]
-  sorry
+/-- UNPROVED / FALSE: the finite cocycle counterexample has nonzero residual;
+    infinite inputs also produce NaN. This is no claim about sheaf cohomology. -/
+def h1_cohomology_vanishing_unproved_claim : Prop :=
+  ∀ (i j k : Nat) (x : Float), cechCoboundary i j k x = 0.0
 
 /-- Denotational Intent Valuation Monad and Bottom Semantics -/
 inductive IntentState : Type where

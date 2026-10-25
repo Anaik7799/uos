@@ -1,0 +1,40 @@
+{
+  "schema": "uos.telegram-quiescence-design-review.v1",
+  "observed_at": "2026-10-11T14:33:21.751Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "STORE_DRAFT_REVIEW",
+  "status": "HOLD_REVISE_DESIGN",
+  "proposal": {
+    "path": "governance/planning/20261011-1630-telegram-store-quiescence-proposal.json",
+    "sha256": "b72d1a0494b2696bb9584585fb5db13316b92836744c1e4b4118c1f43ae01be8"
+  },
+  "findings": [
+    "124/125 cleanup does not locate commit boundary; lost response can follow durable COMMIT",
+    "126 and missing guardian exit cannot establish cleanup",
+    "flock does not prove absence of SQLite fcntl/WAL writers",
+    "A caller-computed witness SHA256 is not trusted lifecycle observation",
+    "New native fence command adds unnecessary protocol and schema work for the adopted cleanup-then-lookup path"
+  ],
+  "required_design": [
+    "Internally constructed opaque cleanup proof only from observed pinned guardian lifecycle",
+    "Proof binds exact config database/native hashes and exact canonical request/operation digest",
+    "Unknown helper exit/catch/timeout/126 never produces quiescence witness",
+    "Matching operation receipt proves original commit; absent receipt proves no commit only with appropriate cleanup evidence",
+    "Single-flight supervised owner prohibits duplicate in-flight operation dispatch and preserves fences",
+    "Returned body with domain-decode failure retains cleanup evidence and operation context",
+    "No automatic external send or blind retry"
+  ],
+  "acceptance": [
+    "Actual worker timeout before commit reconciles absent with cleanup witness",
+    "Actual postcommit lost response reconciles original receipt",
+    "Wrong database, operation digest or configuration refuses proof",
+    "Unknown cleanup remains held",
+    "Worker/group marker remains absent after cleanup",
+    "Operation result/receipt and generation CAS remain consistent"
+  ],
+  "limits": [
+    "Proposal feedback only, no production authority",
+    "Supervisor restart/cgroup recovery of unknown cleanup remains service scope",
+    "No final admission or main merge"
+  ]
+}

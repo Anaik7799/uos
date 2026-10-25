@@ -27,13 +27,14 @@ def composite_energy (s : SwarmNodeState) (gamma : Float) : Float :=
   let e := tracking_error s
   e * e + gamma * (s.integral_acc * s.integral_acc)
 
-/-- Equilibrium zero energy property when error and integral are zero. -/
-theorem composite_energy_equilibrium (s : SwarmNodeState) (gamma : Float)
-    (h_err : s.process_val = s.setpoint) (h_int : s.integral_acc = 0.0) :
-    composite_energy s gamma = 0.0 := by
-  dsimp [composite_energy, tracking_error]
-  rw [h_err, h_int]
-  ring_nf
+/-- UNPROVED / FALSE AS UNIVERSALLY STATED: infinite setpoints or gamma yield
+    NaN even when the original equality premises hold. This proposition preserves
+    the historical statement; it is NOT a theorem or an equivalent repaired proof.
+    Counterexamples: 20261001-1250-float-counterexamples.lean. -/
+def composite_energy_equilibrium_unproved_claim : Prop :=
+  ∀ (s : SwarmNodeState) (gamma : Float),
+    s.process_val = s.setpoint → s.integral_acc = 0.0 →
+    composite_energy s gamma = 0.0
 
 /-- Tri-sovereign agent vote state (AGY, Claude, Codex). -/
 structure SovereignVotes where
@@ -58,13 +59,8 @@ def has_unanimous_consensus (v : SovereignVotes) : Bool :=
 theorem unanimous_implies_2oo3 (v : SovereignVotes)
     (h_unan : has_unanimous_consensus v = true) :
     has_2oo3_consensus v = true := by
-  dsimp [has_unanimous_consensus] at h_unan
-  dsimp [has_2oo3_consensus]
-  cases h1 : v.agy <;> cases h2 : v.claude <;> cases h3 : v.codex
-  all_goals
-    rw [h1, h2, h3] at h_unan
-    revert h_unan
-    decide
+  cases v with
+  | mk a b c => cases a <;> cases b <;> cases c <;> simp_all [has_unanimous_consensus, has_2oo3_consensus]
 
 /-- Hardware drive lock safety state. -/
 structure DriveSafetyState where
@@ -83,18 +79,7 @@ def is_action_authorized (v : SovereignVotes) (d : DriveSafetyState) : Bool :=
 theorem safe_dispatch_guarantees_drive_lock (v : SovereignVotes) (d : DriveSafetyState)
     (h_auth : is_action_authorized v d = true) :
     d.is_locked = true ∧ d.nvme_serial = "25503L801736" := by
-  dsimp [is_action_authorized] at h_auth
-  have h_drive : is_drive_safe d = true := by
-    revert h_auth
-    cases has_2oo3_consensus v <;> cases is_drive_safe d <;> decide
-  dsimp [is_drive_safe] at h_drive
-  cases h_lock : d.is_locked
-  · rw [h_lock] at h_drive
-    revert h_drive; decide
-  · have h_ser : (d.nvme_serial == "25503L801736") = true := by
-      rw [h_lock] at h_drive
-      revert h_drive; decide
-    have h_eq : d.nvme_serial = "25503L801736" := of_decide_eq_true h_ser
-    exact ⟨rfl, h_eq⟩
+  simp [is_action_authorized, is_drive_safe] at h_auth
+  exact h_auth.2
 
 end UOS.CenturyHarmony

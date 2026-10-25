@@ -150,7 +150,115 @@ let reclaim_projection ~now_ns binding records live =
     match j with `Assoc xs -> `Assoc (List.map (fun(k,v)->
       k,(if k="task_state" then `String "available" else v)) xs)
     | _ -> raise (Invalid "invalid reclaim record")) records
-let coherence ?reclaim ~now_ns records live =
+let reclaim_set_projection ~now_ns bindings records live =
+  require (bindings <> []) "reclaim set cannot be empty";
+  require (List.length bindings <= 1000) "reclaim set exceeds bound";
+  let ids = List.map (fun (id,_,_,_) -> id) bindings in
+  require (List.length ids = List.length (List.sort_uniq String.compare ids))
+    "reclaim set contains duplicate task IDs";
+  let expired_executing = List.filter (fun (t : Live_plan.task) ->
+    t.state = "executing" &&
+    Option.fold ~none:true ~some:(fun lease -> lease <= now_ns) t.lease) live
+  in
+  let expired_ids = List.map (fun (t : Live_plan.task) -> t.id) expired_executing |> List.sort String.compare in
+  let binding_ids = List.sort String.compare ids in
+  require (binding_ids = expired_ids)
+    "reclaim set must exactly equal all expired executing tasks in observed plan";
+  List.iter (fun binding ->
+    let id, worker, _, _ = binding in
+    require (List.exists (reclaim_matches ~now_ns binding) live)
+      ("reclaim requires exact expired same-worker attempt and lease: " ^ id);
+    require (List.exists (fun j -> text "task_id" j = id &&
+      text "task_state" j = "executing" && text "actor" j = worker) records)
+      ("reclaim assessment must declare the original executing owner: " ^ id)) bindings;
+  List.map (fun j ->
+    let id = text "task_id" j in
+    if not (List.mem id ids) then j
+    else match j with `Assoc xs -> `Assoc (List.map (fun (k,v) ->
+      k, (if k = "task_state" then `String "available" else v)) xs)
+    | _ -> raise (Invalid "invalid reclaim record")) records
+let require_selected_in_set selected bindings =
+  let ids = List.map (fun (id, _, _, _) -> id) bindings in
+  require (List.mem selected ids) "selected task must be a member of reclaim bindings set"
+let parse_bindings raw =
+  let v =
+    try Bounded.json_text raw
+    with Invalid msg -> raise (Invalid msg)
+    | e -> raise (Invalid ("malformed JSON in bindings: " ^ Printexc.to_string e))
+  in
+  unique v;
+  let fields =
+    match v with
+    | `Assoc fs -> fs
+    | _ -> raise (Invalid "reclaim payload must be a JSON object with plan_id and bindings")
+  in
+  let keys = List.map fst fields |> List.sort String.compare in
+  require (keys = ["bindings"; "plan_id"])
+    "reclaim payload must contain exactly {plan_id, bindings} with no unknown or alias fields";
+  let plan_id =
+    match List.assoc "plan_id" fields with
+    | `String s -> s
+    | _ -> raise (Invalid "plan_id must be a string")
+  in
+  require (String.trim plan_id <> "") "plan_id cannot be empty";
+  let items =
+    match List.assoc "bindings" fields with
+    | `List is -> is
+    | _ -> raise (Invalid "bindings must be a JSON array")
+  in
+  require (items <> []) "reclaim bindings list cannot be empty";
+  require (List.length items <= 1000) "reclaim bindings list exceeds bound";
+  let bindings = List.map (fun item ->
+    unique item;
+    let item_fields =
+      match item with
+      | `Assoc fs -> fs
+      | _ -> raise (Invalid "reclaim binding must be a JSON object")
+    in
+    let item_keys = List.map fst item_fields |> List.sort String.compare in
+    require (item_keys = ["attempt"; "lease_until_ns"; "task_id"; "worker"])
+      "reclaim binding must contain exactly {task_id, worker, attempt, lease_until_ns} with no unknown or alias fields";
+    let task =
+      match List.assoc "task_id" item_fields with
+      | `String s -> s
+      | _ -> raise (Invalid "task_id must be a string")
+    in
+    require (String.trim task <> "") "task_id cannot be empty";
+    let worker =
+      match List.assoc "worker" item_fields with
+      | `String s -> s
+      | _ -> raise (Invalid "worker must be a string")
+    in
+    require (String.trim worker <> "") "worker cannot be empty";
+    let attempt =
+      match List.assoc "attempt" item_fields with
+      | `Int n -> n
+      | _ -> raise (Invalid "attempt must be an integer")
+    in
+    require (attempt >= 1 && attempt < 1000000) "invalid reclaim attempt";
+    let lease_str =
+      match List.assoc "lease_until_ns" item_fields with
+      | `String s -> s
+      | `Int _ | `Float _ -> raise (Invalid "lease_until_ns must be a decimal string, not a number")
+      | _ -> raise (Invalid "lease_until_ns must be a decimal string")
+    in
+    require (String.length lease_str > 0 && String.length lease_str <= 20) "invalid lease_until_ns length";
+    require (String.for_all (fun c -> c >= '0' && c <= '9') lease_str) "lease_until_ns must be decimal digits";
+    let lease =
+      try
+        let l = Int64.of_string lease_str in
+        require (l > 0L) "lease_until_ns must be positive";
+        l
+      with _ -> raise (Invalid "lease_until_ns overflow or non-decimal")
+    in
+    (task, worker, attempt, lease)
+  ) items in
+  let ids = List.map (fun (id, _, _, _) -> id) bindings in
+  require (List.length ids = List.length (List.sort_uniq String.compare ids))
+    "reclaim bindings contain duplicate task IDs";
+  (plan_id, bindings)
+let parse_bindings_with_plan = parse_bindings
+let coherence ?reclaim ?reclaim_set ~now_ns records live =
   let out=ref [] in
   let add id detail=out:=issue "RP-SA-PLAN" id detail
     "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."::!out in
@@ -168,8 +276,14 @@ let coherence ?reclaim ~now_ns records live =
         then add id "declared dependencies differ from Sa-plan";
         if t.state="executing" then (
           if t.worker<>Some (text "actor" j) then add id "executing worker does not match assessment actor";
-          let exact_reclaim=Option.fold ~none:false
-            ~some:(fun binding->reclaim_matches ~now_ns binding t) reclaim in
+          let exact_reclaim =
+            match reclaim with
+            | Some binding -> reclaim_matches ~now_ns binding t
+            | None ->
+                match reclaim_set with
+                | Some bindings -> List.exists (fun b -> reclaim_matches ~now_ns b t) bindings
+                | None -> false
+          in
           if not exact_reclaim &&
             (t.attempt<1 || not (Option.fold ~none:false ~some:(fun n->n>now_ns) t.lease))
           then add id "executing lease is missing or expired at this observation")
@@ -181,6 +295,18 @@ let coherence ?reclaim ~now_ns records live =
   Option.iter (fun binding->
     if not (List.exists (reclaim_matches ~now_ns binding) live) then
       let id,_,_,_=binding in add id "reclaim binding changed or is not an expired owned attempt") reclaim;
+  Option.iter (fun bindings->
+    let expired_executing = List.filter (fun (t:Live_plan.task)->
+      t.state="executing" && Option.fold ~none:true ~some:(fun lease->lease<=now_ns) t.lease) live in
+    let expired_ids = List.map (fun (t:Live_plan.task)->t.id) expired_executing |> List.sort String.compare in
+    let binding_ids = List.map (fun (id,_,_,_)->id) bindings |> List.sort_uniq String.compare in
+    if List.length bindings <> List.length binding_ids then
+      add "" "reclaim set contains duplicate task IDs";
+    if binding_ids <> expired_ids then
+      add "" "reclaim set must exactly equal all expired executing tasks in observed plan";
+    List.iter (fun binding->
+      if not (List.exists (reclaim_matches ~now_ns binding) live) then
+        let id,_,_,_=binding in add id "reclaim binding changed or is not an expired owned attempt") bindings) reclaim_set;
   List.rev !out
 let verify_again ~root evidence =
   List.iter (fun (path,digest)->

@@ -1,0 +1,95 @@
+{
+  "schema": "uos.telegram-store-wire-v4.v1",
+  "generated_at": "2026-10-11T13:22:54Z",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "NATIVE_DEPTH_FIX",
+  "store_schema_version": "uos.telegram-store.v2",
+  "digest_format": {
+    "header": "uos.telegram-store.apply.v2\n",
+    "encoding": "length_prefixed_byte_fields",
+    "framing": "<len>:<str>\n for strings, <N>\n for counts, canonical decimal integers, deterministic key sorting",
+    "collision_resistance": "Strictly prevents delimiter injection and duplicate readset/change partition attacks"
+  },
+  "transport": {
+    "request_json_bytes": 1048572,
+    "response_json_bytes": 1048572,
+    "frame": "Unsigned big-endian 32-bit length header followed by exactly that many UTF-8 JSON bytes"
+  },
+  "commands": [
+    {
+      "command": "initialize_new",
+      "mandatory_fields": ["command", "bot_id"],
+      "optional_fields": ["db_path"],
+      "semantics": "Atomic exclusive creation and schema+meta initialization within single transaction, followed by fsync_dir"
+    },
+    {
+      "command": "read_keys",
+      "mandatory_fields": ["command", "keys"],
+      "optional_fields": ["db_path"],
+      "semantics": "Bounded read of up to 64 keys within single read transaction with aggregate value length enforcement"
+    },
+    {
+      "command": "read_inbox_index",
+      "mandatory_fields": ["command", "limit"],
+      "optional_fields": ["db_path", "after_key"],
+      "semantics": "Bounded pagination of inbox/ namespace up to limit <= 100 with strictly validated after_key cursor"
+    },
+    {
+      "command": "lookup_operation",
+      "mandatory_fields": ["command", "operation_id"],
+      "optional_fields": ["db_path"],
+      "semantics": "Idempotency receipt lookup for operation reconciliation after uncertain outcomes"
+    },
+    {
+      "command": "apply",
+      "mandatory_fields": [
+        "command",
+        "bot_id",
+        "operation_id",
+        "request_digest",
+        "expected_generation",
+        "read_set_assertions",
+        "changes",
+        "reservation_delta",
+        "summary_json"
+      ],
+      "optional_fields": ["db_path"],
+      "semantics": "Atomic CAS transaction with read-set assertions, replay detection, capacity reservation and append-only receipt"
+    }
+  ],
+  "validation": {
+    "schemas": "Exact per-command allowed fields; unknown fields rejected with unknown_json_field",
+    "optional_field_typing": "Optional fields distinguish absent, present with allowed type, and invalid-present; non-string db_path, non-string/non-hex expected_sha256, non-string after_key, non-integer limit strictly rejected without default fallback",
+    "unicode_utf8": "Strict RFC 3629 Unicode scalar validation on input wire frames and base64-decoded values; rejects surrogates (0xD800..0xDFFF), overlong bytes, and invalid bytes such as 0xFF",
+    "json_strictness": "Strict RFC 8259 parser decoding all standard simple escapes (\\\", \\\\, \\/, \\b, \\f, \\n, \\r, \\t), non-surrogate Unicode escapes (\\uXXXX) and non-BMP surrogate pairs (\\uD800..\\uDBFF\\uDC00..\\uDFFF) into exact Unicode UTF-8 scalar bytes prior to duplicate key detection. Rejects Yojson extensions, comments, unescaped control chars, lone surrogates, and duplicate keys (including mixed literal vs escaped representations and duplicate surrogate pairs)",
+    "json_nesting_limit": "Explicit bounded nesting depth policy: max_json_depth = 64. Any JSON payload (wire frame, summary_json, or decoded value) exceeding 64 levels of object/array nesting is rejected with json_nesting_depth_exceeded (mapping to invalid_json on frames/summary, and invalid_value on values). Entry-depth guards on parse_array and parse_object enforce this bound uniformly across both empty and non-empty terminal containers (empty array/object nesting exceeding 64 is strictly rejected, while nesting <= 64 is accepted).",
+    "bot_id": "Positive canonical decimal integer 1 <= bot_id <= 9007199254740991",
+    "request_digest": "Strict 64-hex lowercase SHA-256",
+    "version_hash_invariants": "v = 0 implies sha == '' (or absent/null); v > 0 implies sha is 64-hex lowercase; invalid types rejected",
+    "duplicates": "Duplicate read-set keys rejected with duplicate_read_set_key; duplicate changes rejected with duplicate_change_key; duplicate JSON keys rejected with duplicate_json_keys"
+  },
+  "security": {
+    "ancestor_confinement": "Full ancestor path validation using Unix.lstat from / to parent directory; symlinks forbidden (db_path_symlink); non-foreign-writable (st_perm land 0o022 == 0) enforced on all ancestors regardless of owner UID; only exact root-owned sticky /tmp (st_uid == 0 && st_perm land 0o1000 <> 0) exempt; own-UID world-writable ancestor strictly rejected; dedicated 0700 immediate parent",
+    "redaction": "No token, path, row value, or request body reflection in error strings"
+  },
+  "durability": {
+    "initialization": "Atomic BEGIN IMMEDIATE ... COMMIT encompassing schema and 5 meta entries; explicit rollback on failure; fsync_dir after commit; post-commit failure returns commit_uncertain; no deletion of ambiguous DB files",
+    "statement_cleanup": "Guaranteed Sqlite3.finalize on all 15 statement execution paths via with_prepared_stmt wrapper",
+    "uncertainty_reconciliation": "Failures during COMMIT or post-commit return commit_uncertain; lookup_operation reconciles committed receipts",
+    "crash_recovery": "Verified under actual SIGKILL child termination across 5 internal barriers (Init_after_ddl, Init_after_meta, Apply_between_rows, Apply_pre_commit, Apply_post_commit_pre_reply) proving clean WAL rollback and durable receipt replay",
+    "commit_stage_exception_safety": "All internal stage callbacks (Apply_between_rows, Apply_pre_commit, Apply_post_commit_pre_reply) are protected within typed exception-to-result boundaries. An exception raised before commit (Apply_between_rows, Apply_pre_commit) triggers immediate ROLLBACK and returns a finite error (sqlite_error) leaving receipt absent. An exception raised post-commit (Apply_post_commit_pre_reply) guarantees committed receipt persistence while returning commit_uncertain. Zero private fault markers are reflected"
+  },
+  "capacity_bounds": {
+    "max_rows": 20000,
+    "max_receipts": 20000,
+    "max_db_main_bytes": 268435456,
+    "max_reservation_delta_rows": 20,
+    "max_reservation_delta_receipts": 64,
+    "sqlite_busy_timeout_ms": 250,
+    "pragmas": {
+      "journal_mode": "WAL",
+      "synchronous": "FULL (2)",
+      "foreign_keys": "ON (1)"
+    }
+  }
+}

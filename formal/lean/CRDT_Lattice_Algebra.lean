@@ -29,17 +29,7 @@ def lww_join {α : Type} (a b : LWW α) : LWW α :=
 /-- THEOREM 1: LWW Join Idempotence (a ⊔ a = a). -/
 theorem lww_join_idempotent {α : Type} (a : LWW α) :
     lww_join a a = a := by
-  unfold lww_join
-  split
-  · rename_i hgt
-    exact False.elim (Nat.lt_irrefl a.epoch_us hgt)
-  · split
-    · rename_i _ hgt2
-      exact False.elim (Nat.lt_irrefl a.epoch_us hgt2)
-    · split
-      · rfl
-      · rename_i _ _ hnot_ge
-        exact False.elim (hnot_ge (Nat.le_refl a.writer_id))
+  simp [lww_join]
 
 /-- Natural Max-Semilattice join on Nat counters. -/
 def counter_join (a b : Nat) : Nat :=

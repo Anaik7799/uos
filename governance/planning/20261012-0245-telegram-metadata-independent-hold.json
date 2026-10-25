@@ -1,0 +1,103 @@
+{
+  "observed_at": "2026-10-12T02:45:04.835Z",
+  "plan": "uos/telegram-reclaim-tool/20261012-0226",
+  "task": "VERIFY",
+  "worker": "codex-telegram-20261012",
+  "attempt": 1,
+  "status": "HOLD",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "source_manifest": [
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "6193bcc872fdc4ba77e4a110d384e20f45eba64b12b370824adcb657a75ed76e"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/bounded.ml",
+      "sha256": "fd78167db257d863415ea9ceb6399662e2ce24b46cc15a7b0cc04ea57e23b13f"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "sha256": "a56b74b3c71d35ecd2a750dbd5a5d3082b3ef862defe504cbd648a0d41fa531a"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "sha256": "6bbee14590cc7e8bf1507a114325592ab6cb298ff858981533e646cf59eedcfb"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune-project",
+      "sha256": "476c2f0f0403984f06e7a43a49b9fb2ec40971076437e685b6c78490dd526ca1"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/host_clock.ml",
+      "sha256": "fd481302dc5b4bbad04f12b2eb7130a02b4cb22fd8586ebcee769808e115b073"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+      "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "sha256": "86c2138c2a149908b05466f2c9befcafe13e414a8ab4405229ac152655b3b724"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/reclaim_metadata.ml",
+      "sha256": "d06a11d75bdc127ccf5d3250db6630965470135605a51351ba35795db92d6fa4"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/record.ml",
+      "sha256": "2a66578ee158bfbe1f06d135be0ac003bfdbf4f6d61d1d2376925742d554cd60"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "sha256": "dfeed28f5faaf315dbbd8b3d53fbdd13445d7c04b33ba76f3cea36408b8a0b19"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "215f26fe094c93cf7fbff9ebad82d72463c24c74862cb83b941b5af7fe2e74be"
+    }
+  ],
+  "baseline": {
+    "checks": 375,
+    "adversarial": 32938,
+    "result": "PASS_WITH_COVERAGE_GAPS"
+  },
+  "probe_results": "var/recovery-runtime/20261012-0243-metadata-independent/probes.jsonl",
+  "findings": [
+    {
+      "id": "META-01",
+      "severity": "critical",
+      "observed": "New observer accepts executing row with completed_at and result; existing reclaim rejects same row",
+      "fix": "Reuse exact Checker.reclaim_set_projection preconditions"
+    },
+    {
+      "id": "META-02",
+      "severity": "high",
+      "observed": "Duplicate portfolio task and portfolio mutation during observation both accepted",
+      "fix": "Unique task IDs, stable raw bytes and assessment digest"
+    },
+    {
+      "id": "META-03",
+      "severity": "high",
+      "observed": "Timer excludes both boundary clock reads and no actual 5second invocation cutoff",
+      "fix": "Whole observation/serialization budget, finite worker cleanup, delayed-clock/overrun falsifier"
+    },
+    {
+      "id": "META-04",
+      "severity": "high",
+      "observed": "NC18 uses membership predicate, NC19 Checker.audit only, NC20 main bytes only; 20/20 claim overstates specified coverage",
+      "fix": "Actual wrong-worker/attempt CLI refusal; old/new CLI findings equality; active WAL main/frame invariance, SHM reported separately"
+    },
+    {
+      "id": "META-05",
+      "severity": "medium",
+      "observed": "New parser accepts aliases/optional fields and exhausted attempt1million",
+      "fix": "One exact input schema and attempt below max; test boundary"
+    }
+  ],
+  "coordination": {
+    "observed_integrity": "602/602 sequence, chain, digest, replay and triggers PASS; no admission implied",
+    "peer_routing": "Bare tool use observed; full harness-compliance claim withheld"
+  },
+  "quiescence": "Three original runtime claims remain expired and untouched"
+}

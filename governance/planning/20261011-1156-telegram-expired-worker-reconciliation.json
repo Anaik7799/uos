@@ -1,0 +1,164 @@
+{
+  "schema": "uos.telegram-expired-worker-reconciliation.v1",
+  "plan": "uos/telegram-runtime/20261001-1150",
+  "recovery_authority": {
+    "plan": "uos/telegram-tools/20261011-1115",
+    "task": "RECOVER",
+    "worker": "codex-telegram-20261011",
+    "attempt": 1
+  },
+  "original_bindings": [
+    {
+      "task_id": "FORMAL_FIX",
+      "worker": "codex-telegram-admission-20261001",
+      "attempt": 1,
+      "lease_until_ns": "1790862250536791626"
+    },
+    {
+      "task_id": "STORE_TRANSPORT_REVIEW",
+      "worker": "codex-admission-review-20261001",
+      "attempt": 1,
+      "lease_until_ns": "1790862377544275998"
+    }
+  ],
+  "process_and_effect_observation": {
+    "observed_utc": "2026-10-11T11:56:09.867Z",
+    "scope": "Same UID local process/known harness effect scan, current diagnostic ancestry excluded; secret values not emitted",
+    "processes_checked": 96,
+    "process_matches": [],
+    "limited": [
+      {
+        "pid": "1183868",
+        "comm": "codex",
+        "state": "Z (zombie)",
+        "environment": "EACCES"
+      },
+      {
+        "pid": "2669018",
+        "comm": "sshd-session",
+        "state": "S (sleeping)",
+        "environment": "EACCES"
+      },
+      {
+        "pid": "3701658",
+        "comm": "codex",
+        "state": "Z (zombie)",
+        "environment": "EACCES"
+      },
+      {
+        "pid": "778513",
+        "comm": "codex",
+        "state": "Z (zombie)",
+        "environment": "EACCES"
+      },
+      {
+        "pid": "8692",
+        "comm": "(sd-pam)",
+        "state": "S (sleeping)",
+        "environment": "EACCES"
+      }
+    ],
+    "effects_checked": 720,
+    "effect_matches": [],
+    "limits": "Cooperative local observation; no claim against unlabelled external or privileged hidden effects."
+  },
+  "herdr": {
+    "ok": true,
+    "agents": [
+      {
+        "agent": "codex",
+        "pane_id": "w2:p1",
+        "session_id": "01a0f051-84d4-7be0-be4b-2c1055e89dd3",
+        "session_source": "herdr:codex",
+        "session_kind": "id",
+        "status": "working",
+        "cwd": "/home/an/NAS-setup/uos",
+        "foreground_cwd": "/home/an/NAS-setup/uos",
+        "scope_allowed_by_default": true
+      },
+      {
+        "agent": "agy",
+        "pane_id": "w2:p9",
+        "session_id": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+        "session_source": "herdr:antigravity_cli",
+        "session_kind": "id",
+        "status": "idle",
+        "cwd": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+        "foreground_cwd": "/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+        "scope_allowed_by_default": true
+      },
+      {
+        "agent": "claude",
+        "pane_id": "w2:p2",
+        "session_id": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+        "session_source": "herdr:claude",
+        "session_kind": "id",
+        "status": "done",
+        "cwd": "/home/an/NAS-setup",
+        "foreground_cwd": "/home/an/NAS-setup",
+        "scope_allowed_by_default": false
+      },
+      {
+        "agent": "agy",
+        "pane_id": "w2:p6",
+        "session_id": "db2e3c06-e6f3-4bcd-9da0-d5f46eceb161",
+        "session_source": "herdr:antigravity_cli",
+        "session_kind": "id",
+        "status": "idle",
+        "cwd": "/home/an",
+        "foreground_cwd": "/home/an",
+        "scope_allowed_by_default": false
+      }
+    ],
+    "authority": "observed_herdr_metadata_only",
+    "atomic_session_fence": false
+  },
+  "coordinator": {
+    "sequence": 421,
+    "leases": [
+      {
+        "resource": "task:uos-telegram-tools-RECOVER",
+        "holder": "01a0f051-84d4-7be0-be4b-2c1055e89dd3",
+        "epoch": 1,
+        "expires_boot_us": 988385150000
+      },
+      {
+        "resource": "workspace:/home/an/NAS-setup/uos/.uos-workspaces/agy-full-restoration-20260930",
+        "holder": "954b9a82-15dc-4bd5-ae31-dd9670e583ca",
+        "epoch": 1,
+        "expires_boot_us": 987691150000
+      }
+    ],
+    "old_sessions": [
+      {
+        "session": "codex-telegram-admission-20261001",
+        "provider": "codex",
+        "workspace": "/home/an/NAS-setup/uos",
+        "revision": "83dca0394346564356920f066b3924858144107f",
+        "refs": [
+          "plan:uos/telegram-admission/20261001-1015",
+          "plan:uos/telegram-runtime/20261001-1150",
+          "board:codex-telegram-admission-20261001"
+        ],
+        "status": "stale",
+        "heartbeat_boot_us": 123942360000,
+        "pending_messages": 0
+      }
+    ]
+  },
+  "codex_agents": {
+    "observed": "only /root running; prior doctor/recovery reviewer agents absent"
+  },
+  "decision": "Accept bounded local cooperative quiescence evidence for canonical task lease reconciliation only. No production or runtime release; no old attempt executable. Formal task will be released without claiming repair complete.",
+  "requirements": [
+    "Re-observe complete-plan exact-set risk immediately before each canonical claim.",
+    "Claim each expired task with new worker; original attempt1 -> attempt2 via Sa-plan CAS.",
+    "No task effects until both old attempts reclaimed and ordinary new-owner active checks pass."
+  ],
+  "unknowns": [
+    "Does not establish absence of unlabelled remote or privileged effects.",
+    "Previous source changes are preserved and require fresh review, never inferred complete from old task state."
+  ],
+  "admission": false,
+  "observed_utc": "2026-10-11T11:56:45.390Z"
+}
