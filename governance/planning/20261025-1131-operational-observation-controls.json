@@ -1,0 +1,144 @@
+{
+  "observed_at": "2026-10-25T11:03:31.773Z",
+  "plan": "uos/full-merge/20261025-0638",
+  "task": "G8_IMPROVE",
+  "attempt": 1,
+  "status": "SOURCE_IMPLEMENTED_TESTED_REVIEW_PENDING",
+  "scope": "Goal-critical observer selection and truthful demonstration status; existing controls reused; proposals remain explicitly unadopted unless stated",
+  "source_base": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
+  "proposals": [
+    {
+      "id": "I1",
+      "status": "NOT_ADOPTED_AS_AUTOMATION",
+      "disposition": "Each reviewed increment has reached main during this session; a new blanket 24-hour checker is not implemented.",
+      "evidence": "Per-stage merge receipts G1–G7"
+    },
+    {
+      "id": "I2",
+      "status": "EXISTING_CONTAINMENT_PARTIAL",
+      "disposition": "Own-workspace edits and AGY sandbox prevent shared-source changes in this work. A new global default-dirty hook is not implemented; default must remain because live processes consume it.",
+      "evidence": "G7 runtime-consumers.json; agy_dispatch.bubblewrap_args"
+    },
+    {
+      "id": "I3",
+      "status": "VERIFIED_DRILL_NO_NEW_AGE_GUARD",
+      "disposition": "Latest authenticated off-host restore passed at 10:47:31Z. No automatic fleet backup-age guard is claimed.",
+      "evidence": "var/recovery-runtime/20261025-1021-merge-g7/backup-restore-receipt.json"
+    },
+    {
+      "id": "I4",
+      "status": "EXISTING_REVIEW_PRACTICE",
+      "disposition": "Raw root snapshots excluded; curated deltas and outgoing source/history reviewed. No generic file-count rejection rule adopted.",
+      "evidence": "G2–G7 exact-candidate ledgers and main-only dry runs"
+    },
+    {
+      "id": "I5",
+      "status": "EXISTING_REVIEW_PRACTICE",
+      "disposition": "Unvetted executable excluded in G4. Native admission stays separately gated; no new repository-wide executable scanner implemented.",
+      "evidence": "G4 default-evidence ledger; NIF release HOLD"
+    },
+    {
+      "id": "I6",
+      "status": "PROPOSED_NOT_ADOPTED",
+      "disposition": "Relevance catalog exists but full skill-by-skill classification is unverified. Avoid broad skill installation during Telegram critical-path work.",
+      "evidence": "governance/capability-inventory/skills.toml"
+    },
+    {
+      "id": "I7",
+      "status": "PARTIAL_SCOPE_IMPLEMENTED",
+      "disposition": "Observer now selects current and future relevant work; presentation labels simulations. Generating CLAUDE.md status from gates remains a separate proposal.",
+      "evidence": "restoration_observer.gleam; tui_evolution_player.html"
+    },
+    {
+      "id": "I8",
+      "status": "VERIFIED_RETRY_CONTROL_PARTIAL",
+      "disposition": "Retry budget repair and native law tests were integrated earlier. Automatic sweep of unknown-owner expired claims is not adopted; reviewed reclaim remains necessary.",
+      "evidence": "main 2ab40165; G1 evidence; expired MINI_API_IMPL remains open"
+    },
+    {
+      "id": "I9",
+      "status": "PROPOSED_NOT_ADOPTED",
+      "disposition": "G7 cleared only proven dead transient unit status after evidence capture. Automatic collection must preserve terminal metadata needed by the AGY collector before adopting --collect.",
+      "evidence": "G7 unit-metadata-reset.json; agy_dispatch.collect"
+    },
+    {
+      "id": "I10",
+      "status": "PROPOSED_NOT_ADOPTED",
+      "disposition": "Four-surface JJ redirect note not found in this observation; no claim that imported Git worktree guidance is adapted. Existing canonical JJ policy governs.",
+      "evidence": "AGENTS.md section 4; scoped rg observation"
+    },
+    {
+      "id": "I11",
+      "status": "PROPOSED_NOT_ADOPTED",
+      "disposition": "Reuse reviewed merge plan and stage ledgers; no new skill wrapper added merely to duplicate an operational runbook.",
+      "evidence": "docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
+    },
+    {
+      "id": "I12",
+      "status": "PROPOSED_NOT_ADOPTED",
+      "disposition": "A listening socket alone does not prove a successful Zenoh session. Live connectivity root cause is not established by this source-control stage.",
+      "evidence": "G6 health/browser limitations"
+    },
+    {
+      "id": "I13",
+      "status": "CONFIRMED_PENDING",
+      "disposition": "14 broken links observed on each of .codex/.claude/.gemini/.agents (175 symlinks per surface). Pinned ingestion and independent review are required before repair.",
+      "evidence": "skill-link-observation.json"
+    },
+    {
+      "id": "I14",
+      "status": "PROPOSED_NOT_ADOPTED",
+      "disposition": "Wrapper delegates to Hermes diagram checker; no new explanatory diagrams authored here and no comment/law repair claimed.",
+      "evidence": "tools/diagram-check; engines/hermes/modules/hermes_toolchain/diagram_check.ml"
+    },
+    {
+      "id": "I15",
+      "status": "RCA_ADAPTER_DISTINCTION_OBSERVED",
+      "disposition": "session_sync_cli reads legacy journal; session_store_cli accepts the canonical SQLite store. Current coordinator check/claim/renew succeeds through store adapter. No legacy journal rewrite or new global preflight arm.",
+      "evidence": "apps/uos_swarm/src/session_sync_cli.gleam; session_store_cli.gleam; current lease receipts"
+    },
+    {
+      "id": "I16",
+      "status": "EXISTING_TRACEABILITY_PRACTICE",
+      "disposition": "Curated source commits carry explicit source ledger references. Automatic universal ledger-coverage enforcement is not implemented.",
+      "evidence": "G2–G7 ledgers"
+    },
+    {
+      "id": "I17",
+      "status": "VERIFIED_EXISTING_CONTROL",
+      "disposition": "Collector rejects empty SUCCESS envelopes and diagnostic timeouts. G6 and G8 failed code jobs were recorded ERROR/discarded; 9 focused result/authority tests pass.",
+      "evidence": "agy-code-failure.json; agy_job_result_test; regression-tests.json"
+    },
+    {
+      "id": "I18",
+      "status": "VERIFIED_PRACTICE_NO_NEW_GLOBAL_GUARD",
+      "disposition": "Publication used a verified restore less than 24h old; G7 refreshed backup after publication. No automatic global bookmark hook is claimed.",
+      "evidence": "G7 merge-receipt.json and backup-restore-receipt.json"
+    }
+  ],
+  "checks": {
+    "full_application_build": "PASS",
+    "observer_sql_and_lifetime_tests": 7,
+    "related_regression_total": 29,
+    "real_chromium_player": {
+      "desktop_checks": 8,
+      "mobile_checks": 8,
+      "scope": "candidate file plus test-only interaction instrumentation"
+    },
+    "live_query": {
+      "plans": 14,
+      "tasks": 190,
+      "merge_completed": 8,
+      "merge_total": 9
+    },
+    "live_dashboard": "PENDING reviewed finite observer renewal; existing snapshot expired"
+  },
+  "remaining": [
+    "Independent exact-candidate source review/publication",
+    "Fresh observer config/control review and finite supervised activation",
+    "Live desktop/mobile dashboard freshness and current-plan inclusion",
+    "Ten Telegram runtime and eight admission task records",
+    "NIF digest mismatch; reviewed application release",
+    "Unadopted advisory improvements retain their stated partial/pending status"
+  ]
+}

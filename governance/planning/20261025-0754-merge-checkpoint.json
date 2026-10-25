@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-25T10:32:35.570Z",
+  "observed_at": "2026-10-25T11:04:24.458Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
@@ -8,9 +8,10 @@
     "G3_AUTHORITY",
     "G4_EVIDENCE",
     "G5_ARCHIVE",
-    "G6_GRAFTS"
+    "G6_GRAFTS",
+    "G7_PRUNE"
   ],
-  "main": "5b05558e66fbd13c9c375977a8ea5a541f9e1d59",
+  "main": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -21,7 +22,7 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "G7 workspace/runtime-consumer reconciliation and off-host refresh; G8 operational controls and observer repair",
+  "next": "G8 operational controls, then remaining Telegram functionality",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
@@ -31,9 +32,9 @@
     "Existing TUI demonstration player contains unsupported admission claims; fix in G8"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G7 executing:101workspaces inventoried,9historical documents preserved,138terminal transient unit states cleared,2merged bookmarks removed; latest off-host restore pending",
-  "github_verified_at": "2026-10-25T10:18:42.009Z",
-  "github_new_commits_uploaded": 239,
+  "working_on": "G8 source review: date-independent observer and truthful demo; 29 tests and 16 Chromium assertions pass; live observer renewal pending",
+  "github_verified_at": "2026-10-25T10:42:18.880Z",
+  "github_new_commits_uploaded": 240,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -83,14 +84,14 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 11,
-  "latest_receipt": "var/recovery-runtime/20261025-0958-merge-g6/merge-receipt.json",
-  "merge_completed": 7,
+  "merged_paths_latest": 14,
+  "latest_receipt": "var/recovery-runtime/20261025-1021-merge-g7/merge-receipt.json",
+  "merge_completed": 8,
   "merge_total": 9,
   "agents": {
-    "codex": "G7 preservation, cleanup and backup verification",
-    "agy": "No active job; scoped G7 review next",
-    "claude": "Preserved plan advisory"
+    "codex": "G8 source verification and reviewed finite observer preparation",
+    "agy": "Code job discarded after empty timeout; independent source review next",
+    "claude": "18 advisory improvements assessed with explicit pending/partial dispositions"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
   "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
@@ -107,7 +108,7 @@
     "excluded_preserved": 2,
     "source_checks": "983 regular files match source;16 symlinks equal main;5 existing binaries equal main;2 exclusions retained",
     "source_ledger": "governance/planning/20261025-0918-default-evidence-ledger.json",
-    "default_transition_task": "G7_PRUNE",
+    "default_transition_task": "PREP/RELEASE in Telegram admission plan",
     "status": "MERGED_AND_UPLOADED"
   },
   "g5": {
@@ -153,6 +154,24 @@
     "merged_bookmarks_deleted": 2,
     "unmerged_bookmarks_retained": 64,
     "default_checkout": "RETAINED: live web/cognitive/Telegram consumers; transition belongs to reviewed release",
-    "backup": "PENDING latest revision refresh"
+    "backup": "AUTHENTICATED_OFFHOST_RESTORE_PASS at 2026-10-25T10:47:31.204Z",
+    "status": "COMPLETED",
+    "candidate": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
+    "review": "1606da32-8b31-457b-8ad9-86cd37cfffdd",
+    "backup_receipt": "var/recovery-runtime/20261025-1021-merge-g7/backup-restore-receipt.json"
+  },
+  "restore_evidence": {
+    "scope": "G0 historical snapshot only",
+    "latest_candidate": "30bac953e714c1520cbf1443ee45cac9bcc3d20a",
+    "source": "var/recovery-runtime/20261025-0747-merge-g0",
+    "latest_receipt": "var/recovery-runtime/20261025-1021-merge-g7/backup-restore-receipt.json"
+  },
+  "g8": {
+    "status": "SOURCE_TESTED_REVIEW_PENDING",
+    "tests": 29,
+    "player_browser_assertions": 16,
+    "live_observer": "PENDING",
+    "ledger": "governance/planning/20261025-1131-operational-observation-controls.json",
+    "journal": "docs/journal/20261025-1131-operational-observation-controls.md"
   }
 }

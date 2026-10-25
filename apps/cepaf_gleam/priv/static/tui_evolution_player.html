@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>C3I Terminal UI — 15-Cycle Evolutionary Verification Player</title>
+  <title>C3I Terminal UI — Evolution Demonstration Player</title>
   <style>
     :root {
       --bg-dark: #0a0e17;
@@ -396,6 +396,13 @@
       flex-wrap: wrap;
       gap: 0.8rem;
     }
+    .player-viewport { position: relative; }
+    .demo-media-label { position:absolute; z-index:2; top:0; left:0; right:0; padding:.35rem; background:#241d0ef2; color:#ffd166; font-size:.8rem; pointer-events:none; text-align:center; }
+    .badge-sil, .badge-muda, .badge-tailscale { color:var(--accent-gold); border-color:var(--accent-gold); }
+    .checklist-domain li { display:block; overflow-wrap:anywhere; }
+    .checklist-domain strong { white-space:nowrap; }
+    .chk-pending { color:var(--accent-gold); }
+    #demonstrationNotice a { color:var(--accent-cyan); }
   </style>
 </head>
 <body>
@@ -403,15 +410,21 @@
     <!-- Header -->
     <header>
       <div class="header-title">
-        <h1><span>&#9881;</span> C3I Terminal UI — 15-Cycle Evolutionary Verification Player</h1>
+        <h1><span>&#9881;</span> C3I Terminal UI — Evolution Demonstration Player</h1>
       </div>
       <div class="badges">
-        <span class="badge badge-cycle">EV-126</span>
-        <span class="badge badge-sil">SIL-6 VERIFIED</span>
-        <span class="badge badge-tailscale">TAILNET ACTIVE</span>
-        <span class="badge badge-muda">ZERO-MUDA 100%</span>
+        <span class="badge badge-cycle">SIMULATION</span>
+        <span class="badge badge-sil">NO LIVE VERIFICATION</span>
+        <span class="badge badge-tailscale">STATIC RECORDING</span>
+        <span class="badge badge-muda">ADMISSION NOT ASSESSED</span>
       </div>
     </header>
+
+    <aside id="demonstrationNotice" role="note" style="padding:1rem;border:2px solid var(--accent-gold);margin:1rem 0;">
+      <strong>Historical demonstration — not live operational evidence.</strong>
+      Metrics and consensus values below are synthetic examples. Recorded media may contain unsupported historical success claims. This page establishes no test pass, safety certification or system admission.
+      <a href="http://nas-1.tail55d152.ts.net:4100/planning">Open current planning observations</a>.
+    </aside>
 
     <!-- Navigation & Direct Links Bar -->
     <div class="nav-bar">
@@ -423,19 +436,19 @@
         <a href="http://nas-1.tail55d152.ts.net:4100/docs/journal/20260908-0220-tui-15-evolutionary-cycles-multimedia-verification.md">&#128214; 13-Section Journal</a>
       </div>
       <div class="direct-links">
-        <a class="btn-link" id="linkRawMp4" href="/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles.mp4" target="_blank">&#9654; Direct MP4 Link</a>
-        <a class="btn-link" id="linkRawGif" href="/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles.gif" target="_blank">&#127916; Direct GIF Link</a>
-        <a class="btn-link" href="/files/docs/evidence/tui_evolution_cycles" target="_blank">&#128194; Evidence Directory</a>
+        <a class="btn-link" id="linkRawMp4" href="http://nas-1.tail55d152.ts.net:4100/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles.mp4" target="_blank">&#9654; Direct MP4 Link</a>
+        <a class="btn-link" id="linkRawGif" href="http://nas-1.tail55d152.ts.net:4100/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles.gif" target="_blank">&#127916; Direct GIF Link</a>
+        <a class="btn-link" href="http://nas-1.tail55d152.ts.net:4100/files/docs/evidence/tui_evolution_cycles" target="_blank">&#128194; Evidence Directory</a>
       </div>
     </div>
 
     <!-- Interactive Comprehensive Verification Checklist -->
     <details class="checklist-card" open>
       <summary class="checklist-summary">
-        <div style="display:flex;align-items:center;gap:0.6rem;">
-          <span style="color:#00e676;font-size:1.1rem;">&#10004;</span>
-          <strong style="color:var(--accent-gold);">UOS COMPREHENSIVE VERIFICATION CHECKLIST (SC-CHECKLIST-001 / EV-126)</strong>
-          <span class="badge badge-sil">18/18 CHECKS 100% GREEN</span>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0.6rem;">
+          <span style="color:var(--accent-gold);font-size:1.1rem;">?</span>
+          <strong style="color:var(--accent-gold);">Verification requirements — not evaluated by this demonstration</strong>
+          <span class="badge badge-sil">18 CHECKS UNRUN</span>
         </div>
         <span style="color:var(--text-muted);font-size:0.75rem;">Click to Collapse/Expand</span>
       </summary>
@@ -444,44 +457,44 @@
           <div class="checklist-domain">
             <h3>1. Metadata & Navigation</h3>
             <ul>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-01-TIME</strong>: 20260908-0220- Synchronized</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-02-TAIL</strong>: Universal Tailscale FQDN</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-03-FRACT</strong>: L0, L2, L4, L5 Classified</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-04-KM</strong>: ZK ADR & Living Ontology Bound</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-01-TIME</strong>: UNRUN — Current synchronized observation timestamp</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-02-TAIL</strong>: UNRUN — Reachable Tailnet navigation</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-03-FRACT</strong>: UNRUN — Fractal classification</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-04-KM</strong>: UNRUN — Knowledge provenance</li>
             </ul>
           </div>
           <div class="checklist-domain">
             <h3>2. Zero-Muda & Storage</h3>
             <ul>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-05-MUDA</strong>: 0 Bevy, 0 Graphite Absolute Purity</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-06-GRAPH</strong>: Pure Erlang graphene_nif.erl (No NIF)</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-07-DRIVE</strong>: NVMe Serial 25503L801736 Hard-Locked</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-05-MUDA</strong>: UNRUN — Dependency exclusion policy</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-06-GRAPH</strong>: UNRUN — Native interface provenance</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-07-DRIVE</strong>: UNRUN — Storage protection</li>
             </ul>
           </div>
           <div class="checklist-domain">
             <h3>3. Testing & Math Gates</h3>
             <ul>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-08-C1C8</strong>: C1–C8 Testing Gold Standard Met</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-09-MATH</strong>: H &ge; 2.5b, CCM &ge; 90%, D_EA &le; 10%</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-10-9MOD</strong>: 9-Modality Test Protocol 100% Green</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-11-REGR</strong>: 381 UI Regression Suite Verified</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-08-C1C8</strong>: UNRUN — C1–C8 acceptance</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-09-MATH</strong>: UNRUN — Mathematical gate evidence</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-10-9MOD</strong>: UNRUN — Modality acceptance</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-11-REGR</strong>: UNRUN — Regression acceptance</li>
             </ul>
           </div>
           <div class="checklist-domain">
             <h3>4. Cross-Language Control</h3>
             <ul>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-12-GLEAM</strong>: Gleam/OTP 29 uos_sup.gleam Supervised</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-13-HERMES</strong>: Hermes OCaml Gospel &amp; SQLite Ledgers</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-14-ZIGVM</strong>: ZigVM Deterministic Kernel &amp; VFS</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-15-MAX</strong>: MAX/Mojo Isolated Inference Tier</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-16-OTEL</strong>: C3I Telemetry with ISO 8601 UTC 'Z'</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-12-GLEAM</strong>: UNRUN — Gleam/OTP runtime supervision</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-13-HERMES</strong>: UNRUN — Hermes evidence and contracts</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-14-ZIGVM</strong>: UNRUN — ZigVM runtime behavior</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-15-MAX</strong>: UNRUN — Inference service behavior</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-16-OTEL</strong>: UNRUN — Observed telemetry correlation</li>
             </ul>
           </div>
           <div class="checklist-domain">
             <h3>5. Governance & VCS</h3>
             <ul>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-17-SOV</strong>: 3-of-4 Sovereign Quorum Ratified</li>
-              <li><span class="chk-pass">&#10004;</span> <strong>CHK-18-JJ</strong>: Standalone Jujutsu (.jj/) Active</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-17-SOV</strong>: UNRUN — Independent admission decision</li>
+              <li><span class="chk-pending">?</span> <strong>CHK-18-JJ</strong>: UNRUN — Standalone Jujutsu discipline</li>
             </ul>
           </div>
         </div>
@@ -497,6 +510,7 @@
           <span class="cycle-badge" id="videoCycleBadge">GEN 01 (Proposal) [01s/30s]</span>
         </div>
         <div class="player-viewport">
+          <div class="demo-media-label">Historical demonstration — claims in recording unverified</div>
           <video id="tuiVideo" controls autoplay loop playsinline preload="auto" poster="/raw/docs/evidence/tui_evolution_cycles/frame_01.png">
             <source src="/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles_30s.mp4" type="video/mp4">
             <source src="/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles.mp4" type="video/mp4">
@@ -527,6 +541,7 @@
           <span class="cycle-badge" id="gifCycleBadge">30 SECONDS &bull; 15 CYCLES &bull; 1.0 FPS</span>
         </div>
         <div class="player-viewport">
+          <div class="demo-media-label">Historical demonstration — claims in recording unverified</div>
           <img id="tuiGif" src="/raw/docs/evidence/tui_evolution_cycles/tui_15_evolutionary_cycles_30s.gif" alt="C3I TUI 15 Evolutionary Cycles Animation">
         </div>
         <div class="player-controls">
@@ -544,7 +559,7 @@
     <!-- Frame Gallery & Inspection -->
     <div class="gallery-card">
       <div class="gallery-header">
-        <h2><span>&#128065;</span> 15-Generation Frame Inspector &amp; Telemetry Matrix</h2>
+        <h2><span>&#128065;</span> Demonstration Frame Inspector &amp; Synthetic Metrics</h2>
         <span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent-cyan);" id="selectedGenTitle">Selected: Generation 01 (mut-01 CPU Governor)</span>
       </div>
 
@@ -568,8 +583,8 @@ Loading terminal frame data...
                 <th>Gen</th>
                 <th>Mutation</th>
                 <th>Domain</th>
-                <th>Fitness</th>
-                <th>Quorum</th>
+                <th>Example fitness</th>
+                <th>Example consensus</th>
               </tr>
             </thead>
             <tbody id="metricsBody">
@@ -586,7 +601,7 @@ Loading terminal frame data...
         <strong>UOS Canonical Tailnet:</strong> <code>http://nas-1.tail55d152.ts.net:4100</code> | IP: <code>100.87.7.78</code>
       </div>
       <div>
-        BEAM OTP 29 &bull; Gleam 1.14.0 &bull; Standalone Jujutsu Monorepo &bull; EV-126 Ratified
+        Static demonstration; runtime versions and admission are not observed by this page.
       </div>
     </footer>
   </div>
@@ -624,8 +639,8 @@ Loading terminal frame data...
         timeSec: f - 1,
         gen: gen,
         isProposal: isProposal,
-        phaseName: isProposal ? "Phase A: Proposal & Perturbation" : "Phase B: Ratified & Homeostasis",
-        shortPhase: isProposal ? "Prop" : "Rat",
+        phaseName: isProposal ? "Example A: Proposal" : "Example B: Simulated outcome",
+        shortPhase: isProposal ? "Demo A" : "Demo B",
         mutId: mut.id,
         mutName: mut.name,
         gain: mut.gain,
@@ -634,8 +649,8 @@ Loading terminal frame data...
         error: isProposal ? "+0.0160" : "+0.0016",
         control: isProposal ? "-0.0085" : "-0.0008",
         lyapunov: isProposal ? "0.00000845 (Stabilizing)" : "0.00000128 (Equilibrium)",
-        quorum: isProposal ? "2/4 (Awaiting 3-of-4)" : "4/4 (Unanimous)",
-        status: isProposal ? "EVALUATING" : "RATIFIED"
+        quorum: isProposal ? "Example 2/4 votes" : "Example 4/4 votes",
+        status: isProposal ? "SIMULATED_PROPOSAL" : "SIMULATED_OUTCOME"
       });
     }
 
@@ -708,7 +723,7 @@ Loading terminal frame data...
       document.querySelectorAll('.thumb-item').forEach((el, idx) => {
         if (idx === frameNum - 1) {
           el.classList.add('active');
-          el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          el.parentElement.scrollTo({ left: Math.max(0, el.offsetLeft - el.parentElement.offsetLeft - el.parentElement.clientWidth / 2), behavior: 'smooth' });
         } else {
           el.classList.remove('active');
         }
@@ -722,13 +737,13 @@ Loading terminal frame data...
 
       // Fetch text dump for terminal
       fetch(`/raw/docs/evidence/tui_evolution_cycles/frame_${pad}.txt`)
-        .then(r => r.text())
+        .then(r => { if (!r.ok) throw new Error("recorded frame unavailable"); return r.text(); })
         .then(txt => {
-          document.getElementById('terminalOutput').textContent = txt;
+          document.getElementById('terminalOutput').textContent = 'HISTORICAL DEMONSTRATION — NOT LIVE EVIDENCE\nClaims in this recorded frame are unverified.\n\n' + txt;
         })
         .catch(() => {
           document.getElementById('terminalOutput').textContent =
-            `[Frame ${pad} Telemetry @ ${data.timeSec}s]\nGen: ${data.gen}/15 | ${data.phaseName}\nMutation: ${data.mutId} (${data.mutName})\nGain: ${data.gain} | Parameter Risk: ${data.risk}\nFitness Score: ${data.fitness}\nLyapunov State: ${data.lyapunov}\nError e(t): ${data.error} | Control u(t): ${data.control}\nQuorum Consensus: ${data.quorum}\nStatus: ${data.status}`;
+            `[SYNTHETIC EXAMPLE — NOT LIVE EVIDENCE]\n[Frame ${pad} @ ${data.timeSec}s]\nGen: ${data.gen}/15 | ${data.phaseName}\nMutation: ${data.mutId} (${data.mutName})\nGain: ${data.gain} | Parameter Risk: ${data.risk}\nFitness Score: ${data.fitness}\nLyapunov State: ${data.lyapunov}\nError e(t): ${data.error} | Control u(t): ${data.control}\nQuorum Consensus: ${data.quorum}\nStatus: ${data.status}`;
         });
 
       if (seekVideo && video.paused) {
@@ -764,13 +779,12 @@ Loading terminal frame data...
         tr.onclick = () => selectFrame(item.frame);
         tr.style.cursor = 'pointer';
         
-        const statusClass = item.isProposal ? 'status-evaluating' : 'status-ratified';
-        const statusStyle = item.isProposal ? 'color:#ffaa00;font-weight:bold' : 'color:#00e676;font-weight:bold';
+        const statusStyle = 'color:#ffaa00;font-weight:bold';
         
         tr.innerHTML = `
           <td><strong>${pad}s</strong> (G${String(item.gen).padStart(2, '0')})</td>
           <td><code>${item.mutId}</code></td>
-          <td>${item.isProposal ? '&#9888; ' : '&#10004; '} ${item.phaseName}</td>
+          <td>&#9888;  ${item.phaseName}</td>
           <td><span style="color:var(--accent-gold);font-weight:bold">${item.fitness}</span></td>
           <td><span style="${statusStyle}">${item.status}</span> (${item.quorum})</td>
         `;

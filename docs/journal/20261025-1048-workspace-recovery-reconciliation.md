@@ -30,7 +30,7 @@ Devil's Advocate / Popperian falsification: an empty working revision can coexis
 
 ## 7. Verification Matrix
 
-Read-only inventory scanned101workspaces; all source comparisons are exact byte checks. Nine restored artifacts match their screened originals; JSON artifacts parse. Two deleted bookmark targets remain ancestors of main and can be recreated from the recorded names/revisions. Zero failed uos-* units remained immediately after the targeted metadata reset; no stop/restart commands occurred. Latest encrypted source backup and off-host restore are pending at authorship and are required before G7 task completion. All seven automated epistemic engines UNRUN; Admiralty A1 covers direct process/byte observations only.
+Read-only inventory scanned101workspaces; all source comparisons are exact byte checks. Nine restored artifacts match their screened originals; JSON artifacts parse. Two deleted bookmark targets remain ancestors of main and can be recreated from the recorded names/revisions. Zero failed uos-* units remained immediately after the targeted metadata reset; no stop/restart commands occurred. Closure observation at 2026-10-25T10:48:07Z: AGY review 1606da32 approved source publication; GitHub main is 30bac953. Latest backup at /home/an/uos-backups/20261025-1045 captured a stable JJ operation, 14,111 default paths (database excluded) and 72 screened files. AES-256-GCM ciphertexts returned from vm-1 authenticated locally; restored main, 226 bookmarks and selected-file hashes matched on vm-1. Key stayed local. Receipt: var/recovery-runtime/20261025-1021-merge-g7/backup-restore-receipt.json. G7 completed through Sa-plan only after this verification. All seven automated epistemic engines UNRUN; Admiralty A1 covers direct process/byte observations only.
 
 ## 8. Files Modified
 
@@ -42,7 +42,7 @@ The live web process on4100 runs from default/apps/cepaf_gleam; the cognitive wo
 
 ## 10. Remaining Gaps
 
-G7 exact-candidate review/publication and latest authenticated off-host restore are pending. G8 must repair the observer plan filter, renew the supervised observer with fresh review, and correct unsupported TUI demonstration status claims. Default runtime cutover belongs to admission PREP/RELEASE. Ten Telegram runtime and eight admission tasks remain; installed NIF digest mismatch still blocks runtime activation.
+G7 source review, publication and latest authenticated off-host restore are complete. G8 must repair the observer plan filter, renew the supervised observer with fresh review, and correct unsupported TUI demonstration status claims. Default runtime cutover belongs to admission PREP/RELEASE. Ten Telegram runtime and eight admission tasks remain; installed NIF digest mismatch still blocks runtime activation.
 
 ## 11. Metrics Summary
 
@@ -54,7 +54,7 @@ Unsafe provision: reset a live unit, overwrite a consumer checkout, or publish u
 
 ## 13. Conclusion
 
-The reconciliation candidate preserves distinct evidence and removes only proven redundant metadata. Forecast (analyst estimate): source publication and latest restore verification within30active minutes if review and network checks pass. Horizon:30minutes from this observation. Falsifier: source drift, reviewer HOLD, failed authenticated restore or remote main mismatch. Brier score awaits the outcome; the overall Telegram goal remains incomplete.
+The reconciliation candidate preserves distinct evidence and removes only proven redundant metadata. Forecast (analyst estimate): source publication and latest restore verification within30active minutes if review and network checks pass. Horizon:30minutes from this observation. Falsifier: source drift, reviewer HOLD, failed authenticated restore or remote main mismatch. Observed outcome: publication and authenticated restore completed within the 30-minute horizon. No numerical probability was precommitted, so a Brier score is not computable. The overall Telegram goal remains incomplete.
 
 ## Verification checklist
 

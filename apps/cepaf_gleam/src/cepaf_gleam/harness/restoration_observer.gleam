@@ -315,8 +315,36 @@ fn rows_with_expiry(data: v.Value) -> json.Json {
   }
 }
 
-fn task_filter() -> String {
-  "plan_id IN ('uos/telegram-runtime/20261001-1150','uos/telegram-admission/20261001-1015','uos/telegram-tools/20261011-1115','uos/telegram-resume/20261012-0216','uos/telegram-reclaim-tool/20261012-0226','uos/telegram-dashboard/20261012-0230') OR plan_id LIKE '%20261024%'"
+// Fixed SQL identifiers only: callers cannot supply arbitrary SQL. Scope follows
+// project families, not a date embedded in a plan or job identifier.
+fn family_filter(column: String) -> String {
+  "("
+  <> column
+  <> " GLOB 'uos/telegram-?*/?*' OR "
+  <> column
+  <> " GLOB 'uos/agy-operations/?*' OR "
+  <> column
+  <> " GLOB 'uos/full-merge/?*')"
+}
+
+pub fn task_filter() -> String {
+  family_filter("plan_id")
+}
+
+pub fn job_filter() -> String {
+  "("
+  <> family_filter("id")
+  <> " OR id GLOB 'telegram/?*' OR "
+  <> family_filter(
+    "(CASE WHEN json_valid(args) THEN json_extract(args, '$.plan') ELSE NULL END)",
+  )
+  <> ")"
+}
+
+pub fn completion_marker_query() -> String {
+  "SELECT count(*) || ':' || COALESCE(MAX(completed_at_ns),0) FROM sa_plan_task WHERE state='completed' AND "
+  <> task_filter()
+  <> ";"
 }
 
 fn completion_marker() -> Result(String, String) {
@@ -325,7 +353,7 @@ fn completion_marker() -> Result(String, String) {
     [
       "-readonly",
       dev.root <> "/var/sa-plan/uos.sqlite3",
-      "SELECT count(*) || ':' || COALESCE(MAX(completed_at_ns),0) FROM sa_plan_task WHERE state='completed';",
+      completion_marker_query(),
     ],
     3000,
   )
@@ -380,7 +408,9 @@ pub fn snapshot(cfg: Config, reason: String) -> Result(String, String) {
     |> result.try(one),
   )
   use jobs <- result.try(sql(
-    "SELECT id,worker,state,attempt,(state='executing' AND lease_until_ns<cast(strftime('%s','now') AS integer)*1000000000) AS expired FROM sa_plan_job WHERE id LIKE '%20261024%' ORDER BY id;",
+    "SELECT id,worker,state,attempt,(state='executing' AND lease_until_ns<cast(strftime('%s','now') AS integer)*1000000000) AS expired FROM sa_plan_job WHERE "
+    <> job_filter()
+    <> " ORDER BY id;",
   ))
   use global_tasks <- result.try(sql(
     "SELECT state,count(*) AS n,sum(state='executing' AND lease_until_ns<cast(strftime('%s','now') AS integer)*1000000000) AS expired FROM sa_plan_task GROUP BY state;",
