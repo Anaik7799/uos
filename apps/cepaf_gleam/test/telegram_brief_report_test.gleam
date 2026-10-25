@@ -148,3 +148,126 @@ pub fn valid_http_failure_is_reported_not_hidden_test() {
 fn indices(n: Int,acc: List(Int)) -> List(Int) {
   case n { 0 -> acc _ -> indices(n-1,[n,..acc]) }
 }
+
+@external(erlang, "telegram_brief_test_io", "reset")
+fn reset_observation(times: List(Int), leases: List(Result(Int,String))) -> Nil
+@external(erlang, "telegram_brief_test_io", "now_ms")
+fn observation_now_ms() -> Int
+@external(erlang, "telegram_brief_test_io", "authorize")
+fn observation_authorize() -> Result(Int,String)
+@external(erlang, "telegram_brief_test_io", "mark")
+fn observation_mark(stage: String) -> Nil
+@external(erlang, "telegram_brief_test_io", "calls")
+fn observation_calls() -> List(String)
+
+fn observation_io(plan: Result(String,String), current: Result(String,String)) -> brief.Io {
+  brief.Io(
+    authorize: observation_authorize,
+    now_ms: observation_now_ms,
+    now_us: fn() { 1001 },
+    read_tasks: fn() { observation_mark("tasks") plan },
+    read_status: fn() { observation_mark("status") current },
+  )
+}
+pub fn observation_success_uses_both_current_sources_test() {
+  reset_observation([0], [Ok(30_000)])
+  let assert Ok(raw)=brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+  string.contains(raw,"uos.telegram.exec-brief.v1") |> should.be_true
+  observation_calls() |> should.equal(["tasks","status"])
+}
+pub fn observation_failed_plan_stops_status_and_redacts_test() {
+  reset_observation([0], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Error("PRIVATE_PLAN"),Ok(status())))
+    |> should.equal(Error("brief_plan_unavailable"))
+  observation_calls() |> should.equal(["tasks"])
+}
+pub fn observation_failed_status_is_redacted_test() {
+  reset_observation([0], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Error("PRIVATE_STATUS")))
+    |> should.equal(Error("brief_status_unavailable"))
+  observation_calls() |> should.equal(["tasks","status"])
+}
+pub fn observation_revoked_before_start_executes_no_reads_test() {
+  reset_observation([0], [Error("PRIVATE_AUTH")])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_authority_refused"))
+  observation_calls() |> should.equal([])
+}
+pub fn observation_short_initial_lease_executes_no_reads_test() {
+  reset_observation([0], [Ok(19_999)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_authority_window_too_short"))
+  observation_calls() |> should.equal([])
+}
+pub fn observation_revoked_after_plan_stops_status_test() {
+  reset_observation([0], [Ok(30_000),Error("revoked")])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_authority_refused"))
+  observation_calls() |> should.equal(["tasks"])
+}
+pub fn observation_plan_exhausts_deadline_stops_status_test() {
+  reset_observation([0,0,20_000], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_deadline_refused"))
+  observation_calls() |> should.equal(["tasks"])
+}
+pub fn observation_clock_regression_stops_status_test() {
+  reset_observation([100,100,99], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_deadline_refused"))
+  observation_calls() |> should.equal(["tasks"])
+}
+pub fn observation_revoked_after_status_emits_no_report_test() {
+  reset_observation([0], [Ok(30_000),Ok(30_000),Error("revoked")])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_authority_refused"))
+  observation_calls() |> should.equal(["tasks","status"])
+}
+pub fn observation_status_exhausts_deadline_emits_no_report_test() {
+  reset_observation([0,0,1,20_001], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_deadline_refused"))
+  observation_calls() |> should.equal(["tasks","status"])
+}
+pub fn observation_invalid_status_emits_no_report_test() {
+  reset_observation([0], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok("{}")))
+    |> should.equal(Error("brief_observation_invalid"))
+}
+pub fn observation_post_projection_authority_loss_emits_no_report_test() {
+  reset_observation([0], [Ok(30_000),Ok(30_000),Ok(30_000),Error("revoked")])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_authority_refused"))
+}
+pub fn observation_post_projection_deadline_emits_no_report_test() {
+  reset_observation([0,0,1,2,20_001], [Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status())))
+    |> should.equal(Error("brief_deadline_refused"))
+}
+
+pub fn observation_initial_authority_latency_does_not_refuse_valid_budget_test() {
+  reset_observation([0,10,20,30,40],[Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status()))) |> should.be_ok
+  observation_calls() |> should.equal(["tasks","status"])
+}
+pub fn observation_initial_authority_exhausts_read_budget_test() {
+  reset_observation([0,3001],[Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status()))) |> should.equal(Error("brief_deadline_refused"))
+  observation_calls() |> should.equal([])
+}
+
+pub fn observation_short_status_lease_stops_status_test() {
+  reset_observation([0],[Ok(30_000),Ok(11_999)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status()))) |> should.equal(Error("brief_authority_window_too_short"))
+  observation_calls() |> should.equal(["tasks"])
+}
+pub fn observation_short_status_work_budget_stops_status_test() {
+  reset_observation([0,0,8001],[Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status()))) |> should.equal(Error("brief_deadline_refused"))
+  observation_calls() |> should.equal(["tasks"])
+}
+pub fn observation_exact_status_reserve_boundary_passes_test() {
+  reset_observation([0,0,8000,8001,8002],[Ok(30_000),Ok(12_000),Ok(30_000)])
+  brief.observe("uos/test/brief",observation_io(Ok(tasks([])),Ok(status()))) |> should.be_ok
+  observation_calls() |> should.equal(["tasks","status"])
+}

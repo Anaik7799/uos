@@ -86,7 +86,11 @@
     }
   ],
   "publication": {
-    "state": "PENDING",
+    "state": "PUBLISHED",
+    "at": "2026-10-25T16:30:02.225Z",
+    "candidate": "a5dddfc043fdf3f4f688c2cc8070b2418ea57287",
+    "remote": "a5dddfc043fdf3f4f688c2cc8070b2418ea57287",
+    "commits_since_baseline": 252,
     "source_only": true,
     "production_admission": false
   },

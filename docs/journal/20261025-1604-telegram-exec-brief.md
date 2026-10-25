@@ -41,7 +41,7 @@ Pure brief projector, guarded command/tool selection, service composition, focus
 Gleam owns control, typed projection and fences. Existing isolated native observer remains behind the pinned adapter. No new daemon, external package or inference dependency. Sheaf/category mathematical proof UNRUN.
 
 ## 10. Remaining Gaps
-Publication gates for this increment; direct service fault scenarios for aggregate deadline, authority loss between reads and failed observer output remain a documented Minor coverage gap; all remaining command/Mini/media/gateway functionality, actual Telegram/browser final acceptance and global admission. Full observer digest cryptographic verification is upstream, not duplicated in the projector.
+Source publication verified at 2026-10-25T16:30:02.225Z; main and GitHub match a5dddfc043fdf3f4f688c2cc8070b2418ea57287. Remaining: direct service fault scenarios for aggregate deadline, authority loss between reads and failed observer output remain a documented Minor coverage gap; all remaining command/Mini/media/gateway functionality, actual Telegram/browser final acceptance and global admission. Full observer digest cryptographic verification is upstream, not duplicated in the projector.
 
 ## 11. Metrics Summary
 Runtime61/71 tasks unchanged; candidate39/77connected command literals,16backend gaps,22unimplemented. These are connectivity categories, not readiness percentages. Bayesian trust calibration and system Lyapunov derivative are UNRUN. Earlier Socratic forecast p0.8 for publication by16:25 succeeded at16:13:17; Brier=(0.8-1)^2=0.04, one analyst forecast only.

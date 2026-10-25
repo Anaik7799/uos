@@ -171,3 +171,49 @@ pub fn project(expected_plan: String,tasks_raw: String,status_raw: String,
   use _ <- result.try(require(string.byte_size(rendered)<=16_384))
   Ok(rendered)
 }
+
+
+/// Trusted service wiring supplies these bounded reads and fresh authority.
+/// There is no caller-supplied executable, endpoint, cached fallback or grant.
+pub type Io {
+  Io(
+    authorize: fn() -> Result(Int,String),
+    now_ms: fn() -> Int,
+    now_us: fn() -> Int,
+    read_tasks: fn() -> Result(String,String),
+    read_status: fn() -> Result(String,String),
+  )
+}
+
+fn checkpoint(io: Io,started_ms: Int,required_ms: Int,work_ms: Int) -> Result(Nil,String) {
+  use lease_ms <- result.try(io.authorize()
+    |> result.replace_error("brief_authority_refused"))
+  use _ <- result.try(case lease_ms>0 && lease_ms>=required_ms {
+    True -> Ok(Nil)
+    False -> Error("brief_authority_window_too_short")
+  })
+  let elapsed=io.now_ms()-started_ms
+  case elapsed>=0 && elapsed<20_000 && 20_000-elapsed>=work_ms {
+    True -> Ok(Nil)
+    False -> Error("brief_deadline_refused")
+  }
+}
+
+/// Shared service orchestration, exercised with deterministic fault schedules.
+/// The service adapters bound plan reads to 5s and status reads to 12s.
+/// Authority and the aggregate monotonic deadline are rechecked between reads
+/// and after projection, so a later failure cannot reuse an earlier report.
+pub fn observe(expected_plan: String,io: Io) -> Result(String,String) {
+  let started_ms=io.now_ms()
+  let started_us=io.now_us()
+  use _ <- result.try(checkpoint(io,started_ms,20_000,17_000))
+  use tasks <- result.try(io.read_tasks()
+    |> result.replace_error("brief_plan_unavailable"))
+  use _ <- result.try(checkpoint(io,started_ms,12_000,12_000))
+  use status <- result.try(io.read_status()
+    |> result.replace_error("brief_status_unavailable"))
+  use _ <- result.try(checkpoint(io,started_ms,0,0))
+  use report <- result.try(project(expected_plan,tasks,status,started_us,io.now_us()))
+  use _ <- result.try(checkpoint(io,started_ms,0,0))
+  Ok(report)
+}
