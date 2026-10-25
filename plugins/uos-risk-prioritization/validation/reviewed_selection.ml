@@ -64,10 +64,10 @@ let apply ~now ~raw ~records ~selected ~(report:Checker.report) ~review ~proof =
     Bounded.sha256 proof=text "review_evidence_sha256" review) "selection proof bytes differ";
   let envelope=Bounded.json_text proof in unique envelope;
   require(text "status" envelope="SUCCESS") "selection reviewer response incomplete";
-  let conversation=bounded_text "conversation_id" 160 envelope in
-  require(reviewer="agy:"^conversation) "selection reviewer differs from evidence";
+  ignore(bounded_text "conversation_id" 160 envelope);
   let verdict=Bounded.json_text(text "response" envelope) in
-  keys verdict ["verdict";"proposal_sha256";"reason"];
+  keys verdict ["verdict";"proposal_sha256";"reviewer";"reason"];
+  require(text "reviewer" verdict=reviewer) "selection reviewer differs from evidence";
   require(text "verdict" verdict="APPROVE" &&
     text "proposal_sha256" verdict=Bounded.sha256(proposal review))
     "selection review does not approve this exact proposal";

@@ -24,14 +24,14 @@ let run () =
     "plan_id",`String "test/selection";"portfolio_sha256",`String(Bounded.sha256 raw);
     "selected_task",`String "B";"tied_tasks",`List[`String "A";`String "B"];
     "observed_at",`String now;"valid_until",`String "2026-10-25T01:30:00Z";
-    "reviewer",`String "agy:independent";"reason",`String "B reuses accepted adapters";
+    "reviewer",`String "agy-independent-reviewer";"reason",`String "B reuses accepted adapters";
     "comparisons",`List[cost "A";cost "B"];
     "review_evidence_path",`String "governance/planning/test-review.json";
     "review_evidence_sha256",`String(String.make 64 '0')] in
   let seal r =
     let verdict=`Assoc["verdict",`String "APPROVE";
       "proposal_sha256",`String(Bounded.sha256(Reviewed_selection.proposal r));
-      "reason",`String "bounded comparative choice"] in
+      "reason",`String "bounded comparative choice";"reviewer",field "reviewer" r] in
     let proof=Yojson.Basic.to_string(`Assoc["status",`String "SUCCESS";
       "conversation_id",`String "independent";
       "response",`String(Yojson.Basic.to_string verdict)]) in
@@ -51,9 +51,9 @@ let run () =
   reject "expiry boundary" (fun()->apply ~time:"2026-10-25T01:30:00Z" review);
   reject "too long lifetime" (fun()->let r,p=seal(change "valid_until" (`String "2026-10-25T02:00:01Z") review) in apply ~evidence:p r);
   reject "wrong plan" (fun()->let r,p=seal(change "plan_id" (`String "other/plan") review) in apply ~evidence:p r);
-  reject "self review" (fun()->apply ~rs:(List.map(change "actor" (`String "agy:independent")) records) review);
+  reject "self review" (fun()->apply ~rs:(List.map(change "actor" (`String "agy-independent-reviewer")) records) review);
   reject "proof mismatch" (fun()->apply ~evidence:(proof^" ") review);
-  reject "reviewer mismatch" (fun()->let r,p=seal(change "reviewer" (`String "agy:another") review) in apply ~evidence:p r);
+  reject "reviewer mismatch" (fun()->apply(change "reviewer" (`String "agy:another") review));
   reject "unknown field" (fun()->apply(`Assoc(("force",`Bool true)::obj review)));
   reject "duplicate field" (fun()->apply(`Assoc(("plan_id",field "plan_id" review)::obj review)));
   List.iter(fun(name,ids)->reject name(fun()->let r,p=seal(change "tied_tasks" (`List(List.map(fun s->`String s) ids)) review) in apply ~evidence:p r))
