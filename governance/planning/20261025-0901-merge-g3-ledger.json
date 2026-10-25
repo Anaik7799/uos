@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-10-25T09:01:21.461Z",
+  "plan": "uos/full-merge/20261025-0638",
+  "task": "G3_AUTHORITY",
+  "source_only": true,
+  "status": "VERIFIED_PENDING_INDEPENDENT_REVIEW",
+  "groups": [
+    {
+      "group": "C1",
+      "revision": "633bd519d0398c8e2a34e11e22fd862c0e9b775c",
+      "decision": "PRESERVE_SUPERSEDED",
+      "reason": "Trusted DB argv locator and EOF framing present in main; entry point and Dune identical, store has newer stricter validation. Unprefixed v1 wire specification superseded by timestamped v2-v4 specs. Original preserved bookmark remains private."
+    },
+    {
+      "group": "C2",
+      "revision": "a591b7edfbd22c13485d375323cabb31313e4a73",
+      "decision": "INTEGRATE_MISSING_AND_KEEP_NEWER",
+      "reason": "Integrate service provider, confined private-stage migration, typed authority protocol and tests. Keep main current ingress/delivery source and tests; combine migration with unchanged read-only observer. Four historical advisory JSON files retain original content and no runtime authority."
+    },
+    {
+      "group": "C3",
+      "revision": "d75fe43304baf32f611cf775a510e676535f0dc1",
+      "decision": "ALREADY_IDENTICAL",
+      "reason": "27/27 paths equal main after G2; avoid duplicate changes; preserve original bookmark."
+    }
+  ],
+  "tests": {
+    "swarm": 66,
+    "telegram": 62,
+    "first_attempt": "61/66 passed; five child cases resolved wrong code path",
+    "second_attempt": "Child code fixed; default 5-second EUnit timeout too short for bounded lock refusal",
+    "final": "66/66 with per-test 35-second bound; 62/62 Telegram checks"
+  },
+  "limitations": [
+    "No operational provider migration performed",
+    "No runtime release or global admission",
+    "Same-UID hostile filesystem changes are not proven safe by private-stage checks",
+    "Other branch groups G4-G8 remain"
+  ]
+}

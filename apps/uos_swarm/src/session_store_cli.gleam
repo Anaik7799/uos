@@ -31,11 +31,17 @@ fn exact_database_path(path: String) -> Result(Nil, String) {
     ["", ..parts] -> Ok(parts)
     _ -> Error("database path must be absolute")
   })
-  use _ <- result.try(case list.any(parts, fn(p) { p == "" || p == "." || p == ".." }) {
-    True -> Error("database path aliases are refused")
-    False -> Ok(Nil)
-  })
-  let parent = "/" <> { parts |> list.reverse |> list.drop(1) |> list.reverse |> string.join("/") }
+  use _ <- result.try(
+    case list.any(parts, fn(p) { p == "" || p == "." || p == ".." }) {
+      True -> Error("database path aliases are refused")
+      False -> Ok(Nil)
+    },
+  )
+  let parent =
+    "/"
+    <> {
+      parts |> list.reverse |> list.drop(1) |> list.reverse |> string.join("/")
+    }
   use actual <- result.try(canonical_directory(parent))
   use _ <- result.try(case actual == parent {
     True -> Ok(Nil)
@@ -43,10 +49,11 @@ fn exact_database_path(path: String) -> Result(Nil, String) {
   })
   case simplifile.link_info(path) {
     Error(simplifile.Enoent) -> Ok(Nil)
-    Ok(info) -> case simplifile.file_info_type(info) == simplifile.File {
-      True -> Ok(Nil)
-      False -> Error("database must be a regular file")
-    }
+    Ok(info) ->
+      case simplifile.file_info_type(info) == simplifile.File {
+        True -> Ok(Nil)
+        False -> Error("database must be a regular file")
+      }
     Error(_) -> Error("database path cannot be observed")
   }
 }
@@ -105,10 +112,16 @@ fn with_store(
 ) -> Result(String, String) {
   use _ <- result.try(exact_database_path(db))
   use opened <- result.try(
-    { case db == "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3" {
-      True -> store.open_existing(db)
-      False -> store.open(db)
-    } } |> result.map_error(store.error_to_string),
+    {
+      case
+        db
+        == "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
+      {
+        True -> store.open_existing(db)
+        False -> store.open(db)
+      }
+    }
+    |> result.map_error(store.error_to_string),
   )
   let outcome = f(opened)
   let _ = store.close(opened)
@@ -297,7 +310,7 @@ fn run_other(args: List(String)) -> Result(String, String) {
 
 pub fn usage() -> String {
   "gleam run -m session_store_cli -- <absolute_sqlite3_path> <command> ...\n"
-  <> "register <session> <claude|codex|agy> <workspace> <revision> <refs_csv|-> <op_id>\n"
+  <> "register <session> <claude|codex|agy|service> <workspace> <revision> <refs_csv|-> <op_id>\n"
   <> "heartbeat <session> <revision> <refs_csv|-> <op_id>\n"
   <> "claim <session> <task:id|workspace:path|integration/main|runtime:service> <ttl_seconds> <op_id>\n"
   <> "renew <session> <resource> <epoch> <ttl_seconds> <op_id>\n"

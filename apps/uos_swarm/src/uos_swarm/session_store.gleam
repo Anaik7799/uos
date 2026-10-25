@@ -40,13 +40,13 @@
 //// #fractal-l3 #zero-muda
 
 import gleam/dynamic.{type Dynamic}
-import gleam/uri
 import gleam/int
 import gleam/json.{type Json}
 import gleam/list
 import gleam/result
 import gleam/set
 import gleam/string
+import gleam/uri
 import simplifile
 import uos_swarm/board
 import uos_swarm/session_sync as sync
@@ -384,7 +384,9 @@ pub fn open_existing(path: String) -> Result(Store, StoreError) {
   let store = Store(conn, path, generation)
   let checked = {
     use _ <- result.try(recovery_current(store))
-    use metadata <- result.try(run(store, "SELECT value FROM meta WHERE key = 'schema'", []))
+    use metadata <- result.try(
+      run(store, "SELECT value FROM meta WHERE key = 'schema'", []),
+    )
     use _ <- result.try(case metadata {
       [[CellText(schema)]] if schema == sync.genesis -> Ok(Nil)
       _ -> Error(SchemaError("operational_coordinator_schema_mismatch"))
@@ -394,13 +396,18 @@ pub fn open_existing(path: String) -> Result(Store, StoreError) {
     use _ <- result.try(recovery_current(store))
     case report.ok && rows > 0 {
       True -> Ok(store)
-      False -> Error(CorruptError("operational_coordinator_requires_verified_nonempty_ledger"))
+      False ->
+        Error(CorruptError(
+          "operational_coordinator_requires_verified_nonempty_ledger",
+        ))
     }
   }
   case checked {
     Ok(_) -> checked
-    Error(_) -> { let _ = ffi_close(conn)
-      checked }
+    Error(_) -> {
+      let _ = ffi_close(conn)
+      checked
+    }
   }
 }
 
@@ -416,10 +423,19 @@ fn recovery_generation(path: String) -> Result(String, StoreError) {
   let marker = path <> ".recovery-generation"
   case simplifile.link_info(marker) {
     Error(simplifile.Enoent) -> Ok("genesis")
-    Ok(info) -> case simplifile.file_info_type(info) == simplifile.File && info.size > 0 && info.size <= 256 {
-      True -> simplifile.read(marker) |> result.map_error(fn(_) { RefusedError("coordinator_generation_unreadable") })
-      False -> Error(RefusedError("coordinator_generation_invalid"))
-    }
+    Ok(info) ->
+      case
+        simplifile.file_info_type(info) == simplifile.File
+        && info.size > 0
+        && info.size <= 256
+      {
+        True ->
+          simplifile.read(marker)
+          |> result.map_error(fn(_) {
+            RefusedError("coordinator_generation_unreadable")
+          })
+        False -> Error(RefusedError("coordinator_generation_invalid"))
+      }
     Error(_) -> Error(RefusedError("coordinator_generation_unknown"))
   }
 }
@@ -748,6 +764,19 @@ fn required_trigger_sql() -> List(String) {
   })
 }
 
+pub fn events_payload_v1_sql() -> String {
+  let triggers = required_trigger_sql()
+  list.drop(triggers, 4) |> list.first |> result.unwrap("")
+}
+
+pub fn events_payload_v2_sql() -> String {
+  string.replace(
+    events_payload_v1_sql(),
+    "IN ('claude','codex','agy')",
+    "IN ('claude','codex','agy','service')",
+  )
+}
+
 pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use rows <- result.try(
     run(
@@ -764,12 +793,29 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
     ),
   )
   let triggers_present = list.length(trigger_rows) == 5
-  let trigger_definitions_ok = list.all(required_trigger_sql(), fn(sql) {
-    list.any(trigger_rows, fn(row) { case row {
-      [CellText(_), CellText(actual)] -> actual == sql
-      _ -> False
-    } })
-  })
+  let required_common = list.take(required_trigger_sql(), 4)
+  let common_triggers_ok =
+    list.all(required_common, fn(sql) {
+      list.any(trigger_rows, fn(row) {
+        case row {
+          [CellText(_), CellText(actual)] -> actual == sql
+          _ -> False
+        }
+      })
+    })
+  let payload_trigger_row =
+    list.find(trigger_rows, fn(row) {
+      case row {
+        [CellText("events_payload"), CellText(_)] -> True
+        _ -> False
+      }
+    })
+  let payload_trigger_ok = case payload_trigger_row {
+    Ok([CellText(_), CellText(actual)]) ->
+      actual == events_payload_v1_sql() || actual == events_payload_v2_sql()
+    _ -> False
+  }
+  let trigger_definitions_ok = common_triggers_ok && payload_trigger_ok
   let #(_, _, failures, _) =
     list.fold(rows, #(0, sync.genesis, [], set.new()), fn(acc, row) {
       let #(expected_sequence, expected_previous, fails, seen_ops) = acc
@@ -856,8 +902,13 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
       ..failures
     ]
   }
-  let failures = failures
-    |> add_if(!trigger_definitions_ok, "trigger_definitions", "append-only trigger definitions do not match this candidate's required schema")
+  let failures =
+    failures
+    |> add_if(
+      !trigger_definitions_ok,
+      "trigger_definitions",
+      "append-only trigger definitions do not match this candidate's required schema",
+    )
     |> list.reverse
   let failed = fn(check: String) {
     list.any(failures, fn(entry) { entry.0 == check })
@@ -1068,4 +1119,183 @@ pub fn observe_file(
     Error(error) -> Error(error)
     Ok(value) -> closed |> result.replace(value)
   }
+}
+
+
+// ---------------------------------------------------------------------
+// Service Provider Migration (v1 -> v2)
+// ---------------------------------------------------------------------
+
+/// Explicit staged migration from v1 trigger schema ('claude','codex','agy')
+/// to v2 ('claude','codex','agy','service').
+///
+/// Preconditions:
+/// 1. Recovery clear (no recovery in progress)
+/// 2. Schema metadata matches genesis
+/// 3. Store independently verifies (chain, sequence, digests, triggers)
+/// 4. Current events_payload trigger matches events_payload_v1_sql() (or already v2)
+///
+/// Execution:
+/// Transactionally drop v1 trigger and create v2 trigger under BEGIN IMMEDIATE.
+///
+/// Postconditions:
+/// 1. Store independently verifies under v2
+/// 2. Event count and head digest are byte-for-byte identical (no history mutation)
+fn migration_require(ok: Bool, reason: String) -> Result(Nil, StoreError) {
+  case ok {
+    True -> Ok(Nil)
+    False -> Error(RefusedError(reason))
+  }
+}
+
+/// Development migration is confined to a fresh private staged candidate.
+/// This function cannot migrate the operational coordinator or path aliases.
+fn migration_stage_identity(
+  path: String,
+) -> Result(simplifile.FileInfo, StoreError) {
+  use stage <- result.try(case string.split(path, "/") {
+    ["", "tmp", "uos-telegram-provider-stage-" <> nonce, "coordinator.sqlite3"] -> {
+      use _ <- result.try(migration_require(
+        nonce != ""
+          && string.byte_size(nonce) <= 128
+          && list.all(string.to_graphemes(nonce), fn(c) {
+          string.contains(
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_",
+            c,
+          )
+        }),
+        "provider_migration_requires_private_stage",
+      ))
+      Ok("/tmp/uos-telegram-provider-stage-" <> nonce)
+    }
+    _ -> Error(RefusedError("provider_migration_requires_private_stage"))
+  })
+  use tmp <- result.try(
+    simplifile.link_info("/tmp")
+    |> result.map_error(fn(_) {
+      RefusedError("provider_stage_parent_unavailable")
+    }),
+  )
+  use owner <- result.try(
+    simplifile.file_info("/proc/self")
+    |> result.map_error(fn(_) {
+      RefusedError("provider_stage_owner_unavailable")
+    }),
+  )
+  use directory <- result.try(
+    simplifile.link_info(stage)
+    |> result.map_error(fn(_) {
+      RefusedError("provider_stage_directory_unavailable")
+    }),
+  )
+  use file <- result.try(
+    simplifile.link_info(path)
+    |> result.map_error(fn(_) {
+      RefusedError("provider_stage_file_unavailable")
+    }),
+  )
+  use _ <- result.try(migration_require(
+    simplifile.file_info_type(tmp) == simplifile.Directory
+      && tmp.user_id == 0
+      && int.bitwise_and(tmp.mode, 0o1000) != 0
+      && simplifile.file_info_type(directory) == simplifile.Directory
+      && directory.user_id == owner.user_id
+      && simplifile.file_info_permissions_octal(directory) == 0o700
+      && simplifile.file_info_type(file) == simplifile.File
+      && file.user_id == owner.user_id
+      && simplifile.file_info_permissions_octal(file) == 0o600
+      && file.nlinks == 1,
+    "provider_stage_permissions_or_identity_invalid",
+  ))
+  Ok(file)
+}
+
+fn migration_identity_current(
+  path: String,
+  original: simplifile.FileInfo,
+) -> Result(Nil, StoreError) {
+  use current <- result.try(migration_stage_identity(path))
+  migration_require(
+    current.inode == original.inode && current.dev == original.dev,
+    "provider_stage_identity_changed",
+  )
+}
+
+fn migration_payload_sql(store: Store) -> Result(String, StoreError) {
+  use rows <- result.try(
+    run(
+      store,
+      "SELECT sql FROM sqlite_master WHERE type = 'trigger' AND name = 'events_payload'",
+      [],
+    ),
+  )
+  case rows {
+    [[CellText(sql)]] -> Ok(sql)
+    _ -> Error(SchemaError("provider_stage_payload_trigger_missing"))
+  }
+}
+
+pub fn migrate_to_service_provider(path: String) -> Result(Nil, StoreError) {
+  use identity <- result.try(migration_stage_identity(path))
+  use _ <- result.try(recovery_clear(path))
+  use generation <- result.try(recovery_generation(path))
+  use conn <- result.try(ffi_open_existing(path) |> result.map_error(OpenError))
+  let store = Store(conn, path, generation)
+  let outcome =
+    transactionally(store, fn() {
+      use _ <- result.try(migration_identity_current(path, identity))
+      use _ <- result.try(recovery_current(store))
+      use metadata <- result.try(
+        run(store, "SELECT value FROM meta WHERE key = 'schema'", []),
+      )
+      use _ <- result.try(case metadata {
+        [[CellText(schema)]] if schema == sync.genesis -> Ok(Nil)
+        _ -> Error(SchemaError("operational_coordinator_schema_mismatch"))
+      })
+      use before <- result.try(verify(store))
+      use _ <- result.try(migration_require(
+        before.ok,
+        "provider_stage_preverification_failed",
+      ))
+      use #(pre_count, pre_digest) <- result.try(head(store))
+      use _ <- result.try(migration_require(
+        pre_count > 0,
+        "provider_stage_requires_verified_history",
+      ))
+      use pre_journal <- result.try(reconstruct_journal(store))
+      use sql <- result.try(migration_payload_sql(store))
+      use _ <- result.try(case sql == events_payload_v2_sql() {
+        True -> Ok(Nil)
+        False -> {
+          use _ <- result.try(migration_require(
+            sql == events_payload_v1_sql(),
+            "provider_stage_unknown_payload_trigger",
+          ))
+          use _ <- result.try(
+            ffi_exec(conn, "DROP TRIGGER events_payload;")
+            |> result.map_error(SchemaError),
+          )
+          ffi_exec(conn, events_payload_v2_sql() <> ";")
+          |> result.map(fn(_) { Nil })
+          |> result.map_error(SchemaError)
+        }
+      })
+      use after <- result.try(verify(store))
+      use post_sql <- result.try(migration_payload_sql(store))
+      use #(post_count, post_digest) <- result.try(head(store))
+      use post_journal <- result.try(reconstruct_journal(store))
+      use _ <- result.try(migration_require(
+        after.ok
+          && post_sql == events_payload_v2_sql()
+          && pre_count == post_count
+          && pre_digest == post_digest
+          && pre_journal == post_journal,
+        "provider_stage_postcondition_failed",
+      ))
+      use _ <- result.try(migration_identity_current(path, identity))
+      // transactionally rechecks recovery generation/lock immediately before COMMIT.
+      Ok(Nil)
+    })
+  let _ = ffi_close(conn)
+  outcome
 }

@@ -2,7 +2,7 @@
 
 #fractal-l0 #fractal-l5 #fractal-l9 #zk-adr #zero-muda
 
-Observed 2026-10-25T08:45:44.247Z (post-G2 checkpoint). [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning)
+Observed 2026-10-25T09:01:21.461Z (G3 verification checkpoint). [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning)
 
 **AS-IS:** Telegram runtime plan 61/71 completed (86% of task records); admission plan 25/33 completed (76% of task records). These are not feature or live acceptance percentages. Main and GitHub are verified at a7a8d368; 229 commits uploaded across the two pushes. G2 consolidated743 paths, including728 trunk paths. Merge plan3/9 stages complete; other branch groups remain.
 
@@ -19,11 +19,11 @@ Observed 2026-10-25T08:45:44.247Z (post-G2 checkpoint). [Cockpit](http://nas-1.t
 
 Execution order: finish the requested consolidation first; then pull the ready Mini App, command, media and gateway tasks through Sa-plan with narrow code ownership. Use AGY for bounded independent review and Codex/AGY for code and tests. Reuse unchanged revision-bound evidence and run new checks only for changed behavior or unresolved failures. Update this checkpoint after task completion and at five-minute work boundaries. Review jobs are not feature completion.
 
-Current owner: Codex G3_AUTHORITY attempt 1. AGY gemini-4-argon-high reviewed the supplied integration packet (conversation 1b02c3f4); initial verdict HOLD; final review7c6f8b05 approved a7a8d368 for source-only merge after the checks passed. Claude v6 preservation/consolidation advice is retained in the merge-plan snapshot. No other Codex sub-agents are currently active.
+Current owner: Codex G3_AUTHORITY attempt 1. G3 full application builds passed; 66 coordinator checks and 62 Telegram authority/ingress/ledger checks passed. Independent source-merge review is next. AGY gemini-4-argon-high reviewed the supplied integration packet (conversation 1b02c3f4); initial verdict HOLD; final review7c6f8b05 approved a7a8d368 for source-only merge after the checks passed. Claude v6 preservation/consolidation advice is retained in the merge-plan snapshot. No other Codex sub-agents are currently active.
 
 The candidate now has 639 affected Gleam checks, 40 CLI unit checks, two retained positive native CLI integration tests, 20 Lean module compiles, 681 axiom closures, risk checker cases, and four health/chat browser scenarios passing. Routing acceptance covers 29 checks across 11 homeostasis paths. TLS handshakes and real backend WebSocket sessions were not exercised. Runtime deployment stays HOLD because installed C3i/rule-engine NIF digests do not match their manifests; neither was loaded.
 
-A reliable overall finish time is not yet established. Ten runtime task records and eight admission task records remain, with backend availability and real Telegram acceptance still on the critical path. G2 is merged and uploaded. The next milestone is G3 reconciliation: C3 already matches main on27/27 paths, C1 overlaps newer storage code, C2 still has missing provider/migration behavior.
+A reliable overall finish time is not yet established. Ten runtime task records and eight admission task records remain, with backend availability and real Telegram acceptance still on the critical path. G2 is merged and uploaded. The next milestone is G3 independent review and upload: C3 matches main on 27/27 paths, C1 is superseded by newer storage behavior, and C2 provider/migration behavior is now implemented in the isolated candidate. This has not yet changed the 229 uploaded-commit count.
 
 [Machine checkpoint](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-0754-merge-checkpoint.json). Publication of this candidate document at that canonical URL follows source integration; the working-copy file is the current review artifact.
 

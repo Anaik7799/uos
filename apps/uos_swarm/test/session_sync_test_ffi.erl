@@ -25,11 +25,14 @@ run_cli_pair(ArgsA, ArgsB, Fault) ->
     {StatusA, OutputA, StatusB, OutputB}.
 
 start_cli(Args, Fault) ->
-    Erl = os:find_executable("erl"),
+    %% Follow the running candidate, including isolated compile-package builds.
+    Erl = filename:join([code:root_dir(), "bin", "erl"]),
     {ok, Cwd} = file:get_cwd(),
-    Ebins = filelib:wildcard(filename:join([Cwd, "build", "dev", "erlang", "*", "ebin"])),
-    Paths = lists:append([["-pa", Path] || Path <- Ebins]),
-    Payload = base64:encode(term_to_binary({Args, Fault})),
+    Ebins = [filename:absname(Path) || Path <- code:get_path()],
+    Paths = lists:append([["-pa", Path] || Path <- lists:reverse(Ebins)]),
+    Bindings = [module_binding(Module) || Module <-
+        [?MODULE, session_sync_cli, uos_swarm@session_sync]],
+    Payload = base64:encode(term_to_binary({Args, Fault, Bindings})),
     ErlArgs = ["+S", "2:2", "+A", "2", "-noshell"] ++ Paths ++
         ["-s", "session_sync_test_ffi", "child_cli", "-extra", binary_to_list(Payload)],
     open_port({spawn_executable, Erl}, [binary, exit_status, stderr_to_stdout,
@@ -49,7 +52,8 @@ collect(Port, Output) ->
 
 child_cli() ->
     [Encoded] = init:get_plain_arguments(),
-    {Args, Fault} = binary_to_term(base64:decode(Encoded), [safe]),
+    {Args, Fault, Bindings} = binary_to_term(base64:decode(Encoded), [safe]),
+    ok = verify_bindings(Bindings),
     case Fault of
         <<>> -> ok;
         _ -> put('$session_sync_test_fault', Fault)
@@ -58,5 +62,15 @@ child_cli() ->
         {ok, Output} -> io:put_chars([Output, <<"\n">>]), erlang:halt(0);
         {error, Error} -> io:put_chars([Error, <<"\n">>]), erlang:halt(1)
     end.
+
+module_binding(Module) ->
+    {Module, Beam, _Path} = code:get_object_code(Module),
+    {Module, crypto:hash(sha256, Beam)}.
+
+verify_bindings(Bindings) ->
+    lists:foreach(fun({Module, Expected}) ->
+        {Module, Expected} = module_binding(Module)
+    end, Bindings),
+    ok.
 
 unique_id() -> binary:encode_hex(crypto:strong_rand_bytes(12), lowercase).

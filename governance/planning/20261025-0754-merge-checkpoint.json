@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-25T08:45:44.246Z",
+  "observed_at": "2026-10-25T09:01:21.461Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
@@ -25,8 +25,8 @@
     "Expired MINI_API_IMPL claim requires recovery; not actively executing"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G3_AUTHORITY attempt1: C1 newer storage behavior equivalence; C2 service-provider/migration delta integration; C3 27/27 paths already identical",
-  "github_verified_at": "2026-10-25T08:41:12Z",
+  "working_on": "G3_AUTHORITY: provider migration/protocol integrated in isolated candidate; 66 coordinator + 62 Telegram checks pass; independent review pending",
+  "github_verified_at": "2026-10-25T09:03:04.223Z",
   "github_new_commits_uploaded": 229,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
@@ -82,9 +82,15 @@
   "merge_completed": 3,
   "merge_total": 9,
   "agents": {
-    "codex": "Executing G3_AUTHORITY",
-    "agy": "Two G2 reviews completed; final source-only PASS",
-    "claude": "v6 merge plan used as advisory input"
+    "codex": "G3 integration and verification",
+    "agy": "G3 independent review next; G2 review completed",
+    "claude": "v6 merge plan advisory retained"
   },
-  "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json"
+  "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
+  "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
+  "g3_checks": {
+    "coordinator": 66,
+    "telegram": 62,
+    "build": "PASS three production/test packages plus swarm tests"
+  }
 }
