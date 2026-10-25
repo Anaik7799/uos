@@ -21,7 +21,7 @@ function owned(){
 }
 function signed(){
  const p={auth_date:String(Math.floor(Date.now()/1000)),user:JSON.stringify({id:42,first_name:'Fixture'})};
- const secret=crypto.createHmac('sha256','WebAppData').update('synthetic-mini-test-token').digest();
+ const secret=crypto.createHmac('sha256','WebAppData').update('333444:synthetic-mini-test-token').digest();
  p.hash=crypto.createHmac('sha256',secret).update(Object.keys(p).sort().map(k=>k+'='+p[k]).join('\n')).digest('hex');
  return new URLSearchParams(p).toString();
 }

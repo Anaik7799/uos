@@ -5,6 +5,9 @@ import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/mini_evidence
 import cepaf_gleam/telegram/mini_podman
+import cepaf_gleam/telegram/mini_history
+import cepaf_gleam/harness/telegram_store as history_store
+import cepaf_gleam/harness/telegram_store_transport as history_transport
 import cepaf_gleam/harness/telegram_fmea_reader as fmea
 import cepaf_gleam/harness/telegram_verification_reader as verification
 import cepaf_gleam/telegram/types
@@ -156,6 +159,31 @@ fn observe_podman() -> Result(api.Observation, Nil) {
   mini_podman.observe(mini_podman.live_io(sha)) |> result.replace_error(Nil)
 }
 
+
+fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
+  use token <- result.try(get_env("UOS_TELEGRAM_MINI_BOT_TOKEN"))
+  use raw <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_GRANTS"))
+  use _ <- result.try(case string.byte_size(raw) <= 8192 { True -> Ok(Nil) False -> Error(Nil) })
+  let grant_decoder = {
+    use user <- decode.field("user_id", decode.int)
+    use chat <- decode.field("chat_id", decode.int)
+    decode.success(mini_history.Grant(user, chat))
+  }
+  use grants <- result.try(json.parse(raw, decode.list(grant_decoder)) |> result.replace_error(Nil))
+  use config <- result.try(mini_history.configuration(token, grants) |> result.replace_error(Nil))
+  use database <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_DATABASE"))
+  let transport = history_transport.reviewed_local_configuration(
+    "/home/an/NAS-setup/uos/tools/validation/telegram_store_transport_guardian.exe",
+    "06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab",
+    "/home/an/NAS-setup/uos/tools/validation/telegram_store_recovery_worker.exe",
+    "f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e",
+    database,
+  )
+  mini_history.observe(config, read, fn(keys) {
+    history_store.read_keys(transport, keys) |> result.replace_error("history_store_unavailable")
+  }, clock) |> result.replace_error(Nil)
+}
+
 pub fn observe(read: api.AuthorizedRead) -> api.Observation {
   case api.page(read) {
     types.MiniPlanning ->
@@ -167,12 +195,13 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
       observe_verification() |> result.unwrap(api.Unavailable("verification_observation_failed"))
     types.MiniPodman ->
       observe_podman() |> result.unwrap(api.Unavailable("podman_observation_failed"))
+    types.MiniConversation ->
+      observe_history(read) |> result.unwrap(api.Unavailable("history_observation_failed"))
     types.MiniDashboard
     | types.MiniHealthGrid
     | types.MiniCockpit
     | types.MiniImmune
     | types.MiniInference
-    | types.MiniConversation
     | types.MiniConfig
     | types.MiniFederation
     | types.MiniTelemetry
