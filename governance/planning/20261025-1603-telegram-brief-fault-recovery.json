@@ -10,7 +10,7 @@
     "coordinator_epoch": 16,
     "complete": false
   },
-  "as_is": "Built and executed in development; independent exact-patch source review PASS; source publication pending",
+  "as_is": "Reviewed source published on main and GitHub; not deployed",
   "to_be": "Complete adopted Telegram scope, real Telegram/browser acceptance, independent release/global admission and applicable branch integration",
   "implementation": {
     "requirement": "CMD-043 authority/deadline/observer orchestration acceptance",
@@ -111,7 +111,11 @@
     "residual": "Fault schedules execute actual orchestration function with injected callbacks; they do not revoke a real production lease. End-to-end cases verify service wiring and durable replies, not actual Telegram transport."
   },
   "publication": {
-    "state": "PENDING",
+    "state": "PUBLISHED",
+    "at": "2026-10-25T16:51:25.768Z",
+    "candidate": "5d6b9be84bfa0cd244ae3f185369e738db3ff468",
+    "remote": "5d6b9be84bfa0cd244ae3f185369e738db3ff468",
+    "commits_since_baseline": 253,
     "source_only": true,
     "production_admission": false
   },

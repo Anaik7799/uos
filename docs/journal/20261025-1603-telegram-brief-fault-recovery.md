@@ -41,7 +41,7 @@ telegram_brief_report.gleam, telegram_service.gleam, telegram_brief_report_test.
 Gleam owns orchestration and typed policy; existing pinned adapters own bounded observation. Injected callbacks are trusted code wiring, not Telegram user parameters. Sheaf/category proof UNRUN. AGY correctly identifies the need for a distinct verification reservation and complete per-gate receipts, not cancellation approval reuse or exit0 inference.
 
 ## 10. Remaining Gaps
-Independent exact-patch source review PASS; source publication pending. Real Telegram transport, actual production revocation/timeout recovery, all remaining command/Mini/media/gateway features and global admission remain open. /verify has design advice only and is not implemented. Full goal is not complete.
+Independent exact-patch source review PASS; source published 2026-10-25T16:51:25.768Z at 5d6b9be84bfa0cd244ae3f185369e738db3ff468. Real Telegram transport, actual production revocation/timeout recovery, all remaining command/Mini/media/gateway features and global admission remain open. /verify has design advice only and is not implemented. Full goal is not complete.
 
 ## 11. Metrics Summary
 61/71 task records completed,39/77 connected command entries unchanged. Eighteen new tests increase combined suite423→441. Bayesian calibration and Lyapunov derivative UNRUN. Prior publication forecast p0.8 by16:45 succeeded16:30:02; Brier=(0.8-1)^2=0.04 for one forecast, not calibrated reliability.
@@ -50,7 +50,7 @@ Independent exact-patch source review PASS; source publication pending. Real Tel
 FMEA S4O3Det3RPN36 for stale/false observation. Four UCAs: unavailable read returns failure; unsafe output scope rejected; timing controlled by fresh authority and monotonic checkpoints; excessive duration bounded and rejected. EVceiling93 unchanged; no new EV identifiers or release authority inferred.
 
 ## 13. Conclusion
-Prediction at 2026-10-25T16:48:03.239Z: p = 0.8 source-only publication by Horizon 2026-10-25T17:00:00Z, conditional on independent review and current-source gates. Falsifiers: adverse review, source mismatch, failed gates or expired authority. Brier=(p-o)^2 pending horizon. No full feature or goal completion claimed.
+Prediction at 2026-10-25T16:48:03.239Z: p = 0.8 source-only publication by Horizon 2026-10-25T17:00:00Z, conditional on independent review and current-source gates. Falsifiers: adverse review, source mismatch, failed gates or expired authority. Outcome observed: publication succeeded 2026-10-25T16:51:25.768Z; Brier=(0.8-1)^2=0.04 for this forecast only. No full feature or goal completion claimed.
 
 ## Verification checklist
 <details><summary>Domain 1 — Metadata and navigation</summary>
