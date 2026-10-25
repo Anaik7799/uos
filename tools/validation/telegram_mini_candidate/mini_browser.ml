@@ -55,6 +55,11 @@ let contains text needle =
  let rec loop i = if i + String.length needle > String.length text then false
  else if String.sub text i (String.length needle) = needle then true else loop (i+1) in loop 0
 
+let png_width bytes =
+ require(String.length bytes >= 24 && String.sub bytes 0 8 = "\137PNG\r\n\026\n")"PNG header";
+ let byte i=Char.code bytes.[i] in
+ (byte 16 lsl 24) lor (byte 17 lsl 16) lor (byte 18 lsl 8) lor byte 19
+
 let base="http://nas-1.tail55d152.ts.net:49134"
 let () =
  require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
@@ -112,9 +117,13 @@ let () =
  Playwright.Locator.check ~timeout:1000.(loc page "#CHK-01-TIME");
  Playwright.Locator.press ~key:"Control+Home" ~timeout:1000.(loc page "body");
  let viewport_screenshot=out^"/"^mode^"-viewport.png"in save viewport_screenshot(Playwright.Page.screenshot ~type_:`Png ~full_page:false ~timeout:2500. page);
- let screenshot=out^"/"^mode^".png"in save screenshot(Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:2500. page);
+ let screenshot=out^"/"^mode^".png"in
+ let png=Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:2500. page in
+ save screenshot png;let actual_width=png_width png in
+ save(out^"/"^mode^"-geometry.json")(Yojson.Safe.to_string(`Assoc["viewport_width",`Int width;"full_page_png_width",`Int actual_width]));
+ require(actual_width=width)"horizontal overflow beyond viewport";
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
- rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
+ rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"full_page_png_width",`Int actual_width;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
  ))(if failure_mode then ["containers-unavailable",390,844,"/mini-app/containers";"fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["mobile-containers",390,844,"/mini-app/containers";"identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in

@@ -25,6 +25,7 @@ pub fn route(path: String) -> String {
 fn render_shell(page: types.MiniAppPage) -> String {
   "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>UOS Telegram</title><style>"
   <> theme.mini_app_css()
+  <> "#mini-fields{min-width:0;max-width:100%}#mini-fields dt,#mini-fields dd{display:block;min-width:0;max-width:100%;margin-inline:0;overflow-wrap:anywhere;word-break:break-word;white-space:normal}"
   <> "</style><script defer src=\"https://telegram.org/js/telegram-web-app.js\"></script><script defer src=\"/mini-app/client.js\"></script></head><body>"
   <> mini_view.public_page(page)
   <> "</body></html>"
