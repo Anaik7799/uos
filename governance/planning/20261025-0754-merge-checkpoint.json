@@ -1,14 +1,15 @@
 {
-  "observed_at": "2026-10-25T09:46:26.249Z",
+  "observed_at": "2026-10-25T10:14:05.371Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
     "G1_ACCEPT",
     "G2_REMAINING",
     "G3_AUTHORITY",
-    "G4_EVIDENCE"
+    "G4_EVIDENCE",
+    "G5_ARCHIVE"
   ],
-  "main": "32d43f9afe069948fcdbeb4b5e631448f8d1fa0d",
+  "main": "4e2e9e1b11a161609beb36b0a7f0aad3d61ddc9d",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -19,17 +20,19 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "G5 archive, G6 branch deltas, G7 default/runtime consumer reconciliation, G8 measured controls",
+  "next": "G6 branch deltas, G7 default/runtime consumer reconciliation, G8 measured controls",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
     "Live Telegram acceptance and global admission pending",
-    "Expired MINI_API_IMPL claim requires recovery; not actively executing"
+    "Expired MINI_API_IMPL claim requires recovery; not actively executing",
+    "Live recovery dashboard observation expired; both desktop/mobile fail freshness",
+    "Existing TUI demonstration player contains unsupported admission claims; fix in G8"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G5_ARCHIVE attempt1: 24 heads accounted,362 historical versions restored; KM/review pending",
-  "github_verified_at": "2026-10-25T09:27:50.531Z",
-  "github_new_commits_uploaded": 237,
+  "working_on": "G6 code/test integration complete; exact-candidate review pending",
+  "github_verified_at": "2026-10-25T09:56:42.332Z",
+  "github_new_commits_uploaded": 238,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -79,14 +82,14 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 288,
-  "latest_receipt": "var/recovery-runtime/20261025-0912-merge-g4/merge-receipt.json",
-  "merge_completed": 5,
+  "merged_paths_latest": 367,
+  "latest_receipt": "var/recovery-runtime/20261025-0931-merge-g5/merge-receipt.json",
+  "merge_completed": 6,
   "merge_total": 9,
   "agents": {
-    "codex": "G5 archive verification",
-    "agy": "G5 independent review next; G4 review complete",
-    "claude": "Archive plan advisory retained"
+    "codex": "G6 review preparation; telemetry build and64checks pass",
+    "agy": "Code job timed out/discarded; smaller supplied-code review next",
+    "claude": "Preserved plan advisory"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
   "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
@@ -113,6 +116,24 @@
     "restored_versions": 362,
     "runtime_source_changes": 0,
     "ledger": "governance/planning/20261025-0926-september-archive-ledger.json",
-    "g6_followup": "apps/cepaf_gleam/priv/static/tui_evolution/player.html"
+    "g6_followup": "apps/cepaf_gleam/priv/static/tui_evolution/player.html",
+    "status": "MERGED_AND_UPLOADED",
+    "km": "PASS report-only",
+    "agy_review": "7c50dc06-5e66-46c4-b0ca-c460f372fb2d"
+  },
+  "g6": {
+    "browser_policy_checks": 18,
+    "browser_negative_controls": 6,
+    "live_browser": {
+      "desktop": "HOLD expired observation",
+      "mobile": "HOLD expired observation"
+    },
+    "player_disposition": "var/recovery-runtime/20261025-0958-merge-g6/player-disposition.json",
+    "branch_paths": 6,
+    "focused_tests": 23,
+    "regression_tests": 41,
+    "ledger": "governance/planning/20261025-1005-branch-telemetry-ledger.json",
+    "journal": "docs/journal/20261025-1005-branch-telemetry-integration.md",
+    "agy_code": "ERROR empty timed-out response; no edits"
   }
 }

@@ -1,0 +1,96 @@
+{
+  "observed_at": "2026-10-25T10:14:05.371Z",
+  "task": "G6_GRAFTS",
+  "base": "4e2e9e1b11a161609beb36b0a7f0aad3d61ddc9d",
+  "status": "REVIEW_PENDING",
+  "paths": [
+    {
+      "branch": "B1",
+      "head": "39794f705360a4b8f9c96d79cc03594dc047f8bb",
+      "path": "tools/validation/restoration_browser_check.ml",
+      "source_sha256": "e66545b295258f886f7f532f524570b365c588247ff68a96d0675e14e456de1b",
+      "main_sha256": "7e426d5154fab4f579abdf8cc0ec03a8aeda7df14db220effdbeedf9856f90e5",
+      "same": false,
+      "candidate_sha256": "e66545b295258f886f7f532f524570b365c588247ff68a96d0675e14e456de1b",
+      "disposition": "RESTORE_EXACT"
+    },
+    {
+      "branch": "B2",
+      "head": "622edd3792fa1f35383b1638d067633e629b4511",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/c3i/evidence.gleam",
+      "source_sha256": "6e1f4d84baca2472f0479cc7d399f089cd2c51b2ec7ac49e0fc37997684ef598",
+      "main_sha256": null,
+      "same": false,
+      "candidate_sha256": "448bb41af120970903f56f675af81da9fc34ac8c53da13b8594408b0464e16a3",
+      "disposition": "INTEGRATE_AND_REPAIR"
+    },
+    {
+      "branch": "B2",
+      "head": "622edd3792fa1f35383b1638d067633e629b4511",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "source_sha256": "f55a741118dbd586d3d77efd39b287cd35bdc95cb0edf8a8bd2cf2d5eef75a5a",
+      "main_sha256": "a77a587da5bded083880d2223f6ddbdb6823c624f46f0ee3a2b2dd05c14c8a53",
+      "same": false,
+      "candidate_sha256": "0be1bf7231fc3d408e32938ce78f28c59b6db643c696987bc060a1e0676654a4",
+      "disposition": "INTEGRATE_AND_REPAIR"
+    },
+    {
+      "branch": "B2",
+      "head": "622edd3792fa1f35383b1638d067633e629b4511",
+      "path": "apps/cepaf_gleam/test/evidence_falsifiers_test.gleam",
+      "source_sha256": "db20b0730fa094b0698c5048b3335c5130cc1ffe5826103c54adac4cfeed18f2",
+      "main_sha256": null,
+      "same": false,
+      "candidate_sha256": "ca5893c13081fbef15317163abb8163b9ebb30d77807020b7ce4a321b09ffe0a",
+      "disposition": "INTEGRATE_AND_REPAIR"
+    },
+    {
+      "branch": "B2",
+      "head": "622edd3792fa1f35383b1638d067633e629b4511",
+      "path": "apps/cepaf_gleam/test/private_http_fixture_test.gleam",
+      "source_sha256": "c8f18b22e01eca1b36f9a194a6ffc8b14bc9bd0fdf4636b20b917445bb3ff986",
+      "main_sha256": null,
+      "same": false,
+      "candidate_sha256": "8f789c2ef73640218212b38820e06c49ed9dd0bd2bccd2b287aee9c9b4713507",
+      "disposition": "INTEGRATE_AND_REPAIR"
+    },
+    {
+      "branch": "B2",
+      "head": "622edd3792fa1f35383b1638d067633e629b4511",
+      "path": "apps/cepaf_gleam/test/telemetry_repair_runner.gleam",
+      "source_sha256": "a4697b25a0ed272a0fc9a81915fbb0a9df3d4b1a3c74cf5fe03eb21c927df32e",
+      "main_sha256": null,
+      "same": false,
+      "candidate_sha256": "a8348bff3f00c49b188257542840ed1757302ccca7d82c0247b0c2d3a6d4feda",
+      "disposition": "INTEGRATE_AND_REPAIR"
+    }
+  ],
+  "player": {
+    "observed_at": "2026-10-25T10:04:57.792Z",
+    "source_revision": "22ef49c9c40c5e290bd9f71a14e3fad94d179543",
+    "missing_path": "apps/cepaf_gleam/priv/static/tui_evolution/player.html",
+    "source_sha256": "73ba7510bbe9f158f8b0cd5438c93ff524394dd7eff38cfb26c2757217dd77da",
+    "current_paths": [
+      "apps/cepaf_gleam/priv/static/tui_evolution_player.html",
+      "docs/evidence/tui_evolution_cycles/tui_evolution_player.html"
+    ],
+    "current_sha256": "9965b21b302ae22cd02a3ae0cae48f37238bc631d9f897f9a805a79ee9f4bfb1",
+    "disposition": "KEEP_CURRENT_AND_PRESERVE_OLDER_VARIANT",
+    "reason": "Older 15-frame player is superseded in functional coverage by current 30-frame proposal/ratification player. No current apps/tools reference missing nested path. This is a new explicit disposition, not a claim that historical deletion was intentional.",
+    "residual": "Both versions contain unsupported EV126/SIL6/100%-green claims and synthetic metrics; current copy is not admission evidence. G8 status-projection work must label demonstration data and remove unsupported active status claims.",
+    "acceptance": "Source diff reviewed; no restored runtime player or new unverified success claims; historical source remains preserved, no media playback acceptance claimed."
+  },
+  "checks": {
+    "focused": 23,
+    "regression": 41,
+    "browser_policy": 18,
+    "browser_negative": 6,
+    "live_browser": "HOLD recovery_not_stale desktop/mobile"
+  },
+  "agy_code_job": {
+    "status": "discarded",
+    "reason": "timeout with empty response and no edits"
+  },
+  "integration_method": "Curated path deltas; originals preserved; no foreign workspace rewrite or raw ancestry",
+  "runtime_admission": false
+}

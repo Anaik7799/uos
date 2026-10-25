@@ -21,6 +21,7 @@ import cepaf_gleam/agui/state as agui_state
 import cepaf_gleam/agui/tools as agui_tools
 import cepaf_gleam/bridge/pi_daemon
 import cepaf_gleam/c3i/nif as c3i_nif
+import cepaf_gleam/c3i/evidence
 import cepaf_gleam/ecology/andon
 import cepaf_gleam/ecology/capability_port
 import cepaf_gleam/ecology/living_swarm
@@ -132,7 +133,7 @@ fn route_internal(path: String) -> String {
       module_guard.unwrap(module_guard.guard_json(
         health_json(),
         "health",
-        "status",
+        "threat_level",
       ))
     "/api/v1/pages" | "/api/pages" ->
       module_guard.unwrap(module_guard.guard_json(
@@ -1384,8 +1385,27 @@ fn cockpit_json() -> String {
 }
 
 /// Health endpoint — NIF-backed live data (SC-GLM-UI-007, SC-GLM-UI-003).
+/// Separates telemetry unavailability from actual service outage.
 fn health_json() -> String {
-  c3i_nif.system_health()
+  case c3i_nif.runtime_loaded() {
+    True -> c3i_nif.system_health()
+    False ->
+      json.object([
+        #("runtime_loaded", json.bool(False)),
+        #("telemetry_status", json.string("unavailable")),
+        #("threat_level", json.string("unknown")),
+        #("container_count", json.int(0)),
+        #("healthy_count", json.int(0)),
+        #("zenoh_connected", json.bool(False)),
+        #(
+          "detail",
+          json.string(
+            "Native telemetry runtime unavailable; underlying service state unobserved",
+          ),
+        ),
+      ])
+      |> json.to_string()
+  }
 }
 
 /// Aggregated data-quality + page-checker + cron-schedule status.
@@ -2013,25 +2033,13 @@ fn fitness_json() -> String {
 /// सर्वज्ञानं एकत्र — All knowledge in one place.
 /// Enables OODA observe phase to complete in a single HTTP round-trip.
 fn system_snapshot_json() -> String {
-  let health = c3i_nif.system_health()
+  let health = health_json()
   let dashboard = c3i_nif.system_dashboard()
   let plan = c3i_nif.plan_status()
-  // Inline freshness check — reuse the same NIF calls
-  let has_plan_data = string.length(plan) > 2
-  let has_health_data = string.length(health) > 2
+  let now_ms = router_system_time_nanos() / 1_000_000
   let freshness =
-    json.object([
-      #("nif_plan_status", json.bool(has_plan_data)),
-      #("nif_system_health", json.bool(has_health_data)),
-      #(
-        "staleness",
-        json.string(case has_plan_data && has_health_data {
-          True -> "fresh"
-          False -> "stale"
-        }),
-      ),
-    ])
-    |> json.to_string()
+    evidence.evaluate_freshness_custom(c3i_nif.runtime_loaded(), plan, health, now_ms)
+    |> evidence.to_freshness_json()
   "{\"snapshot\":{\"health\":"
   <> health
   <> ",\"dashboard\":"
@@ -2046,29 +2054,9 @@ fn system_snapshot_json() -> String {
 /// Data freshness check — components report staleness (SC-EVO-KPI-003)
 /// स्थिरता जाँच — Is the data fresh or stale?
 fn data_freshness_json() -> String {
-  // Check if NIF returns current data
-  let status = c3i_nif.plan_status()
-  let health = c3i_nif.system_health()
-  let has_plan_data = string.length(status) > 2
-  let has_health_data = string.length(health) > 2
-  json.object([
-    #("page", json.string("Data Freshness")),
-    #("nif_plan_status", json.bool(has_plan_data)),
-    #("nif_system_health", json.bool(has_health_data)),
-    #("plan_status_length", json.int(string.length(status))),
-    #("health_length", json.int(string.length(health))),
-    #("ws_planning_active", json.bool(True)),
-    #("ws_dashboard_active", json.bool(True)),
-    #("all_wiring_functional", json.bool(has_plan_data && has_health_data)),
-    #(
-      "staleness",
-      json.string(case has_plan_data && has_health_data {
-        True -> "fresh"
-        False -> "stale"
-      }),
-    ),
-  ])
-  |> json.to_string()
+  let now_ms = router_system_time_nanos() / 1_000_000
+  evidence.evaluate_freshness(now_ms)
+  |> evidence.to_freshness_json()
 }
 
 /// Cockpit alarm list — अन्धकारात् प्रकाशं प्राप्नोति (from darkness to light)

@@ -9,28 +9,28 @@
     "scope": "Preserve all source/evidence and test restore; safe GitHub backup; explicitly account blocked stale claims",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -222,28 +222,28 @@
     "scope": "Accept exact current main 2ab40165: verify candidate-bound AGY reviews, source/test bindings and scoped tested behavior; classify full 733-path delta. No source mutation or runtime release.",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -438,28 +438,28 @@
     "scope": "Reconcile all 733 trunk differences with main in owned workspace, preserve newer main retry fix and tests, restore source groups, compile/test and independently review before source-only integration",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -654,28 +654,28 @@
     "scope": "Review C1 trusted store locator, C2 private provider migration confinement, C3 numeric formal repair against new main; preserve superseded variants, integrate only missing behavior with tests and AGY review",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T08:42:29Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -870,28 +870,28 @@
     "scope": "Inventory both preserved default variants and current on-disk differences; integrate missing vetted code/evidence without overwriting newer main; preserve all variants and avoid default reset until exact coverage and runtime consumers are verified",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "completed",
     "ready_since": "2026-10-25T09:10:48Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -1087,28 +1087,28 @@
     "scope": "Reconcile September EV-01 code fixes, D1-D12 and divergent evidence against current main. Preserve both variants; integrate missing vetted behavior with candidate tests; archive superseded or quarantined evidence without admission claims or raw ancestor ingestion.",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
-    "task_state": "executing",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
+    "task_state": "completed",
     "ready_since": "2026-10-25T09:29:10Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -1304,28 +1304,28 @@
     "scope": "Integrate branch deltas without uncurated ancestor history",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
-    "task_state": "available",
-    "ready_since": "2026-10-25T07:46:38Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
+    "task_state": "executing",
+    "ready_since": "2026-10-25T09:57:41Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -1334,7 +1334,7 @@
         "value": 4,
         "low": 4,
         "high": 4,
-        "rationale": "Preservation precedes requested all-code integration; remote is 228 revisions behind.",
+        "rationale": "Integrate remaining reviewed branch deltas without importing uncurated history; main matches GitHub.",
         "evidence_refs": [
           ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
         ]
@@ -1343,7 +1343,7 @@
         "value": 4,
         "low": 4,
         "high": 4,
-        "rationale": "Repository-wide mutation with unverified backup and concurrent-writer evidence.",
+        "rationale": "Preserved history exists; remaining hazard is regressions or unsafe ancestry in branch integration.",
         "evidence_refs": [
           ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
         ]
@@ -1361,7 +1361,7 @@
         "value": 5,
         "low": 5,
         "high": 5,
-        "rationale": "Backup is a prerequisite for all requested consolidation generations.",
+        "rationale": "G5 completed; G0 preservation and off-host restore verified.",
         "evidence_refs": [
           ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md"
         ]
@@ -1466,10 +1466,8 @@
       ]
     },
     "class": "P2",
-    "readiness": "blocked",
-    "blockers": [
-      "Predecessor G5_ARCHIVE is not completed"
-    ],
+    "readiness": "ready",
+    "blockers": [],
     "dependencies": [
       "G5_ARCHIVE"
     ],
@@ -1479,24 +1477,28 @@
       2000
     ],
     "decision": {
-      "summary": "Dependency-gated future generation: Integrate branch deltas without uncurated ancestor history",
+      "summary": "Inspect full B1/B2 branch changes and TUI player provenance; integrate only verified source while preserving all variants.",
       "alternatives": [
         "Chosen: preserve and verify before requested GitHub push",
         "Deferred: further Mini config code until consolidation checkpoint",
         "Rejected: all-bookmark push or blind trunk merge"
       ],
       "counterevidence": [
-        "Main already contains two tested source-only increments; preserve exact identity rather than rolling back",
-        "AGY v5 delta review still pending; Codex independently reviewed G0 and tightened unsafe upload and stale-release steps"
+        "B1 and B2 descend from uncurated trunk; never merge their raw ancestry",
+        "AGY review of G5 supplied-context only; G6 requires separate exact-candidate checks"
       ],
       "assumptions": [
         "Existing origin is intended target as explicitly requested by user"
       ],
       "confidence": "analyst_estimate",
-      "forecast": "Local backup restored within one active hour; remote outcome depends on secret scan and connectivity",
+      "forecast": "Within this one-hour attempt, inventory and source disposition for B1/B2; integration depends on actual conflicts and tests.",
       "falsifier": "Restore differs, any outgoing secret finding, repository operation changes or expired authority",
       "acceptance": [
-        "Predecessor complete; refresh exact scope risk and candidate-specific acceptance before claim"
+        "Full branch inventory and per-path ledger",
+        "No uncurated ancestry or source loss",
+        "TUI player disposition supported by source evidence",
+        "Changed behavior builds/tests plus AGY review",
+        "Serialized source-only push and fetch readback"
       ],
       "rollback": "No deletions or backwards main move; retain all local backups and bookmark references",
       "reviewer": "Claude authored plan; AGY v4 review; Codex G0 corrections",
@@ -1519,28 +1521,28 @@
     "scope": "Reconcile owned stale state and final verified off-host backup",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "available",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
@@ -1734,28 +1736,28 @@
     "scope": "Implement measured low-waste agent and integration controls",
     "phase": "planning",
     "fractal_layer": 5,
-    "observed_at": "2026-10-25T09:44:17Z",
-    "valid_until": "2026-10-25T10:44:17Z",
+    "observed_at": "2026-10-25T09:57:41Z",
+    "valid_until": "2026-10-25T10:57:41Z",
     "task_state": "available",
     "ready_since": "2026-10-25T07:46:38Z",
     "snapshot": {
       "kind": "working_tree",
-      "reference": "Source identity and canonical task states reobserved 2026-10-25T09:44:17Z; main32d43f9a. Historical test/backup observations retain original dates; this refresh does not rerun or admit runtime.",
+      "reference": "Source byte identity and canonical task states observed 2026-10-25T09:57:41Z; main4e2e9e1b verified GitHub. Historical tests retain original candidate/date; no runtime admission.",
       "evidence": [
         {
           "path": ".uos-workspaces/codex-merge-20261025/docs/plans/20261025-0751-claude-merge-plan-snapshot.md",
           "sha256": "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "AGENTS.md",
           "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         },
         {
           "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
           "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
-          "observed_at": "2026-10-25T09:44:17Z"
+          "observed_at": "2026-10-25T09:57:41Z"
         }
       ]
     },
