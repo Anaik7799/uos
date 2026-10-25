@@ -1,0 +1,1585 @@
+{
+  "observed_at": "2026-10-25T10:34:48.462Z",
+  "task": "G7_PRUNE",
+  "base": "5b05558e66fbd13c9c375977a8ea5a541f9e1d59",
+  "source": [
+    {
+      "workspace": "agy-full-restoration-20260930",
+      "path": "governance/planning/20261024-0512-project-analysis-observations.json",
+      "sha256": "4c0e3f31622e09cdcaefb97f911e537f17a66508bfb41b73db8c4ccf9e336bcd",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "agy-full-restoration-20260930",
+      "path": "governance/planning/20261024-0512-project-analysis-risk.json",
+      "sha256": "f58f972aca234fa471e0252f33de1a1f2fe40d61a61b63c85f608e882fb38d42",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/raga_cybernetic_synthesis.gleam",
+      "sha256": "02dfce73863fb0b13bc8aec31dda237a81f1ba3425d29f53d75b4b22d1524ffb",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zigvm_add_fractal_engine.gleam",
+      "sha256": "a967c723888fdeb90aa6fde686077ced34aca2400ac1504c5e5f1f83c40cac2b",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",
+      "sha256": "96fefb667fa86c4f42d507f0bf9e8fc409c90cf5e04f119d464f0e64de5ea034",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 8
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_migration_engine.gleam",
+      "sha256": "44dbc4a2254b7e4efa642e4769f759f245f9923c8d0739916f874a8eae5507ac",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam",
+      "sha256": "61f3126abcde9cb1473666aef082e476d9b8b723f45867210fe61b79714968b7",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam",
+      "sha256": "9d129e71a57dfbac634cad2e0e68ae0bfd220f39b4a91f0813a1eef606eca102",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 10
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mirage_view.gleam",
+      "sha256": "036119bb2ff64bba5aaed4ab8ad1f7d220a72c77350ae5f9084fc7c8f4b7b3fb",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam",
+      "sha256": "b4da907a1568536642e043e2f8adae8534bba2d5d5f02c1fa5cc2c3c230c2f56",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 9
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/test/max_inference_daemon_test.gleam",
+      "sha256": "b7244ec7d1b2d9a8014619b76198be929e8f46fc8afb5d5f74a44f8f7baa2bd1",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 9
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/test/mirage_cockpit_test.gleam",
+      "sha256": "85adc507b477ebbf1183b4804eb766c80a6da9cc96e9f07d2693bcc8fd6ef153",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 7
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/test/mirage_migration_engine_test.gleam",
+      "sha256": "2abc6e2089f46665de1b304a27856e37e59c4f35866d92d1ebdaac66252bac8a",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/test/mirage_unikernel_daemon_test.gleam",
+      "sha256": "cf52ae99c416c2d496e2892bca971e59d3485279c8f7a0fd541a8a0271532730",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/test/raga_cybernetic_synthesis_test.gleam",
+      "sha256": "ec15cc24541c70c8956c8719603899847884371484485d9c30575e0ca6888d55",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "apps/cepaf_gleam/test/zigvm_add_fractal_engine_test.gleam",
+      "sha256": "2d479687b0190390b9ad4e584a5463bd825046a3f720edfc23328646eedcc86a",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "contracts/rules/mirage-migration-policy.md",
+      "sha256": "3fb27e65c72fd75e4679d94319225c68c0e05ac09282cb50e5c4297c48a64172",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "contracts/rules/mirage-production-integration-contract.md",
+      "sha256": "2384b79030bf88dec6b8beea12c5d941741628ddf8100f57597fc8b8461456f9",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "contracts/rules/mirage-unikernel-contract.md",
+      "sha256": "df06796989ddda79b362f036b9f69e8dd25c4cc231ab17535e569d4a367639f5",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "contracts/rules/zigvm-add-fractal-contract.md",
+      "sha256": "ad635257b9dfa0dd46a2a0b608f98aaa5f9a45cf20773763d14e32d21d311669",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/design/20260907-1110-modular-mojo-max-ai-ml-architecture-and-synthesis.md",
+      "sha256": "5e81fc3f1a2056081d7ddc3ed8df7a36ea14507d2f03ee2d43a507a07711ff31",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md",
+      "sha256": "bc9ab770caca13207fa789c0dc0f33d83cf9cdd67bcb83e5e68aff39e7eb22c7",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/design/20260907-1130-zigvm-add-fractal-mapping-and-sublimation-spec.md",
+      "sha256": "40f7eaf66e107773b363fee16f4053010f33dafea5cfd2efdb6b245795179c3d",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/design/20260907-1150-mirageos-unikernel-architecture-and-uos-integration-spec.md",
+      "sha256": "c95525f97edb006a75b7733a23cff632dbfde832511782bed9059a2090cfe387",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md",
+      "sha256": "fb9a914996fdf3d4118feae4d9073b0e3ac727f5ce2bad539d79a89d3ef5e52f",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1028-deployment-inventory-and-web-music-player-journal.md",
+      "sha256": "7805607930099e53ae1387375a6af4bfa80709adffc385144705181f6fa75782",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1110-modular-mojo-max-ai-ml-integration-journal.md",
+      "sha256": "515c0d3b75b18b6e5cbcfc725cff2f72d34f1a5d191873d72939a679b5e85e7c",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1120-mirageos-comprehensive-migration-and-subsystem-journal.md",
+      "sha256": "6bce7e6a8d11bacb275a7ee3901fe12ceabd93b001faa75370d1eb91ba99c1f0",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1130-zigvm-add-fractal-mapping-and-sublimation-journal.md",
+      "sha256": "7f9f715c39fbeaf500822b46adde710026a4388db2914f25d4daae29e6ddcfb1",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md",
+      "sha256": "0cf208ccdbffe9c8b8d1ae11c8a21d874e1b9a5f88e0f7809b85317689a46c71",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 3
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1150-mirageos-unikernel-architecture-and-uos-integration-journal.md",
+      "sha256": "a570bb508433a873a1cd35ca1a159e2bfd13b6d6b28bc0c8b223469ecb375e13",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md",
+      "sha256": "a5b24d578a34e96f0809967b4f5cea7038fe7bca2bc7aafd778a551420abf756",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/music/20260907-1052-swarm-durga-player.md",
+      "sha256": "eacfd55d48928643dc10d43bbbbc886b53c62ef74e11615f35566939018cfc73",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "docs/music/20260907-1145-cybernetic-raga-durga-and-22-shruti-studio.md",
+      "sha256": "066d5cbd9eaa4e335e893da52419492e2ceb7f704f0367587d9c2f90ea4050b7",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml",
+      "sha256": "0fd1990290a6816ad2578883f72d7ec583a43166e8f5c6ffd57c15bc59e5708a",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 6
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_dns_resolver.ml",
+      "sha256": "e35f15b183536ed22812e82d4c1fa59f9d9cace6b8bda74a0ec26ab2268885b4",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_dns_resolver.mli",
+      "sha256": "df50598f91e586b31163650622d3804f6af6355973a35a1773bcf3b488db7ea6",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_interceptor.ml",
+      "sha256": "5c16f1db9f101f3733c2d75da59ca0a3eaeb6f5f504e9b7fd9253f0a216c0c26",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_interceptor.mli",
+      "sha256": "2c1862408465ce12a371c3606605a39fb19ec19f3e1cc37adf9d5e58e799d395",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_memory_block.ml",
+      "sha256": "4b1f248366330f9f23937f003e233f1233eca1125b1dc15f66ee279b42c7c7ce",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_memory_block.mli",
+      "sha256": "8171f8dabb9790d3b7c264265c0060f923410cee4acbd1122956c5b62faf3e94",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_merkle_kv.ml",
+      "sha256": "adc7e395cecf69bf5efcc933ba61f33df1190ba3d2ec3117fec47a908a2c845f",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_merkle_kv.mli",
+      "sha256": "c4e1e9888bd5104491c518f1cdf9dc5d6160916f6fa0ad0132ebfd9b220fedca",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_migration_catalog.ml",
+      "sha256": "317a6cfd8216d2ef2e49b1e9a41a062f466cbc8ef647834b2c7f3ff5644831e2",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 5
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_migration_catalog.mli",
+      "sha256": "5303d9daa51db394778d2509acf0805c6d4464f7107c3bacac7450de1802da42",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_signatures.ml",
+      "sha256": "b841a13572e14d0f20ea17b517afb8780d86b1f51b29766d5bde36ad18d4eebd",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_signatures.mli",
+      "sha256": "e66e01a7bea287f0a641ff84a5b2e4622ebf82ca498f23140ef354473c2d92f0",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_solo5_tender.ml",
+      "sha256": "13073c90ec6e572ce0e7a9a62112bec9f466d10ebe62fc2cfe214b89cc6db41a",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_solo5_tender.mli",
+      "sha256": "30fcb91b8e02f08177c013e645482a18198575bb39166305d3772e825470f344",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_tls_ingress.ml",
+      "sha256": "1a4046e7789b8ce71dd68deef2564d3fad2f8d74b32d076ec4e5385c4c7d0613",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_tls_ingress.mli",
+      "sha256": "9e4e7e1904ea02b22e45f0d4c2dc1d974dd69e1533613c0bf936152a675c84f4",
+      "main_present": true,
+      "disposition": "EXACT_MAIN"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/test_mirage_core.ml",
+      "sha256": "d5fac2ac83018015a04703213cf7b010577f3310a7897de3266e6eb9960fe7d1",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 5
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/test_mirage_migration.ml",
+      "sha256": "5f61a9b2ec216144c605857ee294ab306a314561ee7fc88a58bec2121e848436",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 4
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "services/inference/max/max_kernel.mojo",
+      "sha256": "ee29ec13410d059ba2f4d25fd850ff6e04b829535b20b586e5556a25d960b1b4",
+      "main_present": true,
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+      "main_history_versions_checked": 9
+    },
+    {
+      "workspace": "codex-side-resource-controls",
+      "path": "docs/design/20260907-2036-hive-stabilization-plan.md",
+      "sha256": "082f2844da46dd9a37e1e9d7f702d952bcc792da7eeaa9cfc1e83135dda84865",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/design/20260907-2036-hive-stabilization-plan.md"
+    },
+    {
+      "workspace": "codex-side-resource-controls",
+      "path": "docs/journal/20260907-2036-hive-stabilization-journal.md",
+      "sha256": "78884732c7d38dda28043d6d7bfa7c2a8872740b4d0875e3a1dae14a5d418e16",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/journal/20260907-2036-hive-stabilization-journal.md"
+    },
+    {
+      "workspace": "codex-side-resource-controls",
+      "path": "docs/reviews/20260907-2036-hive-stabilization-tasks.json",
+      "sha256": "11c98b3e201ec2806ad62b0983dcaba3b90bf8087b85615a7dd6f109cdcc7f06",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/reviews/20260907-2036-hive-stabilization-tasks.json"
+    },
+    {
+      "workspace": "codex-side-resource-controls",
+      "path": "docs/reviews/20260907-2036-stabilization-design-risk.json",
+      "sha256": "b1e9235e750954032945ec20657ad630f7cf3e2e6e2e034f099ab8bd11100702",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/reviews/20260907-2036-stabilization-design-risk.json"
+    },
+    {
+      "workspace": "fable-l0",
+      "path": "governance/planning/20261025-0738-merge-plan-review/attempt3-delta-valid.json",
+      "sha256": "2f8b5a7e967d87588e0b45f3f6bc8e6c910869e3748e6deec2db9eba403d26a5",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/attempt3-delta-valid.json"
+    },
+    {
+      "workspace": "fable-l0",
+      "path": "governance/planning/20261025-0738-merge-plan-review/attempt4-v6-valid.json",
+      "sha256": "7f3418a2cf28891ac69605cda5844e6b91215114360d7c1e165f0de0544e3355",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/attempt4-v6-valid.json"
+    },
+    {
+      "workspace": "fable-l0",
+      "path": "governance/planning/20261025-0738-merge-plan-review/review-prompt5.txt",
+      "sha256": "507201a15265935f77d93c8d397e941e8f29c9729ae40d64df1e3caa4216c376",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/review-prompt5.txt"
+    },
+    {
+      "workspace": "fable-l0",
+      "path": "governance/planning/20261025-0738-merge-plan-review/review-prompt6.txt",
+      "sha256": "594b12eae4cd3906c70cce67bc7f71a7e5525351b6f8f72040afc97c749bed1c",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/review-prompt6.txt"
+    },
+    {
+      "workspace": "q01-warnings",
+      "path": "governance/sources/20260907-0531-s24-n01-repaired-core-review.json",
+      "sha256": "77b010e868c35d185ee895452f0fb9803af4133d5429dc795c562c3dc175a0e4",
+      "main_present": false,
+      "disposition": "PRESERVED_HISTORICAL_ARTIFACT",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/q01-warnings/governance/sources/20260907-0531-s24-n01-repaired-core-review.json"
+    },
+    {
+      "workspace": "codex-mirage-evidence-audit",
+      "path": "engines/hermes/modules/hermes_mirage/dune",
+      "sha256": "defb2dc8433e46cf2aab7eb7eef11af27f204664279fdd31ff20f5a0fed02899",
+      "disposition": "EXACT_MAIN_ANCESTOR",
+      "ancestor": "c660b3d35d5e688c8a987135e3f181acb2adc561"
+    }
+  ],
+  "generated_lockfiles": [
+    {
+      "workspace": "default",
+      "path": "apps/cepaf_gleam/native/c3i_nif/Cargo.lock",
+      "sha256": "818ba5c41044d2012199831103c526f6cef07696630cd9f08e307ad2755110a8",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "apps/cepaf_gleam/native/ferriskey_nif/Cargo.lock",
+      "sha256": "2ab5a05c89f9ff07f5fbb4ac5dd50afac7e5e7b79c047230b07e32dad7271a77",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "apps/cepaf_gleam/native/planning_nif/Cargo.lock",
+      "sha256": "5b964d0b3c89e01d9d9f68ee2f8f9a892f32a4170f5310819ca98b9c041c27b0",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "apps/cepaf_gleam/native/rule_engine_nif/Cargo.lock",
+      "sha256": "f1ab25794a9fb584d958484c32d5d105a17cf9596433c822e1f516c50b883ebd",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "apps/cepaf_gleam/native/rusty_vault_nif/Cargo.lock",
+      "sha256": "59cd03d496be544aa9d666e5e853d41b9707ab8894f03dc71b3dcafefcbaba41",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "engines/hermes/rust/drift_engine/Cargo.lock",
+      "sha256": "03de4c9607236ca96713ae5b63af5386027563c8669a2198b64d75961d2400ac",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "native/nifs/rust/cortex_nif/Cargo.lock",
+      "sha256": "6e70bf7b060971ac2b883c562462d44425ee95a4a85ed932c923cfb7c26070e2",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    },
+    {
+      "workspace": "default",
+      "path": "ops/kubernetes/nas-k8s-lab/Cargo.lock",
+      "sha256": "897421e4691eba0fbd2aa757ef564d028d46e06687d849407cc08e0c2174899c",
+      "disposition": "RETAIN_GENERATED_IGNORED_LOCKFILE_FOR_RELEASE_REVIEW"
+    }
+  ],
+  "workspaces": [
+    {
+      "name": "agy-dashboard-20261024",
+      "revision": "a026c484658e2b8f6978f0623329d57a057f4eca",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-direct-fix-20261001",
+      "revision": "14785b6745aecae04a7c7efd044896490b927046",
+      "untracked_count": 3,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-direct-tools-20261001",
+      "revision": "c72513b8f2b4971d44ae9fd65002d4152b177f31",
+      "untracked_count": 2,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-fractal-dispatch-20261001",
+      "revision": "b546f7e8e47533e4595505677ba8493fd62b95eb",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-fractal-doctor-20261001",
+      "revision": "73bb7d3c90b5483484aecc796cd86650845f9241",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-full-restoration-20260930",
+      "revision": "32990422e48293cdf8904e867fb642ad69ecd98c",
+      "untracked_count": 6,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-history-helpers-20260930",
+      "revision": "57493b178cff9b5b8524271e993357479c2a53fd",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-history-receipt-20260930",
+      "revision": "d5b57d052233504960826f7ff9cc11d154116a76",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-history-reconciliation-20260930",
+      "revision": "e5b8ded56ae6e3e521ea3a8601bccb2d08e6e882",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-history-superset-20260930",
+      "revision": "9c41344754f847b48a33be64a46e4d6135fbd02c",
+      "untracked_count": 2,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-l3",
+      "revision": "67d5d57b4a0f7e3be6f042530e39d7bd8a88f9c5",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-telegram-admission-20261001",
+      "revision": "ba1353c837cda6c108266ed319a7e398c802f7d3",
+      "untracked_count": 3,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "agy-telemetry-20261024",
+      "revision": "622edd3792fa1f35383b1638d067633e629b4511",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-action-boundaries",
+      "revision": "1353e6584342fd7c6fe825a864b2d26ed440cc84",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-action-kpi-integration",
+      "revision": "31207adba558d200dcec854809d6bbfc00b860b9",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-agy-ops-20261024",
+      "revision": "39794f705360a4b8f9c96d79cc03594dc047f8bb",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-ainf-design",
+      "revision": "2624cff0250247e5675db515f11e7202eb4b1665",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-astra",
+      "revision": "5b9b9388f7adce3a27acae3c048a5312220967d1",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-auth-framing-review",
+      "revision": "f8c38071ab579f4b7dd718f8d899c1a2ee6376d8",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-auth-ingress",
+      "revision": "3ee0188be49a6b91d551efebe364e4241342b203",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-auth-ingress-review",
+      "revision": "1753727c53b64e6651a271be68959da8d65cb252",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-board-insights",
+      "revision": "ada45ee774d2d58d8dca39c8934faa270daacf3a",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-board-strict-validate",
+      "revision": "e0b50cdce6fdb08e945984a119f4214c25893a5e",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-capability-restoration-20260930",
+      "revision": "b1484ad34a9d3e5beab28e0bd0371199a6e8d8f3",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-clock-guard",
+      "revision": "c1841115ba3b2baf5597ca624c9f69fc9c22e6eb",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-clock-provenance",
+      "revision": "4a5e1fa3681afb66109874b526c549fec2821d89",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-coordination-formal",
+      "revision": "6d1cda9ad199a6cfad04b5d9fb5ca01587c5b156",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-coordination-impl",
+      "revision": "a0c3fd11ea96eeb9a757e668a2cf365abae58b93",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-coordinator-recovery-20261024",
+      "revision": "fd85fe743c7476c58ef34586f367caafecd6d1e8",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-ev-admission-20260909-0210",
+      "revision": "d9bd28497f84a5dc62cbc84eeeaa8e841fc6655f",
+      "untracked_count": 25,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-full-restoration-20260930",
+      "revision": "e96b14c6e9849ce23f38dcfd1caf1cfc3b20af95",
+      "untracked_count": 22,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-hive-projection",
+      "revision": "4e6632fcad35cd664899efb798cb33748424f2e8",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-homeostasis-interface-repair",
+      "revision": "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-homeostasis-release-20260908-0551",
+      "revision": "45435f5b215d9cf5932a67d8d22e8c7ef7ed958b",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-live-evolution",
+      "revision": "78d8fef66199f1c5c82a7013efd43099d04437be",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-manual-ui-20260908-1150",
+      "revision": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mcp-catalog",
+      "revision": "b99598309dc0eaa8925862aca7c305201f1b51d1",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mcp-runtime-check",
+      "revision": "cb625f48c9e3b7ab70fa6c1b8797f400302ad599",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mcp-stdio-runtime",
+      "revision": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mcp-wave34-tests",
+      "revision": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-merge-20261025",
+      "revision": "2241926993810157937ebbcc7b97a0be1f3119d2",
+      "untracked_count": 0,
+      "disposition": "RETAIN_ACTIVE_OWNED_WORKSPACE"
+    },
+    {
+      "name": "codex-merge-execute-20260908-1925",
+      "revision": "4719d3f4dce6d85899b1b82636bb4186f404fcf3",
+      "untracked_count": 2,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-merge-plan-20260908-1439",
+      "revision": "2473ea54a72bc75ed69e5f57c8791efaa4982abd",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-audit",
+      "revision": "b63169a3eea4792c0b4b690ff23a45be8dcef6db",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-audit-action-boundary",
+      "revision": "02d43656ad7ac562277714e8864a7fb3ceb56b47",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-benchmark-review",
+      "revision": "a7b479618b4a6f003aefeb435fe53a0807f63af4",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-evidence-audit",
+      "revision": "fe542cb830e917354f0845ddf6d70d809fe9bcab",
+      "untracked_count": 53,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-feature",
+      "revision": "4aec1c8e1bd19521b66ab03de8ccf2077b05ae0b",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-governance-failclosed",
+      "revision": "c5960ff123cb1218d9a43775082d7ace8fd356a1",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-metrics",
+      "revision": "9962d6d17d5ec1ec0557cae6100d24a293f01bbc",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-tenders-audit",
+      "revision": "b10e553273ad520e18aceeae345bdf1d83baf63c",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-verification",
+      "revision": "72c7552b181fc44f6e30d5611efd84f3b18b9417",
+      "untracked_count": 2,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-mirage-workorder",
+      "revision": "059afa533f2efefdf809756b84da67b98112f6a3",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-observation-bridge",
+      "revision": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-oidc-auth-review",
+      "revision": "294ebc47342ac372b886d22656fbd9103f1d5f12",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-oidc-verifier",
+      "revision": "10ead02d11d8ffcbaf133702c87244d38b650210",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-reuse-ops",
+      "revision": "e5572657abeeba9c6eaca2bdf9e24d77bf5603dc",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-session-durability",
+      "revision": "de84ada81054f23ea06193ba0c92e124166a9fb8",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-side-hive-fencing",
+      "revision": "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-side-interface-skills",
+      "revision": "efbaea22367d3363df94ee0e36924ce1bfe2585f",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-side-resource-controls",
+      "revision": "7c162d0f8d83825679c2badcb6703decccd3581e",
+      "untracked_count": 4,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-solo5-source-review",
+      "revision": "52f8034f75bb60bf845d77c5ad5a4c250b47146f",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-solo5-toolchain",
+      "revision": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-telegram-authority-20261001",
+      "revision": "4d04f601dcd33bddfc9b4a408aa72b65662f8df8",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-telegram-formal-20261011",
+      "revision": "d75fe43304baf32f611cf775a510e676535f0dc1",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-telegram-mainline-20261025",
+      "revision": "52e2b5bdf09f8f66d9e232429fb0168a79a5174d",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-telegram-mini-20261011",
+      "revision": "f34473666902d7af46f313ac470cff5b81b70c23",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-telegram-poll-20261024",
+      "revision": "8a8e648a79e086e8f32ece7f7aeedba252be4477",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-telemetry-repair",
+      "revision": "8180c73608373b00b46f7836af71f50ce6f40de7",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-unification-20260908-0753",
+      "revision": "9bbc5217a740ff03791d68c11913c0cc1823ff4b",
+      "untracked_count": 1,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-unification-50-20260908-0852",
+      "revision": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "codex-unification-integration-20260908-0821",
+      "revision": "0114d3063109d120b04b958acf1db1445ba19fed",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "default",
+      "revision": "8fad14d59042226de9a40fd010afa2fd19eac394",
+      "untracked_count": 38212,
+      "disposition": "RETAIN_ACTIVE_RUNTIME_CONSUMERS"
+    },
+    {
+      "name": "e01-candidate",
+      "revision": "a1a02a8845819809349af690d18095e2316ba881",
+      "untracked_count": 1,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "e01-review",
+      "revision": "a1a02a8845819809349af690d18095e2316ba881",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "e02-acceptance",
+      "revision": "646741f77e8454fdedf5f036981cf93c5b0a8bed",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "e03-evidence",
+      "revision": "42568ef75042598ff6261da4977e45d6017c476d",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "e04-census",
+      "revision": "dd00d2c914c0074fbe58ccdc2e7726350d91bce4",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev-delta-freshness-20260909",
+      "revision": "3d31036fd880b67937782c4ce1897dc7bfbeb2e7",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev-evidence-campaign-20260909",
+      "revision": "48ef2240cc0207a5707c8c3d760b119f93bf1643",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev-homeostasis-repair-20260909",
+      "revision": "21876162350141ba20024083bd1bd157a66ffa42",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev-rag-freshness-20260909",
+      "revision": "9aadea1bbdc4a545cdbede3eba1d7e10b5b835e2",
+      "untracked_count": 1,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev-receipt-validation-20260909",
+      "revision": "dbab4b956e884e4ce303c13cddf81d7af7939749",
+      "untracked_count": 209,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev-scheduler-repair-20260909",
+      "revision": "3374e20c181f457eb47fb1cf9c9ed1e29e76d41c",
+      "untracked_count": 1,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev98-health-formal-20260909",
+      "revision": "a00843573fd1d20425bd875690d241c764b2de78",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev98-peer-loop-20260909",
+      "revision": "c3275374d57b5636576cbd763fdb99b4332ed2b6",
+      "untracked_count": 1,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ev98-wire-codec-20260909",
+      "revision": "8331c04ed32fc6179c46df8108a2133d6675528a",
+      "untracked_count": 8,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "execution-audit",
+      "revision": "84c050b87a7779b792db70977379f4819faa1017",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "execution-control",
+      "revision": "e17fd93b3911597bf90241eb4a94103f9d8629da",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "execution-tracker",
+      "revision": "10b42a436b70669cec816fe7bf21b9bb5d4668e6",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "fable-l0",
+      "revision": "0b662fb55ddc3c0d89b458e438ff7fc509346b55",
+      "untracked_count": 14,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "full-implementation-plan-main",
+      "revision": "ca1d21c4dbb379931234ee92c654c32e7b2f7d15",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "incoming-review",
+      "revision": "17aae5b726d97a3ee48d9844e165abc547f934da",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "n01-peer",
+      "revision": "d3432a57e9d0e1fd83fd042425223a15ed91e987",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "ocaml-gleam-tests",
+      "revision": "4cc1ac15892877e885ce78518afbf266806d8cf8",
+      "untracked_count": 3,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "q01-warnings",
+      "revision": "1a4b34b5a571695d9044ef5e821887ad989a6b10",
+      "untracked_count": 1,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "sa-plan-execution",
+      "revision": "c5c048dda1facf4aafa1891659f001a2f4262320",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "skills-preparation",
+      "revision": "fda0b91e5dfadf04230d20ed9f86a4908761665b",
+      "untracked_count": 0,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "split-int",
+      "revision": "0705e34261a6d855b4f1e96f3bb1fd186252fb9f",
+      "untracked_count": 8,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "w-coverage2",
+      "revision": "af12bb89ce945be226f76f09ba87f01c2f716a39",
+      "untracked_count": 5,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    },
+    {
+      "name": "w-store2",
+      "revision": "381c400d4ae7f76ed4bfad7433c0e1b98accbbb8",
+      "untracked_count": 5,
+      "disposition": "RETAIN_PRESERVED_OWNER_ACK_NOT_ESTABLISHED"
+    }
+  ],
+  "restored": [
+    {
+      "source_workspace": "codex-side-resource-controls",
+      "source_path": "docs/design/20260907-2036-hive-stabilization-plan.md",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/design/20260907-2036-hive-stabilization-plan.md",
+      "sha256": "082f2844da46dd9a37e1e9d7f702d952bcc792da7eeaa9cfc1e83135dda84865"
+    },
+    {
+      "source_workspace": "codex-side-resource-controls",
+      "source_path": "docs/journal/20260907-2036-hive-stabilization-journal.md",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/journal/20260907-2036-hive-stabilization-journal.md",
+      "sha256": "78884732c7d38dda28043d6d7bfa7c2a8872740b4d0875e3a1dae14a5d418e16"
+    },
+    {
+      "source_workspace": "codex-side-resource-controls",
+      "source_path": "docs/reviews/20260907-2036-hive-stabilization-tasks.json",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/reviews/20260907-2036-hive-stabilization-tasks.json",
+      "sha256": "11c98b3e201ec2806ad62b0983dcaba3b90bf8087b85615a7dd6f109cdcc7f06"
+    },
+    {
+      "source_workspace": "codex-side-resource-controls",
+      "source_path": "docs/reviews/20260907-2036-stabilization-design-risk.json",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/codex-side-resource-controls/docs/reviews/20260907-2036-stabilization-design-risk.json",
+      "sha256": "b1e9235e750954032945ec20657ad630f7cf3e2e6e2e034f099ab8bd11100702"
+    },
+    {
+      "source_workspace": "fable-l0",
+      "source_path": "governance/planning/20261025-0738-merge-plan-review/attempt3-delta-valid.json",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/attempt3-delta-valid.json",
+      "sha256": "2f8b5a7e967d87588e0b45f3f6bc8e6c910869e3748e6deec2db9eba403d26a5"
+    },
+    {
+      "source_workspace": "fable-l0",
+      "source_path": "governance/planning/20261025-0738-merge-plan-review/attempt4-v6-valid.json",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/attempt4-v6-valid.json",
+      "sha256": "7f3418a2cf28891ac69605cda5844e6b91215114360d7c1e165f0de0544e3355"
+    },
+    {
+      "source_workspace": "fable-l0",
+      "source_path": "governance/planning/20261025-0738-merge-plan-review/review-prompt5.txt",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/review-prompt5.txt",
+      "sha256": "507201a15265935f77d93c8d397e941e8f29c9729ae40d64df1e3caa4216c376"
+    },
+    {
+      "source_workspace": "fable-l0",
+      "source_path": "governance/planning/20261025-0738-merge-plan-review/review-prompt6.txt",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/fable-l0/governance/planning/20261025-0738-merge-plan-review/review-prompt6.txt",
+      "sha256": "594b12eae4cd3906c70cce67bc7f71a7e5525351b6f8f72040afc97c749bed1c"
+    },
+    {
+      "source_workspace": "q01-warnings",
+      "source_path": "governance/sources/20260907-0531-s24-n01-repaired-core-review.json",
+      "destination": "docs/archive/20261025-1037-untracked-evidence/q01-warnings/governance/sources/20260907-0531-s24-n01-repaired-core-review.json",
+      "sha256": "77b010e868c35d185ee895452f0fb9803af4133d5429dc795c562c3dc175a0e4"
+    }
+  ],
+  "bookmarks": [
+    {
+      "name": "integration/telegram-action-dispatch-20261024-2211",
+      "commit": "04e060e0c4345ae82c942707c05cb5e7b7ebdb23",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-action-intent-20261024-1827",
+      "commit": "c7cfd4a1df7506a6a802983661d03bbefa5a0197",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-action-profile-20261024-2133",
+      "commit": "212b058180ccf68f4ae17fd359bc1f1f983cdd1c",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-action-service-20261024-2153",
+      "commit": "eca2700cd37eb52a55548dda29d36e2f0096bc60",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-active-start-verified-20261024-1245",
+      "commit": "a15ae8f20e8567020e0c7a7a510ec04d4741ab56",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-agent-collection-20261025-0113",
+      "commit": "8110970849ac239f81c8ae247bcfc929d1bc7c54",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-approval-20261024-1916",
+      "commit": "4b6ed682aa3ba2812a717afcd3eeea6e55dcd075",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-approved-cancel-20261024-2029",
+      "commit": "a2912902554198bd8d51248979994b2048b11380",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-authority-maintenance-verified-20261024-1225",
+      "commit": "c6b3cc29795298c382f35a0a9e7269fcc355603f",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-bootstrap-verified-20261024-1023",
+      "commit": "a3ad86ee3202312481c5c1b7ea6c22c0e4be2897",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-bridge-transport-20261024-2114",
+      "commit": "666fd25388cc699f921d1f12284bf6cc7ec77ffa",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-cancel-protocol-20261024-1933",
+      "commit": "2779b7f24141e60c88dadff2fc2289c0b67aa160",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-cancel-store-20261024-1900",
+      "commit": "667a8775f6e2a6b28523083742a1404154a5d98b",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-command-catalog-verified-20261024-1349",
+      "commit": "5d6dc9ef2d662773f7f8d2ffddfd1f6de4e12a0b",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-conversation-held-20261024-1552",
+      "commit": "7afb43c2aa0de680166cda1facaf30651319f0ab",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-conversation-memory-20261024-1606",
+      "commit": "06f6b2a651c11e58f19ff6c6ff3a7ebb7dcad67f",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-conversation-state-20261024-1429",
+      "commit": "329dff6ca090a9a506f2f085fe9bf66ab99390a1",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-conversation-store-20261024-1455",
+      "commit": "71fa89ead730bca2f53cdccfe438499fb64bd57a",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-coordination-20261024-1725",
+      "commit": "b2e3dcd5af1bca8b31d561962f5aaf6dcccdec01",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-current-task-bridge-20261024-2059",
+      "commit": "259402d211b463c7f5793e0668f37a494305602f",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-durable-approval-20261024-2301",
+      "commit": "ef2db89df99ee67632d531f2bff4d4cf88273ebd",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-durable-cancel-20261024-2047",
+      "commit": "6930ed7499c22990ba3d7c5a03dfeaf25df15cdd",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-ecology-20261025-0013",
+      "commit": "8cc89aaaf8a2f82777c61ecf31b1bedc7e812cc0",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-evidence-20261025-0059",
+      "commit": "0c9e0ddfddc73f7668ad3e81928c9c404924be32",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-fmea-20261024-2355",
+      "commit": "509d993f1496d7f74425f42798d523f28c4838f3",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-framed-cancel-20261024-2003",
+      "commit": "384a18f7e8af577613431e2b8328a1a4f7950ae8",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-fresh-proof-candidate-20261024-1104",
+      "commit": "a66d85d0680e0a43972e3a99b52ad9d359675639",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-health-20261024-2339",
+      "commit": "d0491cd16fd7befa1322a4fa250ddbe4b820c303",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-host-observations-20261024-1706",
+      "commit": "f3645128695b853a3696cad41318d15d3770c005",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-instance-scope-candidate-20261024-1128",
+      "commit": "691cced5018738637654d5137e1c0aed9d4531e9",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-job-budgets-20261025",
+      "commit": "2ab401652a9f2122d58663157821ca7fde909254",
+      "disposition": "ELIGIBLE_MERGED_LOCAL_BOOKMARK_DELETE"
+    },
+    {
+      "name": "integration/telegram-knowledge-20261024-1747",
+      "commit": "8b39e341d32b0356b43c079a1e2b4ee666f148a4",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-loop-verified-20261024-1010",
+      "commit": "1b6f230f31dbfcb84f179989c34c4987e4d88883",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mainline-20261025",
+      "commit": "8169e1b988aeb246779c0a50fd74acf596393ed4",
+      "disposition": "ELIGIBLE_MERGED_LOCAL_BOOKMARK_DELETE"
+    },
+    {
+      "name": "integration/telegram-managed-expiry-20261024-2324",
+      "commit": "890c1df5b742d9a96958305957c277fc952c4606",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-managed-start-verified-20261024-1209",
+      "commit": "d99735510cd7a7ed479b2466da50f8df3b03348d",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-matrix-20261024-1805",
+      "commit": "3b863f826036708d1a0f79649e19de050d020a6e",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-chat-flow-20261025",
+      "commit": "c2490fa14cf96c4dacec1bf77e40684b3c22cc1a",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-control-20261025-0430",
+      "commit": "be56afb562b046acc85cc684b230a7979ee4e6c0",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-dashboard-20261025-0331",
+      "commit": "bfc2d8bcc561a9760f47fcaaf02f4f89a26cf985",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-evidence-20261025-0151",
+      "commit": "50ce74fff6c87161077f2f4874562503af719137",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-health-20261025",
+      "commit": "f34473666902d7af46f313ac470cff5b81b70c23",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-history-20261025-0230",
+      "commit": "4a8aea86e63c7ee7781a93aceeff3d294d26a991",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-memory-20261025-0540",
+      "commit": "709c91b8a44f0c205e7bd62973ba5e8433794210",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-podman-20261025-0211",
+      "commit": "a17f582dbfb0c68cb9f134c5530a0add914a01d8",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-send-transactions-20261025",
+      "commit": "a02cee6a8785753601f0d9e1688d9474d5cba883",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-telemetry-20261025-0355",
+      "commit": "0a07f329e6964cf1a00536bd29282b606db21f46",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-mini-zenoh-20261025-0310",
+      "commit": "103ebc28b3ec04655440618926a9f97739ad9940",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-operational-status-20261024-1649",
+      "commit": "e0328195cc203767d985feaf1eaa6c44823ebc71",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-proposal-status-20261024-2236",
+      "commit": "76fadebe5c2d7219f3731f5d415eedb26a7c7573",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-rete-20261025-0026",
+      "commit": "ec21fc104b3b33a6c89e0ca43c11d7831921250c",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-reviewed-reclaim-20261025-0244",
+      "commit": "7c5acf7b6a5b1f35fd57574649536456e864800e",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-reviewed-selection-20261025-0134",
+      "commit": "8cf461c46f26ff0f4a7a9770fff27307eb2b88d7",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-search-20261024-1754",
+      "commit": "5be4fbfc5d2c523eca3a3f4200633a60e0585cf6",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-service-implementation-verified-20261024-1312",
+      "commit": "ba20f3e039c6317b7c4e35fa3a0d08562162adeb",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-service-verified-20261024-0937",
+      "commit": "44a26193d52c69e81032bb66bc245e69b6edcd9a",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-shared-conversation-20261025-0505",
+      "commit": "c126c69c49b3f0b9fb94fe1b409c628dfea1e123",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-storage-20261025-0041",
+      "commit": "eb075041b37a369e4128ea457762f8d9b17c753e",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-successor-verified-20261024-1256",
+      "commit": "a4abe4715b5dffc314386bb9d4757f97b17c0151",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-supervisor-lifetime-tested-20261024-1139",
+      "commit": "2585aedb6110476f842ae644d45737c4f8d26037",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-supervisor-owner-verified-20261024-1146",
+      "commit": "f4c30dadf92c69cbf2f189425b86fcfafa0db222",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-task-read-verified-20261024-1410",
+      "commit": "211a5356f1e90875bb82f3696fc53395b1c19f2b",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-tool-read-20261024-1628",
+      "commit": "0752ad53a0c409e257464d764a3b348649e4a32d",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-withdrawal-20261024-2315",
+      "commit": "75c500c3633a78bb171e721592bd75a60b2be82d",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-writer-start-candidate-20261024-1117",
+      "commit": "536a0fa7bb3237b5a602e383a264ffcd25e739d0",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    },
+    {
+      "name": "integration/telegram-writer-storage-tested-20261024-1047",
+      "commit": "4d80fb2fba815c0787c207c1f779e8f9a8f843c3",
+      "disposition": "RETAIN_NOT_ANCESTRAL"
+    }
+  ],
+  "unit_cleanup": {
+    "count": 138,
+    "receipt": "var/recovery-runtime/20261025-1021-merge-g7/unit-metadata-reset.json",
+    "effect": "terminal transient metadata only",
+    "running_services_changed": false
+  },
+  "default_transition": {
+    "status": "DEFER_TO_REVIEWED_RELEASE",
+    "consumers": [
+      "c3i-gleam-server.service",
+      "uos-cognitive-worker.service",
+      "uos-telegram-bridge.service"
+    ],
+    "owner_tasks": [
+      "uos/telegram-admission/20261001-1015/PREP",
+      "uos/telegram-admission/20261001-1015/RELEASE"
+    ],
+    "receipt": "var/recovery-runtime/20261025-1021-merge-g7/runtime-consumers.json"
+  },
+  "latest_backup": "PENDING authenticated latest-revision restore before task completion",
+  "runtime_admission": false
+}

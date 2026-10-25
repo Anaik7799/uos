@@ -1,0 +1,212 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "hive-stabilization-design-claimed",
+    "plan_id": "uos/hive-stabilization/20260907-2036",
+    "task_id": "DESIGN",
+    "actor": "codex-side-stabilization",
+    "scope": "Author bounded stabilization plan and Sa-plan handoff. No agent launch, board send, journal repair, source integration or runtime effects.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-07T20:24:20Z",
+    "valid_until": "2026-09-07T21:24:20Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-07T20:21:36Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Read-only canonical evidence at planning intake; plan authored in isolated child of c502fbd27c68439dd72686f2affe586c4198851b; session_sync refreshed after observed concurrent SQLite/compaction helper changes at 20:24:20Z.",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:21:36Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:21:36Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+          "sha256": "600efce913f85f8caf2883944f6b1326a6873bc5f49ae8fc438e0b436223cd98",
+          "observed_at": "2026-09-07T20:21:36Z"
+        },
+        {
+          "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+          "sha256": "05f331b37436b03af6a11938ab50b3c6cedef640d3a472d4395a7aab4ae8a63c",
+          "observed_at": "2026-09-07T20:24:20Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary next milestone: truthful stabilization handoff.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Feedback and ownership are incomplete; planning effects remain controlled.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3, RPN36, F4; credible under expected stale-feedback conditions, not measured probability.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Plan sequences shared coordination/effect-authority prerequisites for multiple consumers.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Acceptance supports fleet-level coordination integrity; no achieved benefit is claimed.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+          "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-PLAN-FALSE-RELEASE",
+        "cause": "Planning treats stale or synthetic status as permission to expand the swarm.",
+        "effect": "Multiple writers act on unreliable ownership/evidence.",
+        "controls": "Side session performs planning only; authority, independent evidence and canary gates precede dispatch.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Stabilization planner and main-session dispatch controller",
+      "control_action": "Select and dispatch bounded stabilization work",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required containment or integrity repair is omitted from the stabilization sequence.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Check safety class and inherited prerequisite urgency before score."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Swarm is expanded on constant health or unverified completed task labels.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Authorization and effect constraints precede ranking."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Dispatch occurs before dependency, freshness or current-lease checks.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Re-observe and reject affected stale/blocked selection."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Workers exceed their finite lease, task scope or budget.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Recheck current owner, fencing, expiry and budget before effects."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 900,
+    "score_interval": [
+      900,
+      900
+    ],
+    "decision": {
+      "summary": "Prepare dependency-gated recovery and canary plan using observed facts; keep peer dispatch with the main session.",
+      "alternatives": [
+        "Expand swarm immediately (blocked by unverified evidence/authority).",
+        "Bounded stabilization before a measured canary (selected)."
+      ],
+      "counterevidence": [
+        "Coordinator task is marked completed; reverify it instead of duplicating its implementation.",
+        "Concurrent coordinator implementation is in progress; verify the current owner candidate and its append-only behavior before creating duplicate repair work."
+      ],
+      "assumptions": [
+        "Task is planning and local bookkeeping only.",
+        "The main session will discover actual available agents and assign owners; none are assigned here."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "A compact plan makes the next eligible repair explicit and prevents duplicate work.",
+      "falsifier": "A blocked consumer can be dispatched, or a completion label substitutes for fresh independent evidence.",
+      "acceptance": [
+        "Concrete source paths and falsifiable per-task checks",
+        "Safety-first priority and actual dependency edges",
+        "Compact unposted board handoff",
+        "No peer invocation or runtime effect"
+      ],
+      "rollback": "Retain local plan candidate for review; no runtime change to roll back.",
+      "reviewer": "Author self-review; main-session qualified review required before dispatch.",
+      "budget": "One planning task, one hour lease, deterministic tools, no additional model calls.",
+      "residuals": [
+        "Execution assessments must be refreshed before claims.",
+        "Swarm initialization is unavailable in this side conversation."
+      ],
+      "supersedes": "hive-stabilization-design"
+    }
+  }
+]

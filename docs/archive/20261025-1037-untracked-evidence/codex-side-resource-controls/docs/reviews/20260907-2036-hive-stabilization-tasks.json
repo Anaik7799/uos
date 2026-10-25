@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "kind": "planning_handoff_not_execution_clearance",
+  "plan_id": "uos/hive-stabilization/20260907-2036",
+  "created_at": "2026-09-07T20:26:57Z",
+  "side_session_dispatch": "PROHIBITED",
+  "planning_task": "DESIGN",
+  "execution_status": "NOT_STARTED",
+  "priority_semantics": "Safety class and dependency eligibility precede ordinal C*T*F*Dep*I; intervals require evidence before a point ranking",
+  "future_execution_risk_packets": "REQUIRED_FRESH_COMPLETE_PORTFOLIO",
+  "tasks": [
+    {
+      "id": "HANDOFF",
+      "dependencies": [
+        "DESIGN"
+      ],
+      "class": "P1",
+      "factors": [
+        4,
+        4,
+        5,
+        5,
+        5
+      ],
+      "score": 2000,
+      "title": "Main-session intake: discover real agents, validate authority, refresh full risk portfolio and acknowledge scoped work",
+      "files": [
+        "apps/uos_swarm/src/session_store_cli.gleam",
+        "apps/uos_swarm/src/session_sync_cli.gleam",
+        "contracts/rules/20260907-0653-tri-agent-coordination.md"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 2000,
+      "priority_is_admission": false
+    },
+    {
+      "id": "COORD",
+      "dependencies": [
+        "HANDOFF"
+      ],
+      "class": "P1",
+      "factors": [
+        4,
+        4,
+        5,
+        5,
+        5
+      ],
+      "score": 2000,
+      "title": "Independently verify current coordinator SQLite repair, append-only history and stale-lease recovery",
+      "files": [
+        "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "apps/uos_swarm/src/session_store_ffi.erl",
+        "apps/uos_swarm/test/session_store_test.gleam",
+        "apps/uos_swarm/test/session_sync_test.gleam"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 2000,
+      "priority_is_admission": false
+    },
+    {
+      "id": "TRUTH",
+      "dependencies": [
+        "HANDOFF"
+      ],
+      "class": "P1",
+      "factors": [
+        4,
+        4,
+        5,
+        4,
+        4
+      ],
+      "score": 1280,
+      "title": "Expose fixture, stale and unknown forecast/inference states honestly and gate operational consumers",
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "apps/cepaf_gleam/test/fractal_forecast_test.gleam",
+        "services/inference/max/max_worker.py"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 1280,
+      "priority_is_admission": false
+    },
+    {
+      "id": "FENCE",
+      "dependencies": [
+        "COORD"
+      ],
+      "class": "P1",
+      "factors": [
+        4,
+        4,
+        5,
+        5,
+        5
+      ],
+      "score": 2000,
+      "title": "Review and admit original-attempt fencing candidate through serialized integration and caller compatibility checks",
+      "files": [
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+        "engines/hermes/modules/sa_plan/sa_plan_store.mli",
+        "engines/hermes/modules/sa_plan/test/test_sa_plan_leases.ml",
+        "tools/sa_plan_execution.ml"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 2000,
+      "priority_is_admission": false
+    },
+    {
+      "id": "OBSERVE",
+      "dependencies": [
+        "COORD",
+        "FENCE"
+      ],
+      "class": "P1",
+      "factors": [
+        4,
+        4,
+        5,
+        5,
+        5
+      ],
+      "score": 2000,
+      "title": "Review numeric repair and implement genuine root/current resource observation authority without bypass",
+      "files": [
+        "engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+        "engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+        "engines/hermes/modules/hermes_harness/resource_envelope.mli",
+        "engines/hermes/modules/system_engg/run_swarm_bridge_programme.ml",
+        "engines/hermes/modules/hermes_harness/test_resource_envelope.ml"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 2000,
+      "priority_is_admission": false
+    },
+    {
+      "id": "HISTORY",
+      "dependencies": [
+        "COORD",
+        "TRUTH",
+        "OBSERVE"
+      ],
+      "class": "P2",
+      "factors": [
+        3,
+        3,
+        null,
+        4,
+        4
+      ],
+      "score": null,
+      "score_interval": [
+        576,
+        720
+      ],
+      "title": "Persist typed timestamped observations, forecast/outcome pairs and measured calibration with provenance",
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_zenoh_stream.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/sdlc/forecasting_engine.gleam",
+        "apps/cepaf_gleam/test/forecasting_engine_test.gleam"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 576,
+      "priority_is_admission": false
+    },
+    {
+      "id": "CANARY",
+      "dependencies": [
+        "COORD",
+        "TRUTH",
+        "FENCE",
+        "OBSERVE",
+        "HISTORY"
+      ],
+      "class": "P2",
+      "factors": [
+        3,
+        3,
+        5,
+        4,
+        4
+      ],
+      "score": 720,
+      "title": "Run one-controller two-worker read-only canary with bounded costs, evidence receipts, duplicate and expiry probes",
+      "files": [
+        "apps/uos_swarm/src/uos_swarm/board.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "engines/hermes/modules/sa_plan/test/test_sa_plan_leases.ml",
+        "contracts/rules/20260907-0653-tri-agent-coordination.md"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 720,
+      "priority_is_admission": false
+    },
+    {
+      "id": "EXPAND",
+      "dependencies": [
+        "CANARY"
+      ],
+      "class": "P2",
+      "factors": [
+        3,
+        3,
+        5,
+        3,
+        4
+      ],
+      "score": 540,
+      "title": "Expand one bounded SDLC or SRE capability after observed canary acceptance and separate runtime authority",
+      "files": [
+        "contracts/rules/20260907-0653-tri-agent-coordination.md",
+        "engines/hermes/modules/sa_plan/sa_plan_store.mli"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 540,
+      "priority_is_admission": false
+    },
+    {
+      "id": "MODELS",
+      "dependencies": [
+        "HISTORY",
+        "CANARY"
+      ],
+      "class": "P3",
+      "factors": [
+        2,
+        2,
+        null,
+        2,
+        3
+      ],
+      "score": null,
+      "score_interval": [
+        72,
+        120
+      ],
+      "title": "Evaluate small utility models against deterministic baselines and measured costs before any runtime admission",
+      "files": [
+        "services/inference/max/max_worker.py",
+        "services/inference/max/max_kernel.mojo",
+        "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",
+        "apps/cepaf_gleam/test/max_inference_daemon_test.gleam"
+      ],
+      "owner": null,
+      "registration_target": "sa-plan",
+      "status": "PLANNED",
+      "priority": 72,
+      "priority_is_admission": false
+    }
+  ],
+  "board_handoff": {
+    "status": "UNPOSTED",
+    "sender": "MAIN_SESSION_MUST_BIND_REAL_IDENTITY",
+    "plan_id": "uos/hive-stabilization/20260907-2036",
+    "goal": "Truthful evidence and fenced ownership before bounded read-only canary",
+    "first_task": "HANDOFF",
+    "reuse_candidates": [
+      "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "c502fbd27c68439dd72686f2affe586c4198851b"
+    ],
+    "ack_fields": [
+      "session",
+      "task",
+      "workspace",
+      "paths",
+      "base_revision",
+      "budget",
+      "blockers"
+    ],
+    "prohibitions": [
+      "No shared-journal rewrite",
+      "No runtime authority from ACK or model output"
+    ]
+  },
+  "preflight": {
+    "status": "PREFLIGHT_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "observed_at": "2026-09-07T20:24:50Z",
+    "completed_at": "2026-09-07T20:24:50Z",
+    "elapsed_monotonic_seconds": 0.213091119,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000478954,
+      "uncertainty_seconds": 0.0171450065,
+      "reference_age_seconds": 489.3463273048401,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000478904,
+      "uncertainty_seconds": 0.0171451265,
+      "reference_age_seconds": 489.4551591873169,
+      "stratum": 3
+    },
+    "assessment_sha256": "1fa5cafe1e5a1b0809b744d00f04dca50281da257698a8b7085da5e541881026",
+    "evidence_files_checked": 4,
+    "sa_plan": {
+      "plan_id": "uos/hive-stabilization/20260907-2036",
+      "snapshot_sha256": "a4c217638eeb93544852d925e337a4452a8eb177160831430c74158fb0f3a67e",
+      "tasks": [
+        {
+          "task_id": "DESIGN",
+          "state": "available",
+          "worker": null,
+          "lease_until_ns": null,
+          "attempt": 0,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [
+      {
+        "task_id": "DESIGN",
+        "effective_class": "P2",
+        "effective_score": 900,
+        "origins": [
+          "DESIGN"
+        ]
+      }
+    ],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  },
+  "active_observation": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "observed_at": "2026-09-07T20:26:57Z",
+    "completed_at": "2026-09-07T20:26:57Z",
+    "elapsed_monotonic_seconds": 0.220321651,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000420285,
+      "uncertainty_seconds": 0.0172847305,
+      "reference_age_seconds": 616.2516362667084,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000420231,
+      "uncertainty_seconds": 0.0172848575,
+      "reference_age_seconds": 616.3635241985321,
+      "stratum": 3
+    },
+    "assessment_sha256": "b1e9235e750954032945ec20657ad630f7cf3e2e6e2e034f099ab8bd11100702",
+    "evidence_files_checked": 4,
+    "sa_plan": {
+      "plan_id": "uos/hive-stabilization/20260907-2036",
+      "snapshot_sha256": "302f9a3664369acd5b17d7e362f79cd7b8c67720c40dd431af0da9b4dfa5af7e",
+      "tasks": [
+        {
+          "task_id": "DESIGN",
+          "state": "executing",
+          "worker": "codex-side-stabilization",
+          "lease_until_ns": "1788816302904585640",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  }
+}

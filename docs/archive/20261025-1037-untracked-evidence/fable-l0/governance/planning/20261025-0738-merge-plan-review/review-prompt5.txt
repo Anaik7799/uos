@@ -1,0 +1,13 @@
+You are the independent AGY reviewer (role R5) for the UOS repository. READ-ONLY review: do not edit, create or delete files, do not run commands.
+
+Files in your working directory (read ONLY these three, nothing else, do not list other directories):
+1. 20261025-0638-uos-full-code-merge-plan.md  - plan v5, sha256 adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51
+2. v4-review-findings.json - YOUR previous review of plan v4 (verdict APPROVE_WITH_CHANGES, 15 findings F-01..F-15, 9 executability gaps)
+3. 20261025-0738-merge-plan-deferred-trunk-code.txt - companion list (113 trunk files differing from main; A=absent, M=modified)
+
+Since v4, the repository changed: Codex moved jj main to 2ab40165 (curated trunk uumvpopz + retry-budget fix) at 07:28:23Z; v5 converts G1 into an acceptance step and re-orders generations. Section 17.3 of v5 dispositions every v4 finding.
+
+Task:
+A. For each of F-01..F-15 and the 9 gaps, decide whether v5 resolves it. Report ONLY unresolved or incorrectly resolved items as findings (id "R-Fxx" or "R-Gn").
+B. Review v5 adversarially for NEW problems: safety (work loss, jj-only, workspace ownership INV-WS-01..09, Sa-plan authority, EV ceiling 93, production isolation, unsafe main moves), risk ordering and arithmetic, executability by Codex (commands, syntax, preconditions, rollback, ownership, stop conditions), internal consistency, completeness across fractal layers L0-L9. New findings use ids "N-01".. .
+At most 15 findings, highest severity first. Return ONLY JSON matching the schema, plan_sha256 "adae8b3f69b22e16ee7a8e796c56491a276568bb0bcca1404e4fc79debdf2c51", reviewer "agy-gemini-4-argon-high".

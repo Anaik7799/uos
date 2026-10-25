@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-25T10:14:05.371Z",
+  "observed_at": "2026-10-25T10:32:35.570Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
@@ -7,9 +7,10 @@
     "G2_REMAINING",
     "G3_AUTHORITY",
     "G4_EVIDENCE",
-    "G5_ARCHIVE"
+    "G5_ARCHIVE",
+    "G6_GRAFTS"
   ],
-  "main": "4e2e9e1b11a161609beb36b0a7f0aad3d61ddc9d",
+  "main": "5b05558e66fbd13c9c375977a8ea5a541f9e1d59",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -20,7 +21,7 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "G6 branch deltas, G7 default/runtime consumer reconciliation, G8 measured controls",
+  "next": "G7 workspace/runtime-consumer reconciliation and off-host refresh; G8 operational controls and observer repair",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
@@ -30,9 +31,9 @@
     "Existing TUI demonstration player contains unsupported admission claims; fix in G8"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G6 code/test integration complete; exact-candidate review pending",
-  "github_verified_at": "2026-10-25T09:56:42.332Z",
-  "github_new_commits_uploaded": 238,
+  "working_on": "G7 executing:101workspaces inventoried,9historical documents preserved,138terminal transient unit states cleared,2merged bookmarks removed; latest off-host restore pending",
+  "github_verified_at": "2026-10-25T10:18:42.009Z",
+  "github_new_commits_uploaded": 239,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -82,13 +83,13 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 367,
-  "latest_receipt": "var/recovery-runtime/20261025-0931-merge-g5/merge-receipt.json",
-  "merge_completed": 6,
+  "merged_paths_latest": 11,
+  "latest_receipt": "var/recovery-runtime/20261025-0958-merge-g6/merge-receipt.json",
+  "merge_completed": 7,
   "merge_total": 9,
   "agents": {
-    "codex": "G6 review preparation; telemetry build and64checks pass",
-    "agy": "Code job timed out/discarded; smaller supplied-code review next",
+    "codex": "G7 preservation, cleanup and backup verification",
+    "agy": "No active job; scoped G7 review next",
     "claude": "Preserved plan advisory"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
@@ -134,6 +135,24 @@
     "regression_tests": 41,
     "ledger": "governance/planning/20261025-1005-branch-telemetry-ledger.json",
     "journal": "docs/journal/20261025-1005-branch-telemetry-integration.md",
-    "agy_code": "ERROR empty timed-out response; no edits"
+    "agy_code": "ERROR empty timed-out response; no edits",
+    "status": "MERGED_AND_UPLOADED",
+    "candidate": "5b05558e66fbd13c9c375977a8ea5a541f9e1d59",
+    "review": "504e0857-d857-41a9-b291-64ae8c2a71db",
+    "observer_rca": "var/recovery-runtime/20261025-0958-merge-g6/observer-rca-intake.json"
+  },
+  "g7": {
+    "workspaces_inventoried": 101,
+    "workspaces_forgotten": 0,
+    "source_or_evidence_records": 72,
+    "exact_main": 27,
+    "exact_main_ancestor": 28,
+    "historical_restored": 9,
+    "generated_lockfiles_retained_pending_native_release": 8,
+    "terminal_transient_units_reset": 138,
+    "merged_bookmarks_deleted": 2,
+    "unmerged_bookmarks_retained": 64,
+    "default_checkout": "RETAINED: live web/cognitive/Telegram consumers; transition belongs to reviewed release",
+    "backup": "PENDING latest revision refresh"
   }
 }
