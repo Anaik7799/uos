@@ -2,16 +2,16 @@
 
 #fractal-l0 #fractal-l5 #fractal-l9 #zk-adr #zero-muda
 
-Observed 2026-10-25T11:49:57.264Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
+Observed 2026-10-25T12:38:02.736Z. [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Live dashboard](http://nas-1.tail55d152.ts.net:4100/static/20261024-0712-recovery-dashboard.html)
 
-**AS-IS:** Main and GitHub match 1307f2de; 242 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
+**AS-IS:** Main and GitHub match 832a0748; 243 commits uploaded since baseline. Consolidation 9/9 canonical tasks completed. Observer detected completion at 11:37:33Z. Telegram runtime 61/71 and admission 25/33 complete. Counts measure task records, not feature coverage.
 
 **TO-BE:** All adopted Telegram commands, Mini App actions and media operate through guarded supervised dispatch; real Telegram and browser acceptance pass on the released candidate; applicable branch deltas are integrated and GitHub readback matches main.
 
 | Task | State | Contribution and acceptance | Risk / mitigation |
 |---|---|---|---|
-| G8_IMPROVE | Completed; live desktop/mobile PASS | Current task projection, finite refresh and truthful demonstration | High: reviewed exact bytes/config, preserved originals, finite observer until 12:25:47Z |
-| MINI_API_IMPL → MINI_API_REVIEW | Attempt 7 active; config implementation and browser acceptance in progress | Authenticated data/actions reflect actual state; denial/recovery and browser checks | High: AGY reviewed recovery; six WIP files preserved and surgically integrated |
+| G8_IMPROVE | Completed; live desktop/mobile PASS | Current task projection, finite refresh and truthful demonstration | High: reviewed exact bytes/config, preserved originals, renewed finite observer until13:22:00Z |
+| MINI_API_IMPL → MINI_API_REVIEW | Attempt 7 active; config published; Alerts read/browser reviewed, acknowledgement pending; three other data adapters remain | Authenticated data/actions reflect actual state; denial/recovery and browser checks | High: AGY reviewed recovery; six WIP files preserved and surgically integrated |
 | COMMAND_IMPL → COMMAND_REVIEW | Partial; historical inventory 32/77 reachable | Every adopted command maps to typed dispatcher and backend | Critical: effect-time owner/task fence and receipts |
 | MEDIA_IMPL → MEDIA_REVIEW | Pending | Bounded media ingestion and delivery | High: size/type validation and hostile-input checks |
 | GATEWAY_IMPL → GATEWAY_REVIEW | Pending | Supervised secret-safe startup/outbox/recovery | Critical: no credentials in operational messages |
@@ -21,7 +21,11 @@ Codex implemented and tested the dashboard changes; AGY gemini-4-argon-high inde
 
 G0–G7 source and evidence consolidation is published. All 101 workspaces were inventoried; 64 nonancestral bookmarks remain preserved. Backup 20261025-1045 restored revision 30bac953, 226 bookmarks, 14,111 default paths and 72 screened files on vm-1; the key stayed local. Later commits are published on GitHub but not claimed in that earlier backup. Installed C3i/rule-engine NIF digest mismatch remains a release HOLD; mismatched binaries were not loaded.
 
-Next: finish Mini App APIs and browser acceptance, then command/media/gateway and exact release/admission. Use bounded AGY review and Codex/AGY code/testing; reuse unchanged source-bound evidence. Ten runtime and eight admission tasks remain. Overall completion time is not established until backend availability and actual Telegram acceptance are verified.
+Config now uses shared validated declarations with12 current tests,16 HTTP cases,9 actual Chromium scenarios and4 startup checks passing. AGY4fdd0402 approved exact source; source-only publication verified12:03:37Z. Synthetic test identity does not prove real Telegram acceptance.
+
+Alerts read increment now has23 focused tests,319 prior combined checks,8 HTTP executions across two collector profiles and4 real Chromium scenarios; AGY51fcfe4f/126a1f5c PASS. Source publication pending. No acknowledgement/full-page completion claimed. Observer renewed after a finite expiry gap, latest startup snapshot12:34:29UTC.
+
+Next: finish incident-specific acknowledgement, remaining alarm coverage, and Mini App immune/inference/federation producers and adopted action flows, then command/media/gateway and exact release/admission. Use bounded AGY review and Codex/AGY code/testing; reuse unchanged source-bound evidence. Ten runtime and eight admission tasks remain. Overall completion time is not established until backend availability and actual Telegram acceptance are verified.
 
 [Machine checkpoint](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261025-0754-merge-checkpoint.json). Working document publication follows reviewed source integration.
 

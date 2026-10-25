@@ -153,3 +153,35 @@ pub fn project(raw: String,now: Int,expected_source: String) -> Result(api.Obser
   ]
   Ok(api.Observed(at,"local_device_observations",dict.from_list(fields)))
 }
+
+//// Revalidate a health projection before another feature derives conditions from it.
+pub fn devices_from_observation(observation: api.Observation,now: Int)
+  -> Result(#(List(Device),Bool),String) {
+  case observation {
+    api.Observed(at,"local_device_observations",fields) -> {
+      use _ <- result.try(require(at > 0 && now >= at && now-at <= 5))
+      use count <- result.try(dict.get(fields,"Device count") |> result.replace_error("health_count_missing"))
+      use n <- result.try(int.parse(count) |> result.replace_error("health_count_invalid"))
+      use _ <- result.try(require(n >= 0 && n <= 64 && int.to_string(n) == count))
+      let entries=dict.to_list(fields) |> list.filter(fn(p) {string.starts_with(p.0,"Device ") && p.0 != "Device count"})
+      use _ <- result.try(require(list.length(entries)==n))
+      use rows <- result.try(list.try_map(list.index_map(list.repeat(Nil,n),fn(_,i){i+1}),fn(i) {
+        use raw <- result.try(dict.get(fields,"Device " <> int.to_string(i)) |> result.replace_error("health_device_missing"))
+        use _ <- result.try(require(string.byte_size(raw)<=2048))
+        use d <- result.try(json.parse(raw,decoder()) |> result.replace_error("health_device_invalid"))
+        use _ <- result.try(require(valid(d)))
+        Ok(d)
+      }))
+      use _ <- result.try(require(list.length(list.unique(list.map(rows,fn(d) {d.id})))==n))
+      use scan <- result.try(dict.get(fields,"Scan") |> result.replace_error("health_scan_missing"))
+      use truncated <- result.try(dict.get(fields,"Truncation") |> result.replace_error("health_truncation_missing"))
+      use _ <- result.try(require(list.contains([
+        "All three inventory directories scanned; individual readings may be unavailable",
+        "Partial: an inventory directory or sensor listing was unavailable"],scan)
+        && list.contains(["Not truncated","First 64 records only; inventory is incomplete"],truncated)
+        && case truncated { "Not truncated" -> True _ -> n==64 && scan=="Partial: an inventory directory or sensor listing was unavailable" }))
+      Ok(#(rows,string.starts_with(scan,"All three") && truncated=="Not truncated"))
+    }
+    _ -> Error("health_source_unavailable")
+  }
+}

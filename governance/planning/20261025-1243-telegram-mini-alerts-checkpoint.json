@@ -1,0 +1,93 @@
+{
+  "schema": "uos.telegram-mini-alerts.checkpoint.v1",
+  "observed_at": "2026-10-25T12:30:43.161Z",
+  "status": "SOURCE_AND_TEST_REVIEW_PASS_PENDING_PUBLICATION",
+  "scope": "Partial read increment; acknowledgement and complete alert coverage remain required",
+  "parent_main": "832a07488e521e7acfefb702d07ba0777ef02faf",
+  "task": "MINI_API_IMPL",
+  "attempt": 7,
+  "files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alerts.gleam",
+      "sha256": "a19e18222de8be6bcbdea9e1d8e2c0cd5e13bac78387f6a12f935707c45cdce6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alerts_view.gleam",
+      "sha256": "eedde42aa13ed31d66f519c6e62df6c9963f38d3bf17dc969ef30787e8e2895e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_health.gleam",
+      "sha256": "ddca53fa2b77245599f470e9d9b18587a43c8943f56645299e21aac00e146f5c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+      "sha256": "a3db851e73375296c3fc6f68698416ca40cba70d2a8e0ed4f7fdaa7b0dc895bb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_view.gleam",
+      "sha256": "6e18ff4c124b4d0f6a7c5d03f653088a148b73b8e9e1c4a84da1f75e3e819361"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "sha256": "bca0fad8dace06cd3affaeb9a863bb460ba546b529c11349617c95931744f543"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_alerts_test.gleam",
+      "sha256": "5814c1745c16fd35c58bb8f88797f1f4f06ee817064451cdf2eb1d68f9c88358"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/alerts-http-tests.js",
+      "sha256": "9a43f2a65c23057e22329f590a884c5e88a7fc5124a23928a857a6f85f5b0f2c"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "803e70fb8de235f75b3a0d0130b2dbc4f9b0a7f86c84cad9eab97d72b017cf75"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_browser.ml",
+      "sha256": "7740c5a4da1dcb055ab509edb7438abbeaa0489e2f8ffce20e44ef7cfc8fbf16"
+    }
+  ],
+  "evidence_root": "/home/an/NAS-setup/uos/var/recovery-runtime/20261025-1224-alerts-evidence",
+  "full_build": "/home/an/NAS-setup/uos/var/recovery-runtime/20261025-1224-alerts-full",
+  "counts": {
+    "focused": 23,
+    "prior_combined": 319,
+    "prior_combined_focused": 18,
+    "prior_combined_other": 301,
+    "http_executions": 8,
+    "http_profiles": 2,
+    "browser": 4
+  },
+  "design_review": "84e0ff9c-5009-4d1e-a8c4-707f283cc201",
+  "main_merged": false,
+  "uploaded_commits": 243,
+  "real_telegram": "UNRUN",
+  "runtime_tasks": "61/71",
+  "admission_tasks": "25/33",
+  "goal_met": false,
+  "global_admission": "NOT_GRANTED",
+  "remaining": [
+    "Durable incident-specific acknowledgement and recurrence",
+    "Complete adopted alarm coverage and cleanup of legacy static alarm API",
+    "Immune,Inference,Federation data backends",
+    "Remaining Mini actions,commands,media,gateway",
+    "Independent complete review,real Telegram,release and global admission"
+  ],
+  "failures_preserved": [
+    "20261025-1224-mini-alerts/build-results.json: unsupported list.range; corrected",
+    "AGY output read while live: incomplete JSON; same handle collected after terminal",
+    "Coordinator TTL3900 refused; corrected bounded3600"
+  ],
+  "updated_at": "2026-10-25T12:38:02.736Z",
+  "source_review": "51fcfe4f-8dd1-44cf-8ba9-bc6a39549f8c",
+  "test_review": "126a1f5c-812f-47ae-b6b4-446d983b511b",
+  "review_artifact": "governance/planning/20261025-1243-telegram-mini-alerts-review.json",
+  "observer": {
+    "unit": "uos-recovery-dashboard-20261025-mini-alerts",
+    "config_sha256": "b57eb50f95aacb5bc1a41aae95dc23da2f21bca7089d7312fc74ad90507a26c9",
+    "expires_at": "2026-10-25T13:22:00.854Z",
+    "last_observed_running": "2026-10-25T12:38:02.736Z"
+  },
+  "fixtures_stopped": true
+}

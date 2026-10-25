@@ -960,7 +960,7 @@
     "fractal_layer": 5,
     "observed_at": "2026-10-25T11:38:38Z",
     "valid_until": "2026-10-25T12:38:38Z",
-    "task_state": "executing",
+    "task_state": "completed",
     "ready_since": "2026-10-25T11:38:38Z",
     "snapshot": {
       "kind": "working_tree",

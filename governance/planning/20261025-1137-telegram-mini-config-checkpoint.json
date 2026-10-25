@@ -1,7 +1,7 @@
 {
   "schema": "uos.telegram.mini-config.checkpoint.v1",
   "observed_at": "2026-10-25T11:58:37.988Z",
-  "status": "DEVELOPMENT_VERIFIED_REVIEW_PENDING",
+  "status": "SOURCE_MERGED_AND_UPLOADED",
   "task": {
     "plan": "uos/telegram-runtime/20261001-1150",
     "id": "MINI_API_IMPL",
@@ -96,5 +96,10 @@
   "global_admission": false,
   "real_telegram": false,
   "goal_met": false,
-  "main_merged": false
+  "main_merged": true,
+  "updated_at": "2026-10-25T12:05:50.229Z",
+  "candidate": "832a07488e521e7acfefb702d07ba0777ef02faf",
+  "review": "4fdd0402-9ae9-4012-b7b7-758f260784cd",
+  "merge_receipt": "var/recovery-runtime/20261025-1138-mini-resume/merge-receipt.json",
+  "uploaded_commits_since_baseline": 243
 }

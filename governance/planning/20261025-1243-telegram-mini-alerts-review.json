@@ -1,0 +1,71 @@
+{
+  "at": "2026-10-25T12:38:02.736Z",
+  "scope": "Source and test delta only; page/task/admission remain incomplete",
+  "source_review": {
+    "conversation": "51fcfe4f-8dd1-44cf-8ba9-bc6a39549f8c",
+    "response": {
+      "source_verdict": "PASS",
+      "source_findings": [],
+      "observer_verdict": "PASS",
+      "observer_findings": [],
+      "config_sha256": "b57eb50f95aacb5bc1a41aae95dc23da2f21bca7089d7312fc74ad90507a26c9",
+      "limitations": [
+        "Warning, clear, and recurrence transitions are verified via injected typed sources in unit tests, whereas live HTTP and Chromium runs exercised actual serving BEAM counters, fixed HTTP endpoint probes, and the explicit missing local device collector coverage gap.",
+        "HTTP and Chromium verification used a synthetic Telegram initData fixture against private Mist ingress rather than real Telegram client acceptance.",
+        "Alert acknowledgement is not yet connected (read-only condition projection only; viewing does not acknowledge conditions).",
+        "Legacy static cockpit alerts API replacement and overall page/task completion remain pending (61/71, 25/33; goal false).",
+        "The new canonical job (uos/agy-operations/20261024-0642/live-dashboard-mini-alerts-20261025-1227) must be claimed before launching the renewed finite read-only dashboard observer unit."
+      ]
+    }
+  },
+  "test_review": {
+    "conversation": "126a1f5c-812f-47ae-b6b4-446d983b511b",
+    "response": {
+      "verdict": "PASS",
+      "findings": [],
+      "scope": "Test delta only following source PASS 51fcfe4f-8dd1-44cf-8ba9-bc6a39549f8c (bound production SHA256 digests unchanged): 5 new unit tests in mini_alerts_test (23 focused tests total; prior 319-test combined run covers the original 18 + 301 regressions, not a claimed 324-test single combined run) verifying monotonic clock rollback before/during read, insufficient remaining budget, elapsed deadline short-circuiting via panic-guarded callbacks, and wall-clock rollback/jump refusal; plus private HTTP verification script covering both missing-collector (4 cases) and configured real Linux collector (4 cases, including 3 repeated denial/expired/public-shell checks) against live Mist ingress, BEAM metrics, and fixed probes with synthetic Telegram identity and 4 unchanged Chromium scenarios; excludes alert acknowledgement, full page/task/goal completion, and runtime admission."
+    }
+  },
+  "files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alerts.gleam",
+      "sha256": "a19e18222de8be6bcbdea9e1d8e2c0cd5e13bac78387f6a12f935707c45cdce6"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_alerts_view.gleam",
+      "sha256": "eedde42aa13ed31d66f519c6e62df6c9963f38d3bf17dc969ef30787e8e2895e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_health.gleam",
+      "sha256": "ddca53fa2b77245599f470e9d9b18587a43c8943f56645299e21aac00e146f5c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+      "sha256": "a3db851e73375296c3fc6f68698416ca40cba70d2a8e0ed4f7fdaa7b0dc895bb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_view.gleam",
+      "sha256": "6e18ff4c124b4d0f6a7c5d03f653088a148b73b8e9e1c4a84da1f75e3e819361"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+      "sha256": "bca0fad8dace06cd3affaeb9a863bb460ba546b529c11349617c95931744f543"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mini_alerts_test.gleam",
+      "sha256": "5814c1745c16fd35c58bb8f88797f1f4f06ee817064451cdf2eb1d68f9c88358"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/alerts-http-tests.js",
+      "sha256": "9a43f2a65c23057e22329f590a884c5e88a7fc5124a23928a857a6f85f5b0f2c"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/build.js",
+      "sha256": "803e70fb8de235f75b3a0d0130b2dbc4f9b0a7f86c84cad9eab97d72b017cf75"
+    },
+    {
+      "path": "tools/validation/telegram_mini_candidate/mini_browser.ml",
+      "sha256": "7740c5a4da1dcb055ab509edb7438abbeaa0489e2f8ffce20e44ef7cfc8fbf16"
+    }
+  ]
+}

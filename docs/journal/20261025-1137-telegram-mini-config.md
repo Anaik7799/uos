@@ -30,7 +30,7 @@ Devil’s Advocate/Popperian checks cover duplicate escaped keys, invalid CIDR, 
 
 ## 7. Verification Matrix
 
-Full current application build PASS with empty private priv directory. Twelve current config tests PASS;289 related unchanged regression cases passed in the preceding candidate. Sixteen actual HTTP cases and9 Chromium scenarios PASS across default/custom/maximum/invalid configs, desktop/mobile, refusal, SDK absence and outage stale-data clearing. Four startup cases match configured quorum, including64-of64. All fixture units stopped. Configured mobile screenshot visually inspected. Admiralty A1 denotes directly observed scoped results by analyst classification; automated Admiralty adjudication and seven epistemic engines remain UNRUN.
+Full current application build PASS with empty private priv directory. AGY independent source review 4fdd0402 PASS for exact candidate832a0748; main/GitHub readback matched at12:03:37Z (243 commits since baseline). Twelve current config tests PASS;289 related unchanged regression cases passed in the preceding candidate. Sixteen actual HTTP cases and9 Chromium scenarios PASS across default/custom/maximum/invalid configs, desktop/mobile, refusal, SDK absence and outage stale-data clearing. Four startup cases match configured quorum, including64-of64. All fixture units stopped. Configured mobile screenshot visually inspected. Admiralty A1 denotes directly observed scoped results by analyst classification; automated Admiralty adjudication and seven epistemic engines remain UNRUN.
 
 ## 8. Files Modified
 
@@ -63,7 +63,7 @@ Configuration functionality now has direct implementation and browser evidence. 
 - [x] CHK-01-TIME: host UTC observation.
 - [x] CHK-02-TAIL: clickable Tailnet links.
 - [x] CHK-03-FRACT: scope tags.
-- [ ] CHK-04-KM: final config candidate KM gate pending.
+- [x] CHK-04-KM: exact source candidate KM gate PASS, report-only.
 
 </details>
 
@@ -96,7 +96,7 @@ Configuration functionality now has direct implementation and browser evidence. 
 
 <details><summary>Domain 5 — Governance and version control</summary>
 
-- [ ] CHK-17-SOV: independent config candidate review pending; global admission open.
+- [x] CHK-17-SOV: independent exact source review PASS; production/global admission open.
 - [x] CHK-18-JJ: standalone JJ; no native Git mutations.
 
 </details>

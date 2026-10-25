@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-25T11:39:08.669Z",
+  "observed_at": "2026-10-25T12:05:50.229Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
@@ -12,7 +12,7 @@
     "G7_PRUNE",
     "G8_IMPROVE"
   ],
-  "main": "1307f2de66295723838cf792e3b38985fb18e222",
+  "main": "832a07488e521e7acfefb702d07ba0777ef02faf",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -28,13 +28,13 @@
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
     "Live Telegram acceptance and global admission pending",
-    "Expired MINI_API_IMPL claim requires recovery; not actively executing",
-    "Finite dashboard observer expires 2026-10-25T12:25:47Z; renewal requires current authority"
+    "Finite dashboard observer expires 2026-10-25T12:25:47Z; renewal requires current authority",
+    "Four Mini App adapters have no verified runtime producer; source serializers or sample models cannot establish operation"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "Record G8 completion, then recover expired Mini App task through reviewed Sa-plan authority",
-  "github_verified_at": "2026-10-25T11:35:36.276Z",
-  "github_new_commits_uploaded": 242,
+  "working_on": "Mini App remaining live data adapters and full action/backend acceptance",
+  "github_verified_at": "2026-10-25T12:03:37.193Z",
+  "github_new_commits_uploaded": 243,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -63,7 +63,7 @@
       "step": 2,
       "task": "Finish Mini App APIs and browser acceptance",
       "purpose": "Make visible controls reflect actual state and execute authorized actions",
-      "status": "PARTIAL"
+      "status": "PARTIAL_CONFIG_NOW_VERIFIED_AND_PUBLISHED"
     },
     {
       "step": 3,
@@ -84,14 +84,14 @@
       "status": "PENDING"
     }
   ],
-  "merged_paths_latest": 7,
-  "latest_receipt": "var/recovery-runtime/20261025-1050-merge-g8/layout-final-merge-receipt.json",
+  "merged_paths_latest": 22,
+  "latest_receipt": "var/recovery-runtime/20261025-1138-mini-resume/merge-receipt.json",
   "merge_completed": 9,
   "merge_total": 9,
   "agents": {
-    "codex": "G8 closure and Mini App recovery",
-    "agy": "Final source/config review completed PASS; next Mini App recovery review",
-    "claude": "18 advisory proposals dispositioned; partial/unadopted items remain explicit"
+    "codex": "Mini App actual producer audit; attempt7 active",
+    "agy": "Config exact-candidate review PASS; no active model job",
+    "claude": "Earlier advisory plan retained; no active execution"
   },
   "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json",
   "g3_ledger": "governance/planning/20261025-0901-merge-g3-ledger.json",
@@ -179,5 +179,16 @@
     },
     "review": "5b281fa0-5bdd-4c51-aa7c-5475aeaea29a",
     "completion_refresh": "Observed task_completion snapshot at 11:37:33Z; all 9 merge tasks completed"
+  },
+  "mini_config": {
+    "candidate": "832a07488e521e7acfefb702d07ba0777ef02faf",
+    "status": "SOURCE_MERGED_AND_UPLOADED",
+    "review": "4fdd0402-9ae9-4012-b7b7-758f260784cd",
+    "current_tests": 12,
+    "related_regressions": 289,
+    "http": 16,
+    "browser": 9,
+    "startup": 4,
+    "real_telegram": false
   }
 }

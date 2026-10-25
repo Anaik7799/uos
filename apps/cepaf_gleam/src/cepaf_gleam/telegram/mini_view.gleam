@@ -144,6 +144,20 @@ pub fn public_page(page: types.MiniAppPage) -> String {
                   [h.text("Load current data before making a change.")],
                 ),
               ])
+            types.MiniCockpit ->
+              h.div([a.id("mini-alert-controls")],[
+                h.label([a.for("mini-alert-filter")],[h.text("Alert severity")]),
+                h.select([a.id("mini-alert-filter"),a.disabled(True)],[
+                  h.option([a.value("all")],"All conditions"),
+                  h.option([a.value("critical")],"Critical"),
+                  h.option([a.value("warning")],"Warnings"),
+                  h.option([a.value("unknown")],"Coverage gaps"),
+                  h.option([a.value("advisory")],"Advisories"),
+                ]),
+                h.p([a.id("mini-alert-status"),a.attribute("role","status")],[h.text("Load current data to review conditions.")]),
+                h.div([a.id("mini-alert-grid")],[]),
+                h.div([a.id("mini-alert-detail"),a.attribute("aria-live","polite")],[]),
+              ])
             types.MiniHealthGrid ->
               h.div([a.id("mini-health-controls")],[
                 h.label([a.for("mini-health-filter")],[h.text("Device assessment")]),
