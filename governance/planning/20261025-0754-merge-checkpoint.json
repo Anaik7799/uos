@@ -1,11 +1,12 @@
 {
-  "observed_at": "2026-10-25T08:32:33.983Z",
+  "observed_at": "2026-10-25T08:45:44.246Z",
   "plan": "uos/full-merge/20261025-0638",
   "completed": [
     "G0_PRESERVE",
-    "G1_ACCEPT"
+    "G1_ACCEPT",
+    "G2_REMAINING"
   ],
-  "main": "2ab401652a9f2122d58663157821ca7fde909254",
+  "main": "a7a8d3682bf123cb5b15b72e38d9718eb5e9b520",
   "github_readback": true,
   "local_restore": true,
   "offhost_restore": true,
@@ -16,7 +17,7 @@
   "telegram_runtime_total": 71,
   "telegram_commands_reachable": 32,
   "telegram_commands_total": 77,
-  "next": "Final AGY review, main lease, fast-forward source integration, GitHub push and fresh fetch",
+  "next": "G3 authority/durability, G4 evidence, G5 archive, G6 remaining branch deltas",
   "risks": [
     "Native C3i/rule_engine installed hash mismatch: not loaded; runtime HOLD",
     "Unmerged branch/evidence inventory",
@@ -24,9 +25,9 @@
     "Expired MINI_API_IMPL claim requires recovery; not actively executing"
   ],
   "source": "var/recovery-runtime/20261025-0747-merge-g0",
-  "working_on": "G2_REMAINING: candidate integration verification",
-  "github_verified_at": "2026-10-25T08:17:00Z",
-  "github_new_commits_uploaded": 228,
+  "working_on": "G3_AUTHORITY attempt1: C1 newer storage behavior equivalence; C2 service-provider/migration delta integration; C3 27/27 paths already identical",
+  "github_verified_at": "2026-10-25T08:41:12Z",
+  "github_new_commits_uploaded": 229,
   "candidate_trunk_paths_included": 728,
   "candidate_trunk_paths_keep_main": 4,
   "candidate_binary_excluded": 1,
@@ -75,5 +76,15 @@
       "purpose": "Prove usable operation on the deployed candidate",
       "status": "PENDING"
     }
-  ]
+  ],
+  "merged_paths_latest": 743,
+  "latest_receipt": "var/recovery-runtime/20261025-0830-merge-final/merge-receipt.json",
+  "merge_completed": 3,
+  "merge_total": 9,
+  "agents": {
+    "codex": "Executing G3_AUTHORITY",
+    "agy": "Two G2 reviews completed; final source-only PASS",
+    "claude": "v6 merge plan used as advisory input"
+  },
+  "g3_inventory": "var/recovery-runtime/20261025-0843-merge-g3/inventory.json"
 }
