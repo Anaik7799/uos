@@ -12,8 +12,19 @@ const modules=[
  'cepaf_gleam/telegram/mini_api.gleam','cepaf_gleam/telegram/mini_runtime.gleam','cepaf_gleam/telegram/mini_view.gleam',
  'cepaf_gleam/ui/wisp/mini_app_routes.gleam','cepaf_gleam/ui/wisp/router.gleam',
  'cepaf_gleam/harness/observer_policy.gleam','cepaf_gleam/web/mini_http.gleam','cepaf_gleam/web/server.gleam',
- 'mini_app_clock_ffi.erl','sa_plan_observer_ffi.erl'];
-const tests=['mini_boundary_test.gleam','mini_test_vectors.gleam','mini_boundary_test_ffi.erl'];
+ 'mini_app_clock_ffi.erl','sa_plan_observer_ffi.erl',
+ "cepaf_gleam/harness/telegram_fmea_reader.gleam",
+ "cepaf_gleam/harness/telegram_fmea_report.gleam",
+ "cepaf_gleam/harness/telegram_verification_reader.gleam",
+ "cepaf_gleam/harness/telegram_verification_report.gleam",
+ "cepaf_gleam/harness/telegram_evidence_status.gleam",
+ "cepaf_gleam/harness/telegram_knowledge_report.gleam",
+ "telegram_coordination_binding.erl",
+ "telegram_knowledge_files.erl",
+ "telegram_risk_files.erl",
+ "telegram_ecology_clock.erl",
+ "cepaf_gleam/telegram/mini_evidence.gleam"];
+const tests=['mini_evidence_test.gleam','mini_boundary_test.gleam','mini_test_vectors.gleam','mini_boundary_test_ffi.erl'];
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const sources=[];
 function copy(relative,to) {const from=path.join(sourceRoot,relative);fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to);sources.push({path:relative,sha256:sha(from)});}
@@ -36,6 +47,6 @@ function run(exe,args,cwd=canonical) {
 }
 run(canonical+'/toolchains/gleam-1.16.0/bin/gleam',['compile-package','--target','erlang','--package',out+'/package','--out',out+'/build','--lib',canonical+'/apps/cepaf_gleam/build/dev/erlang']);
 run(canonical+'/toolchains/opam-ocaml/bin/ocamlfind',['ocamlopt','-linkpkg','-package','playwright,eio_main,cryptokit,yojson','mini_browser.ml','-o','mini_browser.exe'],out);
-const erlCode='code:add_paths(filelib:wildcard("'+canonical+'/apps/cepaf_gleam/build/dev/erlang/*/ebin")),code:add_patha("'+out+'/build/ebin"),case eunit:test(mini_boundary_test,[verbose]) of ok -> halt(0); _ -> halt(1) end.';
+const erlCode='code:add_paths(filelib:wildcard("'+canonical+'/apps/cepaf_gleam/build/dev/erlang/*/ebin")),code:add_patha("'+out+'/build/ebin"),case eunit:test([mini_boundary_test,mini_evidence_test],[verbose]) of ok -> halt(0); _ -> halt(1) end.';
 run(canonical+'/toolchains/nix-profile/bin/erl',['+S','2:2','+A','2','-noshell','-eval',erlCode]);
 console.log('CANDIDATE_BUILD_AND_UNIT_TESTS_PASS '+out);

@@ -3,6 +3,9 @@
 
 import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/telegram/mini_api as api
+import cepaf_gleam/telegram/mini_evidence
+import cepaf_gleam/harness/telegram_fmea_reader as fmea
+import cepaf_gleam/harness/telegram_verification_reader as verification
 import cepaf_gleam/telegram/types
 import gleam/bit_array
 import gleam/dict
@@ -10,7 +13,7 @@ import gleam/dynamic/decode
 import gleam/int
 import gleam/json
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 
@@ -19,6 +22,23 @@ fn get_env(name: String) -> Result(String, Nil)
 
 @external(erlang, "mini_app_clock_ffi", "unix_seconds")
 pub fn clock() -> Int
+
+type TimeUnit { Nanosecond }
+@external(erlang, "erlang", "system_time")
+fn system_time(unit: TimeUnit) -> Int
+
+pub fn task_state(state: String, lease: Option(String), now_ns: Int) -> String {
+  case state == "executing", lease {
+    True, Some(raw) ->
+      case int.parse(raw) {
+        Ok(until) if until > now_ns -> state
+        Ok(_) -> state <> " (lease expired)"
+        Error(_) -> state <> " (lease unknown)"
+      }
+    True, None -> state <> " (lease unknown)"
+    False, _ -> state
+  }
+}
 
 pub fn load_configuration() -> Result(api.Configuration, api.ApiError) {
   use token <- result.try(
@@ -73,21 +93,12 @@ fn observe_tasks() -> Result(api.Observation, Nil) {
     |> result.replace_error(Nil),
   )
   use raw <- result.try(bit_array.to_string(observation.payload))
-  let observed_now = clock()
+  let observed_now = system_time(Nanosecond)
   let task_decoder = {
     use id <- decode.field("task_id", decode.string)
     use state <- decode.field("state", decode.string)
     use lease <- decode.field("lease_until_ns", decode.optional(decode.string))
-    let display_state = case state == "executing", lease {
-      True, Some(raw) ->
-        case int.parse(raw) {
-          Ok(until) if until > observed_now * 1_000_000_000 -> state
-          Ok(_) -> state <> " (lease expired)"
-          Error(_) -> state <> " (lease unknown)"
-        }
-      True, None -> state <> " (lease unknown)"
-      False, _ -> state
-    }
+    let display_state = task_state(state, lease, observed_now)
     decode.success(#(id, display_state))
   }
   let decoder = {
@@ -111,11 +122,42 @@ fn observe_tasks() -> Result(api.Observation, Nil) {
   Ok(api.Observed(clock(), "canonical_sa_plan_snapshot", fields))
 }
 
+
+fn observe_fmea() -> Result(api.Observation, Nil) {
+  use path <- result.try(get_env("UOS_TELEGRAM_MINI_FMEA_SOURCE"))
+  use plan <- result.try(get_env("UOS_TELEGRAM_MINI_FMEA_PLAN"))
+  use _ <- result.try(case fmea.valid_source(path, False) && observer.valid_id(plan) {
+    True -> Ok(Nil)
+    False -> Error(Nil)
+  })
+  use raw <- result.try(fmea.observe(path, plan, "") |> result.replace_error(Nil))
+  mini_evidence.fmea(raw, plan, clock()) |> result.replace_error(Nil)
+}
+
+fn observe_verification() -> Result(api.Observation, Nil) {
+  use path <- result.try(get_env("UOS_TELEGRAM_MINI_VERIFICATION_SOURCE"))
+  use sha <- result.try(get_env("UOS_TELEGRAM_MINI_VERIFICATION_SHA256"))
+  use candidate <- result.try(get_env("UOS_TELEGRAM_MINI_VERIFICATION_CANDIDATE"))
+  let source = verification.Source(path, sha, candidate)
+  use _ <- result.try(case verification.valid_source(source, False) {
+    True -> Ok(Nil)
+    False -> Error(Nil)
+  })
+  use raw <- result.try(
+    verification.observe(source, "checklist", "") |> result.replace_error(Nil),
+  )
+  mini_evidence.verification(raw, candidate, clock()) |> result.replace_error(Nil)
+}
+
 pub fn observe(read: api.AuthorizedRead) -> api.Observation {
   case api.page(read) {
     types.MiniPlanning ->
       observe_tasks()
       |> result.unwrap(api.Unavailable("task_observation_failed"))
+    types.MiniFmea ->
+      observe_fmea() |> result.unwrap(api.Unavailable("fmea_observation_failed"))
+    types.MiniVerification ->
+      observe_verification() |> result.unwrap(api.Unavailable("verification_observation_failed"))
     types.MiniDashboard
     | types.MiniHealthGrid
     | types.MiniCockpit
@@ -125,8 +167,6 @@ pub fn observe(read: api.AuthorizedRead) -> api.Observation {
     | types.MiniConfig
     | types.MiniPodman
     | types.MiniFederation
-    | types.MiniVerification
-    | types.MiniFmea
     | types.MiniTelemetry
     | types.MiniZenohBrowser -> api.Unavailable("backend_not_integrated")
   }

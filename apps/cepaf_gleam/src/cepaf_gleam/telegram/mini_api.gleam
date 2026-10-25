@@ -11,6 +11,7 @@ import gleam/http/response
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/order
 import gleam/result
 import gleam/string
 import gleam/uri
@@ -197,6 +198,10 @@ fn error_response(status: Int, code: String) -> response.Response(String) {
   json_response(status, json.object([#("error", json.string(code))]))
 }
 
+fn detail_field(key: String) -> Bool {
+  string.starts_with(key, "Assessment ") || string.starts_with(key, "CHK-")
+}
+
 fn render_observation(
   read: AuthorizedRead,
   observation: Observation,
@@ -230,6 +235,13 @@ fn render_observation(
             "fields",
             json.object(
               dict.to_list(fields)
+              |> list.sort(fn(a, b) {
+                case detail_field(a.0), detail_field(b.0) {
+                  True, False -> order.Gt
+                  False, True -> order.Lt
+                  _, _ -> string.compare(a.0, b.0)
+                }
+              })
               |> list.map(fn(pair) { #(pair.0, json.string(pair.1)) }),
             ),
           ),

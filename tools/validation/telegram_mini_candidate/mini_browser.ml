@@ -51,19 +51,25 @@ let refuse_redirects ~sw ~context ~page on_refusal =
 
 
 
+let contains text needle =
+ let rec loop i = if i + String.length needle > String.length text then false
+ else if String.sub text i (String.length needle) = needle then true else loop (i+1) in loop 0
+
 let base="http://nas-1.tail55d152.ts.net:49134"
 let () =
- require(Array.length Sys.argv=3)"usage: mini_browser OUT SIGNED_FIXTURE_JSON";
+ require(Array.length Sys.argv=3 || Array.length Sys.argv=4)"usage: mini_browser OUT SIGNED_FIXTURE_JSON [--unavailable]";
+ let failure_mode=Array.length Sys.argv=4 in
+ require(not failure_mode || Sys.argv.(3)="--unavailable")"unknown scenario";
  let out=Sys.argv.(1)in require(not(Sys.file_exists out))"new output required";Unix.mkdir out 0o700;
  let init_data=Yojson.Safe.Util.(Yojson.Safe.from_file Sys.argv.(2)|>member"init_data"|>to_string)in
- let sdk="window.Telegram={WebApp:{initData:"^Yojson.Safe.to_string(`String init_data)^",ready:function(){},expand:function(){}}};"in
+ let sdk_for denied="window.Telegram={WebApp:{initData:"^Yojson.Safe.to_string(`String (if denied then init_data^"0" else init_data))^",ready:function(){},expand:function(){}}};"in
  let rows=ref[]in
  Eio_main.run(fun env->Eio.Time.with_timeout_exn env#clock 35.(fun()->Eio.Switch.run(fun sw->
  with_driver ~env ~sw(fun conn pw->
  let browser=Playwright.BrowserType.launch ~executable_path:"/opt/google/chrome/chrome" ~headless:true ~timeout:8000.
  ~args:[|"--no-proxy-server";"--disable-background-networking";"--host-resolver-rules=MAP nas-1.tail55d152.ts.net 100.87.7.78"|](Playwright.Playwright.chromium pw)in
  Fun.protect ~finally:(fun()->Playwright.Browser.close browser)(fun()->
- List.iter(fun(mode,width,height)->
+ List.iter(fun(mode,width,height,page_path)->
  let context=Playwright.Browser.new_context ~viewport:Playwright.Browser.Viewport.{width;height}
  ~service_workers:`Block ~accept_downloads:`Deny browser in
  Fun.protect ~finally:(fun()->Playwright.BrowserContext.close context)(fun()->
@@ -72,9 +78,9 @@ let () =
  Playwright.BrowserContext.on_route context(fun event->Eio.Fiber.fork ~sw(fun()->
  let i=observed_initializer conn(Playwright.Request.to_yojson(Playwright.Route.request event.route))Playwright.Request.Initializer.of_yojson in
  if i.url="https://telegram.org/js/telegram-web-app.js" && mode<>"sdk-blocked"then
- Playwright.Route.fulfill ~status:200 ~headers:[|Playwright.NameValue.{name="content-type";value="text/javascript"}|] ~body:sdk event.route
+ Playwright.Route.fulfill ~status:200 ~headers:[|Playwright.NameValue.{name="content-type";value="text/javascript"}|] ~body:(sdk_for(mode="identity-denied")) event.route
  else if Option.is_none i.redirected_from &&
- ((i.method_="GET"&&(i.url=base^"/mini-app/tasks"||i.url=base^"/mini-app/client.js"))||
+ ((i.method_="GET"&&(i.url=base^page_path||i.url=base^"/mini-app/client.js"))||
  (i.method_="POST"&&i.url=base^"/mini-app/api/data"))
  then(if i.method_="POST"then incr posts;Playwright.Route.continue ~is_fallback:false event.route)
  else(denied:=(i.method_^" "^i.url)::!denied;Playwright.Route.abort event.route)));
@@ -83,7 +89,7 @@ let () =
  Playwright.BrowserContext.set_web_socket_interception_patterns ~patterns context;
  let page=Playwright.BrowserContext.new_page context in
  refuse_redirects ~sw ~context ~page(fun()->denied:="redirect"::!denied);
- let response=Playwright.Page.goto ~url:(base^"/mini-app/tasks") ~timeout:7000. page in
+ let response=Playwright.Page.goto ~url:(base^page_path) ~timeout:7000. page in
  let status=match response with None->0|Some r->(observed_initializer conn(Playwright.Response.to_yojson r)Playwright.Response.Initializer.of_yojson).status in
  require(status=200)"HTTP status";
  require(Playwright.Locator.count(loc page "input[type=checkbox]")=18)"18 checkpoints";
@@ -94,13 +100,21 @@ let () =
  let final=wait 100 in
  save(out^"/"^mode^"-preassert.json")(Yojson.Safe.pretty_to_string(`Assoc["status",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts]));
  if mode="sdk-blocked"then(require(!posts=0)"SDK-less request made network call";require(String.starts_with ~prefix:"Telegram authentication is unavailable"final)"SDK-less status")
- else(require(!posts=1)"exactly one authenticated POST";require(String.starts_with ~prefix:"Observed at "final)"authenticated observation";require(List.mem "Task FENCE" (String.split_on_char '\n' (text page "#mini-fields")))"task fields absent";require(List.mem "executing (lease expired)" (String.split_on_char '\n' (text page "#mini-fields")))"expired lease hidden");
+ else if mode="identity-denied"then(require(!posts=1)"one refused POST";require(String.starts_with ~prefix:"Authentication expired or access is not allowed."final)"denial state absent";require(text page "#mini-fields"="")"denied data exposed")
+ else if failure_mode then(require(!posts=1)"one failed-backend POST";require(final="The data source is unavailable or not configured.")"backend failure state absent";require(text page "#mini-fields"="")"failed backend data exposed")
+ else(require(!posts=1)"exactly one authenticated POST";require(String.starts_with ~prefix:"Observed at "final)"authenticated observation";let fields=text page "#mini-fields" in
+ if page_path="/mini-app/tasks" then (require(contains fields "Task FENCE")"task fields absent";require(contains fields "executing (lease expired)")"expired lease hidden")
+ else (require(contains fields "NOT_GRANTED")"admission disclaimer absent";
+ if page_path="/mini-app/fmea" then(require(String.starts_with ~prefix:"Assessments" fields)"FMEA metadata must precede details";require(contains fields "uos/telegram-runtime/20261001-1150")"FMEA plan absent";require(contains fields "RPN")"FMEA risks absent")
+ else(require(String.starts_with ~prefix:"Candidate" fields)"candidate must precede details";require(contains fields "CHK-18-JJ")"verification catalog incomplete";require(contains fields "UNKNOWN")"missing evidence hidden")));
  for n=1 to 6 do Playwright.Locator.click ~timeout:1000.(loc page(Printf.sprintf"section details:nth-of-type(%d) summary"n))done;
  Playwright.Locator.check ~timeout:1000.(loc page "#CHK-01-TIME");
+ Playwright.Locator.press ~key:"Control+Home" ~timeout:1000.(loc page "body");
+ let viewport_screenshot=out^"/"^mode^"-viewport.png"in save viewport_screenshot(Playwright.Page.screenshot ~type_:`Png ~full_page:false ~timeout:2500. page);
  let screenshot=out^"/"^mode^".png"in save screenshot(Playwright.Page.screenshot ~type_:`Png ~full_page:true ~timeout:2500. page);
  let errors=Array.to_list(Playwright.Page.page_errors page)in require(errors=[])"page script errors";
- rows:=`Assoc["mode",s mode;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
- ))["sdk-blocked",390,844;"mobile-authenticated",390,844;"desktop-authenticated",1280,800]
+ rows:=`Assoc["mode",s mode;"path",s page_path;"viewport",`List[`Int width;`Int height];"http_status",`Int status;"status_text",s final;"fields",s(text page "#mini-fields");"posts",`Int !posts;"checkpoints",`Int 18;"screenshot",s screenshot;"denied",`List(List.map s !denied);"page_errors",`List[]]::!rows
+ ))(if failure_mode then ["fmea-unavailable",390,844,"/mini-app/fmea";"verification-unavailable",1280,800,"/mini-app/verify"] else ["identity-denied",390,844,"/mini-app/fmea";"sdk-blocked",390,844,"/mini-app/tasks";"mobile-authenticated",390,844,"/mini-app/tasks";"desktop-authenticated",1280,800,"/mini-app/tasks";"mobile-fmea",390,844,"/mini-app/fmea";"desktop-verification",1280,800,"/mini-app/verify"])
  )))));
  let report=`Assoc["status",s"PASS_PRIVATE_BROWSER_FIXTURE";"observed_utc",`Float(Unix.gettimeofday());"scope",s"Actual Chromium, Mist ingress, Gleam authentication and native private Sa-plan reader; Telegram SDK identity supplied by explicit synthetic fixture, not real Telegram acceptance";"rows",`List(List.rev !rows)]in
  save(out^"/report.json")(Yojson.Safe.pretty_to_string report);print_endline(Yojson.Safe.to_string report)
