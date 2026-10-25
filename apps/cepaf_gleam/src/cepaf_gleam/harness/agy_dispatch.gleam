@@ -184,8 +184,28 @@ pub fn long_job_window(
   && coordinator_us > boot_us + { seconds + 30 } * 1_000_000
 }
 
-fn fence(r: Request) -> Result(Nil, String) {
+/// Launch reserves the requested model runtime. Terminal collection starts no
+/// model work and reserves 40s plus the existing 30s margin (70s total), matching
+/// the development fence. This phase is chosen internally, never by request JSON.
+pub type FencePhase {
+  Launch
+  TerminalCollection
+}
+
+pub fn fence_runtime(phase: FencePhase, requested: Int) -> Result(Int, String) {
+  case requested >= 30 && requested <= 900 {
+    False -> Error("invalid_requested_runtime")
+    True ->
+      case phase {
+        Launch -> Ok(requested)
+        TerminalCollection -> Ok(40)
+      }
+  }
+}
+
+fn fence(r: Request, phase: FencePhase) -> Result(Nil, String) {
   use _ <- result.try(validate(r))
+  use seconds <- result.try(fence_runtime(phase, r.seconds))
   use parent <- result.try(dev.fence_for(r.binding, 70_000))
   use _ <- result.try(files.checked_path(
     dev.root,
@@ -215,7 +235,7 @@ fn fence(r: Request) -> Result(Nil, String) {
           |> result.map_error(fn(_) { "workspace_lease_missing" }),
         )
         use _ <- result.try(a.require(
-          lease.expires_us > now + { r.seconds + 30 } * 1_000_000,
+          lease.expires_us > now + { seconds + 30 } * 1_000_000,
           "workspace_lease_too_short",
         ))
         Ok(json.bool(True))
@@ -232,7 +252,7 @@ fn fence(r: Request) -> Result(Nil, String) {
       parent.coordinator_lease_until_us,
       now.sample.observed.utc_us,
       now.sample.observed.boot_us,
-      r.seconds,
+      seconds,
     ),
     "parent_lease_too_short_for_job",
   ))
@@ -242,7 +262,7 @@ fn fence(r: Request) -> Result(Nil, String) {
     r.job_worker,
     r.job_attempt,
     now.sample.observed.utc_us * 1000,
-    r.seconds,
+    seconds,
   )
 }
 
@@ -350,7 +370,7 @@ fn socket_ready(path: String, remaining: Int) -> Result(Nil, String) {
 /// An exclusive durable receipt prohibits automatic retry after ambiguous launch.
 pub fn launch(name: String) -> Result(String, String) {
   use #(r, raw) <- result.try(request(name))
-  use _ <- result.try(fence(r))
+  use _ <- result.try(fence(r, Launch))
   let unit = unit_id(raw)
   use _ <- result.try(files.create(runtime_root, "active-job.json", raw))
   use _ <- result.try(files.create(runtime_root, unit <> ".stdout.json", ""))
@@ -368,7 +388,7 @@ pub fn launch(name: String) -> Result(String, String) {
     5000,
   ))
   use _ <- result.try(socket_ready(socket, 20))
-  use _ <- result.try(fence(r))
+  use _ <- result.try(fence(r, Launch))
   use _ <- result.try(dev.bounded(
     "/usr/bin/systemd-run",
     list.append(
@@ -436,7 +456,7 @@ pub fn collect(name: String) -> Result(String, String) {
   use stdout <- result.try(files.read(runtime_root, unit <> ".stdout.json"))
   let classified =
     outcome.classify(exit_code, result_name != "success", stderr, stdout)
-  let authority = fence(r)
+  let authority = fence(r, TerminalCollection)
   let status = case classified, authority {
     Ok(_), Ok(_) -> "MODEL_RESPONSE_COMPLETE_REVIEW_REQUIRED"
     _, Error(_) -> "STALE_AUTHORITY_HOLD"
