@@ -58,6 +58,8 @@ import cepaf_gleam/harness/telegram_poll_rpc as poll_rpc
 import cepaf_gleam/harness/telegram_store as store
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
+import cepaf_gleam/harness/telegram_media_store as media_store
+import cepaf_gleam/telegram/telegram_media_janitor as janitor
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/dict
@@ -188,6 +190,22 @@ pub type VerifyConfiguration {
   VerifyConfiguration(source: verify_run.Source, database: String, runner: verify_job.Runner)
 }
 
+/// Operator-held media retention configuration (wave 6g). When present, the
+/// supervised service starts one `telegram_media_janitor` child that runs
+/// `telegram_media_store.reclaim_expired` on `reclaim_cadence_ms` with at most
+/// `reclaim_max_objects` per run. Absent, no media object is ever reclaimed by
+/// the service. The configuration is validated by `configure_media`; a
+/// constructor literal with an unvalidated `Some(_)` is refused at supervisor
+/// start by the janitor's own `validate`.
+pub type MediaConfiguration {
+  MediaConfiguration(
+    store_policy: media_store.Policy,
+    reclaim_cadence_ms: Int,
+    reclaim_max_objects: Int,
+    reclaim_history_limit: Int,
+  )
+}
+
 pub type ServiceConfiguration {
   ServiceConfiguration(
     storage_config: transport.LocalConfiguration,
@@ -218,6 +236,42 @@ pub type ServiceConfiguration {
     budget_source:Option(budget_report.Source),
     zenoh_source:Option(zenoh_report.Configuration),
     impact_source:Option(impact_reader.Source),
+    media: Option(MediaConfiguration),
+  )
+}
+
+/// Bind a media retention configuration to the service. The store root must be
+/// absolute; the janitor's own `validate` rejects the cadence, bounds and any
+/// policy whose `base` escapes the root. Nothing is started here.
+pub fn configure_media(
+  config: ServiceConfiguration,
+  store_policy: media_store.Policy,
+  reclaim_cadence_ms: Int,
+  reclaim_max_objects: Int,
+  reclaim_history_limit: Int,
+) -> Result(ServiceConfiguration, String) {
+  use _ <- result.try(case string.starts_with(store_policy.root, "/") {
+    True -> Ok(Nil)
+    False -> Error("media_root_not_absolute")
+  })
+  let media =
+    MediaConfiguration(
+      store_policy: store_policy,
+      reclaim_cadence_ms: reclaim_cadence_ms,
+      reclaim_max_objects: reclaim_max_objects,
+      reclaim_history_limit: reclaim_history_limit,
+    )
+  use _ <- result.try(janitor.validate(janitor_config(media)))
+  Ok(ServiceConfiguration(..config, media: Some(media)))
+}
+
+fn janitor_config(media: MediaConfiguration) -> janitor.Config {
+  janitor.Config(
+    policy: media.store_policy,
+    cadence_ms: media.reclaim_cadence_ms,
+    max_objects: media.reclaim_max_objects,
+    history_limit: media.reclaim_history_limit,
+    now_ms: fn() { ffi_system_now_utc_us() / 1000 },
   )
 }
 
@@ -263,6 +317,7 @@ pub fn operational_service_configuration(
     budget_source:None,
     zenoh_source:None,
     impact_source:None,
+    media:None,
   )
 }
 
@@ -303,6 +358,7 @@ pub fn development_service_configuration(
     budget_source:None,
     zenoh_source:None,
     impact_source:None,
+    media:None,
   )
 }
 
@@ -3105,6 +3161,9 @@ pub type SupervisedService {
     subject_scope: reference.Reference,
     supervisor_pid: Pid,
     configuration: ServiceConfiguration,
+    /// Registered name of the media janitor child when `configuration.media`
+    /// is present; `None` means no janitor was started for this service.
+    media_janitor: Option(process.Name(janitor.Message)),
   )
 }
 
@@ -3996,13 +4055,30 @@ pub fn start_supervised_service(
     |> result.map_error(actor.InitFailed)
   })
   let c4 = supervised_worker_scoped(config, cleanup_receipt, Some(bridge_subject))
-  use sup_started <- result.try(
+  // Optional fifth child: the media janitor, only when media retention is
+  // configured. It sits after the service actor under RestForOne, so a service
+  // restart restarts it too and it never outlives the service it serves.
+  let media_janitor = case config.media {
+    Some(media) -> {
+      let name =
+        process.new_name("telegram_media_janitor_" <> int.to_string(config.bot_id))
+      Some(#(name, janitor.child_spec_named(name, janitor_config(media))))
+    }
+    None -> None
+  }
+  let base_supervisor =
     static_supervisor.new(static_supervisor.RestForOne)
     |> static_supervisor.restart_tolerance(intensity: 3, period: 5)
     |> static_supervisor.add(c1)
     |> static_supervisor.add(c2)
     |> static_supervisor.add(c3)
     |> static_supervisor.add(c4)
+  let full_supervisor = case media_janitor {
+    Some(#(_, spec)) -> static_supervisor.add(base_supervisor, spec)
+    None -> base_supervisor
+  }
+  use sup_started <- result.try(
+    full_supervisor
     |> static_supervisor.start()
     |> result.map_error(fn(err) {
       "start_service_supervisor_failed: " <> string.inspect(err)
@@ -4027,6 +4103,7 @@ pub fn start_supervised_service(
             subject_scope: scope,
             supervisor_pid: sup_started.pid,
             configuration: config,
+            media_janitor: option.map(media_janitor, fn(pair) { pair.0 }),
           ))
         _ -> {
           let cleanup = stop_instance(sup_started.pid)

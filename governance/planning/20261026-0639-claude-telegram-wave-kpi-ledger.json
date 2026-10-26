@@ -223,17 +223,31 @@
     },
     {
       "wave": "6f",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "495f1e66",
+      "landed_utc": "2026-10-26T08:56:02Z",
       "canonicals_answering": "77/77 (unchanged)",
       "tests_added": 12,
       "mutants": "6/6 worker (counter never increments, pause unreachable, history unbounded, RunNow reschedules, max_objects ignored, Resume does not reset) plus 1 integrator re-observation",
       "workers": 1,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 17,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "telegram_media_janitor: supervised OTP actor (child_spec_named, restart under one_for_one proven) running reclaim_expired once per bounded cadence with a bounded history, GetSnapshot and RunNow, single timer chain, Jidoka pause after three consecutive whole-run errors until Resume. A deleted store base is an empty store by the store law, so the error path is provoked by an unlistable base. Closes the media lifecycle at source; production placement is deployment configuration.",
       "full_suite": "13784/13784"
+    },
+    {
+      "wave": "6g",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged)",
+      "tests_added": 1,
+      "mutants": "2/2 integrator (janitor child built but not added; configure_media skips validate)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "ServiceConfiguration.media: Option(MediaConfiguration); configure_media validates through telegram_media_janitor.validate and an absolute-root check; start_supervised_service adds the janitor as an optional fifth named child under RestForOne after the service actor; SupervisedService.media_janitor exposes the name. Process defect: gleam format on two never-formatted shared files produced a 5,000-line diff; both restored from main and the edits reapplied (217-line diff).",
+      "full_suite": "13785/13785"
     }
   ],
   "forecasts": [
@@ -277,6 +291,42 @@
       "made_in": "wave 5 journal (02:30)",
       "p": 0.5,
       "claim": "an authorized human completes at least one real-traffic journey against the staging bot and records it in Sa-plan by 2026-10-28T00:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6b journal (07:28)",
+      "p": 0.6,
+      "claim": "the four REVIEW tasks (COMMAND, GATEWAY, MEDIA, MINI_API) are claimed by an independent reviewer session and at least two complete with a recorded verdict by 2026-10-27T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6c journal (07:50)",
+      "p": 0.55,
+      "claim": "a supervised caller landing on main wires telegram_media_inspect and telegram_media_store.put behind a bounded deadline with a test by 2026-10-27T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6e journal (08:26)",
+      "p": 0.5,
+      "claim": "a scheduled caller (supervised actor or Oban job) runs reclaim_expired on main with a test by 2026-10-28T00:00:00Z",
+      "outcome": 1,
+      "brier": 0.25,
+      "resolved_by": "main 495f1e66: telegram_media_janitor calls reclaim_expired on a cadence with tests (wave 6f)",
+      "resolved_utc": "2026-10-26T08:56:20Z"
+    },
+    {
+      "made_in": "wave 6f journal (08:47)",
+      "p": 0.4,
+      "claim": "an independent reviewer session claims MEDIA_REVIEW in Sa-plan and records a verdict by 2026-10-28T00:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -391,6 +441,12 @@
       "wave": "6e",
       "lesson": "A design safety requirement is a deliverable, not a limit to document; a packet that scopes below it must say so as a gap with its own task",
       "applied": "MEDIA_RECLAIM opened as a task with dependency MEDIA_FIX; the wiki guide and skill now describe the full lifecycle"
+    },
+    {
+      "id": "L-19",
+      "wave": "6g",
+      "lesson": "Running gleam format on a shared file that was never formatter-clean rewrites the whole file and hides the increment; format only new files and read jj diff --stat before trusting a build",
+      "applied": "the two service files were restored from main and the six edits reapplied by hand; the landing diff is 217 lines"
     }
   ]
 }

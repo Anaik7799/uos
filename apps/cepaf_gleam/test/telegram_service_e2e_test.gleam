@@ -1073,6 +1073,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       budget_source: None,
       zenoh_source: None,
       impact_source: None,
+      media: None,
     )
 
   // 1. Commit an initial record to store

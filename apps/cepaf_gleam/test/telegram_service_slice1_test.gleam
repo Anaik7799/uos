@@ -24,6 +24,8 @@ import cepaf_gleam/harness/telegram_ingress_guard as guard
 import cepaf_gleam/harness/telegram_lifecycle_adapter as lifecycle
 import cepaf_gleam/harness/telegram_service as service
 import cepaf_gleam/harness/telegram_store as store
+import cepaf_gleam/harness/telegram_media_store as media_store
+import cepaf_gleam/telegram/telegram_media_janitor as janitor
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/dynamic.{type Dynamic}
@@ -564,6 +566,7 @@ pub fn service_dual_authority_attempt2_epoch7_positive_and_rejection_test() {
       budget_source: None,
       zenoh_source: None,
       impact_source: None,
+      media: None,
     )
   let valid_lease =
     service.AuthorityLease(
@@ -1372,6 +1375,7 @@ pub fn authority_worker_independent_test() {
       budget_source: None,
       zenoh_source: None,
       impact_source: None,
+      media: None,
     )
   let assert Ok(started) = service.start_authority_worker(config)
   let worker = started.data
@@ -2511,6 +2515,8 @@ pub fn non_parent_can_stop_supervised_service_test() {
   })
   process.receive(reply, 6000) |> should.equal(Ok(Ok(Nil)))
   process.is_alive(svc.supervisor_pid) |> should.equal(False)
+  // wave 6g: a service without a media configuration starts no janitor
+  svc.media_janitor |> should.equal(None)
   let found: Result(Dynamic, Nil) = service.ffi_get_worker_subject(svc.subject_scope, "authority")
   found |> should.equal(Error(Nil))
   fixture_stop(fixture_pid)
@@ -2527,4 +2533,96 @@ pub fn loop_repeated_renewal_cannot_extend_work_budget_test() {
   let #(report, _) = observe_loop("lease_renewal", 200, loop.Config(100, 250, 10, 500, 500, 1), False)
   report.reason |> should.equal("lifetime_expired")
   { report.completed_cycles > 0 && report.completed_cycles < 100 } |> should.equal(True)
+}
+
+// wave 6g: media retention is a supervised child of the service, present only
+// when `configure_media` bound a validated configuration.
+pub fn supervised_service_starts_media_janitor_when_configured_test() {
+  process.trap_exits(True)
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+  let dir =
+    "/tmp/uos-tg-slice1-janitor-"
+    <> int.to_string(service.ffi_system_now_utc_us())
+  let _ = simplifile.create_directory_all(dir <> "/media/objects")
+  let assert Ok(_) = simplifile.set_permissions_octal(dir, 0o700)
+  let db_path = dir <> "/supervised.db"
+  let storage_config =
+    transport.reviewed_local_configuration(
+      recovery_guardian_path,
+      recovery_guardian_sha,
+      recovery_worker_path,
+      recovery_worker_sha,
+      db_path,
+    )
+  let http_config =
+    http_client.TelegramHttpConfiguration(
+      base_url: base_url,
+      bot_token: "test-token-janitor",
+      timeout_ms: 10_000,
+      max_response_bytes: 65_536,
+    )
+  let bot_id = 999_555
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+  let base =
+    service.default_service_configuration(
+      storage_config,
+      http_config,
+      bot_id,
+      [#(100, 200)],
+      "worker-janitor-test",
+      5,
+    )
+  base.media |> should.equal(None)
+  let policy =
+    media_store.Policy(
+      root: dir <> "/media",
+      base: "objects",
+      retention_ms: 60_000,
+      total_ceiling_bytes: 1_048_576,
+    )
+  // configure_media validates before anything starts
+  service.configure_media(base, policy, 999, 10, 4)
+  |> should.equal(Error("cadence_invalid"))
+  service.configure_media(
+    base,
+    media_store.Policy(..policy, root: "relative/media"),
+    1000,
+    10,
+    4,
+  )
+  |> should.equal(Error("media_root_not_absolute"))
+  service.configure_media(
+    base,
+    media_store.Policy(..policy, base: "../objects"),
+    1000,
+    10,
+    4,
+  )
+  |> should.equal(Error("policy_invalid"))
+  service.configure_media(base, policy, 1000, 0, 4)
+  |> should.equal(Error("max_objects_invalid"))
+  let assert Ok(config) = service.configure_media(base, policy, 1000, 10, 4)
+
+  let assert Ok(svc) = service.start_supervised_service(config, None)
+  let assert Some(name) = svc.media_janitor
+  let j = process.named_subject(name)
+  let assert Ok(snap) = janitor.snapshot(j, 2000)
+  snap.runs |> should.equal(0)
+  snap.paused |> should.be_false
+  let assert Ok(run) = janitor.run_now(j, 2000)
+  let assert Ok(receipt) = run.outcome
+  receipt.examined |> should.equal(0)
+  let assert Ok(_) = process.named(name)
+
+  let reply = process.new_subject()
+  let _ =
+    process.spawn_unlinked(fn() {
+      process.send(reply, service.stop_supervised_service(svc))
+    })
+  process.receive(reply, 6000) |> should.equal(Ok(Ok(Nil)))
+  // the janitor never outlives the service it serves
+  process.named(name) |> should.equal(Error(Nil))
+  fixture_stop(fixture_pid)
+  let _ = simplifile.delete(dir)
+  Nil
 }
