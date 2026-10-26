@@ -2,6 +2,7 @@ import cepaf_gleam/harness/telegram_budget_report as budget_report
 import cepaf_gleam/harness/telegram_action_proposal as proposal
 import cepaf_gleam/harness/telegram_approval as approval
 import cepaf_gleam/harness/telegram_read_adapters as read_adapters
+import cepaf_gleam/harness/telegram_action_adapters as action_adapters
 //// Supervised Telegram Service: Polling, Durable Storage, & Bounded Delivery
 ////
 //// Implements the coordinated runtime loop:
@@ -2377,9 +2378,13 @@ fn execute_guarded_dispatch(
                           // not own keeps the historical reference/fallthrough.
                           let reference = case read_adapters.route(name, preserved_args) {
                             option.Some(reply) -> Ok(reply)
-                            option.None -> case commands.parse(txt) {
-                              Ok(invocation) -> commands.reference_reply(invocation)
-                              Error(_) -> Error(Nil)
+                            option.None -> case action_adapters.route_preview(name, preserved_args) {
+                              // Preview only: no ControlledAction executes here.
+                              option.Some(reply) -> Ok(reply)
+                              option.None -> case commands.parse(txt) {
+                                Ok(invocation) -> commands.reference_reply(invocation)
+                                Error(_) -> Error(Nil)
+                              }
                             }
                           }
                           case reference {

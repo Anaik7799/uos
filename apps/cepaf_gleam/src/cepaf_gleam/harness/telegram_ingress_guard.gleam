@@ -1,6 +1,7 @@
 //// Pure bounded Telegram decoder. Configuration is trusted local input, not
 //// authentication. Transport must bind the configured bot to its real identity.
 
+import cepaf_gleam/harness/telegram_action_adapters as action_adapters
 import cepaf_gleam/harness/telegram_commands as commands
 import cepaf_gleam/harness/telegram_task_command as task_command
 import cepaf_gleam/harness/telegram_tool_command as tool_command
@@ -224,7 +225,12 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
             }
           }
           _ -> case invocation.definition.kind {
-            commands.ControlledAction -> DeniedMutation(name, "Action is not implemented yet; current effect authority will also be required.")
+            // A ControlledAction with an adapter is preserved for its read-only
+            // preview; execution still requires the signed approval flow.
+            commands.ControlledAction -> case list.contains(action_adapters.literals(), name) {
+              True -> PreservedDirective(name, case args { "" -> [] _ -> [args] })
+              False -> DeniedMutation(name, "Action is not implemented yet; current effect authority will also be required.")
+            }
             _ -> PreservedDirective(name, case args { "" -> [] _ -> [args] })
           }
         }
