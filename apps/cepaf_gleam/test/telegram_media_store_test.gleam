@@ -7,9 +7,11 @@ import cepaf_gleam/harness/telegram_media_ref as ref
 import cepaf_gleam/harness/telegram_media_store as store
 import envoy
 import gleam/bit_array
+import gleam/crypto
 import gleam/erlang/process
 import gleam/int
 import gleam/list
+import gleam/order
 import gleam/result
 import gleam/string
 import gleeunit/should
@@ -593,4 +595,255 @@ pub fn usage_sums_index_recorded_bytes_test() {
     )
     |> written
   store.usage(p) |> should.equal(Ok(7))
+}
+
+// -------------------------------------------------- bounded delete and reclaim
+
+fn text_sha(text: String) -> String {
+  crypto.hash(crypto.Sha256, bit_array.from_string(text))
+  |> bit_array.base16_encode
+  |> string.lowercase
+}
+
+fn put_text(p: store.Policy, text: String, now: Int) -> store.Stored {
+  store.put(
+    p,
+    ref.Document,
+    "id-" <> text,
+    bit_array.from_string(text),
+    text_sha(text),
+    now,
+    0,
+  )
+  |> written
+}
+
+fn shard_file(root: String, sha: String, ext: String) -> String {
+  root <> "/media/" <> string.slice(sha, 0, 2) <> "/" <> sha <> "." <> ext
+}
+
+pub fn delete_round_trip_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  store.usage(p) |> should.equal(Ok(3))
+  store.delete(p, abc_sha)
+  |> should.equal(Ok(store.Removed(abc_sha, 3, True, True)))
+  store.get(p, abc_sha, t0 + 1) |> should.equal(Error("not_found"))
+  store.usage(p) |> should.equal(Ok(0))
+  simplifile.is_file(bin_path(root)) |> should.equal(Ok(False))
+  simplifile.is_file(index_path(root)) |> should.equal(Ok(False))
+  store.delete(p, abc_sha) |> should.equal(Error("not_found"))
+  // the digest is free again
+  let _ = written(put_abc(p, t0 + 2, 0))
+  Nil
+}
+
+pub fn delete_refuses_invalid_input_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  store.delete(p, "../../etc/passwd") |> should.equal(Error("sha256_invalid"))
+  store.delete(p, string.uppercase(abc_sha))
+  |> should.equal(Error("sha256_invalid"))
+  store.delete(store.Policy(..p, base: "../media"), abc_sha)
+  |> should.equal(Error("policy_invalid"))
+  store.delete(store.Policy(..p, retention_ms: 1), abc_sha)
+  |> should.equal(Error("policy_invalid"))
+  // nothing was removed
+  simplifile.is_file(bin_path(root)) |> should.equal(Ok(True))
+  simplifile.is_file(index_path(root)) |> should.equal(Ok(True))
+}
+
+pub fn delete_refuses_symlinked_bin_and_touches_nothing_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.write_bits(root <> "/outside.bin", abc())
+  let assert Ok(_) = simplifile.delete(bin_path(root))
+  let assert Ok(_) =
+    simplifile.create_symlink("../../outside.bin", bin_path(root))
+  store.delete(p, abc_sha) |> should.equal(Error("not_regular_single_link"))
+  // the whole delete was refused: the index is still there too
+  simplifile.is_file(index_path(root)) |> should.equal(Ok(True))
+  let assert Ok(info) = simplifile.link_info(bin_path(root))
+  simplifile.file_info_type(info) |> should.equal(simplifile.Symlink)
+  simplifile.read_bits(root <> "/outside.bin") |> should.equal(Ok(abc()))
+}
+
+pub fn delete_refuses_symlinked_index_and_hardlinked_bin_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(index_text) = simplifile.read(index_path(root))
+  let assert Ok(_) = simplifile.write(root <> "/outside.json", index_text)
+  let assert Ok(_) = simplifile.delete(index_path(root))
+  let assert Ok(_) =
+    simplifile.create_symlink("../../outside.json", index_path(root))
+  store.delete(p, abc_sha) |> should.equal(Error("not_regular_single_link"))
+  simplifile.is_file(bin_path(root)) |> should.equal(Ok(True))
+  simplifile.read(root <> "/outside.json") |> should.equal(Ok(index_text))
+  // a second name for the bin makes nlinks 2: refused as well
+  let assert Ok(_) = simplifile.delete(index_path(root))
+  let assert Ok(_) = simplifile.write(index_path(root), index_text)
+  let assert Ok(_) = simplifile.create_link(bin_path(root), root <> "/alias")
+  store.delete(p, abc_sha) |> should.equal(Error("not_regular_single_link"))
+  simplifile.is_file(bin_path(root)) |> should.equal(Ok(True))
+  simplifile.is_file(index_path(root)) |> should.equal(Ok(True))
+}
+
+pub fn delete_removes_the_present_half_and_says_so_test() {
+  use p, root <- with_store
+  // index only
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.delete(bin_path(root))
+  store.delete(p, abc_sha)
+  |> should.equal(Ok(store.Removed(abc_sha, 3, False, True)))
+  simplifile.is_file(index_path(root)) |> should.equal(Ok(False))
+  // bin only (an orphan)
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.delete(index_path(root))
+  store.delete(p, abc_sha)
+  |> should.equal(Ok(store.Removed(abc_sha, 3, True, False)))
+  simplifile.is_file(bin_path(root)) |> should.equal(Ok(False))
+  store.usage(p) |> should.equal(Ok(0))
+}
+
+pub fn delete_removes_garbage_bytes_too_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.write_bits(bin_path(root), <<"abd":utf8>>)
+  store.delete(p, abc_sha)
+  |> should.equal(Ok(store.Removed(abc_sha, 3, True, True)))
+}
+
+pub fn reclaim_removes_only_expired_objects_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  let c = put_text(p, "gamma", t0 + 50_000)
+  let now = t0 + retention + 10_000
+  let assert Ok(receipt) = store.reclaim_expired(p, now, 10)
+  receipt.examined |> should.equal(2)
+  receipt.truncated |> should.be_false
+  receipt.refused |> should.equal([])
+  receipt.bytes_freed |> should.equal(9)
+  list.map(receipt.removed, fn(r) { r.sha256_hex })
+  |> list.sort(string.compare)
+  |> should.equal(list.sort([a.sha256_hex, b.sha256_hex], string.compare))
+  list.all(receipt.removed, fn(r) { r.removed_bin && r.removed_index })
+  |> should.be_true
+  // the live object is untouched and still served
+  let assert Ok(#(got, bytes)) = store.get(p, c.sha256_hex, now)
+  got |> should.equal(c)
+  bytes |> should.equal(bit_array.from_string("gamma"))
+  // afterwards nothing is expired and usage is exactly the live bytes
+  store.expired(p, now) |> should.equal(Ok([]))
+  store.usage(p) |> should.equal(Ok(5))
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(False))
+}
+
+pub fn reclaim_never_deletes_unexpired_objects_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  let assert Ok(receipt) = store.reclaim_expired(p, t0 + retention - 1, 10)
+  receipt
+  |> should.equal(store.ReclaimReceipt(0, [], [], 0, False))
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(True))
+  simplifile.is_file(shard_file(root, b.sha256_hex, "json"))
+  |> should.equal(Ok(True))
+  store.usage(p) |> should.equal(Ok(9))
+}
+
+pub fn reclaim_honours_the_bound_test() {
+  use p, _ <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  let first_sha = case string.compare(a.sha256_hex, b.sha256_hex) {
+    order.Lt -> a.sha256_hex
+    _ -> b.sha256_hex
+  }
+  let now = t0 + retention
+  let assert Ok(one) = store.reclaim_expired(p, now, 1)
+  one.examined |> should.equal(1)
+  one.truncated |> should.be_true
+  list.map(one.removed, fn(r) { r.sha256_hex }) |> should.equal([first_sha])
+  // the remaining expired object is picked up by the next bounded call
+  let assert Ok(two) = store.reclaim_expired(p, now, 1)
+  two.examined |> should.equal(1)
+  two.truncated |> should.be_false
+  store.usage(p) |> should.equal(Ok(0))
+  store.reclaim_expired(p, now, 1)
+  |> should.equal(Ok(store.ReclaimReceipt(0, [], [], 0, False)))
+}
+
+pub fn reclaim_rejects_a_bad_bound_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  store.reclaim_expired(p, t0 + retention, 0)
+  |> should.equal(Error("bound_invalid"))
+  store.reclaim_expired(p, t0 + retention, -3)
+  |> should.equal(Error("bound_invalid"))
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(True))
+  store.reclaim_expired(store.Policy(..p, base: "/abs"), t0, 5)
+  |> should.equal(Error("policy_invalid"))
+}
+
+pub fn reclaim_collects_a_refusal_and_continues_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  // alpha's bin becomes a symlink: its delete is refused
+  let bin_a = shard_file(root, a.sha256_hex, "bin")
+  let assert Ok(_) =
+    simplifile.write_bits(root <> "/outside.bin", <<"alpha":utf8>>)
+  let assert Ok(_) = simplifile.delete(bin_a)
+  let assert Ok(_) = simplifile.create_symlink("../../outside.bin", bin_a)
+  let assert Ok(receipt) = store.reclaim_expired(p, t0 + retention, 10)
+  receipt.examined |> should.equal(2)
+  receipt.refused
+  |> should.equal([#(a.sha256_hex, "not_regular_single_link")])
+  list.map(receipt.removed, fn(r) { r.sha256_hex })
+  |> should.equal([b.sha256_hex])
+  simplifile.is_file(shard_file(root, a.sha256_hex, "json"))
+  |> should.equal(Ok(True))
+  simplifile.read_bits(root <> "/outside.bin")
+  |> should.equal(Ok(<<"alpha":utf8>>))
+}
+
+pub fn reclaim_reports_a_malformed_index_and_leaves_it_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  let assert Ok(_) =
+    simplifile.write(shard_file(root, a.sha256_hex, "json"), "{broken")
+  let assert Ok(receipt) = store.reclaim_expired(p, t0 + retention, 10)
+  receipt.refused |> should.equal([#(a.sha256_hex, "index_invalid")])
+  list.map(receipt.removed, fn(r) { r.sha256_hex })
+  |> should.equal([b.sha256_hex])
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(True))
+}
+
+pub fn reclaim_leaves_tmp_files_and_foreign_files_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let shard = root <> "/media/" <> string.slice(a.sha256_hex, 0, 2)
+  let assert Ok(_) = simplifile.write(shard <> "/.tmp-inflight", "partial")
+  let assert Ok(_) = simplifile.write(root <> "/neighbour.txt", "not ours")
+  let assert Ok(receipt) = store.reclaim_expired(p, t0 + retention, 10)
+  list.length(receipt.removed) |> should.equal(1)
+  simplifile.read(shard <> "/.tmp-inflight") |> should.equal(Ok("partial"))
+  simplifile.read(root <> "/neighbour.txt") |> should.equal(Ok("not ours"))
+  // the live temp file is still visible to the ceiling
+  store.usage(p) |> should.equal(Ok(7))
+}
+
+pub fn reclaimed_digest_can_be_ingested_again_test() {
+  use p, _ <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  put_abc(p, t0 + retention, 3) |> refused |> should.equal("expired_present")
+  let assert Ok(_) = store.reclaim_expired(p, t0 + retention, 5)
+  let again = written(put_abc(p, t0 + retention + 1, 0))
+  again.stored_at_ms |> should.equal(t0 + retention + 1)
 }

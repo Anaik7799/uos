@@ -17,7 +17,7 @@ Every stage is a pure Gleam function in `apps/cepaf_gleam/src/cepaf_gleam/harnes
 | T1 parse | `telegram_media_ref` | update JSON | `Option(MediaRef)` (kind, file id, file_unique_id, declared mime, caption) | malformed updates; unsupported kinds become `Unsupported(label)` |
 | T2 download | `telegram_media_download` | `MediaRef`, already-fetched ids, token thunk, injected `Transport` | `Fetched(kind, file_unique_id, bytes, sha256_hex, content)`, `Rejected(reason)`, `Aborted(observed, cap)` | over-cap declared size, repeat `file_unique_id`, token or transport failure; streams stop at the per-kind cap and at 4096 chunks; file URLs are redacted in every reason |
 | T3 inspect | `telegram_media_inspect` | kind and content | `Accepted(sniffed)` or `Rejected(reason, sniffed)` | unknown signature, a type outside the kind's allowlist, `Unsupported` kinds; reads only the first 64 bytes; never reads `declared_mime` |
-| T4 store | `telegram_media_store` | `Policy`, kind, file_unique_id, content, expected sha256, `now_ms`, measured `usage_bytes` | `Written`, `AlreadyStored`, `Refused(reason)`; `get` returns bytes and record or an error; `expired` returns a `Result` list | caller digest that differs from the recomputed one, ceiling reached, invalid policy, `file_unique_id` over 128 bytes, an expired object already present (`expired_present`), an unverifiable stored object; `get` refuses tampered, expired, missing or malformed objects |
+| T4 store | `telegram_media_store` | `Policy`, kind, file_unique_id, content, expected sha256, `now_ms`, measured `usage_bytes` | `Written`, `AlreadyStored`, `Refused(reason)`; `get` returns bytes and record or an error; `expired` returns a `Result` list; `delete` and `reclaim_expired` return receipts | caller digest that differs from the recomputed one, ceiling reached, invalid policy, `file_unique_id` over 128 bytes, an expired object already present (`expired_present`), an unverifiable stored object; `get` refuses tampered, expired, missing or malformed objects |
 
 Allowlist (T3): Photo Jpeg Png Webp · Sticker Webp Png · Voice Ogg · Audio Mp3 Ogg · Video and Animation Mp4 · Document Pdf Png Jpeg Zip · GIF nowhere · ZIP never opened.
 
@@ -53,7 +53,7 @@ No production caller exists yet; the service does not download media on its own.
 1. Run `download` with a transport that holds the token outside the message and the logs.
 2. Hand the `Fetched` outcome to `inspect_fetched`; treat anything but `Accepted` as a refusal reply, never as a fallback to the declared mime.
 3. Measure `usage` and run `put` inside a supervised process bounded by the design's 2,000 ms `store_write` deadline; the module has no clock of its own.
-4. List `expired` on a schedule and act on it elsewhere; the store deletes nothing.
+4. Run `reclaim_expired(policy, now_ms, max_objects)` on a schedule and keep its receipt; `delete(policy, sha)` removes one object on request (index first, then bytes; symlinks refused untouched). Deletion is an unlink, not a wipe (wave 6e).
 5. Keep `Accepted` as "narrowed", not "safe": a magic-byte verdict is not content validation and nothing in these modules opens, decodes or renders.
 
 ## Run
@@ -64,7 +64,7 @@ cd apps/cepaf_gleam && bash -c 'export UOS_ROOT=/home/an/NAS-setup/uos; source $
 
 ## Limits
 
-T5 (upload) is deferred by the design's own condition; no use case survived review. The ceiling is a guard on a caller-measured number, not a quota lock. Parent-directory rename races need a cooperative lease. MEDIA_REVIEW by an independent reviewer and TELEGRAM_E2E by an authorized human remain open. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number is minted.
+T5 (upload) is deferred by the design's own condition; no use case survived review. The ceiling is a guard on a caller-measured number, not a quota lock, and it counts expired bytes until a caller runs `reclaim_expired`. Parent-directory rename races need a cooperative lease. MEDIA_REVIEW by an independent reviewer and TELEGRAM_E2E by an authorized human remain open. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number is minted.
 
 ## Comprehensive verification checklist
 

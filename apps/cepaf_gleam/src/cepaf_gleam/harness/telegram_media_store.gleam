@@ -16,9 +16,16 @@
 //// absolute segments, no symlinked parent directory).
 ////
 //// Honest limits:
-//// * NO DELETION. Retention is a horizon (`expires_at_ms`) that the caller
-////   enforces by listing `expired` and acting on it elsewhere. An expired
-////   object is never served by `get`, but its bytes remain on disk.
+//// * Deletion exists and is bounded. `delete` removes one named object (index
+////   first, then the `.bin`; symlinks and hard links are refused untouched).
+////   `reclaim_expired` deletes at most N expired objects per call and reports
+////   what it removed and refused. Retention is enforced only when a caller runs
+////   `reclaim_expired` on a schedule: until then an expired object is never
+////   served by `get`, but its bytes remain on disk and still count toward the
+////   ceiling. Neither function deletes a `.tmp-` file or anything outside
+////   `root/base`, and bytes that no longer hash to their name are garbage that
+////   `delete` removes like any other. Deletion is not wiped or shredded: it is
+////   an unlink.
 //// * The ceiling check is pure: the caller supplies `usage_bytes` (measure it
 ////   with `usage`). Two concurrent callers may both pass the check against the
 ////   same measurement; the ceiling is a guard, not a quota lock.
@@ -703,4 +710,210 @@ pub fn usage(policy: Policy) -> Result(Int, String) {
 /// Test and diagnostics helper: decimal text of a byte count.
 pub fn bytes_label(n: Int) -> String {
   int.to_string(n) <> "B"
+}
+
+// ------------------------------------------------------------------- delete
+
+/// What `delete` removed. `bytes_freed` is what `usage` stopped counting for
+/// this digest: the larger of the index-recorded bytes and the `.bin` size
+/// (the `.bin` size alone when the index is unreadable).
+pub type Removed {
+  Removed(
+    sha256_hex: String,
+    bytes_freed: Int,
+    removed_bin: Bool,
+    removed_index: Bool,
+  )
+}
+
+type Half {
+  Absent
+  Present(size: Int)
+}
+
+/// A half must be absent, or a regular file with a single link. A symlink or a
+/// hard link is refused untouched.
+fn probe_half(path: String) -> Result(Half, String) {
+  case simplifile.link_info(path) {
+    Error(simplifile.Enoent) -> Ok(Absent)
+    Error(_) -> Error("store_unavailable")
+    Ok(info) ->
+      case
+        simplifile.file_info_type(info) == simplifile.File && info.nlinks == 1
+      {
+        True -> Ok(Present(info.size))
+        False -> Error("not_regular_single_link")
+      }
+  }
+}
+
+/// Resolve a path through `files.checked_path`. A shard that does not exist
+/// means the half is absent; any other refusal (a symlinked ancestor) stays a
+/// refusal.
+fn resolve_half(
+  policy: Policy,
+  relative: String,
+) -> Result(Result(String, Nil), String) {
+  case files.checked_path(policy.root, relative) {
+    Ok(path) -> Ok(Ok(path))
+    Error("parent_unavailable") -> Ok(Error(Nil))
+    Error(reason) -> Error(reason)
+  }
+}
+
+fn probe(policy: Policy, relative: String) -> Result(#(String, Half), String) {
+  use resolved <- result.try(resolve_half(policy, relative))
+  case resolved {
+    Error(Nil) -> Ok(#("", Absent))
+    Ok(path) -> {
+      use half <- result.try(probe_half(path))
+      Ok(#(path, half))
+    }
+  }
+}
+
+/// Remove one object from disk. Both halves are checked (`checked_path`, then
+/// `link_info`: regular file, single link) BEFORE either is touched, so a
+/// symlink or hard link refuses the whole delete and nothing changes. The index
+/// is removed first and the shard directory synced, then the `.bin`: a crash
+/// in between leaves an orphan `.bin` (counted by `usage`, adopted or replaced
+/// by a later `put`), never an index that points at nothing. An object with
+/// only one half present has that half removed and `Removed` says which.
+/// Bytes that no longer hash to their name are garbage; deleting them is still
+/// a deletion. `delete` does not look at expiry: it is the caller's decision,
+/// and `reclaim_expired` is the expiry-checked wrapper. It never touches a
+/// `.tmp-` file or anything outside `root/base`.
+pub fn delete(policy: Policy, sha256_hex: String) -> Result(Removed, String) {
+  use _ <- result.try(valid_policy(policy))
+  use _ <- result.try(case is_hex_digest(sha256_hex) {
+    True -> Ok(Nil)
+    False -> Error("sha256_invalid")
+  })
+  use #(index_path, index_half) <- result.try(probe(
+    policy,
+    rel_index(policy, sha256_hex),
+  ))
+  use #(bin_path, bin_half) <- result.try(probe(
+    policy,
+    rel_bin(policy, sha256_hex),
+  ))
+  case index_half, bin_half {
+    Absent, Absent -> Error("not_found")
+    _, _ -> {
+      let recorded = case index_half {
+        Present(_) ->
+          case load_record(policy, sha256_hex) {
+            Ok(stored) -> stored.bytes
+            Error(_) -> 0
+          }
+        Absent -> 0
+      }
+      let bin_size = case bin_half {
+        Present(size) -> size
+        Absent -> 0
+      }
+      use removed_index <- result.try(case index_half {
+        Present(_) ->
+          simplifile.delete(index_path)
+          |> result.map(fn(_) { True })
+          |> result.map_error(fn(_) { "delete_failed:index" })
+        Absent -> Ok(False)
+      })
+      use _ <- result.try(case removed_index {
+        True ->
+          clock_guard.verify_durable_directory(
+            policy.root <> "/" <> rel_dir(policy, sha256_hex),
+          )
+          |> result.map_error(fn(_) { "delete_failed:sync" })
+        False -> Ok(Nil)
+      })
+      use removed_bin <- result.try(case bin_half {
+        Present(_) ->
+          simplifile.delete(bin_path)
+          |> result.map(fn(_) { True })
+          |> result.map_error(fn(_) { "delete_failed:bin" })
+        Absent -> Ok(False)
+      })
+      Ok(Removed(
+        sha256_hex: sha256_hex,
+        bytes_freed: int.max(recorded, bin_size),
+        removed_bin: removed_bin,
+        removed_index: removed_index,
+      ))
+    }
+  }
+}
+
+// ------------------------------------------------------------------ reclaim
+
+/// `examined` objects were attempted (at most `max_objects`); `removed` lists
+/// what was deleted; `refused` holds `#(sha, reason)` for every object that
+/// could not be deleted or whose index is unreadable; `truncated` is True when
+/// more expired objects remain beyond the bound.
+pub type ReclaimReceipt {
+  ReclaimReceipt(
+    examined: Int,
+    removed: List(Removed),
+    refused: List(#(String, String)),
+    bytes_freed: Int,
+    truncated: Bool,
+  )
+}
+
+/// Delete at most `max_objects` expired objects (`now_ms >= expires_at_ms`), in
+/// digest order. An unexpired object is never deleted: expiry is re-read from
+/// the index immediately before each delete. A refusal (symlinked half, failed
+/// removal) is collected and the run continues. A malformed index is reported
+/// in `refused` as `index_invalid`, does not count toward `max_objects` and is
+/// left alone (its expiry is unknown; remove it with an explicit `delete`).
+/// Retention enforcement is this function run by a caller on a schedule; the
+/// ceiling keeps counting an expired object's bytes until it has run.
+pub fn reclaim_expired(
+  policy: Policy,
+  now_ms: Int,
+  max_objects: Int,
+) -> Result(ReclaimReceipt, String) {
+  case max_objects < 1 {
+    True -> Error("bound_invalid")
+    False -> {
+      use #(entries, _) <- result.try(scan(policy))
+      let #(candidates, malformed) =
+        list.fold(entries, #([], []), fn(acc, entry) {
+          case entry.record {
+            Ok(stored) ->
+              case now_ms >= stored.expires_at_ms {
+                True -> #(list.append(acc.0, [stored]), acc.1)
+                False -> acc
+              }
+            Error("not_found") -> acc
+            Error(reason) -> #(
+              acc.0,
+              list.append(acc.1, [#(entry.sha, reason)]),
+            )
+          }
+        })
+      let batch = list.take(candidates, max_objects)
+      let #(removed, refused) =
+        list.fold(batch, #([], malformed), fn(acc, stored) {
+          let sha = stored.sha256_hex
+          case load_record(policy, sha) {
+            Ok(now_stored) if now_ms >= now_stored.expires_at_ms ->
+              case delete(policy, sha) {
+                Ok(gone) -> #(list.append(acc.0, [gone]), acc.1)
+                Error(reason) -> #(acc.0, list.append(acc.1, [#(sha, reason)]))
+              }
+            _ -> #(acc.0, list.append(acc.1, [#(sha, "no_longer_expired")]))
+          }
+        })
+      Ok(ReclaimReceipt(
+        examined: list.length(batch),
+        removed: removed,
+        refused: refused,
+        bytes_freed: list.fold(removed, 0, fn(total, r) {
+          total + r.bytes_freed
+        }),
+        truncated: list.length(candidates) > max_objects,
+      ))
+    }
+  }
 }

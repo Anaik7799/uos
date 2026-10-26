@@ -195,17 +195,31 @@
     },
     {
       "wave": "6d",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "5745dd3e",
+      "landed_utc": "2026-10-26T08:21:50Z",
       "canonicals_answering": "77/77 (unchanged)",
       "tests_added": 14,
       "mutants": "6/6 worker (rename skipped, put-expiry dropped, orphan bins ignored, usage without max, verification skipped, length bound dropped) plus 2 integrator re-observations",
       "workers": 1,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 37,
       "checker_holds": 1,
       "process_defects": 1,
       "notes": "Review-fix increment after an independent R2 review of the 6c diff (REQUEST_CHANGES, 15 findings, 5 majors in the store crash and expiry behaviour, path security confirmed). Store: temp-and-rename writes, expired_present, bin re-verified before AlreadyStored, usage counts orphans and takes max(index, bin), file_unique_id bounded to 128 bytes, link_info before mkdir and before adoption, expired returns Result, two-process smoke test. Inspect: honest-limits doc (ftyp brands, MP3 frame syncs, polyglots, N-3 caller duty) and the vacuous declared-mime test replaced. The 6c landing gate held once (RP-SA-PLAN) because three portfolio records still declared executing for tasks completed after 6b; repaired by aligning the declared state. Media pipeline wiki guide and a media section in the journey skill (five surfaces) added.",
       "full_suite": "13758/13758"
+    },
+    {
+      "wave": "6e",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged)",
+      "tests_added": 14,
+      "mutants": "5/5 worker (bound ignored, unexpired deleted, comparison flipped, symlink followed, single-link check dropped) plus 1 integrator re-observation",
+      "workers": 1,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "Bounded delete(policy, sha) (index first then bin, link_info before every removal, symlinks and hard links refused untouched, half-present objects handled) and reclaim_expired(policy, now_ms, max_objects) with a receipt (examined, removed, refused, bytes_freed, truncated; expiry re-read before each delete; malformed indexes reported, not deleted). Closes the media design safety requirement that a stored unit is deletable on request (review M-11 residual). Own Sa-plan task MEDIA_RECLAIM. Process defect: the 6c packet had scoped T4 below the design safety requirement and recorded the omission as a limit.",
+      "full_suite": "13772/13772"
     }
   ],
   "forecasts": [
@@ -357,6 +371,12 @@
       "wave": "6d",
       "lesson": "Completing Sa-plan tasks after a landing invalidates the risk portfolio records that still declare them executing; the next landing gate holds on RP-SA-PLAN",
       "applied": "complete6*.sh now ends by aligning the portfolio task_state with Sa-plan, re-stamping and rehashing"
+    },
+    {
+      "id": "L-18",
+      "wave": "6e",
+      "lesson": "A design safety requirement is a deliverable, not a limit to document; a packet that scopes below it must say so as a gap with its own task",
+      "applied": "MEDIA_RECLAIM opened as a task with dependency MEDIA_FIX; the wiki guide and skill now describe the full lifecycle"
     }
   ]
 }
