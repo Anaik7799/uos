@@ -96,21 +96,21 @@
       "id": "TG-KPI-11",
       "name": "independent_review_closure",
       "definition": "review tasks completed in Sa-plan by a claimant other than the author with a recorded verdict, over the six review tasks",
-      "numerator": 6,
-      "denominator": 6,
-      "value": "6/6 (COMMAND e, MEDIA f2, GATEWAY g, MINI_API h, VAULT_NIF v, VAULT_NIF_REVIEW2 v2; all APPROVE by AGY claimants)",
-      "observed_utc": "2026-10-26T16:10:29Z",
-      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json",
+      "numerator": 7,
+      "denominator": 7,
+      "value": "7/7 (COMMAND, MEDIA, GATEWAY, MINI_API, VAULT_NIF, VAULT_NIF_REVIEW2, VAULT_NIF_REVIEW3 adversarial; all APPROVE by AGY claimants)",
+      "observed_utc": "2026-10-26T16:23:37Z",
+      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json; governance/planning/20261026-1637-agy-vault-nif-review3-independent-verdict.json",
       "confidence": "Measured"
     },
     {
       "id": "TG-KPI-12",
       "name": "vault_nif_law_closure",
       "definition": "VF-01 laws holding at the pinned library: persistence across handles and BEAMs, wrong-key refusal with the vault sealed, no plaintext or key on disk, audit append-only; numerator = laws observed green through the loaded NIF under OTP 29, denominator = laws declared",
-      "numerator": 5,
-      "denominator": 5,
-      "value": "5/5 at pin 6db27c1e (persistence, wrong key, no plaintext, audit append-only, name validation; cargo 67/67, mutants 3/3, eunit 4/4)",
-      "observed_utc": "2026-10-26T15:36:25Z",
+      "numerator": 7,
+      "denominator": 7,
+      "value": "7/7 at pin a5b63b75 (persistence, wrong key, no plaintext, audit append-only, name validation, no poison under a concurrent seal, audit chain tamper-evident; cargo 69/69, mutants 5/5, eunit 5/5)",
+      "observed_utc": "2026-10-26T16:29:53Z",
       "source": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256; apps/cepaf_gleam/test/rusty_vault_persistence_test.erl; wave 6v journal",
       "confidence": "Measured"
     }
@@ -515,6 +515,20 @@
       "process_defects": 1,
       "notes": "VAULT_NIF_REVIEW completed by agy-review-v-20261026 with APPROVE: seven laws VERIFIED, 66 cargo and 75 eunit tests, eight hostile probes; probes 7 and 8 (empty name, NUL in name) were stored without refusal. VAULT_NIF_HARDEN: valid_name (non-empty, <= 512 bytes, no control bytes) checked before any disk access in kv_put, kv_get, kv_versions, kv_destroy with {error, {invalid_name, Name}}; cargo law, eunit law, mutant killed; library rebuilt and re-pinned 6db27c1e. Process defect: the portfolio crossed the checker byte bound (1 MiB, bounded.ml) and the four records cloned today carried copied media-wave rationale; they were rewritten with accurate compact content (L-35). VAULT_NIF_REVIEW2 (plan uos/telegram-vault/20261026-1530) completed by agy-review-v2-20261026 with APPROVE: 4/4 laws VERIFIED, 143 tests, five new probes (512/513-byte names, spaces-only name accepted, 1 MiB value, NUL in lease id, 20 concurrent unseal/seal cycles with integrity_check ok). Residual for the next hardening: a name made only of spaces is accepted.",
       "full_suite": "13895 passed, 0 failed"
+    },
+    {
+      "wave": "6x",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77; VAULT_NIF_REVIEW3 (adversarial) APPROVE; its two findings closed",
+      "tests_added": 3,
+      "mutants": "2 planted, 2 killed (verifier ignores mismatch; append forgets the predecessor)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "VAULT_NIF_HARDEN2 in plan uos/telegram-vault/20261026-1530: poison-tolerant locks and a typed Sealed on an absent key close the seal-vs-read race that disabled a handle (V3-LAW-03); audit rows form a blake2s-256 hash chain appended under BEGIN IMMEDIATE with a 5 s busy timeout and verified by vault_audit_tail, which answers audit_chain_broken with the offending id (V3-LAW-05). Cargo 69 tests (12 vf01_laws), race law with a flipping thread, chain tamper law; eunit tamper law through the host sqlite3; library rebuilt, Cargo.lock updated once for the direct blake2 dependency, re-pinned a5b63b75.",
+      "full_suite": "13896 passed, 0 failed"
     }
   ],
   "forecasts": [
@@ -702,6 +716,15 @@
       "made_in": "wave 6w journal",
       "p": 0.8,
       "claim": "the production bridge journal shows no database is locked line and no crash in the 24 hours after the wave 6t restart, by 2026-10-27T15:00:00Z (restates the 6s forecast with the interim observation: 0 locked lines, 1 curl timeout surfaced after retries)",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6x journal",
+      "p": 0.7,
+      "claim": "VAULT_NIF_REVIEW4 is completed by an AGY claimant with APPROVE or APPROVE_WITH_CHANGES and no REFUTED law by 2026-10-27T12:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,

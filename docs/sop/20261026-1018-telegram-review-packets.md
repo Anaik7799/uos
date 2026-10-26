@@ -83,6 +83,11 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 - Laws: V2-LAW-01 name validation; V2-LAW-02 pre-existing bad rows; V2-LAW-03 the predecessor's seven laws; V2-LAW-04 pin and provenance.
 - Residual for the next hardening: a name made only of spaces is accepted (0x20 is not a control byte); whether blank names are refused is a contract decision, not a defect of the law as written.
 
+## VAULT_NIF_REVIEW3 — "Adversarial security review of the vault NIF" (plan `uos/telegram-vault/20261026-1530`)
+
+- **Completed 2026-10-26 by `agy-review-v3-20261026` with verdict APPROVE** (advisory review evidence, no admission): V3-LAW-01 to V3-LAW-06 VERIFIED at main 28d0d752. Durability: a put survived `kill -9` of its BEAM and was read by a fresh one. Four writers: 200 versions from four BEAMs, counts exact, `integrity_check` ok, no duplicate `(name, version)`. Poisoned state: a `vault_seal` between `require_active` and the master-key lock makes the `.expect("require_active guarantees Some")` panic inside the lock and poisons it; rustler traps the panic as `nif_panicked` and later calls answer `sealed` or `nif_panicked`, so no BEAM crash and no hang, but the handle is disabled by one race (closed by VAULT_NIF_HARDEN2). Verifier race: 10/10 two-process races on an empty file produced one winner and one `wrong_key`, `vault_meta` row count 1. Audit bypass: with direct sqlite access `DROP TRIGGER`, `UPDATE`, a past-timestamp `INSERT` and a table `RENAME` all succeed and `vault_audit_tail` returns the forged rows without notice (closed by the hash chain in VAULT_NIF_HARDEN2); `PRAGMA writable_schema` is refused by defensive mode. Zeroization: the 32 key bytes are present in NIF memory while unsealed and absent after `vault_seal`; the verdict JSON is filed as governance evidence `governance/planning/20261026-1637-agy-vault-nif-review3-independent-verdict.json`.
+- Findings carried into VAULT_NIF_HARDEN2: the seal-vs-read race (FM-POISONED-KEY-MUTEX) and undetectable audit tampering (FM-AUDIT-TAMPER-UNDETECTED).
+
 ## TELEGRAM_E2E — "Verify complete staged Telegram operation and release readiness against current candidate"
 
 - Actor: an authorized human with the staging bot only; the production bridge is never touched (INV-TGJ-05).

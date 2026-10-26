@@ -123,3 +123,29 @@ law_invalid_names_are_refused_before_disk_test() ->
             %% a well-formed non-ASCII name is a name
             {ok, #{version := 1}} = rusty_vault_nif:vault_kv_put(H, <<"名前/ключ"/utf8>>, <<"v">>, 60, 600)
     end.
+
+%% VAULT_NIF_REVIEW3 V3-LAW-05: with direct sqlite access a tamperer can drop the
+%% triggers and rewrite or forge audit rows. The rows now form a hash chain and
+%% vault_audit_tail verifies it first, so the tail refuses with the id of the
+%% first row that does not recompute. Uses the host sqlite3 CLI when present.
+law_audit_tampering_is_detected_by_the_tail_test() ->
+    case nif_available() andalso os:find_executable("sqlite3") =/= false of
+        false -> ok;
+        true ->
+            Dir = fresh_dir(),
+            Db = binary_to_list(<<Dir/binary, "/vault.sqlite3">>),
+            {ok, H} = rusty_vault_nif:vault_init(Dir, <<Dir/binary, "/audit.log">>),
+            {ok, nil} = rusty_vault_nif:vault_unseal(H, key(16#99)),
+            {ok, _} = rusty_vault_nif:vault_kv_put(H, <<"k">>, <<"v">>, 60, 600),
+            ok = rusty_vault_nif:vault_seal(H),
+            {ok, Rows} = rusty_vault_nif:vault_audit_tail(H, 0),
+            ?assertEqual(4, length(Rows)),
+            Sql = "DROP TRIGGER audit_log_no_update; UPDATE audit_log SET event = 'x' WHERE id = 3;",
+            _ = os:cmd("sqlite3 " ++ Db ++ " \"" ++ Sql ++ "\""),
+            ?assertEqual({error, {audit_chain_broken, 3}}, rusty_vault_nif:vault_audit_tail(H, 0)),
+            _ = os:cmd("sqlite3 " ++ Db ++ " \"UPDATE audit_log SET event = 'put' WHERE id = 3;\""),
+            {ok, Rows2} = rusty_vault_nif:vault_audit_tail(H, 0),
+            ?assertEqual(4, length(Rows2)),
+            _ = os:cmd("sqlite3 " ++ Db ++ " \"INSERT INTO audit_log (ts, event, name, version, caller) VALUES (1000, 'get', 'k', 1, 'forged');\""),
+            ?assertEqual({error, {audit_chain_broken, 5}}, rusty_vault_nif:vault_audit_tail(H, 0))
+    end.

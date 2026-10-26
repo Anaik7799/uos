@@ -80,6 +80,7 @@ mod atoms {
         already_unsealed,
         decrypt_failed,
         invalid_name,
+        audit_chain_broken,
         nif_panic,
         version,
         lease_id,
@@ -457,13 +458,21 @@ fn vault_lease_renew<'a>(
 // =====================================================================
 
 /// Audit rows with `ts >= since_ts`. Readable while sealed: the trail is
-/// not a secret and register sync must observe seal events.
+/// not a secret and register sync must observe seal events. The whole hash
+/// chain is verified first; a row that does not recompute (rewritten,
+/// inserted, deleted or written before the chain) answers
+/// `{error, {audit_chain_broken, Id}}` and no rows (VAULT_NIF_HARDEN2).
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_audit_tail<'a>(
     env: Env<'a>,
     handle: ResourceArc<VaultHandle>,
     since_ts: i64,
 ) -> NifResult<Term<'a>> {
+    match handle.disk.audit_verify() {
+        Ok(Ok(_)) => {}
+        Ok(Err(id)) => return Ok((atoms::error(), (atoms::audit_chain_broken(), id)).encode(env)),
+        Err(e) => return Ok((atoms::error(), error_atom(&e)).encode(env)),
+    }
     match handle.disk.audit_tail(since_ts) {
         Ok(rows) => {
             let entries: Vec<Term> = rows
@@ -713,6 +722,68 @@ mod vf01_laws {
         assert!(!valid_name("k\x7f"), "DEL");
         assert!(!valid_name(&"a".repeat(MAX_NAME_BYTES + 1)), "oversize");
         assert!(valid_name("名前/ключ"), "non-ASCII text is a name, not a control byte");
+    }
+
+    #[test]
+    fn law_seal_during_reads_never_poisons_the_handle() {
+        // VAULT_NIF_REVIEW3 V3-LAW-03: a seal between the active check and the
+        // key lock used to panic inside the lock and poison it for good.
+        use std::sync::Arc;
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("r.sqlite3");
+        let h = Arc::new(VaultHandle::open(db.to_str().unwrap(), "unused").unwrap());
+        h.disk.unseal_verified(key(0x88)).unwrap();
+        h.disk.put_with_lease("k", b"v", 60, 600).unwrap();
+        let flipper = {
+            let h = Arc::clone(&h);
+            std::thread::spawn(move || {
+                for _ in 0..400 {
+                    h.disk.seal();
+                    let _ = h.disk.unseal_verified(key(0x88));
+                }
+            })
+        };
+        let mut sealed_seen = 0;
+        let mut ok_seen = 0;
+        for i in 0..400 {
+            let r = if i % 2 == 0 {
+                h.disk.get_latest_meta("k").map(|_| ())
+            } else {
+                h.disk.put_with_lease("k", b"v", 60, 600).map(|_| ())
+            };
+            match r {
+                Ok(()) => ok_seen += 1,
+                Err(VaultHandleError::Sealed) => sealed_seen += 1,
+                Err(e) => panic!("unexpected error under a concurrent seal: {e:?}"),
+            }
+        }
+        flipper.join().expect("the flipper thread must not panic");
+        // the handle still works afterwards: no poisoned lock
+        let _ = h.disk.unseal_verified(key(0x88));
+        assert_eq!(h.disk.get_latest_meta("k").unwrap().1, b"v");
+        assert!(ok_seen + sealed_seen == 400);
+    }
+
+    #[test]
+    fn law_audit_chain_verifies_and_detects_tampering() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("h.sqlite3");
+        let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        a.disk.unseal_verified(key(0x99)).unwrap();
+        a.disk.put_with_lease("k", b"v", 60, 600).unwrap();
+        a.disk.seal();
+        assert_eq!(a.disk.audit_verify().unwrap(), Ok(4), "key_established, unseal, put, seal");
+        let conn = rusqlite::Connection::open(&db).unwrap();
+        // the triggers refuse a direct rewrite...
+        assert!(conn.execute("UPDATE audit_log SET event = 'x' WHERE id = 3", []).is_err());
+        // ...so a tamperer drops them first; the chain still catches the rewrite
+        conn.execute_batch("DROP TRIGGER audit_log_no_update; UPDATE audit_log SET event = 'x' WHERE id = 3;").unwrap();
+        assert_eq!(a.disk.audit_verify().unwrap(), Err(3));
+        // a forged row appended with a past timestamp and no digest is caught at its id
+        conn.execute_batch("UPDATE audit_log SET event = 'put' WHERE id = 3;").unwrap();
+        assert_eq!(a.disk.audit_verify().unwrap(), Ok(4));
+        conn.execute("INSERT INTO audit_log (ts, event, name, version, caller) VALUES (1000, 'get', 'k', 1, 'forged')", []).unwrap();
+        assert_eq!(a.disk.audit_verify().unwrap(), Err(5));
     }
 
     #[test]

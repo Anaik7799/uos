@@ -129,7 +129,78 @@ impl SqliteKvBackend {
             "#,
         )
         .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        // VAULT_NIF_HARDEN2: the hash-chain column, added once to files that predate it.
+        let has_digest: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM pragma_table_info('audit_log') WHERE name = 'digest'",
+                [],
+                |row| row.get(0),
+            )
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        if has_digest == 0 {
+            conn.execute_batch("ALTER TABLE audit_log ADD COLUMN digest TEXT NOT NULL DEFAULT '';")
+                .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        }
         Ok(())
+    }
+
+    /// Open a connection with a 5 s busy timeout, so several BEAMs writing
+    /// one file wait for the lock instead of failing on SQLITE_BUSY.
+    fn open_conn(&self) -> Result<Connection, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        conn.busy_timeout(std::time::Duration::from_secs(5))
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        Ok(conn)
+    }
+
+    /// Digest of one audit row given its predecessor's digest (`""` for the
+    /// first row): blake2s-256 over the fields joined by newlines, hex.
+    pub fn audit_digest(prev: &str, ts: i64, event: &str, name: &str, version: i64, caller: &str) -> String {
+        use blake2::{Blake2s256, Digest};
+        let mut h = Blake2s256::new();
+        for part in [prev, &ts.to_string(), event, name, &version.to_string(), caller] {
+            h.update(part.as_bytes());
+            h.update(b"\n");
+        }
+        h.finalize().iter().map(|b| format!("{:02x}", b)).collect()
+    }
+
+    /// Walk the audit rows in id order recomputing the chain. `Ok(Ok(n))`
+    /// when all `n` rows verify; `Ok(Err(id))` at the first row whose stored
+    /// digest differs from the recomputed one (a rewritten, inserted, deleted
+    /// or pre-chain row).
+    pub fn audit_verify(&self) -> Result<Result<i64, i64>, BackendError> {
+        let conn = self.open_conn()?;
+        let mut stmt = conn
+            .prepare("SELECT id, ts, event, name, version, caller, digest FROM audit_log ORDER BY id ASC")
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let rows = stmt
+            .query_map([], |row| {
+                Ok((
+                    row.get::<_, i64>(0)?,
+                    row.get::<_, i64>(1)?,
+                    row.get::<_, String>(2)?,
+                    row.get::<_, String>(3)?,
+                    row.get::<_, i64>(4)?,
+                    row.get::<_, String>(5)?,
+                    row.get::<_, String>(6)?,
+                ))
+            })
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut prev = String::new();
+        let mut count = 0i64;
+        for r in rows {
+            let (id, ts, event, name, version, caller, digest) =
+                r.map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+            let expected = Self::audit_digest(&prev, ts, &event, &name, version, &caller);
+            if digest != expected {
+                return Ok(Err(id));
+            }
+            prev = digest;
+            count += 1;
+        }
+        Ok(Ok(count))
     }
 
     /// Path of the underlying SQLite database file.
@@ -363,16 +434,32 @@ impl SqliteKvBackend {
         }
     }
 
-    /// Append an audit row. The table refuses UPDATE and DELETE by trigger.
+    /// Append an audit row as the next link of the hash chain. The read of
+    /// the previous digest and the insert happen under `BEGIN IMMEDIATE`, so
+    /// concurrent writers serialize and no two rows share a predecessor.
+    /// The table refuses UPDATE and DELETE by trigger.
     pub fn audit_append(&self, event: &str, name: &str, version: i64, caller: &str) -> Result<(), BackendError> {
-        let conn = Connection::open(&self.path)
+        let conn = self.open_conn()?;
+        conn.execute_batch("BEGIN IMMEDIATE;")
             .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
-        conn.execute(
-            "INSERT INTO audit_log (ts, event, name, version, caller) VALUES (?1, ?2, ?3, ?4, ?5)",
-            rusqlite::params![chrono_now_unix(), event, name, version, caller],
-        )
-        .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
-        Ok(())
+        let prev: String = conn
+            .query_row("SELECT digest FROM audit_log ORDER BY id DESC LIMIT 1", [], |row| row.get(0))
+            .unwrap_or_default();
+        let ts = chrono_now_unix();
+        let digest = Self::audit_digest(&prev, ts, event, name, version, caller);
+        let inserted = conn.execute(
+            "INSERT INTO audit_log (ts, event, name, version, caller, digest) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            rusqlite::params![ts, event, name, version, caller, digest],
+        );
+        match inserted {
+            Ok(_) => conn
+                .execute_batch("COMMIT;")
+                .map_err(|e| BackendError::MigrateFailed(e.to_string())),
+            Err(e) => {
+                let _ = conn.execute_batch("ROLLBACK;");
+                Err(BackendError::MigrateFailed(e.to_string()))
+            }
+        }
     }
 
     /// Audit rows with `ts >= since_ts`, oldest first:

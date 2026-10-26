@@ -118,11 +118,11 @@ impl DiskVaultHandle {
         if master_key.len() != 32 {
             return Err(VaultHandleError::BadMasterKeyLen(master_key.len()));
         }
-        let mut state = self.state.lock().expect("state mutex poisoned");
+        let mut state = self.state.lock().unwrap_or_else(|p| p.into_inner());
         if *state == DiskVaultState::Active {
             return Err(VaultHandleError::AlreadyUnsealed);
         }
-        let mut mk = self.master_key.lock().expect("master_key mutex poisoned");
+        let mut mk = self.master_key.lock().unwrap_or_else(|p| p.into_inner());
         *mk = Some(master_key);
         *state = DiskVaultState::Active;
         self.append_audit("unseal", "", 0);
@@ -132,8 +132,8 @@ impl DiskVaultHandle {
     /// Transition Active → Sealed; zeroize the in-RAM master key
     /// (SC-VAULT-002).
     pub fn seal(&self) {
-        let mut state = self.state.lock().expect("state mutex poisoned");
-        let mut mk = self.master_key.lock().expect("master_key mutex poisoned");
+        let mut state = self.state.lock().unwrap_or_else(|p| p.into_inner());
+        let mut mk = self.master_key.lock().unwrap_or_else(|p| p.into_inner());
         *mk = None; // Zeroizing::drop fires
         *state = DiskVaultState::Sealed;
         self.append_audit("seal", "", 0);
@@ -141,7 +141,7 @@ impl DiskVaultHandle {
 
     /// Current state. Cheap, lock-only.
     pub fn state(&self) -> DiskVaultState {
-        *self.state.lock().expect("state mutex poisoned")
+        *self.state.lock().unwrap_or_else(|p| p.into_inner())
     }
 
     /// Path of the backing database file.
@@ -170,8 +170,8 @@ impl DiskVaultHandle {
     ) -> Result<i64, VaultHandleError> {
         self.require_active()?;
         let envelope_bytes = {
-            let mk_guard = self.master_key.lock().expect("master_key mutex poisoned");
-            let mk = mk_guard.as_ref().expect("require_active guarantees Some");
+            let mk_guard = self.master_key.lock().unwrap_or_else(|p| p.into_inner());
+            let mk = mk_guard.as_ref().ok_or(VaultHandleError::Sealed)?;
             let env = crypto::encrypt(plaintext, mk)?;
             crypto::serialize(&env)
         };
@@ -200,8 +200,8 @@ impl DiskVaultHandle {
             Some((v, blob)) => {
                 let envelope = crypto::deserialize(&blob)?;
                 let plaintext = {
-                    let mk_guard = self.master_key.lock().expect("master_key mutex poisoned");
-                    let mk = mk_guard.as_ref().expect("require_active guarantees Some");
+                    let mk_guard = self.master_key.lock().unwrap_or_else(|p| p.into_inner());
+                    let mk = mk_guard.as_ref().ok_or(VaultHandleError::Sealed)?;
                     crypto::decrypt(&envelope, mk)?
                 };
                 self.append_audit("get", name, v);
@@ -246,7 +246,7 @@ impl DiskVaultHandle {
             return Err(VaultHandleError::BadMasterKeyLen(master_key.len()));
         }
         {
-            let state = self.state.lock().expect("state mutex poisoned");
+            let state = self.state.lock().unwrap_or_else(|p| p.into_inner());
             if *state == DiskVaultState::Active {
                 return Err(VaultHandleError::AlreadyUnsealed);
             }
@@ -289,8 +289,8 @@ impl DiskVaultHandle {
     ) -> Result<(i64, String), VaultHandleError> {
         self.require_active()?;
         let envelope_bytes = {
-            let mk_guard = self.master_key.lock().expect("master_key mutex poisoned");
-            let mk = mk_guard.as_ref().expect("require_active guarantees Some");
+            let mk_guard = self.master_key.lock().unwrap_or_else(|p| p.into_inner());
+            let mk = mk_guard.as_ref().ok_or(VaultHandleError::Sealed)?;
             crypto::serialize(&crypto::encrypt(plaintext, mk)?)
         };
         let next = match self.backend.versions(name)?.last().copied() {
@@ -316,8 +316,8 @@ impl DiskVaultHandle {
             Some((v, blob, created_at, ttl, max_ttl, lease)) => {
                 let envelope = crypto::deserialize(&blob)?;
                 let plaintext = {
-                    let mk_guard = self.master_key.lock().expect("master_key mutex poisoned");
-                    let mk = mk_guard.as_ref().expect("require_active guarantees Some");
+                    let mk_guard = self.master_key.lock().unwrap_or_else(|p| p.into_inner());
+                    let mk = mk_guard.as_ref().ok_or(VaultHandleError::Sealed)?;
                     crypto::decrypt(&envelope, mk)?
                 };
                 Ok((v, plaintext.to_vec(), created_at, ttl, max_ttl, lease))
@@ -367,7 +367,7 @@ impl DiskVaultHandle {
     }
 
     fn require_active(&self) -> Result<(), VaultHandleError> {
-        let state = self.state.lock().expect("state mutex poisoned");
+        let state = self.state.lock().unwrap_or_else(|p| p.into_inner());
         if *state != DiskVaultState::Active {
             Err(VaultHandleError::Sealed)
         } else {
@@ -382,15 +382,17 @@ impl DiskVaultHandle {
     /// append fails, we silently swallow — surfacing it would risk
     /// double-spending an audit row from the caller's perspective.
     fn append_audit(&self, event: &str, name: &str, version: i64) {
-        let conn = match Connection::open(&self.db_path) {
-            Ok(c) => c,
-            Err(_) => return,
-        };
-        let _ = conn.execute(
-            "INSERT INTO audit_log (ts, event, name, version, caller) \
-             VALUES (?1, ?2, ?3, ?4, ?5)",
-            rusqlite::params![Utc::now().timestamp(), event, name, version, "disk_vault"],
-        );
+        // VAULT_NIF_HARDEN2: every row joins the hash chain and is appended
+        // under BEGIN IMMEDIATE in the backend; a failed append leaves no row,
+        // so the chain stays continuous.
+        let _ = self.backend.audit_append(event, name, version, "disk_vault");
+    }
+
+    /// Verify the audit hash chain: `Ok(rows)` when every row's digest
+    /// recomputes from its predecessor, `Err(id)` at the first row that does
+    /// not (including a row written before the chain existed).
+    pub fn audit_verify(&self) -> Result<Result<i64, i64>, VaultHandleError> {
+        Ok(self.backend.audit_verify()?)
     }
 
     /// Read-only count of audit rows. Used by tests to confirm
