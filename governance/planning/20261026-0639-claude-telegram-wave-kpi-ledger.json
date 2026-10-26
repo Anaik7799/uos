@@ -96,11 +96,11 @@
       "id": "TG-KPI-11",
       "name": "independent_review_closure",
       "definition": "review tasks completed in Sa-plan by a claimant other than the author with a recorded verdict, over the six review tasks",
-      "numerator": 8,
-      "denominator": 8,
-      "value": "8/8 (COMMAND, MEDIA, GATEWAY, MINI_API, VAULT_NIF, VAULT_NIF_REVIEW2, VAULT_NIF_REVIEW3 adversarial, VAULT_NIF_REVIEW4; all APPROVE by AGY claimants)",
-      "observed_utc": "2026-10-26T16:51:43Z",
-      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json; governance/planning/20261026-1637-agy-vault-nif-review3-independent-verdict.json; governance/planning/20261026-1643-agy-vault-nif-review4-independent-verdict.json",
+      "numerator": 9,
+      "denominator": 9,
+      "value": "9/9 (COMMAND, MEDIA, GATEWAY, MINI_API, VAULT_NIF, VAULT_NIF_REVIEW2..5; all APPROVE by AGY claimants)",
+      "observed_utc": "2026-10-26T17:19:10Z",
+      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json; governance/planning/20261026-1637-agy-vault-nif-review3-independent-verdict.json; governance/planning/20261026-1643-agy-vault-nif-review4-independent-verdict.json; governance/planning/20261026-1710-agy-vault-nif-review5-independent-verdict.json",
       "confidence": "Measured"
     },
     {
@@ -532,7 +532,7 @@
     },
     {
       "wave": "6y",
-      "landed_commit": null,
+      "landed_commit": "3556dae0",
       "landed_utc": null,
       "canonicals_answering": "77/77; VAULT_NIF_REVIEW4 APPROVE 6/6; the chain residual closed with an external root",
       "tests_added": 2,
@@ -541,7 +541,7 @@
       "wave_wall_minutes": null,
       "checker_holds": 1,
       "process_defects": 1,
-      "notes": "VAULT_NIF_HARDEN3: vault_audit_root/1 answers the verified chain head {rows, digest}; vault_audit_verify_root/2 answers ok, audit_chain_broken or audit_root_mismatch with both digests, so a caller that keeps the head outside the file detects a consistent full rewrite that the in-file verification cannot see. Cargo 70 tests (13 vf01_laws, incl. a law that performs the consistent rewrite and shows in-file verify passes while the external root fails); eunit root law; 78 vault-suite tests twice; library re-pinned ab61df88. Process defect: the new record declared a score that was not its factor product (RP-INVALID five-factor product mismatch); corrected before the claim.",
+      "notes": "VAULT_NIF_HARDEN3: vault_audit_root/1 answers the verified chain head {rows, digest}; vault_audit_verify_root/2 answers ok, audit_chain_broken or audit_root_mismatch with both digests, so a caller that keeps the head outside the file detects a consistent full rewrite that the in-file verification cannot see. Cargo 70 tests (13 vf01_laws, incl. a law that performs the consistent rewrite and shows in-file verify passes while the external root fails); eunit root law; 78 vault-suite tests twice; library re-pinned ab61df88. Process defect: the new record declared a score that was not its factor product (RP-INVALID five-factor product mismatch); corrected before the claim. VAULT_NIF_REVIEW5 APPROVE 6/6 (103795 seal cycles against 11910572 reads, zero panics); root-keeper advice: a Sa-plan evidence row written by the vault owner after each session, not a file under var/vault (same failure domain).",
       "full_suite": "13897 passed, 0 failed"
     }
   ],
@@ -748,10 +748,10 @@
       "made_in": "wave 6y journal",
       "p": 0.7,
       "claim": "VAULT_NIF_REVIEW5 is completed by an AGY claimant with APPROVE or APPROVE_WITH_CHANGES and no REFUTED law by 2026-10-27T12:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.09,
+      "resolved_by": "VAULT_NIF_REVIEW5 APPROVE by agy-review-v5-20261026, 6/6 laws, 148 tests; the reviewer performed the consistent full rewrite and the external root caught it",
+      "resolved_utc": "2026-10-26T17:19:10Z"
     }
   ],
   "lessons": [
