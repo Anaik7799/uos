@@ -8,12 +8,10 @@ import gleam/string
 import gleeunit/should
 
 const wave_two = [
-  "/andon",
-  "/dark",
-  "/chaos",
-  "/gameday",
-  "/export-audit",
-  "/handover",
+  "/andon", "/dark", "/chaos", "/gameday", "/export-audit", "/handover",
+  "/rotate-keys", "/lockbox", "/migrate", "/escalate", "/resuscitate", "/repro",
+  "/merge", "/bisect", "/rewind", "/commitments", "/eco-schedule", "/sidecar",
+  "/voice-roll-call", "/pair-voice",
 ]
 
 fn status_of(reply: String) -> String {
@@ -55,6 +53,8 @@ pub fn router_never_reports_executed_test() {
 
 pub fn foreign_literals_fall_through_test() {
   actions.route_preview("/verify", []) |> should.equal(None)
+  // Catalog alias of /verify: never previewed here.
+  actions.route_preview("/verification", []) |> should.equal(None)
   actions.route_preview("/task", ["X"]) |> should.equal(None)
 }
 
@@ -65,8 +65,13 @@ pub fn classify_preserves_wave_two_actions_and_still_denies_others_test() {
       _ -> should.fail()
     }
   })
-  case guard.classify_directive("/rotate-keys now") {
-    guard.DeniedMutation("/rotate-keys", _) -> Nil
+  // /verify and its alias stay on the executor path: still denied at classify.
+  case guard.classify_directive("/verify telegram-core") {
+    guard.DeniedMutation("/verify", _) -> Nil
+    _ -> should.fail()
+  }
+  case guard.classify_directive("/verification now") {
+    guard.DeniedMutation("/verify", _) -> Nil
     _ -> should.fail()
   }
 }
