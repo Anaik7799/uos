@@ -535,6 +535,8 @@ Analysis of Competing Hypotheses (ACH):
 
 | Gate / Surface | Command / Method | Result | Admiralty Rating |
 | :--- | :--- | :--- | :--- |
+| Expanded Use-Case EUnit Suite | `eunit:test([telegram_user_usecases_test], [verbose])` | `PASS` (`13/13` tests covering all 78 invocations, previews, twins, memory, 2oo3, media) | **A1** |
+| Full 49-Suite Telegram EUnit Run | `erl -pa build/dev/erlang/*/ebin ... eunit:test(Suites, [])` | `PASS` (`49` suites, `762/762` tests passed, `0` failures) | **A1** |
 | Journal Protocol (`SC-JOURNAL-v3`) | `bash tools/journal-check docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md` | `PASS` (`10/10` checks) | **A1** |
 | Diagram Parity (`SC-DIAGRAM-001`) | `bash tools/diagram-check docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md` | `PASS` (`1/1` verified) | **A1** |
 | Parent Closure Journal | `bash tools/journal-check docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md` | `PASS` (`10/10` checks) | **A1** |
@@ -545,6 +547,12 @@ Analysis of Competing Hypotheses (ACH):
 
 ## 8. Files Modified
 
+- `apps/cepaf_gleam/test/telegram_user_usecases_test.gleam`
+- `docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md`
+- `docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md`
+- `docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md`
+- `docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md`
+- `docs/design/20261027-0030-telegram-journeys-miniapp-media-vault-and-live-runtime-usecases.md`
 - `docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md`
 - `docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md`
 
