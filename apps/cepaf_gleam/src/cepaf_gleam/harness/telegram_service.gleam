@@ -64,6 +64,7 @@ import cepaf_gleam/harness/telegram_media_download as download
 import cepaf_gleam/harness/telegram_media_intake as media_intake
 import cepaf_gleam/harness/telegram_media_transport as media_transport
 import cepaf_gleam/gateway/telegram_gateway_drain as gateway_drain
+import cepaf_gleam/gateway/telegram_gateway_ticker as gateway_ticker
 import cepaf_gleam/gateway/telegram_gateway_outbox as gateway_outbox
 import cepaf_gleam/telegram/telegram_media_janitor as janitor
 import gleam/bit_array
@@ -6977,4 +6978,37 @@ pub fn gateway_tick(
   timeout_ms: Int,
 ) -> gateway_drain.TickReport {
   gateway_drain.tick(drain, budget, gateway_send(config), timeout_ms)
+}
+
+/// A supervised ticker for the drain named by `gateway_drain_child` (residual
+/// G-04 closed): every `cadence_ms` it runs one bounded tick with a Send built
+/// from this configuration for that tick only, then reads the drain counters
+/// and raises `Stale`, `Cleared` or `Unobserved` on `alarms`. The deployment
+/// adds this child after the drain child under the same supervisor and routes
+/// the alarm sink wherever operators look.
+pub fn gateway_ticker_child(
+  config: ServiceConfiguration,
+  drain_name: process.Name(gateway_drain.Message),
+  cadence_ms: Int,
+  budget: Int,
+  staleness_bound_ms: Int,
+  alarms: Subject(gateway_ticker.Alarm),
+) -> #(
+  process.Name(gateway_ticker.Message),
+  supervision.ChildSpecification(Subject(gateway_ticker.Message)),
+) {
+  let name =
+    process.new_name("telegram_gateway_ticker_" <> int.to_string(config.bot_id))
+  let ticker_config =
+    gateway_ticker.Config(
+      drain: process.named_subject(drain_name),
+      cadence_ms: cadence_ms,
+      budget: budget,
+      call_timeout_ms: 1000,
+      staleness_bound_ms: staleness_bound_ms,
+      make_send: fn() { gateway_send(config) },
+      alarms: alarms,
+      now_ms: fn() { ffi_system_now_utc_us() / 1000 },
+    )
+  #(name, gateway_ticker.child_spec_named(name, ticker_config))
 }

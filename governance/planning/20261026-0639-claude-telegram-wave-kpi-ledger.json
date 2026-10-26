@@ -113,6 +113,28 @@
       "observed_utc": "2026-10-26T16:56:08Z",
       "source": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256; apps/cepaf_gleam/test/rusty_vault_persistence_test.erl; wave 6v journal",
       "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-13",
+      "name": "review_residuals_closed",
+      "definition": "author-control residuals recorded by the independent reviews (G-04 staleness alarm consumer, Mini App immune actor never started) that are closed with laws on main; numerator = closed, denominator = recorded",
+      "numerator": 2,
+      "denominator": 2,
+      "value": "2/2 (G-04 closed by GATEWAY_TICKER; immune actor closed by IMMUNE_SUPERVISED)",
+      "observed_utc": "2026-10-26T17:30:47Z",
+      "source": "governance/planning/20261026-1752-claude-telegram-residuals-risk.json; docs/sop/20261026-1018-telegram-review-packets.md",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-14",
+      "name": "real_traffic_usecases_functional",
+      "definition": "operational use cases observed working with real Telegram traffic (api.telegram.org, the production bot, the operator chat); numerator = observed functional, denominator = use cases that have a real-traffic form",
+      "numerator": 4,
+      "denominator": 6,
+      "value": "4/6: outbound Critical delivered, outbound Notice delivered, production bridge polling live with the vault-first token (0 lock errors since the restart), getMe through the repaired client; pending the operator: inbound command journeys (19 steps over 78 literals) and captioned media intake, which need messages sent to the staging bot",
+      "observed_utc": "2026-10-26T17:53:34Z",
+      "source": "governance/planning/20261026-1734-claude-telegram-real-traffic-outbound-receipt.json",
+      "confidence": "Measured"
     }
   ],
   "waves": [
@@ -543,6 +565,20 @@
       "process_defects": 1,
       "notes": "VAULT_NIF_HARDEN3: vault_audit_root/1 answers the verified chain head {rows, digest}; vault_audit_verify_root/2 answers ok, audit_chain_broken or audit_root_mismatch with both digests, so a caller that keeps the head outside the file detects a consistent full rewrite that the in-file verification cannot see. Cargo 70 tests (13 vf01_laws, incl. a law that performs the consistent rewrite and shows in-file verify passes while the external root fails); eunit root law; 78 vault-suite tests twice; library re-pinned ab61df88. Process defect: the new record declared a score that was not its factor product (RP-INVALID five-factor product mismatch); corrected before the claim. VAULT_NIF_REVIEW5 APPROVE 6/6 (103795 seal cycles against 11910572 reads, zero panics); root-keeper advice: a Sa-plan evidence row written by the vault owner after each session, not a file under var/vault (same failure domain).",
       "full_suite": "13897 passed, 0 failed"
+    },
+    {
+      "wave": "6z",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77; both author-control review residuals closed (G-04 staleness ticker; immune actor supervised and discoverable)",
+      "tests_added": 9,
+      "mutants": "3 planted, 3 killed (bound ignored; never cleared; lookup always None)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 2,
+      "notes": "GATEWAY_TICKER in plan uos/telegram-residuals/20261026-1752 (opened per L-35): telegram_gateway_ticker drives the drain on a cadence with a Send built per tick, reads Counters and raises Stale (repeated while stale), Cleared (once) and Unobserved (silent drain) on a typed sink; gateway_ticker_child start site in telegram_service; 27 gateway laws green twice. Process defect: the silent-drain law first killed its own test process through the drain link (unlink before kill) and then timed out on a 1 s call timeout while the ticker was blocked in a scheduled tick (short call timeout in that law). IMMUNE_SUPERVISED (same plan, same landing): immune/system gains registry_name (fixed atom via immune_system_ffi), start_named, child_spec and lookup; mini_runtime discovers the actor by name at observation time instead of holding None; two laws (not running without a supervisor; discovered, restarted under the same name, observed, honest again after the supervisor stops); 51 immune and Mini App tests green twice. Process defect L-36: cp -p restores after the mutants left the mutant beams in the build; the first full suite ran against them; sources touched, rebuilt, laws green three times, full suite rerun.",
+      "full_suite": "13906 passed, 0 failed"
     }
   ],
   "forecasts": [
@@ -752,6 +788,15 @@
       "brier": 0.09,
       "resolved_by": "VAULT_NIF_REVIEW5 APPROVE by agy-review-v5-20261026, 6/6 laws, 148 tests; the reviewer performed the consistent full rewrite and the external root caught it",
       "resolved_utc": "2026-10-26T17:19:10Z"
+    },
+    {
+      "made_in": "wave 6z journal",
+      "p": 0.75,
+      "claim": "IMMUNE_SUPERVISED lands on main with laws and the full suite green by 2026-10-27T06:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
     }
   ],
   "lessons": [
@@ -964,6 +1009,12 @@
       "wave": "6w",
       "lesson": "The risk portfolio is read under a 1 MiB bound and must hold a record for every task of its plan, so a plan of about 95 tasks is full; cloning a record to create a new one also copies another task's rationale into it.",
       "applied": "the four records created today were rewritten with their own content; the next Telegram tasks open a new Sa-plan plan with a fresh portfolio instead of growing this one"
+    },
+    {
+      "id": "L-36",
+      "wave": "6z",
+      "lesson": "A mutant restore with cp -p keeps the original mtime, so gleam build (and cargo fingerprints) keep the mutant beams and a rebuild recompiles nothing; the suite then fails exactly where the mutant bites and looks like a flake.",
+      "applied": "restore then touch the file and rerun a law known to kill the mutant before reading any result; the mutant scripts touch on restore"
     }
   ]
 }

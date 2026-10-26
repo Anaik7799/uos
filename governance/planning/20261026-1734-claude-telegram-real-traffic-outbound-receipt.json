@@ -1,0 +1,16 @@
+{
+  "schema": "uos-real-traffic-receipt/v1",
+  "observed_utc": "2026-10-26T17:53:34Z",
+  "plan_id": "uos/telegram-residuals/20261026-1752",
+  "task_id": "REAL_TRAFFIC_OUTBOUND",
+  "actor": "claude-fable-l0-35600f5c",
+  "use_case": "outbound gateway path end to end against api.telegram.org: drain and ticker under a one-for-one supervisor, one Critical and one Notice enqueued, delivered by the ticker through telegram_http_client.send_message",
+  "bot_id": 8660817750,
+  "chat_id": 6249174059,
+  "label": "20261026T175251Z",
+  "report": "enqueued=2 delivered=2 failed=0 uncertain=0 ticks=1 alarms=[] elapsed_ms=1025",
+  "credential_handling": "token and chat id read from var/vault/telegram/store inside the BEAM by uos_vault_file:get; never printed, never passed as an argument",
+  "tool": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam (run/6, render_report/1)",
+  "authority": "observation; grants no admission",
+  "residual": "inbound real traffic needs the operator to send messages to the bot"
+}
