@@ -1,146 +1,153 @@
-//// [C3I-SIL6-MSTS] <c3i-module><identity><module>cepaf_gleam/gateway/telegram</module>
+//// [C3I-SIL6-MSTS] <c3i-module><identity><module>cepaf_gleam/gateway/telegram</module></identity>
 ////   <fractal-topology><layer>L7_FEDERATION</layer></fractal-topology>
-////   <compliance><stamp-controls>SC-ZENOH-005, SC-ZMOF-001</stamp-controls></compliance>
+////   <compliance><stamp-controls>SC-ZENOH-005, SC-ZMOF-001, SC-JIDOKA-001</stamp-controls></compliance>
 //// </c3i-module>
 ////
-//// Zenoh-to-Telegram Gateway Bridge (OpenClaw Skill Analog).
-//// Subscribes to indrajaal/otel/span/critical and routes to Telegram via MoZ.
+//// Zenoh-to-Telegram gateway bridge.
+////
+//// * `start` reports only what it observed (session open, subscription made)
+////   and fabricates no notification, command or intent.
+//// * The bot credential is never held here and never appears in any MoZ,
+////   Zenoh, task or log payload. It stays in the private transport
+////   configuration read by `harness/telegram_outbound`, which alone sends.
+//// * Telegram notifications are typed, bounded requests handed to
+////   `gateway/telegram_gateway_outbox`; this module never sends them.
 
+import cepaf_gleam/gateway/telegram_gateway_outbox as outbox
 import cepaf_gleam/moz/client as moz
 import cepaf_gleam/zenoh/client as zenoh
+import gleam/bit_array
+import gleam/crypto
 import gleam/erlang/process
-import gleam/io
+import gleam/int
 import gleam/json
+import gleam/string
 
+/// Critical OTel spans topic the gateway observes.
+pub const critical_topic = "indrajaal/otel/span/critical"
+
+/// Peer-channel state (gchat, whatsapp). Holds no credential.
 pub type GatewayState {
-  GatewayState(moz: moz.MoZClientState, bot_token: String, chat_id: String)
+  GatewayState(moz: moz.MoZClientState, chat_id: String)
 }
+
+pub type Startup {
+  Observed(subscribed: Bool, topic: String)
+  Unavailable(reason: String)
+}
+
+@external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
+fn ffi_system_time_nanos() -> Int
 
 pub fn new_moz_state() -> moz.MoZClientState {
   moz.new()
 }
 
-/// Start the Telegram Gateway listener loop.
-pub fn start(bot_token: String, chat_id: String) {
-  let state =
-    GatewayState(moz: moz.new(), bot_token: bot_token, chat_id: chat_id)
+/// Host wall clock in milliseconds. Never 0 on a running host.
+pub fn now_ms() -> Int {
+  ffi_system_time_nanos() / 1_000_000
+}
 
-  io.println("📡 Starting OpenClaw Telegram Gateway (SC-ZENOH-005)")
-
+/// Open Zenoh and subscribe the calling process to the critical span topic.
+/// Returns what was observed; the caller owns the receive loop.
+pub fn start(_chat_id: Int) -> Startup {
   case zenoh.open("{}") {
-    Ok(session) -> {
-      // Subscribe to critical OTel spans via Zenoh
-      let topic = "indrajaal/otel/span/critical"
-      let self = process.self()
-      case zenoh.subscribe(session, topic, self) {
-        Ok(Nil) -> {
-          io.println("  [ok] Listening for critical spans on: " <> topic)
-          listen_loop(state)
-        }
-        Error(reason) ->
-          io.println("  [!] Gateway subscription unavailable: " <> reason)
+    Error(reason) -> Unavailable(reason)
+    Ok(session) ->
+      case zenoh.subscribe(session, critical_topic, process.self()) {
+        Ok(Nil) -> Observed(subscribed: True, topic: critical_topic)
+        Error(_) -> Observed(subscribed: False, topic: critical_topic)
       }
-    }
-    Error(e) -> {
-      io.println("  [!] Failed to open Zenoh for Gateway: " <> e)
-    }
   }
 }
 
-fn listen_loop(state: GatewayState) {
-  // Wait for Zenoh messages
-  let _selector = process.new_selector()
-  // Note: zenoh.subscribe sends messages to the PID.
-
-  // Check if Zenoh is actually operational before notification
-  let _ = case zenoh.open("{}") {
-    Ok(session) -> {
-      let _ =
-        send_notification(
-          state,
-          "telegram",
-          "🚀 C3I Mesh Ignition: All systems nominal.",
-        )
-
-      // Simulation of receiving an inbound command from Telegram
-      // In production, this would be triggered by a long-poll or webhook
-      let mock_command = "Summarize daily activity and check L4 health"
-      let _ = process_inbound_message(session, state, mock_command)
-
-      Ok(Nil)
-    }
-    Error(_) -> {
-      io.println("  [gateway] Zenoh unavailable, skipping notification.")
-      Ok(Nil)
-    }
-  }
-
-  process.sleep(1000)
+/// Stable digest of the request identity (chat, topic, text). It contains no
+/// credential and is the idempotency key for the outbox.
+pub fn request_digest(chat_id: Int, topic: String, text: String) -> String {
+  let material = int.to_string(chat_id) <> "\n" <> topic <> "\n" <> text
+  crypto.hash(crypto.Sha256, bit_array.from_string(material))
+  |> bit_array.base16_encode
+  |> string.lowercase
 }
 
-/// Process an inbound message and publish it as a Swarm Intent (SC-COG-001).
-pub fn process_inbound_message(
-  session: zenoh.Session,
-  _state: GatewayState,
+fn build_request(
+  kind: outbox.Kind,
+  chat_id: Int,
   text: String,
-) -> Result(Nil, String) {
-  io.println("📥 Gateway: Processing inbound command -> " <> text)
-
-  let intent_topic = "indrajaal/l5/cog/intent/req"
-  let payload =
-    json.object([
-      #("id", json.string("tg-" <> text)),
-      #("raw_text", json.string(text)),
-      #("source", json.string("telegram")),
-      #("timestamp_ms", json.int(0)),
-      // In production, use system_time_nanos()
-    ])
-    |> json.to_string()
-
-  case zenoh.put(session, intent_topic, payload) {
-    Ok(_) -> {
-      io.println("  [ok] Intent published to: " <> intent_topic)
-      Ok(Nil)
-    }
-    Error(e) -> {
-      io.println("  [!] Failed to publish intent: " <> e)
-      Error(e)
-    }
+  topic: String,
+  now: Int,
+) -> outbox.Request {
+  let observed = case now > 0 {
+    True -> now
+    False -> now_ms()
   }
+  outbox.Request(
+    kind: kind,
+    chat_id: chat_id,
+    text: text,
+    source_topic: topic,
+    observed_at_ms: observed,
+    digest: request_digest(chat_id, topic, text),
+  )
 }
 
-/// Send a notification to a specific channel via MoZ/MCP request to the bridge.
-pub fn send_notification(
+/// Enqueue a routine notification. Sends nothing.
+pub fn enqueue_notification(
+  queue: outbox.Queue,
+  chat_id: Int,
+  text: String,
+  topic: String,
+  now: Int,
+) -> Result(outbox.Queue, outbox.Backpressure) {
+  outbox.enqueue(queue, build_request(outbox.Notice, chat_id, text, topic, now))
+}
+
+/// Enqueue a critical notification (selected before notices, and may displace
+/// the oldest pending notice when the queue is full). Sends nothing.
+pub fn enqueue_critical(
+  queue: outbox.Queue,
+  chat_id: Int,
+  text: String,
+  topic: String,
+  now: Int,
+) -> Result(outbox.Queue, outbox.Backpressure) {
+  outbox.enqueue(
+    queue,
+    build_request(outbox.Critical, chat_id, text, topic, now),
+  )
+}
+
+/// JSON params for a peer-channel MoZ request. Carries no credential.
+pub fn peer_params(
+  state: GatewayState,
+  channel: String,
+  message: String,
+) -> json.Json {
+  json.object([
+    #("channel", json.string(channel)),
+    #("chat_id", json.string(state.chat_id)),
+    #("text", json.string(message)),
+  ])
+}
+
+/// Route a notification for a non-Telegram peer channel over MoZ. Telegram
+/// is refused here: it must go through the bounded outbox.
+pub fn route_peer_notification(
   state: GatewayState,
   channel: String,
   message: String,
 ) -> Result(Nil, String) {
-  let params =
-    json.object([
-      #("channel", json.string(channel)),
-      #("token", json.string(state.bot_token)),
-      #("chat_id", json.string(state.chat_id)),
-      #("text", json.string(message)),
-    ])
-
-  let #(_new_state, result) =
-    moz.send_request(state.moz, "gateway", "telegram_send", params)
-
-  case result {
-    Ok(_) -> {
-      io.println(
-        "  [gateway] Notification routed to Zenoh ("
-        <> channel
-        <> "): "
-        <> message,
-      )
-      Ok(Nil)
-    }
-    Error(e) -> {
-      io.println(
-        "  [gateway] Failed to route notification (" <> channel <> "): " <> e,
-      )
-      Error(e)
+  case channel {
+    "telegram" ->
+      Error("telegram notifications use enqueue_notification, not MoZ")
+    _ -> {
+      let params = peer_params(state, channel, message)
+      let #(_new_state, result) =
+        moz.send_request(state.moz, "gateway", "telegram_send", params)
+      case result {
+        Ok(_) -> Ok(Nil)
+        Error(e) -> Error(e)
+      }
     }
   }
 }

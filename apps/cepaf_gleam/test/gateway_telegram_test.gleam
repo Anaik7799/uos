@@ -2,15 +2,18 @@ import cepaf_gleam/gateway/telegram
 import gleam/io
 
 pub fn main() {
-  io.println("🧪 Running Telegram Gateway Integration Test...")
+  io.println("Running Telegram Gateway observed-startup check...")
+  // Observed state only: Unavailable when Zenoh is absent, no fabricated traffic.
+  case telegram.start(1) {
+    telegram.Observed(subscribed: s, topic: t) ->
+      io.println("observed subscribed=" <> bool_text(s) <> " topic=" <> t)
+    telegram.Unavailable(reason) -> io.println("unavailable: " <> reason)
+  }
+}
 
-  // Mock tokens
-  let token = "123456:ABC-DEF"
-  let chat_id = "@c3i_alerts"
-
-  // In a real environment, this would block and listen
-  // For the CI gate, we'll just test the send_notification logic
-  telegram.start(token, chat_id)
-
-  io.println("✅ Gateway test complete.")
+fn bool_text(b: Bool) -> String {
+  case b {
+    True -> "true"
+    False -> "false"
+  }
 }

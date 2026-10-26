@@ -85,15 +85,14 @@ pub fn telegram_domain_c_simulation_test() {
   let rack_msg =
     telegram_simulator.simulate_text_directive(23, "/rack-cv chassis-01")
   let resp3 = telegram.handle_message(rack_msg)
-  string.contains(resp3.text, "Computer Vision Server Rack Diagnostic")
+  string.contains(resp3.text, "\"capability\":\"media.photo.rack_cv\"")
   |> should.equal(True)
-  string.contains(resp3.text, "[REDACTED_SYSTEM_OS_SERIAL]")
-  |> should.equal(True)
+  string.contains(resp3.text, "25503L801736") |> should.equal(False)
 
   let acoustic_msg =
     telegram_simulator.simulate_text_directive(24, "/acoustic fan-02")
   let resp4 = telegram.handle_message(acoustic_msg)
-  string.contains(resp4.text, "Acoustic Bearing Degradation Diagnostic")
+  string.contains(resp4.text, "\"capability\":\"media.audio.acoustic_fft\"")
   |> should.equal(True)
 
   let rewind_msg = telegram_simulator.simulate_text_directive(25, "/rewind 10m")
@@ -117,7 +116,7 @@ pub fn telegram_domain_d_simulation_test() {
   let sidecar_msg =
     telegram_simulator.simulate_text_directive(31, "/sidecar listen")
   let resp1 = telegram.handle_message(sidecar_msg)
-  string.contains(resp1.text, "Whisper-to-Ear Private Telemetry Sidecar")
+  string.contains(resp1.text, "\"capability\":\"media.voice.sidecar\"")
   |> should.equal(True)
 
   let voice_msg =
@@ -126,20 +125,29 @@ pub fn telegram_domain_d_simulation_test() {
       "/voice-roll-call verify prop-drain",
     )
   let resp2 = telegram.handle_message(voice_msg)
-  string.contains(resp2.text, "Multi-Party Voice Biometric Quorum Roll Call")
+  string.contains(
+    resp2.text,
+    "\"capability\":\"media.voice.biometric_roll_call\"",
+  )
   |> should.equal(True)
-  string.contains(resp2.text, "25503L801736") |> should.equal(True)
+  string.contains(resp2.text, "VOTE: YES") |> should.equal(False)
 
   let babel_msg =
     telegram_simulator.simulate_text_directive(33, "/babel start ja en")
   let resp3 = telegram.handle_message(babel_msg)
-  string.contains(resp3.text, "Live Technical Speech Babel Bridge Active")
+  string.contains(
+    resp3.text,
+    "\"capability\":\"media.voice.speech_translation\"",
+  )
   |> should.equal(True)
 
   let wb_msg =
     telegram_simulator.simulate_text_directive(34, "/whiteboard session-fsm")
   let resp4 = telegram.handle_message(wb_msg)
-  string.contains(resp4.text, "Whiteboard-to-Code Collaborative Synthesis")
+  string.contains(
+    resp4.text,
+    "\"capability\":\"media.photo.whiteboard_synthesis\"",
+  )
   |> should.equal(True)
 
   let socratic_msg =
@@ -151,7 +159,7 @@ pub fn telegram_domain_d_simulation_test() {
   let handover_msg =
     telegram_simulator.simulate_text_directive(36, "/handover generate")
   let resp6 = telegram.handle_message(handover_msg)
-  string.contains(resp6.text, "Shift Handover Dossier & Podcast Minted")
+  string.contains(resp6.text, "\"capability\":\"media.audio.handover_podcast\"")
   |> should.equal(True)
 
   let gameday_msg =
@@ -160,7 +168,7 @@ pub fn telegram_domain_d_simulation_test() {
       "/gameday start partition-nas1",
     )
   let resp7 = telegram.handle_message(gameday_msg)
-  string.contains(resp7.text, "Synthetic Adversary GameDay Chaos Drill")
+  string.contains(resp7.text, "\"capability\":\"media.voice.gameday_drill\"")
   |> should.equal(True)
 }
 
@@ -200,14 +208,20 @@ pub fn telegram_multimodal_vision_and_audio_simulation_test() {
     )
   let voice_resp = telegram.handle_message(voice_memo)
   voice_resp.chat_id |> should.equal("voice-room-sim")
-  string.contains(voice_resp.text, "Quorum Roll Call") |> should.equal(True)
+  string.contains(
+    voice_resp.text,
+    "\"capability\":\"media.voice.biometric_roll_call\"",
+  )
+  |> should.equal(True)
 
   // Photo upload simulation
   let photo_memo =
     telegram_simulator.simulate_photo_upload(881, "/rack-cv bay-3", "file-9912")
   let photo_resp = telegram.handle_message(photo_memo)
   photo_resp.chat_id |> should.equal("field-ops-sim")
-  string.contains(photo_resp.text, "Bay 3 (SAFE TO PULL)") |> should.equal(True)
+  string.contains(photo_resp.text, "\"capability\":\"media.photo.rack_cv\"")
+  |> should.equal(True)
+  string.contains(photo_resp.text, "SAFE TO PULL") |> should.equal(False)
 }
 
 pub fn telegram_full_simulation_sweep_test() {

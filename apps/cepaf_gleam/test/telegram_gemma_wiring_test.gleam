@@ -161,29 +161,33 @@ pub fn telegram_fenced_tool_mutating_quorum_halt_test() {
   |> should.be_true
 }
 
-pub fn telegram_multimodal_rack_cv_redacted_test() {
+pub fn telegram_multimodal_rack_cv_unsupported_test() {
+  // T0: the legacy /rack-cv reply no longer fabricates a diagnostic, a vector
+  // or hardware state; it reports MediaUnsupported and never names the OS serial.
   let output = telegram_creative.handle_rack_cv(["test-chassis-photo"])
   output
-  |> string.contains("Computer Vision Server Rack Diagnostic")
+  |> string.contains(
+    "\"capability\":\"media.photo.rack_cv\",\"backend\":\"NOT_IMPLEMENTED\",\"observed\":false",
+  )
   |> should.be_true
-  output |> string.contains("Multimodal Vector (SC-MM-001)") |> should.be_true
-  output |> string.contains("vision_rack_inspection") |> should.be_true
-  output
-  |> string.contains(egress_redactor.redacted_serial_placeholder)
-  |> should.be_true
+  output |> string.contains("Multimodal Vector") |> should.be_false
+  output |> string.contains("test-chassis-photo") |> should.be_false
   output
   |> string.contains(egress_redactor.denied_os_nvme_serial)
   |> should.be_false
 }
 
-pub fn telegram_multimodal_acoustic_fft_test() {
+pub fn telegram_multimodal_acoustic_fft_unsupported_test() {
+  // T0: no FFT runs, so no harmonic peak, confidence or remaining life is reported.
   let output = telegram_creative.handle_acoustic(["test-audio-sample"])
   output
-  |> string.contains("Acoustic Bearing Degradation Diagnostic")
+  |> string.contains(
+    "\"capability\":\"media.audio.acoustic_fft\",\"backend\":\"NOT_IMPLEMENTED\",\"observed\":false",
+  )
   |> should.be_true
-  output |> string.contains("Multimodal Vector (SC-MM-001)") |> should.be_true
-  output |> string.contains("acoustic_vibration") |> should.be_true
-  output |> string.contains("1240.0") |> should.be_true
+  output |> string.contains("Multimodal Vector") |> should.be_false
+  output |> string.contains("1240.0") |> should.be_false
+  output |> string.contains("Confidence") |> should.be_false
 }
 
 pub fn telegram_directive_extractor_test() {
@@ -321,9 +325,9 @@ pub fn telegram_execute_harness_tools_expanded_test() {
   cv |> should.be_ok
   case cv {
     Ok(s) -> {
-      s
-      |> string.contains(egress_redactor.redacted_serial_placeholder)
-      |> should.be_true
+      // T0: the tool reports MediaUnsupported, not a redacted diagnostic.
+      s |> string.contains("media.photo.rack_cv") |> should.be_true
+      s |> string.contains("NOT_IMPLEMENTED") |> should.be_true
       s
       |> string.contains(egress_redactor.denied_os_nvme_serial)
       |> should.be_false
@@ -333,6 +337,10 @@ pub fn telegram_execute_harness_tools_expanded_test() {
 
   let acoustic = execute_harness_tool("query_acoustic_fft", "{}")
   acoustic |> should.be_ok
+  case acoustic {
+    Ok(s) -> s |> string.contains("media.audio.acoustic_fft") |> should.be_true
+    Error(_) -> panic as "expected ok"
+  }
 
   // Verification and checklist
   let chk = execute_harness_tool("query_checklist", "{}")

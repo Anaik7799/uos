@@ -13,21 +13,17 @@ pub type Message {
 }
 
 pub fn start(
-  token: String,
+  _token: String,
   phone: String,
 ) -> Result(actor.Started(Subject(Message)), actor.StartError) {
   let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: token,
-      chat_id: phone,
-    )
+    telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: phone)
 
   actor.new(state)
   |> actor.on_message(fn(state, msg) {
     case msg {
       SendStatus(text) -> {
-        let _ = telegram.send_notification(state, "whatsapp", text)
+        let _ = telegram.route_peer_notification(state, "whatsapp", text)
         actor.continue(state)
       }
       Stop -> actor.stop()

@@ -6,6 +6,7 @@
 import cepaf_gleam/gateway/gchat
 import cepaf_gleam/gateway/telegram
 import cepaf_gleam/gateway/whatsapp
+import gleam/json
 import gleam/list
 import gleam/string
 import gleeunit
@@ -21,35 +22,20 @@ pub fn main() {
 
 pub fn gateway_state_construction_test() {
   let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "test-token-123",
-      chat_id: "chat-456",
-    )
-  state.bot_token
-  |> should.equal("test-token-123")
+    telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "chat-456")
+  state.chat_id
+  |> should.equal("chat-456")
 }
 
 pub fn gateway_state_chat_id_test() {
   let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "bot-token",
-      chat_id: "group-789",
-    )
+    telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "group-789")
   state.chat_id
   |> should.equal("group-789")
 }
 
 pub fn gateway_state_empty_fields_test() {
-  let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "",
-      chat_id: "",
-    )
-  state.bot_token
-  |> should.equal("")
+  let state = telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "")
   state.chat_id
   |> should.equal("")
 }
@@ -61,10 +47,9 @@ pub fn gateway_state_empty_fields_test() {
 pub fn new_moz_state_embeds_in_gateway_test() {
   // new_moz_state must not crash and must be embeddable
   let moz_state = telegram.new_moz_state()
-  let gateway =
-    telegram.GatewayState(moz: moz_state, bot_token: "tok", chat_id: "cid")
-  gateway.bot_token
-  |> should.equal("tok")
+  let gateway = telegram.GatewayState(moz: moz_state, chat_id: "cid")
+  gateway.chat_id
+  |> should.equal("cid")
 }
 
 pub fn moz_state_creation_is_idempotent_test() {
@@ -81,27 +66,15 @@ pub fn moz_state_creation_is_idempotent_test() {
 
 pub fn send_notification_returns_result_telegram_test() {
   let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "tok",
-      chat_id: "cid",
-    )
-  let result = telegram.send_notification(state, "telegram", "Hello from test")
-  // Either Ok or Error is acceptable — must not panic
-  case result {
-    Ok(_) -> True |> should.be_true()
-    Error(_) -> True |> should.be_true()
-  }
+    telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "cid")
+  // Telegram never travels over MoZ: it must use the bounded outbox.
+  telegram.route_peer_notification(state, "telegram", "Hello from test")
+  |> should.be_error()
 }
 
 pub fn send_notification_gchat_channel_test() {
-  let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "x",
-      chat_id: "y",
-    )
-  let result = telegram.send_notification(state, "gchat", "gchat message")
+  let state = telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "y")
+  let result = telegram.route_peer_notification(state, "gchat", "gchat message")
   case result {
     Ok(_) -> True |> should.be_true()
     Error(_) -> True |> should.be_true()
@@ -112,10 +85,9 @@ pub fn send_notification_whatsapp_channel_test() {
   let state =
     telegram.GatewayState(
       moz: telegram.new_moz_state(),
-      bot_token: "w",
       chat_id: "+46700000000",
     )
-  let result = telegram.send_notification(state, "whatsapp", "wa msg")
+  let result = telegram.route_peer_notification(state, "whatsapp", "wa msg")
   case result {
     Ok(_) -> True |> should.be_true()
     Error(_) -> True |> should.be_true()
@@ -123,34 +95,23 @@ pub fn send_notification_whatsapp_channel_test() {
 }
 
 pub fn send_notification_empty_message_test() {
-  let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "t",
-      chat_id: "c",
-    )
-  let result = telegram.send_notification(state, "telegram", "")
-  case result {
-    Ok(_) -> True |> should.be_true()
-    Error(_) -> True |> should.be_true()
-  }
+  let state = telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "c")
+  telegram.route_peer_notification(state, "telegram", "")
+  |> should.be_error()
 }
 
 // =============================================================================
 // C4: GatewayState field format assertions
 // =============================================================================
 
-pub fn gateway_bot_token_contains_colon_test() {
-  let token = "123456:ABCdefGHIjkl"
+pub fn gateway_peer_params_carry_no_credential_test() {
   let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: token,
-      chat_id: "123",
-    )
-  state.bot_token
-  |> string.contains(":")
-  |> should.be_true()
+    telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "123")
+  let payload =
+    telegram.peer_params(state, "gchat", "hello")
+    |> json.to_string
+  string.contains(payload, "token")
+  |> should.be_false()
 }
 
 pub fn gateway_chat_id_negative_number_test() {
@@ -158,7 +119,6 @@ pub fn gateway_chat_id_negative_number_test() {
   let state =
     telegram.GatewayState(
       moz: telegram.new_moz_state(),
-      bot_token: "t",
       chat_id: "-100123456789",
     )
   state.chat_id
@@ -169,11 +129,7 @@ pub fn gateway_chat_id_negative_number_test() {
 pub fn gateway_state_long_chat_id_test() {
   let long_id = string.repeat("x", 64)
   let state =
-    telegram.GatewayState(
-      moz: telegram.new_moz_state(),
-      bot_token: "t",
-      chat_id: long_id,
-    )
+    telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: long_id)
   string.length(state.chat_id)
   |> should.equal(64)
 }

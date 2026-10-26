@@ -1,0 +1,37 @@
+{
+  "schema": "uos.reviewed-tie-selection.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "portfolio_sha256": "26e5c4161438dac22af9b4fe14f387b7f27e2201acb82c5f0518b26212816a13",
+  "selected_task": "GATEWAY_IMPL",
+  "tied_tasks": [
+    "GATEWAY_IMPL",
+    "MEDIA_IMPL",
+    "MINI_API_IMPL"
+  ],
+  "observed_at": "2026-10-26T01:49:56Z",
+  "valid_until": "2026-10-26T02:44:56Z",
+  "reviewer": "claude-subagent-tie-review-20261026",
+  "reason": "Three P1 tasks tie at 768 with all dependencies completed. Select GATEWAY_IMPL first: gateway/telegram.gleam places the bot token in a MoZ/Zenoh payload and emits a synthetic startup notification, the highest-severity defect of the three (credential exposure, S5). MEDIA_IMPL follows (adopted design T0 is a P1 hold-class repair), then MINI_API_IMPL, whose pages already answer with a truthful Unavailable. Stable-ID order agrees. Development only; no authority from selection.",
+  "comparisons": [
+    {
+      "task_id": "MINI_API_IMPL",
+      "benefit": "Four Mini App pages move from a truthful Unavailable to declared/observed state; lowest severity of the three",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for one worker reusing wave-1 adapter backends; not a whole-task forecast."
+    },
+    {
+      "task_id": "MEDIA_IMPL",
+      "benefit": "Typed inbound media boundary and the adopted design T0 denial land; later transport items remain",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for T0+T1 only; T2-T5 not forecast."
+    },
+    {
+      "task_id": "GATEWAY_IMPL",
+      "benefit": "Removes a credential from a published payload and a fabricated startup claim; adds a bounded outbox request type",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for the gateway module and tests; live Zenoh delivery not forecast."
+    }
+  ],
+  "review_evidence_path": "governance/planning/20261026-0156-claude-gateway-selection-proof.json",
+  "review_evidence_sha256": "8735c896131f1595291a888cbb2eaa4d638b90ca600a0d0518b45286998038bd"
+}

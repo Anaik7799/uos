@@ -7,7 +7,7 @@
 //// Governs circadian fatigue pacing, shadow twin simulation, physical rack CV,
 //// acoustic FFT diagnostics, time-machine scrubbing, and green energy dispatch.
 
-import cepaf_gleam/harness/multimodal_features as mm
+import cepaf_gleam/harness/telegram_media_unsupported as unsup
 import gleam/string
 
 /// Handle circadian & cognitive fatigue pacing (/pacing).
@@ -51,69 +51,40 @@ pub fn handle_whatif(args: List(String)) -> String {
   <> "Recommendation: Safe to proceed with progressive canary deployment."
 }
 
+/// Capability name for /rack-cv.
+pub const rack_cv_capability = "media.photo.rack_cv"
+
+/// Capability name for /acoustic.
+pub const acoustic_capability = "media.audio.acoustic_fft"
+
+/// /rack-cv: no image is fetched or analysed, so nothing is measured or detected.
+pub fn rack_cv_unsupported() -> unsup.MediaUnsupported {
+  unsup.unsupported(
+    rack_cv_capability,
+    "No Telegram photo download and no vision backend are wired to this command; no image was read and no hardware state was reported.",
+  )
+}
+
+/// /acoustic: no audio is fetched or transformed, so nothing is measured.
+pub fn acoustic_unsupported() -> unsup.MediaUnsupported {
+  unsup.unsupported(
+    acoustic_capability,
+    "No Telegram audio download and no spectral analysis backend are wired to this command; no audio was read and no fault or remaining life was estimated.",
+  )
+}
+
 /// Handle computer vision server rack diagnostics (/rack-cv).
+/// The argument is a sender-supplied label and is deliberately not echoed.
 pub fn handle_rack_cv(args: List(String)) -> String {
-  let photo_ref = case args {
-    [ref, ..] -> ref
-    [] -> "photo-chassis-01"
-  }
-
-  let slots = [
-    mm.VisionCaddySlot(0, True, "solid_green", True, True),
-    mm.VisionCaddySlot(1, True, "off", True, False),
-    mm.VisionCaddySlot(2, True, "off", True, False),
-    mm.VisionCaddySlot(3, False, "blinking_amber", True, False),
-  ]
-  let vector_json = mm.encode_rack_caddies(slots)
-
-  "📷 *Computer Vision Server Rack Diagnostic (UC-27)*\n\n"
-  <> "• *Image Ingest:* `"
-  <> photo_ref
-  <> "` processed by MAX/Mojo ViT model\n"
-  <> "• *Chassis Detected:* 2U 24-Bay NVMe Storage Enclosure\n"
-  <> "• *Fault Analysis:* Blinking Amber LED isolated on Bay 3\n\n"
-  <> "*Hardware Enclave Safety Overlays:*\n"
-  <> "• 🟩 *Bay 3 (SAFE TO PULL):* Drive `/dev/nvme2n1` (Serial: `S439NX0M819234`) quiesced and unmounted.\n"
-  <> "• 🟥 *Bay 0 (CRITICAL LOCKOUT):* Drive `/dev/nvme0n1` (Serial: `[REDACTED_SYSTEM_OS_SERIAL]`) is the Host Root OS.\n"
-  <> "  `HARD_DENIED_SYSTEM_OS_SERIAL` enforced. DO NOT REMOVE BAY 0.\n\n"
-  <> "• *Multimodal Vector (SC-MM-001):*\n```json\n"
-  <> vector_json
-  <> "\n```\n\n"
-  <> "Drive locator LED activated on Bay 3 for physical verification."
+  let _ = args
+  unsup.render("/rack-cv", rack_cv_unsupported())
 }
 
 /// Handle acoustic bearing degradation & chassis resonance (/acoustic).
+/// The argument is a sender-supplied label and is deliberately not echoed.
 pub fn handle_acoustic(args: List(String)) -> String {
-  let sample = case args {
-    [s, ..] -> s
-    [] -> "audio-exhaust-sample"
-  }
-
-  let profile =
-    mm.AcousticProfile(
-      sensor_id: "sensor-exhaust-fan-2",
-      fundamental_hz: 1240.0,
-      rms_db: -18.4,
-      harmonic_distortion: 0.042,
-      tanpura_drift: 0.003,
-    )
-  let vector_json = mm.encode_acoustic_profile(profile)
-
-  "🔊 *Acoustic Bearing Degradation Diagnostic (UC-28)*\n\n"
-  <> "• *Audio Sample:* `"
-  <> sample
-  <> "` (5.0s PCM stream)\n"
-  <> "• *DSP Kernel:* Native ZigVM 1024-point Fourier FFT Spectrogram\n"
-  <> "• *Harmonic Peak:* 1,240 Hz with 14 Hz modulation flutter\n\n"
-  <> "*Diagnostic Findings:*\n"
-  <> "• Fault: Ball-bearing race pitting on Exhaust Fan #2 (Confidence: 94.2%)\n"
-  <> "• Projected RUL: 72 ± 6 hours remaining before mechanical lockup\n"
-  <> "• Autonomic Action: IPMI fan PWM stepped down from 5,000 to 4,200 RPM to eliminate acoustic resonance\n"
-  <> "• Thermal Compensation: Fan #1 and Fan #3 adjusted to compensate\n\n"
-  <> "• *Multimodal Vector (SC-MM-001):*\n```json\n"
-  <> vector_json
-  <> "\n```\n\n"
-  <> "Sa-Plan maintenance ticket registered automatically."
+  let _ = args
+  unsup.render("/acoustic", acoustic_unsupported())
 }
 
 /// Handle time-machine in-chat state scrubbing (/rewind).

@@ -25,7 +25,6 @@ import cepaf_gleam/harness/telegram_action_resuscitate as resuscitate
 import cepaf_gleam/harness/telegram_action_rewind as rewind
 import cepaf_gleam/harness/telegram_action_rotate_keys as rotate_keys
 import cepaf_gleam/harness/telegram_action_sidecar as sidecar
-import cepaf_gleam/harness/telegram_action_voice_roll_call as voice_roll_call
 import gleam/json
 import gleam/option.{type Option, None, Some}
 import gleam/string
@@ -50,7 +49,6 @@ pub fn literals() -> List(String) {
     commitments.literal(),
     eco_schedule.literal(),
     sidecar.literal(),
-    voice_roll_call.literal(),
     pair_voice.literal(),
   ]
 }
@@ -92,8 +90,11 @@ pub fn route_preview(name: String, args: List(String)) -> Option(String) {
     "/eco-schedule" ->
       Some(preview(name, eco_schedule.parse(text), eco_schedule.preview))
     "/sidecar" -> Some(preview(name, sidecar.parse(text), sidecar.preview))
-    "/voice-roll-call" ->
-      Some(preview(name, voice_roll_call.parse(text), voice_roll_call.preview))
+    // "/voice-roll-call" is deliberately NOT routed: the adopted media design
+    // (governance/planning/20261011-1354, T0) requires the biometric arm to be
+    // denied at classify, because an unauthenticated path must not offer to
+    // authenticate a constitutional vote. telegram_action_voice_roll_call stays
+    // as a tested candidate for a future authenticated surface.
     "/pair-voice" ->
       Some(preview(name, pair_voice.parse(text), pair_voice.preview))
     // "/verification" is a catalog alias of "/verify" and stays on the

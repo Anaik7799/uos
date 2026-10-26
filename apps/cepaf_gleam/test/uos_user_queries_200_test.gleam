@@ -2870,12 +2870,16 @@ pub fn user_query_166_cat09_166_rack_cv_vision_diagnostic_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
+  // T0: the rack-cv arm reports MediaUnsupported, never a fabricated diagnostic.
   decision.reply_markdown
-  |> string.contains("Computer Vision Server Rack Diagnostic")
+  |> string.contains("\"capability\":\"media.photo.rack_cv\"")
+  |> should.be_true
+  decision.reply_markdown
+  |> string.contains("\"backend\":\"NOT_IMPLEMENTED\"")
   |> should.be_true
   decision.reply_markdown
   |> string.contains("MAX/Mojo ViT model")
-  |> should.be_true
+  |> should.be_false
 }
 
 // -----------------------------------------------------------------------------
@@ -2891,10 +2895,14 @@ pub fn user_query_167_cat09_167_acoustic_vibration_tool_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
+  // T0: the acoustic arm reports MediaUnsupported, never a fabricated finding.
   decision.reply_markdown
-  |> string.contains("Acoustic Bearing Degradation")
+  |> string.contains("\"capability\":\"media.audio.acoustic_fft\"")
   |> should.be_true
-  decision.reply_markdown |> string.contains("FFT") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("\"observed\":false")
+  |> should.be_true
+  decision.reply_markdown |> string.contains("Confidence") |> should.be_false
 }
 
 // -----------------------------------------------------------------------------
@@ -2907,10 +2915,14 @@ pub fn user_query_168_cat09_168_bearing_fault_frequency_fft_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
+  // T0: the acoustic arm reports MediaUnsupported, never a fabricated finding.
   decision.reply_markdown
-  |> string.contains("Acoustic Bearing Degradation")
+  |> string.contains("\"capability\":\"media.audio.acoustic_fft\"")
   |> should.be_true
-  decision.reply_markdown |> string.contains("FFT") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("\"observed\":false")
+  |> should.be_true
+  decision.reply_markdown |> string.contains("Confidence") |> should.be_false
 }
 
 // -----------------------------------------------------------------------------
@@ -2923,10 +2935,13 @@ pub fn user_query_169_cat09_169_camera_zones_inspected_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
+  // T0: no camera zone is inspected; the arm reports MediaUnsupported.
   decision.reply_markdown
-  |> string.contains("Bay 0 (CRITICAL LOCKOUT)")
+  |> string.contains("\"capability\":\"media.photo.rack_cv\"")
   |> should.be_true
-  decision.reply_markdown |> string.contains("Bay 3") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("Bay 3")
+  |> should.be_false
 }
 
 // -----------------------------------------------------------------------------
@@ -3049,10 +3064,14 @@ pub fn user_query_176_cat09_176_acoustic_hud_monitoring_test() {
   let decision = evaluate_intent(intent)
   decision.ooda_phase |> should.equal("Completed")
   { decision.confidence >. 0.9 } |> should.be_true
+  // T0: the acoustic arm reports MediaUnsupported, never a fabricated finding.
   decision.reply_markdown
-  |> string.contains("Acoustic Bearing Degradation")
+  |> string.contains("\"capability\":\"media.audio.acoustic_fft\"")
   |> should.be_true
-  decision.reply_markdown |> string.contains("FFT") |> should.be_true
+  decision.reply_markdown
+  |> string.contains("\"observed\":false")
+  |> should.be_true
+  decision.reply_markdown |> string.contains("Confidence") |> should.be_false
 }
 
 // -----------------------------------------------------------------------------

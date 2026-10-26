@@ -15,33 +15,17 @@ pub fn main() {
 
 pub fn gateway_state_construction_test() {
   let moz_state = moz.new()
-  let state =
-    telegram.GatewayState(
-      moz: moz_state,
-      bot_token: "token-123",
-      chat_id: "chat-456",
-    )
-  state.bot_token |> should.equal("token-123")
+  let state = telegram.GatewayState(moz: moz_state, chat_id: "chat-456")
   state.chat_id |> should.equal("chat-456")
 }
 
-pub fn gateway_state_bot_token_test() {
-  let state =
-    telegram.GatewayState(
-      moz: moz.new(),
-      bot_token: "my-bot-token",
-      chat_id: "987654",
-    )
-  state.bot_token |> should.equal("my-bot-token")
+pub fn gateway_state_chat_id_numeric_test() {
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "987654")
+  state.chat_id |> should.equal("987654")
 }
 
 pub fn gateway_state_chat_id_test() {
-  let state =
-    telegram.GatewayState(
-      moz: moz.new(),
-      bot_token: "tok",
-      chat_id: "my-chat-id",
-    )
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "my-chat-id")
   state.chat_id |> should.equal("my-chat-id")
 }
 
@@ -65,31 +49,26 @@ pub fn new_moz_state_failures_zero_test() {
 // ── GatewayState moz field ────────────────────────────────────────────────────
 
 pub fn gateway_state_moz_is_available_test() {
-  let state =
-    telegram.GatewayState(moz: moz.new(), bot_token: "tok", chat_id: "cid")
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "cid")
   moz.is_available(state.moz) |> should.equal(True)
 }
 
 pub fn gateway_state_moz_circuit_status_test() {
-  let state =
-    telegram.GatewayState(moz: moz.new(), bot_token: "tok", chat_id: "cid")
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "cid")
   moz.circuit_status(state.moz) |> should.equal("closed")
 }
 
 // ── Multiple gateway states independent ──────────────────────────────────────
 
 pub fn two_gateway_states_independent_test() {
-  let s1 =
-    telegram.GatewayState(moz: moz.new(), bot_token: "bot1", chat_id: "chat1")
-  let s2 =
-    telegram.GatewayState(moz: moz.new(), bot_token: "bot2", chat_id: "chat2")
-  s1.bot_token |> should.equal("bot1")
-  s2.bot_token |> should.equal("bot2")
+  let s1 = telegram.GatewayState(moz: moz.new(), chat_id: "chat1")
+  let s2 = telegram.GatewayState(moz: moz.new(), chat_id: "chat2")
+  s1.chat_id |> should.equal("chat1")
+  s2.chat_id |> should.equal("chat2")
 }
 
-pub fn gateway_state_empty_token_test() {
-  let state = telegram.GatewayState(moz: moz.new(), bot_token: "", chat_id: "")
-  state.bot_token |> should.equal("")
+pub fn gateway_state_empty_chat_test() {
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "")
   state.chat_id |> should.equal("")
 }
 
@@ -98,15 +77,10 @@ pub fn gateway_state_empty_token_test() {
 // verify the function is callable and returns a Result)
 
 pub fn send_notification_returns_result_test() {
-  let state =
-    telegram.GatewayState(
-      moz: moz.new(),
-      bot_token: "test-token",
-      chat_id: "test-chat",
-    )
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "test-chat")
   // In test env, Zenoh is not running, so this returns Error
   // We just verify it's callable and returns a Result type
-  let result = telegram.send_notification(state, "telegram", "test message")
+  let result = telegram.route_peer_notification(state, "gchat", "test message")
   case result {
     Ok(_) | Error(_) -> should.be_true(True)
   }
@@ -144,12 +118,7 @@ pub fn whatsapp_stop_message_test() {
 // ── GatewayState field update pattern ────────────────────────────────────────
 
 pub fn gateway_state_moz_field_update_test() {
-  let state =
-    telegram.GatewayState(
-      moz: moz.new(),
-      bot_token: "original-token",
-      chat_id: "original-chat",
-    )
+  let state = telegram.GatewayState(moz: moz.new(), chat_id: "original-chat")
   // Record a failure on the moz state to verify field access
   let new_moz = moz.record_failure(state.moz)
   let updated = telegram.GatewayState(..state, moz: new_moz)

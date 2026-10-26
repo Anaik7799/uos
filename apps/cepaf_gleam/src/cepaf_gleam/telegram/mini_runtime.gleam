@@ -1,11 +1,9 @@
-import cepaf_gleam/harness/files
 //// Server-owned Mini App configuration and bounded read adapters.
 //// No credential or initData is returned to the browser or placed on the bus.
 
+import cepaf_gleam/harness/files
+
 import cepaf_gleam/config/mesh_source
-import cepaf_gleam/telegram/mini_alert_io
-import cepaf_gleam/telegram/mini_alert_owner
-import cepaf_gleam/telegram/mini_config
 import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/harness/observer_policy as observer
 import cepaf_gleam/harness/telegram_coordination_reader as coordination
@@ -13,16 +11,22 @@ import cepaf_gleam/harness/telegram_fmea_reader as fmea
 import cepaf_gleam/harness/telegram_store as history_store
 import cepaf_gleam/harness/telegram_store_transport as history_transport
 import cepaf_gleam/harness/telegram_verification_reader as verification
+import cepaf_gleam/services/max_inference_daemon as max_daemon
+import cepaf_gleam/telegram/mini_alert_io
+import cepaf_gleam/telegram/mini_alert_owner
 import cepaf_gleam/telegram/mini_api as api
-import cepaf_gleam/telegram/mini_health
+import cepaf_gleam/telegram/mini_config
 import cepaf_gleam/telegram/mini_dashboard
 import cepaf_gleam/telegram/mini_evidence
-import cepaf_gleam/telegram/mini_memory
+import cepaf_gleam/telegram/mini_health
 import cepaf_gleam/telegram/mini_history
+import cepaf_gleam/telegram/mini_memory
 import cepaf_gleam/telegram/mini_podman
+import cepaf_gleam/telegram/mini_system_observers as observers
 import cepaf_gleam/telegram/mini_telemetry
 import cepaf_gleam/telegram/mini_zenoh
 import cepaf_gleam/telegram/types
+import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/zenoh/rest as zenoh_rest
 import gleam/bit_array
 import gleam/dict
@@ -184,7 +188,9 @@ fn observe_podman() -> Result(api.Observation, Nil) {
   mini_podman.observe(mini_podman.live_io(sha)) |> result.replace_error(Nil)
 }
 
-fn observe_history_environment(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
+fn observe_history_environment(
+  read: api.AuthorizedRead,
+) -> Result(api.Observation, Nil) {
   use token <- result.try(get_env("UOS_TELEGRAM_MINI_BOT_TOKEN"))
   use raw <- result.try(get_env("UOS_TELEGRAM_MINI_HISTORY_GRANTS"))
   use _ <- result.try(case string.byte_size(raw) <= 8192 {
@@ -316,16 +322,24 @@ fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
       |> result.unwrap(api.Unavailable("history_observation_failed"))
     types.MiniZenohBrowser -> observe_zenoh(read)
     types.MiniDashboard -> mini_dashboard.observe(dashboard_io())
-    types.MiniHealthGrid -> observe_health() |> result.unwrap(api.Unavailable("health_observation_failed"))
-    types.MiniConfig -> mini_config.project(mesh_source.load(),clock())
-    types.MiniCockpit -> case mini_alert_owner.observe(mini_alert_io.live()) {
-      api.Observed(at,source,fields) -> api.Observed(at,source,dict.insert(fields,"Reader user",int.to_string(api.user_id(read))))
-      other -> other
-    }
-    types.MiniImmune
-    | types.MiniInference
-    | types.MiniFederation
-    | types.MiniTelemetry -> api.Unavailable("backend_not_integrated")
+    types.MiniHealthGrid ->
+      observe_health()
+      |> result.unwrap(api.Unavailable("health_observation_failed"))
+    types.MiniConfig -> mini_config.project(mesh_source.load(), clock())
+    types.MiniCockpit ->
+      case mini_alert_owner.observe(mini_alert_io.live()) {
+        api.Observed(at, source, fields) ->
+          api.Observed(
+            at,
+            source,
+            dict.insert(fields, "Reader user", int.to_string(api.user_id(read))),
+          )
+        other -> other
+      }
+    types.MiniImmune -> observers.immune()
+    types.MiniInference -> observe_inference()
+    types.MiniFederation -> observers.federation(clock(), mesh_source.load())
+    types.MiniTelemetry -> observers.telemetry(mini_telemetry.observe())
   }
 }
 
@@ -334,19 +348,39 @@ fn observe_history(read: api.AuthorizedRead) -> Result(api.Observation, Nil) {
     Error(_) -> observe_history_environment(read)
     Ok(raw) -> {
       use expected <- result.try(get_env("UOS_MINI_CONTROL_FIXTURE_SHA256"))
-      use _ <- result.try(case files.digest(raw) == expected {True -> Ok(Nil) False -> Error(Nil)})
+      use _ <- result.try(case files.digest(raw) == expected {
+        True -> Ok(Nil)
+        False -> Error(Nil)
+      })
       use token <- result.try(get_env("UOS_TELEGRAM_MINI_BOT_TOKEN"))
-      use config <- result.try(mini_memory.configuration(raw,token) |> result.replace_error(Nil))
+      use config <- result.try(
+        mini_memory.configuration(raw, token) |> result.replace_error(Nil),
+      )
       case config {
         None -> observe_history_environment(read)
-        Some(c) -> mini_memory.observe(c,api.user_id(read),api.chat_id(read),clock()) |> result.replace_error(Nil)
+        Some(c) ->
+          mini_memory.observe(c, api.user_id(read), api.chat_id(read), clock())
+          |> result.replace_error(Nil)
       }
     }
   }
 }
 
-fn observe_health() -> Result(api.Observation,Nil) {
+fn observe_health() -> Result(api.Observation, Nil) {
   use path <- result.try(get_env("UOS_TELEGRAM_MINI_HEALTH_WORKER"))
   use sha <- result.try(get_env("UOS_TELEGRAM_MINI_HEALTH_SHA256"))
-  mini_health.observe(mini_health.live_io(path,sha)) |> result.replace_error(Nil)
+  mini_health.observe(mini_health.live_io(path, sha))
+  |> result.replace_error(Nil)
+}
+
+fn observe_inference() -> api.Observation {
+  let tiers =
+    list.map(inference_tier.init().tiers, fn(t) {
+      observers.Tier(t.tier, t.name, t.model, t.active)
+    })
+  observers.inference(
+    clock(),
+    tiers,
+    list.map(max_daemon.all_methods(), max_daemon.method_name),
+  )
 }

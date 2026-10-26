@@ -11,7 +11,7 @@ const wave_two = [
   "/andon", "/dark", "/chaos", "/gameday", "/export-audit", "/handover",
   "/rotate-keys", "/lockbox", "/migrate", "/escalate", "/resuscitate", "/repro",
   "/merge", "/bisect", "/rewind", "/commitments", "/eco-schedule", "/sidecar",
-  "/voice-roll-call", "/pair-voice",
+  "/pair-voice",
 ]
 
 fn status_of(reply: String) -> String {
@@ -74,4 +74,10 @@ pub fn classify_preserves_wave_two_actions_and_still_denies_others_test() {
     guard.DeniedMutation("/verify", _) -> Nil
     _ -> should.fail()
   }
+  // Adopted media design T0: the biometric arm is denied at classify.
+  case guard.classify_directive("/voice-roll-call all") {
+    guard.DeniedMutation("/voice-roll-call", _) -> Nil
+    _ -> should.fail()
+  }
+  actions.route_preview("/voice-roll-call", []) |> should.equal(None)
 }

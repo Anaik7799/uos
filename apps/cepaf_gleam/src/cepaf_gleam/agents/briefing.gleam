@@ -9,6 +9,7 @@
 import cepaf_gleam/agui/events
 import cepaf_gleam/agui/zenoh_bus
 import cepaf_gleam/gateway/telegram
+import cepaf_gleam/gateway/telegram_gateway_outbox as outbox
 import cepaf_gleam/moz/client as moz
 import cepaf_gleam/zenoh/client as zenoh
 import gleam/erlang/process.{type Subject}
@@ -26,7 +27,8 @@ pub type BriefingState {
   BriefingState(
     id: String,
     moz: moz.MoZClientState,
-    telegram: telegram.GatewayState,
+    telegram_outbox: outbox.Queue,
+    telegram_chat_id: Option(Int),
     zenoh_session: Option(zenoh.Session),
   )
 }
@@ -39,11 +41,8 @@ pub fn start(
     BriefingState(
       id: id,
       moz: moz.new(),
-      telegram: telegram.GatewayState(
-        moz: moz.new(),
-        bot_token: "internal",
-        chat_id: "admin",
-      ),
+      telegram_outbox: outbox.new(16),
+      telegram_chat_id: None,
       zenoh_session: None,
     )
 
@@ -87,7 +86,23 @@ fn handle_message(
       }
 
       // 2. DISPATCH: Send to mobile gateway
-      let _ = telegram.send_notification(state.telegram, "telegram", summary)
+      // Bounded outbox request; no chat configured means nothing is queued.
+      let state = case state.telegram_chat_id {
+        Some(chat_id) ->
+          case
+            telegram.enqueue_notification(
+              state.telegram_outbox,
+              chat_id,
+              summary,
+              "agents/briefing",
+              telegram.now_ms(),
+            )
+          {
+            Ok(queue) -> BriefingState(..state, telegram_outbox: queue)
+            Error(_) -> state
+          }
+        None -> state
+      }
       // SC-WIRE: Emit AG-UI StepFinished event
       emit_event(state, events.new_step_finished("briefing_complete"))
 

@@ -1,0 +1,30 @@
+{
+  "schema": "uos.reviewed-tie-selection.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "portfolio_sha256": "e87dc6297245f38ea82f25395cda53c9f5a859cf01b66f167c6d910f77502703",
+  "selected_task": "MEDIA_IMPL",
+  "tied_tasks": [
+    "MEDIA_IMPL",
+    "MINI_API_IMPL"
+  ],
+  "observed_at": "2026-10-26T01:54:06Z",
+  "valid_until": "2026-10-26T02:49:06Z",
+  "reviewer": "claude-subagent-tie-review-20261026",
+  "reason": "GATEWAY_IMPL is now executing. Of the remaining tie, select MEDIA_IMPL: the adopted media design names T0 a P1 hold-class repair (deny the biometric /voice-roll-call arm at classify; typed inbound media descriptor with total parsing), while the Mini App pages already answer with a truthful Unavailable. Stable-ID order agrees. Development only; no authority from selection.",
+  "comparisons": [
+    {
+      "task_id": "MINI_API_IMPL",
+      "benefit": "Four Mini App pages move from a truthful Unavailable to declared/observed state; lowest severity of the three",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for one worker reusing wave-1 adapter backends; not a whole-task forecast."
+    },
+    {
+      "task_id": "MEDIA_IMPL",
+      "benefit": "Typed inbound media boundary and the adopted design T0 denial land; later transport items remain",
+      "cost_bound_seconds": 3600,
+      "basis": "Analyst estimate for T0+T1 only; T2-T5 not forecast."
+    }
+  ],
+  "review_evidence_path": "governance/planning/20261026-0106-claude-media-selection-proof.json",
+  "review_evidence_sha256": "da35273a2ed477178dfcd579b224124960c0f39632c8a3bdb511bd64c4a8d5d7"
+}

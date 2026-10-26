@@ -1,0 +1,127 @@
+---
+name: uos-telegram-journeys
+description: Use when adding, changing, running or accepting Telegram operator journeys (security incident, defence/HA, critical responder), touching the Telegram command surface, or preparing a real-traffic Telegram run.
+---
+
+# 20261026-0220 — UOS Telegram journeys
+
+#fractal-l0 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l9 #zk-adr #zero-muda #km-triad
+
+[Source](http://nas-1.tail55d152.ts.net:4100/files/plugins/uos-telegram-journeys/skills/uos-telegram-journeys/SKILL.md) · [Contract](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0210-telegram-operator-journey-contract.md) · [Rule](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261026-0220-telegram-journey-acceptance.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20261026-0220-telegram-journeys-guide.md) · [Bindings](http://nas-1.tail55d152.ts.net:4100/files/plugins/uos-telegram-journeys/skills/uos-telegram-journeys/references/20261026-0220-superpowers-bindings.md) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/)
+
+Created: 2026-10-26. Contract `SC-TELEGRAM-JOURNEY-001` (rule) over the [operator journey contract](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0210-telegram-operator-journey-contract.md). Process guidance; grants no authority and no admission. Sa-plan remains the sole execution authority.
+
+## When to use
+
+- Adding, renaming or removing a Telegram command literal or family (F1–F9).
+- Changing `telegram_ingress_guard`, `telegram_read_adapters`, `telegram_action_adapters` or the service loop.
+- Preparing, running or recording the TELEGRAM_E2E / TELEGRAM_ACCEPT evidence.
+- Reviewing a landing that touches the Telegram command surface.
+
+## The three use cases
+
+| Use case | Operator | Outcome | Spec |
+|---|---|---|---|
+| Security incident | on-call security responder | detect, contain, preserve evidence, escalate, record | [spec](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-security-incident.md) |
+| Defence / high availability | SRE under degraded conditions | observe health, exercise safeguards, verify recovery, never fabricate state | [spec](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-defence-ha.md) |
+| Critical responder | field responder with a phone | fastest truthful situational picture, bounded actions behind approval, handover | [spec](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-critical-responder.md) |
+
+Across the set every family F1–F9 appears at least once and every one of the 77 command literals appears in at least one step.
+
+## How to add a journey (or a step)
+
+1. Start from the step, not the code (test-driven): write the table row first with the expected class.
+2. A spec row has the contract's columns: Step, Persona action, Literal and args, Family, Expected class, Required fields (for example `confidence`, `backend`), Authority gate (none / allowlisted pair / approval roster / operator), Evidence kept (receipt digest, journal line), Failure meaning.
+3. Expected reply class is exactly one of:
+   `ok` (observation from a named backend, `confidence` observed or declared), `preview` (read-only ControlledAction preview), `denied` (typed refusal), `backend_unavailable` (truthful refusal naming the missing backend), `approval_required` (needs the signed `/approval propose|submit` flow).
+   `executed` and `duplicate` are reachable only through the approval flow, never from a plain message, and are not yet wired for `/verify`.
+4. Never expect fabricated success. If the staged system cannot do the thing, expect `backend_unavailable` or `denied` and state in the runbook what real deployment must add.
+5. Mirror the row in the dispatcher-layer test `test/telegram_journey_<usecase>_test.gleam`: `telegram_ingress_guard.classify_directive(text)`, then `telegram_read_adapters.route`, `telegram_action_adapters.route_preview`, or the historical arm expectation; assert the class and the required fields.
+6. A new literal must appear in at least one step or the coverage test `test/telegram_journey_coverage_test.gleam` fails.
+7. Add the real-traffic message, expected reply and pass/fail criterion to the matching runbook.
+
+## Run the staged forms
+
+Dispatcher-layer journeys and the coverage test, with the OTP 29 in-project toolchain (no host toolchain, no network):
+
+```bash
+cd apps/cepaf_gleam && bash -c 'export UOS_ROOT=/home/an/NAS-setup/uos; source $UOS_ROOT/tools/lib/uos-toolchain.sh; uos_env; gleam build --target erlang; PA=(); for d in build/dev/erlang/*/ebin; do PA+=(-pa $d); done; erl -noshell "${PA[@]}" -eval "eunit:test([telegram_journey_security_test,telegram_journey_defence_test,telegram_journey_responder_test,telegram_journey_coverage_test],[verbose]), halt()."'
+```
+
+- Run inside your own jj workspace, provisioned per the workspace isolation contract (copy `priv/*.so` first; an unprovisioned workspace reports artifact failures, not defects).
+- The service-loop journeys (poll, dispatch, outbox) live in `telegram_service_e2e_test`; run that module for the journey's first steps where the harness supports them.
+- Record the observed pass/fail counts and the candidate commit; a green staged run is development evidence only.
+
+## Prepare a real-traffic run
+
+An authorized human executes this; an agent prepares and never sends.
+
+1. Use the staging bot only. The token stays in the reviewed private transport configuration, never in the repository, a prompt, a board message or a journal.
+2. Allowlist exactly one operator user and one chat for the staging bot.
+3. Leave the production bridge untouched: do not restart, reconfigure or share its token or chat.
+4. Follow the runbook for the use case ([security](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261026-0215-telegram-real-traffic-journeys-security-runbook.md), [defence](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261026-0215-telegram-real-traffic-journeys-defence-runbook.md), [responder](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261026-0215-telegram-real-traffic-journeys-responder-runbook.md)): exact messages, expected replies, pass/fail per step.
+5. The operator records the outcome and evidence references in Sa-plan under the programme task.
+
+## What counts as evidence
+
+| Counts | Does not count as a real Telegram pass |
+|---|---|
+| Operator-recorded Sa-plan evidence of a staging-bot run with the exact replies observed | A model reply or model summary |
+| Staged journey tests green at a named candidate (as development evidence) | A board ACK or peer directive |
+| Receipt digests and journal lines named in the spec's Evidence column | A passing dispatcher-layer test presented as a real run |
+| Honest `UNRUN` / `NOT_ADMITTED` for anything not observed | A score, a lease, file presence or a hook firing |
+
+A staged pass proves the dispatcher and staged service behave as specified. It is not a real Telegram user journey, not a release, not admission. EV ceiling 93; EV-94..109 NOT_ADMITTED.
+
+## Comprehensive verification checklist
+
+This is a process/document package. The entries below do not assert production conformance.
+UNRUN and NOT_ADMITTED remain nonpassing; N/A must be justified for each actual change.
+
+<details><summary>Domain 1 — Metadata and navigation</summary>
+
+- [x] CHK-01-TIME — Timestamp prefix recorded (20261026-0220).
+- [x] CHK-02-TAIL — Full Tailscale FQDN references provided; live delivery unverified.
+- [x] CHK-03-FRACT — L0–L9 applicability tagged.
+- [x] CHK-04-KM — Contract, specs, runbooks and wiki guide linked in this package.
+
+</details>
+<details><summary>Domain 2 — Zero-Muda and storage safety</summary>
+
+- [ ] CHK-05-MUDA — Fleet dependency exclusion scan UNRUN.
+- [ ] CHK-06-GRAPH — Runtime language/NIF conformance UNRUN.
+- [ ] CHK-07-DRIVE — OS storage interlock execution UNRUN.
+
+</details>
+<details><summary>Domain 3 — Testing and mathematical gates</summary>
+
+- [ ] CHK-08-C1C8 — Full UI categories UNRUN.
+- [ ] CHK-09-MATH — Mathematical quality gates UNRUN.
+- [ ] CHK-10-9MOD — Nine runtime test modalities UNRUN.
+- [ ] CHK-11-REGR — Live UI regression monitoring UNRUN.
+
+</details>
+<details><summary>Domain 4 — Cross-language control and observability</summary>
+
+- [ ] CHK-12-GLEAM — Staged journey tests not run by this documentation package; UNRUN.
+- [ ] CHK-13-HERMES — Mandatory enforcement NOT_IMPLEMENTED by this package.
+- [ ] CHK-14-ZIGVM — Runtime kernel checks UNRUN.
+- [ ] CHK-15-MAX — Actual inference checks UNRUN.
+- [ ] CHK-16-OTEL — Runtime telemetry correlation UNRUN.
+
+</details>
+<details><summary>Domain 5 — Governance and Jujutsu</summary>
+
+- [ ] CHK-17-SOV — Independent review/admission NOT_ADMITTED.
+- [x] CHK-18-JJ — No native Git command used; standalone JJ workspace fable-w4 only.
+
+</details>
+
+<details><summary>Domain 6 — Provenance extension</summary>
+
+EV ceiling remains 93. EV-94..109 remain NOT_ADMITTED. No new EV number is minted.
+A real-traffic journey pass is recorded by an authorized human in Sa-plan; this package records none.
+
+</details>
+
+**UOS footer:** local skill adapter; `nas-1.tail55d152.ts.net:4100`; canonical execution state remains in Sa-plan; document evidence grants no system admission.
