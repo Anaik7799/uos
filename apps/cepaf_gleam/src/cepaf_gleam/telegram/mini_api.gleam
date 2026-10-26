@@ -261,6 +261,7 @@ fn render_observation_inner(
         json.object([
           #("path", json.string(types.page_to_path(read.page))),
           #("status", json.string(status)),
+          #("reason_code", json.string(reason_code_of(observation))),
           #("observed_at", at),
           #("source", json.string(source)),
           #(
@@ -370,5 +371,36 @@ pub fn handle_data(
           error_response(405, "method_not_allowed")
           |> response.set_header("allow", "POST, OPTIONS")
       }
+  }
+}
+
+/// Closed set of unavailability reasons a client may see (review A-01, wave
+/// 6l). An observer reason outside this list renders as
+/// `unavailable_unspecified`; the raw string never reaches a response, so a
+/// backend error text cannot leak, while a typed absence such as
+/// `immune_actor_not_running` is distinguishable from an outage.
+pub const unavailability_reasons = [
+  "immune_actor_not_running", "immune_observer_timeout", "telemetry_unavailable",
+  "zenoh_configuration_unavailable", "verification_observation_failed",
+  "task_observation_failed", "podman_observation_failed",
+  "mesh_configuration_invalid", "history_observation_failed",
+  "health_observation_failed", "fmea_observation_failed",
+  "dashboard_sources_unavailable", "dashboard_deadline_or_clock_refused",
+  "alerts_deadline_or_clock_refused", "alert_review_projection_bound",
+  "alert_owner_observation_unavailable", "inference_not_configured",
+  "federation_not_configured", "observer_deadline_exceeded",
+]
+
+pub fn reason_code(reason: String) -> String {
+  case list.contains(unavailability_reasons, reason) {
+    True -> reason
+    False -> "unavailable_unspecified"
+  }
+}
+
+fn reason_code_of(observation: Observation) -> String {
+  case observation {
+    Unavailable(reason) -> reason_code(reason)
+    _ -> "none"
   }
 }

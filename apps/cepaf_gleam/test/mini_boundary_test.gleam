@@ -250,3 +250,29 @@ pub fn public_shell_has_no_operational_defaults_test() {
     string.split(html, "type=\"checkbox\"") |> list.length |> should.equal(19)
   })
 }
+
+/// Review A-01 (wave 6l): a typed absence is distinguishable from an outage
+/// through a closed reason code, while raw observer strings never render.
+pub fn unavailable_reason_code_is_closed_and_typed_test() {
+  let r = req(body(v.valid, "/mini-app/tasks"))
+  let immune =
+    api.handle_data(r, Ok(config()), fn() { 1000 }, fn(_) {
+      api.Unavailable("immune_actor_not_running")
+    })
+  string.contains(immune.body, "\"status\":\"unavailable\"") |> should.be_true
+  string.contains(immune.body, "\"reason_code\":\"immune_actor_not_running\"")
+  |> should.be_true
+  let raw =
+    api.handle_data(r, Ok(config()), fn() { 1000 }, fn(_) {
+      api.Unavailable("private_backend_error: /etc/secret")
+    })
+  string.contains(raw.body, "\"reason_code\":\"unavailable_unspecified\"")
+  |> should.be_true
+  string.contains(raw.body, "/etc/secret") |> should.equal(False)
+  // observed replies carry the neutral code
+  let good = api.handle_data(r, Ok(config()), fn() { 1000 }, observed)
+  string.contains(good.body, "\"reason_code\":\"none\"") |> should.be_true
+  api.reason_code("telemetry_unavailable")
+  |> should.equal("telemetry_unavailable")
+  api.reason_code("anything else") |> should.equal("unavailable_unspecified")
+}

@@ -181,7 +181,8 @@ fn row_fields(row: FRow, index: Int) -> List(#(String, String)) {
         <> int.to_string(list.length(shown))
         <> " of "
         <> int.to_string(list.length(sorted))
-        <> " modes, ordered by RPN; omitted=" <> int.to_string(list.length(sorted) - list.length(shown)),
+        <> " modes, ordered by RPN; omitted="
+        <> int.to_string(list.length(sorted) - list.length(shown)),
     ),
     ..list.index_map(shown, fn(m, i) {
       let key = prefix <> " mode " <> int.to_string(i + 1)
@@ -383,13 +384,20 @@ pub fn verification(
       False -> passes == list.count(rows, fn(r) { r.state == "RECORDED_PASS" })
     },
   ))
+  // Review A-02 (wave 6l): the record's own horizon is compared with now; an
+  // expired record is stale whatever the worker wrote, and carries no passes.
+  let expired = expires <= now_seconds * 1000
   emit(at, "candidate_verification_record", [
     #("Candidate", candidate),
     #("Source SHA256", source),
     #("Record observed (ms)", int.to_string(observed)),
     #("Record expires (ms)", int.to_string(expires)),
-    #("Record stale", boolean(stale)),
-    #("Recorded passes", int.to_string(passes)),
+    #("Record expired", boolean(expired)),
+    #("Record stale", boolean(stale || expired)),
+    #("Recorded passes", case expired {
+      True -> "0 (expired)"
+      False -> int.to_string(passes)
+    }),
     #("Missing checkpoints", int.to_string(missing)),
     #("Evidence bytes verified", "false"),
     #("Gates executed", "false"),

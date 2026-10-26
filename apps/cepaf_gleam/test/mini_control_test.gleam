@@ -81,3 +81,11 @@ pub fn alert_acknowledgement_auth_and_page_test() {
   control.parse(string.replace(b,"/mini-app/alerts","/mini-app/telemetry"),config(),1000) |> should.be_error
   control.parse(string.replace(b,"\"target_episode\"","\"run_shell\""),config(),1000) |> should.be_error
 }
+
+/// Review A-06 (wave 6l): the logger can be made quieter, never silenced.
+pub fn logger_target_none_is_refused_test() {
+  control.level("none") |> should.equal(False)
+  control.level("emergency") |> should.equal(True)
+  control.level("all") |> should.equal(True)
+  control.level("debug") |> should.equal(True)
+}

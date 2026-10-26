@@ -151,7 +151,6 @@ pub fn level(text: String) -> Bool {
       "info",
       "debug",
       "all",
-      "none",
     ],
     text,
   )
@@ -471,7 +470,17 @@ fn execute(
                   "1",
                 ])
               {
-                Error(_) -> existing(p, intent, id)
+                Error(_) -> {
+                  // Review A-07 (wave 6l): a duplicate enqueue has a receipt;
+                  // an enqueue that failed because Sa-plan is unavailable has
+                  // none, and that is a 503, never "no such request".
+                  let looked_up = existing(p, intent, id)
+                  case looked_up.status {
+                    404 ->
+                      reply(503, "sa_plan_unavailable", id, json.int(0), json.null())
+                    _ -> looked_up
+                  }
+                }
                 Ok(_) -> {
                   let claim =
                     ledger.run_sa_plan_cli([

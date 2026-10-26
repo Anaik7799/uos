@@ -293,17 +293,31 @@
     },
     {
       "wave": "6k",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "0645a45a",
+      "landed_utc": "2026-10-26T11:01:36Z",
       "canonicals_answering": "77/77 (unchanged); captioned media can no longer reach the specialised arms",
       "tests_added": 7,
       "mutants": "3/3 integrator (media gate removed; forwarding never detected; allowlist skipped before media naming)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 45,
       "checker_holds": 0,
       "process_defects": 1,
       "notes": "Advisory R2 review of the command surface (REQUEST_CHANGES, 16 findings) answered: C-01 specialized_dispatch returns RegularDispatch whenever the stored row carries or malforms a media reference; C-02 forwarded, automatically forwarded and via-bot messages refused as forwarded_not_supported; C-10 allowlist checked before any media naming (stranger bare photo is unauthorized); C-03 media_reply checks the window before the chain and reports the chain outcome as it happened; C-04 and C-06 denied, unknown and fallthrough replies carry an INV-TGJ-04 status and observation_failed maps to backend_unavailable with the label kept as the reason; C-08 unknown-directive echo bounded to 64 bytes; C-14 security coverage counts only behavioural steps; C-15 the plain-message law asserts adapter preview statuses and a closed service-owned set over five argument shapes; INV-TGJ-06 records the media effect, the caption precedence and the forwarded refusal. Process defect: C-01 was introduced by this session in wave 6h and normalised by an e2e whose caption classified to the regular arm; found by an independent reviewer with the full surface.",
       "full_suite": "13821/13821"
+    },
+    {
+      "wave": "6l",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); Mini App pages now name their absence",
+      "tests_added": 3,
+      "mutants": "3/3 integrator (raw reason rendered; expiry comparison inverted; logger none accepted)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Advisory R2 review of the Mini App (APPROVE_WITH_CHANGES, 18 findings) answered on the server side: A-01 every Unavailable observation renders a closed-enum reason_code (immune_actor_not_running reachable; unknown reasons collapse to unavailable_unspecified; raw strings never render); A-02 the verification record is rendered expired and stale with zero passes when its own record_expires_at_ms has passed, whatever the worker wrote; A-06 the vm logger target none is refused; A-07 an enqueue failure with no receipt answers 503 sa_plan_unavailable instead of 404. Residuals: A-03 pre-actor authorization (config lives in the actor), A-04 action initData max_age, A-05 derived secret only, A-08 unreachable identity recheck, A-10 zenoh observed_at, A-11 pre-auth probing, A-12 second parser, A-13 deadline after observer, A-14 long task ids, A-15 hard-coded paths and SHAs, FMEA freshness recomputation, browser behaviour.",
+      "full_suite": "13824/13824"
     }
   ],
   "forecasts": [

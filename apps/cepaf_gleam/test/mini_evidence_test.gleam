@@ -4,6 +4,7 @@ import cepaf_gleam/telegram/mini_api as api
 import cepaf_gleam/telegram/mini_evidence as mini
 import cepaf_gleam/telegram/mini_runtime as runtime
 import gleam/dict
+import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
@@ -148,15 +149,52 @@ const fmea_source = "[{\"assessment_id\":\"assessment-0\",\"plan_id\":\"test/min
 const verification_source = "{\"schema\":\"uos.telegram.verification-record.v1\",\"candidate\":\"cccccccccccccccccccccccccccccccccccccccc\",\"observed_at_ms\":1792889999000,\"expires_at_ms\":1792890001000,\"checkpoints\":[{\"id\":\"CHK-01-TIME\",\"outcome\":\"PASS\",\"runtime_sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"formal_sha256\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"reason\":\"Recorded fixture only\"}],\"aspects\":[]}"
 
 pub fn task_lease_exact_nanosecond_boundary_test() {
-  runtime.task_state("executing", Some("1000000001"), 1000000000)
+  runtime.task_state("executing", Some("1000000001"), 1_000_000_000)
   |> should.equal("executing")
-  runtime.task_state("executing", Some("1000000001"), 1000000001)
+  runtime.task_state("executing", Some("1000000001"), 1_000_000_001)
   |> should.equal("executing (lease expired)")
-  runtime.task_state("executing", Some("1000000001"), 1000000002)
+  runtime.task_state("executing", Some("1000000001"), 1_000_000_002)
   |> should.equal("executing (lease expired)")
-  runtime.task_state("executing", None, 1000000002)
+  runtime.task_state("executing", None, 1_000_000_002)
   |> should.equal("executing (lease unknown)")
-  runtime.task_state("executing", Some("invalid"), 1000000002)
+  runtime.task_state("executing", Some("invalid"), 1_000_000_002)
   |> should.equal("executing (lease unknown)")
-  runtime.task_state("completed", None, 1000000002) |> should.equal("completed")
+  runtime.task_state("completed", None, 1_000_000_002)
+  |> should.equal("completed")
+}
+
+/// Rewrite one integer JSON field of a record, for horizon tests.
+fn with_int_field(raw: String, key: String, value: Int) -> String {
+  case string.split(raw, "\"" <> key <> "\":") {
+    [head, tail] -> {
+      let rest = case string.split_once(tail, ",") {
+        Ok(#(_, after)) -> "," <> after
+        Error(_) -> tail
+      }
+      head <> "\"" <> key <> "\":" <> int.to_string(value) <> rest
+    }
+    _ -> raw
+  }
+}
+
+/// Review A-02 (wave 6l): a record whose own horizon has passed is rendered
+/// expired and stale with no passes, whatever the worker wrote.
+pub fn verification_expired_record_is_stale_with_zero_credit_test() {
+  let fresh = verification_output(now * 1000)
+  let expired =
+    fresh
+    |> with_int_field("record_observed_at_ms", now * 1000 - 100_000)
+    |> with_int_field("record_expires_at_ms", now * 1000 - 50_000)
+  let text =
+    mini.verification(expired, candidate, now)
+    |> should.be_ok
+    |> rendered
+  string.contains(text, "Record expired: true") |> should.equal(True)
+  string.contains(text, "Record stale: true") |> should.equal(True)
+  string.contains(text, "Recorded passes: 0 (expired)") |> should.equal(True)
+  // the fresh record is unchanged by the law
+  let live =
+    mini.verification(fresh, candidate, now) |> should.be_ok |> rendered
+  string.contains(live, "Record expired: false") |> should.equal(True)
+  string.contains(live, "Record stale: false") |> should.equal(True)
 }
