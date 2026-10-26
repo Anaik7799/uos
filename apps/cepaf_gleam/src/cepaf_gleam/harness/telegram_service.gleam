@@ -322,6 +322,7 @@ fn janitor_config(media: MediaConfiguration) -> janitor.Config {
     cadence_ms: media.reclaim_cadence_ms,
     max_objects: media.reclaim_max_objects,
     history_limit: media.reclaim_history_limit,
+    orphan_grace_ms: media_store.default_orphan_grace_ms,
     now_ms: fn() { ffi_system_now_utc_us() / 1000 },
   )
 }
@@ -4165,7 +4166,7 @@ pub fn start_supervised_service(
     Some(media) -> {
       let name =
         process.new_name("telegram_media_janitor_" <> int.to_string(config.bot_id))
-      Some(#(name, janitor.child_spec_named(name, janitor_config(media))))
+      Some(#(name, janitor.isolated_child_spec_named(name, janitor_config(media))))
     }
     None -> None
   }

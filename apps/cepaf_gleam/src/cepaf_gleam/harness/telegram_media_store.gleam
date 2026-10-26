@@ -22,10 +22,19 @@
 ////   what it removed and refused. Retention is enforced only when a caller runs
 ////   `reclaim_expired` on a schedule: until then an expired object is never
 ////   served by `get`, but its bytes remain on disk and still count toward the
-////   ceiling. Neither function deletes a `.tmp-` file or anything outside
-////   `root/base`, and bytes that no longer hash to their name are garbage that
-////   `delete` removes like any other. Deletion is not wiped or shredded: it is
-////   an unlink.
+////   ceiling. Neither `delete` nor `reclaim_expired` deletes a `.tmp-` file or
+////   anything outside `root/base`, and bytes that no longer hash to their name
+////   are garbage that `delete` removes like any other. Deletion is not wiped or
+////   shredded: it is an unlink, and it is file-only (`unlink_file` re-checks
+////   `link_info` and uses `delete_file`, so a directory is refused, never
+////   removed).
+//// * Residue is reclaimed by `reclaim_orphans`, never by `reclaim_expired`:
+////   `.tmp-` files, `.bin` files with no index, and index records that do not
+////   decode, each only once older than a caller-supplied grace period (file
+////   mtime against the injected `now_ms`; default 10 minutes) and within the
+////   same per-call `max_objects` bound. Nothing younger than the grace is
+////   touched, because a `.bin` without an index and a `.tmp-` file are also
+////   what a `put` in flight looks like.
 //// * The ceiling check is pure: the caller supplies `usage_bytes` (measure it
 ////   with `usage`). Two concurrent callers may both pass the check against the
 ////   same measurement; the ceiling is a guard, not a quota lock.
@@ -45,14 +54,18 @@
 ////   only after its `.bin` is re-checked (regular, single link, size, hash);
 ////   otherwise `Refused("stored_object_unverified:<reason>")`.
 //// * `usage` counts per digest the larger of the index bytes and the `.bin`
-////   size, orphan `.bin` files and leftover `.tmp-` files included.
+////   size, orphan `.bin` files and leftover `.tmp-` files included. A malformed
+////   index does not fail it: `usage_report` skips the record, counts its `.bin`
+////   and names the invalid index paths.
 //// * `put` takes no media-inspection verdict: running `telegram_media_inspect`
 ////   before `put` is a caller convention, not something this module enforces.
 //// * Index fields other than the digest (kind, `file_unique_id`, timestamps,
 ////   horizon) are unauthenticated: anyone who can write the store directory can
 ////   alter them. Only the byte content is bound to its name by the hash.
 //// * A put interrupted while writing the index leaves a truncated index that
-////   reads as `index_invalid` and is not auto-repaired (known residual).
+////   reads as `index_invalid`. `get` and `put` still refuse it; once it is
+////   older than the grace, `reclaim_orphans` removes it (its `.bin` follows as
+////   an orphan on a later call).
 //// * Parent-directory rename races still need a cooperative workspace lease
 ////   (same limit as `files`); this is not a descriptor-relative VFS.
 
@@ -692,19 +705,52 @@ pub fn expired(policy: Policy, now_ms: Int) -> Result(List(Stored), String) {
   })
 }
 
-/// Bytes held under `base`: per digest the larger of the index-recorded bytes
-/// and the `.bin` size, orphan `.bin` files (no index) and leftover `.tmp-`
-/// files included. An absent store is zero. A malformed record or an
-/// unreadable directory fails closed: usage must not under-count.
-pub fn usage(policy: Policy) -> Result(Int, String) {
+/// `bytes` as `usage` defines it; `index_invalid_count` is the exact number of
+/// digests whose index record did not decode, `index_invalid` names at most
+/// `max_reported_invalid` of them as the relative index path
+/// (`<base>/<shard>/<sha>.json`), in digest order.
+pub type UsageReport {
+  UsageReport(
+    bytes: Int,
+    index_invalid_count: Int,
+    index_invalid: List(String),
+  )
+}
+
+/// Bytes held under `base`, with the malformed indexes it skipped. Per digest
+/// the larger of the index-recorded bytes and the `.bin` size; orphan `.bin`
+/// files (no index) and leftover `.tmp-` files are included. A malformed index
+/// record does not fail the scan (that let one bad file stop all intake): the
+/// digest counts its `.bin` bytes and is reported. The malformed index file's
+/// own few bytes are not counted. An absent store is zero; an unreadable
+/// directory still fails closed (`store_unavailable`): usage must not
+/// under-count what it cannot see.
+pub fn usage_report(policy: Policy) -> Result(UsageReport, String) {
   use #(entries, tmp_bytes) <- result.try(scan(policy))
-  list.try_fold(entries, tmp_bytes, fn(total, entry) {
-    case entry.record {
-      Ok(stored) -> Ok(total + int.max(stored.bytes, entry.bin_bytes))
-      Error("not_found") -> Ok(total + entry.bin_bytes)
-      Error(reason) -> Error(reason)
-    }
-  })
+  let #(total, invalid) =
+    list.fold(entries, #(tmp_bytes, []), fn(acc, entry) {
+      case entry.record {
+        Ok(stored) -> #(
+          acc.0 + int.max(stored.bytes, entry.bin_bytes),
+          acc.1,
+        )
+        Error("not_found") -> #(acc.0 + entry.bin_bytes, acc.1)
+        Error(_) -> #(
+          acc.0 + entry.bin_bytes,
+          list.append(acc.1, [rel_index(policy, entry.sha)]),
+        )
+      }
+    })
+  Ok(UsageReport(
+    bytes: total,
+    index_invalid_count: list.length(invalid),
+    index_invalid: list.take(invalid, max_reported_invalid),
+  ))
+}
+
+/// The byte count of `usage_report`; a malformed index is skipped, not fatal.
+pub fn usage(policy: Policy) -> Result(Int, String) {
+  usage_report(policy) |> result.map(fn(report) { report.bytes })
 }
 
 /// Test and diagnostics helper: decimal text of a byte count.
@@ -772,6 +818,17 @@ fn probe(policy: Policy, relative: String) -> Result(#(String, Half), String) {
   }
 }
 
+/// A directory (or link) that appeared after the probe stays a typed refusal;
+/// every other unlink failure is `delete_failed:<half>`.
+fn delete_error(half: String) -> fn(String) -> String {
+  fn(reason) {
+    case reason {
+      "not_regular_single_link" -> reason
+      _ -> "delete_failed:" <> half
+    }
+  }
+}
+
 /// Remove one object from disk. Both halves are checked (`checked_path`, then
 /// `link_info`: regular file, single link) BEFORE either is touched, so a
 /// symlink or hard link refuses the whole delete and nothing changes. The index
@@ -814,9 +871,9 @@ pub fn delete(policy: Policy, sha256_hex: String) -> Result(Removed, String) {
       }
       use removed_index <- result.try(case index_half {
         Present(_) ->
-          simplifile.delete(index_path)
+          unlink_file(index_path)
           |> result.map(fn(_) { True })
-          |> result.map_error(fn(_) { "delete_failed:index" })
+          |> result.map_error(delete_error("index"))
         Absent -> Ok(False)
       })
       use _ <- result.try(case removed_index {
@@ -829,9 +886,9 @@ pub fn delete(policy: Policy, sha256_hex: String) -> Result(Removed, String) {
       })
       use removed_bin <- result.try(case bin_half {
         Present(_) ->
-          simplifile.delete(bin_path)
+          unlink_file(bin_path)
           |> result.map(fn(_) { True })
-          |> result.map_error(fn(_) { "delete_failed:bin" })
+          |> result.map_error(delete_error("bin"))
         Absent -> Ok(False)
       })
       Ok(Removed(
@@ -913,6 +970,255 @@ pub fn reclaim_expired(
           total + r.bytes_freed
         }),
         truncated: list.length(candidates) > max_objects,
+      ))
+    }
+  }
+}
+
+// ------------------------------------------------------------------ orphans
+
+/// Smallest accepted orphan grace period: one second. A younger orphan can be
+/// a `put` in flight (the `.bin` lands before its index), so the grace is the
+/// only thing that separates residue from work in progress.
+pub const min_orphan_grace_ms = 1000
+
+/// Default grace period: ten minutes.
+pub const default_orphan_grace_ms = 600_000
+
+/// Largest number of `index_invalid` paths `usage_report` names; the count is
+/// always exact.
+pub const max_reported_invalid = 32
+
+pub type OrphanKind {
+  /// A leftover `.tmp-<random>` file from an interrupted write.
+  OrphanTmp
+  /// A `<sha>.bin` with no `<sha>.json` beside it.
+  OrphanBin
+  /// A `<sha>.json` that does not decode (truncated or foreign bytes).
+  InvalidIndex
+}
+
+/// What `reclaim_orphans` removed. `name` is `<shard>/<file>` below `base`.
+pub type OrphanRemoved {
+  OrphanRemoved(name: String, kind: OrphanKind, bytes_freed: Int)
+}
+
+/// `examined` candidates were attempted (at most `max_objects`); `refused`
+/// holds `#(name, reason)`; `truncated` is True when more candidates remain.
+pub type OrphanReceipt {
+  OrphanReceipt(
+    examined: Int,
+    removed: List(OrphanRemoved),
+    refused: List(#(String, String)),
+    bytes_freed: Int,
+    truncated: Bool,
+  )
+}
+
+pub fn empty_orphan_receipt() -> OrphanReceipt {
+  OrphanReceipt(0, [], [], 0, False)
+}
+
+type Orphan {
+  Orphan(shard: String, file: String, kind: OrphanKind)
+}
+
+fn orphan_name(orphan: Orphan) -> String {
+  orphan.shard <> "/" <> orphan.file
+}
+
+/// Age of a file in ms against the caller's clock. The mtime is the host's
+/// clock; `now_ms` is injected, so a `now_ms` that lags the host makes every
+/// file look young: that errs towards keeping a file.
+fn old_enough(info: simplifile.FileInfo, now_ms: Int, grace_ms: Int) -> Bool {
+  now_ms - info.mtime_seconds * 1000 >= grace_ms
+}
+
+fn index_decodes(policy: Policy, sha: String) -> Bool {
+  case load_record(policy, sha) {
+    Ok(_) -> True
+    Error(_) -> False
+  }
+}
+
+/// True when the file exists and is at least `grace_ms` old. A file that
+/// cannot be inspected is not a candidate.
+fn aged(path: String, now_ms: Int, grace_ms: Int) -> Bool {
+  case simplifile.link_info(path) {
+    Ok(info) -> old_enough(info, now_ms, grace_ms)
+    Error(_) -> False
+  }
+}
+
+/// Orphan candidates of one shard listing that are old enough, in file-name
+/// order. Younger files are not candidates and do not consume the bound.
+fn shard_orphans(
+  policy: Policy,
+  shard: String,
+  entries: List(String),
+  now_ms: Int,
+  grace_ms: Int,
+) -> List(Orphan) {
+  let dir = policy.root <> "/" <> policy.base <> "/" <> shard
+  entries
+  |> list.sort(string.compare)
+  |> list.filter(fn(file) { aged(dir <> "/" <> file, now_ms, grace_ms) })
+  |> list.filter_map(fn(file) {
+    case string.starts_with(file, ".tmp-") {
+      True -> Ok(Orphan(shard, file, OrphanTmp))
+      False ->
+        case digest_of(file, shard) {
+          Error(_) -> Error(Nil)
+          Ok(sha) ->
+            case string.ends_with(file, ".bin") {
+              True ->
+                case list.contains(entries, sha <> ".json") {
+                  False -> Ok(Orphan(shard, file, OrphanBin))
+                  True -> Error(Nil)
+                }
+              False ->
+                case index_decodes(policy, sha) {
+                  False -> Ok(Orphan(shard, file, InvalidIndex))
+                  True -> Error(Nil)
+                }
+            }
+        }
+    }
+  })
+}
+
+fn orphan_candidates(
+  policy: Policy,
+  now_ms: Int,
+  grace_ms: Int,
+) -> Result(List(Orphan), String) {
+  let base_dir = policy.root <> "/" <> policy.base
+  case simplifile.read_directory(base_dir) {
+    Error(simplifile.Enoent) -> Ok([])
+    Error(_) -> Error("store_unavailable")
+    Ok(names) ->
+      names
+      |> list.filter(is_shard)
+      |> list.sort(string.compare)
+      |> list.try_fold([], fn(acc, shard) {
+        use entries <- result.try(
+          simplifile.read_directory(base_dir <> "/" <> shard)
+          |> result.map_error(fn(_) { "store_unavailable" }),
+        )
+        Ok(list.append(
+          acc,
+          shard_orphans(policy, shard, entries, now_ms, grace_ms),
+        ))
+      })
+  }
+}
+
+/// Unlink one regular, single-link file. `link_info` is read immediately
+/// before the unlink and a directory, symlink or hard link is refused with
+/// `not_regular_single_link` and left untouched; the unlink itself is the
+/// file-only `delete_file`, which cannot remove a directory even if one
+/// appears after the check.
+pub fn unlink_file(path: String) -> Result(Int, String) {
+  case simplifile.link_info(path) {
+    Error(simplifile.Enoent) -> Error("not_found")
+    Error(_) -> Error("store_unavailable")
+    Ok(info) ->
+      case
+        simplifile.file_info_type(info) == simplifile.File && info.nlinks == 1
+      {
+        False -> Error("not_regular_single_link")
+        True ->
+          simplifile.delete_file(path)
+          |> result.map(fn(_) { info.size })
+          |> result.map_error(fn(_) { "delete_failed" })
+      }
+  }
+}
+
+fn reclaim_one_orphan(
+  policy: Policy,
+  orphan: Orphan,
+  now_ms: Int,
+  grace_ms: Int,
+) -> Result(OrphanRemoved, String) {
+  use path <- result.try(files.checked_path(
+    policy.root,
+    policy.base <> "/" <> orphan_name(orphan),
+  ))
+  use info <- result.try(case simplifile.link_info(path) {
+    Ok(info) -> Ok(info)
+    Error(simplifile.Enoent) -> Error("no_longer_orphan")
+    Error(_) -> Error("store_unavailable")
+  })
+  use _ <- result.try(case
+    simplifile.file_info_type(info) == simplifile.File && info.nlinks == 1
+  {
+    True -> Ok(Nil)
+    False -> Error("not_regular_single_link")
+  })
+  use _ <- result.try(case old_enough(info, now_ms, grace_ms) {
+    True -> Ok(Nil)
+    False -> Error("no_longer_orphan")
+  })
+  // Re-check the defining condition immediately before the unlink.
+  use _ <- result.try(case orphan.kind {
+    OrphanTmp -> Ok(Nil)
+    OrphanBin ->
+      case simplifile.link_info(string.drop_end(path, 4) <> ".json") {
+        Error(simplifile.Enoent) -> Ok(Nil)
+        _ -> Error("no_longer_orphan")
+      }
+    InvalidIndex ->
+      case index_decodes(policy, string.drop_end(orphan.file, 5)) {
+        False -> Ok(Nil)
+        True -> Error("no_longer_orphan")
+      }
+  })
+  use freed <- result.try(unlink_file(path))
+  Ok(OrphanRemoved(orphan_name(orphan), orphan.kind, freed))
+}
+
+/// Delete at most `max_objects` orphans that are at least `grace_ms` old by
+/// file mtime: leftover `.tmp-` files, `.bin` files with no index, and index
+/// records that fail to decode. Nothing younger than the grace is touched, a
+/// symlink, hard link or directory is refused, and only names inside
+/// `root/base/<shard>/` are considered. Candidates are taken in shard and file
+/// order; `examined` counts at most `max_objects`. A `.bin` whose index is
+/// malformed is not an orphan: its index goes first, and once that is gone the
+/// `.bin` is an orphan on a later call. Residual race: an index written for an
+/// old orphan `.bin` between the final re-check and the unlink is not seen.
+pub fn reclaim_orphans(
+  policy: Policy,
+  now_ms: Int,
+  max_objects: Int,
+  grace_ms: Int,
+) -> Result(OrphanReceipt, String) {
+  case max_objects < 1, grace_ms < min_orphan_grace_ms {
+    True, _ -> Error("bound_invalid")
+    _, True -> Error("grace_invalid")
+    False, False -> {
+      use _ <- result.try(valid_policy(policy))
+      use found <- result.try(orphan_candidates(policy, now_ms, grace_ms))
+      let batch = list.take(found, max_objects)
+      let #(removed, refused) =
+        list.fold(batch, #([], []), fn(acc, orphan) {
+          case reclaim_one_orphan(policy, orphan, now_ms, grace_ms) {
+            Ok(gone) -> #(list.append(acc.0, [gone]), acc.1)
+            Error("no_longer_orphan") -> acc
+            Error(reason) -> #(
+              acc.0,
+              list.append(acc.1, [#(orphan_name(orphan), reason)]),
+            )
+          }
+        })
+      Ok(OrphanReceipt(
+        examined: list.length(batch),
+        removed: removed,
+        refused: refused,
+        bytes_freed: list.fold(removed, 0, fn(total, r) {
+          total + r.bytes_freed
+        }),
+        truncated: list.length(found) > max_objects,
       ))
     }
   }
