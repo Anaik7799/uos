@@ -307,17 +307,31 @@
     },
     {
       "wave": "6l",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "661c64a1",
+      "landed_utc": "2026-10-26T11:15:39Z",
       "canonicals_answering": "77/77 (unchanged); Mini App pages now name their absence",
       "tests_added": 3,
       "mutants": "3/3 integrator (raw reason rendered; expiry comparison inverted; logger none accepted)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 30,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "Advisory R2 review of the Mini App (APPROVE_WITH_CHANGES, 18 findings) answered on the server side: A-01 every Unavailable observation renders a closed-enum reason_code (immune_actor_not_running reachable; unknown reasons collapse to unavailable_unspecified; raw strings never render); A-02 the verification record is rendered expired and stale with zero passes when its own record_expires_at_ms has passed, whatever the worker wrote; A-06 the vm logger target none is refused; A-07 an enqueue failure with no receipt answers 503 sa_plan_unavailable instead of 404. Residuals: A-03 pre-actor authorization (config lives in the actor), A-04 action initData max_age, A-05 derived secret only, A-08 unreachable identity recheck, A-10 zenoh observed_at, A-11 pre-auth probing, A-12 second parser, A-13 deadline after observer, A-14 long task ids, A-15 hard-coded paths and SHAs, FMEA freshness recomputation, browser behaviour.",
       "full_suite": "13824/13824"
+    },
+    {
+      "wave": "6m",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); 23 closed reason codes, 0 literals outside the list",
+      "tests_added": 4,
+      "mutants": "3/3 integrator (backend_exception removed from the list; reason_code collapses every reason; a prose Zenoh reason reintroduced)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Reason-code completeness law: mini_reason_code_completeness_test reads every src/cepaf_gleam/telegram/*.gleam and refuses an Unavailable literal outside mini_api.unavailability_reasons (floor of ten literals). Four gaps closed: backend_exception, and three prose Zenoh reasons converted to zenoh_observation_clock_refused, zenoh_query_failed, zenoh_observation_field_bound. Gateway advisory review received (REQUEST_CHANGES, 9 majors) and media lifecycle review since 6d received (REQUEST_CHANGES, 3 majors, 8 minors); both recorded in the 6m journal section 10 for GATEWAY_FIX and a media fix task.",
+      "full_suite": "13828/13828"
     }
   ],
   "forecasts": [
@@ -433,6 +447,24 @@
       "made_in": "wave 6 close journal",
       "p": 0.35,
       "claim": "RETURN becomes claimable (COMMAND_REVIEW, GATEWAY_REVIEW, MEDIA_REVIEW, MINI_API_REVIEW and TELEGRAM_E2E completed in Sa-plan) by 2026-10-29T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6k journal",
+      "p": 0.5,
+      "claim": "the independent COMMAND_REVIEW, when claimed, records no major beyond the residuals listed in the 6k journal section 10, by 2026-10-29T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6l journal",
+      "p": 0.5,
+      "claim": "the independent MINI_API_REVIEW, when claimed, records no server-side major beyond the residuals in the 6l journal section 10, by 2026-10-29T12:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -565,6 +597,12 @@
       "wave": "6k",
       "lesson": "A gate added at one dispatch entry is not a gate: the media precedence lived only in RegularDispatch while specialized_dispatch re-read the same row and ran its arms; the author e2e used a caption that never reached them",
       "applied": "the media gate now sits where the row is decoded, before any arm is chosen, and the e2e drives captions that classify to the specialised arms; every surface with more than one entry gets a test per entry"
+    },
+    {
+      "id": "L-22",
+      "wave": "6m",
+      "lesson": "When a closed enumeration is introduced, land its completeness law in the same wave. A grep is an enumeration with an assumption baked in: the 6l pattern assumed snake-case codes and missed four literals (one identifier used by the span wrapper and three prose reasons), all of which rendered as unavailable_unspecified.",
+      "applied": "mini_reason_code_completeness_test reads the module sources and refuses the next unlisted literal, with a floor of ten literals so an empty scan cannot pass vacuously; the three prose reasons became codes rather than list members"
     }
   ]
 }

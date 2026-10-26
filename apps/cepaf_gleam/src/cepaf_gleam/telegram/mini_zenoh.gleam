@@ -75,7 +75,7 @@ fn observe_topic_list(
 ) -> api.Observation {
   let at = clock()
   case at > 0 {
-    False -> api.Unavailable("Invalid observation timestamp")
+    False -> api.Unavailable("zenoh_observation_clock_refused")
     True -> {
       let fields =
         base_topic_fields(user_topics)
@@ -96,7 +96,7 @@ fn observe_selected_topic(
     Error("zenoh_no_reply") -> {
       let at = clock()
       case at > 0 {
-        False -> api.Unavailable("Invalid observation timestamp")
+        False -> api.Unavailable("zenoh_observation_clock_refused")
         True -> {
           let fields =
             base_topic_fields(user_topics)
@@ -109,13 +109,13 @@ fn observe_selected_topic(
     }
     Error(reason) ->
       case string.is_empty(reason) {
-        True -> api.Unavailable("Zenoh query failed")
+        True -> api.Unavailable("zenoh_query_failed")
         False -> api.Unavailable(reason)
       }
     Ok(raw) -> {
       let at = clock()
       case at > 0 {
-        False -> api.Unavailable("Invalid observation timestamp")
+        False -> api.Unavailable("zenoh_observation_clock_refused")
         True ->
           case chunk_valid_payload(raw) {
             Error(reason) -> api.Unavailable(reason)
@@ -127,7 +127,7 @@ fn observe_selected_topic(
                 |> dict.insert("Runtime admission", "NOT_GRANTED")
               let fields = insert_message_parts(base, parts, 1)
               case dict.size(fields) <= max_observation_fields {
-                False -> api.Unavailable("Observation exceeds 100 fields")
+                False -> api.Unavailable("zenoh_observation_field_bound")
                 True ->
                   api.Observed(at_unix: at, source: "zenoh_rest", fields: fields)
               }

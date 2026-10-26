@@ -389,6 +389,8 @@ pub const unavailability_reasons = [
   "alerts_deadline_or_clock_refused", "alert_review_projection_bound",
   "alert_owner_observation_unavailable", "inference_not_configured",
   "federation_not_configured", "observer_deadline_exceeded",
+  "backend_exception", "zenoh_observation_clock_refused", "zenoh_query_failed",
+  "zenoh_observation_field_bound",
 ]
 
 pub fn reason_code(reason: String) -> String {
