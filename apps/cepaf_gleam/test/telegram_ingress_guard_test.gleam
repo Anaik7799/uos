@@ -445,3 +445,109 @@ pub fn message_without_text_or_media_stays_unidentified_test() {
   let _ = raw
   Nil
 }
+
+// ------------------------------------------------------------- wave 6k review
+
+fn with_message_fields(extra: List(#(String, json.Json))) -> String {
+  json.object([
+    #("update_id", json.int(100)),
+    #(
+      "message",
+      json.object(
+        list.append(
+          [
+            #("message_id", json.int(10)),
+            #(
+              "chat",
+              json.object([#("id", json.int(1001)), #("type", json.string("private"))]),
+            ),
+            #(
+              "from",
+              json.object([#("id", json.int(501)), #("is_bot", json.bool(False))]),
+            ),
+          ],
+          extra,
+        ),
+      ),
+    ),
+  ])
+  |> json.to_string
+}
+
+fn reason_of(raw: String) -> String {
+  case g.evaluate_update(raw, allow()) {
+    g.RejectedUpdate(reason: reason, ..) -> reason
+    g.AcceptedEnvelope(..) -> "ACCEPTED"
+    g.UnidentifiedRejection(reason) -> "UNIDENTIFIED:" <> reason
+  }
+}
+
+pub fn forwarded_text_is_refused_by_name_test() {
+  with_message_fields([
+    #("text", json.string("/approval submit tg-1 operator x")),
+    #(
+      "forward_origin",
+      json.object([#("type", json.string("user")), #("date", json.int(1))]),
+    ),
+  ])
+  |> reason_of
+  |> should.equal("forwarded_not_supported")
+  with_message_fields([
+    #("text", json.string("/dark on")),
+    #("forward_date", json.int(1_700_000_000)),
+  ])
+  |> reason_of
+  |> should.equal("forwarded_not_supported")
+  with_message_fields([
+    #("text", json.string("/status")),
+    #("via_bot", json.object([#("id", json.int(77)), #("is_bot", json.bool(True))])),
+  ])
+  |> reason_of
+  |> should.equal("forwarded_not_supported")
+  with_message_fields([
+    #("text", json.string("/status")),
+    #("is_automatic_forward", json.bool(True)),
+  ])
+  |> reason_of
+  |> should.equal("forwarded_not_supported")
+}
+
+pub fn forwarded_caption_is_refused_by_name_test() {
+  with_message_fields([
+    #("caption", json.string("/status")),
+    #(
+      "photo",
+      json.array([1], fn(i) {
+        json.object([
+          #("file_id", json.string("fid")),
+          #("file_unique_id", json.string("uniq")),
+          #("file_size", json.int(1000 * i)),
+        ])
+      }),
+    ),
+    #("forward_from", json.object([#("id", json.int(5)), #("is_bot", json.bool(False))])),
+  ])
+  |> reason_of
+  |> should.equal("forwarded_not_supported")
+}
+
+pub fn stranger_bare_photo_is_unauthorized_not_media_named_test() {
+  // the same bare photo from a non-allowlisted user: the tombstone names the
+  // authorization failure, never the media
+  let stranger =
+    string.replace(media_payload(Error(Nil)), "\"id\":501", "\"id\":9999")
+  reason_of(stranger) |> should.equal("unsupported_or_unauthorized_identity")
+  reason_of(media_payload(Error(Nil))) |> should.equal("media_without_caption")
+}
+
+pub fn unknown_directive_echo_is_bounded_test() {
+  let long = "/" <> string.repeat("z", 3000)
+  case g.classify_directive(long) {
+    g.UnknownDirective(name) -> { string.byte_size(name) <= 64 } |> should.be_true
+    other -> should.equal(string.inspect(other), "UnknownDirective")
+  }
+  case g.classify_directive("/status@somebot") {
+    g.UnknownDirective(name) -> name |> should.equal("/status@somebot")
+    other -> should.equal(string.inspect(other), "UnknownDirective")
+  }
+}

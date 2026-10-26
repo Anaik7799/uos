@@ -290,6 +290,20 @@
       "process_defects": 0,
       "notes": "Ranged media fetch: telegram_http_client.fetch_file_range (Range requests of 4 MiB, 206 with Content-Range parsed and cross-checked, 200 accepted only from offset zero within one chunk, 416 past the end is end of body) and parse_content_range; telegram_media_transport.open_stream returns a ranged reader with an absolute stream deadline, so the download adapter enforces the per-kind cap across chunks and the 10 MiB single-read ceiling is gone; the fixture honours a single byte range (206, Content-Range, 416) and can omit file_size. Proven: a 12 MiB document streams through the real transport and is stored under its digest; a 12 MiB photo with undeclared size is aborted at the photo cap across chunks with nothing stored.",
       "full_suite": "13816/13816"
+    },
+    {
+      "wave": "6k",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); captioned media can no longer reach the specialised arms",
+      "tests_added": 7,
+      "mutants": "3/3 integrator (media gate removed; forwarding never detected; allowlist skipped before media naming)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "Advisory R2 review of the command surface (REQUEST_CHANGES, 16 findings) answered: C-01 specialized_dispatch returns RegularDispatch whenever the stored row carries or malforms a media reference; C-02 forwarded, automatically forwarded and via-bot messages refused as forwarded_not_supported; C-10 allowlist checked before any media naming (stranger bare photo is unauthorized); C-03 media_reply checks the window before the chain and reports the chain outcome as it happened; C-04 and C-06 denied, unknown and fallthrough replies carry an INV-TGJ-04 status and observation_failed maps to backend_unavailable with the label kept as the reason; C-08 unknown-directive echo bounded to 64 bytes; C-14 security coverage counts only behavioural steps; C-15 the plain-message law asserts adapter preview statuses and a closed service-owned set over five argument shapes; INV-TGJ-06 records the media effect, the caption precedence and the forwarded refusal. Process defect: C-01 was introduced by this session in wave 6h and normalised by an e2e whose caption classified to the regular arm; found by an independent reviewer with the full surface.",
+      "full_suite": "13821/13821"
     }
   ],
   "forecasts": [
@@ -531,6 +545,12 @@
       "wave": "6i",
       "lesson": "Fixture-backed HTTP tests fail under a bare erl eunit call because hackney is not started there; the gleam test runner starts it",
       "applied": "fable-mut-h.sh starts hackney before eunit; the nine baseline slice1 failures under erl are explained, not real"
+    },
+    {
+      "id": "L-21",
+      "wave": "6k",
+      "lesson": "A gate added at one dispatch entry is not a gate: the media precedence lived only in RegularDispatch while specialized_dispatch re-read the same row and ran its arms; the author e2e used a caption that never reached them",
+      "applied": "the media gate now sits where the row is decoded, before any arm is chosen, and the e2e drives captions that classify to the specialised arms; every surface with more than one entry gets a test per entry"
     }
   ]
 }

@@ -285,10 +285,18 @@ fn step_literal(step: Step) -> String {
   step.literal
 }
 
-/// Every literal any security journey touches, deduplicated.
+/// Every literal a security journey covers with a behavioural expectation
+/// (review C-14, wave 6k): steps that only tombstone a stranger or an
+/// attachment do not count as coverage of the literal they mention.
 pub fn covered_literals() -> List(String) {
   journeys()
   |> list.flat_map(fn(journey) { journey.1 })
+  |> list.filter(fn(step) {
+    case step.expect {
+      Stranger(_) | Attachment(_) | MediaAccepted(_) -> False
+      _ -> True
+    }
+  })
   |> list.map(step_literal)
   |> list.filter(fn(literal) { literal != "" })
   |> list.unique

@@ -292,13 +292,26 @@ fn media_reply(
     _ -> 1000
   }
   let token = state.config.http_config.bot_token
-  let outcome = case
-    current_read(state, required_ms, fn() {
-      media_intake.run(binding, ref, fn() { Ok(token) }, ffi_system_now_utc_us() / 1000)
-    })
-  {
-    Ok(outcome) -> outcome
-    Error(reason) -> media_intake.UsageUnavailable("observation_window: " <> reason)
+  // Review C-03 (wave 6k): the authority window is checked BEFORE the chain
+  // runs; once the chain ran, its outcome is reported as it happened, because
+  // a stored object is a fact whether or not the window closed afterwards.
+  let outcome = case conversation_authorize(state) {
+    Error(reason) ->
+      media_intake.UsageUnavailable("observation_window: " <> reason)
+    Ok(remaining) ->
+      case remaining >= required_ms {
+        False ->
+          media_intake.UsageUnavailable(
+            "observation_window: observation_authority_window_too_short",
+          )
+        True ->
+          media_intake.run(
+            binding,
+            ref,
+            fn() { Ok(token) },
+            ffi_system_now_utc_us() / 1000,
+          )
+      }
   }
   media_intake.reply_json(outcome, ref, media_intake.directive_label(dir), request_id)
 }
@@ -2543,7 +2556,12 @@ fn execute_guarded_dispatch(
                           }
                         }
                         guard.DeniedMutation(tool, reason) ->
+                          // Review C-04 (wave 6k): refusals carry the journey status.
                           json.object([
+                            #("status", json.string("denied")),
+                            #("reason", json.string("denied_mutation")),
+                            #("tool", json.string(tool)),
+                            #("request_id", json.string(inbox_rec.request_id)),
                             #(
                               "error",
                               json.string(
@@ -2558,6 +2576,9 @@ fn execute_guarded_dispatch(
                           |> json.to_string
                         guard.UnknownDirective(name) ->
                           json.object([
+                            #("status", json.string("denied")),
+                            #("reason", json.string("unknown_directive")),
+                            #("request_id", json.string(inbox_rec.request_id)),
                             #(
                               "error",
                               json.string("unknown_directive_refused: " <> name),
@@ -2565,8 +2586,11 @@ fn execute_guarded_dispatch(
                           ])
                           |> json.to_string
                         _ ->
+                          // Review C-06 (wave 6k): no arm owns this directive; say so
+                          // instead of echoing the text as an observation.
                           json.object([
-                            #("observation", json.string(txt)),
+                            #("status", json.string("backend_unavailable")),
+                            #("reason", json.string("no_service_arm")),
                             #("request_id", json.string(inbox_rec.request_id)),
                           ])
                           |> json.to_string
@@ -5367,7 +5391,23 @@ type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch C
 
 fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedDispatch {
   case svc_read_keys(state, [codec.input_key(request_id)]) {
-    Ok(#(_, [row])) -> case codec.decode_row_value(row) |> result.try(codec.decode_input_verdict) {
+    Ok(#(_, [row])) -> case codec.decode_row_value(row) {
+      // Review C-01 (wave 6k): a stored row that carries a media reference is
+      // media intake, whatever its caption classified to. Only a row with no
+      // media field may reach the verify, memory, conversation, cancellation
+      // or approval arms; a malformed media field is also kept out of them.
+      Ok(raw_json) -> case codec.decode_input_media(raw_json) {
+        Ok(None) -> specialized_dispatch_of(state, raw_json)
+        _ -> RegularDispatch
+      }
+      Error(_) -> RegularDispatch
+    }
+    _ -> RegularDispatch
+  }
+}
+
+fn specialized_dispatch_of(state: ServiceState, raw_json: String) -> SpecializedDispatch {
+  case codec.decode_input_verdict(raw_json) {
       Ok(#(_, _, _, guard.AcceptedEnvelope(
         directive: guard.PreservedDirective(name, _), callback_query_id: None, ..
       ))) -> case name {
@@ -5382,8 +5422,6 @@ fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedD
         _ -> RegularDispatch
       }
       _ -> RegularDispatch
-    }
-    _ -> RegularDispatch
   }
 }
 
@@ -5573,8 +5611,12 @@ fn current_read(
 }
 
 fn status_failure() -> String {
+  // Review C-04 (wave 6k): the journey vocabulary has no observation_failed;
+  // an observation that could not be made is backend_unavailable, and the
+  // original label is kept as the reason.
   json.object([
-    #("status", json.string("observation_failed")),
+    #("status", json.string("backend_unavailable")),
+    #("reason", json.string("observation_failed")),
     #("error", json.string("Observation unavailable within current authority and bounds.")),
   ]) |> json.to_string
 }

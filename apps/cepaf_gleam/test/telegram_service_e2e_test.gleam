@@ -4433,3 +4433,86 @@ pub fn e2e_captioned_photo_answers_typed_media_reply_test() {
   fixture_stop(fixture_pid)
   lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
 }
+
+/// Review C-01 and C-04 (wave 6k): a captioned photo never reaches the
+/// specialised arms whatever its caption classifies to, and a denied mutation
+/// carries the journey status.
+pub fn e2e_captioned_media_never_reaches_specialised_arms_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+  let bot_id = 444_666
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+  let nonce =
+    int.to_string(service.ffi_system_now_utc_us())
+    <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_media_b" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-media-b" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-media-b",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+  runner_set_authority(ipc_dir, "lease-e2e-media-02", 1, 1, 3_000_000_000_000_000)
+
+  let photo = fn(update_id: Int, message_id: Int, caption: String) {
+    "{\"update_id\": "
+    <> int.to_string(update_id)
+    <> ", \"message\": {\"message_id\": "
+    <> int.to_string(message_id)
+    <> ", \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false}, \"caption\": \""
+    <> caption
+    <> "\", \"photo\": [{\"file_id\": \"AgAC-x\", \"file_unique_id\": \"AQAD-"
+    <> int.to_string(update_id)
+    <> "\", \"width\": 90, \"height\": 90, \"file_size\": 1200}], \"date\": 1700000300}}"
+  }
+  let updates = [
+    photo(9201, 401, "/verify something"),
+    photo(9202, 402, "/memory"),
+    "{\"update_id\": 9203, \"message\": {\"message_id\": 403, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false}, \"text\": \"/voice-roll-call verify x\", \"date\": 1700000301}}",
+  ]
+  // the runner commits one update per poll cycle: one poll and one dispatch per update
+  list.each(updates, fn(update) {
+    fixture_set_updates(fixture_pid, [update])
+    let poll = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+    string.contains(poll, "\"type\":\"poll_committed\"") |> should.equal(True)
+    let dispatched =
+      runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+    string.contains(dispatched, "\"processed_count\":1") |> should.equal(True)
+  })
+  let bodies =
+    list.filter_map(fixture_requests_typed(fixture_pid), fn(r) {
+      let #(_, path, _, body) = r
+      case string.ends_with(path, "/sendMessage") {
+        True -> Ok(body)
+        False -> Error(Nil)
+      }
+    })
+  // every captioned photo answered with the media reply, never a verify or memory reply
+  let media_replies = list.filter(bodies, fn(b) { string.contains(b, "media.intake") })
+  list.length(media_replies) |> should.equal(2)
+  list.any(bodies, fn(b) { string.contains(b, "verify_profile") || string.contains(b, "\"capability\":\"memory") })
+  |> should.equal(False)
+  let assert Ok(verify_reply) = list.find(media_replies, fn(b) { string.contains(b, "/verify") })
+  // the body is the JSON-escaped sendMessage text
+  string.contains(verify_reply, "caption_directive\\\":\\\"/verify") |> should.equal(True)
+  // the denied mutation carries the journey status
+  let assert Ok(denied) = list.find(bodies, fn(b) { string.contains(b, "denied_mutation") })
+  string.contains(denied, "status\\\":\\\"denied") |> should.equal(True)
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
+}

@@ -14,6 +14,7 @@ import cepaf_gleam/harness/telegram_verification_report as verification
 import cepaf_gleam/harness/telegram_zenoh_report as zenoh_report
 import gleam/dict
 import cepaf_gleam/harness/telegram_media_ref as media_ref
+import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/json
 import gleam/list
@@ -130,7 +131,11 @@ pub fn classify_directive(raw_text: String) -> ParsedDirective {
       case commands.parse(raw_text) {
         Error(commands.InvalidInput) ->
           DeniedMutation("invalid_input", "Invalid bounded command input.")
-        Error(commands.UnknownCommand(name)) -> UnknownDirective(name)
+        // Review C-08 (wave 6k): the echoed name is bounded; a group-addressed
+        // `/cmd@bot` form is refused here as unknown until a bot username is
+        // configured, and the echo never exceeds 64 bytes.
+        Error(commands.UnknownCommand(name)) ->
+          UnknownDirective(bounded_name(name))
         Ok(invocation) -> {
           let name = invocation.definition.canonical
           let args = invocation.args
@@ -457,22 +462,33 @@ fn evaluate_identified(
       // A media message without a caption is identified as such, so the
       // tombstone says why it was refused instead of hiding it behind a
       // generic identity failure (wave 6h). No command text is invented.
-      case media_ref.from_update(raw) {
-        Ok(Some(_)) -> reject("media_without_caption")
-        _ -> reject("missing_or_malformed_message_identity")
+      // Review C-10 (wave 6k): the sender is authorized BEFORE any media is
+      // named, so a stranger learns nothing from the tombstone reason.
+      case json.parse(raw, message_identity_only_decoder()) {
+        Ok(idn) ->
+          case identity_authorized(idn, raw, allow) {
+            False -> reject("unsupported_or_unauthorized_identity")
+            True ->
+              case has_forwarding(raw) {
+                True -> reject("forwarded_not_supported")
+                False ->
+                  case media_ref.from_update(raw) {
+                    Ok(Some(_)) -> reject("media_without_caption")
+                    _ -> reject("missing_or_malformed_message_identity")
+                  }
+              }
+          }
+        Error(_) -> reject("missing_or_malformed_message_identity")
       }
     Ok(id) ->
-      case
-        valid_positive_id(id.message_id)
-        && valid_positive_id(id.user_id)
-        && valid_chat_id(id.chat_id)
-        && list.contains(["private", "group", "supergroup"], id.chat_type)
-        && !id.is_bot
-        && !has_sender_chat(raw)
-        && list.contains(allow.allowed_pairs, #(id.chat_id, id.user_id))
-      {
+      case identity_authorized(id, raw, allow) {
         False -> reject("unsupported_or_unauthorized_identity")
         True ->
+          // Review C-02 (wave 6k): a forwarded or via-bot message carries text
+          // the allowlisted user did not write; it is refused by name.
+          case has_forwarding(raw) {
+            True -> reject("forwarded_not_supported")
+            False ->
           case valid_text(id.text) {
             False -> reject("invalid_text")
             True ->
@@ -488,7 +504,71 @@ fn evaluate_identified(
                 id.callback_query_id,
               )
           }
+          }
       }
+  }
+}
+
+/// The sender, chat and allowlist checks shared by text and bare-media paths.
+fn identity_authorized(id: Identity, raw: String, allow: Allowlist) -> Bool {
+  valid_positive_id(id.message_id)
+  && valid_positive_id(id.user_id)
+  && valid_chat_id(id.chat_id)
+  && list.contains(["private", "group", "supergroup"], id.chat_type)
+  && !id.is_bot
+  && !has_sender_chat(raw)
+  && list.contains(allow.allowed_pairs, #(id.chat_id, id.user_id))
+}
+
+/// Identity of a message without any command text, used only to decide whose
+/// bare media is being refused.
+fn message_identity_only_decoder() -> decode.Decoder(Identity) {
+  use uid <- decode.field("update_id", decode.int)
+  use mid <- decode.subfield(["message", "message_id"], decode.int)
+  use cid <- decode.subfield(["message", "chat", "id"], decode.int)
+  use kind <- decode.subfield(["message", "chat", "type"], decode.string)
+  use user <- decode.subfield(["message", "from", "id"], decode.int)
+  use bot <- decode.subfield(["message", "from", "is_bot"], decode.bool)
+  decode.success(Identity(uid, mid, cid, user, kind, bot, None, ""))
+}
+
+/// Forwarded, automatically forwarded and via-bot messages (review C-02).
+/// Any of these keys on `message` or on a callback query message means the
+/// text was not written by the sender in this chat. A parse failure counts
+/// as forwarded, never as clean.
+fn has_forwarding(raw: String) -> Bool {
+  let keys = [
+    "forward_origin", "forward_from", "forward_from_chat", "forward_date",
+    "forward_sender_name", "forward_from_message_id", "is_automatic_forward",
+    "via_bot",
+  ]
+  let any_key = fn(message: dict.Dict(String, dynamic.Dynamic)) {
+    list.any(keys, fn(k) { dict.has_key(message, k) })
+  }
+  let decoder = {
+    use message <- decode.optional_field(
+      "message",
+      dict.new(),
+      decode.dict(decode.string, decode.dynamic),
+    )
+    use cb <- decode.optional_field(
+      "callback_query",
+      dict.new(),
+      decode.dict(decode.string, decode.dynamic),
+    )
+    let cb_has = case dict.get(cb, "message") {
+      Ok(dyn) ->
+        case decode.run(dyn, decode.dict(decode.string, decode.dynamic)) {
+          Ok(sub) -> any_key(sub)
+          Error(_) -> False
+        }
+      Error(_) -> False
+    }
+    decode.success(any_key(message) || cb_has)
+  }
+  case json.parse(raw, decoder) {
+    Ok(present) -> present
+    Error(_) -> True
   }
 }
 
@@ -543,5 +623,13 @@ fn approval_directive(args: String) -> ParsedDirective {
             "Use propose, submit, or withdraw with an exact request identifier; unsigned approve text cannot authorize an action.",
           )
       }
+  }
+}
+
+/// At most 64 bytes of a name, for replies that echo it.
+fn bounded_name(name: String) -> String {
+  case string.byte_size(name) > 64 {
+    True -> string.slice(name, 0, 64)
+    False -> name
   }
 }
