@@ -138,19 +138,40 @@ check(Code, M, Payload, MaxBytes, Elapsed) ->
     end.
 
 %% Exclusive, fsynced creation of an evidence file; never overwrites.
+%% Exclusive and atomic: the bytes are written and synced to a sibling temp
+%% file created exclusively, then renamed over the final name only if that
+%% name does not exist yet. A crash mid-write leaves a .tmp file, never a
+%% truncated receipt that a reconciler could mistake for Complete.
 write_new(Path, Bytes) when is_binary(Path), is_binary(Bytes) ->
-    case file:open(Path, [write, binary, raw, exclusive]) of
-        {ok, Fd} ->
-            R = case file:write(Fd, Bytes) of
-                    ok -> file:sync(Fd);
-                    E -> E
-                end,
-            _ = file:close(Fd),
-            case R of
-                ok -> {ok, nil};
-                _ -> {error, <<"evidence_write_failed">>}
+    Tmp = <<Path/binary, ".tmp">>,
+    case file:read_file_info(Path) of
+        {ok, _} -> {error, <<"evidence_exists">>};
+        {error, enoent} ->
+            case file:open(Tmp, [write, binary, raw, exclusive]) of
+                {ok, Fd} ->
+                    R = case file:write(Fd, Bytes) of
+                            ok -> file:sync(Fd);
+                            E -> E
+                        end,
+                    _ = file:close(Fd),
+                    case R of
+                        ok ->
+                            case file:read_file_info(Path) of
+                                {error, enoent} ->
+                                    case file:rename(Tmp, Path) of
+                                        ok -> {ok, nil};
+                                        _ -> _ = file:delete(Tmp),
+                                             {error, <<"evidence_write_failed">>}
+                                    end;
+                                _ -> _ = file:delete(Tmp),
+                                     {error, <<"evidence_exists">>}
+                            end;
+                        _ -> _ = file:delete(Tmp),
+                             {error, <<"evidence_write_failed">>}
+                    end;
+                {error, eexist} -> {error, <<"evidence_exists">>};
+                {error, _} -> {error, <<"evidence_create_failed">>}
             end;
-        {error, eexist} -> {error, <<"evidence_exists">>};
         {error, _} -> {error, <<"evidence_create_failed">>}
     end.
 

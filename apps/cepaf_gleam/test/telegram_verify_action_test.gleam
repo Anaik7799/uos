@@ -3,7 +3,9 @@
 //// trips byte-exactly, and readiness expires with the approval.
 
 import cepaf_gleam/harness/telegram_action_intent as action
+import cepaf_gleam/harness/telegram_action_proposal as proposal
 import cepaf_gleam/harness/telegram_approval as approval
+import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import cepaf_gleam/harness/telegram_cancellation as cancel
 import cepaf_gleam/harness/telegram_cancellation_record as record
 import cepaf_gleam/harness/telegram_verify_action as verify_action
@@ -358,4 +360,14 @@ pub fn decode_record_refuses_a_verify_intent_wrapped_for_another_job_test() {
   verify_action.encode_parts(verify_intent(), 1_060_000, other)
   |> verify_action.decode_record
   |> should.equal(Error("verify_target_mismatch"))
+}
+
+pub fn a_cancellation_proposal_refuses_a_verify_intent_test() {
+  // Same request id and roster digest that a cancellation proposal accepts;
+  // only the kind differs, so the refusal is the kind check (review V-09).
+  let request = ledger.make_request_id(7, 19)
+  let digest = approval.roster_digest(roster())
+  proposal.new(request, cancel_intent(), digest) |> should.be_ok
+  proposal.new(request, verify_intent(), digest)
+  |> should.equal(Error("invalid_action_proposal"))
 }

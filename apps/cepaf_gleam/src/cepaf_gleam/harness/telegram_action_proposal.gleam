@@ -18,7 +18,10 @@ pub fn new(request_id:String,intent:action.Intent,roster_digest:String)
   -> Result(Proposal,String) {
   use #(restored,binding,target) <- result.try(
     recovery.decode_intent_json(action.canonical_json(intent)))
-  case request_id==ledger.make_request_id(binding.bot_id,binding.update_id)
+  // A proposal collects approvals for a lease cancellation only; a verify
+  // intent has its own packet path and is refused here by kind.
+  case action.kind(restored)==action.CancelJobLease
+    && request_id==ledger.make_request_id(binding.bot_id,binding.update_id)
     && string.byte_size(roster_digest)==64
     && list.all(string.to_graphemes(roster_digest),fn(c){
       string.contains("0123456789abcdef",c)}) {

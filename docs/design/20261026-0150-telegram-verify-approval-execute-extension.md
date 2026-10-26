@@ -6,7 +6,7 @@
 
 Transclusions: [[zk:20260905-1801-moc-uos-unified-master]] · [[wiki:20260905-1801-uos-zk-km-corpus-index]]
 
-Status: design under `uos/telegram-runtime/20261001-1150` COMMAND_IMPL. Not implemented. It touches the signed-approval code path, so it needs independent review before, not after, implementation (R5 route: Codex and AGY packets).
+Status: implemented in wave 6 under `uos/telegram-runtime/20261001-1150` COMMAND_IMPL attempt 21 (`telegram_action_intent.Kind`, `telegram_verify_action`, `telegram_verify_packet`, `telegram_verify_run`, service `VerifyDispatch` and `configure_verify`; see the wave 6a and 6b journals). Deviation from section 3: the kind marker lives inside the signed intent payload and the logical effect, and every receipt's `purpose` must equal it, rather than only in the record, so the signature itself refuses cross-kind replay; the verify configuration is `ServiceConfiguration.verify`, not part of the action profile. The R5 review by Codex and AGY was not available before implementation (both sessions stale); an independent R2 review of the diff was obtained before landing and is recorded in the wave 6b journal. Both reviews remain advisory; sovereign review is still required for admission.
 
 ## 1. What exists
 
@@ -65,7 +65,9 @@ Changes, each small and separately testable:
 - No execution without a packet whose receipts verify against the current roster and whose target job id equals the reservation's job id.
 - A cancellation packet presented to `load_verify` is refused (kind marker), and a verify packet presented to `action_packet.load` is refused.
 - Replay of the same inbox request after a receipt exists returns the stored receipt (reconcile Complete), never a second run.
-- Partial evidence after a crash refuses to rerun into the same directory; a new attempt is a new Sa-plan job attempt with a new evidence directory.
+- Partial evidence after a crash refuses to rerun into the same directory. Amended at implementation (review finding V-05): the reservation is keyed by the inbox request and the attempt is fixed at 1, so recovery from partial evidence requires a new inbox request (a new reservation, job and evidence directory), not an attempt bump; the second half of the original law is not claimed.
+- The guardian runs only inside a Sa-plan job claim held by the service worker, on a job in state `available`, and the job is completed or failed with the receipt digest afterwards (review finding V-01).
+- A completed request answers `duplicate` from the stored receipt before any approval is examined, so a replay after the receipts expired still answers and never holds the writer (review finding V-03).
 - A changed artifact between approval and execution is refused by `recheck` before spawn.
 - The guardian pin mismatch is refused before spawn; no child process is created.
 

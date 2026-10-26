@@ -43,7 +43,7 @@ In the tables, class `denied` for a step marked as guard denial means the second
 ### 1.3 Findings recorded while building this spec
 
 1. **Alias defect.** The catalog canonicalises `/simulate` to `/whatif`, so the peer-quorum simulation in `telegram_simulation_read_command` is unreachable from a Telegram message; `/simulate zenoh:partitioned` answers with the `/whatif` usage denial. Journey 1 step 6 pins the current (denied) truth and says what must flip when the alias is fixed.
-2. **Voice roll call.** On the integration view that includes the wave-3 adapter router, `/voice-roll-call` is not routed and is denied at classify (the adopted media design requires the biometric arm to be denied until an authenticated surface exists); `/verify` and `/verification` are denied at classify. This use case sends `/verify` and `/verification` and expects the denial, and does not send `/voice-roll-call`.
+2. **Voice roll call.** On the integration view that includes the wave-3 adapter router, `/voice-roll-call` is not routed and is denied at classify (the adopted media design requires the biometric arm to be denied until an authenticated surface exists); `/verify` and `/verification` are preserved at classify for the service's VerifyDispatch (wave 6b). This use case sends `/verify` and `/verification` and expects either the truthful not-configured reply or, with a signed verify packet for that exact inbox request, an executed verification; it does not send `/voice-roll-call`.
 3. **Approval flow scope.** The only approval path wired to the service today manages cancellation proposals (`/tool` cancel lease). No ControlledAction adapter has an approval-to-execute path, so a journey cannot reach `executed`, which is the intended safe state.
 
 
@@ -347,8 +347,8 @@ flowchart LR
 | 5.7 | Read one task's assessment | `/fmea s2-policy-status-correction` | F4 | ok or ok-empty | assessment_id and task_id echoed; freshness field; max_rpn; or total_matching_tasks=0 | allowlisted pair | E1 | An assessment for a task id that has no record |
 | 5.8 | Missing module | `/blast-radius` | F4 | denied | guard denial: error starts 'denied_mutation: /blast-radius' | allowlisted pair | E1 | A default module chosen silently |
 | 5.9 | Impact of changing uos_sup | `/blast-radius uos_sup` | F4 | ok | schema=uos.telegram.impact.v1 (read-only source scan) | allowlisted pair | E1 | Any file written |
-| 5.10 | Try to run verification from chat | `/verify` | F4 | denied | guard denial: error starts 'denied_mutation: /verify' ('Action is not implemented yet; current effect authority will also be required.') | allowlisted pair | E1 | Any verification executed from a plain message |
-| 5.11 | Alias of /verify | `/verification` | F4 | denied | same as step 10 (tool name /verify) | allowlisted pair | E1 | Different behaviour than /verify |
+| 5.10 | Try to run verification from chat | `/verify` | F4 | backend_unavailable (service reply "Verification is not configured on this service. Nothing was executed.") unless a signed verify packet exists for this inbox request, then executed | reply text; with a packet: `status`, `job_id`, `receipt_sha256` | allowlisted pair; approval roster for execution | E1 | Any verification executed from a plain message without a signed packet |
+| 5.11 | Alias of /verify | `/verification` | F4 | same as step 10 (canonical /verify) | same as step 10 | same as step 10 | E1 | Different behaviour than /verify |
 | 5.12 | Read the matrix versions | `/sutra` | F4 | ok | schema=uos.telegram.matrix.v1 | allowlisted pair | E1 | Versions invented |
 | 5.13 | Search tasks for 'andon' | `/search andon` | F4 | ok or ok-empty | schema=uos.telegram.task_search.v1 | allowlisted pair | E1 | Results not backed by a task record |
 | 5.14 | Search the wiki for 'ha' | `/wiki ha` | F4 | ok or ok-empty | schema=uos.telegram.knowledge.v1; view=wiki | allowlisted pair | E1 | Content not from the corpus |
@@ -406,7 +406,7 @@ flowchart LR
 
 | Step or surface | Missing backend | What a real deployment must add |
 |---|---|---|
-| `/verify, /verification` | `telegram_verify_executor and the approval-execute path` | the executor is built but not wired to the plain-message path; real deployment needs the verify approval/execute extension (docs/design/20261026-0150), a signed intent, a fenced candidate, writer quiescence, and a durable result record. Until then the denial is the correct answer. |
+| `/verify, /verification` | `telegram_verify_packet, telegram_verify_run and the service VerifyDispatch` | wired in wave 6b per docs/design/20261026-0150: a signed verify packet (kind `verify_profile` in the intent and in every receipt) for the exact reservation runs the pinned guardian at most once and returns a receipt digest. Real deployment needs the operator-held verify configuration (profile pin, guardian pin, evidence root, sa-plan database) and the approval roster; without them the plain message answers that verification is not configured. |
 | `/doctor, /checklist, /aspects` | `candidate-bound gate runs` | these replies show recorded or UNOBSERVED state; green requires fresh candidate-bound gate execution recorded in the configured candidate record. |
 
 **Journey 5 passes when** every step returns the expected class with its required fields, no reply contains `executed` or `duplicate`, and each failure meaning in the table is absent.

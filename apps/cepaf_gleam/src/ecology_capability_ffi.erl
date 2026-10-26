@@ -16,7 +16,7 @@
 %% =============================================================================
 -module(ecology_capability_ffi).
 
--export([uos_root/0, probe_executable/1, run_bounded/3,
+-export([uos_root/0, probe_executable/1, run_bounded/3, run_bounded_env/4,
          ets_backend_probe/0, km_nif_loaded/0, env_present/1,
          ets_init/0, ets_request/1, invoke_external/2, max_request/1]).
 
@@ -116,7 +116,23 @@ env_present(Name) ->
 
 %% --- bounded execution ------------------------------------------------------
 %% Returns {ok, {ExitCode, Output}} | {error, Reason}. Never blocks past TimeoutMs.
-run_bounded(Path, Args, TimeoutMs) -> run_guarded(Path,Args,TimeoutMs,none).
+run_bounded(Path, Args, TimeoutMs) -> run_guarded(Path,Args,TimeoutMs,none,[]).
+
+%% As run_bounded/3 with extra environment pairs ({Name, Value} binaries) for
+%% the guardian and its child. Used to bind a tool to one database path; it
+%% never carries credentials.
+run_bounded_env(Path, Args, TimeoutMs, Env) when is_list(Env), length(Env) =< 8 ->
+    %% Only names on this allowlist may be set; loader, path and toolchain
+    %% variables (LD_*, PATH, OCAML*, HOME, ...) can never be injected here.
+    case lists:all(fun({K,V}) -> is_binary(K) andalso is_binary(V)
+                                 andalso lists:member(K, [<<"UOS_SA_PLAN_DB">>])
+                                 andalso byte_size(V) > 0 andalso byte_size(V) =< 4096
+                                 andalso binary:first(V) =:= $/;
+                      (_) -> false end, Env) of
+        true -> run_guarded(Path,Args,TimeoutMs,none,Env);
+        false -> {error,<<"invalid_environment_bound">>}
+    end;
+run_bounded_env(_,_,_,_) -> {error,<<"invalid_environment_bound">>}.
 
 utf8_chars(Bytes) when is_binary(Bytes) ->
     case unicode:characters_to_list(Bytes,utf8) of
@@ -124,9 +140,12 @@ utf8_chars(Bytes) when is_binary(Bytes) ->
         _ -> error(invalid_utf8)
     end.
 
-run_guarded(Path, Args, TimeoutMs, Input)
+run_guarded(Path, Args, TimeoutMs, Input) ->
+    run_guarded(Path, Args, TimeoutMs, Input, []).
+
+run_guarded(Path, Args, TimeoutMs, Input, Env)
   when is_binary(Path), is_list(Args), is_integer(TimeoutMs),
-       TimeoutMs>0, TimeoutMs=<60000 ->
+       TimeoutMs>0, TimeoutMs=<60000, is_list(Env) ->
     try
         Root=utf8_chars(uos_root()),
         Ocaml=dependency(Root,<<"ocaml">>,"toolchains/opam-ocaml/bin/ocaml"),
@@ -135,8 +154,12 @@ run_guarded(Path, Args, TimeoutMs, Input)
         A=["-I","+unix",Guardian,integer_to_list(TimeoutMs),
            integer_to_list(?OUTPUT_LIMIT),Mode,utf8_chars(Path)] ++
           [utf8_chars(Argument)||Argument<-Args],
+        EnvOption = case Env of
+            [] -> [];
+            _ -> [{env,[{utf8_chars(K),utf8_chars(V)} || {K,V} <- Env]}]
+        end,
         Port = erlang:open_port({spawn_executable, Ocaml},
-                              [stream,use_stdio,exit_status,binary,{args,A}]),
+                              [stream,use_stdio,exit_status,binary,{args,A}|EnvOption]),
         case Input of
             none->ok;
             Data when is_binary(Data),byte_size(Data)=<65536 ->
@@ -146,7 +169,7 @@ run_guarded(Path, Args, TimeoutMs, Input)
     catch
         _:_ -> {error, <<"backend_spawn_failed">>}
     end;
-run_guarded(_,_,_,_) -> {error,<<"invalid_resource_bound">>}.
+run_guarded(_,_,_,_,_) -> {error,<<"invalid_resource_bound">>}.
 
 collect(Port, Deadline, Size, Chunks) ->
     Remaining=max(0,Deadline-erlang:monotonic_time(millisecond)),

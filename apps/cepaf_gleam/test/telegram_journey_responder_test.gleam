@@ -234,9 +234,11 @@ pub fn journey_bounded_action() -> List(Step) {
     #("/eco-schedule jobs=5", preview("/eco-schedule", ["jobs=5"], "simulated")),
     #("/pair-voice alpha", preview("/pair-voice", ["alpha"], "declared")),
     #("/pair-voice Alpha", usage("/pair-voice", ["Alpha"])),
-    // Denied at classify: no adapter owns these literals.
-    #("/verify", Refused("/verify")),
-    #("/verification", Refused("/verify")),
+    // Wave 6b: /verify is preserved for the service's VerifyDispatch (signed
+    // packet or a truthful not-configured reply); no adapter owns it.
+    #("/verify", Service("/verify", [])),
+    #("/verification", Service("/verify", [])),
+    // Denied at classify: no adapter owns this literal.
     #("/voice-roll-call", Refused("/voice-roll-call")),
   ])
 }

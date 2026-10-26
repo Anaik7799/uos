@@ -305,9 +305,11 @@ pub fn journey_5_steps() -> List(Step) {
     ),
     Step("/blast-radius", Denied("/blast-radius")),
     Step("/blast-radius uos_sup", Historical("/blast-radius", ["uos_sup"])),
-    // The verification executor is not wired to the plain-message path.
-    Step("/verify", Denied("/verify")),
-    Step("/verification", Denied("/verify")),
+    // Wave 6b: /verify is preserved for the service's VerifyDispatch, which
+    // executes only a signed verify packet and otherwise answers that
+    // verification is not configured. No adapter owns the literal.
+    Step("/verify", Historical("/verify", [])),
+    Step("/verification", Historical("/verify", [])),
     Step("/sutra", Direct("query_matrix_versions")),
     Step("/search andon", Historical("/search", ["andon"])),
     Step("/wiki ha", Historical("/knowledge", ["wiki", "ha"])),

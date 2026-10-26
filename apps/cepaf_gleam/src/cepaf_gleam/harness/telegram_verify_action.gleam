@@ -161,6 +161,10 @@ pub fn intent(prepared: Prepared) -> action.Intent {
   prepared.intent
 }
 
+pub fn binding(prepared: Prepared) -> action.Binding {
+  prepared.binding
+}
+
 pub fn verify_binding(prepared: Prepared) -> v.Binding {
   prepared.verify
 }

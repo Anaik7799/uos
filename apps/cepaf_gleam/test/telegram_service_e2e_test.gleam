@@ -1067,6 +1067,7 @@ pub fn e2e_recovery_cgroup_and_writer_hold_test() {
       control_registration_path: None,
       conversation: service.ConversationDisabled,
       actions: None,
+      verify: None,
       risk_source: None,
       verification_source: None,
       budget_source: None,

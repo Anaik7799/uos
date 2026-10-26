@@ -82,3 +82,8 @@
  (name test_sa_plan_job_budget)
  (modules test_sa_plan_job_budget)
  (libraries core core_unix sa_plan sqlite3))
+
+(executable
+ (name verify_fence_fixture)
+ (modules verify_fence_fixture)
+ (libraries sa_plan unix))

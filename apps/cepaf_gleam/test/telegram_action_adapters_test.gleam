@@ -65,15 +65,18 @@ pub fn classify_preserves_wave_two_actions_and_still_denies_others_test() {
       _ -> should.fail()
     }
   })
-  // /verify and its alias stay on the executor path: still denied at classify.
+  // /verify and its alias are preserved for the service's VerifyDispatch
+  // (signed packet executes; otherwise a truthful not-configured reply). No
+  // adapter owns them, so nothing previews or executes from this text.
   case guard.classify_directive("/verify telegram-core") {
-    guard.DeniedMutation("/verify", _) -> Nil
+    guard.PreservedDirective("/verify", ["telegram-core"]) -> Nil
     _ -> should.fail()
   }
   case guard.classify_directive("/verification now") {
-    guard.DeniedMutation("/verify", _) -> Nil
+    guard.PreservedDirective("/verify", ["now"]) -> Nil
     _ -> should.fail()
   }
+  actions.route_preview("/verify", ["telegram-core"]) |> should.equal(None)
   // Adopted media design T0: the biometric arm is denied at classify.
   case guard.classify_directive("/voice-roll-call all") {
     guard.DeniedMutation("/voice-roll-call", _) -> Nil

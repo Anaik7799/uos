@@ -20,6 +20,11 @@ import cepaf_gleam/harness/telegram_action_packet as action_packet
 import cepaf_gleam/harness/telegram_bridge as bridge
 import cepaf_gleam/harness/telegram_cancellation as cancellation
 import cepaf_gleam/harness/telegram_cancellation_record as cancellation_record
+import cepaf_gleam/harness/telegram_verify_action as verify_action
+import cepaf_gleam/harness/telegram_verify_contract as verify_contract
+import cepaf_gleam/harness/telegram_verify_job as verify_job
+import cepaf_gleam/harness/telegram_verify_packet as verify_packet
+import cepaf_gleam/harness/telegram_verify_run as verify_run
 import cepaf_gleam/harness/clock as checked_clock
 import cepaf_gleam/harness/telegram_conversation as conversation
 import cepaf_gleam/harness/telegram_conversation_model as conversation_model
@@ -177,6 +182,12 @@ pub type ActionConfiguration {
   RecoveryActions(profile:action_profile.Profile)
 }
 
+/// Operator-held /verify configuration: the pinned profile, guardian and
+/// evidence layout, plus the sa-plan runner bound to this service's database.
+pub type VerifyConfiguration {
+  VerifyConfiguration(source: verify_run.Source, database: String, runner: verify_job.Runner)
+}
+
 pub type ServiceConfiguration {
   ServiceConfiguration(
     storage_config: transport.LocalConfiguration,
@@ -201,6 +212,7 @@ pub type ServiceConfiguration {
     control_registration_path: Option(String),
     conversation: ConversationConfiguration,
     actions:Option(ActionConfiguration),
+    verify:Option(VerifyConfiguration),
     risk_source:Option(String),
     verification_source:Option(verification_reader.Source),
     budget_source:Option(budget_report.Source),
@@ -245,6 +257,7 @@ pub fn operational_service_configuration(
     control_registration_path: None,
     conversation: ConversationDisabled,
     actions:None,
+    verify:None,
     risk_source:None,
     verification_source:None,
     budget_source:None,
@@ -284,6 +297,7 @@ pub fn development_service_configuration(
     control_registration_path: None,
     conversation: ConversationDisabled,
     actions:None,
+    verify:None,
     risk_source:None,
     verification_source:None,
     budget_source:None,
@@ -2272,6 +2286,8 @@ fn execute_guarded_dispatch(
             ApprovalDispatch -> execute_approval_dispatch(
               ServiceState(..state,expected_generation:gen1),processing_rec,proc_ver,proc_sha)
             CancellationDispatch -> execute_action_dispatch(
+              ServiceState(..state, expected_generation: gen1),processing_rec,proc_ver,proc_sha)
+            VerifyDispatch -> execute_verify_dispatch(
               ServiceState(..state, expected_generation: gen1),processing_rec,proc_ver,proc_sha)
             MemoryDispatch -> execute_memory_dispatch(
               ServiceState(..state, expected_generation: gen1),
@@ -5191,7 +5207,7 @@ fn command_observer_request(config: ServiceConfiguration) -> obs_policy.ObserveR
   )
 }
 
-type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch CancellationDispatch ApprovalDispatch }
+type SpecializedDispatch { RegularDispatch ConversationDispatch MemoryDispatch CancellationDispatch ApprovalDispatch VerifyDispatch }
 
 fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedDispatch {
   case svc_read_keys(state, [codec.input_key(request_id)]) {
@@ -5201,6 +5217,7 @@ fn specialized_dispatch(state: ServiceState, request_id: String) -> SpecializedD
       ))) -> case name {
         "/approval_manage" -> ApprovalDispatch
         "/cancel_job_lease" -> CancellationDispatch
+        "/verify" -> VerifyDispatch
         "/memory" | "/history" | "/messages" -> MemoryDispatch
         "conversational" | "/agy" | "/socratic" -> case state.config.conversation {
           ConversationDisabled -> RegularDispatch
@@ -5838,6 +5855,13 @@ pub fn action_packet_filename(request_id:String) -> String {
 
 fn action_dispatch_ready(state:ServiceState,request_id:String) -> Bool {
   case specialized_dispatch(state,request_id),state.config.actions {
+    // A verify request waits for its signed packet only when verification and
+    // signed actions are both configured; otherwise it is answered at once.
+    VerifyDispatch,Some(SignedActions(_,root)) -> case state.config.verify {
+      Some(_) -> case files.read(root,action_packet_filename(request_id)) { Ok(_) -> True Error(_) -> False }
+      None -> True
+    }
+    VerifyDispatch,_ -> True
     CancellationDispatch,Some(RecoveryActions(_)) -> False
     CancellationDispatch,Some(SignedActions(p,root)) ->
       case svc_read_keys(state,[store.proposal_key(request_id)]) {
@@ -5862,6 +5886,153 @@ fn execute_action_dispatch(state:ServiceState,inbox:ledger.InboxRecord,version:I
       finish_conversation(next,inbox,version,committed)
     }
   }
+}
+
+/// Operator-held verify configuration. Paths are bounded: the root is absolute,
+/// the profile, reservation and evidence paths are relative and never escape,
+/// the guardian is absolute with a 64-hex pin. Configuring grants nothing.
+pub fn configure_verify(config:ServiceConfiguration,source:verify_run.Source,
+  database:String,runner:verify_job.Runner) -> Result(ServiceConfiguration,String) {
+  let relative = fn(p:String) { p != "" && !string.starts_with(p,"/") && !string.contains(p,"..") && string.byte_size(p) <= 512 }
+  let absolute = fn(p:String) { string.starts_with(p,"/") && !string.contains(p,"..") && string.byte_size(p) <= 4096 }
+  // The verify job store must be the service's own Sa-plan database: a second
+  // store per configuration is the INV-WS-05 divergence (review finding V-02).
+  case absolute(source.root) && relative(source.profile_path)
+    && relative(source.reservation_dir) && relative(source.evidence_base)
+    && absolute(source.guardian.path) && guard.valid_digest(source.guardian.sha256)
+    && guard.valid_digest(source.pin) && source.locators != []
+    && source.worker == config.worker_id
+    && database == resolve_sa_plan_db(config.authority_paths) {
+    True -> Ok(ServiceConfiguration(..config,verify:Some(VerifyConfiguration(source,database,runner))))
+    False -> Error("verify_configuration_refused")
+  }
+}
+
+/// The production runner for a configured service: the repository sa-plan
+/// tool bound to the service's own database.
+pub fn verify_runner(config:ServiceConfiguration) -> verify_job.Runner {
+  verify_run.sa_plan_runner("/home/an/NAS-setup/uos/tools/sa-plan",resolve_sa_plan_db(config.authority_paths))
+}
+
+/// Pure dispatch decision for a /verify request. Every branch except
+/// `VerifySigned` is a truthful reply; none is a writer hold.
+pub type VerifyDecision {
+  VerifyNotConfigured
+  VerifyActionsNotConfigured
+  /// Recovery mode reconciles history only; a verify request is answered,
+  /// never allowed to hold the writer (review finding V-04).
+  VerifyRecoveryMode
+  VerifySigned(action_profile.Profile,String,VerifyConfiguration)
+}
+
+pub fn verify_dispatch_decision(config:ServiceConfiguration) -> VerifyDecision {
+  case config.verify,config.actions {
+    None,_ -> VerifyNotConfigured
+    Some(_),None -> VerifyActionsNotConfigured
+    Some(_),Some(RecoveryActions(_)) -> VerifyRecoveryMode
+    Some(cfg),Some(SignedActions(p,root)) -> VerifySigned(p,root,cfg)
+  }
+}
+
+pub fn execute_verify_dispatch(state:ServiceState,inbox:ledger.InboxRecord,version:Int,sha:String)
+  -> Result(#(ServiceState,ServiceStepResult),ServiceError) {
+  case verify_dispatch_decision(state.config) {
+    VerifyNotConfigured -> reply_without_reservation(state,inbox,version,sha,
+      "Verification is not configured on this service. Nothing was executed.")
+    VerifyActionsNotConfigured -> reply_without_reservation(state,inbox,version,sha,
+      "Controlled actions are not configured. No verification was executed.")
+    VerifyRecoveryMode -> reply_without_reservation(state,inbox,version,sha,
+      "Verification is not available while the service is in recovery mode. Nothing was executed.")
+    VerifySigned(p,root,cfg) -> {
+      use #(next,text) <- result.try(execute_approved_verify(state,p,cfg,root,
+        action_packet_filename(inbox.request_id),inbox))
+      reply_without_reservation(next,inbox,version,sha,text)
+    }
+  }
+}
+
+/// Approved /verify: observe fences, bind the allowlisted pair, reserve the
+/// request and its Sa-plan job, load the signed packet against that exact
+/// reservation, re-observe the clock and readiness, then reconcile and run the
+/// pinned guardian at most once. Every refusal names its reason; no step is a
+/// cached or fabricated result.
+pub fn execute_approved_verify(state:ServiceState,p:action_profile.Profile,
+  cfg:VerifyConfiguration,packet_root:String,packet_relative:String,
+  inbox:ledger.InboxRecord) -> Result(#(ServiceState,String),ServiceError) {
+  use before <- result.try(action_observe(state,p))
+  let observed = action_observation(p,before)
+  use _ <- result.try(case list.contains(state.config.allowed_pairs,#(inbox.chat_id,inbox.user_id)) {
+    True -> Ok(Nil)
+    False -> Error(action_hold(state,"action_recipient_refused"))
+  })
+  // No side effect yet: derive the binding, then answer a completed request
+  // from its stored receipt without needing a fresh approval (V-03).
+  use #(loaded,b) <- result.try(
+    verify_run.derive_binding(cfg.source,inbox.request_id,1)
+    |> result.map_error(fn(r) { action_hold(state,"verify_profile_unavailable:" <> r) }))
+  use stored <- result.try(
+    verify_run.complete_receipt(cfg.source,cfg.runner,b)
+    |> result.map_error(fn(r) { action_hold(state,"verify_reconcile_failed:" <> r) }))
+  case stored {
+    Some(receipt) -> Ok(#(state,verify_reply(b,verify_run.AlreadyComplete(receipt))))
+    None -> {
+      use prepared <- result.try(
+        verify_packet.load(p,packet_root,packet_relative,observed,b)
+        |> result.map_error(fn(_) { action_hold(state,"verify_packet_invalid") }))
+      let bd = verify_action.binding(prepared)
+      // The signed binding must name this inbox message, not merely the pair.
+      use _ <- result.try(case bd.chat_id == inbox.chat_id && bd.user_id == inbox.user_id
+        && bd.update_id == inbox.update_id && bd.bot_id == inbox.bot_id {
+        True -> Ok(Nil)
+        False -> Error(action_hold(state,"verify_binding_inbox_mismatch"))
+      })
+      // The approval names a bridge lease and fence; both must still be live.
+      use _ <- result.try(action_bridge_current(p,bd.execution.fencing_token)
+        |> result.map_error(fn(reason) { action_hold(state,reason) }))
+      use after <- result.try(action_observe(state,p))
+      use _ <- result.try(checked_clock.continuity(before,after)
+        |> result.map_error(fn(_) { action_hold(state,"action_clock_discontinuity") }))
+      use _ <- result.try(case verify_action.ready(prepared,action_profile.roster(p),
+        bd,b,action_observation(p,after)) {
+        True -> Ok(Nil)
+        False -> Error(action_hold(state,"action_approval_expired"))
+      })
+      // Effects begin here: reservation, Sa-plan job, claim, guardian, completion.
+      use _ <- result.try(
+        verify_run.reserve_loaded(cfg.source,cfg.runner,b)
+        |> result.map_error(fn(r) { action_hold(state,"verify_reserve_failed:" <> r) }))
+      let deadline = verify_action.deadline_ms(prepared)
+      let now_ms = fn() { ffi_system_now_utc_us() / 1000 }
+      use outcome <- result.try(
+        verify_run.execute(cfg.source,cfg.runner,prepared,loaded,
+          verify_run.real_executor(cfg.source,deadline,now_ms))
+        |> result.map_error(fn(r) { action_hold(state,"verify_run_failed:" <> r) }))
+      Ok(#(state,verify_reply(b,outcome)))
+    }
+  }
+}
+
+fn verify_reply(b:verify_contract.Binding,outcome:verify_run.Outcome) -> String {
+  let base = [#("command",json.string("/verify")),#("job_id",json.string(b.job_id)),
+    #("attempt",json.int(b.attempt)),#("profile_sha256",json.string(b.profile_sha256)),
+    #("runtime_admission",json.string("NOT_GRANTED"))]
+  let fields = case outcome {
+    verify_run.Executed(out) -> [#("status",json.string("executed")),
+      #("assessment",json.string(case out.assessment {
+        verify_contract.VerifiedEvidence -> "verified_evidence"
+        verify_contract.Failed(reason) -> "failed:" <> reason
+        verify_contract.Indeterminate(reason) -> "indeterminate:" <> reason })),
+      #("receipt_sha256",json.string(files.digest(out.receipt))),
+      #("gate_count",json.int(list.length(out.runs))),
+      // Bounded reply: at most 24 gate rows; the receipt carries them all.
+      #("gates",json.array(list.take(out.runs,24),fn(r){ json.object([#("id",json.string(r.gate_id)),
+        #("status",json.string(r.status)),#("elapsed_ms",json.int(r.elapsed_ms))]) }))]
+    verify_run.AlreadyComplete(receipt) -> [#("status",json.string("duplicate")),
+      #("assessment",json.string("stored_receipt")),
+      #("receipt_sha256",json.string(files.digest(receipt)))]
+    verify_run.Refused(reason) -> [#("status",json.string("denied")),#("reason",json.string(reason))]
+  }
+  json.object(list.append(fields,base)) |> json.to_string
 }
 
 /// Reconcile an immutable prior cancellation by native history lookup only.

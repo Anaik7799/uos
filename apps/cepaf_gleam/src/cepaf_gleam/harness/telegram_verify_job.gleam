@@ -8,6 +8,7 @@
 import cepaf_gleam/harness/telegram_verify_contract as v
 import cepaf_gleam/harness/telegram_verify_reservation as reservation
 import gleam/dynamic/decode
+import gleam/int
 import gleam/json
 import gleam/list
 import gleam/result
@@ -79,4 +80,59 @@ pub fn ensure(
         Error(e) -> Error(e)
       }
   }
+}
+
+fn parse_one(output: String) -> Result(#(String, Job), String) {
+  use rows <- result.try(parse_list(output))
+  case rows {
+    [row] -> Ok(row)
+    _ -> Error("job_claim_malformed")
+  }
+}
+
+/// Claims the next job of the verify queue for `worker` through Sa-plan and
+/// requires it to be exactly the reserved job. A different job coming back
+/// is a conflict reported, never silently executed; the lease then belongs
+/// to the operator to resolve through Sa-plan.
+pub fn claim(
+  run: Runner,
+  b: v.Binding,
+  worker: String,
+  lease_ns: Int,
+) -> Result(Job, String) {
+  use output <- result.try(
+    run([
+      "--format",
+      "json",
+      "job",
+      "claim",
+      queue,
+      worker,
+      int.to_string(lease_ns),
+    ])
+    |> result.map_error(fn(e) { "job_claim_failed:" <> e }),
+  )
+  use #(q, job) <- result.try(parse_one(output))
+  case q == queue && job.id == b.job_id && job.worker == worker {
+    True -> Ok(job)
+    False -> Error("job_claim_mismatch:" <> job.id)
+  }
+}
+
+/// Completes (ok) or fails (not ok) the claimed attempt with a result record.
+pub fn complete(
+  run: Runner,
+  b: v.Binding,
+  worker: String,
+  attempt: String,
+  ok: Bool,
+  result_json: String,
+) -> Result(Nil, String) {
+  let status = case ok {
+    True -> "OK"
+    False -> "ERROR"
+  }
+  run(["job", "complete", b.job_id, worker, attempt, status, result_json])
+  |> result.map(fn(_) { Nil })
+  |> result.map_error(fn(e) { "job_complete_failed:" <> e })
 }

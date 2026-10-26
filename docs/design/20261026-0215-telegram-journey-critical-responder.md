@@ -235,8 +235,9 @@ These answer `ok` when the host provides the input and `backend_unavailable` oth
 [R4 start] -> [Approval flow: /approval /tool /action]
 [Approval flow: /approval /tool /action] -> [Incident previews: /andon /escalate /dark /resuscitate /chaos /gameday /lockbox /rotate-keys /sidecar]
 [Incident previews: /andon /escalate /dark /resuscitate /chaos /gameday /lockbox /rotate-keys /sidecar] -> [Engineering previews: /rewind /repro /bisect /merge /migrate /eco-schedule /pair-voice]
-[Engineering previews: /rewind /repro /bisect /merge /migrate /eco-schedule /pair-voice] -> [Denied by design: /verify /verification /voice-roll-call]
-[Denied by design: /verify /verification /voice-roll-call] -> [R4 end]
+[Engineering previews: /rewind /repro /bisect /merge /migrate /eco-schedule /pair-voice] -> [Signed verify flow: /verify /verification]
+[Signed verify flow: /verify /verification] -> [Denied by design: /voice-roll-call]
+[Denied by design: /voice-roll-call] -> [R4 end]
 ```
 
 ```mermaid
@@ -244,8 +245,9 @@ flowchart LR
   N0["R4 start"] --> N1["Approval flow: /approval /tool /action"]
   N1["Approval flow: /approval /tool /action"] --> N2["Incident previews: /andon /escalate /dark /resuscitate /chaos /gameday /lockbox /rotate-keys /sidecar"]
   N2["Incident previews: /andon /escalate /dark /resuscitate /chaos /gameday /lockbox /rotate-keys /sidecar"] --> N3["Engineering previews: /rewind /repro /bisect /merge /migrate /eco-schedule /pair-voice"]
-  N3["Engineering previews: /rewind /repro /bisect /merge /migrate /eco-schedule /pair-voice"] --> N4["Denied by design: /verify /verification /voice-roll-call"]
-  N4["Denied by design: /verify /verification /voice-roll-call"] --> N5["R4 end"]
+  N3["Engineering previews: /rewind /repro /bisect /merge /migrate /eco-schedule /pair-voice"] --> N6["Signed verify flow: /verify /verification"]
+  N6["Signed verify flow: /verify /verification"] --> N4["Denied by design: /voice-roll-call"]
+  N4["Denied by design: /voice-roll-call"] --> N5["R4 end"]
 ```
 
 ### Steps

@@ -126,8 +126,8 @@ Persona and goal: P1 SRE (or release reviewer) checking what is recorded as veri
 | 5.7 | `/fmea s2-policy-status-correction` | ok or ok-empty | assessment_id and task_id echoed; freshness field; max_rpn; or total_matching_tasks=0 | An assessment for a task id that has no record | E1 |
 | 5.8 | `/blast-radius` | denied | guard denial: error starts 'denied_mutation: /blast-radius' | A default module chosen silently | E1 |
 | 5.9 | `/blast-radius uos_sup` | ok | schema=uos.telegram.impact.v1 (read-only source scan) | Any file written | E1 |
-| 5.10 | `/verify` | denied | guard denial: error starts 'denied_mutation: /verify' ('Action is not implemented yet; current effect authority will also be required.') | Any verification executed from a plain message | E1 |
-| 5.11 | `/verification` | denied | same as step 10 (tool name /verify) | Different behaviour than /verify | E1 |
+| 5.10 | `/verify` | backend_unavailable, or executed with a signed packet | staging bot without verify configuration: reply text "Verification is not configured on this service. Nothing was executed."; with the operator-held verify configuration and a signed verify packet for this exact inbox request: JSON with `status` executed, `job_id`, `receipt_sha256`, `assessment`; a second identical message answers `status` duplicate with the same receipt digest | Any verification executed from a plain message without a signed packet; a second guardian run for the same request | E1 |
+| 5.11 | `/verification` | same as step 10 (canonical /verify) | same as step 10 | Different behaviour than /verify | E1 |
 | 5.12 | `/sutra` | ok | schema=uos.telegram.matrix.v1 | Versions invented | E1 |
 | 5.13 | `/search andon` | ok or ok-empty | schema=uos.telegram.task_search.v1 | Results not backed by a task record | E1 |
 | 5.14 | `/wiki ha` | ok or ok-empty | schema=uos.telegram.knowledge.v1; view=wiki | Content not from the corpus | E1 |
@@ -173,7 +173,7 @@ For each row, the "Today's passing outcome" is what the runbook accepts now. Acc
 | 4.8 `/sidecar forward` | observed runtime state | `mirage_unikernel_daemon` with an observable runtime | `runtime_observation=unknown`, `admission=unverified` |
 | 4.10 `/export-audit` | an actual export | `rusty_vault_nif` with audited bounded export, behind approval | `preview` naming `unavailable:rusty_vault_nif` |
 | 4.12 `/radar` | `ok` with radar values | a live telemetry feed for `biosemiotics_radar` | `backend_unavailable` naming that module |
-| 5.10, 5.11 `/verify`, `/verification` | a verification run | verify approval-to-execute extension, signed intent, fenced candidate, writer quiescence | guard denial `denied_mutation: /verify` |
+| 5.10, 5.11 `/verify`, `/verification` | a verification run on the staging bot | the operator-held verify configuration (`configure_verify`: profile pin, guardian pin, evidence root, sa-plan database) and signed actions on the staging service, plus a signed verify packet from the approval roster; the code path is wired (wave 6b) | service reply "Verification is not configured on this service. Nothing was executed." |
 | 5.1 to 5.3 `/doctor`, `/checklist` | green gates | fresh candidate-bound gate execution recorded in the configured candidate record | `UNOBSERVED` states, `NOT_ADMITTED` |
 | 6.5 `/resuscitate` | recovery completion | live actor snapshot, approved restart effect, engaged-backend probe receipt | `preview`, `completion_requires=engaged_backend_probe_receipt` |
 | 6.8 `/commitments` | tasks listed | pinned Sa-plan observer configuration held by the service | `tasks_observed=0` with `backend_unavailable:cepaf_gleam/harness/telegram_task_command` |

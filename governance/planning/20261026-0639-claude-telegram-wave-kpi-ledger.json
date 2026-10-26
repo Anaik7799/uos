@@ -153,16 +153,30 @@
     },
     {
       "wave": "6a",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "55d0f363",
+      "landed_utc": "2026-10-26T06:51:30Z",
       "canonicals_answering": "76/77 (simulate now its own canonical; /verify held for the signed flow)",
       "tests_added": 78,
       "mutants": "18/20 killed (2 equivalent mutants recorded: w3 snapshot swap, cancellation-record kind guard shadowed by native_request)",
       "workers": 3,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 258,
       "checker_holds": 4,
       "process_defects": 2,
-      "notes": "all four implement leases found expired (03:55Z); reclaim needed a reviewed tie but the checker barred reviews in reclaim-set mode; fix: --reclaim-set-preflight-reviewed with laws and contract addendum. Portfolio refreshed twice (stale validate.ml hash after the checker edit; evidence observed_at later than assessment). Independent reviewer approved twice. Verify core (intent kind, verify action, packet loader, run orchestration) added in the same increment: 23 tests, 3 killed mutants.",
+      "notes": "all four implement leases found expired (03:55Z); reclaim needed a reviewed tie but the checker barred reviews in reclaim-set mode; fix: --reclaim-set-preflight-reviewed with laws and contract addendum. Portfolio refreshed twice (stale validate.ml hash after the checker edit; evidence observed_at later than assessment). Independent reviewer approved twice. Verify core (intent kind, verify action, packet loader, run orchestration) added in the same increment: 23 tests, 3 killed mutants. Wall minutes include an idle gap from about 03:55Z to 05:56Z between sessions; active integrator time was about 55 minutes.",
+      "full_suite": "13697/13697"
+    },
+    {
+      "wave": "6b",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (/verify preserved for the service VerifyDispatch; executes only with a signed verify packet)",
+      "tests_added": 11,
+      "mutants": "8/8 (M5-M8 wiring: guard preservation, allowlist, duplicate-as-executed, foreign worker; M9-M12 review fixes: any job state runs, stored-receipt branch skipped, proposal accepts verify kind, database check dropped)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 3,
+      "notes": "Service wiring of the /verify approval-to-execute extension: VerifyDispatch, configure_verify, execute_approved_verify, reply JSON; environment-bound sa-plan runner (run_bounded_env); OCaml fixture verify_fence_fixture.exe prepares the isolated Sa-plan fence for the service test; guard preserves /verify; journey tests flipped to service-owned; journey specs and runbooks updated. Independent R2 review of the signed-approval diff requested before landing. Independent R2 review: APPROVE_WITH_CHANGES, 12 findings (4 major fixed, 5 minor fixed, 1 accepted with design amendment, 2 partly fixed with residuals). Pinned Telegram store recovery worker does not serve Sa-plan frames; the action profile transport must be the Sa-plan cancel worker.",
       "full_suite": null
     }
   ],
@@ -261,6 +275,30 @@
       "wave": "6a",
       "lesson": "Two generated documents were first named with guessed future timestamps (0740, 0825) while the host UTC clock read 06:39; prefixes must come from date -u at write time, never from a sense of elapsed work",
       "applied": "renamed to the observed mtimes 0639 and 0640; every prefix in this session is now taken from the host clock immediately before the Write"
+    },
+    {
+      "id": "L-09",
+      "wave": "6b",
+      "lesson": "A service-level test needs the Sa-plan fence (plan, executing task, bridge mapping and lease); preparing it belongs in an OCaml fixture against the Store API, not in Python or ad-hoc SQL",
+      "applied": "engines/hermes/modules/sa_plan/test/verify_fence_fixture.exe, invoked through development.bounded by the Gleam test"
+    },
+    {
+      "id": "L-10",
+      "wave": "6b",
+      "lesson": "gleam format reflows a one-line condition into several lines, so a mutant pattern copied from the pre-format source silently does not match",
+      "applied": "mutant patterns are taken from the formatted file; PATTERN NOT FOUND is treated as not planted, never as killed"
+    },
+    {
+      "id": "L-11",
+      "wave": "6b",
+      "lesson": "The Telegram store transport and the Sa-plan frame transport are different workers behind one guardian; an action profile that points the store worker at a Sa-plan database answers unknown_command",
+      "applied": "service verify test uses sa_plan_cancel_worker.exe for the profile transport; recorded in the wave 6b journal section 9"
+    },
+    {
+      "id": "L-12",
+      "wave": "6b",
+      "lesson": "An independent reviewer with the full diff found that the guardian ran outside any Sa-plan claim; the author tests had normalised it",
+      "applied": "claim before exec and complete after are now laws with tests; every signed-approval change gets an R2 review before landing while R5 sessions are stale"
     }
   ]
 }

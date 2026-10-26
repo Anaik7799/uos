@@ -459,7 +459,9 @@ fn sec_j3() -> List(Step) {
       "/verification",
       "/verification",
       "F3",
-      ClassifyDenied("/verify"),
+      // Wave 6b: preserved for the service's VerifyDispatch; no adapter owns
+      // it, and without a signed packet the service answers not-configured.
+      ServiceOwned("/verify"),
     ),
   ]
 }

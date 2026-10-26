@@ -214,7 +214,7 @@ flowchart LR
 | S4 | SR asks for whiteboard-to-code synthesis | `/whiteboard` | F8 | backend_unavailable | backend, reason | allowlisted pair (read-only) | reply sha256 + UTC | Any synthesised code. |
 | S5 | SR asks for live translation | `/babel` | F8 | backend_unavailable | backend, reason | allowlisted pair (read-only) | reply sha256 + UTC | Any translated text. |
 | S6 | SR previews an isolated sandbox sidecar for the sample | `/sidecar sandbox` | F9 | preview (backend unavailable) | confidence=simulated, runtime_mode=simulation_only, admission=unverified, backend=unavailable:mirage_unikernel_daemon | allowlisted pair; effect needs signed approval flow and effect authority (none granted) | reply sha256; effect_id | 'started' or 'booted' wording; nothing is started. |
-| S7 | SR asks to verify the sample | `/verification` | F3 | denied (not implemented) | typed denial | guard | reply sha256 | A verification result: the approval-execute extension is not wired for /verify. |
+| S7 | SR asks to verify the sample | `/verification` | F3 | backend_unavailable (not configured) or, with a signed verify packet, executed | `status`, `job_id`, `receipt_sha256` when executed | approval roster (signed verify packet for this exact inbox request) | reply sha256; evidence receipt digest | A verification result from a plain message without a signed packet (wave 6b: the plain message answers that verification is not configured). |
 
 **Step flow (ASCII source).**
 
@@ -253,7 +253,7 @@ flowchart LR
 | S4 `/whiteboard` | backend_unavailable | Needs an uploaded-photo intake and a vision model; the in-repo handler returns static text and is refused. |
 | S5 `/babel` | backend_unavailable | Needs a voice-stream intake and a translation model; the in-repo handler returns static text and is refused. |
 | S6 `/sidecar sandbox` | preview (backend unavailable) | backend unavailable: mirage_unikernel_daemon |
-| S7 `/verification` | denied (not implemented) | Needs the /verify approval-execute extension (20261026-0150) wired through classify and the service so a signed approval can bind a verification job; today classify denies the literal. |
+| S7 `/verification` | backend_unavailable until the service is configured with a verify source and signed actions; executed only through a signed verify packet | Wave 6b wired the approval-execute extension (20261026-0150): classify preserves the literal, the service's VerifyDispatch reserves the request, loads the packet against that exact reservation and runs the pinned guardian at most once. Real deployment needs the operator-held verify configuration (profile pin, guardian pin, evidence root) and the approval roster. |
 
 ## 6. SEC-J4 — Swarm and mesh anomaly
 
@@ -468,7 +468,7 @@ Distinct catalog literals touched: 43 (exported by `covered_literals()` in the t
 ## 10. Findings recorded while writing the journeys
 
 1. `/simulate` is catalogued as an alias of `/whatif`, so `classify_directive` hands `/simulate n1:partitioned ...` to the `/whatif` grammar and the reply is `denied` (SEC-J4/S8). The peer-quorum simulation exists in `telegram_simulation_read_command` but is unreachable through the alias.
-2. `/verify` and its alias `/verification` are denied at classify ("Action is not implemented yet"); the approval-execute extension is not wired (SEC-J3/S7).
+2. `/verify` and its alias `/verification` are preserved at classify for the service's VerifyDispatch (wave 6b); without a signed verify packet the service answers that verification is not configured, and nothing executes from the text (SEC-J3/S7).
 3. `/voice-roll-call` is deliberately not used here: the integrator workspace denies it at classify (biometric arm), while an older adapter copy would preview it. The journeys avoid depending on that difference.
 4. A photo with a caption but no `text` is rejected by the guard as `missing_or_malformed_message_identity`; there is no attachment intake yet (SEC-J3/S1).
 5. `/mesh` is an `ok` declared-configuration read with `deployment_confirmed=false`; it turns `backend_unavailable` if `UOS_MESH_CONFIG_JSON` is invalid.
