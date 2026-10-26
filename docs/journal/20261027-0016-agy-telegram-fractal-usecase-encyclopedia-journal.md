@@ -501,8 +501,23 @@ Every slash command is parsed by `telegram_commands.parse` (`<= 4096` UTF-8 byte
   - `telegram_media_janitor.gleam` runs every `60,000 ms` (`max_objects = 64`) to reclaim expired blobs and orphan temp files.
 - **Fractal Architecture**: $L_0$ (Allowlist pre-check) $\rightarrow$ $L_1$ (Content-addressed disk store & quota ceiling) $\rightarrow$ $L_2$ (64-byte magic header inspector) $\rightarrow$ $L_3$ (Supervised OTP janitor & dual authority window) $\rightarrow$ $L_4$ (4 MiB HTTP Range downloader).
 - **Interactions**: `telegram_ingress_guard` $\rightarrow$ `telegram_media_ref` $\rightarrow$ `telegram_service.media_reply` $\rightarrow$ `telegram_media_intake` $\rightarrow$ `telegram_media_download` $\rightarrow$ `telegram_media_inspect` $\rightarrow$ `telegram_media_store` + `telegram_media_janitor`.
-- **Test Cases**: `telegram_media_ref_test.gleam`, `telegram_media_download_test.gleam`, `telegram_media_inspect_test.gleam`, `telegram_media_store_test.gleam`, `telegram_media_intake_test.gleam`, `telegram_media_janitor_test.gleam`, `telegram_media_transport_test.gleam`.
+- **Test Cases**: `telegram_media_ref_test.gleam`, `telegram_media_download_test.gleam`, `telegram_media_inspect_test.gleam`, `telegram_media_store_test.gleam`, `telegram_media_intake_test.gleam`, `telegram_media_janitor_test.gleam`, `telegram_media_transport_test.gleam`, `telegram_fractal_combinations_test.gleam`.
 - **Real-World Case Study**: A field technician uploads a 10 MiB diagnostic PDF captioned `"nas-1 smartctl report"`. The service verifies $\ge 20\text{ s}$ lease authority, streams the file in three 4 MiB HTTP `Range` chunks, verifies the `%PDF-` 64-byte magic header, stores it by SHA-256 under `objects/<sha256>`, replies with the verified digest and byte size, and automatically reclaims it after the retention TTL expires.
+
+---
+
+### 3.8 Deep-Dive Specification: Fractal Combinatorial & Full-Feature-Surface Test Matrix (`telegram_fractal_combinations_test.gleam`, `1,280+` Cross-Product Combinations)
+
+- **Usage**: Executed via `gleam build` + EUnit (`eunit:test([telegram_fractal_combinations_test, telegram_user_usecases_test, ...])`) across **50** Telegram test suites (`770/770` tests passing).
+- **8 Combinatorial Matrix Test Functions (`apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam`)**:
+  1. `fractal_matrix_78_invocations_x_6_identity_chat_states_test` ($L_0 \times L_4$, **468** combinations): Cross-product of all **78** command invocations $\times$ **6** `(chat_id, user_id, chat_type)` states (`private` allowlisted, `group` allowlisted, `supergroup` allowlisted, `channel` rejected, unauthorized user rejected, unauthorized chat rejected).
+  2. `fractal_matrix_78_invocations_x_5_syntactic_perturbations_test` ($L_4 \times L_6$, **390** combinations): Cross-product of all **78** command invocations $\times$ **5** syntactic/adversarial perturbations (canonical baseline, leading/trailing whitespace normalization, `@uos_c3i_bot` foreign suffix fail-closed rejection, `>2048`-byte oversized argument rejection, and embedded NUL/control-byte boundary handling).
+  3. `fractal_matrix_19_controlled_action_adapters_x_4_arg_regimes_test` ($L_6 \times L_7$, **76** combinations): Cross-product of all **19** `ControlledAction` preview adapters (`telegram_action_adapters.literals()`) $\times$ **4** argument regimes (valid domain arguments $\rightarrow$ `ActionPreview` with `"effect_id"`, empty arguments $\rightarrow$ fail-closed `Error`, invalid subcommand $\rightarrow$ fail-closed `Error`, and `route_preview` non-adapter literal $\rightarrow$ `Error("not_an_action_adapter_command")`).
+  4. `fractal_matrix_16_read_adapters_x_4_arg_regimes_test` ($L_1 \dots L_8$, **64** combinations): Cross-product of all **16** `ReadObservation` adapter commands (`telegram_read_adapters.literals()`) $\times$ **4** argument regimes (default observation, named target observation, invalid flag refusal on strict-grammar adapters, and deterministic twin/analytics reproducibility).
+  5. `fractal_matrix_8_media_kinds_x_11_signatures_and_5_carriers_x_4_states_test` ($L_0 \times L_1 \times L_2 \times L_4$, **108** combinations): Cross-product of all **8** `MediaKind` variants (`Photo`, `Document`, `Audio`, `Voice`, `Video`, `Sticker`, `VideoNote`, `Animation`) $\times$ **11** 64-byte magic binary signatures (`PNG`, `JPEG`, `WEBP`, `PDF`, `OGG`, `MP4`, `UTF8`, `ZIP`, `ELF`, `GIF`, `Empty` = **88** inspection combinations) + **5** supported media carriers $\times$ **4** ingress states (captioned allowlisted accepted, uncaptioned rejected with `media_without_caption`, `forward_date` rejected with `forwarded_not_supported`, unauthorized sender rejected before media inspection = **20** ingress combinations).
+  6. `fractal_matrix_14_mini_app_pages_x_6_security_and_route_vectors_test` ($L_0 \times L_3 \dots L_9$, **84** combinations): Cross-product of all **14** Mini-App pages (`/mini-app/dashboard` .. `/mini-app/zenoh`) $\times$ **6** route/data/security vectors (page catalog metadata, `DataContract` field count $\ge 10$, ` render_screen` HTML rendering under `OBSERVED` and `FAIL_CLOSED_UNAVAILABLE`, `build_launch_Spec` HTTPS URL construction, `validate_init_data` HMAC-SHA256 allowlist verification, and tampered hash/unauthorized user/bot/expired/replayed `query_id` refusal).
+  7. `fractal_matrix_memory_fifo_8_cap_x_dialogue_modes_x_2oo3_approval_x_tool_bridge_test` ($L_3 \times L_5 \times L_6$, **90+** combinations): Verifies 9-turn conversation memory FIFO eviction (turns `1..9` $\rightarrow$ window `2..9` of size `8`), `/messages 3` and `/history 2` rendering, `/memory clear` reset, `CommandOnly` vs `AllowNaturalLanguage` dialogue routing, 4-stage 2oo3 approval state machine (`prepare` $\rightarrow$ `first_approval` $\rightarrow$ self-second-signer refusal $\rightarrow$ distinct second signer `FullyApproved`), and 17 `/tool` / `/action` invocations (`help`, read tools, `cancel_job_lease`, unknown tool, malformed JSON).
+  8. `fractal_matrix_3_journeys_18_cases_114_steps_full_cross_layer_invariants_test` ($L_0 \dots L_9$, **132** combinations): Exhaustively traverses all **3** journeys $\times$ **6** cases = **18** `JourneyCase` definitions and all **114** `StepExpectation` records (`6` steps/case $\times$ `18` cases), verifying step indices `1..6`, non-empty utterances, `Required` vs `Forbidden` evidence tags, and negative/recovery taxonomy coverage (`NegativeSecurity` + `RecoveryOrRollover` $\ge 3$ per journey).
 
 ---
 
@@ -536,7 +551,8 @@ Analysis of Competing Hypotheses (ACH):
 | Gate / Surface | Command / Method | Result | Admiralty Rating |
 | :--- | :--- | :--- | :--- |
 | Expanded Use-Case EUnit Suite | `eunit:test([telegram_user_usecases_test], [verbose])` | `PASS` (`13/13` tests covering all 78 invocations, previews, twins, memory, 2oo3, media) | **A1** |
-| Full 49-Suite Telegram EUnit Run | `erl -pa build/dev/erlang/*/ebin ... eunit:test(Suites, [])` | `PASS` (`49` suites, `762/762` tests passed, `0` failures) | **A1** |
+| Fractal Combinatorial EUnit Suite | `eunit:test([telegram_fractal_combinations_test], [verbose])` | `PASS` (`8/8` matrix functions verifying `1,280+` deterministic cross-product combinations across $L_0 \dots L_9$) | **A1** |
+| Full 50-Suite Telegram EUnit Run | `erl -pa build/dev/erlang/*/ebin ... eunit:test(Suites, [])` | `PASS` (`50` suites, `770/770` tests passed, `0` failures) | **A1** |
 | Journal Protocol (`SC-JOURNAL-v3`) | `bash tools/journal-check docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md` | `PASS` (`10/10` checks) | **A1** |
 | Diagram Parity (`SC-DIAGRAM-001`) | `bash tools/diagram-check docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md` | `PASS` (`1/1` verified) | **A1** |
 | Parent Closure Journal | `bash tools/journal-check docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md` | `PASS` (`10/10` checks) | **A1** |
@@ -548,6 +564,7 @@ Analysis of Competing Hypotheses (ACH):
 ## 8. Files Modified
 
 - `apps/cepaf_gleam/test/telegram_user_usecases_test.gleam`
+- `apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam`
 - `docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md`

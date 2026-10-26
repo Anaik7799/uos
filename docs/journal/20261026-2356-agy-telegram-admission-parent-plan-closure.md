@@ -271,7 +271,7 @@ Analysis of Competing Hypotheses (ACH):
 | Independent Audit (`9fec218b`) | `SOURCE_REVIEW`, `RELEASE_REVIEW`, `ADMISSION` | `APPROVE` (`0` blocking findings, `F-SRC-02` resolved) | **A1** |
 | Parent `sa-plan` Portfolio | `uos/telegram-admission/20261001-1015` | `33/33` `completed` | **A1** |
 | Global Risk Checker | `bash tools/risk-priority-check --all` | `PASS` (`0` HOLDs) | **A1** |
-| Telegram Use-Case & Feature EUnit Suites | `49` EUnit suites (`telegram_user_usecases_test` `13/13` + 48 domain/journey/media/mini-app suites) | `PASS` (`762/762` tests passed) | **A1** |
+| Telegram Use-Case & Fractal Combinatorial EUnit Suites | `50` EUnit suites (`telegram_user_usecases_test` `13/13` + `telegram_fractal_combinations_test` `8/8` (`1,280+` combinations) + 48 domain/journey/media/mini-app suites) | `PASS` (`770/770` tests passed) | **A1** |
 
 ---
 
@@ -282,6 +282,7 @@ Analysis of Competing Hypotheses (ACH):
 - `governance/planning/20261026-2355-independent-telegram-admission-audit-receipt.json`
 - `governance/planning/20261026-0639-claude-telegram-wave-kpi-ledger.json`
 - `apps/cepaf_gleam/test/telegram_user_usecases_test.gleam`
+- `apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam`
 - `docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md`
