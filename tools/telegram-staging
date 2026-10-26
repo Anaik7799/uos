@@ -12,6 +12,7 @@
 #   tools/telegram-staging status                 # unit, journal tail, media root, vault presence
 #   tools/telegram-staging verify                 # getMe through the OCaml client with the sealed token (one process, no disk copy)
 #   tools/telegram-staging bootstrap  USER_ID CHAT_ID   # after vault-put: release + config auto + install + start + status
+#   tools/telegram-staging bridge-upgrade [WORKSPACE]   # operator-run: install the repaired OCaml client over the production bridge and restart it (rollback copy kept)
 # The production bridge (uos-telegram-bridge, OCaml client on the production bot) is never touched here.
 set -euo pipefail
 UOS_ROOT=${UOS_ROOT:-/home/an/NAS-setup/uos}
@@ -155,6 +156,19 @@ UNITF
   verify)
     # The sealed token reaches the OCaml client only through this one process's environment.
     TELEGRAM_TOKEN=$("$VAULT_EXE" get "$VAULT/store" "$TOKEN_NAME" "$PASSFILE") TELEGRAM_CHAT_ID=$(jq -r '.allowed_pairs[0][0]' "$CONFIG") "$CLIENT_EXE" --status 2>&1 | sed -E 's/[0-9]{6,}:[A-Za-z0-9_-]{30,}/<token-redacted>/g' | head -20
+    ;;
+  bridge-upgrade)
+    # Operator-run production step (wave 6s): install the repaired OCaml client from a workspace at main over the
+    # canonical tools/telegram_client.exe, keep a rollback copy, restart the production bridge, show the journal.
+    WS=${2:-$UOS_ROOT/.uos-workspaces/telegram-staging-deploy}
+    SRC=$WS/tools/telegram_client.exe; DST=$UOS_ROOT/tools/telegram_client.exe; TS=$(date -u +%Y%m%d-%H%S)
+    [ -x "$SRC" ] || { echo "no client binary at $SRC"; exit 2; }
+    cp -p "$DST" "$DST.pre-$TS"
+    install -m 755 "$SRC" "$DST.new-$TS" && mv -f "$DST.new-$TS" "$DST"
+    systemctl --user restart uos-telegram-bridge; sleep 6
+    systemctl --user is-active uos-telegram-bridge
+    journalctl --user -u uos-telegram-bridge --no-pager --since "-1 min" 2>&1 | sed -E 's/[0-9]{6,}:[A-Za-z0-9_-]{30,}/<token-redacted>/g' | tail -6 | cut -c1-160
+    echo "rollback: cp -p $DST.pre-$TS $DST && systemctl --user restart uos-telegram-bridge"
     ;;
   bootstrap)
     # After vault-put: release the deployment workspace, write the config with the bot id from the sealed token, install and start.

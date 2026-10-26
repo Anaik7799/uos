@@ -45,6 +45,10 @@ let zenoh_rest_default = "http://127.0.0.1:8080"
 
 let init_db () =
   let db = Sqlite3.db_open state_db_path in
+  (* Wave 6s: a concurrent reader (another client process, a status probe)
+     made the poll loop fail with "database is locked"; wait up to 5 s for
+     the lock instead of failing the cycle. *)
+  let _ = Sqlite3.busy_timeout db 5000 in
   let _ = Sqlite3.exec db "PRAGMA journal_mode = WAL;" in
   let _ = Sqlite3.exec db "PRAGMA synchronous = NORMAL;" in
   let _ = Sqlite3.exec db "
@@ -323,7 +327,9 @@ let zenoh_put ~endpoint key payload =
 let telegram_call ~token method_name (payload_json : Yojson.Safe.t) =
   let url = Printf.sprintf "https://api.telegram.org/bot%s/%s" token method_name in
   let body = Yojson.Safe.to_string payload_json in
-  let cmd = Bos.Cmd.(v "curl" % "-s" % "--max-time" % "15" % "--connect-timeout" % "5" % "-X" % "POST" % "-H" % "Content-Type: application/json" % "-d" % body % url) in
+  (* Wave 6s: transient exits 28 (timeout) and 35 (TLS handshake) are retried
+     twice by curl itself with a short delay before the call is reported failed. *)
+  let cmd = Bos.Cmd.(v "curl" % "-s" % "--max-time" % "20" % "--connect-timeout" % "5" % "--retry" % "2" % "--retry-delay" % "1" % "--retry-all-errors" % "-X" % "POST" % "-H" % "Content-Type: application/json" % "-d" % body % url) in
   match Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.to_string with
   | Ok out ->
       (try Yojson.Safe.from_string out
