@@ -132,6 +132,7 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 ## COCKPIT_RESPONDER_AI — blocked (operator credential and cockpit release)
 
 - Observed: inbound messages 2244 and 2246 were answered with `dispatch_directive_status_default`; `handle_conversational` falls to the offline gateway because `c3i-gleam-server` has no `OPENROUTER_API_KEY`, and that unit runs from a release directory that no longer exists on disk. No effect taken; the Sa-plan task records the two blockers.
+- Correction (recorded, not rewritten): the responder that consumes `indrajaal/l5/cog/intent/req` is `uos-cognitive-worker.service` (release `20261001-0511…`, active since 2026-10-01, 0 restarts), not the cockpit. Its journal states the cause verbatim on every intent: `Both Gemma 4 models failed: OPENROUTER_API_KEY missing or invalid in environment`; it also reports `c3i_nif` NIF load failure from that release directory. The cockpit's missing release directory remains a separate operational finding. Provisioning the key is an operator act (INV-TGS-06, rule `20261026-1910`).
 
 ## Comprehensive verification checklist
 

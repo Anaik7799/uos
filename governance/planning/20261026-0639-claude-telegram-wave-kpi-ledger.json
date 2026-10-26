@@ -164,9 +164,9 @@
       "definition": "free-text inbound messages answered by the inference path rather than the deterministic /status default; numerator = observed AI replies, denominator = observed free-text inbound in the window",
       "numerator": 0,
       "denominator": 2,
-      "value": "0/2 on 2026-10-26 (messages 2244, 2246 answered by dispatch_directive_status_default); cause: no OPENROUTER_API_KEY in c3i-gleam-server; blocked on an operator credential and a cockpit release",
-      "observed_utc": "2026-10-26T19:01:06Z",
-      "source": "journalctl uos-telegram-bridge; zenoh indrajaal/l5/cog/intent/res",
+      "value": "0/2 on 2026-10-26 (messages 2244, 2246 answered by dispatch_directive_status_default); cause stated by uos-cognitive-worker journal: OPENROUTER_API_KEY missing or invalid; blocked on an operator credential (INV-TGS-06)",
+      "observed_utc": "2026-10-26T19:10:33Z",
+      "source": "journalctl uos-cognitive-worker; zenoh indrajaal/l5/cog/intent/res",
       "confidence": "Measured"
     }
   ],
@@ -624,7 +624,7 @@
       "wave_wall_minutes": null,
       "checker_holds": 3,
       "process_defects": 3,
-      "notes": "Verdict governance/planning/20261026-1846-agy-residuals-review-verdict.json. Bridge: canonical tools/telegram_client.exe 42c9130a installed over dfc2f907 under runtime:telegram-bridge epoch 4 with rollback copy; 0 token lines, curl child with -K -, getMe green. Mini App: tools/mini_app_browser_verify.ml compiles; headless Chrome 154 completes no URL load inside the agent shell sandbox (net-log evidence under /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850); operator-run command recorded in the journal. Root cause of the operator complaint (same reply every time): c3i-gleam-server has no OPENROUTER_API_KEY, so handle_conversational falls to the deterministic /status default; its release directory no longer exists on disk."
+      "notes": "Verdict governance/planning/20261026-1846-agy-residuals-review-verdict.json. Bridge: canonical tools/telegram_client.exe 42c9130a installed over dfc2f907 under runtime:telegram-bridge epoch 4 with rollback copy; 0 token lines, curl child with -K -, getMe green. Mini App: tools/mini_app_browser_verify.ml compiles; headless Chrome 154 completes no URL load inside the agent shell sandbox (net-log evidence under /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850); operator-run command recorded in the journal. Root cause of the operator complaint (same reply every time): c3i-gleam-server has no OPENROUTER_API_KEY, so handle_conversational falls to the deterministic /status default; its release directory no longer exists on disk. Correction: the responder is uos-cognitive-worker.service (release 20261001-0511), whose journal states OPENROUTER_API_KEY missing or invalid on every intent; rule SC-TELEGRAM-SECRET-001 (20261026-1910) and the journeys skill section added and mirrored to .gemini/.agents/.codex."
     }
   ],
   "forecasts": [
