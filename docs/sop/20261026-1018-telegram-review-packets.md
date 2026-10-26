@@ -31,12 +31,12 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 
 ## GATEWAY_REVIEW — "Verify Telegram gateway startup secrecy event routing and recovery"
 
-- Candidate: `main` at or after e256791b (surface last changed in wave 6a, 55d0f363).
-- Files: `src/cepaf_gleam/gateway/telegram.gleam`, `telegram_gateway_outbox.gleam`, `telegram_gateway_drain.gleam`; `telegram_app.gleam.broken` is deliberately not compiled.
-- Laws to verify: the gateway holds no credential and reports observed startup only; critical events go to the bounded policy-selected outbox and are drained Critical-first within a budget by the supervised drain actor; the drain never holds, receives or logs a token; restart under `static_supervisor` yields an empty queue by design (durable recovery belongs to the delivery ledger).
-- Suites: `telegram_gateway_test` (if present), `telegram_gateway_outbox_test`, `telegram_gateway_drain_test`.
-- Evidence: journals 20261026-0220 (wave 4) and 0640 (6a).
-- Known residuals: no start site exists for the gateway in the tree, so the drain's placement under a production supervisor is deployment configuration; live Zenoh delivery not exercised.
+- Candidate: `main` at or after the wave 6n landing (the advisory review of 6a's surface, `claude-subagent-gateway-review-20261026`, returned REQUEST_CHANGES with nine majors; 6n answers them).
+- Files: `src/cepaf_gleam/gateway/telegram.gleam`, `telegram_gateway_outbox.gleam`, `telegram_gateway_drain.gleam`, `src/telegram_gateway_drain_ffi.erl`; `telegram_app.gleam.broken` is deliberately not compiled.
+- Laws to verify: the gateway holds no credential and reports observed startup only (with the current Zenoh client `start` can only report `subscribed: False`; no event routing exists); the drain actor's state holds no `Send` closure (the Send is passed per `Tick`; verify with `sys:get_state`); a crashing Send is contained as `OutboxUncertain("send_crashed")` with its reason discarded; the request digest covers kind, chat, topic and text; an uncertain backlog refuses Notices at capacity and Criticals only at twice the capacity; `Delivered(id ≤ 0)` is never a delivery; `enqueue` reports `Unobserved(call_timeout|actor_unavailable)` distinctly from `Full`; the Telegram channel refusal is case- and whitespace-insensitive; a supervisor restart yields an EMPTY queue and the delivery ledger holds no gateway request (no recovery exists; stated, not solved).
+- Suites: `telegram_gateway_test`, `telegram_gateway_outbox_test`, `telegram_gateway_drain_test`, `gateway_coverage_test`, `gateway_comprehensive_test`.
+- Evidence: journals 20261026-0220 (wave 4), 0640 (6a), the 6m journal section 10 (the review's findings) and the 6n journal.
+- Known residuals the author recorded: no Critical-reserved capacity slice and no stale-uncertain alarm (G-04); any Subject holder may `Resolve` (G-05); no pre-send durable record, so a producer re-enqueue after a restart can send twice (G-06); Send runs synchronously inside the actor with no deadline of its own (G-07); the briefing's dead outbox queue (G-10); caller-supplied `now` (G-11); the broken app file (G-12); no start site exists for the gateway in the tree (G-13).
 
 ## MEDIA_REVIEW — "Independently verify all adopted Telegram media cases and hostile inputs"
 

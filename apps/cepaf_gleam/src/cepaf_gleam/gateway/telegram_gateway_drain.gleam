@@ -6,27 +6,36 @@
 //// Supervised drain actor for the bounded Telegram gateway outbox.
 ////
 //// The actor owns exactly one `telegram_gateway_outbox.Queue` and empties it
-//// through an INJECTED `Send` function. The actor never holds, receives or
-//// logs a bot token: the transport that knows the credential lives behind the
-//// injected function and is not this module's concern. The actor state has no
-//// token field and no string field other than what an `outbox.Request`
-//// already carries.
+//// through a `Send` function that the TICKER passes with every `Tick`. The
+//// actor state holds no function and no string beyond what an
+//// `outbox.Request` already carries (review G-01): a Send closure that
+//// captured a credential lives in the ticker's process, never in this
+//// actor's heap, so `sys:get_state`, `process_info` and a crash dump of this
+//// process cannot expose it.
 ////
-//// Truthfulness boundaries:
+//// Truthfulness boundaries (reviews G-02, G-05, G-06, G-07 applied in wave 6n):
 ////   * `Send` is called synchronously inside a tick. The caller bounds it; a
 ////     slow send delays the tick reply and a client timeout is reported as a
-////     typed `CallTimeout`, never as an empty success.
+////     typed `CallTimeout`, never as an empty success. Running Send under its
+////     own deadline is a recorded residual, not a feature.
+////   * An exception inside `Send` does NOT crash the actor. It is contained
+////     by `guard_send` and recorded as `OutboxUncertain("send_crashed")`; the
+////     exception reason is discarded so no transport text reaches state or a
+////     report.
 ////   * `OutboxPending`/`OutboxSending` coming back from `Send` are not terminal
 ////     and are recorded as `OutboxUncertain("non_terminal_status")`, so no
 ////     request is left in flight after a tick and none is silently retried.
-////   * A crash inside `Send` crashes the actor. The queue lives only in the
-////     actor, so a supervisor restart yields an empty queue: requests that
-////     were pending or uncertain at the crash are NOT recovered here. Durable
-////     recovery belongs to the delivery ledger, not to this process.
-////   * The convenience clients `enqueue`, `tick` and `counters` keep the
-////     specified total signatures. On timeout or an absent actor they return
-////     an explicit unavailable value (see each function). The `try_*` clients
-////     return the typed `CallError` and are preferred by new callers.
+////   * `OutboxDelivered(id)` with a non-positive id, from `Send` or from
+////     `Resolve`, is recorded as `OutboxUncertain("invalid_message_id")`.
+////   * NO durable recovery exists. The queue lives only in the actor; a
+////     supervisor restart (after a kill or an actor bug) yields an empty
+////     queue, and requests that were pending or uncertain at that moment are
+////     lost. The delivery ledger does not hold gateway requests, so a producer
+////     re-enqueue after a restart may send twice. This is stated, not solved.
+////   * The convenience clients `enqueue`, `tick` and `counters` keep total
+////     signatures. On timeout or an absent actor `enqueue` returns
+////     `Error(Unobserved(reason))`, which is distinct from every queue refusal.
+////     The `try_*` clients return the typed `CallError` and are preferred.
 
 import cepaf_gleam/gateway/telegram_gateway_outbox as outbox
 import cepaf_gleam/harness/telegram_delivery_ledger.{
@@ -39,7 +48,7 @@ import gleam/otp/actor
 import gleam/otp/supervision
 
 /// Transport boundary. Receives only the typed request; returns the observed
-/// delivery status. Called inside the actor process.
+/// delivery status. Called inside the actor process, passed per tick.
 pub type Send =
   fn(outbox.Request) -> OutboxStatus
 
@@ -48,7 +57,7 @@ pub type Message {
     request: outbox.Request,
     reply: Subject(Result(Nil, outbox.Backpressure)),
   )
-  Tick(budget: Int, reply: Subject(TickReport))
+  Tick(budget: Int, send: Send, reply: Subject(TickReport))
   GetCounters(reply: Subject(Counters))
   Resolve(digest: String, status: OutboxStatus, reply: Subject(Nil))
 }
@@ -60,6 +69,9 @@ pub type TickReport {
     failed: Int,
     uncertain: Int,
     budget: Int,
+    /// Digests whose send reported `Failed` in this tick, Critical and Notice
+    /// alike, so a failed Critical is never dropped silently (review G-04).
+    failed_digests: List(String),
   )
 }
 
@@ -92,24 +104,15 @@ pub const min_timeout_ms = 1
 pub const max_timeout_ms = 3000
 
 type State {
-  State(
-    queue: outbox.Queue,
-    send: Send,
-    now_ms: fn() -> Int,
-    ticks: Int,
-    last_tick_ms: Int,
-  )
+  State(queue: outbox.Queue, now_ms: fn() -> Int, ticks: Int, last_tick_ms: Int)
 }
 
-fn initial_state(capacity: Int, send: Send, now_ms: fn() -> Int) -> State {
-  State(
-    queue: outbox.new(capacity),
-    send: send,
-    now_ms: now_ms,
-    ticks: 0,
-    last_tick_ms: 0,
-  )
+fn initial_state(capacity: Int, now_ms: fn() -> Int) -> State {
+  State(queue: outbox.new(capacity), now_ms: now_ms, ticks: 0, last_tick_ms: 0)
 }
+
+@external(erlang, "telegram_gateway_drain_ffi", "guard_send")
+fn guard_send(send: Send, request: outbox.Request) -> Result(OutboxStatus, Nil)
 
 // ---------------------------------------------------------------------------
 // Start and supervision
@@ -118,10 +121,9 @@ fn initial_state(capacity: Int, send: Send, now_ms: fn() -> Int) -> State {
 /// Start an unnamed drain actor linked to the caller.
 pub fn start(
   capacity: Int,
-  send: Send,
   now_ms: fn() -> Int,
 ) -> Result(actor.Started(Subject(Message)), actor.StartError) {
-  actor.new(initial_state(capacity, send, now_ms))
+  actor.new(initial_state(capacity, now_ms))
   |> actor.on_message(handle_message)
   |> actor.start()
 }
@@ -131,10 +133,9 @@ pub fn start(
 pub fn start_named(
   name: Name(Message),
   capacity: Int,
-  send: Send,
   now_ms: fn() -> Int,
 ) -> Result(actor.Started(Subject(Message)), actor.StartError) {
-  actor.new(initial_state(capacity, send, now_ms))
+  actor.new(initial_state(capacity, now_ms))
   |> actor.on_message(handle_message)
   |> actor.named(name)
   |> actor.start()
@@ -144,10 +145,9 @@ pub fn start_named(
 /// anonymous `Subject`; use `child_spec_named` when clients must keep a handle.
 pub fn child_spec(
   capacity: Int,
-  send: Send,
   now_ms: fn() -> Int,
 ) -> supervision.ChildSpecification(Subject(Message)) {
-  supervision.worker(fn() { start(capacity, send, now_ms) })
+  supervision.worker(fn() { start(capacity, now_ms) })
 }
 
 /// Worker child registered under a stable name, so `process.named_subject(name)`
@@ -155,10 +155,9 @@ pub fn child_spec(
 pub fn child_spec_named(
   name: Name(Message),
   capacity: Int,
-  send: Send,
   now_ms: fn() -> Int,
 ) -> supervision.ChildSpecification(Subject(Message)) {
-  supervision.worker(fn() { start_named(name, capacity, send, now_ms) })
+  supervision.worker(fn() { start_named(name, capacity, now_ms) })
 }
 
 // ---------------------------------------------------------------------------
@@ -181,8 +180,8 @@ fn handle_message(
           actor.continue(state)
         }
       }
-    Tick(budget, reply) -> {
-      let #(report, queue) = run_tick(state, budget)
+    Tick(budget, send, reply) -> {
+      let #(report, queue) = run_tick(state, budget, send)
       process.send(reply, report)
       actor.continue(
         State(
@@ -198,7 +197,7 @@ fn handle_message(
       actor.continue(state)
     }
     Resolve(digest, status, reply) -> {
-      let queue = outbox.drain_result(state.queue, digest, status)
+      let queue = outbox.drain_result(state.queue, digest, normalise(status))
       process.send(reply, Nil)
       actor.continue(State(..state, queue: queue))
     }
@@ -220,22 +219,47 @@ fn snapshot(state: State) -> Counters {
 }
 
 type Tally {
-  Tally(queue: outbox.Queue, delivered: Int, failed: Int, uncertain: Int)
+  Tally(
+    queue: outbox.Queue,
+    delivered: Int,
+    failed: Int,
+    uncertain: Int,
+    failed_digests: List(String),
+  )
 }
 
-fn run_tick(state: State, budget: Int) -> #(TickReport, outbox.Queue) {
+fn run_tick(
+  state: State,
+  budget: Int,
+  send: Send,
+) -> #(TickReport, outbox.Queue) {
   let #(selected, selected_queue) = outbox.select(state.queue, budget)
   let tally =
     list.fold(
       selected,
-      Tally(queue: selected_queue, delivered: 0, failed: 0, uncertain: 0),
+      Tally(
+        queue: selected_queue,
+        delivered: 0,
+        failed: 0,
+        uncertain: 0,
+        failed_digests: [],
+      ),
       fn(acc, request) {
-        let status = normalise(state.send(request))
+        let status = case guard_send(send, request) {
+          Ok(observed) -> normalise(observed)
+          Error(Nil) -> OutboxUncertain("send_crashed")
+        }
         let queue = outbox.drain_result(acc.queue, request.digest, status)
         case status {
           OutboxDelivered(_) ->
             Tally(..acc, queue: queue, delivered: acc.delivered + 1)
-          OutboxFailed(_) -> Tally(..acc, queue: queue, failed: acc.failed + 1)
+          OutboxFailed(_) ->
+            Tally(
+              ..acc,
+              queue: queue,
+              failed: acc.failed + 1,
+              failed_digests: list.append(acc.failed_digests, [request.digest]),
+            )
           _ -> Tally(..acc, queue: queue, uncertain: acc.uncertain + 1)
         }
       },
@@ -247,18 +271,20 @@ fn run_tick(state: State, budget: Int) -> #(TickReport, outbox.Queue) {
       failed: tally.failed,
       uncertain: tally.uncertain,
       budget: budget,
+      failed_digests: tally.failed_digests,
     ),
     tally.queue,
   )
 }
 
-/// Non-terminal statuses must not leave a request in flight. They are
-/// recorded as uncertain: delivery was neither confirmed nor refuted.
-fn normalise(status: OutboxStatus) -> OutboxStatus {
+/// Non-terminal statuses must not leave a request in flight, and a delivery
+/// claim without a positive message id is not a delivery. Both are recorded
+/// as uncertain: delivery was neither confirmed nor refuted.
+pub fn normalise(status: OutboxStatus) -> OutboxStatus {
   case status {
     OutboxPending -> OutboxUncertain("non_terminal_status")
     OutboxSending(_, _) -> OutboxUncertain("non_terminal_status")
-    OutboxDelivered(_) -> status
+    OutboxDelivered(_) -> outbox.validate_status(status)
     OutboxFailed(_) -> status
     OutboxUncertain(_) -> status
   }
@@ -326,9 +352,10 @@ pub fn try_enqueue(
 pub fn try_tick(
   drain: Subject(Message),
   budget: Int,
+  send: Send,
   timeout_ms: Int,
 ) -> Result(TickReport, CallError) {
-  bounded_call(drain, timeout_ms, fn(reply) { Tick(budget, reply) })
+  bounded_call(drain, timeout_ms, fn(reply) { Tick(budget, send, reply) })
 }
 
 pub fn try_counters(
@@ -338,7 +365,10 @@ pub fn try_counters(
   bounded_call(drain, timeout_ms, fn(reply) { GetCounters(reply) })
 }
 
-/// Late resolution of an Uncertain (or in-flight) request by digest.
+/// Late resolution of an Uncertain (or in-flight) request by digest. The
+/// status is normalised like a send result: `Delivered` needs a positive id.
+/// Any holder of the Subject may resolve; restricting the resolver is a
+/// recorded residual.
 pub fn resolve(
   drain: Subject(Message),
   digest: String,
@@ -349,10 +379,11 @@ pub fn resolve(
 }
 
 /// Specified total client. A queue refusal is returned exactly as the queue
-/// reports it. If no reply was observed (timeout or absent actor) the result
-/// is `Error(Full(False))`: the request is NOT known to be admitted. The actor
-/// may nevertheless have admitted it; a retry is safe because a repeated
-/// digest is refused as `Duplicate`. Use `try_enqueue` to tell the cases apart.
+/// reports it. If no reply was observed the result is `Error(Unobserved(…))`
+/// with `call_timeout` or `actor_unavailable`: the request is NOT known to be
+/// admitted and NOT known to be refused, and a producer can tell this apart
+/// from a real `Full`. A retry is safe because a repeated digest is refused as
+/// `Duplicate`.
 pub fn enqueue(
   drain: Subject(Message),
   request: outbox.Request,
@@ -360,11 +391,12 @@ pub fn enqueue(
 ) -> Result(Nil, outbox.Backpressure) {
   case try_enqueue(drain, request, timeout_ms) {
     Ok(result) -> result
-    Error(_) -> Error(outbox.Full(False))
+    Error(CallTimeout) -> Error(outbox.Unobserved("call_timeout"))
+    Error(CallUnavailable) -> Error(outbox.Unobserved("actor_unavailable"))
   }
 }
 
-/// The report returned when no reply was observed. Every field is -1, which no
+/// The report returned when no reply was observed. Every count is -1, which no
 /// real report can contain, so it cannot be mistaken for "nothing selected".
 pub fn unavailable_tick_report(budget: Int) -> TickReport {
   TickReport(
@@ -373,6 +405,7 @@ pub fn unavailable_tick_report(budget: Int) -> TickReport {
     failed: -1,
     uncertain: -1,
     budget: budget,
+    failed_digests: [],
   )
 }
 
@@ -404,9 +437,10 @@ pub fn is_unavailable_counters(counters: Counters) -> Bool {
 pub fn tick(
   drain: Subject(Message),
   budget: Int,
+  send: Send,
   timeout_ms: Int,
 ) -> TickReport {
-  case try_tick(drain, budget, timeout_ms) {
+  case try_tick(drain, budget, send, timeout_ms) {
     Ok(report) -> report
     Error(_) -> unavailable_tick_report(budget)
   }

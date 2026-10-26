@@ -4,22 +4,29 @@
 //// </c3i-module>
 ////
 //// Pure, bounded request queue between the Zenoh-to-Telegram gateway and the
-//// durable outbox. The gateway never sends: it enqueues typed requests, a
-//// policy (`select`) hands a bounded batch to whoever owns the durable
-//// outbox, and that owner reports back with `drain_result`.
+//// drain that sends. The gateway never sends: it enqueues typed requests, a
+//// policy (`select`) hands a bounded batch to whoever owns the transport, and
+//// that owner reports back with `drain_result`.
 ////
 //// A Request carries no bot token and no chat secret. Credentials stay in the
 //// reviewed private transport configuration of the sender.
 ////
-//// Semantics:
+//// Semantics (review G-03, G-04, G-05 applied in wave 6n):
 ////   * capacity is clamped to 1..64 and bounds the pending list and the
 ////     in-flight list separately.
+////   * the digest is computed by the gateway over kind, chat, topic and text,
+////     so a Notice can never pre-empt a Critical with the same text as a
+////     duplicate.
 ////   * refusal is explicit (`Backpressure`); nothing is dropped silently. The
 ////     one admitted eviction (a Critical request displacing the oldest Notice
-////     on a full queue) is counted by `dropped_notices`.
+////     on a full pending list) is counted by `dropped_notices`.
 ////   * an Uncertain delivery is never discarded or retried by this module. It
-////     blocks an identical digest and blocks admission once `uncertain_count`
-////     reaches `capacity`, until a later Delivered/Failed report resolves it.
+////     blocks an identical digest. An uncertain backlog at `capacity` refuses
+////     further Notices (`Full(uncertain_backlog: True)`); a Critical is still
+////     admitted until the hard ceiling of twice the capacity, so a hung
+////     transport cannot starve critical alerts behind routine ones.
+////   * a `Delivered` report whose message id is not positive is not a
+////     delivery: it is recorded as `Uncertain("invalid_message_id")`.
 
 import cepaf_gleam/harness/telegram_delivery_ledger.{
   type OutboxStatus, OutboxDelivered, OutboxFailed, OutboxUncertain,
@@ -48,9 +55,18 @@ pub type Request {
 }
 
 pub type Backpressure {
-  Full(dropped_oldest: Bool)
+  /// The queue refused the request. `uncertain_backlog` is True when the
+  /// refusal came from the uncertain list, False when the pending list was
+  /// full and no Notice could be evicted.
+  Full(uncertain_backlog: Bool)
   Duplicate(digest: String)
   Oversize
+  /// Returned only by the drain's total clients, never by this module: no
+  /// reply was observed within the bound (`call_timeout`) or the actor was
+  /// absent (`actor_unavailable`). The request is neither known to be admitted
+  /// nor known to be refused; a retry is safe because a repeated digest is
+  /// refused as `Duplicate`.
+  Unobserved(reason: String)
 }
 
 pub opaque type Queue {
@@ -92,6 +108,11 @@ pub fn capacity(queue: Queue) -> Int {
   queue.capacity
 }
 
+/// Uncertain backlog beyond which even a Critical is refused.
+pub fn uncertain_hard_ceiling(queue: Queue) -> Int {
+  queue.capacity * 2
+}
+
 pub fn len(queue: Queue) -> Int {
   list.length(queue.pending)
 }
@@ -123,6 +144,14 @@ fn known_digest(queue: Queue, digest: String) -> Bool {
   || list.any(queue.uncertain, same)
 }
 
+fn uncertain_blocks(queue: Queue, kind: Kind) -> Bool {
+  let backlog = list.length(queue.uncertain)
+  case kind {
+    Notice -> backlog >= queue.capacity
+    Critical -> backlog >= uncertain_hard_ceiling(queue)
+  }
+}
+
 pub fn enqueue(queue: Queue, request: Request) -> Result(Queue, Backpressure) {
   case string.byte_size(request.text) > max_text_bytes {
     True -> Error(Oversize)
@@ -130,28 +159,32 @@ pub fn enqueue(queue: Queue, request: Request) -> Result(Queue, Backpressure) {
       case known_digest(queue, request.digest) {
         True -> Error(Duplicate(request.digest))
         False ->
-          case
-            list.length(queue.pending) >= queue.capacity
-            || list.length(queue.uncertain) >= queue.capacity
-          {
+          case uncertain_blocks(queue, request.kind) {
+            True -> Error(Full(True))
             False ->
-              Ok(Queue(..queue, pending: list.append(queue.pending, [request])))
-            True -> admit_when_full(queue, request)
+              case list.length(queue.pending) >= queue.capacity {
+                False ->
+                  Ok(
+                    Queue(
+                      ..queue,
+                      pending: list.append(queue.pending, [request]),
+                    ),
+                  )
+                True -> admit_when_full(queue, request)
+              }
           }
       }
   }
 }
 
-/// A full queue admits only a Critical request, and only by evicting the
-/// oldest Notice. Criticals are never evicted; when uncertainty alone blocks
-/// admission nothing is evicted.
+/// A full pending list admits only a Critical request, and only by evicting
+/// the oldest Notice. Criticals are never evicted.
 fn admit_when_full(
   queue: Queue,
   request: Request,
 ) -> Result(Queue, Backpressure) {
-  let pending_full = list.length(queue.pending) >= queue.capacity
-  case request.kind, pending_full, list.any(queue.pending, is_notice) {
-    Critical, True, True -> {
+  case request.kind, list.any(queue.pending, is_notice) {
+    Critical, True -> {
       let kept = drop_first_notice(queue.pending)
       Ok(
         Queue(
@@ -161,7 +194,7 @@ fn admit_when_full(
         ),
       )
     }
-    _, _, _ -> Error(Full(False))
+    _, _ -> Error(Full(False))
   }
 }
 
@@ -219,15 +252,25 @@ fn int_min(a: Int, b: Int) -> Int {
   }
 }
 
+/// A delivery claim is valid only with a positive Telegram message id.
+pub fn validate_status(status: OutboxStatus) -> OutboxStatus {
+  case status {
+    OutboxDelivered(id) if id <= 0 -> OutboxUncertain("invalid_message_id")
+    _ -> status
+  }
+}
+
 /// Record the outcome for a digest that was handed out by `select` (or that is
-/// already Uncertain). Delivered and Failed resolve it; Uncertain keeps the
-/// request on the uncertain list so it is neither lost nor blindly retried.
-/// Non-terminal statuses and unknown digests leave the queue unchanged.
+/// already Uncertain). Delivered (with a positive id) and Failed resolve it;
+/// Uncertain keeps the request on the uncertain list so it is neither lost nor
+/// blindly retried. Non-terminal statuses and unknown digests leave the queue
+/// unchanged.
 pub fn drain_result(
   queue: Queue,
   digest: String,
   status: OutboxStatus,
 ) -> Queue {
+  let status = validate_status(status)
   let by_digest = fn(r: Request) { r.digest == digest }
   let found_inflight = list.find(queue.inflight, by_digest)
   let found_uncertain = list.find(queue.uncertain, by_digest)

@@ -187,10 +187,47 @@ pub fn drain_uncertain_is_preserved_test() {
   outbox.delivered_count(q) |> should.equal(1)
 }
 
-pub fn uncertain_at_capacity_blocks_admission_test() {
+/// Review G-04: an uncertain backlog at capacity refuses Notices but not
+/// Criticals, which are admitted until the hard ceiling of twice the capacity.
+pub fn uncertain_at_capacity_blocks_notices_not_criticals_test() {
   let q = outbox.new(1) |> add(outbox.Critical, "a", 1)
   let #(_, q) = outbox.select(q, 1)
   let q = outbox.drain_result(q, "a", ledger.OutboxUncertain("t"))
+  outbox.uncertain_count(q) |> should.equal(1)
+  outbox.enqueue(q, req(outbox.Notice, "n", 2))
+  |> should.equal(Error(outbox.Full(True)))
+  let assert Ok(q) = outbox.enqueue(q, req(outbox.Critical, "b", 2))
+  let #(_, q) = outbox.select(q, 1)
+  let q = outbox.drain_result(q, "b", ledger.OutboxUncertain("t"))
+  outbox.uncertain_count(q) |> should.equal(outbox.uncertain_hard_ceiling(q))
+  outbox.enqueue(q, req(outbox.Critical, "c", 3))
+  |> should.equal(Error(outbox.Full(True)))
+  // Resolving one uncertain request readmits a Critical.
+  let q = outbox.drain_result(q, "a", ledger.OutboxDelivered(5))
+  outbox.enqueue(q, req(outbox.Critical, "c", 3)) |> should.be_ok()
+}
+
+/// Review G-05: a delivery claim needs a positive message id.
+pub fn delivered_with_non_positive_id_is_uncertain_test() {
+  let q = outbox.new(4) |> add(outbox.Critical, "a", 1)
+  let #(_, q) = outbox.select(q, 1)
+  let q = outbox.drain_result(q, "a", ledger.OutboxDelivered(0))
+  outbox.delivered_count(q) |> should.equal(0)
+  outbox.uncertain_count(q) |> should.equal(1)
+  let q = outbox.drain_result(q, "a", ledger.OutboxDelivered(-3))
+  outbox.delivered_count(q) |> should.equal(0)
+  outbox.uncertain_count(q) |> should.equal(1)
+  outbox.validate_status(ledger.OutboxDelivered(0))
+  |> should.equal(ledger.OutboxUncertain("invalid_message_id"))
+  outbox.validate_status(ledger.OutboxDelivered(1))
+  |> should.equal(ledger.OutboxDelivered(1))
+  let q = outbox.drain_result(q, "a", ledger.OutboxDelivered(1))
+  outbox.delivered_count(q) |> should.equal(1)
+}
+
+/// A full pending list with only Criticals refuses with the pending flag.
+pub fn pending_full_refusal_is_not_an_uncertain_backlog_test() {
+  let q = outbox.new(1) |> add(outbox.Critical, "a", 1)
   outbox.enqueue(q, req(outbox.Critical, "b", 2))
   |> should.equal(Error(outbox.Full(False)))
 }

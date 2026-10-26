@@ -1,6 +1,7 @@
 import cepaf_gleam/gateway/telegram
 import cepaf_gleam/gateway/telegram_gateway_outbox as outbox
 import gleam/json
+import gleam/list
 import gleam/string
 import gleeunit/should
 
@@ -51,12 +52,39 @@ pub fn enqueue_critical_is_selected_first_test() {
 }
 
 pub fn request_digest_is_stable_and_identity_bound_test() {
-  let a = telegram.request_digest(7, "t", "x")
-  telegram.request_digest(7, "t", "x") |> should.equal(a)
-  telegram.request_digest(8, "t", "x") |> should.not_equal(a)
-  telegram.request_digest(7, "u", "x") |> should.not_equal(a)
-  telegram.request_digest(7, "t", "y") |> should.not_equal(a)
+  let a = telegram.request_digest(outbox.Notice, 7, "t", "x")
+  telegram.request_digest(outbox.Notice, 7, "t", "x") |> should.equal(a)
+  telegram.request_digest(outbox.Notice, 8, "t", "x") |> should.not_equal(a)
+  telegram.request_digest(outbox.Notice, 7, "u", "x") |> should.not_equal(a)
+  telegram.request_digest(outbox.Notice, 7, "t", "y") |> should.not_equal(a)
+  // Review G-03: the kind is part of the identity.
+  telegram.request_digest(outbox.Critical, 7, "t", "x") |> should.not_equal(a)
   string.length(a) |> should.equal(64)
+}
+
+/// Review G-03: a Notice cannot pre-empt a Critical with the same text.
+pub fn notice_then_identical_critical_ends_with_the_critical_queued_test() {
+  let assert Ok(q) =
+    telegram.enqueue_notification(outbox.new(4), 7, "disk full", "t", 1)
+  let assert Ok(q) = telegram.enqueue_critical(q, 7, "disk full", "t", 2)
+  let #(taken, _) = outbox.select(q, 1)
+  let assert [r] = taken
+  r.kind |> should.equal(outbox.Critical)
+  r.text |> should.equal("disk full")
+  // The reverse order is refused only for the second Critical, as a duplicate.
+  telegram.enqueue_critical(q, 7, "disk full", "t", 3) |> should.be_error()
+}
+
+/// Review G-08: the Telegram refusal is case- and whitespace-insensitive.
+pub fn telegram_channel_variants_are_refused_test() {
+  let state = telegram.GatewayState(moz: telegram.new_moz_state(), chat_id: "c")
+  ["telegram", "Telegram", "TELEGRAM", " telegram ", "\tTelegram\n"]
+  |> list.each(fn(channel) {
+    telegram.is_telegram_channel(channel) |> should.be_true()
+    telegram.route_peer_notification(state, channel, "m") |> should.be_error()
+  })
+  telegram.is_telegram_channel("gchat") |> should.be_false()
+  telegram.is_telegram_channel("telegram2") |> should.be_false()
 }
 
 pub fn duplicate_notification_is_refused_test() {

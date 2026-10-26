@@ -6,12 +6,20 @@
 //// Zenoh-to-Telegram gateway bridge.
 ////
 //// * `start` reports only what it observed (session open, subscription made)
-////   and fabricates no notification, command or intent.
+////   and fabricates no notification, command or intent. With the current
+////   Zenoh client (`supports_subscriptions` is False) it can only ever report
+////   `Observed(subscribed: False, …)`: NO code path in this tree receives a
+////   critical span and routes it to `enqueue_critical`. The queue is an API
+////   that a caller feeds; event routing is not implemented (review G-09).
 //// * The bot credential is never held here and never appears in any MoZ,
 ////   Zenoh, task or log payload. It stays in the private transport
 ////   configuration read by `harness/telegram_outbound`, which alone sends.
 //// * Telegram notifications are typed, bounded requests handed to
 ////   `gateway/telegram_gateway_outbox`; this module never sends them.
+//// * The request digest covers kind, chat, topic and text (review G-03), so a
+////   Notice cannot make a later Critical with the same text a duplicate.
+//// * `peer_params` carries the message text and chat id to a peer channel over
+////   MoZ unredacted by design; callers own what they put in `message`.
 
 import cepaf_gleam/gateway/telegram_gateway_outbox as outbox
 import cepaf_gleam/moz/client as moz
@@ -49,7 +57,8 @@ pub fn now_ms() -> Int {
 }
 
 /// Open Zenoh and subscribe the calling process to the critical span topic.
-/// Returns what was observed; the caller owns the receive loop.
+/// Returns what was observed; the caller owns the receive loop. The session
+/// is not retained and not closed here; each call probes again.
 pub fn start(_chat_id: Int) -> Startup {
   case zenoh.open("{}") {
     Error(reason) -> Unavailable(reason)
@@ -61,10 +70,29 @@ pub fn start(_chat_id: Int) -> Startup {
   }
 }
 
-/// Stable digest of the request identity (chat, topic, text). It contains no
-/// credential and is the idempotency key for the outbox.
-pub fn request_digest(chat_id: Int, topic: String, text: String) -> String {
-  let material = int.to_string(chat_id) <> "\n" <> topic <> "\n" <> text
+fn kind_label(kind: outbox.Kind) -> String {
+  case kind {
+    outbox.Critical -> "critical"
+    outbox.Notice -> "notice"
+  }
+}
+
+/// Stable digest of the request identity (kind, chat, topic, text). It
+/// contains no credential and is the idempotency key for the outbox.
+pub fn request_digest(
+  kind: outbox.Kind,
+  chat_id: Int,
+  topic: String,
+  text: String,
+) -> String {
+  let material =
+    kind_label(kind)
+    <> "\n"
+    <> int.to_string(chat_id)
+    <> "\n"
+    <> topic
+    <> "\n"
+    <> text
   crypto.hash(crypto.Sha256, bit_array.from_string(material))
   |> bit_array.base16_encode
   |> string.lowercase
@@ -87,7 +115,7 @@ fn build_request(
     text: text,
     source_topic: topic,
     observed_at_ms: observed,
-    digest: request_digest(chat_id, topic, text),
+    digest: request_digest(kind, chat_id, topic, text),
   )
 }
 
@@ -130,6 +158,12 @@ pub fn peer_params(
   ])
 }
 
+/// True when the channel names Telegram in any case or with surrounding
+/// whitespace (review G-08): such a notification must use the outbox.
+pub fn is_telegram_channel(channel: String) -> Bool {
+  string.lowercase(string.trim(channel)) == "telegram"
+}
+
 /// Route a notification for a non-Telegram peer channel over MoZ. Telegram
 /// is refused here: it must go through the bounded outbox.
 pub fn route_peer_notification(
@@ -137,10 +171,9 @@ pub fn route_peer_notification(
   channel: String,
   message: String,
 ) -> Result(Nil, String) {
-  case channel {
-    "telegram" ->
-      Error("telegram notifications use enqueue_notification, not MoZ")
-    _ -> {
+  case is_telegram_channel(channel) {
+    True -> Error("telegram notifications use enqueue_notification, not MoZ")
+    False -> {
       let params = peer_params(state, channel, message)
       let #(_new_state, result) =
         moz.send_request(state.moz, "gateway", "telegram_send", params)

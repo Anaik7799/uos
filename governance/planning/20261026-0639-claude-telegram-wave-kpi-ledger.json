@@ -321,17 +321,31 @@
     },
     {
       "wave": "6m",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "49399a9d",
+      "landed_utc": "2026-10-26T11:35:23Z",
       "canonicals_answering": "77/77 (unchanged); 23 closed reason codes, 0 literals outside the list",
       "tests_added": 4,
       "mutants": "3/3 integrator (backend_exception removed from the list; reason_code collapses every reason; a prose Zenoh reason reintroduced)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 40,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "Reason-code completeness law: mini_reason_code_completeness_test reads every src/cepaf_gleam/telegram/*.gleam and refuses an Unavailable literal outside mini_api.unavailability_reasons (floor of ten literals). Four gaps closed: backend_exception, and three prose Zenoh reasons converted to zenoh_observation_clock_refused, zenoh_query_failed, zenoh_observation_field_bound. Gateway advisory review received (REQUEST_CHANGES, 9 majors) and media lifecycle review since 6d received (REQUEST_CHANGES, 3 majors, 8 minors); both recorded in the 6m journal section 10 for GATEWAY_FIX and a media fix task.",
       "full_suite": "13828/13828"
+    },
+    {
+      "wave": "6n",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); gateway drain holds no Send closure",
+      "tests_added": 10,
+      "mutants": "5/5 integrator (criticals bounded by the uncertain backlog at capacity; Delivered(0) accepted; channel match case-sensitive; crashed send reported Failed; kind dropped from the digest)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Gateway advisory review (REQUEST_CHANGES, 9 majors) answered: G-01 Send passed per Tick and never in actor state (proven with sys:get_state); G-02 guard_send contains a crashing Send as OutboxUncertain(send_crashed) with the reason discarded; G-03 request digest covers the kind; G-04 uncertain backlog refuses Notices at capacity and Criticals only at twice the capacity, Full(uncertain_backlog) replaces the dead dropped_oldest field, failed digests surfaced in TickReport; G-05 Delivered(id<=0) is Uncertain(invalid_message_id) from Send and Resolve; G-06 and G-09 headers state no recovery and no event routing; G-07 enqueue returns Unobserved(call_timeout|actor_unavailable); G-08 is_telegram_channel trims and lowercases. Residuals: Critical reserve slice, stale-uncertain alarm, resolver capability, pre-send durable record, Send deadline, event routing, briefing dead queue, no start site.",
+      "full_suite": "13836/13836"
     }
   ],
   "forecasts": [
@@ -465,6 +479,15 @@
       "made_in": "wave 6l journal",
       "p": 0.5,
       "claim": "the independent MINI_API_REVIEW, when claimed, records no server-side major beyond the residuals in the 6l journal section 10, by 2026-10-29T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6m journal",
+      "p": 0.7,
+      "claim": "GATEWAY_FIX lands on main with G-01, G-02, G-03, G-05, G-07 and G-08 answered by tests and the full suite green, by 2026-10-26T16:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -603,6 +626,12 @@
       "wave": "6m",
       "lesson": "When a closed enumeration is introduced, land its completeness law in the same wave. A grep is an enumeration with an assumption baked in: the 6l pattern assumed snake-case codes and missed four literals (one identifier used by the span wrapper and three prose reasons), all of which rendered as unavailable_unspecified.",
       "applied": "mini_reason_code_completeness_test reads the module sources and refuses the next unlisted literal, with a floor of ten literals so an empty scan cannot pass vacuously; the three prose reasons became codes rather than list members"
+    },
+    {
+      "id": "L-23",
+      "wave": "6n",
+      "lesson": "A capability injected at start is retained for the process lifetime. The drain took its Send at start so a supervisor could rebuild it, and any Send that closed over a bot token kept the token on the actor heap behind a header that said the opposite; the lexical secrecy tests over reports could not see it.",
+      "applied": "Send is passed with every Tick and dropped when the tick ends; the law inspects sys:get_state for a sentinel the Send captured, before and after a tick"
     }
   ]
 }
