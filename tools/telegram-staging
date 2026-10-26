@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+# [C3I-SIL6-MSTS] UOS Telegram staging service operator entry (wave 6r, 2026-10-26)
+#
+# One bash wrapper (like every tools/* entry) over OCaml and the BEAM:
+#   tools/telegram-staging vault-put  NAME        # seal a secret from stdin into var/vault/telegram (never an argument)
+#   tools/telegram-staging vault-has  NAME
+#   tools/telegram-staging release    [WORKSPACE] # copy a built workspace at main into var/releases/telegram-staging/<ts>-<commit>
+#   tools/telegram-staging config     BOT_ID USER_ID CHAT_ID [RELEASE_DIR]   # write var/telegram-staging/config.json (no token inside)
+#   tools/telegram-staging install                # write and enable the user unit uos-telegram-staging
+#   tools/telegram-staging run                    # what the unit executes: the worker runner on the config
+#   tools/telegram-staging authority              # hand the Sa-plan lease to the running service over IPC
+#   tools/telegram-staging status                 # unit, journal tail, media root, vault presence
+#   tools/telegram-staging verify                 # getMe through the OCaml client with the sealed token (one process, no disk copy)
+#   tools/telegram-staging bootstrap  USER_ID CHAT_ID   # after vault-put: release + config auto + install + start + status
+# The production bridge (uos-telegram-bridge, OCaml client on the production bot) is never touched here.
+set -euo pipefail
+UOS_ROOT=${UOS_ROOT:-/home/an/NAS-setup/uos}
+export UOS_ROOT
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+STAGE=$UOS_ROOT/var/telegram-staging
+VAULT=$UOS_ROOT/var/vault/telegram
+PASSFILE=$VAULT/passphrase
+TOKEN_NAME=telegram/staging/bot_token
+UNIT=uos-telegram-staging
+CONFIG=$STAGE/config.json
+VAULT_EXE=$SCRIPT_DIR/uos_vault.exe
+CLIENT_EXE=$SCRIPT_DIR/telegram_client.exe
+
+ensure_passphrase() {
+  mkdir -p "$VAULT"; chmod 700 "$VAULT"
+  if [ ! -s "$PASSFILE" ]; then
+    # 32 random bytes, base64: generated once, 0600, never printed.
+    umask 077; head -c 32 /dev/urandom | base64 > "$PASSFILE"; chmod 600 "$PASSFILE"
+    echo "passphrase generated at $PASSFILE (0600)"
+  fi
+}
+
+case "${1:-}" in
+  vault-put)
+    NAME=${2:?NAME}; ensure_passphrase
+    [ -x "$VAULT_EXE" ] || { echo "missing $VAULT_EXE (build: ocamlfind ocamlopt -package unix,cryptokit -linkpkg tools/uos_vault.ml -o tools/uos_vault.exe)"; exit 2; }
+    "$VAULT_EXE" put "$VAULT/store" "$NAME" "$PASSFILE"
+    ;;
+  vault-has)
+    "$VAULT_EXE" has "$VAULT/store" "${2:?NAME}"
+    ;;
+  release)
+    WS=${2:-$UOS_ROOT/.uos-workspaces/telegram-staging-deploy}
+    COMMIT=$(cd "$WS" && "$UOS_ROOT/toolchains/nix-profile/bin/jj" --ignore-working-copy log -r @- --no-graph -T 'commit_id.short()' 2>/dev/null || jj --ignore-working-copy log -r @- --no-graph -T 'commit_id.short()')
+    TS=$(date -u +%Y%m%d-%H%S)
+    DEST=$UOS_ROOT/var/releases/telegram-staging/$TS-$COMMIT
+    mkdir -p "$DEST/apps"
+    for d in "$WS"/apps/cepaf_gleam/build/dev/erlang/*/; do
+      name=$(basename "$d"); mkdir -p "$DEST/apps/$name"
+      [ -d "$d/ebin" ] && cp -r "$d/ebin" "$DEST/apps/$name/"
+      [ -d "$d/priv" ] && cp -r "$d/priv" "$DEST/apps/$name/"
+    done
+    mkdir -p "$DEST/apps/cepaf_gleam/priv"; cp "$WS"/apps/cepaf_gleam/priv/*.so "$WS"/apps/cepaf_gleam/priv/*.sha256 "$DEST/apps/cepaf_gleam/priv/" 2>/dev/null || true
+    printf '{"service":"telegram-staging","commit":"%s","built_utc":"%s","workspace":"%s","apps":%d}\n' "$COMMIT" "$(date -u +%FT%TZ)" "$WS" "$(ls -d "$DEST"/apps/*/ | wc -l)" > "$DEST/release-manifest.json"
+    ln -sfn "$DEST" "$UOS_ROOT/var/releases/telegram-staging/current"
+    echo "release $DEST"
+    ;;
+  config)
+    BOT_ID=${2:?BOT_ID}; USER_ID=${3:?USER_ID}; CHAT_ID=${4:?CHAT_ID}
+    if [ "$BOT_ID" = "auto" ]; then
+      # The bot id is the numeric prefix of the sealed token; it is read in this process only and only the prefix is kept.
+      BOT_ID=$("$VAULT_EXE" get "$VAULT/store" "$TOKEN_NAME" "$PASSFILE" | cut -d: -f1 | tr -cd 0-9)
+      [ -n "$BOT_ID" ] || { echo "no sealed token to derive the bot id from"; exit 3; }
+    fi
+    REL=${5:-$UOS_ROOT/var/releases/telegram-staging/current}
+    PLAN=$(cat "$STAGE/plan.id" 2>/dev/null || echo "uos/telegram-staging/unset")
+    mkdir -p "$STAGE/media" "$STAGE/ipc"; chmod 700 "$STAGE"
+    umask 077
+    cat > "$CONFIG" <<JSON
+{
+  "mode": "run_actor",
+  "supervised": true,
+  "ipc_dir": "$STAGE/ipc",
+  "db_path": "$STAGE/store.sqlite3",
+  "base_url": "https://api.telegram.org",
+  "token_vault": {"store": "$VAULT/store", "name": "$TOKEN_NAME", "passphrase_file": "$PASSFILE"},
+  "bot_id": $BOT_ID,
+  "allowed_pairs": [[$CHAT_ID, $USER_ID]],
+  "worker_id": "telegram-staging-nas-1",
+  "task_id": "SERVICE",
+  "plan_id": "$PLAN",
+  "resource_id": "runtime:telegram-staging",
+  "service_epoch": 1,
+  "expected_task_attempt": 1,
+  "coordinator_epoch": 1,
+  "sa_plan_db": "$UOS_ROOT/var/sa-plan/uos.sqlite3",
+  "coord_db": "$UOS_ROOT/var/coordination/tri-agent/coordinator.sqlite3",
+  "control_registration_path": null,
+  "media_root": "$STAGE/media",
+  "media_retention_ms": 604800000,
+  "media_ceiling_bytes": 1073741824,
+  "loop": {"max_cycles": 100000, "lifetime_ms": 3600000, "idle_ms": 1000, "poll_deadline_ms": 15000, "dispatch_deadline_ms": 15000, "max_timeouts": 3},
+  "release_dir": "$REL"
+}
+JSON
+    chmod 600 "$CONFIG"
+    echo "config $CONFIG (token: sealed in $VAULT/store as $TOKEN_NAME; media_root $STAGE/media)"
+    ;;
+  install)
+    mkdir -p ~/.config/systemd/user
+    cat > ~/.config/systemd/user/$UNIT.service <<UNITF
+[Unit]
+Description=UOS Telegram staging service (Gleam service, worker runner, sealed token, media root)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=$UOS_ROOT
+Environment=UOS_ROOT=$UOS_ROOT
+Environment=ERL_CRASH_DUMP=/dev/null
+ExecStart=$UOS_ROOT/tools/telegram-staging run
+ExecStartPost=$UOS_ROOT/tools/telegram-staging authority
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
+UNITF
+    systemctl --user daemon-reload
+    systemctl --user enable "$UNIT" >/dev/null 2>&1 || true
+    echo "unit ~/.config/systemd/user/$UNIT.service installed and enabled"
+    ;;
+  run)
+    source "$UOS_ROOT/tools/lib/uos-toolchain.sh"; uos_env
+    REL=$(jq -r .release_dir "$CONFIG")
+    [ -d "$REL/apps" ] || { echo "release missing: $REL"; exit 2; }
+    "$VAULT_EXE" has "$VAULT/store" "$TOKEN_NAME" >/dev/null || { echo "no sealed token $TOKEN_NAME: run tools/telegram-staging vault-put $TOKEN_NAME"; exit 3; }
+    rm -f "$(jq -r .ipc_dir "$CONFIG")"/cmd.json "$(jq -r .ipc_dir "$CONFIG")"/resp.json
+    exec erl +S 2:2 +A 4 -noshell -eval "code:add_paths(filelib:wildcard(\"$REL/apps/*/ebin\")), telegram_service_worker_runner:start([\"$CONFIG\"])."
+    ;;
+  authority)
+    export UOS_SA_PLAN_DB=$UOS_ROOT/var/sa-plan/uos.sqlite3
+    IPC=$(jq -r .ipc_dir "$CONFIG"); PLAN=$(jq -r .plan_id "$CONFIG")
+    for i in $(seq 1 60); do [ -f "$IPC/resp.json" ] && grep -q '"started"' "$IPC/resp.json" && break; sleep 1; done
+    LEASE=$("$SCRIPT_DIR/sa-plan" task show "$PLAN" SERVICE 2>/dev/null | grep -oE 'lease_id=[^ ]+' | cut -d= -f2 || true)
+    [ -n "$LEASE" ] || LEASE="SERVICE"
+    VALID=$(( $(date +%s) * 1000000 + 2592000000000 ))
+    printf '{"action":"set_authority","lease_id":"%s","attempt":1,"epoch":1,"valid_until_us":%d}\n' "$LEASE" "$VALID" > "$IPC/cmd.json"
+    for i in $(seq 1 30); do [ -f "$IPC/resp.json" ] && grep -q '"ok"' "$IPC/resp.json" && { echo "authority handed to the service: lease $LEASE"; exit 0; }; sleep 1; done
+    echo "authority not acknowledged"; exit 4
+    ;;
+  status)
+    systemctl --user status "$UNIT" --no-pager 2>&1 | head -6
+    journalctl --user -u "$UNIT" --no-pager -n 15 2>&1 | sed -E 's/[0-9]{6,}:[A-Za-z0-9_-]{30,}/<token-redacted>/g' | cut -c1-200
+    echo "media root: $(ls "$STAGE/media" 2>/dev/null | wc -l) entries"; "$VAULT_EXE" has "$VAULT/store" "$TOKEN_NAME"
+    ;;
+  verify)
+    # The sealed token reaches the OCaml client only through this one process's environment.
+    TELEGRAM_TOKEN=$("$VAULT_EXE" get "$VAULT/store" "$TOKEN_NAME" "$PASSFILE") TELEGRAM_CHAT_ID=$(jq -r '.allowed_pairs[0][0]' "$CONFIG") "$CLIENT_EXE" --status 2>&1 | sed -E 's/[0-9]{6,}:[A-Za-z0-9_-]{30,}/<token-redacted>/g' | head -20
+    ;;
+  bootstrap)
+    # After vault-put: release the deployment workspace, write the config with the bot id from the sealed token, install and start.
+    USER_ID=${2:?USER_ID}; CHAT_ID=${3:?CHAT_ID}
+    "$0" release
+    "$0" config auto "$USER_ID" "$CHAT_ID"
+    "$0" install
+    systemctl --user restart "$UNIT"
+    sleep 8
+    "$0" status
+    ;;
+  *)
+    sed -n 2,15p "$0"; exit 64 ;;
+esac

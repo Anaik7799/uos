@@ -153,10 +153,35 @@ let get_smriti_preference key =
     with _ -> None
   else None
 
+(* Wave 6r: vault-first (SC-VAULT-003 pattern from the C3I Rust gateway). The
+   sealed store under var/vault/telegram is consulted through tools/uos_vault.exe
+   in a child process whose stdout is the only channel; the sqlite preference
+   and the environment remain the fallbacks so the running bridge keeps its
+   behaviour until a token is sealed. Names map 1:1: telegram_token ->
+   telegram/production/<key>. *)
+let vault_store = root ^ "/var/vault/telegram/store"
+let vault_passphrase = root ^ "/var/vault/telegram/passphrase"
+let vault_exe = root ^ "/tools/uos_vault.exe"
+
+let get_vault_preference key =
+  let name = "telegram/production/" ^ key in
+  let sealed = Filename.concat vault_store (String.concat "__" (String.split_on_char '/' name) ^ ".v1") in
+  if not (Sys.file_exists sealed && Sys.file_exists vault_exe && Sys.file_exists vault_passphrase) then None
+  else
+    try
+      let cmd = Bos.Cmd.(v vault_exe % "get" % vault_store % name % vault_passphrase) in
+      match Bos.OS.Cmd.(run_out cmd |> to_string) with
+      | Ok v when String.trim v <> "" -> Some (String.trim v)
+      | _ -> None
+    with _ -> None
+
 let get_preference key =
   match Sys.getenv_opt (String.uppercase_ascii key) with
   | Some v when String.trim v <> "" -> String.trim v
   | _ ->
+      match get_vault_preference key with
+      | Some v -> v
+      | None ->
       match get_db_preference key with
       | Some v when String.trim v <> "" -> String.trim v
       | _ ->

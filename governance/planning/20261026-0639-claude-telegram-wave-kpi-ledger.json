@@ -399,17 +399,31 @@
     },
     {
       "wave": "6q",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "2486f37d",
+      "landed_utc": "2026-10-26T13:01:16Z",
       "canonicals_answering": "77/77 (unchanged); staged node: 8 canonicals plus the media flow exercised through the runner with a bound transport",
       "tests_added": 3,
       "mutants": "3/3 integrator (runner binds nothing for media_root; configure_media_http binds no transport; gateway_send reports a delivery as failed)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 75,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "Staged wiring on AGY counsel: configure_media_http binds the media store policy and telegram_media_transport.from_http(config.http_config) in one call; the worker runner takes media_root (plus optional media_retention_ms and media_ceiling_bytes) and binds it; the e2e harness injects media_root when a .media directory sits beside the store, and a captioned photo is fetched from the fixture getFile and /file/bot routes, stored under its recomputed digest and answered ok with a sha256 through the supervised runner. Gateway drain start site (G-13): gateway_drain_child, gateway_send and gateway_tick on the service configuration; a wiring test enqueues a Critical on the supervised drain and ticks it through the fixture sendMessage with the drain state free of the token.",
       "full_suite": "13887/13887"
+    },
+    {
+      "wave": "6r",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); staging service assets complete, awaiting the staging bot token",
+      "tests_added": 4,
+      "mutants": "1/1 integrator (MAC check removed)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 2,
+      "process_defects": 1,
+      "notes": "Operator directive: bridge active and fully functional, a fully functional staging service with media root, token in the vault. Observed: the production bridge uos-telegram-bridge is a user unit (OCaml telegram_client.exe --poll) active since 2026-09-30 on bot id 8660817750 with transient curl timeouts and sqlite lock errors in its journal; its token sits in var/telegram/state.sqlite3 preferences. Finding: the host-provisioned rusty_vault_nif keeps secrets in process memory only (a put is not_found in the next BEAM, nothing is written under its storage or audit path) and unseals with a master key derived from a WRONG passphrase; it cannot hold a token. Built: uos_vault_file (Erlang, durable PBKDF2-HMAC-SHA256 200k + AES-256-CBC + HMAC encrypt-then-MAC, 0600 files, 4 laws) and tools/uos_vault.ml (OCaml, byte-compatible; cross-read both ways); the worker runner resolves token_vault and runs an autonomous loop driver (telegram_loop restarted per lifetime); tools/telegram-staging (vault-put from stdin, release into var/releases/telegram-staging, config with media_root, user unit, authority hand-over, status, verify through the OCaml client); a deployment workspace at main; Sa-plan plan uos/telegram-staging/20261026-1347 with SERVICE claimed by telegram-staging-nas-1 for thirty days. Checker holds: RP-INVALID (release-phase lifetime over 60 min) and RP-EVIDENCE (record stamped before its bound sources were edited), both repaired; process defect: claim.sh died silently on a HOLD because set -e caught the checker exit inside a command substitution (fixed).",
+      "full_suite": "13891/13891"
     }
   ],
   "forecasts": [
@@ -720,6 +734,12 @@
       "wave": "6q",
       "lesson": "A capability described as for a deployment to bind is a claim until the tree holds one deployment-shaped caller that binds it under test; configure_media had existed since wave 6i with no caller, and the packets and a resolved forecast both treated the binding as someone else's step.",
       "applied": "the worker runner binds media_root through configure_media_http and the e2e proves the bound path through the supervised runner; TG-KPI-09 counts only flows that run through that node"
+    },
+    {
+      "id": "L-28",
+      "wave": "6r",
+      "lesson": "A vault is a claim until a second process reads back what the first one wrote and a wrong key is refused: rusty_vault_nif on nas-1 passes neither test. The durable store that replaced it keeps the vault name space so the migration is a rename.",
+      "applied": "uos_vault_file and tools/uos_vault.ml with four laws (round trip from disk, wrong passphrase refused on the MAC, tampered byte refused, 0600 and magic); the staging token is sealed there; the NIF finding is reported for sovereign review"
     }
   ]
 }

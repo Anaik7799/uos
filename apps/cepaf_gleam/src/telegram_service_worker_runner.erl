@@ -192,6 +192,14 @@ start_and_run_actor(Config, IpcDir) ->
                 <<"status">> => <<"ok">>,
                 <<"action">> => <<"started">>
             }),
+            %% Wave 6r: a deployment asks for an autonomous poll/dispatch loop.
+            %% The bounded driver (telegram_loop, lifetime <= 1 h) is restarted
+            %% by this runner each time it reports its terminal, so the service
+            %% keeps polling without an IPC caller; IPC commands still work.
+            case maps:get(<<"loop">>, Config, null) of
+                null -> ok;
+                LoopCfg when is_map(LoopCfg) -> spawn_link(fun() -> loop_forever(Subj, LoopCfg, 0) end)
+            end,
             actor_loop(Subj, IpcDir, SvcConfig);
         {error, Reason} ->
             write_json_file(filename:join([IpcDir, "resp.json"]), #{
@@ -466,7 +474,20 @@ build_service_configuration(Config) ->
         GuardianPath, GuardianSha, WorkerPath, WorkerSha, DbPath
     ),
     BaseUrl = maps:get(<<"base_url">>, Config, <<"http://127.0.0.1:9">>),
-    Token = maps:get(<<"token">>, Config, <<"test-token">>),
+    %% Wave 6r: a deployment keeps the bot token sealed in the durable vault
+    %% file store and names it here; a plaintext "token" key remains for the
+    %% fixture-backed tests. A sealed token that cannot be read is fatal: no
+    %% service starts with a placeholder credential.
+    Token = case maps:get(<<"token_vault">>, Config, null) of
+        null -> maps:get(<<"token">>, Config, <<"test-token">>);
+        #{<<"store">> := VStore, <<"name">> := VName, <<"passphrase_file">> := VPass} ->
+            case uos_vault_file:get(VStore, VName, VPass) of
+                {ok, Sealed} -> Sealed;
+                {error, VReason} ->
+                    io:format("token_vault: ~p~n", [VReason]),
+                    erlang:halt(3)
+            end
+    end,
     HttpCfg = cepaf_gleam@harness@telegram_http_client:default_configuration(BaseUrl, Token),
     BotId = maps:get(<<"bot_id">>, Config, 888111),
     AllowedPairsRaw = maps:get(<<"allowed_pairs">>, Config, [[100, 200]]),
@@ -621,3 +642,33 @@ write_json_file(Path, Data) ->
     ok = file:write_file(TmpPath, Json),
     ok = file:rename(TmpPath, Path),
     ok.
+
+%% Wave 6r: restart the bounded loop driver forever. Each driver runs at most
+%% max_cycles cycles or lifetime_ms (both bounded by telegram_loop:validate);
+%% the terminal is logged and the next driver starts after idle_ms. A driver
+%% that cannot start (service down, invalid budget) ends this process; the
+%% supervisor of the unit decides what happens next, not this loop.
+loop_forever(Subj, LoopCfg, Generation) ->
+    Budget = {config,
+        maps:get(<<"max_cycles">>, LoopCfg, 100000),
+        maps:get(<<"lifetime_ms">>, LoopCfg, 3600000),
+        maps:get(<<"idle_ms">>, LoopCfg, 1000),
+        maps:get(<<"poll_deadline_ms">>, LoopCfg, 15000),
+        maps:get(<<"dispatch_deadline_ms">>, LoopCfg, 15000),
+        maps:get(<<"max_timeouts">>, LoopCfg, 3)},
+    Observer = gleam@erlang@process:new_subject(),
+    case cepaf_gleam@harness@telegram_loop:start(Subj, Budget, Observer) of
+        {ok, _Driver} ->
+            receive
+                {_Tag, {terminal, Reason, Cycles}} ->
+                    io:format("loop generation ~p terminal ~s after ~p cycles~n", [Generation, Reason, Cycles]),
+                    timer:sleep(maps:get(<<"idle_ms">>, LoopCfg, 1000)),
+                    loop_forever(Subj, LoopCfg, Generation + 1)
+            after maps:get(<<"lifetime_ms">>, LoopCfg, 3600000) + 60000 ->
+                    io:format("loop generation ~p produced no terminal; restarting~n", [Generation]),
+                    loop_forever(Subj, LoopCfg, Generation + 1)
+            end;
+        {error, Reason} ->
+            io:format("loop driver refused: ~p~n", [Reason]),
+            ok
+    end.
