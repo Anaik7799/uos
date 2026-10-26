@@ -55,6 +55,14 @@ Before a claim use **--preflight PORTFOLIO TASK**; during owned work use
 Both require a complete, fresh, source-bound plan assessment. Reused receipts require
 **--receipt RECEIPT**. HOLD, missing tools/evidence, clock failures and provisional
 ordering fail closed; investigate the reported next check before retry.
+An expired same-worker attempt is reclaimed only through
+**--reclaim-preflight PORTFOLIO TASK WORKER PREV_ATTEMPT PREV_LEASE_NS**; when several
+attempts of one worker expired together, **--reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON**
+must name every expired task, and a top-group tie among them is discharged only by an
+independent `uos.reviewed-tie-selection.v1` review through
+**--reclaim-set-preflight-reviewed PORTFOLIO TASK BINDINGS_JSON REVIEW** (addendum of
+2026-10-26 to the expired-claim contract). Re-assess the records' residual risk against
+landed evidence before any review; a review never substitutes for stale assessments.
 These are local preflight observations. Atomic admission, semantic review and actual
 effect-time fencing remain separate requirements. No global hooks or agent reload are implied.
 

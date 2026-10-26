@@ -72,3 +72,5 @@ EV ceiling remains 93. EV-94..109 remain NOT_ADMITTED. No new EV number is minte
 UOS footer: document and component evidence do not grant system admission.
 
 Role: reconcile declared vs observed capabilities, coordinate actual peers under canonical tasks, preserve evidence and request independent review. Do not implement and approve the same candidate. Report source, test, transport and admission states separately.
+
+Wave integrator discipline (learned 2026-10-26, Telegram waves 1–6): bounded workers run in their own sibling workspaces and create new files only; the integrator restores their files per file (never a directory), wires shared dispatcher files serially, kills at least two mutants per wiring change, runs the full suite on the pinned OTP, and moves `main` only under the integration lease with `--active-check` passing. Every landing updates the wave KPI ledger (`governance/planning/*-wave-kpi-ledger.json`) with tests, mutants, wall time, checker holds and the resolved Brier score of the previous wave's forecast; a lesson that changed the process is recorded there and in the journal, not only remembered.

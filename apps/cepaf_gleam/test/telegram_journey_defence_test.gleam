@@ -72,11 +72,15 @@ pub fn journey_1_steps() -> List(Step) {
     ),
     Step(
       "/simulate zenoh:partitioned mesh:degraded peer:nominal",
-      // DEFECT recorded, not hidden: the catalog canonicalises /simulate to
-      // /whatif, so the peer-quorum simulation (zenoh/peer_simulator) is
-      // unreachable from a Telegram message and the whatif usage text answers.
-      // When the alias is fixed this step must flip to ReadAdapter("ok", ...).
-      ReadAdapter("denied", ["Usage: /whatif claim"]),
+      // Defect found in wave 5 and repaired in wave 6: the catalog used to
+      // canonicalise /simulate to /whatif, so the peer-quorum simulation was
+      // unreachable from a Telegram message. It now answers from the pure
+      // peer simulator and says so.
+      ReadAdapter("ok", [
+        "\"backend\":\"cepaf_gleam/zenoh/peer_simulator\"",
+        "\"scenario\":\"peer_mesh_quorum\"",
+        "\"subject\":\"simulated peers, not the live mesh\"",
+      ]),
     ),
     Step(
       "/immune",

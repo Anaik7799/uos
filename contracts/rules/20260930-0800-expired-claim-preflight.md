@@ -35,6 +35,28 @@ authorized retrospectively. This extension cannot clear an unrelated HOLD.
 No database mutation, direct SQL recovery, force flag, credential or paid
 request is introduced.
 
+## Expired sets and reviewed ties (addendum 2026-10-26)
+
+`bash tools/risk-priority-check --reclaim-set-preflight PORTFOLIO TASK BINDINGS_JSON`
+observes several expired same-worker attempts at once. The JSON carries exactly
+`{plan_id, bindings}` and the bindings must equal every expired executing task of
+the plan, each with its exact worker, previous attempt and previous lease; the
+selected task must be a member. Only ranking projects those tasks as available.
+
+`bash tools/risk-priority-check --reclaim-set-preflight-reviewed PORTFOLIO TASK BINDINGS_JSON REVIEW`
+(added under Sa-plan `uos/telegram-runtime/20261001-1150` COMMAND_IMPL) composes
+that projection with the same `uos.reviewed-tie-selection.v1` review that
+`--preflight-reviewed` accepts. The review binds the original portfolio bytes,
+never the projection; its reviewer may not be an assessment actor; it discharges
+exactly the adjacent cost-tie findings of the projected top group and nothing
+else. Before this date the validator refused the combination, which left an
+owner whose expired attempts tie on effective class and score with no sanctioned
+way through except re-scoring its own records. The law
+`reclaim set plus review selects the chosen expired member first` and its three
+refusals in `reviewed_selection_test.ml` pin the behaviour. A pass remains
+`RECLAIM_PREFLIGHT_PASS`: claim replacement only, no execution before a fresh
+exact-owner active check.
+
 ## Comprehensive verification checklist
 
 <details><summary>Domain 1 — Metadata and navigation</summary>

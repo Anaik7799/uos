@@ -1,0 +1,44 @@
+{
+  "schema": "uos.reviewed-tie-selection.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "portfolio_sha256": "bccd785ac842e437b1e63a59be1a68537012b4cee50f8f9f82de2ba866d203c1",
+  "selected_task": "COMMAND_IMPL",
+  "tied_tasks": [
+    "COMMAND_IMPL",
+    "GATEWAY_IMPL",
+    "MEDIA_IMPL",
+    "MINI_API_IMPL"
+  ],
+  "observed_at": "2026-10-26T06:11:16Z",
+  "valid_until": "2026-10-26T07:06:16Z",
+  "reviewer": "claude-subagent-tie-review-20261026",
+  "reason": "Four P1 tasks tie at effective score 768, inherited from their REVIEW consumers and TELEGRAM_E2E; own residual scores after the landed wave 4 are COMMAND_IMPL 720, GATEWAY_IMPL 540, MEDIA_IMPL 720, MINI_API_IMPL 216. Select COMMAND_IMPL first: its remaining scope is the only one that changes a safety-relevant surface already reachable from chat (/verify is the last denied canonical; the extension adds the packet kind marker and roster fences that must be tested before any execute path exists) and it carries a defect recorded in three journey tests (/simulate alias). MEDIA_IMPL follows (token-in-URL S5 design whose size and secrecy controls are unimplemented), then GATEWAY_IMPL (delivery of queued notifications; the credential path is already closed), then MINI_API_IMPL (a truthful Unavailable is already in place). Stable-ID order agrees. The checker requires the reclaim set to equal every expired attempt of the same worker, so all four are observed together; this selection is the claim order only and grants no authority.",
+  "comparisons": [
+    {
+      "task_id": "COMMAND_IMPL",
+      "benefit": "Closes the last denied canonical (/verify) through the signed approval flow with six testable fences and repairs the /simulate alias defect pinned in three journey tests; unblocks COMMAND_REVIEW",
+      "cost_bound_seconds": 10800,
+      "basis": "Analyst estimate for one integrator session: alias fix about 30 minutes, verify extension about 2.5 hours; not a whole-task forecast."
+    },
+    {
+      "task_id": "GATEWAY_IMPL",
+      "benefit": "A supervised drain for the bounded outbox so queued critical notifications are delivered or marked failed or uncertain; credential and startup defects are already closed",
+      "cost_bound_seconds": 7200,
+      "basis": "Analyst estimate for one worker plus integrator wiring; live Zenoh delivery not forecast."
+    },
+    {
+      "task_id": "MEDIA_IMPL",
+      "benefit": "Bounded T2 download adapter with the token-in-URL secrecy rules and size caps before and during transfer; T3 to T5 remain",
+      "cost_bound_seconds": 7200,
+      "basis": "Analyst estimate for one worker with a fake transport; no live download."
+    },
+    {
+      "task_id": "MINI_API_IMPL",
+      "benefit": "Immune page moves from a truthful Unavailable to an observed actor snapshot; lowest severity of the four",
+      "cost_bound_seconds": 5400,
+      "basis": "Analyst estimate for one worker; browser verification not rerun."
+    }
+  ],
+  "review_evidence_path": "governance/planning/20261026-0558-claude-command-reclaim3-selection-proof.json",
+  "review_evidence_sha256": "92c0147d32d3b98224609facf5fc02db2fa8004905593ee771817411e355a961"
+}

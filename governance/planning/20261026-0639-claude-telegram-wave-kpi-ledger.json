@@ -1,0 +1,266 @@
+{
+  "schema": "uos.telegram.wave-kpi-ledger.v1",
+  "authority": "REPORT_ONLY",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "owner": "claude-fable-l0-35600f5c",
+  "created_utc": "2026-10-26T06:39:00Z",
+  "policy": "SC-HIVE-KPI-001; SC-JOURNAL-v3 forecasts resolved here with Brier scores; append rows, never rewrite a resolved forecast",
+  "kpi_definitions": [
+    {
+      "id": "TG-KPI-01",
+      "name": "canonicals_answering",
+      "numerator": "catalog canonicals that answer from a backend module or a typed truthful refusal through the dispatcher",
+      "denominator": "catalog canonicals",
+      "source": "telegram_journey_coverage_test, telegram_read_adapters_test, telegram_action_adapters_test",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-02",
+      "name": "tests_added",
+      "numerator": "EUnit tests added by the wave (workers plus integrator)",
+      "denominator": null,
+      "source": "wave journal section 11; worker reports",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-03",
+      "name": "mutant_kill_ratio",
+      "numerator": "deliberate mutants whose tests went red",
+      "denominator": "mutants planted and compiled",
+      "source": "worker reports; integrator fable-mut.sh runs",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-04",
+      "name": "wave_wall_minutes",
+      "numerator": "minutes from previous landing to this landing (main committer timestamps)",
+      "denominator": null,
+      "source": "jj log committer.timestamp",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-05",
+      "name": "checker_holds",
+      "numerator": "risk-priority-check HOLD results encountered before the wave's claim or landing",
+      "denominator": null,
+      "source": "checker receipts in scratch and governance/planning",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-06",
+      "name": "process_defects",
+      "numerator": "process defects found during the wave (integration, workspace, tooling)",
+      "denominator": null,
+      "source": "wave journal sections 4 and 6",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-07",
+      "name": "forecast_brier",
+      "numerator": "(p - o)^2 for the previous wave's precommitted forecast",
+      "denominator": null,
+      "source": "wave journal section 13 and the outcome observed here",
+      "confidence": "Measured once the horizon passes; null while open"
+    },
+    {
+      "id": "TG-KPI-08",
+      "name": "full_suite",
+      "numerator": "cepaf_gleam tests passed on OTP 29 at the landing commit",
+      "denominator": "tests run",
+      "source": "gleam test log in scratch; commit description",
+      "confidence": "Measured"
+    }
+  ],
+  "waves": [
+    {
+      "wave": "verify-executor",
+      "landed_commit": "589557ab",
+      "landed_utc": "2026-10-26T00:37:31Z",
+      "canonicals_answering": "39/76",
+      "tests_added": null,
+      "mutants": null,
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 2,
+      "process_defects": 1,
+      "notes": "reclaim HOLDs: missing executing owner record, lease not yet expired; chain gate lapse recorded later"
+    },
+    {
+      "wave": 1,
+      "landed_commit": "52826c5a",
+      "landed_utc": "2026-10-26T01:13:41Z",
+      "canonicals_answering": "48/76",
+      "tests_added": 58,
+      "mutants": "14/15",
+      "workers": 3,
+      "wave_wall_minutes": 36,
+      "checker_holds": 1,
+      "process_defects": 2,
+      "notes": "landed while active-check was HOLD (hash drift from dispatcher edit); worker overwrote shared mutation script. Fixes: chain gates on PASS; per-worker scratch dirs"
+    },
+    {
+      "wave": 2,
+      "landed_commit": "6f9924f2",
+      "landed_utc": "2026-10-26T01:29:30Z",
+      "canonicals_answering": "54/76",
+      "tests_added": 72,
+      "mutants": "28/29",
+      "workers": 3,
+      "wave_wall_minutes": 16,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "directory restore dropped other workers' files; fix: per-file restore"
+    },
+    {
+      "wave": 3,
+      "landed_commit": "1e7d9736",
+      "landed_utc": "2026-10-26T01:44:07Z",
+      "canonicals_answering": "75/76",
+      "tests_added": 117,
+      "mutants": "39/39",
+      "workers": 3,
+      "wave_wall_minutes": 15,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "/verification alias routed by mistake; removed and pinned by test"
+    },
+    {
+      "wave": 4,
+      "landed_commit": "a7c2e515",
+      "landed_utc": "2026-10-26T02:19:39Z",
+      "canonicals_answering": "75/76",
+      "tests_added": 140,
+      "mutants": "18/18",
+      "workers": 3,
+      "wave_wall_minutes": 36,
+      "checker_holds": 2,
+      "process_defects": 1,
+      "notes": "two RP-COST-TIE holds resolved by reviewed selection; reviewer rejected the first ordering (MINI-first) and was right"
+    },
+    {
+      "wave": 5,
+      "landed_commit": "8236f048",
+      "landed_utc": "2026-10-26T02:33:47Z",
+      "canonicals_answering": "75/76",
+      "tests_added": null,
+      "mutants": null,
+      "workers": 4,
+      "wave_wall_minutes": 14,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "diagram-check FAIL on four journals and two designs; fix: one edge per line, diagram-check added to the per-wave gate; two workers found the /simulate alias defect",
+      "full_suite": "13619/13619"
+    },
+    {
+      "wave": "6a",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "76/77 (simulate now its own canonical; /verify held for the signed flow)",
+      "tests_added": 78,
+      "mutants": "18/20 killed (2 equivalent mutants recorded: w3 snapshot swap, cancellation-record kind guard shadowed by native_request)",
+      "workers": 3,
+      "wave_wall_minutes": null,
+      "checker_holds": 4,
+      "process_defects": 2,
+      "notes": "all four implement leases found expired (03:55Z); reclaim needed a reviewed tie but the checker barred reviews in reclaim-set mode; fix: --reclaim-set-preflight-reviewed with laws and contract addendum. Portfolio refreshed twice (stale validate.ml hash after the checker edit; evidence observed_at later than assessment). Independent reviewer approved twice. Verify core (intent kind, verify action, packet loader, run orchestration) added in the same increment: 23 tests, 3 killed mutants.",
+      "full_suite": null
+    }
+  ],
+  "forecasts": [
+    {
+      "made_in": "wave 1 journal (01:10)",
+      "p": 0.55,
+      "claim": "wave 2 lands >= 4 ControlledActions through the existing approval flow by 2026-10-26T06:00:00Z",
+      "outcome": 0,
+      "brier": 0.3025,
+      "resolved_by": "wave 2 landed six preview adapters; none through the approval flow (propose/approve/job/executor); the approval flow still executes lease cancellation only",
+      "resolved_utc": "2026-10-26T06:39:00Z"
+    },
+    {
+      "made_in": "wave 2 journal (01:25)",
+      "p": 0.7,
+      "claim": "wave 3 lands adapters for all remaining 15 ControlledActions with at least 5 real bounded execute paths in development by 2026-10-26T04:00:00Z",
+      "outcome": 1,
+      "brier": 0.09,
+      "resolved_by": "wave 3 landed 01:44Z with 15 adapters; migrate, escalate, resuscitate, repro, bisect, rewind and eco-schedule have receipt-producing bounded execute paths against real backends; execute remains unreachable from chat",
+      "resolved_utc": "2026-10-26T06:39:00Z"
+    },
+    {
+      "made_in": "wave 3 journal (01:40)",
+      "p": 0.5,
+      "claim": "approval-flow extension lands with /verify executing end-to-end in development by 2026-10-26T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 4 journal (02:20)",
+      "p": 0.6,
+      "claim": "wave 5 lands all three journey specs with dispatcher tests covering all 77 literals and capability bindings on four surfaces by 2026-10-26T05:00:00Z",
+      "outcome": 1,
+      "brier": 0.16,
+      "resolved_by": "main 8236f048 at 02:33:47Z; coverage test 77/77; bindings byte-identical on .claude .gemini .agents .codex",
+      "resolved_utc": "2026-10-26T06:39:00Z"
+    },
+    {
+      "made_in": "wave 5 journal (02:30)",
+      "p": 0.5,
+      "claim": "an authorized human completes at least one real-traffic journey against the staging bot and records it in Sa-plan by 2026-10-28T00:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    }
+  ],
+  "lessons": [
+    {
+      "id": "L-01",
+      "wave": 1,
+      "lesson": "A landing chain joined with ';' let a HOLD pass; gate on the literal ACTIVE_OBSERVATION_PASS string",
+      "applied": "all later chains"
+    },
+    {
+      "id": "L-02",
+      "wave": 1,
+      "lesson": "Workers sharing one scratch directory overwrite each other",
+      "applied": "per-worker scratch directories in every packet"
+    },
+    {
+      "id": "L-03",
+      "wave": 2,
+      "lesson": "jj restore --from <commit> <dir> deletes files absent from that commit",
+      "applied": "per-file restores only"
+    },
+    {
+      "id": "L-04",
+      "wave": 4,
+      "lesson": "An independent reviewer that can reject is worth more than one that only approves; both rejections corrected a real ordering error",
+      "applied": "reviewer told explicitly to disagree; second-round re-verification when bytes change"
+    },
+    {
+      "id": "L-05",
+      "wave": 5,
+      "lesson": "Mermaid chained arrows and parenthesised labels fail diagram-check",
+      "applied": "one edge per line; diagram-check in the per-wave gate"
+    },
+    {
+      "id": "L-06",
+      "wave": "6a",
+      "lesson": "Leases shorter than the integrator's session expire silently; a whole set of same-worker attempts then needs a reclaim set, and a boilerplate portfolio ties them all at an inherited score",
+      "applied": "3h leases sized to intent; checker gains a reviewed reclaim-set mode; residual re-assessment of sibling records against landed evidence before any review"
+    },
+    {
+      "id": "L-07",
+      "wave": "6a",
+      "lesson": "Editing the checker after re-hashing the portfolio invalidates the portfolio's own evidence row for the checker file",
+      "applied": "rehash last, immediately before the preflight; review bytes regenerated and re-approved"
+    },
+    {
+      "id": "L-08",
+      "wave": "6a",
+      "lesson": "Two generated documents were first named with guessed future timestamps (0740, 0825) while the host UTC clock read 06:39; prefixes must come from date -u at write time, never from a sense of elapsed work",
+      "applied": "renamed to the observed mtimes 0639 and 0640; every prefix in this session is now taken from the host clock immediately before the Write"
+    }
+  ]
+}

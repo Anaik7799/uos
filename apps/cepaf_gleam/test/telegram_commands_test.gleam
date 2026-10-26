@@ -1,24 +1,23 @@
 import cepaf_gleam/harness/telegram_commands.{
-  ControlledAction, ConversationModel, Definition,
-  Information, InvalidInput, Invocation, ReadObservation, UnknownCommand,
+  ControlledAction, ConversationModel, Definition, Information, InvalidInput,
+  Invocation, ReadObservation, UnknownCommand,
 } as commands
 import gleam/list
 import gleam/string
 
 const exact_77_literals = [
-  "/start", "/help", "/status", "/storage", "/dark", "/andon", "/zigvm",
-  "/plan", "/sutra", "/zk", "/checklist", "/cockpit", "/approval",
-  "/resuscitate", "/chaos", "/repro", "/merge", "/bisect", "/escalate",
-  "/rotate-keys", "/mesh", "/migrate", "/adr", "/blast-radius", "/pacing",
-  "/whatif", "/simulate", "/rack-cv", "/acoustic", "/rewind", "/postmortem",
-  "/finops", "/budget", "/eco-schedule", "/radar", "/canvas", "/lockbox",
-  "/export-audit", "/sidecar", "/voice-roll-call", "/babel", "/whiteboard",
-  "/socratic", "/handover", "/pair-voice", "/exec-brief", "/commitments",
-  "/acoustic-hud", "/retro", "/gameday", "/aspects", "/ecology", "/health",
-  "/tasks", "/task", "/search", "/immune", "/fmea", "/ha", "/zenoh",
-  "/inference", "/verify", "/verification", "/rete", "/km", "/wiki", "/nvme",
-  "/doctor", "/ev", "/agy", "/board", "/peers", "/memory", "/messages",
-  "/history", "/tool", "/action",
+  "/start", "/help", "/status", "/storage", "/dark", "/andon", "/zigvm", "/plan",
+  "/sutra", "/zk", "/checklist", "/cockpit", "/approval", "/resuscitate",
+  "/chaos", "/repro", "/merge", "/bisect", "/escalate", "/rotate-keys", "/mesh",
+  "/migrate", "/adr", "/blast-radius", "/pacing", "/whatif", "/simulate",
+  "/rack-cv", "/acoustic", "/rewind", "/postmortem", "/finops", "/budget",
+  "/eco-schedule", "/radar", "/canvas", "/lockbox", "/export-audit", "/sidecar",
+  "/voice-roll-call", "/babel", "/whiteboard", "/socratic", "/handover",
+  "/pair-voice", "/exec-brief", "/commitments", "/acoustic-hud", "/retro",
+  "/gameday", "/aspects", "/ecology", "/health", "/tasks", "/task", "/search",
+  "/immune", "/fmea", "/ha", "/zenoh", "/inference", "/verify", "/verification",
+  "/rete", "/km", "/wiki", "/nvme", "/doctor", "/ev", "/agy", "/board", "/peers",
+  "/memory", "/messages", "/history", "/tool", "/action",
 ]
 
 pub fn exact_77_unique_catalog_coverage_test() {
@@ -41,10 +40,20 @@ pub fn exact_77_unique_catalog_coverage_test() {
   })
 }
 
+/// /simulate has its own grammar (peer-mesh quorum simulation); it is a
+/// canonical, not an alias of /whatif. Pinned after two wave-5 journey workers
+/// found the alias made that grammar unreachable from a Telegram message.
+pub fn simulate_is_its_own_canonical_test() {
+  let assert Ok(invocation) = commands.parse("/simulate a:nominal b:degraded")
+  assert invocation.definition.canonical == "/simulate"
+  assert invocation.definition.kind == ConversationModel
+  let assert Ok(whatif) = commands.parse("/whatif claim 42")
+  assert whatif.definition.canonical == "/whatif"
+}
+
 pub fn supported_aliases_and_saplan_test() {
   let expected_aliases = [
     #("/start", "/help", Information),
-    #("/simulate", "/whatif", ConversationModel),
     #("/budget", "/finops", ReadObservation),
     #("/verification", "/verify", ControlledAction),
     #("/ev", "/doctor", ReadObservation),
@@ -58,41 +67,35 @@ pub fn supported_aliases_and_saplan_test() {
   list.each(expected_aliases, fn(item) {
     let #(alias_literal, canonical_literal, expected_kind) = item
     assert commands.parse(alias_literal <> " --check")
-      == Ok(
-        Invocation(
-          definition: Definition(
-            literal: alias_literal,
-            canonical: canonical_literal,
-            kind: expected_kind,
-          ),
-          args: "--check",
+      == Ok(Invocation(
+        definition: Definition(
+          literal: alias_literal,
+          canonical: canonical_literal,
+          kind: expected_kind,
         ),
-      )
+        args: "--check",
+      ))
   })
 
   // /health and /status remain distinct canonical read commands.
   assert commands.parse("/health")
-    == Ok(
-      Invocation(
-        definition: Definition(
-          literal: "/health",
-          canonical: "/health",
-          kind: ReadObservation,
-        ),
-        args: "",
+    == Ok(Invocation(
+      definition: Definition(
+        literal: "/health",
+        canonical: "/health",
+        kind: ReadObservation,
       ),
-    )
+      args: "",
+    ))
   assert commands.parse("/status")
-    == Ok(
-      Invocation(
-        definition: Definition(
-          literal: "/status",
-          canonical: "/status",
-          kind: ReadObservation,
-        ),
-        args: "",
+    == Ok(Invocation(
+      definition: Definition(
+        literal: "/status",
+        canonical: "/status",
+        kind: ReadObservation,
       ),
-    )
+      args: "",
+    ))
 }
 
 pub fn conservative_operator_and_model_kind_classification_test() {
@@ -109,8 +112,8 @@ pub fn conservative_operator_and_model_kind_classification_test() {
   })
 
   let conversational_models = [
-    "/sutra", "/adr", "/whatif", "/simulate", "/postmortem", "/canvas",
-    "/babel", "/whiteboard", "/socratic", "/exec-brief", "/retro", "/aspects",
+    "/sutra", "/adr", "/whatif", "/simulate", "/postmortem", "/canvas", "/babel",
+    "/whiteboard", "/socratic", "/exec-brief", "/retro", "/aspects",
     "/inference",
   ]
 
@@ -228,7 +231,14 @@ pub fn parameters_not_shell_executed_and_reference_replies_safe_test() {
   })
 
   // Non-reference commands never fabricate health or static replies.
-  let non_reference = ["/status", "/health", "/doctor", "/plan", "/saplan", "/whatif"]
+  let non_reference = [
+    "/status",
+    "/health",
+    "/doctor",
+    "/plan",
+    "/saplan",
+    "/whatif",
+  ]
   list.each(non_reference, fn(literal) {
     let assert Ok(inv) = commands.parse(literal <> " " <> hostile_args)
     assert commands.reference_reply(inv) == Error(Nil)
@@ -236,6 +246,6 @@ pub fn parameters_not_shell_executed_and_reference_replies_safe_test() {
 }
 
 pub fn fmea_is_recorded_observation_not_model_test() {
-  let assert Ok(invocation)=commands.parse("/fmea")
+  let assert Ok(invocation) = commands.parse("/fmea")
   assert invocation.definition.kind == commands.ReadObservation
 }

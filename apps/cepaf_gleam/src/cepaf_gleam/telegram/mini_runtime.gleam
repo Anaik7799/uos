@@ -20,6 +20,7 @@ import cepaf_gleam/telegram/mini_dashboard
 import cepaf_gleam/telegram/mini_evidence
 import cepaf_gleam/telegram/mini_health
 import cepaf_gleam/telegram/mini_history
+import cepaf_gleam/telegram/mini_immune_observer as immune_observer
 import cepaf_gleam/telegram/mini_memory
 import cepaf_gleam/telegram/mini_podman
 import cepaf_gleam/telegram/mini_system_observers as observers
@@ -336,7 +337,10 @@ fn observe_backend(read: api.AuthorizedRead) -> api.Observation {
           )
         other -> other
       }
-    types.MiniImmune -> observers.immune()
+    // The immune actor is not started by this runtime, so no subject is held
+    // here; the observer answers with a typed not-running reason until a
+    // supervisor hands one in. Never a cached or fabricated snapshot.
+    types.MiniImmune -> immune_observer.observe_live(clock(), None, 2000)
     types.MiniInference -> observe_inference()
     types.MiniFederation -> observers.federation(clock(), mesh_source.load())
     types.MiniTelemetry -> observers.telemetry(mini_telemetry.observe())

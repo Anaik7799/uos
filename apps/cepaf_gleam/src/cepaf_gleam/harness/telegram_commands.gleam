@@ -106,9 +106,12 @@ pub fn catalog() -> List(Definition) {
       canonical: "/whatif",
       kind: ConversationModel,
     ),
+    // /simulate is its own canonical: it carries the peer-mesh quorum grammar
+    // served by telegram_simulation_read_command. Until wave 6 it aliased
+    // /whatif, which made that grammar unreachable from a Telegram message.
     Definition(
       literal: "/simulate",
-      canonical: "/whatif",
+      canonical: "/simulate",
       kind: ConversationModel,
     ),
     Definition(
@@ -316,8 +319,7 @@ pub fn reference_reply(invocation: Invocation) -> Result(String, Nil) {
 fn lookup_definition(literal: String) -> Result(Definition, Nil) {
   case literal {
     "/saplan" -> Ok(saplan_alias_definition)
-    _ ->
-      list.find(catalog(), fn(definition) { definition.literal == literal })
+    _ -> list.find(catalog(), fn(definition) { definition.literal == literal })
   }
 }
 
@@ -394,7 +396,11 @@ fn render_catalog_help() -> String {
       "Some commands are still being completed. Unavailable features return an explicit error; this list does not mean every feature is ready.",
       render_kind_section("Help and navigation", Information, entries),
       render_kind_section("Status and information", ReadObservation, entries),
-      render_kind_section("Actions requiring authorization", ControlledAction, entries),
+      render_kind_section(
+        "Actions requiring authorization",
+        ControlledAction,
+        entries,
+      ),
       render_kind_section("Assistant features", ConversationModel, entries),
     ],
     "\n\n",

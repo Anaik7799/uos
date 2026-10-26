@@ -514,7 +514,11 @@ fn sec_j4() -> List(Step) {
       "/simulate",
       "/simulate n1:partitioned n2:nominal n3:nominal",
       "F9",
-      ReadReply("denied", [Has("reason"), Is("command", "/whatif")]),
+      ReadReply("ok", [
+        Has("observation"),
+        Is("command", "/simulate"),
+        Is("backend", "cepaf_gleam/zenoh/peer_simulator"),
+      ]),
     ),
     Step(
       "SEC-J4/S9",

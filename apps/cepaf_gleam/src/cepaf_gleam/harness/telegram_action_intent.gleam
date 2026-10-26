@@ -50,6 +50,31 @@ pub type Window {
   )
 }
 
+/// What an approval authorises. The kind is inside the signed canonical
+/// payload and the logical effect, and every receipt's `purpose` must equal
+/// its name, so receipts for one kind can never satisfy another.
+pub type Kind {
+  /// Revoke one Sa-plan job lease (`/cancel_job_lease`).
+  CancelJobLease
+  /// Run the pinned verify guardian for one reserved verify job (`/verify`).
+  VerifyProfile
+}
+
+pub fn kind_name(kind: Kind) -> String {
+  case kind {
+    CancelJobLease -> "cancel_job_lease"
+    VerifyProfile -> "verify_profile"
+  }
+}
+
+pub fn kind_from_name(name: String) -> Result(Kind, Nil) {
+  case name {
+    "cancel_job_lease" -> Ok(CancelJobLease)
+    "verify_profile" -> Ok(VerifyProfile)
+    _ -> Error(Nil)
+  }
+}
+
 pub opaque type Intent {
   Intent(
     binding: Binding,
@@ -59,6 +84,7 @@ pub opaque type Intent {
     nonce: String,
     digest: String,
     effect_id: String,
+    kind: Kind,
   )
 }
 
@@ -191,6 +217,7 @@ fn valid_reason(value: String) -> Bool {
 }
 
 fn payload(
+  kind: Kind,
   binding: Binding,
   target: Target,
   window: Window,
@@ -201,7 +228,7 @@ fn payload(
   json.array(
     [
       json.string("uos.telegram.action-intent.v2"),
-      json.string("cancel_job_lease"),
+      json.string(kind_name(kind)),
       json.int(binding.bot_id),
       json.int(binding.chat_id),
       json.int(binding.user_id),
@@ -234,7 +261,7 @@ fn payload(
   |> json.to_string
 }
 
-fn logical_effect(binding: Binding, target: Target) -> String {
+fn logical_effect(kind: Kind, binding: Binding, target: Target) -> String {
   json.array(
     [
       json.string("uos.telegram.action-effect.v1"),
@@ -242,7 +269,7 @@ fn logical_effect(binding: Binding, target: Target) -> String {
       json.int(binding.chat_id),
       json.int(binding.user_id),
       json.int(binding.update_id),
-      json.string("cancel_job_lease"),
+      json.string(kind_name(kind)),
       json.string(target.job),
     ],
     fn(value) { value },
@@ -252,7 +279,21 @@ fn logical_effect(binding: Binding, target: Target) -> String {
 }
 
 /// Validated request data only. No actual allowlist, job or authority is observed.
+/// A lease-cancellation intent; see `new_kind` for other kinds.
 pub fn new(
+  binding: Binding,
+  target: Target,
+  window: Window,
+  reason: String,
+  nonce: String,
+) -> Result(Intent, String) {
+  new_kind(CancelJobLease, binding, target, window, reason, nonce)
+}
+
+/// Validated request data of the given kind. The kind enters the signed
+/// payload, the digest and the logical effect.
+pub fn new_kind(
+  kind: Kind,
   binding: Binding,
   target: Target,
   window: Window,
@@ -278,20 +319,48 @@ pub fn new(
     False -> Error("invalid_controlled_action_request")
     True ->
       Ok(Intent(
-        binding,
-        target,
-        window,
-        reason,
-        nonce,
-        files.digest(payload(binding, target, window, reason, nonce)),
-        logical_effect(binding, target),
+        binding: binding,
+        target: target,
+        window: window,
+        reason: reason,
+        nonce: nonce,
+        digest: files.digest(payload(
+          kind,
+          binding,
+          target,
+          window,
+          reason,
+          nonce,
+        )),
+        effect_id: logical_effect(kind, binding, target),
+        kind: kind,
       ))
   }
 }
 
 /// Internal canonical request bytes; contains identities and reason, not a public reply.
 pub fn canonical_json(value: Intent) -> String {
-  payload(value.binding, value.target, value.window, value.reason, value.nonce)
+  payload(
+    value.kind,
+    value.binding,
+    value.target,
+    value.window,
+    value.reason,
+    value.nonce,
+  )
+}
+
+pub fn kind(value: Intent) -> Kind {
+  value.kind
+}
+
+/// The receipt `purpose` every approver must sign for this intent.
+pub fn purpose(value: Intent) -> String {
+  kind_name(value.kind)
+}
+
+pub fn target(value: Intent) -> Target {
+  value.target
 }
 
 pub fn digest(value: Intent) -> String {
@@ -328,8 +397,18 @@ pub fn native_request(
   value: Intent,
   expires_at_ms: Int,
 ) -> Result(String, String) {
+  use _ <- result.try(native_cancel_kind(value))
   use _ <- result.try(native_deadline(value, expires_at_ms))
   Ok(json.to_string(native_value(value, expires_at_ms)))
+}
+
+/// The native cancel-once request exists only for lease cancellations; a
+/// verify intent has no native cancellation form and must never gain one.
+fn native_cancel_kind(value: Intent) -> Result(Nil, String) {
+  case value.kind {
+    CancelJobLease -> Ok(Nil)
+    VerifyProfile -> Error("native_request_kind_mismatch")
+  }
 }
 
 fn native_value(value: Intent, expires_at_ms: Int) -> json.Json {
@@ -358,6 +437,7 @@ pub fn native_request_hash(
   value: Intent,
   expires_at_ms: Int,
 ) -> Result(String, String) {
+  use _ <- result.try(native_cancel_kind(value))
   use _ <- result.try(native_deadline(value, expires_at_ms))
   let binding = value.binding
   let execution = binding.execution
@@ -440,5 +520,5 @@ pub fn valid_receipt_window(
 
 /// Exact arguments approved for this request; command aliases use the shared parser.
 pub fn command_args(value: Intent) -> String {
-  "cancel_job_lease " <> value.target.job <> " -- " <> value.reason
+  kind_name(value.kind) <> " " <> value.target.job <> " -- " <> value.reason
 }

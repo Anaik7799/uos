@@ -135,8 +135,11 @@ let run_audit ?active ?reclaim ?reclaim_set ?plan_id ?selection_review path sele
   let reviewed = match selection_review, selected with
     | None, _ -> None
     | Some review_path, Some task ->
-        require(active=None && reclaim_set=None)
-          "reviewed selection cannot combine active or reclaim-set modes";
+        (* A reviewed tie composes with the single-reclaim and the reclaim-set
+           projections (both are ranking evidence over original bytes); it never
+           composes with an active check, which has no selection to review. *)
+        require(active=None)
+          "reviewed selection cannot combine active mode";
         require(String.starts_with ~prefix:"governance/planning/" review_path)
           "selection review must be a governance planning artifact";
         let review_bytes=Bounded.evidence ~root review_path in
@@ -328,6 +331,10 @@ let () =
         let plan_id, bindings = Checker.parse_bindings raw_bindings in
         Checker.require_selected_in_set task bindings;
         run_audit ~plan_id ~reclaim_set:bindings path (Some task)
+    | [_;"--reclaim-set-preflight-reviewed";path;task;raw_bindings;review] ->
+        let plan_id, bindings = Checker.parse_bindings raw_bindings in
+        Checker.require_selected_in_set task bindings;
+        run_audit ~plan_id ~reclaim_set:bindings ~selection_review:review path (Some task)
     | [_;"--reclaim-metadata-observe";path;raw_bindings] ->
         Reclaim_metadata.run ~portfolio_path:path ~raw_bindings ()
     | [_;"--active-check";path;task;worker;attempt] ->

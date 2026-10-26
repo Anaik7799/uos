@@ -82,11 +82,21 @@ pub fn load(
     files.read(root, path(dir, request_id))
     |> result.map_error(fn(r) { "reservation_unavailable:" <> r }),
   )
+  use b <- result.try(decode(raw))
+  case b.request_id == request_id {
+    True -> Ok(b)
+    False -> Error("reservation_not_canonical")
+  }
+}
+
+/// Strict decode of this module's exact encoding; any other byte string for
+/// the same binding is refused.
+pub fn decode(raw: String) -> Result(v.Binding, String) {
   use #(s, b) <- result.try(
     json.parse(raw, decoder())
     |> result.map_error(fn(_) { "reservation_malformed" }),
   )
-  case s == schema && b.request_id == request_id && encode(b) == raw {
+  case s == schema && encode(b) == raw {
     True -> Ok(b)
     False -> Error("reservation_not_canonical")
   }

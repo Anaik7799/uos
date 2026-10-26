@@ -13,8 +13,6 @@ const record_schema = "uos.telegram.cancellation-record.v1"
 
 const intent_schema = "uos.telegram.action-intent.v2"
 
-const cancel_action = "cancel_job_lease"
-
 const max_record_bytes = 16_384
 
 const max_intent_bytes = 8192
@@ -38,8 +36,10 @@ pub fn new(
   target: action.Target,
   deadline_ms: Int,
 ) -> Result(RecoveryRecord, String) {
+  // Only a lease-cancellation intent can become a cancellation record.
   let matches =
-    action.matches_binding(intent, binding)
+    action.kind(intent) == action.CancelJobLease
+    && action.matches_binding(intent, binding)
     && action.matches_target(intent, target)
   case matches {
     False -> Error(invalid_record_error)
@@ -207,9 +207,9 @@ pub fn decode_intent_json(
           codec.JsonString(reason),
           codec.JsonString(nonce),
         ])) -> {
-          case schema == intent_schema && action_kind == cancel_action {
-            False -> Error(invalid_record_error)
-            True -> {
+          case schema == intent_schema, action.kind_from_name(action_kind) {
+            False, _ | _, Error(_) -> Error(invalid_record_error)
+            True, Ok(kind) -> {
               let execution =
                 action.Execution(
                   mapping_id,
@@ -248,7 +248,7 @@ pub fn decode_intent_json(
                   deadline_boot_ms,
                 )
               use recreated <- result.try(
-                action.new(binding, target, window, reason, nonce)
+                action.new_kind(kind, binding, target, window, reason, nonce)
                 |> result.map_error(fn(_) { invalid_record_error }),
               )
               case action.canonical_json(recreated) == raw_intent_json {

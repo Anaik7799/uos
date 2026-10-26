@@ -29,8 +29,6 @@ const max_token_bytes = 8192
 
 const expected_version = "uos.telegram.approval.v1"
 
-const expected_purpose = "cancel_job_lease"
-
 const expected_decision = "approve"
 
 const expected_claim_keys = [
@@ -353,7 +351,9 @@ fn verify_single_receipt(
   use _ <- result.try(
     case
       claims.version == expected_version
-      && claims.purpose == expected_purpose
+      // The signed purpose is the intent kind: a cancellation receipt cannot
+      // approve a verification run, nor the reverse.
+      && claims.purpose == intent.purpose(request)
       && claims.role == role_name(signer.role)
       && claims.subject == signer.subject
       && claims.decision == expected_decision

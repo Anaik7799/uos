@@ -22,10 +22,20 @@ pub type SystemState {
   )
 }
 
+pub type SystemSnapshot {
+  SystemSnapshot(
+    active_antibodies: Int,
+    violation_count: Int,
+    known_patterns: Int,
+    antibody_targets: List(String),
+  )
+}
+
 pub type Message {
   ReportViolation(reason: String, target: String)
   ProcessLogLine(line: String)
   PruneAntibodies
+  Snapshot(reply: Subject(SystemSnapshot))
 }
 
 pub fn start() -> Result(Subject(Message), actor.StartError) {
@@ -87,6 +97,19 @@ fn handle_message(
       actor.continue(state)
     }
     PruneAntibodies -> actor.continue(state)
+    Snapshot(reply) -> {
+      let snapshot =
+        SystemSnapshot(
+          active_antibodies: list.length(state.active_antibodies),
+          violation_count: state.violation_count,
+          known_patterns: list.length(state.known_patterns),
+          antibody_targets: state.active_antibodies
+            |> list.take(24)
+            |> list.map(fn(a) { a.target_pattern }),
+        )
+      process.send(reply, snapshot)
+      actor.continue(state)
+    }
   }
 }
 

@@ -157,11 +157,16 @@ pub fn journey_knowledge_and_whatif() -> List(Step) {
     #("/whatif retry 3", ok("/whatif", ["retry 3"])),
     #("/whatif zombie 100 200", ok("/whatif", ["zombie 100 200"])),
     #("/whatif claim 99", usage("/whatif", ["claim 99"])),
-    // /simulate canonicalizes to /whatif, so its own peer-mesh grammar is
-    // unreachable through the dispatcher and the reply is the /whatif usage.
+    // Wave 6: /simulate is its own canonical, so its peer-mesh grammar is
+    // reachable through the dispatcher; a malformed scenario is still denied
+    // with the /simulate usage, not the /whatif one.
     #(
       "/simulate a:nominal b:degraded",
-      usage("/whatif", ["a:nominal b:degraded"]),
+      ok("/simulate", ["a:nominal b:degraded"]),
+    ),
+    #(
+      "/simulate a:nominal a:degraded",
+      usage("/simulate", ["a:nominal a:degraded"]),
     ),
     #("/canvas a:1,2,3 b:4,5,6", ok("/canvas", ["a:1,2,3 b:4,5,6"])),
     #("/canvas", usage("/canvas", [])),

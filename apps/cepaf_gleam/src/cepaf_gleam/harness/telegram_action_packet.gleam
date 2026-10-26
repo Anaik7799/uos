@@ -17,6 +17,7 @@
 //// all failures redact to `"action_packet_invalid"`.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/telegram_action_intent as action
 import cepaf_gleam/harness/telegram_action_profile as profile
 import cepaf_gleam/harness/telegram_approval as approval
 import cepaf_gleam/harness/telegram_bridge as bridge
@@ -54,6 +55,9 @@ pub fn load(
   use rec <- result.try(redact(record.decode(recovery_json)))
   use _ <- result.try(validate_context_and_binding(p, rec, observed))
   let intent = record.intent(rec)
+  // Kind is already enforced by the record constructor; stated here so the
+  // loader's contract is visible: this path prepares lease cancellations only.
+  use _ <- result.try(check(action.kind(intent) == action.CancelJobLease))
   let roster = profile.roster(p)
   use evidence <- result.try(
     redact(approval.verify(
@@ -85,16 +89,27 @@ pub fn load(
 fn parse_packet_envelope(
   raw: String,
 ) -> Result(#(String, List(approval.Receipt)), String) {
+  parse_envelope(raw, expected_schema, "recovery_json")
+}
+
+/// Closed three-key envelope `{schema, <record_key>, receipts}` with exactly
+/// the given schema. Shared by the cancellation and verify packet loaders so
+/// the two kinds differ only in schema, record key and record decoder.
+pub fn parse_envelope(
+  raw: String,
+  schema_expected: String,
+  record_key: String,
+) -> Result(#(String, List(approval.Receipt)), String) {
   use parsed <- result.try(redact(codec.parse_strict_json(raw)))
   case parsed {
     codec.JsonObject(fields) -> {
       use _ <- result.try(check(list.length(fields) == 3))
-      use _ <- result.try(check(closed_unique_keys(fields, [])))
+      use _ <- result.try(check(closed_unique_keys(fields, record_key, [])))
       use schema_value <- result.try(require_field(fields, "schema"))
-      use recovery_value <- result.try(require_field(fields, "recovery_json"))
+      use recovery_value <- result.try(require_field(fields, record_key))
       use receipts_value <- result.try(require_field(fields, "receipts"))
       use schema <- result.try(expect_string(schema_value))
-      use _ <- result.try(check(schema == expected_schema))
+      use _ <- result.try(check(schema == schema_expected))
       use recovery_json <- result.try(expect_string(recovery_value))
       use _ <- result.try(check(string.byte_size(recovery_json) > 0))
       use receipts <- result.try(parse_receipts(receipts_value))
@@ -106,18 +121,19 @@ fn parse_packet_envelope(
 
 fn closed_unique_keys(
   fields: List(#(String, codec.StrictJsonValue)),
+  record_key: String,
   seen: List(String),
 ) -> Bool {
   case fields {
     [] -> list.length(seen) == 3
     [#(key, _), ..rest] ->
-      case key {
-        "schema" | "recovery_json" | "receipts" ->
+      case key == "schema" || key == record_key || key == "receipts" {
+        True ->
           case list.contains(seen, key) {
             True -> False
-            False -> closed_unique_keys(rest, [key, ..seen])
+            False -> closed_unique_keys(rest, record_key, [key, ..seen])
           }
-        _ -> False
+        False -> False
       }
   }
 }
@@ -183,8 +199,18 @@ fn validate_context_and_binding(
   rec: record.RecoveryRecord,
   observed: cancel.Observation,
 ) -> Result(Nil, String) {
+  validate_binding(p, record.binding(rec), observed)
+}
+
+/// Binds a decoded intent binding to the active profile's context, digest,
+/// bridge execution and the observed host and boot. Shared with the verify
+/// packet loader.
+pub fn validate_binding(
+  p: profile.Profile,
+  binding: action.Binding,
+  observed: cancel.Observation,
+) -> Result(Nil, String) {
   let ctx = profile.context(p)
-  let binding = record.binding(rec)
   let execution = binding.execution
   use _ <- result.try(
     check(profile.active_at(p, ctx, observed.utc_ms * ns_per_ms)),

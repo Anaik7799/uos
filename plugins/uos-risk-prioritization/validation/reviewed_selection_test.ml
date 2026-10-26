@@ -144,4 +144,48 @@ let run () =
   let other=Checker.issue "RP-SA-PLAN" "A" "another expired task" "repair" in
   check "reclaim review retains non-tie hold"
     ((composed ~rep:{projected_report with findings=other::projected_report.findings} rr).findings=[other]);
+
+  (* Reclaim SET plus review: two expired same-worker attempts and one available
+     peer tie after projection. The review binds the original bytes, names the
+     whole projected top group, and discharges only the adjacent tie findings. *)
+  let set_records=List.map(fun id->
+    let r=change "task_id" (`String id) base in
+    if id="A" then r else change "task_state" (`String "executing") r) ["A";"B";"C"] in
+  let set_raw=Yojson.Basic.to_string(`List set_records) in
+  let set_live:Live_plan.task list=[
+    {id="A";state="available";worker=None;lease=None;attempt=0;
+     completed=None;result_present=false;dependencies=[]};
+    {id="B";state="executing";worker=Some "producer";lease=Some 90L;attempt=2;
+     completed=None;result_present=false;dependencies=[]};
+    {id="C";state="executing";worker=Some "producer";lease=Some 80L;attempt=5;
+     completed=None;result_present=false;dependencies=[]}] in
+  let set_bindings=[("B","producer",2,90L);("C","producer",5,80L)] in
+  let set_projected=Checker.reclaim_set_projection ~now_ns:100L set_bindings set_records set_live in
+  let set_ranked=rank ~now (List.map candidate set_projected) in
+  let set_report:Checker.report={ranked=set_ranked;
+    findings=Checker.analysis ~now set_projected set_ranked;evidence=[]} in
+  check "reclaim set projection emits the adjacent ties of a three-way group"
+    (List.length(List.filter(fun(f:Checker.finding)->f.rule="RP-COST-TIE") set_report.findings)=2);
+  let set_review,set_proof=seal(review
+    |> change "portfolio_sha256" (`String(Bounded.sha256 set_raw))
+    |> change "selected_task" (`String "C")
+    |> change "tied_tasks" (`List[`String "A";`String "B";`String "C"])
+    |> change "comparisons" (`List[cost "A";cost "B";cost "C"])) in
+  let set_apply ?(input=set_raw) ?(task="C") ?(rep=set_report) ?(evidence=set_proof) r =
+    Reviewed_selection.apply ~now ~raw:input ~records:set_records ~selected:task
+      ~report:rep ~review:r ~proof:evidence in
+  let set_accepted=set_apply set_review in
+  check "reclaim set plus review selects the chosen expired member first"
+    (List.hd(List.map(fun(r:ranked)->r.task.id) set_accepted.ranked)="C" &&
+     set_accepted.findings=[] &&
+     List.for_all(fun id->text "task_state" (List.find(fun r->text "task_id" r=id) set_records)="executing") ["B";"C"]);
+  reject "reclaim set review omitted a projected member" (fun()->
+    let r,p=seal(change "tied_tasks" (`List[`String "B";`String "C"])
+      (change "comparisons" (`List[cost "B";cost "C"]) set_review)) in
+    set_apply ~evidence:p r);
+  reject "reclaim set review of projected bytes instead of original" (fun()->
+    set_apply ~input:(Yojson.Basic.to_string(`List set_projected)) set_review);
+  let set_other=Checker.issue "RP-SA-PLAN" "B" "lease changed during observation" "repair" in
+  check "reclaim set review retains a non-tie hold"
+    ((set_apply ~rep:{set_report with findings=set_other::set_report.findings} set_review).findings=[set_other]);
   !count
