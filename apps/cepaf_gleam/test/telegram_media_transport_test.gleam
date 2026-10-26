@@ -167,7 +167,7 @@ pub fn intake_through_the_http_transport_stores_the_fixture_bytes_test() {
   let binding =
     Some(intake.Binding(policy(root), Some(transport.from_http(cfg))))
   let out =
-    intake.run(binding, photo_ref("fid-3", None), fn() { Ok(token) }, 5000)
+    run_at(binding, photo_ref("fid-3", None), 5000)
   let assert intake.Stored(sha, bytes, sniffed, written, _) = out
   sha |> should.equal(sha256_hex(png))
   bytes |> should.equal(bit_array.byte_size(png))
@@ -198,7 +198,7 @@ pub fn declared_over_cap_is_refused_before_any_fetch_test() {
       Some(transport.from_http(config(base_url))),
     ))
   let huge = photo_ref("fid-4", Some(dl.cap_for(ref.Photo) + 1))
-  intake.run(binding, huge, fn() { Ok(token) }, 1000)
+  run_at(binding, huge, 1000)
   |> should.equal(intake.DownloadRefused("download_rejected:declared_over_cap"))
   store.usage(policy(root)) |> should.equal(Ok(0))
   fixture_stop(pid)
@@ -213,12 +213,7 @@ pub fn unknown_file_id_is_a_denied_download_test() {
       Some(transport.from_http(config(base_url))),
     ))
   let out =
-    intake.run(
-      binding,
-      photo_ref("fid-missing", None),
-      fn() { Ok(token) },
-      1000,
-    )
+    run_at(binding, photo_ref("fid-missing", None), 1000)
   let assert intake.DownloadRefused(label) = out
   string.starts_with(label, "download_rejected:") |> should.be_true
   intake.status(out) |> should.equal("denied")
@@ -333,7 +328,7 @@ pub fn twelve_mib_document_streams_through_the_transport_and_is_stored_test() {
     Some(intake.Binding(big_policy, Some(transport.from_http(config(base_url)))))
   let document =
     ref.MediaRef(..photo_ref("fid-big-doc", Some(total)), kind: ref.Document)
-  let out = intake.run(binding, document, fn() { Ok(token) }, 5000)
+  let out = run_at(binding, document, 5000)
   let assert intake.Stored(sha, bytes, sniffed, True, _) = out
   bytes |> should.equal(total)
   sha |> should.equal(sha256_hex(body))
@@ -362,14 +357,12 @@ pub fn twelve_mib_photo_is_aborted_at_the_photo_cap_across_chunks_test() {
     ))
   // declared size unknown, so the cap is enforced while streaming
   let out =
-    intake.run(
-      binding,
-      photo_ref("fid-big-photo", None),
-      fn() { Ok(token) },
-      5000,
-    )
+    run_at(binding, photo_ref("fid-big-photo", None), 5000)
   out |> should.equal(intake.DownloadRefused("download_aborted"))
   store.usage(policy(root)) |> should.equal(Ok(0))
+  // Review M2-08 (wave 6p): the per-kind cap reaches the transport, so the
+  // first Content-Range total aborts the fetch before a second range.
+  file_requests(pid) |> should.equal(1)
   fixture_stop(pid)
 }
 
@@ -645,7 +638,7 @@ fn refused_through_intake(
     Some(intake.Binding(big_policy, Some(transport.from_http(config(base_url)))))
   let document =
     ref.MediaRef(..photo_ref(file_id, None), kind: ref.Document)
-  let out = intake.run(binding, document, fn() { Ok(token) }, 5000)
+  let out = run_at(binding, document, 5000)
   store.usage(big_policy) |> should.equal(Ok(0))
   fixture_stop(pid)
   out
@@ -682,11 +675,25 @@ pub fn a_total_beyond_every_cap_aborts_before_a_second_range_test() {
     ))
   let document =
     ref.MediaRef(..photo_ref("fid-n1", None), kind: ref.Document)
-  intake.run(binding, document, fn() { Ok(token) }, 5000)
+  run_at(binding, document, 5000)
   |> should.equal(intake.DownloadRefused("download_aborted"))
   store.usage(policy(root)) |> should.equal(Ok(0))
   // exactly one range was fetched, not one per 4 MiB of the 53 MiB body
   file_requests(pid) |> should.equal(1)
   transport.max_total_bytes |> should.equal(dl.cap_for(ref.Video))
   fixture_stop(pid)
+}
+
+fn run_at(
+  binding: option.Option(intake.Binding),
+  media: ref.MediaRef,
+  now: Int,
+) -> intake.Outcome {
+  intake.run(
+    binding,
+    media,
+    fn() { Ok(token) },
+    fn() { now },
+    fn() { Ok(Nil) },
+  )
 }

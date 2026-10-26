@@ -25,6 +25,8 @@
 ////     further Notices (`Full(uncertain_backlog: True)`); a Critical is still
 ////     admitted until the hard ceiling of twice the capacity, so a hung
 ////     transport cannot starve critical alerts behind routine ones.
+////   * a quarter of the pending capacity is reserved for Criticals: a Notice
+////     flood cannot fill the queue (capacities below four have no reserve).
 ////   * a `Delivered` report whose message id is not positive is not a
 ////     delivery: it is recorded as `Uncertain("invalid_message_id")`.
 
@@ -32,6 +34,7 @@ import cepaf_gleam/harness/telegram_delivery_ledger.{
   type OutboxStatus, OutboxDelivered, OutboxFailed, OutboxUncertain,
 }
 import gleam/list
+import gleam/option.{type Option, None, Some}
 import gleam/string
 
 pub const max_capacity = 64
@@ -113,6 +116,33 @@ pub fn uncertain_hard_ceiling(queue: Queue) -> Int {
   queue.capacity * 2
 }
 
+/// Pending slots a Notice may never take (review G-04): a quarter of the
+/// capacity, so a Notice flood leaves room for Criticals without an eviction.
+/// A capacity below four has no reserve; eviction is the only control there.
+pub fn critical_reserve(queue: Queue) -> Int {
+  queue.capacity / 4
+}
+
+/// Earliest `observed_at_ms` among uncertain requests, or `None`. A ticker
+/// compares it with its clock to alarm on a stale uncertain backlog; this
+/// module holds no clock and raises no alarm itself.
+pub fn oldest_uncertain_observed_at_ms(queue: Queue) -> Option(Int) {
+  list.fold(queue.uncertain, None, fn(acc, r) {
+    case acc {
+      None -> Some(r.observed_at_ms)
+      Some(t) if r.observed_at_ms < t -> Some(r.observed_at_ms)
+      Some(_) -> acc
+    }
+  })
+}
+
+fn pending_room(queue: Queue, kind: Kind) -> Int {
+  case kind {
+    Notice -> queue.capacity - critical_reserve(queue)
+    Critical -> queue.capacity
+  }
+}
+
 pub fn len(queue: Queue) -> Int {
   list.length(queue.pending)
 }
@@ -162,7 +192,9 @@ pub fn enqueue(queue: Queue, request: Request) -> Result(Queue, Backpressure) {
           case uncertain_blocks(queue, request.kind) {
             True -> Error(Full(True))
             False ->
-              case list.length(queue.pending) >= queue.capacity {
+              case
+                list.length(queue.pending) >= pending_room(queue, request.kind)
+              {
                 False ->
                   Ok(
                     Queue(
@@ -177,8 +209,9 @@ pub fn enqueue(queue: Queue, request: Request) -> Result(Queue, Backpressure) {
   }
 }
 
-/// A full pending list admits only a Critical request, and only by evicting
-/// the oldest Notice. Criticals are never evicted.
+/// A pending list with no room for the request's kind admits only a Critical,
+/// and only by evicting the oldest Notice. Criticals are never evicted; a
+/// Notice at the reserve boundary is refused outright.
 fn admit_when_full(
   queue: Queue,
   request: Request,

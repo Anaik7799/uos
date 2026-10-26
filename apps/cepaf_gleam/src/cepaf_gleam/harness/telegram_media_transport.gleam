@@ -74,10 +74,11 @@ pub fn from_http(
           ))
       }
     },
-    open_stream: fn(full_url, deadline_ms) {
+    open_stream: fn(full_url, deadline_ms, cap_bytes) {
       case file_path_of(config, full_url) {
         Error(reason) -> Error(reason)
-        Ok(file_path) -> Ok(ranged_reader(config, file_path, deadline_ms))
+        Ok(file_path) ->
+          Ok(ranged_reader(config, file_path, deadline_ms, cap_bytes))
       }
     },
   )
@@ -112,6 +113,13 @@ type Cursor {
 /// download adapter maps that reason onto its over-cap `Aborted` outcome.
 pub const max_total_bytes = 52_428_800
 
+/// The total above which a stream is refused: the caller's per-kind cap,
+/// bounded above by `max_total_bytes` (the outer ceiling). A non-positive cap
+/// refuses every advertised total.
+pub fn total_limit(cap_bytes: Int) -> Int {
+  int.min(int.max(cap_bytes, 0), max_total_bytes)
+}
+
 /// Prefix of the over-limit reason the download adapter recognises.
 pub const over_limit_prefix = download.range_total_over_limit_prefix
 
@@ -123,7 +131,9 @@ fn ranged_reader(
   config: http_client.TelegramHttpConfiguration,
   file_path: String,
   deadline_ms: Int,
+  cap_bytes: Int,
 ) -> fn() -> Result(option.Option(BitArray), String) {
+  let limit = total_limit(cap_bytes)
   let cursor = process.new_subject()
   process.send(cursor, Cursor(offset: 0, total: None, done: False))
   let absolute_deadline = now_ms() + deadline_ms
@@ -166,7 +176,7 @@ fn ranged_reader(
                   kept -> kept
                 }
                 case first_total {
-                  Some(t) if t > max_total_bytes -> {
+                  Some(t) if t > limit -> {
                     process.send(cursor, Cursor(..state, done: True))
                     Error(over_limit_prefix <> int.to_string(t))
                   }

@@ -44,6 +44,7 @@ import cepaf_gleam/harness/telegram_delivery_ledger.{
 }
 import gleam/erlang/process.{type Name, type Subject}
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/otp/actor
 import gleam/otp/supervision
 
@@ -86,6 +87,9 @@ pub type Counters {
     dropped_notices: Int,
     ticks: Int,
     last_tick_ms: Int,
+    /// Earliest `observed_at_ms` among uncertain requests, 0 when none; a
+    /// ticker alarms when `now - this` exceeds its own staleness bound.
+    uncertain_oldest_observed_at_ms: Int,
   )
 }
 
@@ -215,6 +219,12 @@ fn snapshot(state: State) -> Counters {
     dropped_notices: outbox.dropped_notices(state.queue),
     ticks: state.ticks,
     last_tick_ms: state.last_tick_ms,
+    uncertain_oldest_observed_at_ms: case
+      outbox.oldest_uncertain_observed_at_ms(state.queue)
+    {
+      Some(t) -> t
+      None -> 0
+    },
   )
 }
 
@@ -423,6 +433,7 @@ pub fn unavailable_counters() -> Counters {
     dropped_notices: -1,
     ticks: -1,
     last_tick_ms: -1,
+    uncertain_oldest_observed_at_ms: -1,
   )
 }
 

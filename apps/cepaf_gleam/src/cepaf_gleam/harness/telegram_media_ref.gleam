@@ -43,6 +43,12 @@ pub type MediaRef {
 /// Maximum byte length of any declared string.
 pub const max_string_bytes = 256
 
+/// Telegram's own caption limit, in characters (Unicode code points here).
+pub const max_caption_chars = 1024
+
+/// Byte ceiling on a caption, independent of its character count.
+pub const max_caption_bytes = 4096
+
 /// Recognised, typed media keys in fixed priority order.
 const typed_keys = [
   #("photo", Photo),
@@ -141,7 +147,7 @@ fn caption_of(
       case decode.run(raw, decode.optional(decode.string)) {
         Error(_) -> Error("malformed_caption")
         Ok(None) -> Ok(None)
-        Ok(Some(c)) -> bounded_string("caption", c) |> result.map(Some)
+        Ok(Some(c)) -> bounded_caption(c) |> result.map(Some)
       }
   }
 }
@@ -256,6 +262,19 @@ fn bounded_string(field: String, value: String) -> Result(String, String) {
     || string.contains(value, "\u{0}")
   {
     True -> Error("out_of_bounds_" <> field)
+    False -> Ok(value)
+  }
+}
+
+/// A caption is bounded by Telegram's 1024 characters AND by 4096 bytes, and
+/// may not carry a NUL. Every other declared string keeps `max_string_bytes`.
+fn bounded_caption(value: String) -> Result(String, String) {
+  case
+    string.byte_size(value) > max_caption_bytes
+    || list.length(string.to_utf_codepoints(value)) > max_caption_chars
+    || string.contains(value, "\u{0}")
+  {
+    True -> Error("out_of_bounds_caption")
     False -> Ok(value)
   }
 }
@@ -389,15 +408,22 @@ pub fn decoder() -> decode.Decoder(MediaRef) {
   )
   let rebuilt = {
     use kind <- result.try(kind_from_label(label))
-    use caption <- result.try(bounded_option("caption", caption))
+    use caption <- result.try(case caption {
+      None -> Ok(None)
+      Some(c) -> bounded_caption(c) |> result.map(Some)
+    })
     use ref <- result.try(build(
       kind,
       RawFile(file_id, unique, size, mime, duration),
       caption,
     ))
-    case ref.file_id == "" || ref.file_unique_id == "" {
-      True -> Error("missing_file_identity")
-      False -> Ok(ref)
+    // An `Unsupported` ref carries empty ids by design (`unsupported_ref`
+    // reports the raw key, not a file), so identity is required only for the
+    // typed kinds; the round trip of `to_json` is then total.
+    case ref.kind, ref.file_id == "" || ref.file_unique_id == "" {
+      Unsupported(_), _ -> Ok(ref)
+      _, True -> Error("missing_file_identity")
+      _, False -> Ok(ref)
     }
   }
   case rebuilt {

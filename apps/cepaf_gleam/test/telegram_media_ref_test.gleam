@@ -196,11 +196,21 @@ pub fn string_bounds_are_enforced_test() {
   doc(long, "u", "ok") |> should.equal(Error("out_of_bounds_file_id"))
   doc("f", long, "ok") |> should.equal(Error("out_of_bounds_file_unique_id"))
   doc("f", "u", long) |> should.equal(Error("out_of_bounds_mime_type"))
-  ref.from_update(wrap(
-    ",\"voice\":{\"file_id\":\"f\",\"file_unique_id\":\"u\"},\"caption\":\""
-    <> long
-    <> "\"",
-  ))
+  // Review M2-09 (wave 6p): the caption bound is Telegram's 1024 characters
+  // with a 4096-byte ceiling, so a 257-byte caption is in bounds.
+  let caption = fn(text) {
+    ref.from_update(wrap(
+      ",\"voice\":{\"file_id\":\"f\",\"file_unique_id\":\"u\"},\"caption\":\""
+      <> text
+      <> "\"",
+    ))
+  }
+  caption(long) |> should.be_ok
+  caption(string.repeat("k", ref.max_caption_chars)) |> should.be_ok
+  caption(string.repeat("k", ref.max_caption_chars + 1))
+  |> should.equal(Error("out_of_bounds_caption"))
+  caption(string.repeat("€", 1024)) |> should.be_ok
+  caption(string.repeat("€", 1366))
   |> should.equal(Error("out_of_bounds_caption"))
   ref.from_update(wrap(
     ",\"voice\":{\"file_id\":\"f\",\"file_unique_id\":\"u\"},\"caption\":\"a\\u0000b\"",

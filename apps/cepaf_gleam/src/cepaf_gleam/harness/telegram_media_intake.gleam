@@ -64,16 +64,31 @@ pub type Outcome {
   )
   /// The store could not be measured before the ceiling check.
   UsageUnavailable(reason: String)
+  /// The caller's observation window was closed, or too short for the put
+  /// phase, so nothing was (or will be) written. Reported as `denied`.
+  WindowClosed(reason: String)
 }
+
+/// Smallest observation window, in milliseconds, the service requires to still
+/// be open when the put phase starts (`before_put` guard). The download phase
+/// has its own, larger budget; the put is one bounded store write.
+pub const put_budget_ms = 2000
 
 /// Run the chain for one reference. Pure apart from the injected transport and
 /// the store under `binding.policy`; `token` is consulted only by the download
 /// adapter and never appears in any outcome.
+///
+/// `now_ms` is a clock, sampled AFTER the download and inspection and
+/// immediately before `store.put`, so `stored_at_ms` and the expiry derive from
+/// a reading no older than the store effect. `before_put` is a guard called
+/// after inspection and before the store is touched: `Error(reason)` stops the
+/// chain as `WindowClosed(reason)` with nothing stored.
 pub fn run(
   binding: Option(Binding),
   ref: media_ref.MediaRef,
   token: fn() -> Result(String, String),
-  now_ms: Int,
+  now_ms: fn() -> Int,
+  before_put: fn() -> Result(Nil, String),
 ) -> Outcome {
   case binding {
     None -> NotConfigured
@@ -93,37 +108,24 @@ pub fn run(
               sha256_hex: claimed,
               content: content,
             ) ->
-              case store.usage(policy) {
-                Error(reason) -> UsageUnavailable(reason)
-                Ok(usage) ->
-                  case
-                    store.put(
-                      policy,
-                      kind,
-                      unique,
-                      content,
-                      claimed,
-                      now_ms,
-                      usage,
-                    )
-                  {
-                    store.Written(stored) ->
-                      Stored(
-                        stored.sha256_hex,
-                        stored.bytes,
+              case before_put() {
+                Error(reason) -> WindowClosed(reason)
+                Ok(Nil) ->
+                  case store.usage(policy) {
+                    Error(reason) -> UsageUnavailable(reason)
+                    Ok(usage) ->
+                      put_stored(
+                        store.put(
+                          policy,
+                          kind,
+                          unique,
+                          content,
+                          claimed,
+                          now_ms(),
+                          usage,
+                        ),
                         sniffed,
-                        True,
-                        stored.expires_at_ms,
                       )
-                    store.AlreadyStored(stored) ->
-                      Stored(
-                        stored.sha256_hex,
-                        stored.bytes,
-                        sniffed,
-                        False,
-                        stored.expires_at_ms,
-                      )
-                    store.Refused(reason) -> StoreRefused(reason)
                   }
               }
             // `inspect_fetched` only accepts a `Fetched` outcome, so this arm
@@ -135,12 +137,29 @@ pub fn run(
   }
 }
 
+fn put_stored(put: store.Outcome, sniffed: inspect.Sniffed) -> Outcome {
+  case put {
+    store.Written(stored) ->
+      Stored(stored.sha256_hex, stored.bytes, sniffed, True, stored.expires_at_ms)
+    store.AlreadyStored(stored) ->
+      Stored(
+        stored.sha256_hex,
+        stored.bytes,
+        sniffed,
+        False,
+        stored.expires_at_ms,
+      )
+    store.Refused(reason) -> StoreRefused(reason)
+  }
+}
+
 /// Journey status of an outcome (INV-TGJ-04 vocabulary).
 pub fn status(outcome: Outcome) -> String {
   case outcome {
     NotConfigured | TransportNotConfigured | UsageUnavailable(_) ->
       "backend_unavailable"
-    DownloadRefused(_) | InspectionRejected(_, _) | StoreRefused(_) -> "denied"
+    DownloadRefused(_) | InspectionRejected(_, _) | StoreRefused(_) | WindowClosed(_) ->
+      "denied"
     Stored(_, _, _, _, _) -> "ok"
   }
 }
@@ -179,6 +198,7 @@ pub fn reply_json(
     TransportNotConfigured -> [
       #("reason", json.string("media_transport_not_configured")),
     ]
+    WindowClosed(reason) -> [#("reason", json.string(reason))]
     UsageUnavailable(reason) -> [
       #("reason", json.string("media_store_usage_unavailable:" <> reason)),
     ]

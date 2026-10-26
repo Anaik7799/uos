@@ -62,7 +62,7 @@ fn queued_transport(
       )
       meta
     },
-    open_stream: fn(url, deadline) {
+    open_stream: fn(url, deadline, _cap) {
       process.send(events, "open:" <> url <> "|" <> string.inspect(deadline))
       Ok(fn() {
         process.send(events, "read")
@@ -261,7 +261,7 @@ pub fn chunk_bound_rejects_endless_stream_test() {
   let t =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) {
+      open_stream: fn(_, _, _) {
         Ok(fn() {
           process.send(events, "read")
           Ok(Some(<<1>>))
@@ -278,7 +278,7 @@ pub fn chunk_bound_counts_empty_chunks_test() {
   let t =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) {
+      open_stream: fn(_, _, _) {
         Ok(fn() {
           process.send(events, "read")
           Ok(Some(<<>>))
@@ -382,14 +382,14 @@ pub fn stream_open_and_read_failures_are_typed_test() {
   let t_open =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) { Error("refused") },
+      open_stream: fn(_, _, _) { Error("refused") },
     )
   dl.download(mk_ref(ref.Photo, "u13", None), [], good_token, t_open)
   |> should.equal(dl.Rejected(dl.StreamOpenFailed("refused")))
   let t_read =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) { Ok(fn() { Error("reset") }) },
+      open_stream: fn(_, _, _) { Ok(fn() { Error("reset") }) },
     )
   dl.download(mk_ref(ref.Photo, "u13b", None), [], good_token, t_read)
   |> should.equal(dl.Rejected(dl.StreamReadFailed("reset")))
@@ -447,7 +447,7 @@ pub fn no_outcome_leaks_the_token_on_any_path_test() {
   let t_open_url =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) { Error(url_in_error()) },
+      open_stream: fn(_, _, _) { Error(url_in_error()) },
     )
   leak_free(dl.download(
     mk_ref(ref.Photo, "s7", None),
@@ -458,7 +458,7 @@ pub fn no_outcome_leaks_the_token_on_any_path_test() {
   let t_open_bare =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) { Error("auth rejected for " <> secret) },
+      open_stream: fn(_, _, _) { Error("auth rejected for " <> secret) },
     )
   leak_free(dl.download(
     mk_ref(ref.Photo, "s8", None),
@@ -470,7 +470,7 @@ pub fn no_outcome_leaks_the_token_on_any_path_test() {
   let t_read_url =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) { Ok(fn() { Error(url_in_error()) }) },
+      open_stream: fn(_, _, _) { Ok(fn() { Error(url_in_error()) }) },
     )
   leak_free(dl.download(
     mk_ref(ref.Photo, "s9", None),
@@ -481,7 +481,7 @@ pub fn no_outcome_leaks_the_token_on_any_path_test() {
   let t_read_bare =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) {
+      open_stream: fn(_, _, _) {
         Ok(fn() { Error("connection to " <> secret <> " reset") })
       },
     )
@@ -512,7 +512,7 @@ pub fn bare_token_in_stream_error_is_scrubbed_test() {
   let t =
     dl.Transport(
       get_file: fn(_, _) { meta("a/b.bin", None) },
-      open_stream: fn(_, _) { Error("bad " <> secret) },
+      open_stream: fn(_, _, _) { Error("bad " <> secret) },
     )
   dl.download(mk_ref(ref.Photo, "r2", None), [], good_token, t)
   |> should.equal(dl.Rejected(dl.StreamOpenFailed("bad [REDACTED]")))
@@ -588,7 +588,7 @@ pub fn received_bytes_equal_to_the_getfile_size_are_fetched_test() {
 fn failing_reader_transport(reason: String) -> dl.Transport {
   dl.Transport(
     get_file: fn(_, _) { meta("a/b.bin", None) },
-    open_stream: fn(_, _) { Ok(fn() { Error(reason) }) },
+    open_stream: fn(_, _, _) { Ok(fn() { Error(reason) }) },
   )
 }
 

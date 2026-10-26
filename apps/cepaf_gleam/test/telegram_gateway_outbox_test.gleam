@@ -1,6 +1,7 @@
 import cepaf_gleam/gateway/telegram_gateway_outbox as outbox
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
 
@@ -248,4 +249,53 @@ pub fn request_has_no_credential_field_test() {
   let rendered = string.inspect(req(outbox.Critical, "d", 5))
   string.contains(string.lowercase(rendered), "token") |> should.be_false()
   string.contains(string.lowercase(rendered), "secret") |> should.be_false()
+}
+
+/// Review G-04 residual: a quarter of the pending capacity is reserved for
+/// Criticals, so a Notice flood cannot fill the queue and a Critical is
+/// admitted without an eviction until the reserve is used.
+pub fn notices_cannot_take_the_critical_reserve_test() {
+  let q = outbox.new(8)
+  outbox.critical_reserve(q) |> should.equal(2)
+  let q =
+    q
+    |> add(outbox.Notice, "n1", 1)
+    |> add(outbox.Notice, "n2", 2)
+    |> add(outbox.Notice, "n3", 3)
+    |> add(outbox.Notice, "n4", 4)
+    |> add(outbox.Notice, "n5", 5)
+    |> add(outbox.Notice, "n6", 6)
+  outbox.enqueue(q, req(outbox.Notice, "n7", 7))
+  |> should.equal(Error(outbox.Full(False)))
+  outbox.len(q) |> should.equal(6)
+  // Two Criticals fit in the reserve without evicting anything.
+  let q = q |> add(outbox.Critical, "c1", 8) |> add(outbox.Critical, "c2", 9)
+  outbox.len(q) |> should.equal(8)
+  outbox.dropped_notices(q) |> should.equal(0)
+  // The next Critical evicts the oldest Notice.
+  let q = add(q, outbox.Critical, "c3", 10)
+  outbox.len(q) |> should.equal(8)
+  outbox.dropped_notices(q) |> should.equal(1)
+  let #(taken, _) = outbox.select(q, 8)
+  taken
+  |> digests
+  |> should.equal(["c1", "c2", "c3", "n2", "n3", "n4", "n5", "n6"])
+  // Below four there is no reserve.
+  outbox.critical_reserve(outbox.new(3)) |> should.equal(0)
+  outbox.critical_reserve(outbox.new(64)) |> should.equal(16)
+}
+
+/// Review G-04 residual: the oldest uncertain observation is exposed so a
+/// ticker can alarm on a stale backlog.
+pub fn oldest_uncertain_observation_is_exposed_test() {
+  let q = outbox.new(4)
+  outbox.oldest_uncertain_observed_at_ms(q) |> should.equal(None)
+  let q = q |> add(outbox.Notice, "a", 500) |> add(outbox.Critical, "b", 100)
+  let #(_, q) = outbox.select(q, 2)
+  let q = outbox.drain_result(q, "a", ledger.OutboxUncertain("t"))
+  outbox.oldest_uncertain_observed_at_ms(q) |> should.equal(Some(500))
+  let q = outbox.drain_result(q, "b", ledger.OutboxUncertain("t"))
+  outbox.oldest_uncertain_observed_at_ms(q) |> should.equal(Some(100))
+  let q = outbox.drain_result(q, "b", ledger.OutboxDelivered(3))
+  outbox.oldest_uncertain_observed_at_ms(q) |> should.equal(Some(500))
 }

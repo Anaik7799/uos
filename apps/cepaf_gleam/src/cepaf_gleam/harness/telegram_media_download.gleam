@@ -14,6 +14,7 @@
 //// stored in any returned value. Every string forwarded from the transport is
 //// redacted before it leaves this module.
 
+import cepaf_gleam/harness/telegram_http_client as http_client
 import cepaf_gleam/harness/telegram_media_ref.{
   type MediaKind, type MediaRef, Animation, Audio, Document, Photo, Sticker,
   Unsupported, Video, Voice,
@@ -32,12 +33,14 @@ pub type FileMeta {
 }
 
 /// Injected effects. `get_file(file_id, deadline_ms)` performs getFile.
-/// `open_stream(full_url, deadline_ms)` returns a chunk reader:
+/// `open_stream(full_url, deadline_ms, cap_bytes)` returns a chunk reader:
 /// `Ok(Some(chunk))` next chunk, `Ok(None)` end of stream, `Error(reason)`.
+/// `cap_bytes` is this download's per-kind cap, so a transport that learns the
+/// body total up front can refuse before fetching more than one range.
 pub type Transport {
   Transport(
     get_file: fn(String, Int) -> Result(FileMeta, String),
-    open_stream: fn(String, Int) ->
+    open_stream: fn(String, Int, Int) ->
       Result(fn() -> Result(Option(BitArray), String), String),
   )
 }
@@ -141,7 +144,9 @@ fn fetch_meta(
       case over_cap(meta.declared_size_bytes, cap) {
         Some(declared) -> Rejected(DeclaredOverCap(declared, cap))
         None ->
-          case valid_file_path(meta.file_path) {
+          // The http client's byte ALLOWLIST is the single definition of a
+          // joinable file_path; this adapter keeps no denylist of its own.
+          case http_client.valid_file_path(meta.file_path) {
             False -> Rejected(GetFileFailed("invalid_file_path"))
             True ->
               open(
@@ -158,16 +163,6 @@ fn fetch_meta(
   }
 }
 
-/// A file_path is joined into a URL, so refuse anything that could change the
-/// request target: empty, absolute, traversal, query or fragment.
-fn valid_file_path(path: String) -> Bool {
-  path != ""
-  && !string.starts_with(path, "/")
-  && !string.contains(path, "..")
-  && !string.contains(path, "?")
-  && !string.contains(path, "#")
-}
-
 fn open(
   ref: MediaRef,
   kind: MediaKind,
@@ -182,7 +177,11 @@ fn open(
     Ok(secret) -> {
       let scrub = fn(text: String) { scrub_secret(text, secret) }
       case
-        transport.open_stream(build_url(secret, file_path), stream_deadline_ms)
+        transport.open_stream(
+          build_url(secret, file_path),
+          stream_deadline_ms,
+          cap,
+        )
       {
         Error(reason) -> Rejected(StreamOpenFailed(scrub(reason)))
         Ok(reader) ->

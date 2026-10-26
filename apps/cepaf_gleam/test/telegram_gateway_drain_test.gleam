@@ -430,3 +430,15 @@ pub fn actor_restarts_under_one_for_one_after_kill_test() {
   |> should.equal(Ok(Nil))
   drain.tick(d, 1, recording_send(probe), 500).delivered |> should.equal(1)
 }
+
+/// Review G-04 residual: counters carry the oldest uncertain observation (0
+/// when none, -1 when unobserved) so a ticker can alarm on staleness.
+pub fn counters_expose_the_oldest_uncertain_observation_test() {
+  let d = start_with(8)
+  drain.counters(d, 500).uncertain_oldest_observed_at_ms |> should.equal(0)
+  put(d, outbox.Notice, "u")
+  drain.tick(d, 1, scripted_send, 500).uncertain |> should.equal(1)
+  drain.counters(d, 500).uncertain_oldest_observed_at_ms |> should.equal(11)
+  drain.unavailable_counters().uncertain_oldest_observed_at_ms
+  |> should.equal(-1)
+}
