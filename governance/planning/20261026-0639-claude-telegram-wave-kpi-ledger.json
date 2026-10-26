@@ -209,17 +209,31 @@
     },
     {
       "wave": "6e",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "029e7491",
+      "landed_utc": "2026-10-26T08:38:08Z",
       "canonicals_answering": "77/77 (unchanged)",
       "tests_added": 14,
       "mutants": "5/5 worker (bound ignored, unexpired deleted, comparison flipped, symlink followed, single-link check dropped) plus 1 integrator re-observation",
       "workers": 1,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 35,
       "checker_holds": 0,
       "process_defects": 1,
       "notes": "Bounded delete(policy, sha) (index first then bin, link_info before every removal, symlinks and hard links refused untouched, half-present objects handled) and reclaim_expired(policy, now_ms, max_objects) with a receipt (examined, removed, refused, bytes_freed, truncated; expiry re-read before each delete; malformed indexes reported, not deleted). Closes the media design safety requirement that a stored unit is deletable on request (review M-11 residual). Own Sa-plan task MEDIA_RECLAIM. Process defect: the 6c packet had scoped T4 below the design safety requirement and recorded the omission as a limit.",
       "full_suite": "13772/13772"
+    },
+    {
+      "wave": "6f",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged)",
+      "tests_added": 12,
+      "mutants": "6/6 worker (counter never increments, pause unreachable, history unbounded, RunNow reschedules, max_objects ignored, Resume does not reset) plus 1 integrator re-observation",
+      "workers": 1,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "telegram_media_janitor: supervised OTP actor (child_spec_named, restart under one_for_one proven) running reclaim_expired once per bounded cadence with a bounded history, GetSnapshot and RunNow, single timer chain, Jidoka pause after three consecutive whole-run errors until Resume. A deleted store base is an empty store by the store law, so the error path is provoked by an unlistable base. Closes the media lifecycle at source; production placement is deployment configuration.",
+      "full_suite": "13784/13784"
     }
   ],
   "forecasts": [

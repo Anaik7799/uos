@@ -76,7 +76,7 @@ A staged pass proves the dispatcher and staged service behave as specified. It i
 
 ## Media pipeline (wave 6c)
 
-Media is not a journey step; it is four pure stages behind the download: `telegram_media_ref` (T1 parse) → `telegram_media_download` (T2, per-kind caps, redacted URLs) → `telegram_media_inspect` (T3, 64-byte magic-byte sniff, fixed allowlist, never `declared_mime`) → `telegram_media_store` (T4, content-addressed by the recomputed sha256, ceiling before write, tamper and expiry refusals, bounded `delete` and `reclaim_expired` with receipts). A journey that uploads media expects `denied` or `backend_unavailable` until a supervised caller wires the stages; `Accepted` from T3 narrows the type and is never "safe to open". Guide: [media pipeline](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20261026-0801-telegram-media-pipeline-guide.md).
+Media is not a journey step; it is four pure stages behind the download: `telegram_media_ref` (T1 parse) → `telegram_media_download` (T2, per-kind caps, redacted URLs) → `telegram_media_inspect` (T3, 64-byte magic-byte sniff, fixed allowlist, never `declared_mime`) → `telegram_media_store` (T4, content-addressed by the recomputed sha256, ceiling before write, tamper and expiry refusals, bounded `delete` and `reclaim_expired` with receipts) → `telegram_media_janitor` (supervised bounded actor running reclaim on a cadence, Jidoka pause after three errors). A journey that uploads media expects `denied` or `backend_unavailable` until a supervised caller wires the stages; `Accepted` from T3 narrows the type and is never "safe to open". Guide: [media pipeline](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20261026-0801-telegram-media-pipeline-guide.md).
 
 ## Comprehensive verification checklist
 

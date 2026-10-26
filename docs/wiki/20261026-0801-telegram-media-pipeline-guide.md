@@ -48,12 +48,12 @@ flowchart LR
 
 ## Wiring a caller
 
-No production caller exists yet; the service does not download media on its own. A caller must:
+No production caller wires download, inspect and store yet; the service does not download media on its own. The janitor exists but its placement under a production supervisor is deployment configuration. A caller must:
 
 1. Run `download` with a transport that holds the token outside the message and the logs.
 2. Hand the `Fetched` outcome to `inspect_fetched`; treat anything but `Accepted` as a refusal reply, never as a fallback to the declared mime.
 3. Measure `usage` and run `put` inside a supervised process bounded by the design's 2,000 ms `store_write` deadline; the module has no clock of its own.
-4. Run `reclaim_expired(policy, now_ms, max_objects)` on a schedule and keep its receipt; `delete(policy, sha)` removes one object on request (index first, then bytes; symlinks refused untouched). Deletion is an unlink, not a wipe (wave 6e).
+4. Start `telegram_media_janitor` (`child_spec_named`) under the service supervisor: it runs `reclaim_expired(policy, now_ms, max_objects)` once per cadence, keeps a bounded history and pauses after three consecutive errors until `Resume` (wave 6f); or run `reclaim_expired` yourself and keep its receipt; `delete(policy, sha)` removes one object on request (index first, then bytes; symlinks refused untouched). Deletion is an unlink, not a wipe (wave 6e).
 5. Keep `Accepted` as "narrowed", not "safe": a magic-byte verdict is not content validation and nothing in these modules opens, decodes or renders.
 
 ## Run
