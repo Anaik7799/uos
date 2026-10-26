@@ -91,6 +91,17 @@
       "observed_utc": "2026-10-26T12:33:12Z",
       "source": "waves 6o (two green with mutants) and 6p (one with a red test and no mutants, repaired by the integrator)",
       "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-11",
+      "name": "independent_review_closure",
+      "definition": "review tasks completed in Sa-plan by a claimant other than the author with a recorded verdict, over the four review tasks",
+      "numerator": 4,
+      "denominator": 4,
+      "value": "4/4 (COMMAND e, MEDIA f2, GATEWAY g, MINI_API h; all APPROVE by AGY claimants)",
+      "observed_utc": "2026-10-26T14:46:13Z",
+      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json",
+      "confidence": "Measured"
     }
   ],
   "waves": [
@@ -427,8 +438,8 @@
     },
     {
       "wave": "6s",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "6a776b51",
+      "landed_utc": "2026-10-26T14:07:03Z",
       "canonicals_answering": "77/77 (unchanged); production bridge client repaired at source and rebuilt",
       "tests_added": 0,
       "mutants": "n/a (OCaml client has no suite; read-only probe)",
@@ -438,6 +449,33 @@
       "process_defects": 1,
       "notes": "Bridge defects fixed in tools/telegram_client.ml (sqlite busy_timeout 5 s; curl --retry 2 --retry-delay 1 --retry-all-errors, 20 s ceiling); rebuilt tools/telegram_client.exe verified read-only against the production bot (getMe); the production restart was refused by the session permission classifier (Production Deploy) and is the operator step tools/telegram-staging bridge-upgrade. AGY COMMAND_REVIEW runs 2 and 3: advisory PASS (205 tests, 7 hostile inputs) but no claim, held on portfolio drift because AGY preflights from a workspace at main while the author records were unlanded; fix: land the portfolio before launching a reviewer (L-29). Process defect: the author edited the portfolio while a reviewer was reading it.",
       "full_suite": "unchanged (Gleam untouched)"
+    },
+    {
+      "wave": "6t",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77; COMMAND_REVIEW completed by an independent AGY claimant with verdict APPROVE",
+      "tests_added": 0,
+      "mutants": "n/a (production effect)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 3,
+      "process_defects": 1,
+      "notes": "Operator-directed production effects applied under Sa-plan BRIDGE_UPGRADE and the coordinator runtime lease: telegram_token and telegram_chat_id sealed into var/vault/telegram/store (telegram/production/<key>), the repaired OCaml client installed over the canonical binary with a rollback copy and uos-telegram-bridge restarted; verified active, getMe bot 8660817750, zero error lines in the journal after the restart with a concurrent probe. COMMAND_REVIEW: AGY run e claimed and completed it (APPROVE, six laws, 205 tests, seven hostile inputs) once the portfolio reflected live Sa-plan state; runs 2 to 4 before it were lost to drift and to ties created by the author adding ready records while a reviewer was preflighting (process defect). MEDIA_REVIEW readied and its reviewer relaunched.",
+      "full_suite": "unchanged (Gleam untouched)"
+    },
+    {
+      "wave": "6u",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77; all four independent reviews completed by AGY claimants with APPROVE (TG-KPI-11 4/4)",
+      "tests_added": 0,
+      "mutants": "n/a (source-control verification and evidence ingestion)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 2,
+      "notes": "Operator directive: get the bridge and vault source, all artifacts under UOS control. Finding: the vault NIF crate (apps/cepaf_gleam/native/rusty_vault_nif) and its vendored RustyVault 0.3.1 dependency (sub-projects/rusty_vault_vendored, 155 tracked files, PEM test fixtures redacted) were already ingested on 2026-10-25 and the .so was built from them; verified byte-identical against C3I rev 47f93223 today, and the duplicate copies this task first made under native/nifs/rust were removed (L-31). VF-01 recorded: the NIF source keeps its key-value store and audit log in RAM and its unseal is a TODO stub, so the wave 6r runtime finding is the source, not drift. The C3I Rust gateway and polling sources were ingested as inert evidence (2 files, 0 secret hits). MEDIA_REVIEW (207 tests), GATEWAY_REVIEW (94 tests) and MINI_API_REVIEW (244 tests) completed by AGY runs f2, g and h; verdicts filed; packets and portfolio mirrored."
     }
   ],
   "forecasts": [
@@ -490,10 +528,10 @@
       "made_in": "wave 6b journal (07:28)",
       "p": 0.6,
       "claim": "the four REVIEW tasks (COMMAND, GATEWAY, MEDIA, MINI_API) are claimed by an independent reviewer session and at least two complete with a recorded verdict by 2026-10-27T12:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.16,
+      "resolved_by": "wave 6u: COMMAND, MEDIA, GATEWAY and MINI_API all completed by AGY claimants with APPROVE on 2026-10-26",
+      "resolved_utc": "2026-10-26T14:46:13Z"
     },
     {
       "made_in": "wave 6c journal (07:50)",
@@ -517,10 +555,10 @@
       "made_in": "wave 6f journal (08:47)",
       "p": 0.4,
       "claim": "an independent reviewer session claims MEDIA_REVIEW in Sa-plan and records a verdict by 2026-10-28T00:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.36,
+      "resolved_by": "wave 6u: MEDIA_REVIEW completed by agy-review-f2-20261026, APPROVE",
+      "resolved_utc": "2026-10-26T14:46:13Z"
     },
     {
       "made_in": "wave 6g journal (09:03)",
@@ -544,10 +582,10 @@
       "made_in": "wave 6i journal (09:53)",
       "p": 0.5,
       "claim": "MEDIA_REVIEW is claimed and completed by an independent reviewer session with a recorded verdict by 2026-10-28T12:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.25,
+      "resolved_by": "wave 6u: MEDIA_REVIEW completed by agy-review-f2-20261026, APPROVE",
+      "resolved_utc": "2026-10-26T14:46:13Z"
     },
     {
       "made_in": "wave 6 close journal",
@@ -562,24 +600,51 @@
       "made_in": "wave 6k journal",
       "p": 0.5,
       "claim": "the independent COMMAND_REVIEW, when claimed, records no major beyond the residuals listed in the 6k journal section 10, by 2026-10-29T12:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.25,
+      "resolved_by": "wave 6u: COMMAND_REVIEW APPROVE by agy-review-e-20261026, no major recorded",
+      "resolved_utc": "2026-10-26T14:46:13Z"
     },
     {
       "made_in": "wave 6l journal",
       "p": 0.5,
       "claim": "the independent MINI_API_REVIEW, when claimed, records no server-side major beyond the residuals in the 6l journal section 10, by 2026-10-29T12:00:00Z",
+      "outcome": 1,
+      "brier": 0.25,
+      "resolved_by": "wave 6u: MINI_API_REVIEW APPROVE by agy-review-h-20261026, no server-side major; M-05 browser behaviour NOT_CHECKABLE as the packet states",
+      "resolved_utc": "2026-10-26T14:46:13Z"
+    },
+    {
+      "made_in": "wave 6m journal",
+      "p": 0.7,
+      "claim": "GATEWAY_FIX lands on main with G-01, G-02, G-03, G-05, G-07 and G-08 answered by tests and the full suite green, by 2026-10-26T16:00:00Z",
+      "outcome": 1,
+      "brier": 0.09,
+      "resolved_by": "wave 6u: GATEWAY_FIX landed in wave 6n (0ae16197) with the named findings answered and the suite green before 16:00Z",
+      "resolved_utc": "2026-10-26T14:46:13Z"
+    },
+    {
+      "made_in": "wave 6s journal",
+      "p": 0.75,
+      "claim": "the bridge journal shows no database is locked line in the 24 hours after the restart, by 2026-10-27T15:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
       "resolved_utc": null
     },
     {
-      "made_in": "wave 6m journal",
+      "made_in": "wave 6t journal",
+      "p": 0.6,
+      "claim": "MEDIA_REVIEW, GATEWAY_REVIEW and MINI_API_REVIEW are all completed in Sa-plan by AGY claimants by 2026-10-27T12:00:00Z",
+      "outcome": 1,
+      "brier": 0.16,
+      "resolved_by": "wave 6u: all three completed on 2026-10-26 with APPROVE",
+      "resolved_utc": "2026-10-26T14:46:13Z"
+    },
+    {
+      "made_in": "wave 6u journal",
       "p": 0.7,
-      "claim": "GATEWAY_FIX lands on main with G-01, G-02, G-03, G-05, G-07 and G-08 answered by tests and the full suite green, by 2026-10-26T16:00:00Z",
+      "claim": "the sovereign review of VF-01 (rusty_vault_nif in-RAM stub) is recorded by Codex or AGY as a Sa-plan task with a verdict by 2026-10-28T12:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -760,6 +825,24 @@
       "wave": "6s",
       "lesson": "An independent reviewer preflights from a workspace at main, so any portfolio record that exists only in the author working copy reads as drift and holds the reviewer; three AGY runs were lost to this.",
       "applied": "land the portfolio before launching a reviewer and freeze it from launch until the claim; the chain script readies the next review only from landed state"
+    },
+    {
+      "id": "L-30",
+      "wave": "6t",
+      "lesson": "Adding a ready record to the portfolio while a reviewer is preflighting creates a score tie that holds both the reviewer and the author (RP-SENSITIVITY); and a review that completes in Sa-plan must be mirrored into the portfolio before the next claim or the checker reads drift.",
+      "applied": "author records are created blocked and readied only when no reviewer is between launch and claim; completions by other claimants are mirrored at the next alignment"
+    },
+    {
+      "id": "L-31",
+      "wave": "6u",
+      "lesson": "Before ingesting from an external tree, ask the VCS whether the artifact is already tracked (jj file list -r main | grep): the vault crate and its dependency had been ingested the day before with better redactions, and the fresh copy duplicated them and would have re-imported the PEM test fixtures.",
+      "applied": "ingestion scripts start with a tracked-path check; the duplicate copies were removed before landing and the manifest records the verification instead of a second copy"
+    },
+    {
+      "id": "L-32",
+      "wave": "6u",
+      "lesson": "Under set -o pipefail a secret scan that finds nothing (grep exit 1) aborts the script before the manifest is written, so a clean scan looked like a failed ingestion twice.",
+      "applied": "the scan is wrapped so no-match is the success path and the hit count is still recorded"
     }
   ]
 }

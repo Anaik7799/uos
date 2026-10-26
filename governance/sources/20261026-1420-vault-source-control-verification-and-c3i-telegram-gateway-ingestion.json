@@ -1,0 +1,80 @@
+{
+  "schema": "uos-source-ingestion/v1",
+  "timestamp": "20261026-1420",
+  "recorded_by": "claude-fable-l0-35600f5c",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "task_id": "SOURCE_INGEST",
+  "operator_directive": "get the source code of the bridge code and vault code; ALL project related artifacts MUST be in uos code path and control (2026-10-26)",
+  "source": {
+    "authority": "VM-1 C3I evidence tree (policy section 3, read-only)",
+    "repository_revision": "47f93223",
+    "dirty_paths_in_scope": 0
+  },
+  "vault_code_control": {
+    "verdict": "ALREADY_UNDER_UOS_CONTROL; verified byte-for-byte today, no second copy kept",
+    "nif_crate": {
+      "uos_path": "apps/cepaf_gleam/native/rusty_vault_nif",
+      "tracked_at_main": "6a776b51",
+      "c3i_locator": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/rusty_vault_nif",
+      "comparison": "diff -rq excluding target/: src/ and Cargo files identical; C3I carries an empty tests/ directory that UOS omits",
+      "prior_manifest": "governance/sources/20261025-2230-nif-in-project-build.json"
+    },
+    "vendored_dependency": {
+      "uos_path": "sub-projects/rusty_vault_vendored",
+      "tracked_files_at_main": 155,
+      "c3i_locator": "/home/an/dev/ver/c3i/sub-projects/rusty_vault_vendored",
+      "comparison": "identical except the two recorded test-module redactions (src/utils/cert.rs and src/modules/pki/mod.rs carried embedded PEM private-key fixtures: 2 files in C3I, 0 in UOS) and the excluded docs/, .github/, .gitignore, .vscode and target/",
+      "prior_manifest": "governance/sources/20261025-2230-nif-in-project-build.json"
+    },
+    "built_artifact": {
+      "path": "apps/cepaf_gleam/priv/rusty_vault_nif.so",
+      "pin": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256 (f5aaab89..., built in-project 2026-10-25T21:31:21Z from the tracked crate)"
+    },
+    "duplicate_copies_made_and_removed_this_task": [
+      "native/nifs/rust/rusty_vault_nif (removed: duplicate of the tracked crate)",
+      "native/nifs/rust/vendor/rusty_vault (removed: duplicate of the tracked dependency and less sanitized, since it would have carried the PEM test fixtures)"
+    ]
+  },
+  "vault_source_finding": {
+    "id": "VF-01",
+    "severity": "HIGH",
+    "status": "RECORDED_FOR_SOVEREIGN_REVIEW",
+    "observed_runtime": "wave 6r: the loaded NIF persists nothing under its storage path and unseals with a 32-byte key that was never used to seal",
+    "source_explanation": "src/lib.rs VaultHandle (the NIF resource) keeps kv_store as Mutex<HashMap<String, Vec<KvEntry>>> in RAM and audit_log as Mutex<Vec<AuditEntry>>; vault_unseal carries the comment TODO Slice B+: integrate RustyVault::core::Core::unseal and only checks master_key.len() == 32 before storing the key in RAM; src/vault_handle.rs defines a separate disk-backed VaultHandle over src/sqlite_backend.rs (rusqlite, WAL) with unit tests, but no NIF entry point in lib.rs constructs or calls it",
+    "conclusion": "the binary matches its source: the observed behaviour is the stub in the source, not a build or provisioning drift; the durable file store uos_vault_file.erl and tools/uos_vault.ml (wave 6r) remain the only persistent vault path in UOS until the NIF is completed and reviewed",
+    "required_follow_up": "wire the disk-backed handle or RustyVault Core into the NIF entry points, add a persistence law (put in one BEAM, get in the next) and a wrong-key law, rebuild from the tracked crate, re-pin, sovereign review (R5)"
+  },
+  "bridge_code_ingestion": {
+    "uos_path": "governance/sources/20261026-1402-c3i-telegram-gateway-evidence",
+    "status": "INERT_EVIDENCE: not compiled, not loaded; reference for the Rust gateway and polling design only",
+    "c3i_locators": [
+      "/home/an/dev/ver/c3i/sub-projects/c3i/native/planning_daemon/src/gateway.rs",
+      "/home/an/dev/ver/c3i/sub-projects/c3i/native/planning_daemon/src/ingress_polling.rs"
+    ],
+    "uos_bridge_in_control": [
+      "tools/telegram_client.ml and the tracked tools/telegram_client.exe (OCaml production bridge, repaired in wave 6s, installed in wave 6t)",
+      "apps/cepaf_gleam/src/cepaf_gleam/telegram/* and harness/telegram_* (Gleam service, media, gateway, mini app)",
+      "apps/cepaf_gleam/src/telegram_service_worker_runner.erl and tools/telegram-staging (staging service)"
+    ],
+    "secret_scan": {
+      "patterns": [
+        "sk-ant-api03-...",
+        "<digits>:<30+ token chars>",
+        "BEGIN ... PRIVATE KEY"
+      ],
+      "hits": 0
+    },
+    "digests": [
+      {
+        "path": "gateway.rs",
+        "sha256": "1ab2e9968b981ca8a71cbd6504069d367b0f91eb08abcdb56add68f514f36e19",
+        "bytes": 18383
+      },
+      {
+        "path": "ingress_polling.rs",
+        "sha256": "2c3cfb3cf8262233301abb3b90b994fef8d53c2def2a1f08d0d7f217a07eb13f",
+        "bytes": 30069
+      }
+    ]
+  }
+}
