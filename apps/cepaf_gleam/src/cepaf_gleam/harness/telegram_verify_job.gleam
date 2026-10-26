@@ -49,7 +49,7 @@ fn parse_list(output: String) -> Result(List(#(String, Job)), String) {
   })
 }
 
-fn find(run: Runner, job_id: String) -> Result(Job, String) {
+pub fn lookup(run: Runner, job_id: String) -> Result(Job, String) {
   use output <- result.try(
     run(["--format", "json", "job", "list", queue])
     |> result.map_error(fn(e) { "job_list_failed:" <> e }),
@@ -70,9 +70,9 @@ pub fn ensure(
 ) -> Result(Ensured, String) {
   let args = reservation.encode(b)
   case run(["job", "enqueue", b.job_id, b.job_id, queue, worker, args, "1"]) {
-    Ok(_) -> find(run, b.job_id) |> result.map(Enqueued)
+    Ok(_) -> lookup(run, b.job_id) |> result.map(Enqueued)
     Error(enqueue_error) ->
-      case find(run, b.job_id) {
+      case lookup(run, b.job_id) {
         Ok(job) if job.worker == worker -> Ok(AlreadyEnqueued(job))
         Ok(_) -> Error("job_conflict")
         Error("job_absent") -> Error("job_enqueue_failed:" <> enqueue_error)

@@ -1,0 +1,30 @@
+{
+  "schema": "uos.reviewed-tie-selection.v1",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "portfolio_sha256": "3e1852d5a6a33f7d775f5a5d2267bbae60f6b17436dc8ea6a0901e35669cad56",
+  "selected_task": "COMMAND_IMPL",
+  "tied_tasks": [
+    "COMMAND_IMPL",
+    "MINI_API_IMPL"
+  ],
+  "observed_at": "2026-10-26T00:49:36Z",
+  "valid_until": "2026-10-26T01:44:36Z",
+  "reviewer": "claude-subagent-tie-review-20261026",
+  "reason": "Reclaim COMMAND_IMPL at attempt 19 for its refreshed next scope: /verify crash reconciliation and guarded wiring, plus pure adapter modules for the 38 unconnected literals built in parallel and wired serially. Development source only; review, E2E, release and admission remain required. No authority from selection.",
+  "comparisons": [
+    {
+      "task_id": "COMMAND_IMPL",
+      "benefit": "Connects /verify end to end and advances 38 unconnected literals toward truthful backends",
+      "cost_bound_seconds": 5400,
+      "basis": "Analyst estimate for one wave: reconciliation, wiring and 8-12 adapter modules across three workers; not a whole-task forecast."
+    },
+    {
+      "task_id": "MINI_API_IMPL",
+      "benefit": "Complete remaining Mini App data producers and controls",
+      "cost_bound_seconds": 5400,
+      "basis": "Analyst estimate for the next producer increment; owners for Immune, Inference and Federation still missing; not a whole-task forecast."
+    }
+  ],
+  "review_evidence_path": "governance/planning/20261026-0048-claude-command-reclaim-selection-proof.json",
+  "review_evidence_sha256": "1b129ce6614de7b591914f76dce064195507d99d2ff212590ce3518118d89a0f"
+}
