@@ -77,18 +77,20 @@ ACH (Analysis of Competing Hypotheses): why were 7 of 16 literals unconnectable 
 ## 9. Architectural Observations
 
 ```text
-[inbox text] -> [classify_directive] -> [PreservedDirective(name,args)]
-[PreservedDirective] -> [read_adapters.route] -> [system | knowledge | simulation adapter]
-[read_adapters.route = None] -> [reference reply or backend_unavailable]
+[inbox text] -> [classify_directive]
+[classify_directive] -> [preserved directive]
+[preserved directive] -> [read_adapters route]
+[read_adapters route] -> [adapter module reply]
+[read_adapters route] -> [reference reply or backend_unavailable]
 ```
 
 ```mermaid
 flowchart LR
   T["inbox text"] --> C["classify_directive"]
-  C --> P["PreservedDirective(name,args)"]
-  P --> R["read_adapters.route"]
-  R --> A["system | knowledge | simulation adapter"]
-  R -->|None| F["reference reply or backend_unavailable"]
+  C --> P["preserved directive"]
+  P --> R["read_adapters route"]
+  R --> A["adapter module reply"]
+  R --> F["reference reply or backend_unavailable"]
 ```
 
 Workers never touched the two shared files; the integrator's diff to them is one import and one arm.

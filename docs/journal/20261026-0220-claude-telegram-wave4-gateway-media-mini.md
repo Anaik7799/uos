@@ -73,15 +73,23 @@ ACH (Analysis of Competing Hypotheses): why was a credential in a mesh payload f
 ## 9. Architectural Observations
 
 ```text
-[critical span] -> [gateway.enqueue_critical] -> [outbox.Queue (bounded)] -> [policy select] -> [durable outbox] -> [HTTP send (private config)]
-[gateway] -x-> [token]   (no field, no payload key)
+[critical span] -> [gateway enqueue_critical]
+[gateway enqueue_critical] -> [bounded outbox queue]
+[bounded outbox queue] -> [policy select]
+[policy select] -> [durable outbox]
+[durable outbox] -> [HTTP send with private config]
 ```
 
 ```mermaid
 flowchart LR
-  S["critical span"] --> G["gateway.enqueue_critical"] --> Q["outbox.Queue (bounded)"] --> P["policy select"] --> D["durable outbox"] --> H["HTTP send (private config)"]
-  G -. "no field, no payload key" .-x T["token"]
+  S["critical span"] --> G["gateway enqueue_critical"]
+  G --> Q["bounded outbox queue"]
+  Q --> P["policy select"]
+  P --> D["durable outbox"]
+  D --> H["HTTP send with private config"]
 ```
+
+The gateway state has no token field and no request carries a token key; the credential stays in the private transport configuration used only by the HTTP send.
 
 ## 10. Remaining Gaps
 

@@ -24,19 +24,32 @@ Status: design under `uos/telegram-runtime/20261001-1150` COMMAND_IMPL. Not impl
 Add one effect kind, keeping every existing fence.
 
 ```text
-[/verify <profile_id>] -> [classify: VerifyDispatch] -> [reserve inbox] -> [ensure Sa-plan job]
-[ensure job] -> [proposal: Intent(target = verify job)] -> [/approval propose|submit receipts]
-[approved packet] -> [action_packet.load_verify -> verify.Prepared] -> [fence: profile active, roster, clock, lease window]
-[fence ok] -> [loader.load + recheck] -> [executor.execute] -> [receipt] -> [commit outcome; outbox reply]
+[verify request] -> [classify VerifyDispatch]
+[classify VerifyDispatch] -> [reserve inbox]
+[reserve inbox] -> [ensure job]
+[ensure job] -> [proposal intent]
+[proposal intent] -> [approval receipts]
+[approval receipts] -> [load verify packet]
+[load verify packet] -> [fence checks]
+[fence checks] -> [loader recheck]
+[loader recheck] -> [executor execute]
+[executor execute] -> [receipt]
+[receipt] -> [commit and outbox reply]
 ```
 
 ```mermaid
 flowchart LR
-  A["/verify profile_id"] --> B["classify: VerifyDispatch"]
-  B --> C["reserve inbox"] --> D["ensure Sa-plan job"]
-  D --> E["proposal: Intent(target = verify job)"] --> F["/approval propose or submit receipts"]
-  F --> G["action_packet.load_verify -> verify.Prepared"] --> H["fence: profile active, roster, clock, lease window"]
-  H --> I["loader.load + recheck"] --> J["executor.execute"] --> K["receipt"] --> L["commit outcome; outbox reply"]
+  A["verify request"] --> B["classify VerifyDispatch"]
+  B --> C["reserve inbox"]
+  C --> D["ensure job"]
+  D --> E["proposal intent"]
+  E --> F["approval receipts"]
+  F --> G["load verify packet"]
+  G --> H["fence checks"]
+  H --> I["loader recheck"]
+  I --> J["executor execute"]
+  J --> K["receipt"]
+  K --> L["commit and outbox reply"]
 ```
 
 Changes, each small and separately testable:

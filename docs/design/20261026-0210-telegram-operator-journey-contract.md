@@ -43,7 +43,11 @@ A journey step never expects a fabricated success. If the staged system cannot d
 
 ```mermaid
 flowchart LR
-  S["step n"] --> L["literal + args"] --> C["classify verdict"] --> R["reply class + required fields"] --> G["authority gate"] --> E["evidence to keep"]
+  S["step n"] --> L["literal + args"]
+  L --> C["classify verdict"]
+  C --> R["reply class + required fields"]
+  R --> G["authority gate"]
+  G --> E["evidence to keep"]
 ```
 
 Each spec is a Markdown table with columns: Step, Persona action, Literal and args, Family, Expected class, Required fields (e.g. `confidence`, `backend`), Authority gate (none / allowlisted pair / approval roster / operator), Evidence kept (receipt digest, journal line), Failure meaning.

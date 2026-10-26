@@ -31,16 +31,22 @@ Kalman prior for the plan: state "connected literals" = 39, process noise = one 
 **To-be architecture.** One typed dispatcher. Read commands map to an existing backend module through `read_directive` or a `PreservedDirective` arm. Every ControlledAction follows the `/verify` shape:
 
 ```text
-[literal] -> [classify] -> [propose] -> [reserve (inbox)] -> [/approval]
-[/approval] -> [Sa-plan job] -> [guarded executor] -> [receipt] -> [outbox]
+[literal] -> [classify]
+[classify] -> [propose]
+[propose] -> [reserve inbox]
+[reserve inbox] -> [approval]
+[approval] -> [Sa-plan job]
+[Sa-plan job] -> [guarded executor]
+[guarded executor] -> [receipt]
+[receipt] -> [outbox]
 ```
 
 ```mermaid
 flowchart LR
   L["literal"] --> C["classify"]
   C --> P["propose"]
-  P --> R["reserve (inbox)"]
-  R --> A["/approval"]
+  P --> R["reserve inbox"]
+  R --> A["approval"]
   A --> J["Sa-plan job"]
   J --> X["guarded executor"]
   X --> RC["receipt"]

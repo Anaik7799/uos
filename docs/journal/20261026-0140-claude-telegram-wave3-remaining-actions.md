@@ -66,20 +66,30 @@ ACH (Analysis of Competing Hypotheses): why did the integrator's classify test f
 ## 9. Architectural Observations
 
 ```text
-[77 literals] -> [76 canonicals] -> [classify]
-[classify] -> [read_adapters: 16] -> [module reply]
-[classify] -> [action_adapters: 20 previews] -> [module reply]
-[classify] -> [historical arms: 39] -> [module reply]
-[classify] -> [/verify (+alias): denied] -> [executor path, approval flow pending]
+[77 literals] -> [76 canonicals]
+[76 canonicals] -> [classify]
+[classify] -> [read adapters 16]
+[classify] -> [action adapters 20 previews]
+[classify] -> [historical arms 39]
+[classify] -> [verify denied]
+[read adapters 16] -> [module reply]
+[action adapters 20 previews] -> [module reply]
+[historical arms 39] -> [module reply]
+[verify denied] -> [executor path pending]
 ```
 
 ```mermaid
 flowchart LR
-  L["77 literals"] --> K["76 canonicals"] --> C["classify"]
-  C --> R["read_adapters: 16"] --> M["module reply"]
-  C --> A["action_adapters: 20 previews"] --> M
-  C --> H["historical arms: 39"] --> M
-  C --> V["/verify (+alias): denied"] --> X["executor path, approval flow pending"]
+  L["77 literals"] --> K["76 canonicals"]
+  K --> C["classify"]
+  C --> R["read adapters 16"]
+  C --> A["action adapters 20 previews"]
+  C --> H["historical arms 39"]
+  C --> V["verify denied"]
+  R --> M["module reply"]
+  A --> M
+  H --> M
+  V --> X["executor path pending"]
 ```
 
 ## 10. Remaining Gaps
