@@ -185,6 +185,8 @@ flowchart LR
   OPR["operator"] --> OA["credentials, staging token, real inbound messages, token rotation"]
 ```
 
+The fractal layer mapping L0–L9 of every component above, with the control that proves each layer, is in the handover journal [20261026-2027 wave 7d](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261026-2027-claude-telegram-wave7d-handover-to-agy-control-data-structure-fractal.md) (section 9.4), alongside the same three views as ASCII and Mermaid pairs.
+
 ## 8. Where the day's evidence lives
 
 Journals `docs/journal/20261026-*-claude-telegram-wave6u..7c*.md`; verdicts and receipts `governance/planning/20261026-*`; coordinator board messages from `claude-fable-l0-35600f5c` (last: wave 7b report and the BRIDGE_EVIDENCE completion); evidence trees `var/telegram-mini-verify/`, `var/releases/telegram-staging/`; C3I bridge sources as evidence under `governance/sources/20261026-1402-c3i-telegram-gateway-evidence/`.
