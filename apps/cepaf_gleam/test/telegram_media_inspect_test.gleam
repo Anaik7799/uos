@@ -214,29 +214,32 @@ pub fn inspect_fetched_never_accepts_non_fetched_test() {
   |> should.equal(Error("download_rejected:declared_over_cap"))
 }
 
-pub fn declared_mime_is_never_consulted_test() {
-  let lying = fn(mime) {
+// Review M-13 (wave 6c): "declared_mime is never consulted" is a property of
+// the type signature, since `inspect` takes only a kind and bytes and a
+// `MediaRef` never reaches it. No runtime test can falsify a parameter that
+// does not exist, so this test does not pretend to. It pins the law that the
+// verdict is a function of kind and bytes alone, by varying each in turn.
+pub fn verdict_is_a_function_of_kind_and_bytes_only_test() {
+  let verdict_for = fn(kind, bytes) { insp.inspect(kind, bytes) }
+  // Same kind, same bytes, built twice: equal verdicts.
+  verdict_for(ref.Photo, pdf) |> should.equal(verdict_for(ref.Photo, pdf))
+  // Same bytes, different kind: the verdict may change, through the allowlist.
+  verdict_for(ref.Photo, pdf)
+  |> should.equal(insp.Rejected("sniffed_type_not_allowed_for_kind", insp.Pdf))
+  verdict_for(ref.Document, pdf) |> should.equal(insp.Accepted(insp.Pdf))
+  // Same kind, different bytes: the verdict changes with the bytes.
+  verdict_for(ref.Photo, png) |> should.equal(insp.Accepted(insp.Png))
+  // A MediaRef carries a declared mime; `inspect` has no parameter for it, so
+  // the only thing a ref can contribute is its kind.
+  let liar =
     ref.MediaRef(
       kind: ref.Photo,
       file_unique_id: "u1",
       file_id: "f1",
       declared_size_bytes: Some(10),
-      declared_mime: mime,
+      declared_mime: Some("application/pdf"),
       declared_duration_s: None,
       caption: None,
     )
-  }
-  let honest = lying(Some("image/png"))
-  let liar = lying(Some("application/pdf"))
-  let absent = lying(None)
-  // inspect takes only kind and bytes: the same bytes give the same verdict
-  // whatever the ref claims.
-  let v1 = insp.inspect(honest.kind, pdf)
-  let v2 = insp.inspect(liar.kind, pdf)
-  let v3 = insp.inspect(absent.kind, pdf)
-  v1 |> should.equal(v2)
-  v2 |> should.equal(v3)
-  v1
-  |> should.equal(insp.Rejected("sniffed_type_not_allowed_for_kind", insp.Pdf))
-  insp.inspect(liar.kind, png) |> should.equal(insp.Accepted(insp.Png))
+  verdict_for(liar.kind, png) |> should.equal(insp.Accepted(insp.Png))
 }

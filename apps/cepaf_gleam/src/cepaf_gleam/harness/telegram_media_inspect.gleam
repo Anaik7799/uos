@@ -12,6 +12,20 @@
 //// never reads `declared_mime` or a file name. A ZIP is recognised by its
 //// first four bytes and is never opened. Nothing here claims to measure
 //// anything about the payload, so no function is named after a transform.
+////
+//// Honest limits (recorded by the wave 6c independent review, M-12, M-13):
+//// * `Mp4` means "ISO-BMFF `ftyp` container", so HEIC, AVIF, M4A and 3GP
+////   also sniff as `Mp4`; the allowlist admits them for Video and Animation.
+//// * `Mp3` covers the ID3 tag and the frame syncs FF FB, FF F3 and FF F2;
+////   FF FA and FF FD frames sniff `Unknown` and are rejected (false negative,
+////   never a false acceptance).
+//// * A prefix sniff cannot detect a polyglot: a file that starts with one
+////   signature may be something else after byte 64. `Accepted` narrows the
+////   container type for a later bounded stage; it never means safe to open.
+//// * The design's N-3 obligation to RECORD a declared-mime mismatch is not met
+////   here: this module has no mime parameter by design, so a caller that wants
+////   the mismatch recorded compares `Accepted(sniffed)` with the ref's
+////   `declared_mime` itself.
 
 import cepaf_gleam/harness/telegram_media_download as download
 import cepaf_gleam/harness/telegram_media_ref.{

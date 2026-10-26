@@ -8,7 +8,7 @@ Transclusions: [[zk:20260905-1801-moc-uos-unified-master]] · [[wiki:20260905-18
 
 ## 1. Scope & Trigger
 
-Sa-plan `uos/telegram-runtime/20261001-1150` MEDIA_IMPL attempt 2, worker `claude-fable-l0-35600f5c`, lease to 09:12:51Z; Oban jobs `wave6c-w1-media-inspect` and `wave6c-w2-media-store` in queue `telegram-wave6`. Operator goal: complete all Telegram features; update rules, skills, Superpowers, agents and plugins; learn, track KPIs and improve; helpers in OCaml or Mojo, never Python. Trigger: wave 6b left media design items T3 (bounded content inspection, replacing the degenerate simulators), T4 (bounded media storage with explicit retention) and T5 (upload path, only if a use case survives review) as the last open Telegram feature gap.
+Sa-plan `uos/telegram-runtime/20261001-1150` MEDIA_IMPL attempt 2, worker `claude-fable-l0-35600f5c`, lease to 09:12:51Z; Oban jobs `wave6c-w1-media-inspect` and `wave6c-w2-media-store` in queue `telegram-wave6`. The wave 6d review-fix landing runs under task MEDIA_FIX attempt 1 (created after MEDIA_IMPL completed, dependency MEDIA_IMPL, preflight PREFLIGHT_PASS) and job `wave6d-w2-store-fixes`. Operator goal: complete all Telegram features; update rules, skills, Superpowers, agents and plugins; learn, track KPIs and improve; helpers in OCaml or Mojo, never Python. Trigger: wave 6b left media design items T3 (bounded content inspection, replacing the degenerate simulators), T4 (bounded media storage with explicit retention) and T5 (upload path, only if a use case survives review) as the last open Telegram feature gap.
 
 ## 2. Pre-State Assessment
 
@@ -23,6 +23,7 @@ Sa-plan `uos/telegram-runtime/20261001-1150` MEDIA_IMPL attempt 2, worker `claud
 5. **Mutants.** Integrator: M13 (`fundamental_hz` depends on the sample size) killed; M14 (`amber_led` depends on the image bytes) killed; one earlier integrator mutant was equivalent and is not counted (section 4). Worker w1: five killed (PDF signature byte, GIF added to the Photo allowlist, prefix bound ignored, Unsupported accepted, Aborted mapped to Accepted). Worker w2: four killed (ceiling `>` to `>=`, digest recomputation skipped, expiry inverted, tamper check dropped). The integrator re-ran one mutant per worker module (GIF in Photo; ceiling boundary): both killed.
 6. **Suites.** Inspect 13, store 23, simulator 6, download 31 in one run: 73 passed, 0 failed. Full `cepaf_gleam` suite on OTP 29 at the landing tip: see section 7.
 7. **Sa-plan and KPIs.** MEDIA_IMPL attempt 2 completed after landing with T3 and T4 accepted as source and T5 deferred by the design's own condition; both wave6c jobs claimed and completed; KPI ledger row 6c, lessons L-13 to L-15, and the wave 3 forecast on `/verify` resolved (outcome 1 at e122cb0b, Brier 0.25).
+8. **Independent review and wave 6d (after the 6c landing, eee7f77b).** Reviewer `claude-subagent-media-review-20261026` (R2, advisory, read-only) read the 1,321-line 6c diff (sha256 `1c04c7e7…`): verdict REQUEST_CHANGES, fifteen findings, five majors, all in the store's crash and expiry behaviour; path-escape security was confirmed to hold (M-14). The store author worker w2 (context intact) fixed M-01 to M-11 in `fable-w2` (change `llzpvumn`, commit 55ab456c) under Sa-plan job `wave6d-w2-store-fixes`: temp-name write and rename (M-01), `Refused("expired_present")` on an expired index (M-02), `.bin` re-verified before `AlreadyStored` (M-03), `usage` counts the larger of index bytes and `.bin` size including orphans and temp files (M-04), `file_unique_id` bounded to 128 bytes before any write (M-05), ancestors checked with `link_info` before any mkdir (M-06), adoption checks `link_info` before reading (M-07), a two-process same-digest smoke test (M-09), `expired` returns a `Result` (M-11), doc notes (M-10, M-15). Store suite 23 → 37 tests. The integrator answered the inspect findings: honest-limits doc (M-12) and the vacuous declared-mime test replaced by a kind-and-bytes law (M-13). Dispositions are in section 4; residuals in section 10.
 
 ## 4. Root Cause Analysis
 
@@ -36,6 +37,8 @@ ACH (Analysis of Competing Hypotheses): why could the 64-byte prefix bound not b
 | Evaluation | **CONFIRMED** | REFUTED | REFUTED |
 
 Fix: the module exposes the observation `examined_prefix`, and the bound is a law over that observation, not an inference from outputs. A second, smaller finding on the integrator side: my vision-fixture mutant (`byte_size > 20 && bay == 3` falling through to the original `case`) was equivalent because the inner arm still answered bay 3; it was replaced by a mutant that changes an observable (`amber_led` from the byte count) and that one died.
+
+Review dispositions (wave 6d): M-01 fixed (temp name, sync, rename; truncated, empty and wrong-byte files at a digest name are repaired; tests `truncated_bin_retry_succeeds_test`, `empty_bin_retry_succeeds_test`, `wrong_bytes_at_the_digest_name_are_replaced_test`); M-02 fixed (`expired_present`); M-03 fixed (`stored_object_unverified:<reason>` with `bin_missing`, `bin_hash_mismatch`, `bin_size_mismatch`, `bin_not_regular_single_link`); M-04 fixed (`usage` takes the larger of index and `.bin`, counts orphans and leftover temp files, fails on an unreadable shard); M-05 fixed (`max_unique_id_bytes = 128`); M-06 fixed (`link_info` per level, `parent_not_regular_directory`); M-07 fixed; M-08 noted (parent directories of the shard are not fsynced; non-byte-aligned input raises; neither is sender-reachable); M-09 smoke-tested, not proved (fifteen rounds of two processes); M-10 and M-15 documented; M-11 fixed (`Result`); M-12 documented (`Mp4` means any `ftyp` brand; FF FA and FF FD frames are false negatives; polyglots pass a prefix sniff); M-13 fixed (vacuous test replaced; the N-3 mismatch record is a caller duty, recorded in the module doc); M-14 verified safe by the reviewer. Behaviour change accepted with the fix: a wrong-content regular file at a digest name is now replaced rather than refused, because the M-01 repair needs it; a symlink or hard link there is still refused and never read. Why the author tests missed the majors: every store test exercised a complete write; none interrupted one, aged one, or removed one half of the pair. The review's value here was the failure modes it enumerated, not the code it read.
 
 ## 5. Fix Taxonomy
 
@@ -69,12 +72,17 @@ Fix: the module exposes the observation `examined_prefix`, and the bound is a la
 | Full `cepaf_gleam` suite on OTP 29 at the landing tip | 13744 passed, 0 failed (07:46Z to 07:57Z) | B2 |
 | Diagram parity of this journal (`tools/diagram-check`) | PASS | A1 |
 | Journal linter | 10/10 PASS | A1 |
+| Independent R2 review of the 6c diff (read-only, advisory) | REQUEST_CHANGES, 15 findings, 5 majors, path security confirmed | B2 (advisory) |
+| Wave 6d store suite (37) and inspect suite (13) after the fixes, run by the integrator | all pass | B2 |
+| Integrator re-run of two 6d worker mutants (unique-id bound dropped; put-expiry check dropped) | 2/2 killed | B2 |
+| Full `cepaf_gleam` suite on OTP 29 at the 6d landing tip | 13758 passed, 0 failed (08:10Z to 08:20Z) | B2 |
 
 ## 8. Files Modified
 
 - new: `apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_inspect.gleam`, `apps/cepaf_gleam/test/telegram_media_inspect_test.gleam` (w1); `apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_store.gleam`, `apps/cepaf_gleam/test/telegram_media_store_test.gleam` (w2)
 - changed: `apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_simulator.gleam` (two renames and doc comments), `apps/cepaf_gleam/test/telegram_simulator_test.gleam` (call sites and the fixture law)
 - `governance/planning/20261026-0639-claude-telegram-wave-kpi-ledger.json` (row 6b filled, row 6c, lessons L-13 to L-15, wave 3 forecast resolved); `.claude/agents/20261001-1117-full-symbiosis-supervisor.md` mutant discipline paragraph, mirrored byte-identical to `.gemini`, `.agents` and `.codex`; this journal
+- wave 6d (second landing): `telegram_media_store.gleam` and its test (w2 review fixes M-01 to M-11, 23 → 37 tests); `telegram_media_inspect.gleam` honest-limits doc and its test (M-12, M-13); `docs/wiki/20261026-0801-telegram-media-pipeline-guide.md` (new); `.claude/skills/uos-telegram-journeys/SKILL.md` media section mirrored on `.gemini`, `.agents`, `.codex` and the plugin; KPI ledger row 6d and lessons L-16, L-17; `governance/planning/20261026-0558-claude-command-reclaim3-risk.json` declared states aligned with Sa-plan
 
 ## 9. Architectural Observations
 
@@ -115,14 +123,16 @@ Sheaf view: each stage's output type is the next stage's input, and the digest i
 
 - T5 (upload path) is deferred by the design's own condition: no use case survived review in this wave. Recorded in the MEDIA_IMPL result, not silently dropped.
 - No production caller yet wires download, inspect and store together; the `store_write` deadline of 2,000 ms must be enforced by that caller running `put` in a bounded process.
-- No deletion of expired objects; the ceiling is not a quota lock under concurrent callers; parent-directory rename races need a cooperative lease.
+- No deletion of expired objects, so T4 is partial against the design's safety requirement that a stored unit is deletable on request (review M-11); `expired` now reports them and `put` refuses to re-admit them, but reclaim is a follow-up with its own task. The ceiling is not a quota lock under concurrent callers; parent-directory rename races need a cooperative lease.
+- From the 6d fixes: an interrupted index write leaves a truncated index that a retry reports as `write_failed:index_invalid` and does not repair, because the index keeps its exclusive no-overwrite guarantee; the same-digest concurrency test is a smoke test over a small race window, not a proof; the shard's parent directories are not fsynced.
 - A magic-byte verdict is not content validation; nothing downstream may treat `Accepted` as safe to open.
 - Historical documents naming the old simulator functions are preserved, not rewritten.
 - MEDIA_REVIEW by an independent reviewer; TELEGRAM_E2E by an authorized human; Codex and AGY R5 review of the whole Telegram surface remain open.
 
 ## 11. Metrics Summary
 
-- Tests added: 37 (inspect 13, store 23, simulator law 1); mutants: 11 killed across workers and integrator plus two integrator re-observations; equivalent mutants discarded: 1. Media design items: T3 and T4 implemented as source, T5 deferred by condition.
+- Tests added: 37 (inspect 13, store 23, simulator law 1); mutants: 11 killed across workers and integrator plus two integrator re-observations; equivalent mutants discarded: 1. Media design items: T3 and T4 implemented as source, T5 deferred by condition. Wave 6d: 14 store tests added (23 → 37), 6 worker mutants plus 2 integrator re-observations killed; review findings 15 raised, 11 fixed, 3 documented, 1 verified safe.
+- Bayesian (Beta over "a media-store increment passes independent review without a major"): prior Beta(1,1) → posterior Beta(1,2) after five majors; mean 0.33, matching the verify path's posterior. Two of two reviewed increments carried majors the author tests normalised; the review stays mandatory for any module that writes to disk or executes.
 - Bayesian (Beta over "a worker packet lands without integrator rework of the worker's files"): prior Beta(4,2) after waves 6a and 6b → posterior Beta(6,2) after w1 and w2 landed unchanged; mean 0.75.
 - Lyapunov: V = open media design items without an implementation or a recorded deferral: 3 → 0; dV/dt < 0.
 - Wall time for 6c: workers spawned 07:41Z, both reported by 07:48Z, landing time in the landing commit description.

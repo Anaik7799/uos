@@ -27,6 +27,25 @@
 //// * `put` is synchronous. The design's `store_write` deadline is a caller
 ////   concern (run `put` under a supervised, time-bounded process); this module
 ////   observes no clock of its own and `now_ms` is supplied by the caller.
+//// * Bytes are written to a unique `.tmp-<random>` file in the shard, synced and
+////   renamed onto `<sha>.bin`, so the digest name never holds partial bytes.
+////   A failed attempt deletes only its own temporary file. A truncated or
+////   wrong-content regular file already at the digest name is replaced the
+////   same way; a symlink or hard link there is refused and never read.
+//// * An existing index whose horizon has passed makes `put` return
+////   `Refused("expired_present")`, not `AlreadyStored`: the caller disposes of
+////   `expired` objects first. An existing, unexpired index is `AlreadyStored`
+////   only after its `.bin` is re-checked (regular, single link, size, hash);
+////   otherwise `Refused("stored_object_unverified:<reason>")`.
+//// * `usage` counts per digest the larger of the index bytes and the `.bin`
+////   size, orphan `.bin` files and leftover `.tmp-` files included.
+//// * `put` takes no media-inspection verdict: running `telegram_media_inspect`
+////   before `put` is a caller convention, not something this module enforces.
+//// * Index fields other than the digest (kind, `file_unique_id`, timestamps,
+////   horizon) are unauthenticated: anyone who can write the store directory can
+////   alter them. Only the byte content is bound to its name by the hash.
+//// * A put interrupted while writing the index leaves a truncated index that
+////   reads as `index_invalid` and is not auto-repaired (known residual).
 //// * Parent-directory rename races still need a cooperative workspace lease
 ////   (same limit as `files`); this is not a descriptor-relative VFS.
 
@@ -79,7 +98,9 @@ pub type Outcome {
   /// Same digest already present: idempotent, no second write.
   AlreadyStored(Stored)
   /// Reasons: `ceiling_reached`, `policy_invalid`, `usage_invalid`,
-  /// `kind_unsupported`, `content_digest_mismatch`, `write_failed:<reason>`.
+  /// `kind_unsupported`, `file_unique_id_too_long`, `content_digest_mismatch`,
+  /// `expired_present`, `stored_object_unverified:<reason>`,
+  /// `write_failed:<reason>`.
   Refused(reason: String)
 }
 
@@ -262,6 +283,10 @@ fn load_record(policy: Policy, sha: String) -> Result(Stored, String) {
 
 // ----------------------------------------------------------------------- put
 
+/// Largest accepted `file_unique_id`. It is only recorded in the index, so the
+/// bound keeps the index record far below `files.max_bytes`.
+pub const max_unique_id_bytes = 128
+
 /// Store `content` under its recomputed SHA-256. `expected_sha256` is only a
 /// cross-check against the digest the downloader reported; it never names a
 /// file. `usage_bytes` is the caller's measured current usage.
@@ -280,9 +305,13 @@ pub fn put(
       case kind {
         Unsupported(_) -> Refused("kind_unsupported")
         _ ->
-          case usage_bytes < 0 {
-            True -> Refused("usage_invalid")
-            False -> {
+          case
+            usage_bytes < 0,
+            string.byte_size(file_unique_id) > max_unique_id_bytes
+          {
+            True, _ -> Refused("usage_invalid")
+            _, True -> Refused("file_unique_id_too_long")
+            False, False -> {
               let sha = sha256_of(content)
               case sha == string.lowercase(expected_sha256) {
                 False -> Refused("content_digest_mismatch")
@@ -314,7 +343,16 @@ fn put_verified(
   usage_bytes: Int,
 ) -> Outcome {
   case load_record(policy, stored.sha256_hex) {
-    Ok(existing) -> AlreadyStored(existing)
+    Ok(existing) ->
+      case stored.stored_at_ms >= existing.expires_at_ms {
+        // The horizon has passed: the caller must act on `expired` first.
+        True -> Refused("expired_present")
+        False ->
+          case verify_stored(policy, existing) {
+            Ok(Nil) -> AlreadyStored(existing)
+            Error(reason) -> Refused("stored_object_unverified:" <> reason)
+          }
+      }
     Error("not_found") ->
       case usage_bytes + stored.bytes > policy.total_ceiling_bytes {
         True -> Refused("ceiling_reached")
@@ -324,14 +362,94 @@ fn put_verified(
   }
 }
 
+/// Bytes of an already-indexed object must still be there and still hash to
+/// their name before `put` may call the object stored.
+fn verify_stored(policy: Policy, existing: Stored) -> Result(Nil, String) {
+  use path <- result.try(
+    files.checked_path(policy.root, rel_bin(policy, existing.sha256_hex))
+    |> result.map_error(fn(_) { "bin_missing" }),
+  )
+  verify_bin(path, existing.sha256_hex, existing.bytes)
+}
+
+/// `link_info` first (regular file, single link, exact size: a symlink or a
+/// huge file is never read), then a full re-hash.
+fn verify_bin(path: String, sha: String, bytes: Int) -> Result(Nil, String) {
+  case simplifile.link_info(path) {
+    Error(simplifile.Enoent) -> Error("bin_missing")
+    Error(_) -> Error("bin_unreadable")
+    Ok(info) ->
+      case
+        simplifile.file_info_type(info) == simplifile.File && info.nlinks == 1
+      {
+        False -> Error("bin_not_regular_single_link")
+        True ->
+          case info.size == bytes {
+            False -> Error("bin_size_mismatch")
+            True ->
+              case simplifile.read_bits(path) {
+                Error(_) -> Error("bin_unreadable")
+                Ok(existing) ->
+                  case
+                    bit_array.byte_size(existing) == bytes
+                    && sha256_of(existing) == sha
+                  {
+                    True -> Ok(Nil)
+                    False -> Error("bin_hash_mismatch")
+                  }
+              }
+          }
+      }
+  }
+}
+
+/// Create every missing directory one level at a time, refusing any existing
+/// ancestor that is not a plain directory (a symlink is never followed and
+/// nothing is created through it).
 fn prepare_directory(policy: Policy, sha: String) -> Result(Nil, String) {
   case simplifile.is_directory(policy.root) {
-    Ok(True) ->
-      simplifile.create_directory_all(
-        policy.root <> "/" <> rel_dir(policy, sha),
-      )
-      |> result.map_error(fn(_) { "directory_unavailable" })
+    Ok(True) -> {
+      use parts <- result.try(files.relative_path(rel_dir(policy, sha)))
+      walk_directories(policy.root, parts)
+    }
     _ -> Error("root_unavailable")
+  }
+}
+
+fn walk_directories(dir: String, parts: List(String)) -> Result(Nil, String) {
+  case parts {
+    [] -> Ok(Nil)
+    [part, ..rest] -> {
+      let next = dir <> "/" <> part
+      case plain_directory(next) {
+        Ok(True) -> walk_directories(next, rest)
+        Ok(False) ->
+          case simplifile.create_directory(next) {
+            Ok(Nil) -> walk_directories(next, rest)
+            // lost a creation race: the winner's directory must still be plain
+            Error(simplifile.Eexist) ->
+              case plain_directory(next) {
+                Ok(True) -> walk_directories(next, rest)
+                _ -> Error("parent_not_regular_directory")
+              }
+            Error(_) -> Error("directory_unavailable")
+          }
+        Error(reason) -> Error(reason)
+      }
+    }
+  }
+}
+
+/// Ok(True) plain directory, Ok(False) absent, Error otherwise.
+fn plain_directory(path: String) -> Result(Bool, String) {
+  case simplifile.link_info(path) {
+    Ok(info) ->
+      case simplifile.file_info_type(info) == simplifile.Directory {
+        True -> Ok(True)
+        False -> Error("parent_not_regular_directory")
+      }
+    Error(simplifile.Enoent) -> Ok(False)
+    Error(_) -> Error("directory_unavailable")
   }
 }
 
@@ -343,11 +461,7 @@ fn write_object(policy: Policy, stored: Stored, content: BitArray) -> Outcome {
       policy.root,
       rel_bin(policy, sha),
     ))
-    use _ <- result.try(case write_exclusive(bin_path, content) {
-      Ok(Nil) -> Ok(Nil)
-      Error("eexist") -> adopt_orphan(bin_path, sha, stored.bytes)
-      Error(reason) -> Error(reason)
-    })
+    use _ <- result.try(ensure_bin(policy, sha, content, bin_path))
     use _ <- result.try(clock_guard.verify_durable_directory(
       policy.root <> "/" <> rel_dir(policy, sha),
     ))
@@ -370,18 +484,56 @@ fn write_object(policy: Policy, stored: Stored, content: BitArray) -> Outcome {
   }
 }
 
-/// A `.bin` without an index is the residue of an interrupted put. It is
-/// adopted only if its bytes already hash to its own name.
-fn adopt_orphan(path: String, sha: String, bytes: Int) -> Result(Nil, String) {
-  case simplifile.read_bits(path) {
-    Ok(existing) ->
-      case
-        bit_array.byte_size(existing) == bytes && sha256_of(existing) == sha
-      {
-        True -> Ok(Nil)
-        False -> Error("orphan_object_mismatch")
+/// Leave a complete `.bin` under the digest name. An existing file that hashes
+/// to its own name is adopted. A regular single-link file of the wrong size or
+/// hash is the residue of an interrupted write: it is replaced by renaming a
+/// fully written, synced temporary file over it. Anything that is not a plain
+/// file (symlink, hard link) is refused and never read or replaced.
+fn ensure_bin(
+  policy: Policy,
+  sha: String,
+  content: BitArray,
+  bin_path: String,
+) -> Result(Nil, String) {
+  case simplifile.link_info(bin_path) {
+    Error(simplifile.Enoent) -> write_bin(policy, sha, content, bin_path)
+    Error(_) -> Error("bin_unreadable")
+    Ok(_) ->
+      case verify_bin(bin_path, sha, bit_array.byte_size(content)) {
+        Ok(Nil) -> Ok(Nil)
+        Error("bin_size_mismatch") | Error("bin_hash_mismatch") ->
+          write_bin(policy, sha, content, bin_path)
+        Error(reason) -> Error(reason)
       }
-    Error(_) -> Error("orphan_object_unreadable")
+  }
+}
+
+/// Write to a unique temporary name in the shard, sync, then rename onto the
+/// final name, so the digest name is only ever bound to complete bytes. A
+/// failed attempt removes its own temporary file (never an object).
+fn write_bin(
+  policy: Policy,
+  sha: String,
+  content: BitArray,
+  bin_path: String,
+) -> Result(Nil, String) {
+  let nonce =
+    crypto.strong_random_bytes(8) |> bit_array.base16_encode |> string.lowercase
+  let tmp_rel = rel_dir(policy, sha) <> "/.tmp-" <> nonce
+  use tmp_path <- result.try(files.checked_path(policy.root, tmp_rel))
+  case write_exclusive(tmp_path, content) {
+    Error(reason) -> {
+      let _ = simplifile.delete(tmp_path)
+      Error(reason)
+    }
+    Ok(Nil) ->
+      case simplifile.rename(tmp_path, bin_path) {
+        Ok(Nil) -> Ok(Nil)
+        Error(_) -> {
+          let _ = simplifile.delete(tmp_path)
+          Error("rename_failed")
+        }
+      }
   }
 }
 
@@ -435,68 +587,114 @@ pub fn get(
 
 // ------------------------------------------------------------------- listing
 
-fn all_records(policy: Policy) -> Result(List(Result(Stored, String)), String) {
-  use _ <- result.try(valid_policy(policy))
-  let base_dir = policy.root <> "/" <> policy.base
-  case simplifile.read_directory(base_dir) {
-    Error(simplifile.Enoent) -> Ok([])
-    Error(_) -> Error("store_unavailable")
-    Ok(shards) -> {
-      let names =
-        shards
-        |> list.sort(string.compare)
-        |> list.filter(fn(s) { string.length(s) == 2 })
-        |> list.flat_map(fn(shard) {
-          case simplifile.read_directory(base_dir <> "/" <> shard) {
-            Ok(entries) ->
-              entries
-              |> list.sort(string.compare)
-              |> list.filter_map(fn(entry) {
-                case string.ends_with(entry, ".json") {
-                  True -> {
-                    let sha = string.drop_end(entry, 5)
-                    case is_hex_digest(sha) && string.starts_with(sha, shard) {
-                      True -> Ok(sha)
-                      False -> Error(Nil)
-                    }
-                  }
-                  False -> Error(Nil)
-                }
-              })
-            Error(_) -> []
-          }
-        })
-      Ok(list.map(names, fn(sha) { load_record(policy, sha) }))
-    }
+/// One digest found on disk: its index record (or why there is none) and the
+/// size of its `.bin` (0 when absent).
+type Entry {
+  Entry(sha: String, record: Result(Stored, String), bin_bytes: Int)
+}
+
+fn is_shard(name: String) -> Bool {
+  string.length(name) == 2
+  && list.all(string.to_graphemes(name), fn(c) {
+    string.contains("0123456789abcdef", c)
+  })
+}
+
+fn digest_of(entry: String, shard: String) -> Result(String, Nil) {
+  let sha = case string.ends_with(entry, ".json") {
+    True -> string.drop_end(entry, 5)
+    False ->
+      case string.ends_with(entry, ".bin") {
+        True -> string.drop_end(entry, 4)
+        False -> ""
+      }
+  }
+  case is_hex_digest(sha) && string.starts_with(sha, shard) {
+    True -> Ok(sha)
+    False -> Error(Nil)
   }
 }
 
-/// Index records whose horizon has passed (`now_ms >= expires_at_ms`), oldest
-/// shard order. Read-only: nothing is deleted. Malformed records are skipped.
-pub fn expired(policy: Policy, now_ms: Int) -> List(Stored) {
-  case all_records(policy) {
-    Error(_) -> []
-    Ok(records) ->
-      list.filter_map(records, fn(r) {
-        case r {
-          Ok(stored) ->
-            case now_ms >= stored.expires_at_ms {
-              True -> Ok(stored)
-              False -> Error(Nil)
-            }
-          Error(_) -> Error(Nil)
-        }
+fn size_of(path: String) -> Result(Int, String) {
+  case simplifile.link_info(path) {
+    Ok(info) -> Ok(info.size)
+    Error(simplifile.Enoent) -> Ok(0)
+    Error(_) -> Error("store_unavailable")
+  }
+}
+
+/// Every digest under `base`, whether it has an index, a `.bin` or both, plus
+/// the bytes held by leftover `.tmp-` files. Any unreadable directory fails the
+/// scan: a listing that cannot see part of the store must not look complete.
+fn scan(policy: Policy) -> Result(#(List(Entry), Int), String) {
+  use _ <- result.try(valid_policy(policy))
+  let base_dir = policy.root <> "/" <> policy.base
+  case simplifile.read_directory(base_dir) {
+    Error(simplifile.Enoent) -> Ok(#([], 0))
+    Error(_) -> Error("store_unavailable")
+    Ok(names) ->
+      names
+      |> list.filter(is_shard)
+      |> list.sort(string.compare)
+      |> list.try_fold(#([], 0), fn(acc, shard) {
+        let dir = base_dir <> "/" <> shard
+        use entries <- result.try(
+          simplifile.read_directory(dir)
+          |> result.map_error(fn(_) { "store_unavailable" }),
+        )
+        let shas =
+          entries
+          |> list.filter_map(fn(e) { digest_of(e, shard) })
+          |> list.unique
+          |> list.sort(string.compare)
+        use found <- result.try(
+          list.try_map(shas, fn(sha) {
+            use bin_bytes <- result.try(size_of(dir <> "/" <> sha <> ".bin"))
+            Ok(Entry(sha, load_record(policy, sha), bin_bytes))
+          }),
+        )
+        use tmp_bytes <- result.try(
+          entries
+          |> list.filter(fn(e) { string.starts_with(e, ".tmp-") })
+          |> list.try_fold(0, fn(total, e) {
+            use size <- result.try(size_of(dir <> "/" <> e))
+            Ok(total + size)
+          }),
+        )
+        Ok(#(list.append(acc.0, found), acc.1 + tmp_bytes))
       })
   }
 }
 
-/// Sum of index-recorded bytes under `base`. An absent store is zero. A
-/// malformed record fails closed: an unreadable index must not under-count.
+/// Index records whose horizon has passed (`now_ms >= expires_at_ms`), in
+/// digest order. Read-only: nothing is deleted. A malformed record or an
+/// unreadable store is an error, never an empty list. A `.bin` with no index
+/// has no horizon and is not listed (`usage` still counts it).
+pub fn expired(policy: Policy, now_ms: Int) -> Result(List(Stored), String) {
+  use #(entries, _) <- result.try(scan(policy))
+  list.try_fold(entries, [], fn(acc, entry) {
+    case entry.record {
+      Ok(stored) ->
+        case now_ms >= stored.expires_at_ms {
+          True -> Ok(list.append(acc, [stored]))
+          False -> Ok(acc)
+        }
+      Error("not_found") -> Ok(acc)
+      Error(reason) -> Error(reason)
+    }
+  })
+}
+
+/// Bytes held under `base`: per digest the larger of the index-recorded bytes
+/// and the `.bin` size, orphan `.bin` files (no index) and leftover `.tmp-`
+/// files included. An absent store is zero. A malformed record or an
+/// unreadable directory fails closed: usage must not under-count.
 pub fn usage(policy: Policy) -> Result(Int, String) {
-  use records <- result.try(all_records(policy))
-  list.try_fold(records, 0, fn(total, r) {
-    case r {
-      Ok(stored) -> Ok(total + stored.bytes)
+  use #(entries, tmp_bytes) <- result.try(scan(policy))
+  list.try_fold(entries, tmp_bytes, fn(total, entry) {
+    case entry.record {
+      Ok(stored) -> Ok(total + int.max(stored.bytes, entry.bin_bytes))
+      Error("not_found") -> Ok(total + entry.bin_bytes)
       Error(reason) -> Error(reason)
     }
   })

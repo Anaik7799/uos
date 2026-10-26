@@ -7,6 +7,7 @@ import cepaf_gleam/harness/telegram_media_ref as ref
 import cepaf_gleam/harness/telegram_media_store as store
 import envoy
 import gleam/bit_array
+import gleam/erlang/process
 import gleam/int
 import gleam/list
 import gleam/result
@@ -16,6 +17,9 @@ import simplifile
 
 @external(erlang, "erlang", "unique_integer")
 fn unique_integer() -> Int
+
+@external(erlang, "erlang", "system_time")
+fn system_time() -> Int
 
 const abc_sha = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
 
@@ -35,6 +39,10 @@ fn fresh_root() -> String {
     tmp_base()
     <> "/uos-media-store-test-"
     <> int.to_string(int.absolute_value(unique_integer()))
+    <> "-"
+    <> int.to_string(system_time())
+  // never inherit files left by an earlier failed run
+  let _ = simplifile.delete(root)
   let assert Ok(_) = simplifile.create_directory_all(root)
   root
 }
@@ -164,15 +172,223 @@ pub fn interrupted_put_orphan_bin_is_adopted_test() {
   store.get(p, abc_sha, t0 + 11) |> result.is_ok |> should.be_true
 }
 
-pub fn orphan_bin_with_wrong_bytes_is_refused_test() {
+pub fn wrong_bytes_at_the_digest_name_are_replaced_test() {
   use p, root <- with_store
   let _ = written(put_abc(p, t0, 0))
   let assert Ok(_) = simplifile.delete(index_path(root))
   let assert Ok(_) = simplifile.write_bits(bin_path(root), <<"zzz":utf8>>)
-  put_abc(p, t0 + 10, 0)
+  let _ = written(put_abc(p, t0 + 10, 0))
+  simplifile.read_bits(bin_path(root)) |> should.equal(Ok(abc()))
+  store.get(p, abc_sha, t0 + 11) |> result.is_ok |> should.be_true
+}
+
+// --------------------------------------------------- review fixes (M-01..M-11)
+
+fn seed_shard(root: String) -> Nil {
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/media/ba")
+  Nil
+}
+
+pub fn truncated_bin_retry_succeeds_test() {
+  use p, root <- with_store
+  seed_shard(root)
+  // the residue of a crash mid-write: a prefix of the bytes at the final name
+  let assert Ok(_) = simplifile.write_bits(bin_path(root), <<"ab":utf8>>)
+  let stored = written(put_abc(p, t0, 0))
+  simplifile.read_bits(bin_path(root)) |> should.equal(Ok(abc()))
+  let assert Ok(#(got, bytes)) = store.get(p, abc_sha, t0 + 1)
+  got |> should.equal(stored)
+  bytes |> should.equal(abc())
+  // no temporary file survives a successful put
+  let assert Ok(names) = simplifile.read_directory(root <> "/media/ba")
+  list.sort(names, string.compare)
+  |> should.equal([abc_sha <> ".bin", abc_sha <> ".json"])
+}
+
+pub fn empty_bin_retry_succeeds_test() {
+  use p, root <- with_store
+  seed_shard(root)
+  let assert Ok(_) = simplifile.write_bits(bin_path(root), <<>>)
+  let _ = written(put_abc(p, t0, 0))
+  simplifile.read_bits(bin_path(root)) |> should.equal(Ok(abc()))
+}
+
+pub fn re_put_after_expiry_is_not_already_stored_test() {
+  use p, _ <- with_store
+  let first = written(put_abc(p, t0, 0))
+  // before the horizon the same content is still AlreadyStored
+  put_abc(p, first.expires_at_ms - 1, 3)
+  |> should.equal(store.AlreadyStored(first))
+  // at and after the horizon the caller must dispose of it first
+  put_abc(p, first.expires_at_ms, 3)
   |> refused
-  |> should.equal("write_failed:orphan_object_mismatch")
+  |> should.equal("expired_present")
+  put_abc(p, first.expires_at_ms + 5_000_000, 3)
+  |> refused
+  |> should.equal("expired_present")
+  // the refused re-put changed nothing
+  store.expired(p, first.expires_at_ms) |> should.equal(Ok([first]))
+}
+
+pub fn index_present_bin_missing_put_refuses_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.delete(bin_path(root))
+  put_abc(p, t0 + 1, 0)
+  |> refused
+  |> should.equal("stored_object_unverified:bin_missing")
+}
+
+pub fn index_present_bin_wrong_put_refuses_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.write_bits(bin_path(root), <<"abd":utf8>>)
+  put_abc(p, t0 + 1, 0)
+  |> refused
+  |> should.equal("stored_object_unverified:bin_hash_mismatch")
+  let assert Ok(_) = simplifile.write_bits(bin_path(root), <<"ab":utf8>>)
+  put_abc(p, t0 + 1, 0)
+  |> refused
+  |> should.equal("stored_object_unverified:bin_size_mismatch")
+}
+
+pub fn orphan_bin_counted_in_usage_test() {
+  use p, root <- with_store
+  let orphan = string.repeat("ab", 32)
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/media/ab")
+  let assert Ok(_) =
+    simplifile.write_bits(root <> "/media/ab/" <> orphan <> ".bin", <<
+      "0123456789":utf8,
+    >>)
+  store.usage(p) |> should.equal(Ok(10))
+  // a leftover temporary file is disk the ceiling must also see
+  let assert Ok(_) =
+    simplifile.write_bits(root <> "/media/ab/.tmp-dead", <<"12345":utf8>>)
+  store.usage(p) |> should.equal(Ok(15))
+}
+
+pub fn usage_takes_the_larger_of_index_and_bin_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  store.usage(p) |> should.equal(Ok(3))
+  // the index under-reports once the bytes grew
+  let assert Ok(_) =
+    simplifile.write_bits(bin_path(root), <<"0123456789":utf8>>)
+  store.usage(p) |> should.equal(Ok(10))
+}
+
+pub fn oversized_unique_id_refused_no_files_test() {
+  use p, root <- with_store
+  let too_long = string.repeat("x", 129)
+  store.put(p, ref.Photo, too_long, abc(), abc_sha, t0, 0)
+  |> refused
+  |> should.equal("file_unique_id_too_long")
+  simplifile.is_directory(root <> "/media") |> should.equal(Ok(False))
+  store.usage(p) |> should.equal(Ok(0))
+  // exactly 128 bytes is accepted and recorded
+  let exact = string.repeat("x", 128)
+  let stored = store.put(p, ref.Photo, exact, abc(), abc_sha, t0, 0) |> written
+  stored.file_unique_id |> should.equal(exact)
+}
+
+pub fn symlinked_base_is_refused_without_mkdir_test() {
+  use p, root <- with_store
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/elsewhere")
+  let assert Ok(_) = simplifile.create_symlink("elsewhere", root <> "/media")
+  put_abc(p, t0, 0)
+  |> refused
+  |> should.equal("write_failed:parent_not_regular_directory")
+  // nothing was created through the link
+  simplifile.read_directory(root <> "/elsewhere") |> should.equal(Ok([]))
+}
+
+pub fn symlinked_shard_is_refused_without_writes_test() {
+  use p, root <- with_store
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/media")
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/elsewhere")
+  let assert Ok(_) =
+    simplifile.create_symlink("../elsewhere", root <> "/media/ba")
+  put_abc(p, t0, 0)
+  |> refused
+  |> should.equal("write_failed:parent_not_regular_directory")
+  simplifile.read_directory(root <> "/elsewhere") |> should.equal(Ok([]))
+}
+
+pub fn symlinked_bin_is_not_adopted_test() {
+  use p, root <- with_store
+  seed_shard(root)
+  // a symlink whose target holds exactly the right bytes must still not count
+  let assert Ok(_) = simplifile.write_bits(root <> "/outside.bin", abc())
+  let assert Ok(_) =
+    simplifile.create_symlink("../../outside.bin", bin_path(root))
+  put_abc(p, t0, 0)
+  |> refused
+  |> should.equal("write_failed:bin_not_regular_single_link")
   simplifile.is_file(index_path(root)) |> should.equal(Ok(False))
+  let assert Ok(info) = simplifile.link_info(bin_path(root))
+  simplifile.file_info_type(info) |> should.equal(simplifile.Symlink)
+}
+
+pub fn concurrent_same_digest_put_test() {
+  list.each(list.repeat(Nil, 15), fn(_) {
+    use p, _ <- with_store
+    let results = process.new_subject()
+    list.each([1, 2], fn(n) {
+      process.spawn(fn() {
+        process.send(
+          results,
+          store.put(
+            p,
+            ref.Photo,
+            "u" <> int.to_string(n),
+            abc(),
+            abc_sha,
+            t0,
+            0,
+          ),
+        )
+      })
+    })
+    let assert Ok(a) = process.receive(results, 5000)
+    let assert Ok(b) = process.receive(results, 5000)
+    let outcomes = [a, b]
+    let wins =
+      list.count(outcomes, fn(o) {
+        case o {
+          store.Written(_) -> True
+          _ -> False
+        }
+      })
+    { wins >= 1 } |> should.be_true
+    list.each(outcomes, fn(o) {
+      case o {
+        store.Written(_) | store.AlreadyStored(_) -> Nil
+        store.Refused(r) ->
+          string.starts_with(r, "write_failed:") |> should.be_true
+      }
+    })
+    // never a poisoned state
+    let assert store.AlreadyStored(_) = put_abc(p, t0 + 1, 3)
+    store.get(p, abc_sha, t0 + 1) |> result.is_ok |> should.be_true
+    store.usage(p) |> should.equal(Ok(3))
+  })
+}
+
+pub fn expired_reports_errors_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.write(index_path(root), "{not json")
+  store.expired(p, t0 + 10_000_000) |> should.equal(Error("index_invalid"))
+  store.expired(store.Policy(..p, retention_ms: 1), t0)
+  |> should.equal(Error("policy_invalid"))
+}
+
+pub fn expired_reports_unreadable_store_test() {
+  use p, root <- with_store
+  // `base` is a plain file: the store cannot be listed, and that is not "empty"
+  let assert Ok(_) = simplifile.write(root <> "/media", "not a directory")
+  store.expired(p, t0) |> should.equal(Error("store_unavailable"))
+  store.usage(p) |> should.equal(Error("store_unavailable"))
 }
 
 // ----------------------------------------------------------------- refusals
@@ -226,7 +442,7 @@ pub fn invalid_policy_is_refused_test() {
     store.get(p, abc_sha, t0) |> should.equal(Error("policy_invalid"))
     store.usage(p) |> should.equal(Error("policy_invalid"))
     store.object_path(p, abc_sha) |> should.equal(Error("policy_invalid"))
-    store.expired(p, t0) |> should.equal([])
+    store.expired(p, t0) |> should.equal(Error("policy_invalid"))
   })
   // nothing was created for any invalid policy
   simplifile.read_directory(root) |> should.equal(Ok([]))
@@ -275,8 +491,8 @@ pub fn expiry_is_reported_and_never_served_test() {
   store.get(p, abc_sha, horizon - 1) |> result.is_ok |> should.be_true
   store.get(p, abc_sha, horizon) |> should.equal(Error("expired"))
   store.get(p, abc_sha, horizon + 1_000_000) |> should.equal(Error("expired"))
-  store.expired(p, horizon - 1) |> should.equal([])
-  store.expired(p, horizon) |> should.equal([stored])
+  store.expired(p, horizon - 1) |> should.equal(Ok([]))
+  store.expired(p, horizon) |> should.equal(Ok([stored]))
   // listing is read-only: the object is still on disk and still counted
   store.usage(p) |> should.equal(Ok(3))
 }
