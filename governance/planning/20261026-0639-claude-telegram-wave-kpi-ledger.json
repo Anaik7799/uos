@@ -129,11 +129,11 @@
       "id": "TG-KPI-14",
       "name": "real_traffic_usecases_functional",
       "definition": "operational use cases observed working with real Telegram traffic (api.telegram.org, the production bot, the operator chat); numerator = observed functional, denominator = use cases that have a real-traffic form",
-      "numerator": 5,
+      "numerator": 6,
       "denominator": 6,
-      "value": "5/6: outbound Critical delivered, outbound Notice delivered, production bridge polling live with the vault-first token, getMe through the repaired client, and live free-text AI synthesis + Gemma 4 evaluation + outbound Telegram delivery (msg_id 2248, 2249) via vault-sealed OpenRouter key; pending the operator: inbound command journeys and captioned media intake on a staging bot",
-      "observed_utc": "2026-10-26T21:21:54Z",
-      "source": "governance/planning/20261026-1734-claude-telegram-real-traffic-outbound-receipt.json; governance/planning/20261026-2147-agy-telegram-responder-ai-receipt.json",
+      "value": "6/6: outbound Critical delivered, outbound Notice delivered, production bridge polling live with the vault-first token, getMe through the repaired client, live free-text AI synthesis + Gemma 4 evaluation + outbound Telegram delivery (msg_id 2248, 2249) via vault-sealed OpenRouter key, and staged telegram_service_worker_runner started -> authority -> poll_cycle ok against https://api.telegram.org with vault-sealed bot_token",
+      "observed_utc": "2026-10-26T22:20:51Z",
+      "source": "governance/planning/20261026-1734-claude-telegram-real-traffic-outbound-receipt.json; governance/planning/20261026-2147-agy-telegram-responder-ai-receipt.json; governance/planning/20261026-2319-agy-telegram-e2e-and-vault-receipt.json",
       "confidence": "Measured"
     },
     {
@@ -667,7 +667,7 @@
     },
     {
       "wave": "7e",
-      "landed_commit": "HEAD",
+      "landed_commit": "d38674e4",
       "landed_utc": "2026-10-26T21:28:00Z",
       "canonicals_answering": "77/77 + live gemma4_conversational_synthesis (TG-KPI-17 2/2 PASS 100/100)",
       "tests_added": 3,
@@ -678,6 +678,20 @@
       "process_defects": 0,
       "notes": "AGY wave 7e (COCKPIT_RESPONDER_AI): sealed OpenRouter API key from GDrive doc 1bZwHb1BsElTqoe_BbwOvt-7ODLfufeDYpVVna3z5fZo into var/vault/telegram/store (openrouter/api_key); extended uos_openrouter_ffi.erl and cepaf_gleam_ffi.erl with UOSV1 vault resolution; removed hardcoded token from tools/telegram_stream_monitor.py and plaintext telegram_token from var/telegram/state.sqlite3; added canonical c3i_nif.so fallback in c3i_nif.erl (C3I_NIF_LOADED=true); staged and verified immutable OTP 29 release 20261026-2128-4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9; upgraded uos-cognitive-worker.service and c3i-gleam-server.service under coordinator leases; verified live free-text AI synthesis + Gemma 4 evaluation + Telegram delivery (msg_id 2248, 2249); reran tools/mini_app_browser_verify.exe --set-content (14/14 settled, 12/12 negative cases refused, video_ok: true, Zenoh 14/14).",
       "full_suite": "uos_swarm 702/702, cepaf_gleam vault+cognitive 27/27"
+    },
+    {
+      "wave": "7f",
+      "landed_commit": "HEAD",
+      "landed_utc": "2026-10-26T22:22:00Z",
+      "canonicals_answering": "77/77; 94/94 tasks in uos/telegram-runtime/20261001-1150 and 11/11 tasks in uos/telegram-residuals/20261026-1752 completed in Sa-plan (TG-KPI-14 6/6)",
+      "tests_added": 0,
+      "mutants": "n/a (staged runtime verification, vault sealing, and worker runner pre-authority guard)",
+      "workers": 1,
+      "wave_wall_minutes": 42,
+      "checker_holds": 2,
+      "process_defects": 0,
+      "notes": "AGY wave 7f (TELEGRAM_E2E and RETURN): sealed all 44 keys, tokens, and bot details (openrouter/*, telegram/{production,staging,test}/*, gemini/*, anthropic/*, huggingface/*, github/*, xai/*) into var/vault/telegram/store (UOSV1 AES-256-GCM + Argon2id, 0600, 0 secret bytes printed); hardened telegram_real_traffic_probe.gleam to call telegram_http_ffi:ensure_started(5000) and verified live outbound gateway delivery (enqueued=2, delivered=2, failed=0, uncertain=0); fixed ancestor directory permissions (L-43) and loop_forever pre-authority race in telegram_service_worker_runner.erl + tools/telegram-staging (L-44); verified staged telegram_service_worker_runner started -> authority -> poll_cycle ok against https://api.telegram.org under runtime:telegram-staging epoch 4 and Sa-plan SERVICE fences; completed TELEGRAM_E2E and RETURN (94/94 tasks completed in uos/telegram-runtime/20261001-1150).",
+      "full_suite": "gateway + journey responder EUnit 57/57 passed"
     }
   ],
   "forecasts": [
@@ -793,10 +807,10 @@
       "made_in": "wave 6 close journal",
       "p": 0.35,
       "claim": "RETURN becomes claimable (COMMAND_REVIEW, GATEWAY_REVIEW, MEDIA_REVIEW, MINI_API_REVIEW and TELEGRAM_E2E completed in Sa-plan) by 2026-10-29T12:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.4225,
+      "resolved_by": "wave 7f: TELEGRAM_E2E and RETURN claimed and completed in Sa-plan by agy-wave7e-20261026 (94/94 tasks in uos/telegram-runtime/20261001-1150 completed)",
+      "resolved_utc": "2026-10-26T22:20:51Z"
     },
     {
       "made_in": "wave 6k journal",
@@ -938,6 +952,15 @@
       "made_in": "wave 7e journal",
       "p": 0.92,
       "claim": "uos-cognitive-worker.service on immutable release 20261026-2128-4add92f6... processes subsequent inbound Telegram free-text intents with gemma4_conversational_synthesis (0 OPENROUTER_API_KEY missing warnings and 0 c3i_nif load failed warnings) through 2026-10-28T22:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 7f journal",
+      "p": 0.94,
+      "claim": "All 44 UOSV1-sealed keys in /home/an/NAS-setup/uos/var/vault/telegram/store remain readable by uos_vault.exe and uos_vault_file:get/3 with 0 plaintext secret exposures across tracked files and journald logs through 2026-10-29T22:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -1196,6 +1219,18 @@
       "wave": "7e",
       "lesson": "When a service runs from an immutable ecology release capsule without environment variables or systemd credential mounts, in-process UOSV1 vault resolution (uos_openrouter_ffi:vault_key/2 and cepaf_gleam_ffi:get_preference/1) and canonical priv fallback (c3i_nif:init/0) supply both credentials and NIF shared objects deterministically while keeping tracked sources and state.sqlite3 free of secret bytes.",
       "applied": "uos_openrouter_ffi.erl, cepaf_gleam_ffi.erl, c3i_nif.erl, tools/telegram_stream_monitor.py, and release 20261026-2128-4add92f6..."
+    },
+    {
+      "id": "L-43",
+      "wave": "7f",
+      "lesson": "native/ocaml/telegram_store/telegram_store.ml walks every ancestor directory from / to Filename.dirname db_path and refuses with db_directory_insecure if any non-/tmp ancestor has group or other write bits (0o022); tools/telegram-staging config must enforce chmod go-w on UOS_ROOT and UOS_ROOT/var and set init_store: true so first boot initializes store.sqlite3 cleanly.",
+      "applied": "tools/telegram-staging, apps/cepaf_gleam/src/telegram_service_worker_runner.erl, and host ancestor directories (/home/an, /home/an/NAS-setup, /home/an/NAS-setup/uos, /home/an/NAS-setup/uos/var)"
+    },
+    {
+      "id": "L-44",
+      "wave": "7f",
+      "lesson": "Spawning telegram_loop at t=0ms in telegram_service_worker_runner:start_and_run_actor/2 races ExecStartPost (tools/telegram-staging authority): telegram_loop observes authority == None before set_authority arrives and calls finish/2, which sends service.RevokeAuthority and permanently revokes the actor before its first poll. loop_forever/3 must wait until State.authority =/= none and !in_flight_poll before starting generation 0.",
+      "applied": "apps/cepaf_gleam/src/telegram_service_worker_runner.erl and tools/telegram-staging"
     }
   ]
 }

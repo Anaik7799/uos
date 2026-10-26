@@ -1,0 +1,90 @@
+{
+  "schema": "uos.telegram-e2e-and-vault-receipt.v1",
+  "wave": "7f",
+  "recorded_utc": "2026-10-26T22:19:00Z",
+  "worker": "agy-wave7e-20261026",
+  "plan_id": "uos/telegram-runtime/20261001-1150",
+  "tasks_completed": ["TELEGRAM_E2E", "RETURN"],
+  "plan_completion": {
+    "plan_id": "uos/telegram-runtime/20261001-1150",
+    "completed_tasks": 94,
+    "total_tasks": 94
+  },
+  "vault_sealing": {
+    "store_path": "/home/an/NAS-setup/uos/var/vault/telegram/store",
+    "cipher": "UOSV1-AES-256-GCM-Argon2id",
+    "total_keys_sealed": 44,
+    "secret_bytes_printed": 0,
+    "key_namespaces": [
+      "openrouter/api_key",
+      "openrouter/api_key_1",
+      "openrouter/api_key_2",
+      "openrouter/account_email",
+      "telegram/production/{bot_token,telegram_token,chat_id,telegram_chat_id,user_id,bot_id,bot_username}",
+      "telegram/staging/{bot_token,telegram_token,chat_id,telegram_chat_id,user_id,bot_id,bot_username}",
+      "telegram/test/{bot_token,telegram_token,chat_id,telegram_chat_id,user_id,bot_id,bot_username}",
+      "telegram/{bot_token,telegram_token,chat_id,user_id,bot_id,bot_username}",
+      "gemini/{api_key,api_key_1,api_key_2,api_key_3}",
+      "anthropic/{api_key,api_key_1}",
+      "huggingface/vm1_gemma4_token",
+      "github/vm1_token",
+      "xai/{api_key,api_key_1,api_key_2,api_key_3,api_key_4}"
+    ]
+  },
+  "live_verifications": {
+    "openrouter_vault_auth": [
+      {"key": "openrouter/api_key", "http_status": 200},
+      {"key": "openrouter/api_key_1", "http_status": 200},
+      {"key": "openrouter/api_key_2", "http_status": 200}
+    ],
+    "telegram_real_traffic_probe": {
+      "module": "cepaf_gleam@harness@telegram_real_traffic_probe:run/6",
+      "bot_id": 8660817750,
+      "chat_id": 6249174059,
+      "enqueued": 2,
+      "delivered": 2,
+      "failed": 0,
+      "uncertain": 0,
+      "ticks": 1,
+      "alarms": [],
+      "elapsed_ms": 1023
+    },
+    "telegram_staging_worker_runner": {
+      "release_dir": "/home/an/NAS-setup/uos/var/releases/telegram-staging/20261026-2255-d38674e456da",
+      "coordinator_resource": "runtime:telegram-staging",
+      "coordinator_epoch": 4,
+      "sa_plan_fence": {
+        "plan_id": "uos/telegram-staging/20261026-1347",
+        "task_id": "SERVICE",
+        "worker": "telegram-staging-nas-1",
+        "attempt": 1
+      },
+      "started_resp": {"action": "started", "status": "ok"},
+      "authority_resp": {"status": "ok"},
+      "poll_cycle_resp": {"result": {"type": "poll_empty"}, "status": "ok"},
+      "state_resp": {
+        "expected_generation": 2,
+        "last_committed_offset": 0,
+        "pending_operation_present": false,
+        "status": "ok",
+        "writer_state": "clean"
+      }
+    },
+    "unit_and_law_tests": {
+      "modules": [
+        "telegram_gateway_outbox_test",
+        "telegram_gateway_drain_test",
+        "telegram_gateway_ticker_test",
+        "telegram_gateway_wiring_test",
+        "telegram_journey_responder_test"
+      ],
+      "passed": 57,
+      "failed": 0
+    },
+    "live_services_active": {
+      "uos_telegram_bridge": "active",
+      "uos_cognitive_worker": "active",
+      "c3i_gleam_server": "active"
+    }
+  }
+}

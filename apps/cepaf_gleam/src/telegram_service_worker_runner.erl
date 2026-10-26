@@ -164,6 +164,13 @@ handle_standby_command(Unknown, IpcDir, Config) ->
 
 start_and_run_actor(Config, IpcDir) ->
     SvcConfig = build_service_configuration(Config),
+    case maps:get(<<"init_store">>, Config, false) of
+        true ->
+            _ = cepaf_gleam@harness@telegram_store:initialize_store(
+                element(2, SvcConfig), element(4, SvcConfig)
+            );
+        false -> ok
+    end,
     ReceiptOpt = build_receipt_opt(Config),
     StartRes = case maps:get(<<"managed_start">>, Config, false) of
         true ->
@@ -649,26 +656,40 @@ write_json_file(Path, Data) ->
 %% that cannot start (service down, invalid budget) ends this process; the
 %% supervisor of the unit decides what happens next, not this loop.
 loop_forever(Subj, LoopCfg, Generation) ->
-    Budget = {config,
-        maps:get(<<"max_cycles">>, LoopCfg, 100000),
-        maps:get(<<"lifetime_ms">>, LoopCfg, 3600000),
-        maps:get(<<"idle_ms">>, LoopCfg, 1000),
-        maps:get(<<"poll_deadline_ms">>, LoopCfg, 15000),
-        maps:get(<<"dispatch_deadline_ms">>, LoopCfg, 15000),
-        maps:get(<<"max_timeouts">>, LoopCfg, 3)},
-    Observer = gleam@erlang@process:new_subject(),
-    case cepaf_gleam@harness@telegram_loop:start(Subj, Budget, Observer) of
-        {ok, _Driver} ->
-            receive
-                {_Tag, {terminal, Reason, Cycles}} ->
-                    io:format("loop generation ~p terminal ~s after ~p cycles~n", [Generation, Reason, Cycles]),
-                    timer:sleep(maps:get(<<"idle_ms">>, LoopCfg, 1000)),
-                    loop_forever(Subj, LoopCfg, Generation + 1)
-            after maps:get(<<"lifetime_ms">>, LoopCfg, 3600000) + 60000 ->
-                    io:format("loop generation ~p produced no terminal; restarting~n", [Generation]),
-                    loop_forever(Subj, LoopCfg, Generation + 1)
-            end;
-        {error, Reason} ->
-            io:format("loop driver refused: ~p~n", [Reason]),
-            ok
+    State = gleam@erlang@process:call(Subj, 2000, fun(Reply) -> {get_state, Reply} end),
+    case {element(3, State), element(11, State)} of
+        {none, _} ->
+            timer:sleep(200),
+            loop_forever(Subj, LoopCfg, Generation);
+        {_, true} ->
+            timer:sleep(200),
+            loop_forever(Subj, LoopCfg, Generation);
+        {{some, _}, false} ->
+            case Generation of
+                0 -> timer:sleep(5000);
+                _ -> ok
+            end,
+            Budget = {config,
+                maps:get(<<"max_cycles">>, LoopCfg, 100000),
+                maps:get(<<"lifetime_ms">>, LoopCfg, 3600000),
+                maps:get(<<"idle_ms">>, LoopCfg, 1000),
+                maps:get(<<"poll_deadline_ms">>, LoopCfg, 15000),
+                maps:get(<<"dispatch_deadline_ms">>, LoopCfg, 15000),
+                maps:get(<<"max_timeouts">>, LoopCfg, 3)},
+            Observer = gleam@erlang@process:new_subject(),
+            case cepaf_gleam@harness@telegram_loop:start(Subj, Budget, Observer) of
+                {ok, _Driver} ->
+                    receive
+                        {_Tag, {terminal, Reason, Cycles}} ->
+                            io:format("loop generation ~p terminal ~s after ~p cycles~n", [Generation, Reason, Cycles]),
+                            timer:sleep(maps:get(<<"idle_ms">>, LoopCfg, 1000)),
+                            loop_forever(Subj, LoopCfg, Generation + 1)
+                    after maps:get(<<"lifetime_ms">>, LoopCfg, 3600000) + 60000 ->
+                            io:format("loop generation ~p produced no terminal; restarting~n", [Generation]),
+                            loop_forever(Subj, LoopCfg, Generation + 1)
+                    end;
+                {error, Reason} ->
+                    io:format("loop driver refused: ~p~n", [Reason]),
+                    ok
+            end
     end.

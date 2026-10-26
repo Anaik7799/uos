@@ -50,6 +50,9 @@ fn vault_get(store: String, name: String, passphrase_file: String) -> Dynamic
 @external(erlang, "telegram_real_traffic_probe_ffi", "ok_binary")
 fn ok_binary(value: Dynamic) -> Result(String, String)
 
+@external(erlang, "telegram_http_ffi", "ensure_started")
+fn ensure_http_started(timeout_ms: Int) -> Result(Nil, String)
+
 fn now_ms() -> Int {
   service.ffi_system_now_utc_us() / 1000
 }
@@ -75,6 +78,7 @@ pub fn run(
       case int.parse(string.trim(chat_text)) {
         Error(_) -> Error("chat_id_not_an_integer")
         Ok(chat_id) -> {
+          let _ = ensure_http_started(5000)
           let started = now_ms()
           let config =
             service.development_service_configuration(

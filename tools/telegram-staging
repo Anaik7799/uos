@@ -70,12 +70,15 @@ case "${1:-}" in
     fi
     REL=${5:-$UOS_ROOT/var/releases/telegram-staging/current}
     PLAN=$(cat "$STAGE/plan.id" 2>/dev/null || echo "uos/telegram-staging/unset")
+    COORD_EPOCH=$(sqlite3 "$UOS_ROOT/var/coordination/tri-agent/coordinator.sqlite3" "SELECT COALESCE(NULLIF(COUNT(*), 0), 1) FROM events WHERE operation='claim' AND json_extract(command_json, '$.a')='runtime:telegram-staging';" 2>/dev/null || echo 1)
+    chmod go-w "$UOS_ROOT" "$UOS_ROOT/var" 2>/dev/null || true
     mkdir -p "$STAGE/media" "$STAGE/ipc"; chmod 700 "$STAGE"
     umask 077
     cat > "$CONFIG" <<JSON
 {
   "mode": "run_actor",
   "supervised": true,
+  "init_store": true,
   "ipc_dir": "$STAGE/ipc",
   "db_path": "$STAGE/store.sqlite3",
   "base_url": "https://api.telegram.org",
@@ -88,7 +91,7 @@ case "${1:-}" in
   "resource_id": "runtime:telegram-staging",
   "service_epoch": 1,
   "expected_task_attempt": 1,
-  "coordinator_epoch": 1,
+  "coordinator_epoch": $COORD_EPOCH,
   "sa_plan_db": "$UOS_ROOT/var/sa-plan/uos.sqlite3",
   "coord_db": "$UOS_ROOT/var/coordination/tri-agent/coordinator.sqlite3",
   "control_registration_path": null,
@@ -143,9 +146,11 @@ UNITF
     for i in $(seq 1 60); do [ -f "$IPC/resp.json" ] && grep -q '"started"' "$IPC/resp.json" && break; sleep 1; done
     LEASE=$("$SCRIPT_DIR/sa-plan" task show "$PLAN" SERVICE 2>/dev/null | grep -oE 'lease_id=[^ ]+' | cut -d= -f2 || true)
     [ -n "$LEASE" ] || LEASE="SERVICE"
+    EPOCH=$(jq -r '.coordinator_epoch // 1' "$CONFIG")
     VALID=$(( $(date +%s) * 1000000 + 2592000000000 ))
-    printf '{"action":"set_authority","lease_id":"%s","attempt":1,"epoch":1,"valid_until_us":%d}\n' "$LEASE" "$VALID" > "$IPC/cmd.json"
-    for i in $(seq 1 30); do [ -f "$IPC/resp.json" ] && grep -q '"ok"' "$IPC/resp.json" && { echo "authority handed to the service: lease $LEASE"; exit 0; }; sleep 1; done
+    rm -f "$IPC/resp.json"
+    printf '{"action":"set_authority","lease_id":"%s","attempt":1,"epoch":%d,"valid_until_us":%d}\n' "$LEASE" "$EPOCH" "$VALID" > "$IPC/cmd.json"
+    for i in $(seq 1 100); do [ -f "$IPC/resp.json" ] && grep -q '"ok"' "$IPC/resp.json" && { echo "authority handed to the service: lease $LEASE"; exit 0; }; sleep 0.1; done
     echo "authority not acknowledged"; exit 4
     ;;
   status)
