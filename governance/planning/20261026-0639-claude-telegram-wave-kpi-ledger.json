@@ -276,6 +276,20 @@
       "process_defects": 0,
       "notes": "HTTP media transport: telegram_http_client gains get_file (Bot API getFile, bounded, file_path validated, no URL in errors) and fetch_file_bytes (one bounded GET, at most the FFI ceiling of 10 MiB, oversize is an error never a truncation); telegram_media_transport.from_http builds the download Transport, accepting only the api.telegram.org prefix with the configured token and fetching from the configured base host (the only host contacted). The Erlang HTTP fixture serves set_file, getFile and /file/bot<token>/<path>. Intake through the real transport against the fixture stores the bytes under their sha256. Environment note: fixture-backed tests need hackney started; the gleam test runner does it, a bare erl eunit call does not (explains the nine baseline slice1 fixture failures under erl).",
       "full_suite": "13810/13810"
+    },
+    {
+      "wave": "6j",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); every per-kind media cap is now fetchable",
+      "tests_added": 6,
+      "mutants": "3/3 integrator (reader never advances; 416 past the end as error; chunk bound not clamped, which survived until a clamp law test was added)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Ranged media fetch: telegram_http_client.fetch_file_range (Range requests of 4 MiB, 206 with Content-Range parsed and cross-checked, 200 accepted only from offset zero within one chunk, 416 past the end is end of body) and parse_content_range; telegram_media_transport.open_stream returns a ranged reader with an absolute stream deadline, so the download adapter enforces the per-kind cap across chunks and the 10 MiB single-read ceiling is gone; the fixture honours a single byte range (206, Content-Range, 416) and can omit file_size. Proven: a 12 MiB document streams through the real transport and is stored under its digest; a 12 MiB photo with undeclared size is aborted at the photo cap across chunks with nothing stored.",
+      "full_suite": "13816/13816"
     }
   ],
   "forecasts": [

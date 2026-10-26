@@ -570,3 +570,154 @@ fn bounded_deadline(config: TelegramHttpConfiguration, deadline_ms: Int) -> Int 
       }
   }
 }
+
+// -----------------------------------------------------------------------------
+// Ranged file body (wave 6j): bounded chunks instead of one bounded read
+// -----------------------------------------------------------------------------
+
+/// Bytes of one HTTP range request on a file body. `last` is true when the
+/// server's `Content-Range` total is reached, when the server answered the
+/// whole body to a request from offset zero, or when a non-zero offset is not
+/// satisfiable (the body ended exactly at the previous chunk).
+pub type RangeChunk {
+  RangeChunk(bytes: BitArray, total: Option(Int), last: Bool)
+}
+
+/// Chunk size the media transport asks for per request: well inside the FFI
+/// ceiling, so no single response is ever larger than this plus headers.
+pub const file_range_chunk_bytes = 4_194_304
+
+/// GET `<base_url>/file/bot<token>/<file_path>` with `Range: bytes=offset-end`.
+/// A 206 answer yields the partial body and its `Content-Range`; a 200 answer
+/// means the server ignored the range and is accepted only from offset zero and
+/// only when the whole body fits the chunk bound (then it is the last chunk);
+/// 416 at a non-zero offset is the end of the body. Every response is bounded
+/// by the FFI to `chunk_bytes` plus nothing: an oversize body is an error.
+pub fn fetch_file_range(
+  config: TelegramHttpConfiguration,
+  file_path: String,
+  offset: Int,
+  chunk_bytes: Int,
+  deadline_ms: Int,
+) -> Result(RangeChunk, String) {
+  case valid_file_path(file_path), offset >= 0, chunk_bytes >= 1 {
+    False, _, _ -> Error("fetch_file_invalid_file_path")
+    _, False, _ -> Error("fetch_file_invalid_offset")
+    _, _, False -> Error("fetch_file_invalid_chunk")
+    True, True, True -> {
+      let bound = case chunk_bytes > max_file_body_bytes {
+        True -> max_file_body_bytes
+        False -> chunk_bytes
+      }
+      let url =
+        config.base_url <> "/file/bot" <> config.bot_token <> "/" <> file_path
+      let range =
+        "bytes="
+        <> int.to_string(offset)
+        <> "-"
+        <> int.to_string(offset + bound - 1)
+      case
+        ffi_http_request(
+          http.Get,
+          url,
+          [#("accept", "application/octet-stream"), #("range", range)],
+          <<>>,
+          bounded_deadline(config, deadline_ms),
+          bound,
+        )
+      {
+        Error(err) -> Error("fetch_file_transport: " <> err)
+        Ok(#(206, resp_headers, body)) ->
+          case parse_content_range(resp_headers) {
+            Error(reason) -> Error(reason)
+            Ok(#(first, last_byte, total)) ->
+              case
+                first == offset
+                && bit_array.byte_size(body) == last_byte - first + 1
+                && bit_array.byte_size(body) <= bound
+              {
+                False -> Error("fetch_file_range_mismatch")
+                True ->
+                  Ok(RangeChunk(
+                    bytes: body,
+                    total: total,
+                    last: case total {
+                      Some(t) -> last_byte + 1 >= t
+                      None -> bit_array.byte_size(body) < bound
+                    },
+                  ))
+              }
+          }
+        Ok(#(200, _, body)) ->
+          case offset == 0 && bit_array.byte_size(body) <= bound {
+            True ->
+              Ok(RangeChunk(
+                bytes: body,
+                total: Some(bit_array.byte_size(body)),
+                last: True,
+              ))
+            False -> Error("fetch_file_range_not_supported")
+          }
+        Ok(#(416, _, _)) ->
+          case offset > 0 {
+            True -> Ok(RangeChunk(bytes: <<>>, total: None, last: True))
+            False -> Error("fetch_file_status_416")
+          }
+        Ok(#(code, _, _)) -> Error("fetch_file_status_" <> int.to_string(code))
+      }
+    }
+  }
+}
+
+/// `Content-Range: bytes first-last/total` with `total` possibly `*`.
+pub fn parse_content_range(
+  headers: List(#(String, String)),
+) -> Result(#(Int, Int, Option(Int)), String) {
+  let found =
+    list_find_header(headers, "content-range")
+  case found {
+    Error(_) -> Error("fetch_file_missing_content_range")
+    Ok(value) ->
+      case string.split(string.trim(value), " ") {
+        ["bytes", spec] ->
+          case string.split(spec, "/") {
+            [range, total_text] ->
+              case string.split(range, "-") {
+                [first_text, last_text] ->
+                  case
+                    int.parse(first_text),
+                    int.parse(last_text),
+                    total_text
+                  {
+                    Ok(first), Ok(last_byte), "*" if first <= last_byte ->
+                      Ok(#(first, last_byte, None))
+                    Ok(first), Ok(last_byte), t if first <= last_byte ->
+                      case int.parse(t) {
+                        Ok(total) if total > last_byte ->
+                          Ok(#(first, last_byte, Some(total)))
+                        _ -> Error("fetch_file_invalid_content_range")
+                      }
+                    _, _, _ -> Error("fetch_file_invalid_content_range")
+                  }
+                _ -> Error("fetch_file_invalid_content_range")
+              }
+            _ -> Error("fetch_file_invalid_content_range")
+          }
+        _ -> Error("fetch_file_invalid_content_range")
+      }
+  }
+}
+
+fn list_find_header(
+  headers: List(#(String, String)),
+  name: String,
+) -> Result(String, Nil) {
+  case headers {
+    [] -> Error(Nil)
+    [#(k, v), ..rest] ->
+      case string.lowercase(k) == name {
+        True -> Ok(v)
+        False -> list_find_header(rest, name)
+      }
+  }
+}

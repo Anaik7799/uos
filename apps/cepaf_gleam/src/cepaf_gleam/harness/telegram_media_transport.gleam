@@ -3,7 +3,7 @@
 ////   <compliance><stamp-controls>SC-TELEGRAM-MEDIA-T2, SC-SEC-001</stamp-controls></compliance>
 //// </c3i-module>
 ////
-//// The HTTP fetch transport for media intake (wave 6i): a
+//// The HTTP fetch transport for media intake (waves 6i and 6j): a
 //// `telegram_media_download.Transport` built on the bounded Telegram HTTP
 //// client, so a deployment can bind intake through
 //// `telegram_service.configure_media`.
@@ -16,14 +16,19 @@
 //// host, a staged service configures the local HTTP fixture, and nothing in
 //// between can redirect a fetch elsewhere.
 ////
+//// Bodies are fetched as HTTP ranges of `chunk_bytes` (4 MiB) each, one
+//// guarded request per range, so no single response exceeds the FFI ceiling
+//// and the download adapter's per-kind cap law runs across chunks: the full
+//// design caps (up to 52 MiB for video) are reachable while the process never
+//// holds more than one chunk from the transport at a time. A server that
+//// ignores `Range` is accepted only when the whole body fits one chunk.
+////
 //// Honest limits:
-//// * One bounded read per file, at most `max_body_bytes` (the HTTP FFI policy
-////   ceiling, 10 MiB). Media above that cannot be fetched by this transport and
-////   is refused, never truncated; the per-kind caps above it (audio, document,
-////   video) are unreachable here and the download adapter reports the abort.
-//// * The reader yields the whole body once, then end of stream; the download
-////   adapter's chunk bound and cap law still apply to that one chunk.
+//// * One stream deadline covers every range of a file; a slow server fails
+////   the stream as `stream_deadline_exceeded`, never a partial success.
 //// * No retry, no redirect following, no streaming to disk.
+//// * The download adapter still holds the concatenated body in memory up to
+////   the per-kind cap; the chunking bounds the transport, not the adapter.
 
 import cepaf_gleam/harness/telegram_http_client as http_client
 import cepaf_gleam/harness/telegram_media_download as download
@@ -31,10 +36,26 @@ import gleam/erlang/process
 import gleam/option.{None, Some}
 import gleam/string
 
-/// The HTTP FFI policy ceiling, restated so callers can reason about it.
+/// Bytes requested per range.
+pub const chunk_bytes = http_client.file_range_chunk_bytes
+
+/// Historical name of the single-read ceiling (wave 6i); kept for callers that
+/// read it, now the per-chunk bound rather than a per-file limit.
 pub const max_body_bytes = http_client.max_file_body_bytes
 
 const api_file_prefix = "https://api.telegram.org/file/bot"
+
+/// Erlang time unit atom for `erlang:monotonic_time/1`.
+type TimeUnit {
+  Millisecond
+}
+
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: TimeUnit) -> Int
+
+fn now_ms() -> Int {
+  monotonic_time(Millisecond)
+}
 
 /// Build the transport for a client configuration. The token lives only in
 /// the configuration captured by the closures.
@@ -55,18 +76,7 @@ pub fn from_http(
     open_stream: fn(full_url, deadline_ms) {
       case file_path_of(config, full_url) {
         Error(reason) -> Error(reason)
-        Ok(file_path) ->
-          case
-            http_client.fetch_file_bytes(
-              config,
-              file_path,
-              max_body_bytes,
-              deadline_ms,
-            )
-          {
-            Error(reason) -> Error(reason)
-            Ok(body) -> Ok(one_shot_reader(body))
-          }
+        Ok(file_path) -> Ok(ranged_reader(config, file_path, deadline_ms))
       }
     },
   )
@@ -91,16 +101,69 @@ pub fn file_path_of(
   }
 }
 
-/// A reader that yields `body` exactly once and then end of stream.
-fn one_shot_reader(
-  body: BitArray,
+type Cursor {
+  Cursor(offset: Int, done: Bool)
+}
+
+/// A reader that fetches one range per call, advancing an offset held in a
+/// private subject, until the server reports the last chunk. The stream
+/// deadline is absolute from the moment the stream opened.
+fn ranged_reader(
+  config: http_client.TelegramHttpConfiguration,
+  file_path: String,
+  deadline_ms: Int,
 ) -> fn() -> Result(option.Option(BitArray), String) {
-  let queue = process.new_subject()
-  process.send(queue, body)
+  let cursor = process.new_subject()
+  process.send(cursor, Cursor(offset: 0, done: False))
+  let absolute_deadline = now_ms() + deadline_ms
   fn() {
-    case process.receive(queue, 0) {
-      Ok(chunk) -> Ok(Some(chunk))
-      Error(_) -> Ok(None)
+    let state = case process.receive(cursor, 0) {
+      Ok(c) -> c
+      Error(_) -> Cursor(offset: 0, done: True)
+    }
+    case state.done {
+      True -> {
+        process.send(cursor, state)
+        Ok(None)
+      }
+      False -> {
+        let remaining = absolute_deadline - now_ms()
+        case remaining <= 0 {
+          True -> {
+            process.send(cursor, Cursor(..state, done: True))
+            Error("stream_deadline_exceeded")
+          }
+          False ->
+            case
+              http_client.fetch_file_range(
+                config,
+                file_path,
+                state.offset,
+                chunk_bytes,
+                remaining,
+              )
+            {
+              Error(reason) -> {
+                process.send(cursor, Cursor(..state, done: True))
+                Error(reason)
+              }
+              Ok(http_client.RangeChunk(bytes: bytes, total: _, last: last)) -> {
+                let size = bit_size_bytes(bytes)
+                process.send(
+                  cursor,
+                  Cursor(offset: state.offset + size, done: last),
+                )
+                case size == 0 {
+                  True -> Ok(None)
+                  False -> Ok(Some(bytes))
+                }
+              }
+            }
+        }
+      }
     }
   }
 }
+
+@external(erlang, "erlang", "byte_size")
+fn bit_size_bytes(bytes: BitArray) -> Int

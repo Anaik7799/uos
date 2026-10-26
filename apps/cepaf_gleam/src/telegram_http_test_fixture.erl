@@ -19,7 +19,7 @@
 -module(telegram_http_test_fixture).
 -behaviour(gen_server).
 
--export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1, set_file/4]).
+-export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1, set_file/4, set_file_opts/5]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -record(state, {
@@ -74,7 +74,11 @@ clear_requests(Pid) ->
 
 %% wave 6i: register a file the fixture serves (test content only, never production).
 set_file(Pid, FileId, FilePath, Bytes) when is_binary(FileId), is_binary(FilePath), is_binary(Bytes) ->
-    gen_server:call(Pid, {set_file, FileId, FilePath, Bytes}).
+    gen_server:call(Pid, {set_file, FileId, FilePath, Bytes, true}).
+
+%% DeclareSize=false makes getFile omit file_size, so the client sees an undeclared size.
+set_file_opts(Pid, FileId, FilePath, Bytes, DeclareSize) when is_binary(FileId), is_binary(FilePath), is_binary(Bytes), is_boolean(DeclareSize) ->
+    gen_server:call(Pid, {set_file, FileId, FilePath, Bytes, DeclareSize}).
 
 %% -----------------------------------------------------------------------------
 %% gen_server Callbacks
@@ -108,8 +112,8 @@ handle_call(get_requests, _From, State) ->
     {reply, lists:reverse(State#state.requests), State};
 handle_call(clear_requests, _From, State) ->
     {reply, ok, State#state{requests = []}};
-handle_call({set_file, FileId, FilePath, Bytes}, _From, State) ->
-    Files = maps:put(FileId, {FilePath, Bytes}, State#state.preset_files),
+handle_call({set_file, FileId, FilePath, Bytes, DeclareSize}, _From, State) ->
+    Files = maps:put(FileId, {FilePath, Bytes, DeclareSize}, State#state.preset_files),
     {reply, ok, State#state{preset_files = Files}};
 handle_call(_Req, _From, State) ->
     {reply, {error, unknown_call}, State}.
@@ -158,7 +162,7 @@ handle_client(Socket, ServerPid, Mode, PresetUpdates, PresetFiles) ->
             ServerPid ! {record_request, {Method, Path, Headers, Body}},
             case {Mode, is_subpath(Path, <<"/getFile">>), is_subpath(Path, <<"/file/bot">>)} of
                 {normal, true, _} -> serve_get_file(Socket, Body, PresetFiles);
-                {normal, _, true} -> serve_file_body(Socket, Path, PresetFiles);
+                {normal, _, true} -> serve_file_body(Socket, Path, Headers, PresetFiles);
                 _ -> dispatch_response(Socket, Mode, Method, Path, Body, PresetUpdates)
             end;
         {error, _} ->
@@ -342,26 +346,65 @@ send_json(Socket, StatusCode, Body) ->
 serve_get_file(Socket, Body, Files) ->
     FileId = extract_json_string(Body, <<"\"file_id\":">>),
     case maps:find(FileId, Files) of
-        {ok, {FilePath, Bytes}} ->
+        {ok, {FilePath, Bytes, DeclareSize}} ->
+            SizeField = case DeclareSize of
+                true -> [<<"\"file_size\":">>, integer_to_binary(byte_size(Bytes)), <<",">>];
+                false -> []
+            end,
             Resp = iolist_to_binary([
                 <<"{\"ok\":true,\"result\":{\"file_id\":\"">>, FileId,
-                <<"\",\"file_unique_id\":\"fx-">>, FileId,
-                <<"\",\"file_size\":">>, integer_to_binary(byte_size(Bytes)),
-                <<",\"file_path\":\"">>, FilePath, <<"\"}}">>
+                <<"\",\"file_unique_id\":\"fx-">>, FileId, <<"\",">>,
+                SizeField,
+                <<"\"file_path\":\"">>, FilePath, <<"\"}}">>
             ]),
             send_json(Socket, 200, Resp);
         error ->
             send_json(Socket, 400, <<"{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: file not found\"}">>)
     end.
 
-serve_file_body(Socket, Path, Files) ->
+serve_file_body(Socket, Path, Headers, Files) ->
     %% Path is /file/bot<token>/<file_path>; match on the file path suffix.
-    Matches = [Bytes || {_Id, {FilePath, Bytes}} <- maps:to_list(Files),
+    Matches = [Bytes || {_Id, {FilePath, Bytes, _Declare}} <- maps:to_list(Files),
                         binary:longest_common_suffix([Path, <<"/", FilePath/binary>>]) =:= byte_size(FilePath) + 1],
     case Matches of
-        [Bytes | _] -> send_bytes(Socket, 200, Bytes);
+        [Bytes | _] ->
+            %% wave 6j: honour a single byte range like the Telegram file CDN.
+            case lists:keyfind(<<"range">>, 1, Headers) of
+                {_, RangeValue} -> serve_range(Socket, Bytes, RangeValue);
+                false -> send_bytes(Socket, 200, Bytes)
+            end;
         [] -> send_json(Socket, 404, <<"{\"ok\":false,\"error_code\":404,\"description\":\"Not Found\"}">>)
     end.
+
+serve_range(Socket, Bytes, RangeValue) ->
+    Total = byte_size(Bytes),
+    try
+        <<"bytes=", Spec/binary>> = string:trim(RangeValue),
+        [FirstBin, LastBin] = binary:split(Spec, <<"-">>),
+        First = binary_to_integer(FirstBin),
+        Last0 = case LastBin of <<>> -> Total - 1; _ -> binary_to_integer(LastBin) end,
+        case First >= Total of
+            true -> send_status(Socket, 416, <<"Range Not Satisfiable">>, [{<<"Content-Range">>, iolist_to_binary([<<"bytes */">>, integer_to_binary(Total)])}], <<>>);
+            false ->
+                Last = min(Last0, Total - 1),
+                Len = Last - First + 1,
+                <<_:First/binary, Part:Len/binary, _/binary>> = Bytes,
+                ContentRange = iolist_to_binary([<<"bytes ">>, integer_to_binary(First), <<"-">>, integer_to_binary(Last), <<"/">>, integer_to_binary(Total)]),
+                send_status(Socket, 206, <<"Partial Content">>, [{<<"Content-Range">>, ContentRange}], Part)
+        end
+    catch
+        _:_ -> send_json(Socket, 400, <<"{\"ok\":false,\"error_code\":400,\"description\":\"Bad Range\"}">>)
+    end.
+
+send_status(Socket, StatusCode, StatusText, ExtraHeaders, Body) ->
+    Len = byte_size(Body),
+    Extra = [[K, <<": ">>, V, <<"\r\n">>] || {K, V} <- ExtraHeaders],
+    Header = [io_lib:format("HTTP/1.1 ~p ~s\r\n", [StatusCode, StatusText]),
+              <<"Content-Type: application/octet-stream\r\n">>,
+              Extra,
+              io_lib:format("Content-Length: ~p\r\nConnection: close\r\n\r\n", [Len])],
+    gen_tcp:send(Socket, [Header, Body]),
+    gen_tcp:close(Socket).
 
 extract_json_string(Body, Marker) ->
     try

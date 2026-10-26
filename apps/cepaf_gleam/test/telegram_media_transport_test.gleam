@@ -26,6 +26,15 @@ fn fixture_start() -> Result(#(Pid, Int, String), Dynamic)
 @external(erlang, "telegram_http_test_fixture", "stop")
 fn fixture_stop(pid: Pid) -> Dynamic
 
+@external(erlang, "telegram_http_test_fixture", "set_file_opts")
+fn fixture_set_file_opts(
+  pid: Pid,
+  file_id: String,
+  file_path: String,
+  bytes: BitArray,
+  declare_size: Bool,
+) -> Dynamic
+
 @external(erlang, "telegram_http_test_fixture", "set_file")
 fn fixture_set_file(
   pid: Pid,
@@ -227,5 +236,163 @@ pub fn get_file_refuses_a_hostile_declared_path_test() {
   fixture_set_file(pid, "fid-6", "/abs/path.png", png)
   http_client.get_file(config(base_url), "fid-6", 3000)
   |> should.equal(Error("get_file_invalid_file_path"))
+  fixture_stop(pid)
+}
+
+// ---------------------------------------------------------------- wave 6j ranges
+
+fn big_png(total: Int) -> BitArray {
+  // PNG signature followed by a deterministic filler, so inspection accepts it
+  let header = <<0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A>>
+  let filler = string.repeat("u", total - 8) |> bit_array.from_string
+  bit_array.append(header, filler)
+}
+
+fn big_pdf(total: Int) -> BitArray {
+  let header = <<0x25, 0x50, 0x44, 0x46, 0x2D>>
+  let filler = string.repeat("d", total - 5) |> bit_array.from_string
+  bit_array.append(header, filler)
+}
+
+pub fn content_range_parser_laws_test() {
+  http_client.parse_content_range([
+    #("Content-Range", "bytes 0-4194303/12582912"),
+  ])
+  |> should.equal(Ok(#(0, 4_194_303, Some(12_582_912))))
+  http_client.parse_content_range([#("content-range", "bytes 10-19/*")])
+  |> should.equal(Ok(#(10, 19, None)))
+  http_client.parse_content_range([#("content-range", "bytes 20-19/100")])
+  |> should.equal(Error("fetch_file_invalid_content_range"))
+  http_client.parse_content_range([#("content-range", "bytes 0-99/50")])
+  |> should.equal(Error("fetch_file_invalid_content_range"))
+  http_client.parse_content_range([#("x", "y")])
+  |> should.equal(Error("fetch_file_missing_content_range"))
+}
+
+pub fn ranged_fetch_yields_exact_chunks_and_a_last_flag_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  let body = big_pdf(10_000)
+  fixture_set_file(pid, "fid-r1", "docs/r1.pdf", body)
+  let assert Ok(http_client.RangeChunk(
+    bytes: c1,
+    total: Some(10_000),
+    last: False,
+  )) =
+    http_client.fetch_file_range(config(base_url), "docs/r1.pdf", 0, 4096, 3000)
+  bit_array.byte_size(c1) |> should.equal(4096)
+  let assert Ok(http_client.RangeChunk(
+    bytes: c2,
+    total: Some(10_000),
+    last: False,
+  )) =
+    http_client.fetch_file_range(
+      config(base_url),
+      "docs/r1.pdf",
+      4096,
+      4096,
+      3000,
+    )
+  bit_array.byte_size(c2) |> should.equal(4096)
+  let assert Ok(http_client.RangeChunk(
+    bytes: c3,
+    total: Some(10_000),
+    last: True,
+  )) =
+    http_client.fetch_file_range(
+      config(base_url),
+      "docs/r1.pdf",
+      8192,
+      4096,
+      3000,
+    )
+  bit_array.byte_size(c3) |> should.equal(1808)
+  bit_array.concat([c1, c2, c3]) |> should.equal(body)
+  // past the end: a satisfiable-range failure at a non-zero offset is the end
+  let assert Ok(http_client.RangeChunk(bytes: <<>>, last: True, ..)) =
+    http_client.fetch_file_range(
+      config(base_url),
+      "docs/r1.pdf",
+      10_000,
+      4096,
+      3000,
+    )
+  fixture_stop(pid)
+}
+
+pub fn twelve_mib_document_streams_through_the_transport_and_is_stored_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  let total = 12 * 1_048_576
+  let body = big_pdf(total)
+  fixture_set_file(pid, "fid-big-doc", "docs/big.pdf", body)
+  let root = fresh_root()
+  let big_policy =
+    store.Policy(..policy(root), total_ceiling_bytes: 64 * 1_048_576)
+  let binding =
+    Some(intake.Binding(big_policy, Some(transport.from_http(config(base_url)))))
+  let document =
+    ref.MediaRef(..photo_ref("fid-big-doc", Some(total)), kind: ref.Document)
+  let out = intake.run(binding, document, fn() { Ok(token) }, 5000)
+  let assert intake.Stored(sha, bytes, sniffed, True, _) = out
+  bytes |> should.equal(total)
+  sha |> should.equal(sha256_hex(body))
+  sniffed |> should.equal(inspect.Pdf)
+  let assert Ok(#(stored, _content)) = store.get(big_policy, sha, 6000)
+  stored.bytes |> should.equal(total)
+  fixture_stop(pid)
+}
+
+pub fn twelve_mib_photo_is_aborted_at_the_photo_cap_across_chunks_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  let total = 12 * 1_048_576
+  // the fixture omits file_size, so the cap is enforced only while streaming
+  fixture_set_file_opts(
+    pid,
+    "fid-big-photo",
+    "photos/big.png",
+    big_png(total),
+    False,
+  )
+  let root = fresh_root()
+  let binding =
+    Some(intake.Binding(
+      policy(root),
+      Some(transport.from_http(config(base_url))),
+    ))
+  // declared size unknown, so the cap is enforced while streaming
+  let out =
+    intake.run(
+      binding,
+      photo_ref("fid-big-photo", None),
+      fn() { Ok(token) },
+      5000,
+    )
+  out |> should.equal(intake.DownloadRefused("download_aborted"))
+  store.usage(policy(root)) |> should.equal(Ok(0))
+  fixture_stop(pid)
+}
+
+pub fn chunk_size_is_inside_the_ffi_ceiling_test() {
+  { transport.chunk_bytes <= http_client.max_file_body_bytes } |> should.be_true
+  transport.chunk_bytes |> should.equal(4_194_304)
+}
+
+pub fn oversized_chunk_request_is_clamped_to_the_ceiling_test() {
+  // a caller asking for more than the FFI ceiling per range is clamped, not
+  // refused by the FFI policy: the request still succeeds within the ceiling
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file(pid, "fid-clamp", "docs/clamp.pdf", big_pdf(5000))
+  let assert Ok(http_client.RangeChunk(
+    bytes: bytes,
+    total: Some(5000),
+    last: True,
+  )) =
+    http_client.fetch_file_range(
+      config(base_url),
+      "docs/clamp.pdf",
+      0,
+      64 * 1_048_576,
+      3000,
+    )
+  bit_array.byte_size(bytes) |> should.equal(5000)
   fixture_stop(pid)
 }
