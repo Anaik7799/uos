@@ -8,6 +8,8 @@ import cepaf_gleam/harness/telegram_media_store as store
 import envoy
 import gleam/bit_array
 import gleam/crypto
+import gleam/dynamic
+import gleam/erlang/atom.{type Atom}
 import gleam/erlang/process
 import gleam/int
 import gleam/list
@@ -22,6 +24,17 @@ fn unique_integer() -> Int
 
 @external(erlang, "erlang", "system_time")
 fn system_time() -> Int
+
+@external(erlang, "erlang", "system_time")
+fn system_time_in(unit: Atom) -> Int
+
+type LocalTime
+
+@external(erlang, "calendar", "system_time_to_local_time")
+fn local_time(seconds: Int, unit: Atom) -> LocalTime
+
+@external(erlang, "file", "change_time")
+fn change_time(path: String, time: LocalTime) -> dynamic.Dynamic
 
 const abc_sha = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
 
@@ -528,8 +541,8 @@ pub fn malformed_index_fails_closed_test() {
   let _ = written(put_abc(p, t0, 0))
   let assert Ok(_) = simplifile.write(index_path(root), "{not json")
   store.get(p, abc_sha, t0 + 1) |> should.equal(Error("index_invalid"))
-  // an unreadable record must not under-count usage
-  store.usage(p) |> should.equal(Error("index_invalid"))
+  // a malformed record must not fail the scan (M2-02): its bin still counts
+  store.usage(p) |> should.equal(Ok(3))
   // and a retry must not clobber it
   put_abc(p, t0 + 2, 0)
   |> refused
@@ -846,4 +859,251 @@ pub fn reclaimed_digest_can_be_ingested_again_test() {
   let assert Ok(_) = store.reclaim_expired(p, t0 + retention, 5)
   let again = written(put_abc(p, t0 + retention + 1, 0))
   again.stored_at_ms |> should.equal(t0 + retention + 1)
+}
+
+// ------------------------------------------- usage past a malformed index (M2-02)
+
+fn corrupt_index(root: String, sha: String) -> Nil {
+  let assert Ok(_) = simplifile.write(shard_file(root, sha, "json"), "{broken")
+  Nil
+}
+
+pub fn usage_report_names_a_malformed_index_and_still_counts_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let _ = put_text(p, "beta", t0)
+  corrupt_index(root, a.sha256_hex)
+  // 5 (alpha bin, index unreadable) + 4 (beta): one bad file no longer
+  // makes usage fail
+  store.usage(p) |> should.equal(Ok(9))
+  store.usage_report(p)
+  |> should.equal(
+    Ok(store.UsageReport(
+      9,
+      1,
+      ["media/" <> string.slice(a.sha256_hex, 0, 2) <> "/" <> a.sha256_hex <> ".json"],
+    )),
+  )
+}
+
+pub fn usage_report_without_a_malformed_index_reports_none_test() {
+  use p, _ <- with_store
+  let _ = put_text(p, "alpha", t0)
+  store.usage_report(p) |> should.equal(Ok(store.UsageReport(5, 0, [])))
+}
+
+pub fn usage_report_bounds_the_names_but_not_the_count_test() {
+  use p, root <- with_store
+  list.repeat(Nil, 34)
+  |> list.index_map(fn(_, i) {
+    let s = put_text(p, "obj-" <> int.to_string(i), t0)
+    corrupt_index(root, s.sha256_hex)
+  })
+  let assert Ok(report) = store.usage_report(p)
+  report.index_invalid_count |> should.equal(34)
+  list.length(report.index_invalid) |> should.equal(store.max_reported_invalid)
+}
+
+pub fn usage_still_fails_closed_on_an_unreadable_store_test() {
+  use p, root <- with_store
+  let assert Ok(_) = simplifile.write(root <> "/media", "not a directory")
+  store.usage_report(p) |> should.equal(Error("store_unavailable"))
+}
+
+// ------------------------------------------------------- orphan reclaim (M2-02)
+
+const hour_s = 3600
+
+const grace = 600_000
+
+fn now_ms() -> Int {
+  system_time_in(atom.create("millisecond"))
+}
+
+/// Make a path look `seconds` old to the host clock.
+fn age(path: String, seconds: Int) -> Nil {
+  let then = system_time_in(atom.create("second")) - seconds
+  let _ = change_time(path, local_time(then, atom.create("second")))
+  Nil
+}
+
+fn reclaim_orphans(p: store.Policy, max: Int) -> store.OrphanReceipt {
+  let assert Ok(receipt) = store.reclaim_orphans(p, now_ms(), max, grace)
+  receipt
+}
+
+pub fn orphan_bin_past_the_grace_is_reclaimed_and_a_young_one_is_kept_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  let assert Ok(_) = simplifile.delete(shard_file(root, a.sha256_hex, "json"))
+  let assert Ok(_) = simplifile.delete(shard_file(root, b.sha256_hex, "json"))
+  age(shard_file(root, a.sha256_hex, "bin"), hour_s)
+  let receipt = reclaim_orphans(p, 10)
+  receipt.examined |> should.equal(1)
+  receipt.refused |> should.equal([])
+  receipt.bytes_freed |> should.equal(5)
+  receipt.truncated |> should.be_false
+  list.map(receipt.removed, fn(r) { #(r.name, r.kind, r.bytes_freed) })
+  |> should.equal([
+    #(
+      string.slice(a.sha256_hex, 0, 2) <> "/" <> a.sha256_hex <> ".bin",
+      store.OrphanBin,
+      5,
+    ),
+  ])
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(False))
+  // beta's bin is younger than the grace: it may be a put in flight
+  simplifile.is_file(shard_file(root, b.sha256_hex, "bin"))
+  |> should.equal(Ok(True))
+  store.usage(p) |> should.equal(Ok(4))
+}
+
+pub fn tmp_file_past_the_grace_is_reclaimed_and_a_young_one_is_kept_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let shard = root <> "/media/" <> string.slice(a.sha256_hex, 0, 2)
+  let assert Ok(_) = simplifile.write(shard <> "/.tmp-stale", "partial")
+  let assert Ok(_) = simplifile.write(shard <> "/.tmp-inflight", "partial")
+  age(shard <> "/.tmp-stale", hour_s)
+  let receipt = reclaim_orphans(p, 10)
+  list.map(receipt.removed, fn(r) { r.kind }) |> should.equal([store.OrphanTmp])
+  receipt.bytes_freed |> should.equal(7)
+  simplifile.is_file(shard <> "/.tmp-stale") |> should.equal(Ok(False))
+  simplifile.read(shard <> "/.tmp-inflight") |> should.equal(Ok("partial"))
+  // the stored object is untouched
+  store.get(p, a.sha256_hex, t0 + 1) |> result.is_ok |> should.be_true
+}
+
+pub fn malformed_index_past_the_grace_is_reclaimed_then_its_bin_follows_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let b = put_text(p, "beta", t0)
+  corrupt_index(root, a.sha256_hex)
+  corrupt_index(root, b.sha256_hex)
+  age(shard_file(root, a.sha256_hex, "json"), hour_s)
+  let first = reclaim_orphans(p, 10)
+  list.map(first.removed, fn(r) { r.kind }) |> should.equal([store.InvalidIndex])
+  simplifile.is_file(shard_file(root, a.sha256_hex, "json"))
+  |> should.equal(Ok(False))
+  // the young malformed index stays, and neither bin is an orphan yet
+  simplifile.is_file(shard_file(root, b.sha256_hex, "json"))
+  |> should.equal(Ok(True))
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(True))
+  // alpha's bin now has no index; once old it is an orphan too
+  age(shard_file(root, a.sha256_hex, "bin"), hour_s)
+  let second = reclaim_orphans(p, 10)
+  list.map(second.removed, fn(r) { r.kind }) |> should.equal([store.OrphanBin])
+  store.usage(p) |> should.equal(Ok(4))
+}
+
+pub fn valid_objects_are_never_orphans_however_old_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  age(shard_file(root, a.sha256_hex, "bin"), hour_s)
+  age(shard_file(root, a.sha256_hex, "json"), hour_s)
+  let receipt = reclaim_orphans(p, 10)
+  receipt |> should.equal(store.empty_orphan_receipt())
+  store.get(p, a.sha256_hex, t0 + 1) |> result.is_ok |> should.be_true
+}
+
+pub fn orphan_reclaim_honours_the_bound_test() {
+  use p, root <- with_store
+  let shas =
+    list.map(["alpha", "beta", "gamma"], fn(text) {
+      let s = put_text(p, text, t0)
+      let assert Ok(_) = simplifile.delete(shard_file(root, s.sha256_hex, "json"))
+      age(shard_file(root, s.sha256_hex, "bin"), hour_s)
+      s.sha256_hex
+    })
+  let one = reclaim_orphans(p, 1)
+  one.examined |> should.equal(1)
+  one.truncated |> should.be_true
+  list.length(one.removed) |> should.equal(1)
+  let rest = reclaim_orphans(p, 10)
+  rest.examined |> should.equal(2)
+  rest.truncated |> should.be_false
+  list.length(shas) |> should.equal(3)
+  store.usage(p) |> should.equal(Ok(0))
+}
+
+pub fn orphan_reclaim_refuses_non_regular_files_and_stays_inside_the_store_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let shard = root <> "/media/" <> string.slice(a.sha256_hex, 0, 2)
+  // a directory that looks like a leftover temp file, with content
+  let assert Ok(_) = simplifile.create_directory(shard <> "/.tmp-dir")
+  let assert Ok(_) = simplifile.write(shard <> "/.tmp-dir/keep", "keep")
+  age(shard <> "/.tmp-dir", hour_s)
+  // a hard-linked temp file
+  let assert Ok(_) = simplifile.write(shard <> "/.tmp-linked", "data")
+  let assert Ok(_) = simplifile.create_link(shard <> "/.tmp-linked", root <> "/alias")
+  age(shard <> "/.tmp-linked", hour_s)
+  // foreign files, old: inside the shard and outside the store
+  let assert Ok(_) = simplifile.write(shard <> "/notes.txt", "foreign")
+  age(shard <> "/notes.txt", hour_s)
+  let assert Ok(_) = simplifile.write(root <> "/neighbour.txt", "not ours")
+  age(root <> "/neighbour.txt", hour_s)
+  let receipt = reclaim_orphans(p, 10)
+  receipt.removed |> should.equal([])
+  list.sort(receipt.refused, fn(x, y) { string.compare(x.0, y.0) })
+  |> list.map(fn(r) { r.1 })
+  |> should.equal(["not_regular_single_link", "not_regular_single_link"])
+  simplifile.read(shard <> "/.tmp-dir/keep") |> should.equal(Ok("keep"))
+  simplifile.read(shard <> "/.tmp-linked") |> should.equal(Ok("data"))
+  simplifile.read(root <> "/alias") |> should.equal(Ok("data"))
+  simplifile.read(shard <> "/notes.txt") |> should.equal(Ok("foreign"))
+  simplifile.read(root <> "/neighbour.txt") |> should.equal(Ok("not ours"))
+}
+
+pub fn orphan_reclaim_refuses_bad_arguments_test() {
+  use p, _ <- with_store
+  store.reclaim_orphans(p, 1, 0, grace) |> should.equal(Error("bound_invalid"))
+  store.reclaim_orphans(p, 1, 5, store.min_orphan_grace_ms - 1)
+  |> should.equal(Error("grace_invalid"))
+  store.reclaim_orphans(store.Policy(..p, base: "/abs"), 1, 5, grace)
+  |> should.equal(Error("policy_invalid"))
+  // an absent store has no orphans
+  store.reclaim_orphans(p, now_ms(), 5, grace)
+  |> should.equal(Ok(store.empty_orphan_receipt()))
+}
+
+pub fn a_clock_behind_the_files_keeps_everything_test() {
+  use p, root <- with_store
+  let a = put_text(p, "alpha", t0)
+  let assert Ok(_) = simplifile.delete(shard_file(root, a.sha256_hex, "json"))
+  age(shard_file(root, a.sha256_hex, "bin"), hour_s)
+  // an injected clock far in the past makes the file look young: kept
+  store.reclaim_orphans(p, t0, 10, grace)
+  |> should.equal(Ok(store.empty_orphan_receipt()))
+  simplifile.is_file(shard_file(root, a.sha256_hex, "bin"))
+  |> should.equal(Ok(True))
+}
+
+// ------------------------------------------------- file-only unlink (M2-10)
+
+pub fn delete_refuses_a_directory_in_place_of_the_bin_test() {
+  use p, root <- with_store
+  let _ = written(put_abc(p, t0, 0))
+  let assert Ok(_) = simplifile.delete(bin_path(root))
+  let assert Ok(_) = simplifile.create_directory(bin_path(root))
+  let assert Ok(_) = simplifile.write(bin_path(root) <> "/keep", "keep")
+  store.delete(p, abc_sha) |> should.equal(Error("not_regular_single_link"))
+  simplifile.read(bin_path(root) <> "/keep") |> should.equal(Ok("keep"))
+  simplifile.is_file(index_path(root)) |> should.equal(Ok(True))
+}
+
+pub fn unlink_file_removes_a_file_and_never_a_directory_test() {
+  use _, root <- with_store
+  let assert Ok(_) = simplifile.write(root <> "/f", "12345")
+  store.unlink_file(root <> "/f") |> should.equal(Ok(5))
+  simplifile.is_file(root <> "/f") |> should.equal(Ok(False))
+  let assert Ok(_) = simplifile.create_directory(root <> "/d")
+  let assert Ok(_) = simplifile.write(root <> "/d/inner", "keep")
+  store.unlink_file(root <> "/d")
+  |> should.equal(Error("not_regular_single_link"))
+  simplifile.read(root <> "/d/inner") |> should.equal(Ok("keep"))
+  store.unlink_file(root <> "/missing") |> should.equal(Error("not_found"))
 }

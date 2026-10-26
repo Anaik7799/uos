@@ -335,17 +335,31 @@
     },
     {
       "wave": "6n",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "0ae16197",
+      "landed_utc": "2026-10-26T11:50:49Z",
       "canonicals_answering": "77/77 (unchanged); gateway drain holds no Send closure",
       "tests_added": 10,
       "mutants": "5/5 integrator (criticals bounded by the uncertain backlog at capacity; Delivered(0) accepted; channel match case-sensitive; crashed send reported Failed; kind dropped from the digest)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 55,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "Gateway advisory review (REQUEST_CHANGES, 9 majors) answered: G-01 Send passed per Tick and never in actor state (proven with sys:get_state); G-02 guard_send contains a crashing Send as OutboxUncertain(send_crashed) with the reason discarded; G-03 request digest covers the kind; G-04 uncertain backlog refuses Notices at capacity and Criticals only at twice the capacity, Full(uncertain_backlog) replaces the dead dropped_oldest field, failed digests surfaced in TickReport; G-05 Delivered(id<=0) is Uncertain(invalid_message_id) from Send and Resolve; G-06 and G-09 headers state no recovery and no event routing; G-07 enqueue returns Unobserved(call_timeout|actor_unavailable); G-08 is_telegram_channel trims and lowercases. Residuals: Critical reserve slice, stale-uncertain alarm, resolver capability, pre-send durable record, Send deadline, event routing, briefing dead queue, no start site.",
       "full_suite": "13836/13836"
+    },
+    {
+      "wave": "6o",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); media lifecycle majors M2-01, M2-02, M2-03 closed",
+      "tests_added": 37,
+      "mutants": "11/11 worker (transport 5, store 6; 1 equivalent recorded) + 2/2 integrator",
+      "workers": 2,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Media lifecycle advisory review (REQUEST_CHANGES) answered by two R4 Sonnet workers in fable-w3 (transport: first-seen total, 416 only at offset == total, range_total_changed, 52 MiB abort, size_mismatch, allowlist file paths, six hostile fixture modes) and fable-w2 (store and janitor: usage_report names malformed indexes, reclaim_orphans with a grace period, isolated Transient janitor sub-supervisor with the RestForOne law, refusal streak pauses, file-only unlink, bounded refused history). Integrator restored per file from the workers' snapshotted commits 381ab36d and 1b33a07c; MEDIA_REVIEW packet and media guide updated. Residuals: M2-05, M2-06, M2-09, M2-12, M2-13, per-kind cap not passed into open_stream, sender size not compared, private denylist in the download adapter, index-before-bytes delete order, no fsync on orphan unlinks, no grace field in MediaConfiguration.",
+      "full_suite": "13876/13876"
     }
   ],
   "forecasts": [
@@ -632,6 +646,12 @@
       "wave": "6n",
       "lesson": "A capability injected at start is retained for the process lifetime. The drain took its Send at start so a supervisor could rebuild it, and any Send that closed over a bot token kept the token on the actor heap behind a header that said the opposite; the lexical secrecy tests over reports could not see it.",
       "applied": "Send is passed with every Tick and dropped when the tick ends; the law inspects sys:get_state for a sentinel the Send captured, before and after a tick"
+    },
+    {
+      "id": "L-24",
+      "wave": "6o",
+      "lesson": "Two R4 workers on disjoint file sets, briefed with an explicit file list and an explicit no-formatter rule for the one shared never-formatted file, integrated eleven files in one wave with no conflict; the file list in the brief is the isolation mechanism and per-file restore from the snapshotted worker commit is the merge.",
+      "applied": "worker briefs name the files they may touch and the ones they may not, forbid gleam format on files they did not create, and ask for FROM/TO mutant records so the integrator can re-run any of them"
     }
   ]
 }

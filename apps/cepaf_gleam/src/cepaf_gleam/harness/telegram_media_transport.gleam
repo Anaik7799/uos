@@ -33,6 +33,7 @@
 import cepaf_gleam/harness/telegram_http_client as http_client
 import cepaf_gleam/harness/telegram_media_download as download
 import gleam/erlang/process
+import gleam/int
 import gleam/option.{None, Some}
 import gleam/string
 
@@ -102,24 +103,34 @@ pub fn file_path_of(
 }
 
 type Cursor {
-  Cursor(offset: Int, done: Bool)
+  Cursor(offset: Int, total: option.Option(Int), done: Bool)
 }
 
+/// The largest per-kind cap (video). A chunk whose `Content-Range` total
+/// exceeds it can never fit any kind, so the stream is refused as
+/// `range_total_over_limit:<total>` before another range is fetched; the
+/// download adapter maps that reason onto its over-cap `Aborted` outcome.
+pub const max_total_bytes = 52_428_800
+
+/// Prefix of the over-limit reason the download adapter recognises.
+pub const over_limit_prefix = download.range_total_over_limit_prefix
+
 /// A reader that fetches one range per call, advancing an offset held in a
-/// private subject, until the server reports the last chunk. The stream
-/// deadline is absolute from the moment the stream opened.
+/// private subject, until the server reports the last chunk. The first total a
+/// server advertises is kept in the cursor and every later chunk must agree.
+/// The stream deadline is absolute from the moment the stream opened.
 fn ranged_reader(
   config: http_client.TelegramHttpConfiguration,
   file_path: String,
   deadline_ms: Int,
 ) -> fn() -> Result(option.Option(BitArray), String) {
   let cursor = process.new_subject()
-  process.send(cursor, Cursor(offset: 0, done: False))
+  process.send(cursor, Cursor(offset: 0, total: None, done: False))
   let absolute_deadline = now_ms() + deadline_ms
   fn() {
     let state = case process.receive(cursor, 0) {
       Ok(c) -> c
-      Error(_) -> Cursor(offset: 0, done: True)
+      Error(_) -> Cursor(offset: 0, total: None, done: True)
     }
     case state.done {
       True -> {
@@ -135,27 +146,44 @@ fn ranged_reader(
           }
           False ->
             case
-              http_client.fetch_file_range(
+              http_client.fetch_file_range_checked(
                 config,
                 file_path,
                 state.offset,
                 chunk_bytes,
                 remaining,
+                state.total,
               )
             {
               Error(reason) -> {
                 process.send(cursor, Cursor(..state, done: True))
                 Error(reason)
               }
-              Ok(http_client.RangeChunk(bytes: bytes, total: _, last: last)) -> {
+              Ok(http_client.RangeChunk(bytes: bytes, total: total, last: last)) -> {
                 let size = bit_size_bytes(bytes)
-                process.send(
-                  cursor,
-                  Cursor(offset: state.offset + size, done: last),
-                )
-                case size == 0 {
-                  True -> Ok(None)
-                  False -> Ok(Some(bytes))
+                let first_total = case state.total {
+                  None -> total
+                  kept -> kept
+                }
+                case first_total {
+                  Some(t) if t > max_total_bytes -> {
+                    process.send(cursor, Cursor(..state, done: True))
+                    Error(over_limit_prefix <> int.to_string(t))
+                  }
+                  _ -> {
+                    process.send(
+                      cursor,
+                      Cursor(
+                        offset: state.offset + size,
+                        total: first_total,
+                        done: last,
+                      ),
+                    )
+                    case size == 0 {
+                      True -> Ok(None)
+                      False -> Ok(Some(bytes))
+                    }
+                  }
                 }
               }
             }

@@ -64,7 +64,7 @@ cd apps/cepaf_gleam && bash -c 'export UOS_ROOT=/home/an/NAS-setup/uos; source $
 
 ## Limits
 
-T5 (upload) is deferred by the design's own condition; no use case survived review. The ceiling is a guard on a caller-measured number, not a quota lock, and it counts expired bytes until a caller runs `reclaim_expired`. Parent-directory rename races need a cooperative lease. MEDIA_REVIEW by an independent reviewer and TELEGRAM_E2E by an authorized human remain open. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number is minted.
+T5 (upload) is deferred by the design's own condition; no use case survived review. The ceiling is a guard on a caller-measured number, not a quota lock, and it counts expired bytes until a caller runs `reclaim_expired`, and orphan bytes until the janitor's `reclaim_orphans` sweep ages them past the grace period (default ten minutes). Parent-directory rename races need a cooperative lease. Since wave 6o the transport refuses a truncated range (`range_truncated`, `range_total_changed`), the adapter refuses a body whose size differs from the getFile size (`size_mismatch`), file paths are allowlisted, a malformed index is named by `usage_report` rather than failing intake, and the janitor runs under its own Transient sub-supervisor so its crash loop cannot exhaust the service's restart budget. Still open: the per-kind cap is not passed into `open_stream` (an over-cap file aborts at the third chunk), `now_ms` is sampled before the download, and the observation window is checked once up front. MEDIA_REVIEW by an independent reviewer and TELEGRAM_E2E by an authorized human remain open. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number is minted.
 
 ## Comprehensive verification checklist
 

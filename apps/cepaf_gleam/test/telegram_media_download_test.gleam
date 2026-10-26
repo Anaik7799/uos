@@ -561,3 +561,65 @@ pub fn redact_is_idempotent_test() {
     },
   )
 }
+
+// ----------------------------------------- review M2-01 / M2-08: size integrity
+
+pub fn received_bytes_differing_from_getfile_size_are_not_stored_test() {
+  // fewer bytes than getFile declared: a truncated body
+  let events = process.new_subject()
+  let short =
+    queued_transport(events, meta("a/b.bin", Some(5)), [<<1, 2, 3>>])
+  dl.download(mk_ref(ref.Photo, "z1", None), [], good_token, short)
+  |> should.equal(dl.Rejected(dl.StreamReadFailed("size_mismatch")))
+  // more bytes than declared
+  let long =
+    queued_transport(events, meta("a/b.bin", Some(3)), [<<1, 2>>, <<3, 4, 5>>])
+  dl.download(mk_ref(ref.Photo, "z2", None), [], good_token, long)
+  |> should.equal(dl.Rejected(dl.StreamReadFailed("size_mismatch")))
+}
+
+pub fn received_bytes_equal_to_the_getfile_size_are_fetched_test() {
+  let events = process.new_subject()
+  let t = queued_transport(events, meta("a/b.bin", Some(3)), [<<1, 2>>, <<3>>])
+  let assert dl.Fetched(bytes: 3, content: <<1, 2, 3>>, ..) =
+    dl.download(mk_ref(ref.Photo, "z4", None), [], good_token, t)
+}
+
+fn failing_reader_transport(reason: String) -> dl.Transport {
+  dl.Transport(
+    get_file: fn(_, _) { meta("a/b.bin", None) },
+    open_stream: fn(_, _) { Ok(fn() { Error(reason) }) },
+  )
+}
+
+pub fn an_advertised_total_over_the_kind_cap_is_the_over_cap_abort_test() {
+  // photo cap 10_485_760; the transport reports the 20_000_000 total at once
+  dl.download(
+    mk_ref(ref.Photo, "z5", None),
+    [],
+    good_token,
+    failing_reader_transport("range_total_over_limit:20000000"),
+  )
+  |> should.equal(dl.Aborted(20_000_000, 10_485_760))
+}
+
+pub fn an_over_limit_reason_within_the_cap_stays_a_read_failure_test() {
+  dl.download(
+    mk_ref(ref.Photo, "z6", None),
+    [],
+    good_token,
+    failing_reader_transport("range_total_over_limit:5"),
+  )
+  |> should.equal(
+    dl.Rejected(dl.StreamReadFailed("range_total_over_limit:5")),
+  )
+  dl.download(
+    mk_ref(ref.Photo, "z7", None),
+    [],
+    good_token,
+    failing_reader_transport("range_total_over_limit:abc"),
+  )
+  |> should.equal(
+    dl.Rejected(dl.StreamReadFailed("range_total_over_limit:abc")),
+  )
+}

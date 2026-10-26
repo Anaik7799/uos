@@ -13,8 +13,10 @@ import cepaf_gleam/harness/telegram_media_transport as transport
 import gleam/bit_array
 import gleam/crypto
 import gleam/dynamic.{type Dynamic}
+import gleam/erlang/atom.{type Atom}
 import gleam/erlang/process.{type Pid}
 import gleam/int
+import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
@@ -394,5 +396,297 @@ pub fn oversized_chunk_request_is_clamped_to_the_ceiling_test() {
       3000,
     )
   bit_array.byte_size(bytes) |> should.equal(5000)
+  fixture_stop(pid)
+}
+
+// ------------------------------------------------- review M2-01 / M2-07 / M2-08
+
+@external(erlang, "telegram_http_test_fixture", "set_file_mode")
+fn fixture_set_file_mode(
+  pid: Pid,
+  file_id: String,
+  file_path: String,
+  bytes: BitArray,
+  mode: Atom,
+) -> Dynamic
+
+@external(erlang, "telegram_http_test_fixture", "get_requests")
+fn fixture_requests(pid: Pid) -> List(Dynamic)
+
+@external(erlang, "erlang", "binary_to_atom")
+fn binary_to_atom(name: String) -> Atom
+
+fn mode(name: String) -> Atom {
+  binary_to_atom(name)
+}
+
+fn file_requests(pid: Pid) -> Int {
+  fixture_requests(pid)
+  |> list.filter(fn(req) { string.contains(string.inspect(req), "/file/bot") })
+  |> list.length
+}
+
+pub fn file_path_allowlist_accepts_only_safe_bytes_test() {
+  // every example the Telegram CDN really serves stays accepted
+  [
+    "photos/file_1.jpg", "documents/file_2.pdf", "voice/file_3.oga",
+    "a/b-c_d.e", "A9", "a..b",
+  ]
+  |> list.each(fn(path) { http_client.valid_file_path(path) |> should.be_true })
+  // CR, LF, space, percent, backslash and every other byte are refused
+  [
+    "", "/abs", "..", "a/..", "a/../b", "a?x", "a#f", "a b", "a\r\nb", "a\nb",
+    "a\rb", "a%2e%2e/b", "a%00", "a\\b", "a;b", "a:b", "a@b", "a\tb", "a\u{0}b",
+    "caf\u{e9}", "a|b", "a\"b", "a'b", "a<b", "a+b", "a=b", "a&b",
+  ]
+  |> list.each(fn(path) { http_client.valid_file_path(path) |> should.be_false })
+  // the length bound is kept
+  http_client.valid_file_path(string.repeat("a", 256)) |> should.be_true
+  http_client.valid_file_path(string.repeat("a", 257)) |> should.be_false
+}
+
+pub fn file_path_of_refuses_url_smuggling_bytes_test() {
+  let cfg = config("http://unused.invalid")
+  let prefix = "https://api.telegram.org/file/bot" <> token <> "/"
+  ["a b", "a%2e%2e", "a\r\nHost: x", "a\\b"]
+  |> list.each(fn(path) {
+    transport.file_path_of(cfg, prefix <> path)
+    |> should.equal(Error("file_url_invalid_path"))
+  })
+}
+
+pub fn a_416_ends_the_body_only_at_the_total_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file(pid, "fid-e1", "docs/e1.pdf", big_pdf(10_000))
+  // offset == total: the clean end, with or without a first-seen total
+  let assert Ok(http_client.RangeChunk(bytes: <<>>, last: True, ..)) =
+    http_client.fetch_file_range_checked(
+      config(base_url),
+      "docs/e1.pdf",
+      10_000,
+      4096,
+      3000,
+      Some(10_000),
+    )
+  let assert Ok(http_client.RangeChunk(bytes: <<>>, last: True, ..)) =
+    http_client.fetch_file_range_checked(
+      config(base_url),
+      "docs/e1.pdf",
+      10_000,
+      4096,
+      3000,
+      None,
+    )
+  // a first-seen total that disagrees with the 416's own total is a change
+  http_client.fetch_file_range_checked(
+    config(base_url),
+    "docs/e1.pdf",
+    10_000,
+    4096,
+    3000,
+    Some(20_000),
+  )
+  |> should.equal(Error("range_total_changed"))
+  // a 416 at offset zero is never an end of body
+  fixture_set_file(pid, "fid-e0", "docs/e0.pdf", <<>>)
+  http_client.fetch_file_range(config(base_url), "docs/e0.pdf", 0, 4096, 3000)
+  |> should.equal(Error("fetch_file_status_416"))
+  fixture_stop(pid)
+}
+
+pub fn early_416_before_the_advertised_total_is_range_truncated_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file_mode(
+    pid,
+    "fid-f1",
+    "docs/f1.pdf",
+    big_pdf(10_000),
+    mode("early_416"),
+  )
+  // the first chunks advertise the real total of 10000
+  let assert Ok(http_client.RangeChunk(total: Some(10_000), last: False, ..)) =
+    http_client.fetch_file_range(
+      config(base_url),
+      "docs/f1.pdf",
+      0,
+      4096,
+      3000,
+    )
+  // then the server answers 416 at 8192, long before 10000
+  http_client.fetch_file_range_checked(
+    config(base_url),
+    "docs/f1.pdf",
+    8192,
+    4096,
+    3000,
+    Some(10_000),
+  )
+  |> should.equal(Error("range_truncated"))
+  // even with no first-seen total the 416's own `bytes */10000` disproves it
+  http_client.fetch_file_range(config(base_url), "docs/f1.pdf", 8192, 4096, 3000)
+  |> should.equal(Error("range_truncated"))
+  fixture_stop(pid)
+}
+
+pub fn a_changed_total_between_chunks_is_refused_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file_mode(
+    pid,
+    "fid-g1",
+    "docs/g1.pdf",
+    big_pdf(10_000),
+    mode("total_changes"),
+  )
+  let assert Ok(http_client.RangeChunk(total: Some(10_000), ..)) =
+    http_client.fetch_file_range(
+      config(base_url),
+      "docs/g1.pdf",
+      0,
+      4096,
+      3000,
+    )
+  // the second chunk advertises 10001: refused against the first-seen total
+  http_client.fetch_file_range_checked(
+    config(base_url),
+    "docs/g1.pdf",
+    4096,
+    4096,
+    3000,
+    Some(10_000),
+  )
+  |> should.equal(Error("range_total_changed"))
+  fixture_stop(pid)
+}
+
+pub fn a_206_with_the_wrong_first_byte_is_refused_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file_mode(
+    pid,
+    "fid-h1",
+    "docs/h1.pdf",
+    big_pdf(10_000),
+    mode("wrong_first"),
+  )
+  http_client.fetch_file_range(config(base_url), "docs/h1.pdf", 0, 4096, 3000)
+  |> should.equal(Error("fetch_file_range_mismatch"))
+  fixture_stop(pid)
+}
+
+pub fn a_206_whose_span_differs_from_the_body_is_refused_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file_mode(
+    pid,
+    "fid-i1",
+    "docs/i1.pdf",
+    big_pdf(10_000),
+    mode("span_differs"),
+  )
+  http_client.fetch_file_range(config(base_url), "docs/i1.pdf", 0, 4096, 3000)
+  |> should.equal(Error("fetch_file_range_mismatch"))
+  fixture_stop(pid)
+}
+
+pub fn a_truncated_body_is_never_a_chunk_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file_mode(
+    pid,
+    "fid-j1",
+    "docs/j1.pdf",
+    big_pdf(10_000),
+    mode("truncated_body"),
+  )
+  let assert Error(reason) =
+    http_client.fetch_file_range(config(base_url), "docs/j1.pdf", 0, 4096, 3000)
+  string.starts_with(reason, "fetch_file_") |> should.be_true
+  fixture_stop(pid)
+}
+
+pub fn a_server_that_ignores_range_is_accepted_only_for_a_whole_small_body_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  // body fits one chunk: offset 0 gets the complete body, nothing partial
+  let small = big_pdf(3000)
+  fixture_set_file_mode(pid, "fid-k1", "docs/k1.pdf", small, mode("ignore_range"))
+  let assert Ok(http_client.RangeChunk(
+    bytes: whole,
+    total: Some(3000),
+    last: True,
+  )) =
+    http_client.fetch_file_range(config(base_url), "docs/k1.pdf", 0, 4096, 3000)
+  whole |> should.equal(small)
+  // a later offset cannot be satisfied by a whole-body 200
+  http_client.fetch_file_range(config(base_url), "docs/k1.pdf", 4096, 4096, 3000)
+  |> should.equal(Error("fetch_file_range_not_supported"))
+  // body larger than one chunk: never reported as a chunk, let alone complete
+  fixture_set_file_mode(
+    pid,
+    "fid-k2",
+    "docs/k2.pdf",
+    big_pdf(10_000),
+    mode("ignore_range"),
+  )
+  let assert Error(reason) =
+    http_client.fetch_file_range(config(base_url), "docs/k2.pdf", 0, 4096, 3000)
+  string.starts_with(reason, "fetch_file_") |> should.be_true
+  fixture_stop(pid)
+}
+
+fn refused_through_intake(
+  file_id: String,
+  file_path: String,
+  body: BitArray,
+  hostile: String,
+) -> intake.Outcome {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  fixture_set_file_mode(pid, file_id, file_path, body, mode(hostile))
+  let root = fresh_root()
+  let big_policy =
+    store.Policy(..policy(root), total_ceiling_bytes: 64 * 1_048_576)
+  let binding =
+    Some(intake.Binding(big_policy, Some(transport.from_http(config(base_url)))))
+  let document =
+    ref.MediaRef(..photo_ref(file_id, None), kind: ref.Document)
+  let out = intake.run(binding, document, fn() { Ok(token) }, 5000)
+  store.usage(big_policy) |> should.equal(Ok(0))
+  fixture_stop(pid)
+  out
+}
+
+pub fn hostile_servers_never_store_a_truncated_or_inconsistent_body_test() {
+  let body = big_pdf(9 * 1_048_576)
+  // early 416 at 8 MiB after a 9 MiB total was advertised: the M2-01 attack
+  refused_through_intake("fid-m1", "docs/m1.pdf", body, "early_416")
+  |> should.equal(intake.DownloadRefused("download_rejected:stream_read_failed"))
+  // the total changes after the first 4 MiB chunk
+  refused_through_intake("fid-m2", "docs/m2.pdf", body, "total_changes")
+  |> should.equal(intake.DownloadRefused("download_rejected:stream_read_failed"))
+  // wrong first, differing span, truncated body, ignored range on a big body
+  ["wrong_first", "span_differs", "truncated_body", "ignore_range"]
+  |> list.each(fn(hostile) {
+    refused_through_intake("fid-m3-" <> hostile, "docs/m3.pdf", body, hostile)
+    |> should.equal(
+      intake.DownloadRefused("download_rejected:stream_read_failed"),
+    )
+  })
+}
+
+pub fn a_total_beyond_every_cap_aborts_before_a_second_range_test() {
+  let assert Ok(#(pid, _port, base_url)) = fixture_start()
+  let total = 53 * 1_048_576
+  // file_size omitted, so only the chunk's own total can reveal the size
+  fixture_set_file_opts(pid, "fid-n1", "docs/n1.pdf", big_pdf(total), False)
+  let root = fresh_root()
+  let binding =
+    Some(intake.Binding(
+      policy(root),
+      Some(transport.from_http(config(base_url))),
+    ))
+  let document =
+    ref.MediaRef(..photo_ref("fid-n1", None), kind: ref.Document)
+  intake.run(binding, document, fn() { Ok(token) }, 5000)
+  |> should.equal(intake.DownloadRefused("download_aborted"))
+  store.usage(policy(root)) |> should.equal(Ok(0))
+  // exactly one range was fetched, not one per 4 MiB of the 53 MiB body
+  file_requests(pid) |> should.equal(1)
+  transport.max_total_bytes |> should.equal(dl.cap_for(ref.Video))
   fixture_stop(pid)
 }

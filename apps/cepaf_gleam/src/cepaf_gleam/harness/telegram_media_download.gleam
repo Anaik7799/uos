@@ -20,6 +20,7 @@ import cepaf_gleam/harness/telegram_media_ref.{
 }
 import gleam/bit_array
 import gleam/crypto
+import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
@@ -69,6 +70,15 @@ pub const stream_deadline_ms = 15_000
 
 /// The reader is invoked at most this many times per download.
 pub const max_chunks = 4096
+
+/// Reason prefix a transport uses to report that the server advertised a body
+/// total it can never accept (`range_total_over_limit:<total>`). When the total
+/// exceeds this download's cap the adapter reports the existing `Aborted`.
+pub const range_total_over_limit_prefix = "range_total_over_limit:"
+
+/// `StreamReadFailed` reason when the declared size and the received byte
+/// count differ: nothing is returned for storage.
+pub const size_mismatch_reason = "size_mismatch"
 
 const url_marker = "/file/bot"
 
@@ -133,7 +143,16 @@ fn fetch_meta(
         None ->
           case valid_file_path(meta.file_path) {
             False -> Rejected(GetFileFailed("invalid_file_path"))
-            True -> open(ref, kind, cap, meta.file_path, token, transport)
+            True ->
+              open(
+                ref,
+                kind,
+                cap,
+                declared_sizes(meta.declared_size_bytes),
+                meta.file_path,
+                token,
+                transport,
+              )
           }
       }
   }
@@ -153,6 +172,7 @@ fn open(
   ref: MediaRef,
   kind: MediaKind,
   cap: Int,
+  declared: List(Int),
   file_path: String,
   token: fn() -> Result(String, String),
   transport: Transport,
@@ -168,20 +188,53 @@ fn open(
         Ok(reader) ->
           case read_loop(reader, cap, 0, 0, [], scrub) {
             ReadAborted(observed) -> Aborted(observed, cap)
-            ReadFailed(reason) -> Rejected(StreamReadFailed(reason))
-            ReadDone(total, chunks) -> {
-              let content = bit_array.concat(list.reverse(chunks))
-              Fetched(
-                kind: kind,
-                file_unique_id: ref.file_unique_id,
-                bytes: total,
-                sha256_hex: sha256_hex(content),
-                content: content,
-              )
-            }
+            ReadFailed(reason) ->
+              case over_limit_total(reason) {
+                Some(advertised) if advertised > cap ->
+                  Aborted(advertised, cap)
+                _ -> Rejected(StreamReadFailed(reason))
+              }
+            ReadDone(total, chunks) ->
+              case list.all(declared, fn(d) { d == total }) {
+                False -> Rejected(StreamReadFailed(size_mismatch_reason))
+                True -> {
+                  let content = bit_array.concat(list.reverse(chunks))
+                  Fetched(
+                    kind: kind,
+                    file_unique_id: ref.file_unique_id,
+                    bytes: total,
+                    sha256_hex: sha256_hex(content),
+                    content: content,
+                  )
+                }
+              }
           }
       }
     }
+  }
+}
+
+/// The size getFile declared, as a list. The sender-declared `ref` size is NOT
+/// compared: it is advisory message metadata and several intake fixtures carry
+/// one that does not match their bytes.
+fn declared_sizes(declared: Option(Int)) -> List(Int) {
+  list.filter_map([declared], fn(d) { option.to_result(d, Nil) })
+}
+
+/// The advertised total in a transport's `range_total_over_limit:<n>` reason.
+fn over_limit_total(reason: String) -> Option(Int) {
+  case string.starts_with(reason, range_total_over_limit_prefix) {
+    False -> None
+    True ->
+      case
+        int.parse(string.drop_start(
+          reason,
+          string.length(range_total_over_limit_prefix),
+        ))
+      {
+        Ok(n) -> Some(n)
+        Error(_) -> None
+      }
   }
 }
 

@@ -4,13 +4,25 @@
 //// </c3i-module>
 ////
 //// Supervised, bounded janitor for the Telegram media store. On a cadence it
-//// calls `telegram_media_store.reclaim_expired` exactly once per tick, keeps a
-//// bounded history of the receipts, and stops itself (a Jidoka stop) after
-//// three consecutive failed runs until an operator sends `Resume`.
+//// calls `telegram_media_store.reclaim_expired` and then
+//// `telegram_media_store.reclaim_orphans` once per tick (together deleting at
+//// most `max_objects`), keeps a bounded history of the receipts, and stops
+//// itself (a Jidoka stop) after three consecutive failed runs until an
+//// operator sends `Resume`.
+////
+//// A run FAILS when either call errors, or when it attempted deletions and
+//// every one was refused (`delete_failed`, a symlink, a directory): a janitor
+//// that can remove nothing is not working. `index_invalid` and the benign
+//// `no_longer_*` races are not attempts.
+////
+//// Supervision: `child_spec_named` is a Transient worker (a `Stop` is a normal
+//// exit and is not restarted). `isolated_child_spec_named` wraps it in its own
+//// supervisor with its own restart budget, so a janitor crash loop exhausts
+//// that supervisor and not the service supervisor it is placed under.
 ////
 //// Truthfulness boundaries:
 ////   * The actor performs NO file operation of its own. Every deletion is made
-////     by `reclaim_expired`, which owns the expiry, `.tmp-` and foreign-file
+////     by the store, which owns the expiry, grace, `.tmp-` and foreign-file
 ////     laws. The actor only schedules, records and pauses.
 ////   * Retention is enforced only while this actor runs. Until a run happens an
 ////     expired object stays on disk and keeps counting toward the ceiling. A
@@ -32,7 +44,9 @@ import gleam/erlang/process.{type Name, type Subject, type Timer}
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/otp/actor
+import gleam/otp/static_supervisor
 import gleam/otp/supervision
+import gleam/result
 
 /// Smallest cadence: one second.
 pub const min_cadence_ms = 1000
@@ -44,19 +58,42 @@ pub const history_limit_ceiling = 64
 /// Consecutive failed runs after which the actor pauses.
 pub const pause_after_errors = 3
 
+/// Most refusal entries one history run carries (expired and orphan refusals
+/// together); the rest are counted in `refused_dropped`.
+pub const refused_detail_limit = 32
+
+/// Restart budget of the janitor's own supervisor: ten restarts in sixty
+/// seconds, independent of the service supervisor's three in five.
+pub const isolation_intensity = 10
+
+pub const isolation_period_s = 60
+
 pub type Config {
   Config(
     policy: store.Policy,
     cadence_ms: Int,
     max_objects: Int,
     history_limit: Int,
+    /// Orphans (`.tmp-`, index-less `.bin`, undecodable index) younger than
+    /// this are never touched; at least `store.min_orphan_grace_ms`.
+    orphan_grace_ms: Int,
     now_ms: fn() -> Int,
   )
 }
 
 /// One reclaim run. `started_ms` is the `now_ms` sample the run used.
+/// `outcome` is the expiry reclaim, `orphans` the orphan reclaim (empty when
+/// the expiry reclaim used the whole `max_objects` bound). `refused` is the
+/// exact number of refusals in both receipts; their lists here are cut to
+/// `refused_detail_limit` entries and `refused_dropped` counts the cut ones.
 pub type Run {
-  Run(started_ms: Int, outcome: Result(store.ReclaimReceipt, String))
+  Run(
+    started_ms: Int,
+    outcome: Result(store.ReclaimReceipt, String),
+    orphans: Result(store.OrphanReceipt, String),
+    refused: Int,
+    refused_dropped: Int,
+  )
 }
 
 /// Bounded view of the actor. `history` is oldest first and holds at most
@@ -70,6 +107,10 @@ pub type Snapshot {
     consecutive_errors: Int,
     paused: Bool,
     next_tick_ms: Option(Int),
+    /// Refusals in the latest run, and the sum over every run of this
+    /// incarnation.
+    last_refused: Int,
+    refused_total: Int,
   )
 }
 
@@ -109,9 +150,13 @@ pub fn validate(config: Config) -> Result(Config, String) {
     _, False, _ -> Error("max_objects_invalid")
     _, _, False -> Error("history_limit_invalid")
     True, True, True ->
-      case store.object_path(config.policy, zero_digest) {
-        Error("policy_invalid") -> Error("policy_invalid")
-        _ -> Ok(config)
+      case config.orphan_grace_ms >= store.min_orphan_grace_ms {
+        False -> Error("orphan_grace_invalid")
+        True ->
+          case store.object_path(config.policy, zero_digest) {
+            Error("policy_invalid") -> Error("policy_invalid")
+            _ -> Ok(config)
+          }
       }
   }
 }
@@ -127,6 +172,7 @@ type State {
     runs: Int,
     history: List(Run),
     consecutive_errors: Int,
+    refused_total: Int,
     paused: Bool,
     timer: Option(Timer),
     next_tick_ms: Option(Int),
@@ -144,6 +190,7 @@ fn initialise(
       runs: 0,
       history: [],
       consecutive_errors: 0,
+      refused_total: 0,
       paused: False,
       timer: None,
       next_tick_ms: None,
@@ -186,13 +233,37 @@ pub fn start_named(
   }
 }
 
-/// Worker child registered under a stable name (same shape as the gateway
-/// drain actor's `child_spec_named`).
+/// Worker child registered under a stable name. `Transient`: a crash is
+/// restarted, a `Stop` (a normal exit) is not. Placed directly under a
+/// supervisor it shares that supervisor's restart budget; prefer
+/// `isolated_child_spec_named` under a supervisor whose budget other children
+/// depend on.
 pub fn child_spec_named(
   name: Name(Message),
   config: Config,
 ) -> supervision.ChildSpecification(Subject(Message)) {
   supervision.worker(fn() { start_named(name, config) })
+  |> supervision.restart(supervision.Transient)
+}
+
+/// The janitor inside its own one-for-one supervisor with its own restart
+/// budget (`isolation_intensity` in `isolation_period_s`). Crashes are
+/// absorbed there; only when that budget is exhausted does the inner
+/// supervisor exit, which the parent sees as one failure of one child (it is
+/// restarted with a fresh budget, as `Transient`). A `Stop` leaves the inner
+/// supervisor alive and the janitor gone, and nothing restarts it.
+pub fn isolated_child_spec_named(
+  name: Name(Message),
+  config: Config,
+) -> supervision.ChildSpecification(static_supervisor.Supervisor) {
+  static_supervisor.new(static_supervisor.OneForOne)
+  |> static_supervisor.restart_tolerance(
+    intensity: isolation_intensity,
+    period: isolation_period_s,
+  )
+  |> static_supervisor.add(child_spec_named(name, config))
+  |> static_supervisor.supervised
+  |> supervision.restart(supervision.Transient)
 }
 
 // -------------------------------------------------------------------- actor
@@ -225,17 +296,101 @@ fn pause(state: State) -> State {
   State(..state, paused: True, timer: None, next_tick_ms: None)
 }
 
-/// The single place a reclaim is called. Updates the counters and the bounded
-/// history; the caller decides about the cadence.
-fn execute(state: State, now: Int) -> #(Run, State) {
-  let outcome =
-    store.reclaim_expired(state.config.policy, now, state.config.max_objects)
-  let run = Run(started_ms: now, outcome: outcome)
-  let errors = case outcome {
-    Ok(_) -> 0
-    Error(_) -> state.consecutive_errors + 1
+/// Refusal reasons that are not a failed attempt: a malformed index is the
+/// orphan reclaim's job once it ages, and a `no_longer_*` is a lost race.
+const benign_refusals = ["index_invalid", "no_longer_expired", "no_longer_orphan"]
+
+fn attempted(refused: List(#(String, String))) -> Int {
+  list.length(
+    list.filter(refused, fn(entry) { !list.contains(benign_refusals, entry.1) }),
+  )
+}
+
+/// Failed: either call errored, or deletions were attempted and none removed
+/// anything (every attempt refused).
+fn run_failed(
+  expired: Result(store.ReclaimReceipt, String),
+  orphans: Result(store.OrphanReceipt, String),
+) -> Bool {
+  case expired, orphans {
+    Ok(e), Ok(o) ->
+      attempted(e.refused) + attempted(o.refused) > 0
+      && list.length(e.removed) + list.length(o.removed) == 0
+    _, _ -> True
   }
-  let history = bounded(list.append(state.history, [run]), state.config)
+}
+
+fn refusal_count(
+  expired: Result(store.ReclaimReceipt, String),
+  orphans: Result(store.OrphanReceipt, String),
+) -> Int {
+  let e = case expired {
+    Ok(r) -> list.length(r.refused)
+    Error(_) -> 0
+  }
+  let o = case orphans {
+    Ok(r) -> list.length(r.refused)
+    Error(_) -> 0
+  }
+  e + o
+}
+
+/// Cut the refusal lists carried in a run to `refused_detail_limit` entries in
+/// total (expired first); the number cut is recorded.
+fn bound_refusals(run: Run) -> Run {
+  let kept_expired = case run.outcome {
+    Ok(r) -> list.take(r.refused, refused_detail_limit)
+    Error(_) -> []
+  }
+  let room = refused_detail_limit - list.length(kept_expired)
+  let kept_orphans = case run.orphans {
+    Ok(r) -> list.take(r.refused, room)
+    Error(_) -> []
+  }
+  Run(
+    ..run,
+    outcome: result.map(run.outcome, fn(r) {
+      store.ReclaimReceipt(..r, refused: kept_expired)
+    }),
+    orphans: result.map(run.orphans, fn(r) {
+      store.OrphanReceipt(..r, refused: kept_orphans)
+    }),
+    refused_dropped: run.refused
+      - list.length(kept_expired)
+      - list.length(kept_orphans),
+  )
+}
+
+/// The single place a reclaim is called. Updates the counters and the bounded
+/// history; the caller decides about the cadence. The orphan reclaim gets what
+/// the expiry reclaim left of `max_objects`, so one tick never deletes more
+/// than `max_objects` objects in total.
+fn execute(state: State, now: Int) -> #(Run, State) {
+  let config = state.config
+  let outcome = store.reclaim_expired(config.policy, now, config.max_objects)
+  let budget = case outcome {
+    Ok(receipt) -> config.max_objects - receipt.examined
+    Error(_) -> config.max_objects
+  }
+  let orphans = case budget < 1 {
+    True -> Ok(store.empty_orphan_receipt())
+    False ->
+      store.reclaim_orphans(config.policy, now, budget, config.orphan_grace_ms)
+  }
+  let refused = refusal_count(outcome, orphans)
+  let errors = case run_failed(outcome, orphans) {
+    False -> 0
+    True -> state.consecutive_errors + 1
+  }
+  let run =
+    bound_refusals(Run(
+      started_ms: now,
+      outcome: outcome,
+      orphans: orphans,
+      refused: refused,
+      refused_dropped: 0,
+    ))
+  let history = bounded(list.append(state.history, [run]), config)
   #(
     run,
     State(
@@ -243,6 +398,7 @@ fn execute(state: State, now: Int) -> #(Run, State) {
       runs: state.runs + 1,
       history: history,
       consecutive_errors: errors,
+      refused_total: state.refused_total + refused,
     ),
   )
 }
@@ -316,6 +472,11 @@ fn snapshot_of(state: State) -> Snapshot {
     consecutive_errors: state.consecutive_errors,
     paused: state.paused,
     next_tick_ms: state.next_tick_ms,
+    last_refused: case list.last(state.history) {
+      Ok(run) -> run.refused
+      Error(_) -> 0
+    },
+    refused_total: state.refused_total,
   )
 }
 

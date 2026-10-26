@@ -19,7 +19,7 @@
 -module(telegram_http_test_fixture).
 -behaviour(gen_server).
 
--export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1, set_file/4, set_file_opts/5]).
+-export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1, set_file/4, set_file_opts/5, set_file_mode/5]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -record(state, {
@@ -79,6 +79,18 @@ set_file(Pid, FileId, FilePath, Bytes) when is_binary(FileId), is_binary(FilePat
 %% DeclareSize=false makes getFile omit file_size, so the client sees an undeclared size.
 set_file_opts(Pid, FileId, FilePath, Bytes, DeclareSize) when is_binary(FileId), is_binary(FilePath), is_binary(Bytes), is_boolean(DeclareSize) ->
     gen_server:call(Pid, {set_file, FileId, FilePath, Bytes, DeclareSize}).
+
+%% Hostile range modes (file body only), for refusal-law tests:
+%%   ignore_range   - answer 200 with the whole body even when a Range is sent
+%%   wrong_first    - 206 whose Content-Range first differs from the request
+%%   span_differs   - 206 whose Content-Range span is shorter than the body
+%%   truncated_body - 206 whose Content-Length promises more than is sent
+%%   total_changes  - 206 whose advertised total changes after the first chunk
+%%   early_416      - 416 (bytes */Total) from the half-way offset on, though
+%%                    earlier 206s advertised the real Total
+%% The normal getFile still declares the true size.
+set_file_mode(Pid, FileId, FilePath, Bytes, Mode) when is_binary(FileId), is_binary(FilePath), is_binary(Bytes), is_atom(Mode) ->
+    gen_server:call(Pid, {set_file, FileId, FilePath, Bytes, #{declare => true, mode => Mode}}).
 
 %% -----------------------------------------------------------------------------
 %% gen_server Callbacks
@@ -346,7 +358,8 @@ send_json(Socket, StatusCode, Body) ->
 serve_get_file(Socket, Body, Files) ->
     FileId = extract_json_string(Body, <<"\"file_id\":">>),
     case maps:find(FileId, Files) of
-        {ok, {FilePath, Bytes, DeclareSize}} ->
+        {ok, {FilePath, Bytes, DeclareOpt}} ->
+            DeclareSize = declare_of(DeclareOpt),
             SizeField = case DeclareSize of
                 true -> [<<"\"file_size\":">>, integer_to_binary(byte_size(Bytes)), <<",">>];
                 false -> []
@@ -364,33 +377,50 @@ serve_get_file(Socket, Body, Files) ->
 
 serve_file_body(Socket, Path, Headers, Files) ->
     %% Path is /file/bot<token>/<file_path>; match on the file path suffix.
-    Matches = [Bytes || {_Id, {FilePath, Bytes, _Declare}} <- maps:to_list(Files),
+    Matches = [{Bytes, mode_of(Opt)} || {_Id, {FilePath, Bytes, Opt}} <- maps:to_list(Files),
                         binary:longest_common_suffix([Path, <<"/", FilePath/binary>>]) =:= byte_size(FilePath) + 1],
     case Matches of
-        [Bytes | _] ->
+        [{Bytes, ignore_range} | _] ->
+            send_bytes(Socket, 200, Bytes);
+        [{Bytes, Mode} | _] ->
             %% wave 6j: honour a single byte range like the Telegram file CDN.
             case lists:keyfind(<<"range">>, 1, Headers) of
-                {_, RangeValue} -> serve_range(Socket, Bytes, RangeValue);
+                {_, RangeValue} -> serve_range(Socket, Bytes, RangeValue, Mode);
                 false -> send_bytes(Socket, 200, Bytes)
             end;
         [] -> send_json(Socket, 404, <<"{\"ok\":false,\"error_code\":404,\"description\":\"Not Found\"}">>)
     end.
 
-serve_range(Socket, Bytes, RangeValue) ->
+declare_of(Opt) when is_boolean(Opt) -> Opt;
+declare_of(#{declare := D}) -> D.
+
+mode_of(Opt) when is_boolean(Opt) -> normal;
+mode_of(#{mode := M}) -> M.
+
+serve_range(Socket, Bytes, RangeValue, Mode) ->
     Total = byte_size(Bytes),
     try
         <<"bytes=", Spec/binary>> = string:trim(RangeValue),
         [FirstBin, LastBin] = binary:split(Spec, <<"-">>),
         First = binary_to_integer(FirstBin),
         Last0 = case LastBin of <<>> -> Total - 1; _ -> binary_to_integer(LastBin) end,
-        case First >= Total of
+        case First >= Total orelse (Mode =:= early_416 andalso First >= Total div 2) of
             true -> send_status(Socket, 416, <<"Range Not Satisfiable">>, [{<<"Content-Range">>, iolist_to_binary([<<"bytes */">>, integer_to_binary(Total)])}], <<>>);
             false ->
                 Last = min(Last0, Total - 1),
                 Len = Last - First + 1,
                 <<_:First/binary, Part:Len/binary, _/binary>> = Bytes,
-                ContentRange = iolist_to_binary([<<"bytes ">>, integer_to_binary(First), <<"-">>, integer_to_binary(Last), <<"/">>, integer_to_binary(Total)]),
-                send_status(Socket, 206, <<"Partial Content">>, [{<<"Content-Range">>, ContentRange}], Part)
+                {CF, CL, CT} = case Mode of
+                    wrong_first -> {First + 1, Last + 1, Total + 1};
+                    span_differs -> {First, Last - 1, Total};
+                    total_changes when First > 0 -> {First, Last, Total + 1};
+                    _ -> {First, Last, Total}
+                end,
+                ContentRange = iolist_to_binary([<<"bytes ">>, integer_to_binary(CF), <<"-">>, integer_to_binary(CL), <<"/">>, integer_to_binary(CT)]),
+                case Mode of
+                    truncated_body -> send_truncated(Socket, ContentRange, Part);
+                    _ -> send_status(Socket, 206, <<"Partial Content">>, [{<<"Content-Range">>, ContentRange}], Part)
+                end
         end
     catch
         _:_ -> send_json(Socket, 400, <<"{\"ok\":false,\"error_code\":400,\"description\":\"Bad Range\"}">>)
@@ -404,6 +434,17 @@ send_status(Socket, StatusCode, StatusText, ExtraHeaders, Body) ->
               Extra,
               io_lib:format("Content-Length: ~p\r\nConnection: close\r\n\r\n", [Len])],
     gen_tcp:send(Socket, [Header, Body]),
+    gen_tcp:close(Socket).
+
+%% Promise the full length, send ten bytes fewer, close: a truncated body.
+send_truncated(Socket, ContentRange, Part) ->
+    Len = byte_size(Part),
+    Sent = binary:part(Part, 0, max(0, Len - 10)),
+    Header = [io_lib:format("HTTP/1.1 206 Partial Content\r\n", []),
+              <<"Content-Type: application/octet-stream\r\n">>,
+              <<"Content-Range: ">>, ContentRange, <<"\r\n">>,
+              io_lib:format("Content-Length: ~p\r\nConnection: close\r\n\r\n", [Len])],
+    gen_tcp:send(Socket, [Header, Sent]),
     gen_tcp:close(Socket).
 
 extract_json_string(Body, Marker) ->

@@ -12,6 +12,7 @@ import gleam/dynamic/decode
 import gleam/http
 import gleam/int
 import gleam/json
+import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
@@ -504,16 +505,38 @@ fn decode_get_file(body_str: String) -> Result(FileLocator, String) {
   }
 }
 
-/// A file_path is joined into a URL: refuse empty, absolute, traversal, query,
-/// fragment, NUL and anything over 256 bytes.
+/// A file_path is joined into a URL, so it is an ALLOWLIST: only the bytes
+/// `[A-Za-z0-9._/-]`, non-empty, at most 256 bytes, no leading `/` and no `..`
+/// segment. Every other byte (CR, LF, space, `%`, backslash, `?`, `#`, NUL,
+/// any non-ASCII byte) is refused.
 pub fn valid_file_path(path: String) -> Bool {
   path != ""
   && string.byte_size(path) <= 256
   && !string.starts_with(path, "/")
-  && !string.contains(path, "..")
-  && !string.contains(path, "?")
-  && !string.contains(path, "#")
-  && !string.contains(path, "\u{0}")
+  && !list.contains(string.split(path, "/"), "..")
+  && all_path_bytes(bit_array.from_string(path))
+}
+
+fn all_path_bytes(bytes: BitArray) -> Bool {
+  case bytes {
+    <<>> -> True
+    <<b, rest:bytes>> ->
+      case path_byte_allowed(b) {
+        True -> all_path_bytes(rest)
+        False -> False
+      }
+    _ -> False
+  }
+}
+
+fn path_byte_allowed(b: Int) -> Bool {
+  { b >= 0x30 && b <= 0x39 }
+  || { b >= 0x41 && b <= 0x5A }
+  || { b >= 0x61 && b <= 0x7A }
+  || b == 0x2E
+  || b == 0x2F
+  || b == 0x2D
+  || b == 0x5F
 }
 
 /// GET the file body at `<base_url>/file/bot<token>/<file_path>` with a hard
@@ -591,14 +614,36 @@ pub const file_range_chunk_bytes = 4_194_304
 /// A 206 answer yields the partial body and its `Content-Range`; a 200 answer
 /// means the server ignored the range and is accepted only from offset zero and
 /// only when the whole body fits the chunk bound (then it is the last chunk);
-/// 416 at a non-zero offset is the end of the body. Every response is bounded
-/// by the FFI to `chunk_bytes` plus nothing: an oversize body is an error.
+/// 416 at a non-zero offset is the end of the body ONLY when the total (the
+/// caller's first-seen total, else the 416's own `bytes */N`) equals the offset;
+/// otherwise it is `range_truncated`. Every response is bounded by the FFI to
+/// `chunk_bytes` plus nothing: an oversize body is an error.
 pub fn fetch_file_range(
   config: TelegramHttpConfiguration,
   file_path: String,
   offset: Int,
   chunk_bytes: Int,
   deadline_ms: Int,
+) -> Result(RangeChunk, String) {
+  fetch_file_range_checked(
+    config,
+    file_path,
+    offset,
+    chunk_bytes,
+    deadline_ms,
+    None,
+  )
+}
+
+/// `fetch_file_range` with the total a previous chunk advertised. A later
+/// chunk that advertises a different total is `range_total_changed`.
+pub fn fetch_file_range_checked(
+  config: TelegramHttpConfiguration,
+  file_path: String,
+  offset: Int,
+  chunk_bytes: Int,
+  deadline_ms: Int,
+  known_total: Option(Int),
 ) -> Result(RangeChunk, String) {
   case valid_file_path(file_path), offset >= 0, chunk_bytes >= 1 {
     False, _, _ -> Error("fetch_file_invalid_file_path")
@@ -630,6 +675,8 @@ pub fn fetch_file_range(
         Ok(#(206, resp_headers, body)) ->
           case parse_content_range(resp_headers) {
             Error(reason) -> Error(reason)
+            Ok(#(_, _, total)) if known_total != None && total != known_total ->
+              Error("range_total_changed")
             Ok(#(first, last_byte, total)) ->
               case
                 first == offset
@@ -658,14 +705,62 @@ pub fn fetch_file_range(
               ))
             False -> Error("fetch_file_range_not_supported")
           }
-        Ok(#(416, _, _)) ->
+        Ok(#(416, resp_headers, _)) ->
           case offset > 0 {
-            True -> Ok(RangeChunk(bytes: <<>>, total: None, last: True))
+            True ->
+              range_end_check(
+                offset,
+                known_total,
+                parse_unsatisfied_total(resp_headers),
+              )
             False -> Error("fetch_file_status_416")
           }
         Ok(#(code, _, _)) -> Error("fetch_file_status_" <> int.to_string(code))
       }
     }
+  }
+}
+
+/// A 416 at a non-zero offset ends the body only when the offset IS the total.
+/// The total is the caller's first-seen total; a 416 advertising another total
+/// is `range_total_changed`; no known total at all cannot prove the end.
+fn range_end_check(
+  offset: Int,
+  known: Option(Int),
+  advertised: Option(Int),
+) -> Result(RangeChunk, String) {
+  case known, advertised {
+    Some(k), Some(a) if k != a -> Error("range_total_changed")
+    Some(t), _ -> accept_end(offset, t)
+    None, Some(t) -> accept_end(offset, t)
+    None, None -> Error("range_truncated")
+  }
+}
+
+fn accept_end(offset: Int, total: Int) -> Result(RangeChunk, String) {
+  case offset == total {
+    True -> Ok(RangeChunk(bytes: <<>>, total: Some(total), last: True))
+    False -> Error("range_truncated")
+  }
+}
+
+/// `Content-Range: bytes */total` of a 416 answer.
+fn parse_unsatisfied_total(headers: List(#(String, String))) -> Option(Int) {
+  case list_find_header(headers, "content-range") {
+    Error(_) -> None
+    Ok(value) ->
+      case string.split(string.trim(value), " ") {
+        ["bytes", spec] ->
+          case string.split(spec, "/") {
+            ["*", total_text] ->
+              case int.parse(total_text) {
+                Ok(n) if n >= 0 -> Some(n)
+                _ -> None
+              }
+            _ -> None
+          }
+        _ -> None
+      }
   }
 }
 
