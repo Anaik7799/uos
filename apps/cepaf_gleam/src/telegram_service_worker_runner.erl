@@ -533,11 +533,22 @@ build_service_configuration(Config) ->
             {ok,ImpactConfigured}=cepaf_gleam@harness@telegram_service:configure_impact_source(B13,ImpactPath,ImpactSha,ImpactCandidate,ImpactClosure),
             ImpactConfigured
     end,
-    case maps:get(<<"test_historical_action_profile">>, Config, null) of
+    B15 = case maps:get(<<"test_historical_action_profile">>, Config, null) of
         null -> B14;
         [Root, Digest] when is_binary(Root), is_binary(Digest) ->
             {ok, Configured} = telegram_managed_action_test:configure(B14, Root, Digest),
             Configured
+    end,
+    %% Staged wiring (wave 6q): an absolute media_root binds the media store and
+    %% the HTTP fetch transport built from this service's own base_url and token.
+    case maps:get(<<"media_root">>, Config, null) of
+        null -> B15;
+        MediaRoot when is_binary(MediaRoot) ->
+            {ok, MediaConfigured} = cepaf_gleam@harness@telegram_service:configure_media_http(
+                B15, MediaRoot,
+                maps:get(<<"media_retention_ms">>, Config, 86400000),
+                maps:get(<<"media_ceiling_bytes">>, Config, 268435456)),
+            MediaConfigured
     end.
 
 build_receipt_opt(Config) ->

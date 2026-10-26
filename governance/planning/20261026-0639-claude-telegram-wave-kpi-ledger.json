@@ -69,6 +69,28 @@
       "denominator": "tests run",
       "source": "gleam test log in scratch; commit description",
       "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-09",
+      "name": "staged_runtime_closure",
+      "definition": "catalog commands and media journeys exercised against a fully assembled, supervised BEAM node with an active transport, over 77 canonicals plus the media flows",
+      "numerator": 9,
+      "denominator": 80,
+      "value": "9/80 (11.3%)",
+      "observed_utc": "2026-10-26T12:47:43Z",
+      "source": "e2e runner (supervised BEAM node, fixture transport): /admin /crash /doctor /drop /large /saplan /status /voice plus the bound media flow (wave 6q); the remaining canonicals are exercised only through the isolated dispatcher",
+      "confidence": "Measured (absence)"
+    },
+    {
+      "id": "TG-KPI-10",
+      "name": "worker_delivery_quality",
+      "definition": "R4 worker deliveries that arrive green with their mutant records, over worker deliveries integrated",
+      "numerator": 2,
+      "denominator": 3,
+      "value": "2/3 (66.7%)",
+      "observed_utc": "2026-10-26T12:33:12Z",
+      "source": "waves 6o (two green with mutants) and 6p (one with a red test and no mutants, repaired by the integrator)",
+      "confidence": "Measured"
     }
   ],
   "waves": [
@@ -363,17 +385,31 @@
     },
     {
       "wave": "6p",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "7c152add",
+      "landed_utc": "2026-10-26T12:28:44Z",
       "canonicals_answering": "77/77 (unchanged); gateway and media residuals closed",
       "tests_added": 17,
       "mutants": "4/4 integrator (reserve removed; oldest uncertain picks the newest; guard result ignored; cap compared against the outer ceiling) ; worker planted none and left one test red, both repaired by the integrator",
       "workers": 1,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 60,
       "checker_holds": 1,
       "process_defects": 1,
       "notes": "Residuals of the 6n and 6o reviews: outbox reserves a quarter of the pending capacity for Criticals (no reserve below four) and exposes the oldest uncertain observation in Counters; media intake samples the clock after the download, re-checks the conversation window before the store effect (WindowClosed), passes the per-kind cap to the transport before the first range, uses the shared allowlist for file paths, round-trips unsupported refs and raises the caption bound to Telegram's 1024 characters (worker claude-worker-media-residuals-20261026 in fable-w3). Process defect: the task was claimed on a HOLD preflight (declared dependencies differed from Sa-plan) because the claim was chained after the preflight without a gate; the record was repaired before any work and claim.sh now refuses a non-PASS preflight.",
       "full_suite": "13884/13884"
+    },
+    {
+      "wave": "6q",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); staged node: 8 canonicals plus the media flow exercised through the runner with a bound transport",
+      "tests_added": 3,
+      "mutants": "3/3 integrator (runner binds nothing for media_root; configure_media_http binds no transport; gateway_send reports a delivery as failed)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Staged wiring on AGY counsel: configure_media_http binds the media store policy and telegram_media_transport.from_http(config.http_config) in one call; the worker runner takes media_root (plus optional media_retention_ms and media_ceiling_bytes) and binds it; the e2e harness injects media_root when a .media directory sits beside the store, and a captioned photo is fetched from the fixture getFile and /file/bot routes, stored under its recomputed digest and answered ok with a sha256 through the supervised runner. Gateway drain start site (G-13): gateway_drain_child, gateway_send and gateway_tick on the service configuration; a wiring test enqueues a Critical on the supervised drain and ticks it through the fixture sendMessage with the drain state free of the token.",
+      "full_suite": "13887/13887"
     }
   ],
   "forecasts": [
@@ -471,9 +507,9 @@
       "made_in": "wave 6h journal (09:36)",
       "p": 0.45,
       "claim": "an HTTP fetch transport (getFile plus streamed body on the existing HTTP client) lands on main with tests and is bound through configure_media in a staged service test by 2026-10-27T18:00:00Z",
-      "outcome": 1,
-      "brier": 0.3025,
-      "resolved_by": "main 6c65dd07 (wave 6i): telegram_media_transport.from_http with fixture-backed tests; bound through the intake binding in the transport suite rather than a staged service test, so the claim is scored as met at source with that caveat recorded",
+      "outcome": 0,
+      "brier": 0.2025,
+      "resolved_by": "main 6c65dd07 (wave 6i): telegram_media_transport.from_http with fixture-backed tests; bound through the intake binding in the transport suite rather than a staged service test, so the claim is scored as met at source with that caveat recorded | CORRECTED 2026-10-26T12:33:12Z on AGY advisory counsel (governance/planning/20261026-1212-agy-advice-telegram-next-actions.json): the claim as precommitted required a staged service test binding the transport through configure_media; that test did not exist at resolution and still does not, so the outcome is 0 and the earlier 1 was an unearned pass",
       "resolved_utc": "2026-10-26T10:08:01Z"
     },
     {
@@ -672,6 +708,18 @@
       "wave": "6p",
       "lesson": "A preflight whose status is printed but not gated is decoration: TELEGRAM_RESIDUALS was claimed while the preflight read HOLD (the portfolio declared two dependencies, Sa-plan held one). HOLD is repaired, never forced, and the claim must wait for it.",
       "applied": "claim.sh runs the preflight, refuses any status but PREFLIGHT_PASS, claims, flips the record, rehashes and requires ACTIVE_OBSERVATION_PASS before returning; the land gate already refused to land on HOLD"
+    },
+    {
+      "id": "L-26",
+      "wave": "6p (AGY counsel)",
+      "lesson": "A fast micro-wave loop between an author and its own advisory subagents inflates test counts while deferring sovereign review, end-to-end service assembly and human operational testing; the KPI that exposes it is staged runtime closure, which reads 0/80 today.",
+      "applied": "independent reviews dispatched to AGY as agents under their own worker ids; the next wave wires the staged service (transport bound in the operational configuration, a drain start site) and the ledger carries TG-KPI-09 and TG-KPI-10"
+    },
+    {
+      "id": "L-27",
+      "wave": "6q",
+      "lesson": "A capability described as for a deployment to bind is a claim until the tree holds one deployment-shaped caller that binds it under test; configure_media had existed since wave 6i with no caller, and the packets and a resolved forecast both treated the binding as someone else's step.",
+      "applied": "the worker runner binds media_root through configure_media_http and the e2e proves the bound path through the supervised runner; TG-KPI-09 counts only flows that run through that node"
     }
   ]
 }

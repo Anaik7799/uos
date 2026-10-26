@@ -74,6 +74,14 @@ fn fixture_set_mode(pid: Pid, mode: String) -> Dynamic
 @external(erlang, "telegram_http_test_fixture", "set_updates")
 fn fixture_set_updates(pid: Pid, updates: List(String)) -> Dynamic
 
+@external(erlang, "telegram_http_test_fixture", "set_file")
+fn fixture_set_file(
+  pid: Pid,
+  file_id: String,
+  file_path: String,
+  bytes: BitArray,
+) -> Dynamic
+
 @external(erlang, "telegram_http_test_fixture", "get_requests")
 fn fixture_get_requests(pid: Pid) -> List(Dynamic)
 
@@ -397,6 +405,16 @@ fn start_runner_actor_with_conversation(
   let cmd = case simplifile.read(db_path <> ".budget-source.json") {
     Ok(raw) ->
       "{\"test_budget_source\":" <> raw <> "," <> string.drop_start(cmd, 1)
+    _ -> cmd
+  }
+  // Staged wiring (wave 6q): a media directory beside the store binds the
+  // media store and the HTTP fetch transport in the runner.
+  let cmd = case simplifile.is_directory(db_path <> ".media") {
+    Ok(True) ->
+      "{\"media_root\":"
+      <> json.to_string(json.string(db_path <> ".media"))
+      <> ","
+      <> string.drop_start(cmd, 1)
     _ -> cmd
   }
   let cmd = case simplifile.read(db_path <> ".zenoh-grants.json") {
@@ -4515,4 +4533,86 @@ pub fn e2e_captioned_media_never_reaches_specialised_arms_test() {
   runner_stop(ipc_dir)
   fixture_stop(fixture_pid)
   lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
+}
+
+/// Staged wiring (wave 6q, AGY counsel): with a media directory beside the
+/// store the runner binds the media store and the HTTP fetch transport, so a
+/// captioned photo from the allowlisted pair is fetched from the fixture's
+/// `getFile` and `/file/bot<token>/<path>` routes, inspected, stored under its
+/// recomputed digest and answered `ok` with a `sha256`; the caption directive
+/// is named and never executed, and the token never appears in the reply.
+pub fn e2e_captioned_photo_with_bound_transport_is_stored_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 444_556
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+  let media_root = db_path <> ".media"
+  let assert Ok(_) = simplifile.create_directory_all(media_root)
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce =
+    int.to_string(service.ffi_system_now_utc_us())
+    <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_media_b" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-media-b" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  let png = <<0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 9, 8, 7, 6, 5, 4>>
+  fixture_set_file(fixture_pid, "AgAC-large-b", "photos/large-b.png", png)
+
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-media-b",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+  runner_set_authority(ipc_dir, "lease-e2e-media-02", 1, 1, 3_000_000_000_000_000)
+
+  let captioned =
+    "{\"update_id\": 9201, \"message\": {\"message_id\": 311, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"caption\": \"/status\", \"photo\": [{\"file_id\": \"AgAC-small-b\", \"file_unique_id\": \"AQAD-small-b\", \"width\": 90, \"height\": 90, \"file_size\": 12}, {\"file_id\": \"AgAC-large-b\", \"file_unique_id\": \"AQAD-large-b\", \"width\": 800, \"height\": 600, \"file_size\": 14}], \"date\": 1700000300}}"
+  fixture_set_updates(fixture_pid, [captioned])
+  let poll = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(poll, "\"type\":\"poll_committed\"") |> should.equal(True)
+  let dispatch =
+    runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(dispatch, "\"processed_count\":1") |> should.equal(True)
+
+  let sends =
+    list.filter(fixture_requests_typed(fixture_pid), fn(r) {
+      let #(_, path, _, _) = r
+      string.ends_with(path, "/sendMessage")
+    })
+  let assert [#(_, _, _, body)] = sends
+  string.contains(body, "media.intake") |> should.equal(True)
+  string.contains(body, "\\\"status\\\":\\\"ok\\\"") |> should.equal(True)
+  string.contains(body, "sha256") |> should.equal(True)
+  string.contains(body, "backend_unavailable") |> should.equal(False)
+  string.contains(body, "caption_directive") |> should.equal(True)
+  string.contains(body, "Cluster Telemetry") |> should.equal(False)
+  string.contains(body, "test-bot-token-media-b") |> should.equal(False)
+  // the fixture served the file to the runner's transport, not to this test
+  let file_fetches =
+    list.filter(fixture_requests_typed(fixture_pid), fn(r) {
+      let #(_, path, _, _) = r
+      string.contains(path, "/file/bot")
+    })
+  { list.length(file_fetches) >= 1 } |> should.equal(True)
+  // the object exists under the media root, named by its recomputed digest
+  let assert Ok(entries) = simplifile.get_files(media_root)
+  { list.length(entries) >= 2 } |> should.equal(True)
+
+  fixture_stop(fixture_pid)
 }

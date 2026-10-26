@@ -62,6 +62,9 @@ import cepaf_gleam/harness/telegram_media_store as media_store
 import cepaf_gleam/harness/telegram_media_ref as media_ref
 import cepaf_gleam/harness/telegram_media_download as download
 import cepaf_gleam/harness/telegram_media_intake as media_intake
+import cepaf_gleam/harness/telegram_media_transport as media_transport
+import cepaf_gleam/gateway/telegram_gateway_drain as gateway_drain
+import cepaf_gleam/gateway/telegram_gateway_outbox as gateway_outbox
 import cepaf_gleam/telegram/telegram_media_janitor as janitor
 import gleam/bit_array
 import gleam/dynamic/decode
@@ -273,6 +276,42 @@ pub fn configure_media(
   use _ <- result.try(janitor.validate(janitor_config(media)))
   Ok(ServiceConfiguration(..config, media: Some(media)))
 }
+
+/// Staged wiring (wave 6q, AGY counsel): bind the media store AND the HTTP
+/// fetch transport built from this configuration's own Telegram HTTP client,
+/// so a deployment needs one call and one directory. The policy keeps media
+/// under `root/objects`, retains objects for `retention_ms` and refuses writes
+/// past `ceiling_bytes`; the janitor runs with the default cadence and bounds.
+/// This binds a transport that fetches from the configured `base_url` with the
+/// configured token; it grants nothing and starts nothing by itself.
+pub fn configure_media_http(
+  config: ServiceConfiguration,
+  root: String,
+  retention_ms: Int,
+  ceiling_bytes: Int,
+) -> Result(ServiceConfiguration, String) {
+  let policy =
+    media_store.Policy(
+      root: root,
+      base: "objects",
+      retention_ms: retention_ms,
+      total_ceiling_bytes: ceiling_bytes,
+    )
+  configure_media(
+    config,
+    policy,
+    default_media_reclaim_cadence_ms,
+    default_media_reclaim_max_objects,
+    default_media_reclaim_history_limit,
+    Some(media_transport.from_http(config.http_config)),
+  )
+}
+
+pub const default_media_reclaim_cadence_ms = 60_000
+
+pub const default_media_reclaim_max_objects = 64
+
+pub const default_media_reclaim_history_limit = 64
 
 /// The typed media reply for a captioned media message (wave 6h). The intake
 /// chain runs inside the observation authority window; without a bound media
@@ -6882,4 +6921,60 @@ fn executive_brief_reply(state: ServiceState, generation: Int) -> String {
     Ok(report) -> report
     Error(_) -> status_failure()
   }
+}
+
+// -----------------------------------------------------------------------------
+// Gateway drain start site (wave 6q, review G-13)
+// -----------------------------------------------------------------------------
+
+/// A supervised child for the Zenoh-to-Telegram gateway drain, named per bot,
+/// that a deployment adds beside the service supervisor. The drain holds no
+/// credential: the Send is built per tick by `gateway_send` from this
+/// configuration and dropped when the tick ends (review G-01).
+pub fn gateway_drain_child(
+  config: ServiceConfiguration,
+  capacity: Int,
+) -> #(
+  process.Name(gateway_drain.Message),
+  supervision.ChildSpecification(Subject(gateway_drain.Message)),
+) {
+  let name =
+    process.new_name("telegram_gateway_drain_" <> int.to_string(config.bot_id))
+  #(name, gateway_drain.child_spec_named(name, capacity, fn() {
+    ffi_system_now_utc_us() / 1000
+  }))
+}
+
+/// The per-tick Send for the gateway drain: one `sendMessage` through this
+/// configuration's HTTP client, mapped onto the delivery ledger's statuses.
+/// A proven rejection is `Failed` with the error code only (no description
+/// text leaves the transport); an ambiguous outcome is `Uncertain`.
+pub fn gateway_send(config: ServiceConfiguration) -> gateway_drain.Send {
+  fn(request: gateway_outbox.Request) {
+    case
+      http_client.send_message(
+        config.http_config,
+        request.chat_id,
+        request.text,
+        None,
+      )
+    {
+      http_client.Delivered(message_id, _) -> ledger.OutboxDelivered(message_id)
+      http_client.ProvenRejection(code, _) ->
+        ledger.OutboxFailed("http_" <> int.to_string(code))
+      http_client.AmbiguousOutcome(_) ->
+        ledger.OutboxUncertain("ambiguous_outcome")
+    }
+  }
+}
+
+/// One bounded drain tick with the configuration's Send. The ticker owns the
+/// cadence; the drain keeps nothing from the Send after the tick.
+pub fn gateway_tick(
+  config: ServiceConfiguration,
+  drain: Subject(gateway_drain.Message),
+  budget: Int,
+  timeout_ms: Int,
+) -> gateway_drain.TickReport {
+  gateway_drain.tick(drain, budget, gateway_send(config), timeout_ms)
 }
