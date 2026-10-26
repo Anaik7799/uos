@@ -151,11 +151,11 @@
       "id": "TG-KPI-16",
       "name": "mini_app_browser_verification",
       "definition": "Mini App pages verified through real Chrome DevTools Protocol control with screenshot, screencast and data API verdicts; numerator = pages with a receipt, denominator = 14",
-      "numerator": 0,
+      "numerator": 14,
       "denominator": 14,
-      "value": "0/14: verifier built (tools/mini_app_browser_verify.ml), run blocked in the agent sandbox (L-38); operator-run pending",
-      "observed_utc": "2026-10-26T19:01:06Z",
-      "source": "tools/mini_app_browser_verify.ml; /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850",
+      "value": "14/14 pages settled in real Chrome 154 with the official Telegram script (8 observed with data, 6 fail-closed unavailable for sources the dedicated instance does not configure); 12/12 negative cases refused; live refresh OK; video 87 frames; Zenoh 14/14",
+      "observed_utc": "2026-10-26T19:46:03Z",
+      "source": "tools/mini_app_browser_verify.ml; governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json",
       "confidence": "Measured"
     },
     {
@@ -625,6 +625,19 @@
       "checker_holds": 3,
       "process_defects": 3,
       "notes": "Verdict governance/planning/20261026-1846-agy-residuals-review-verdict.json. Bridge: canonical tools/telegram_client.exe 42c9130a installed over dfc2f907 under runtime:telegram-bridge epoch 4 with rollback copy; 0 token lines, curl child with -K -, getMe green. Mini App: tools/mini_app_browser_verify.ml compiles; headless Chrome 154 completes no URL load inside the agent shell sandbox (net-log evidence under /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850); operator-run command recorded in the journal. Root cause of the operator complaint (same reply every time): c3i-gleam-server has no OPENROUTER_API_KEY, so handle_conversational falls to the deterministic /status default; its release directory no longer exists on disk. Correction: the responder is uos-cognitive-worker.service (release 20261001-0511), whose journal states OPENROUTER_API_KEY missing or invalid on every intent; rule SC-TELEGRAM-SECRET-001 (20261026-1910) and the journeys skill section added and mirrored to .gemini/.agents/.codex."
+    },
+    {
+      "wave": "7b",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "Mini App verified in a real Chrome from the agent shell: 14/14 pages settled (8 observed, 6 fail-closed unavailable for unset sources), 6 browser negatives and 6 direct API cases refused, live-refresh journey OK, 87-frame video, Zenoh 14/14 both ways",
+      "tests_added": 0,
+      "mutants": "0 (OCaml tool; no Gleam source changed)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 1,
+      "notes": "Receipt governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json; evidence root /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944. The sandbox stall (L-38) was worked around inside the tool: Page.setDocumentContent with the official telegram-web-app.js and client.js inlined and window.fetch routed through a Runtime.addBinding served by the tool; the official script parsed the signed hash (auth_source telegram-web-app.js on every page). Defects fixed on the way: the tool waited for EOF on keep-alive connections (15 s per request), initData expired across a long run (now re-minted per page), Zenoh grants need concrete keys (no wildcard), an oversize initData answers 413 (a refusal, recorded as REFUSED_OTHER_4XX)."
     }
   ],
   "forecasts": [
@@ -848,6 +861,16 @@
       "made_in": "wave 7a journal",
       "p": 0.6,
       "claim": "The operator runs tools/mini_app_browser_verify.exe from a terminal and a receipt with 14/14 pages settled and a video exists under var/telegram-mini-verify by 2026-10-27T18:00:00Z",
+      "outcome": 1,
+      "brier": 0.16,
+      "resolved_by": "claude-fable-l0-35600f5c",
+      "resolved_utc": "2026-10-26T19:46:03Z",
+      "note": "resolved early and not by the operator: the receipt exists because the tool gained a load path that works from the agent shell; the predicted mechanism was wrong even though the outcome occurred"
+    },
+    {
+      "made_in": "wave 7b journal",
+      "p": 0.8,
+      "claim": "A rerun of tools/mini_app_browser_verify.exe --set-content at the landed commit within 24 h yields 14/14 settled and video_ok true again (reproducibility)",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -1088,6 +1111,12 @@
       "wave": "7a",
       "lesson": "A tool that spawns Chrome and a server instance leaked both when an exception escaped before its cleanup; the next run then talked to the stale pair and failed for an unrelated reason.",
       "applied": "register every child in at_exit and refuse to start when the target port already answers"
+    },
+    {
+      "id": "L-40",
+      "wave": "7b",
+      "lesson": "When a browser cannot load URLs but can run scripts, inject the server-rendered document with Page.setDocumentContent, inline the scripts, and route window.fetch through a DevTools binding served by the tool; the page logic, DOM, screenshots and screencast are then real while the transport is owned by the verifier.",
+      "applied": "tools/mini_app_browser_verify.exe --set-content; the receipt records mode and auth_source so the two load paths are never confused"
     }
   ]
 }

@@ -124,7 +124,11 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 - Residual: lines written before the restart still carry the token in the user journal; rotating the token is an operator decision (`BotFather` → `vault-put` → restart under lease).
 - Correction (recorded, not rewritten): the Sa-plan completion result for `BRIDGE_TOKEN_HYGIENE` attempt 1 names `candidate` `284a78547052`, which is the wave 6z base; the first landing attempt had been refused by the coordinator (replayed heartbeat operation id) before that completion was written. The source change is in the wave 7a landing commit that follows this correction; the installed canonical binary `42c9130a…` is the same bytes in both. A corrected board message supersedes the premature report.
 
-## MINI_APP_BROWSER_VERIFY — executing (tool built, run blocked in the agent sandbox)
+## MINI_APP_BROWSER_VERIFY — completed 2026-10-26 (wave 7b; receipt `governance/planning/*-claude-telegram-mini-app-browser-verify-receipt.json`)
+
+- Completed from the agent shell with `--set-content`: the server-rendered document is installed by `Page.setDocumentContent`, the official `telegram-web-app.js` and `client.js` run inline, and `window.fetch` is routed through a DevTools binding served by the tool. 14/14 pages settled in Chrome 154 (8 observed with data, 6 fail-closed unavailable for sources the dedicated instance does not configure), `auth_source` `telegram-web-app.js` on every page, 6 browser and 6 direct negative cases refused, live-refresh journey OK, 20 screenshots, 87-frame mp4, Zenoh 14 results published and read back. Evidence root `var/telegram-mini-verify/20261026-1944/`. The paragraph below records the state before that run.
+
+## MINI_APP_BROWSER_VERIFY — earlier state (tool built, run blocked in the agent sandbox)
 
 - Tool: `tools/mini_app_browser_verify.ml` (pure OCaml CDP: dedicated instance on 4190 with a verification-only token and a throwaway TLS pair, official `telegram-web-app.js` served through `Fetch` interception, initData signed per the Telegram scheme, 14 pages with screenshot + data API verdict, screencast → mp4, live-refresh journey, 6 browser negative cases, 6 direct API cases, Zenoh start command consumed and every page result published to `indrajaal/telegram/mini_app_verify/<run>/…` and read back).
 - Blocker (L-38): headless Chrome 154 completes no URL load from the agent shell sandbox (net-log and strace under `var/telegram-mini-verify/`). Operator-run command is in the wave 7a journal; the task stays executing until a receipt exists.

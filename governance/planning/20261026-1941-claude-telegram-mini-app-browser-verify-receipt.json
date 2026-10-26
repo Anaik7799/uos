@@ -1,0 +1,608 @@
+{
+  "schema": "uos-mini-app-browser-verify/v1",
+  "run_id": "20261026-1944",
+  "started_at": "2026-10-26T19:43:44Z",
+  "finished_at": "2026-10-26T19:44:41Z",
+  "base": "http://127.0.0.1:4190",
+  "candidate": "0b9dfbaa",
+  "chrome": "Chrome/154.0.8037.92",
+  "cdp_port": 9333,
+  "user_id": 6249174059,
+  "token": "verification-only, random, never persisted",
+  "zenoh_control": "start_consumed",
+  "zenoh_key_prefix": "indrajaal/telegram/mini_app_verify/20261026-1944",
+  "zenoh_page_puts_ok": 14,
+  "zenoh_page_readbacks_ok": 14,
+  "auth_sources": [
+    "telegram-web-app.js"
+  ],
+  "pages": [
+    {
+      "page": "/mini-app/dashboard",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/dashboard",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:43:47.000Z",
+      "rendered_fields": 21,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 21,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 1340
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/01-mini-app-dashboard.png",
+      "screenshot_bytes": 210971,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/health",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/health",
+      "title": "UOS Telegram",
+      "status_text": "The data source is unavailable or not configured.",
+      "rendered_fields": 0,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "unavailable",
+      "api_fields": 0,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 135
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/02-mini-app-health.png",
+      "screenshot_bytes": 162768,
+      "verdict": "FAIL_CLOSED_UNAVAILABLE"
+    },
+    {
+      "page": "/mini-app/alerts",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/alerts",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:43:52.000Z",
+      "rendered_fields": 11,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 15,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 1778
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/03-mini-app-alerts.png",
+      "screenshot_bytes": 232868,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/immune",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/immune",
+      "title": "UOS Telegram",
+      "status_text": "The data source is unavailable or not configured.",
+      "rendered_fields": 0,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "unavailable",
+      "api_fields": 0,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 134
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/04-mini-app-immune.png",
+      "screenshot_bytes": 153247,
+      "verdict": "FAIL_CLOSED_UNAVAILABLE"
+    },
+    {
+      "page": "/mini-app/tasks",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/tasks",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:43:57.000Z",
+      "rendered_fields": 9,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 9,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 475
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/05-mini-app-tasks.png",
+      "screenshot_bytes": 172287,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/inference",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/inference",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:43:59.000Z",
+      "rendered_fields": 15,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 15,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 1108
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/06-mini-app-inference.png",
+      "screenshot_bytes": 183582,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/chat",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/chat",
+      "title": "UOS Telegram",
+      "status_text": "The data source is unavailable or not configured.",
+      "rendered_fields": 0,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "unavailable",
+      "api_fields": 0,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 134
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/07-mini-app-chat.png",
+      "screenshot_bytes": 189159,
+      "verdict": "FAIL_CLOSED_UNAVAILABLE"
+    },
+    {
+      "page": "/mini-app/config",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/config",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:44:04.000Z",
+      "rendered_fields": 14,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 14,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 952
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/08-mini-app-config.png",
+      "screenshot_bytes": 140009,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/containers",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/containers",
+      "title": "UOS Telegram",
+      "status_text": "The data source is unavailable or not configured.",
+      "rendered_fields": 0,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "unavailable",
+      "api_fields": 0,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 139
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/09-mini-app-containers.png",
+      "screenshot_bytes": 159960,
+      "verdict": "FAIL_CLOSED_UNAVAILABLE"
+    },
+    {
+      "page": "/mini-app/federation",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/federation",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:44:09.000Z",
+      "rendered_fields": 11,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 11,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 411
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/10-mini-app-federation.png",
+      "screenshot_bytes": 130309,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/verify",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/verify",
+      "title": "UOS Telegram",
+      "status_text": "The data source is unavailable or not configured.",
+      "rendered_fields": 0,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "unavailable",
+      "api_fields": 0,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 141
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/11-mini-app-verify.png",
+      "screenshot_bytes": 155020,
+      "verdict": "FAIL_CLOSED_UNAVAILABLE"
+    },
+    {
+      "page": "/mini-app/fmea",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/fmea",
+      "title": "UOS Telegram",
+      "status_text": "The data source is unavailable or not configured.",
+      "rendered_fields": 0,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "unavailable",
+      "api_fields": 0,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 131
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/12-mini-app-fmea.png",
+      "screenshot_bytes": 152707,
+      "verdict": "FAIL_CLOSED_UNAVAILABLE"
+    },
+    {
+      "page": "/mini-app/telemetry",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/telemetry",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:44:16.000Z",
+      "rendered_fields": 50,
+      "topic_options": 0,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 50,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 4573
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/13-mini-app-telemetry.png",
+      "screenshot_bytes": 178671,
+      "verdict": "OBSERVED"
+    },
+    {
+      "page": "/mini-app/zenoh",
+      "url_loaded": true,
+      "auth_source": "telegram-web-app.js",
+      "data_page_attr": "/mini-app/zenoh",
+      "title": "UOS Telegram",
+      "status_text": "Observed at 2026-10-26T19:44:18.000Z",
+      "rendered_fields": 6,
+      "topic_options": 4,
+      "browser_api_status": 200,
+      "api_http_status": 200,
+      "api_observation_status": "observed",
+      "api_fields": 6,
+      "js_exceptions": [],
+      "intercepted": [
+        {
+          "method": "POST",
+          "url": "http://127.0.0.1:4190/mini-app/api/data",
+          "status": 200,
+          "bytes": 473
+        }
+      ],
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/14-mini-app-zenoh.png",
+      "screenshot_bytes": 184537,
+      "verdict": "OBSERVED"
+    }
+  ],
+  "interactive": {
+    "page": "/mini-app/zenoh",
+    "topics_offered": 4,
+    "after_topic_status": "Observed at 2026-10-26T19:44:21.000Z",
+    "live_status_during": "Polling the selected topic every two seconds; stops within five minutes or on failure.",
+    "api_calls_observed_in_session": 6,
+    "live_status_after_stop": "Live refresh stopped.",
+    "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/15-zenoh-live-refresh.png",
+    "screenshot_bytes": 183323,
+    "verdict": "LIVE_REFRESH_OK"
+  },
+  "negative_cases": [
+    {
+      "case": "tampered-hash",
+      "status_text": "Authentication expired or access is not allowed.",
+      "expected_text_prefix": "Authentication expired or access is not allowed.",
+      "browser_api_calls": 1,
+      "browser_api_status": 401,
+      "direct_api_status": 401,
+      "direct_api_body_status": "unauthorized",
+      "expected_api_status": 401,
+      "rendered_fields": 0,
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/neg-tampered-hash.png",
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "expired-auth-date",
+      "status_text": "Authentication expired or access is not allowed.",
+      "expected_text_prefix": "Authentication expired or access is not allowed.",
+      "browser_api_calls": 1,
+      "browser_api_status": 401,
+      "direct_api_status": 401,
+      "direct_api_body_status": "unauthorized",
+      "expected_api_status": 401,
+      "rendered_fields": 0,
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/neg-expired-auth-date.png",
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "future-auth-date",
+      "status_text": "Authentication expired or access is not allowed.",
+      "expected_text_prefix": "Authentication expired or access is not allowed.",
+      "browser_api_calls": 1,
+      "browser_api_status": 401,
+      "direct_api_status": 401,
+      "direct_api_body_status": "unauthorized",
+      "expected_api_status": 401,
+      "rendered_fields": 0,
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/neg-future-auth-date.png",
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "user-not-allowlisted",
+      "status_text": "Authentication expired or access is not allowed.",
+      "expected_text_prefix": "Authentication expired or access is not allowed.",
+      "browser_api_calls": 1,
+      "browser_api_status": 401,
+      "direct_api_status": 401,
+      "direct_api_body_status": "unauthorized",
+      "expected_api_status": 401,
+      "rendered_fields": 0,
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/neg-user-not-allowlisted.png",
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "missing-user",
+      "status_text": "Authentication expired or access is not allowed.",
+      "expected_text_prefix": "Authentication expired or access is not allowed.",
+      "browser_api_calls": 1,
+      "browser_api_status": 401,
+      "direct_api_status": 401,
+      "direct_api_body_status": "unauthorized",
+      "expected_api_status": 401,
+      "rendered_fields": 0,
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/neg-missing-user.png",
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "no-init-data",
+      "status_text": "Telegram authentication is unavailable. Open this page through the configured bot.",
+      "expected_text_prefix": "Telegram authentication is unavailable.",
+      "browser_api_calls": 0,
+      "browser_api_status": 0,
+      "direct_api_status": 0,
+      "direct_api_body_status": "not_sent",
+      "expected_api_status": 0,
+      "rendered_fields": 0,
+      "screenshot": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/neg-no-init-data.png",
+      "verdict": "REFUSED_AS_EXPECTED"
+    }
+  ],
+  "direct_api_cases": [
+    {
+      "case": "GET-on-data-api",
+      "http_status": 405,
+      "expected": 405,
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "unknown-page-path",
+      "http_status": 400,
+      "expected": 400,
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "oversize-init-data",
+      "http_status": 413,
+      "expected": 401,
+      "verdict": "REFUSED_OTHER_4XX"
+    },
+    {
+      "case": "malformed-json",
+      "http_status": 400,
+      "expected": 400,
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "unknown-mini-page",
+      "http_status": 404,
+      "expected": 404,
+      "verdict": "REFUSED_AS_EXPECTED"
+    },
+    {
+      "case": "nul-byte-init-data",
+      "http_status": 401,
+      "expected": 401,
+      "verdict": "REFUSED_AS_EXPECTED"
+    }
+  ],
+  "screencast_frames": 87,
+  "video": {
+    "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/mini-app-journey.mp4",
+    "bytes": 661143,
+    "sha256": "46fbb58d9f67fec07bca43a635c604d03837f1d92dc699ec3641e360e9e45721"
+  },
+  "screenshots": [
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/01-mini-app-dashboard.png",
+      "bytes": 210971,
+      "sha256": "3abda9f1d160b398a708230c0bfdd64205e1335bda22089454e7513a2ca73bff"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/02-mini-app-health.png",
+      "bytes": 162768,
+      "sha256": "8f2824a427a2feb8528a9ceb1f72ae7c9204aa13143a3b91ceddae6b6de1b85b"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/03-mini-app-alerts.png",
+      "bytes": 232868,
+      "sha256": "1ab135f5291cbace66cd62d951e6df751aa95f0c3e153d4a1b4dde1ed95731ec"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/04-mini-app-immune.png",
+      "bytes": 153247,
+      "sha256": "f4e0fca93fbd43ba3eced39693a29032a78683c6b406801c53376c6a7617365f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/05-mini-app-tasks.png",
+      "bytes": 172287,
+      "sha256": "5e294ce0ec3c7efd41ad37a290c3ca2d213720d7c427b1a98a7c59b12312b3d7"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/06-mini-app-inference.png",
+      "bytes": 183582,
+      "sha256": "e9f5d04a0f72c9074ba38f2a816a133499d525b95bd641c8854d15881dab1caa"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/07-mini-app-chat.png",
+      "bytes": 189159,
+      "sha256": "c0e01444cf23fb8116c60578da602d20991547b125232db1e78c7a15f3aefb1e"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/08-mini-app-config.png",
+      "bytes": 140009,
+      "sha256": "f5fb2b1a2c9f5af1980a639d740e8459b1f92f7b59e01bfd01e3c8a4e974d15f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/09-mini-app-containers.png",
+      "bytes": 159960,
+      "sha256": "85b12924cc322f9cf88576e9630539a6b3d3d19774a51c32c6ca48cc34bc81b2"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/10-mini-app-federation.png",
+      "bytes": 130309,
+      "sha256": "58783792f4a5c252efa1551f0c6dc77af2e4506988955fc33619810b2a87081e"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/11-mini-app-verify.png",
+      "bytes": 155020,
+      "sha256": "a4b34cd1a785f97cf1d9c0160d668233d3076a3c9cb2a484340219ca0113c3fa"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/12-mini-app-fmea.png",
+      "bytes": 152707,
+      "sha256": "4003423ff93405f8dae5831df2c22cd41bc9acf0b73f0f26103a0f11b4dd77a8"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/13-mini-app-telemetry.png",
+      "bytes": 178671,
+      "sha256": "966ee9c44ae2f913391371945ad9438f767456127547fdf450326bef965128d6"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944/screens/14-mini-app-zenoh.png",
+      "bytes": 184537,
+      "sha256": "062864b1f2cb22b00b4607eb28d18cc488e77d04b409ea098e9a94213cb54101"
+    }
+  ],
+  "summary": {
+    "pages_total": 14,
+    "observed": 8,
+    "fail_closed_unavailable": 6,
+    "stale": 0,
+    "load_timeouts": 0,
+    "no_status": 0,
+    "refused": 0,
+    "negative_unexpected": 0,
+    "video_ok": true
+  },
+  "authority": "observed test evidence; grants no admission",
+  "evidence_root": "/home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944",
+  "mode": "--set-content (document injected by Page.setDocumentContent; official telegram-web-app.js and client.js inlined; window.fetch routed through the __uosFetch DevTools binding served by the tool)",
+  "recorded_by": "claude-fable-l0-35600f5c",
+  "sa_plan_task": "uos/telegram-residuals/20261026-1752 MINI_APP_BROWSER_VERIFY attempt 1"
+}

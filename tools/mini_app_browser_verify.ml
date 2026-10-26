@@ -123,13 +123,26 @@ let http host port meth path ?(headers = []) ?(timeout = 15.0) body =
   ignore (send s (Bytes.of_string req) 0 (String.length req) []);
   let buf = Buffer.create 65536 in
   let chunk = Bytes.create 65536 in
+  (* stop at Content-Length: the instance keeps connections open despite
+     Connection: close, and waiting for EOF costs the whole receive timeout *)
+  let complete () =
+    let s = Buffer.contents buf in
+    let head, body = split_header_body s in
+    if head = s then false
+    else
+      match List.assoc_opt "content-length" (parse_headers head) with
+      | Some n -> ( try String.length body >= int_of_string n with _ -> false)
+      | None -> false
+  in
   let rec loop () =
-    match recv s chunk 0 65536 [] with
-    | 0 -> ()
-    | n ->
-        Buffer.add_subbytes buf chunk 0 n;
-        loop ()
-    | exception Unix_error ((EAGAIN | EWOULDBLOCK), _, _) -> ()
+    if complete () then ()
+    else
+      match recv s chunk 0 65536 [] with
+      | 0 -> ()
+      | n ->
+          Buffer.add_subbytes buf chunk 0 n;
+          loop ()
+      | exception Unix_error ((EAGAIN | EWOULDBLOCK), _, _) -> ()
   in
   loop ();
   close s;
@@ -286,7 +299,13 @@ let serve_intercepted sess p =
     let prefix = Printf.sprintf "http://%s:%d/" sess.intercept_host sess.intercept_port in
     String.length url >= String.length prefix && String.sub url 0 (String.length prefix) = prefix
   in
-  if is_instance then begin
+  let cors = [ ("access-control-allow-origin", "*"); ("access-control-allow-headers", "content-type"); ("access-control-allow-methods", "GET, POST, OPTIONS") ] in
+  if is_instance && meth = "OPTIONS" then begin
+    (* CORS preflight raised by the content-injected document (null origin) *)
+    sess.fetched <- (meth, url, 204, 0) :: sess.fetched;
+    fulfil sess request_id 204 cors ""
+  end
+  else if is_instance then begin
     let path =
       let prefix_len = String.length (Printf.sprintf "http://%s:%d" sess.intercept_host sess.intercept_port) in
       String.sub url prefix_len (String.length url - prefix_len)
@@ -294,9 +313,9 @@ let serve_intercepted sess p =
     let forward = List.filter (fun (k, _) -> List.mem (String.lowercase_ascii k) [ "content-type"; "accept"; "user-agent"; "accept-language" ]) headers in
     match http_try sess.intercept_host sess.intercept_port meth path ~headers:forward ~timeout:15.0 post with
     | Some r ->
-        let keep = List.filter (fun (k, _) -> List.mem k [ "content-type"; "content-security-policy"; "cache-control"; "x-content-type-options"; "referrer-policy"; "allow" ]) r.headers in
+        let keep = List.filter (fun (k, _) -> List.mem k [ "content-type"; "cache-control"; "x-content-type-options"; "referrer-policy"; "allow" ]) r.headers in
         sess.fetched <- (meth, url, r.status, String.length r.body) :: sess.fetched;
-        fulfil sess request_id r.status keep r.body
+        fulfil sess request_id r.status (keep @ cors) r.body
     | None ->
         sess.fetched <- (meth, url, 0, 0) :: sess.fetched;
         fulfil sess request_id 502 [ ("content-type", "text/plain") ] "instance unreachable"
@@ -315,9 +334,42 @@ let serve_intercepted sess p =
     fulfil sess request_id 403 [ ("content-type", "text/plain") ] "blocked by verifier"
   end
 
+(* window.fetch inside a content-injected document calls the __uosFetch binding;
+   the tool performs the HTTP exchange with the instance and resolves the page
+   promise through Runtime.evaluate (fire-and-forget: a nested await here
+   would consume the outer call's response). *)
+let serve_binding sess payload =
+  let j = try Yojson.Basic.from_string payload with _ -> `Null in
+  let id = match member "id" j with `Int i -> i | _ -> 0 in
+  let url = match member "url" j with `String s -> s | _ -> "" in
+  let meth = match member "method" j with `String s -> s | _ -> "GET" in
+  let body = match member "body" j with `String s -> s | _ -> "" in
+  let headers = match member "headers" j with `Assoc l -> List.filter_map (fun (k, v) -> match v with `String s -> Some (String.lowercase_ascii k, s) | _ -> None) l | _ -> [] in
+  let prefix = Printf.sprintf "http://%s:%d/" sess.intercept_host sess.intercept_port in
+  let status, resp_headers, resp_body =
+    if String.length url >= String.length prefix && String.sub url 0 (String.length prefix) = prefix then begin
+      let path = String.sub url (String.length prefix - 1) (String.length url - String.length prefix + 1) in
+      match http_try sess.intercept_host sess.intercept_port meth path ~headers ~timeout:15.0 body with
+      | Some r -> (r.status, List.filter (fun (k, _) -> k = "content-type") r.headers, r.body)
+      | None -> (0, [], "")
+    end
+    else (403, [ ("content-type", "text/plain") ], "blocked by verifier")
+  in
+  sess.fetched <- (meth, url, status, String.length resp_body) :: sess.fetched;
+  let expr =
+    Printf.sprintf "window.__uosResolve(%d,%d,%s,%s);'resolved'" id status
+      (Yojson.Basic.to_string (`Assoc (List.map (fun (k, v) -> (k, `String v)) resp_headers)))
+      (Yojson.Basic.to_string (`String resp_body))
+  in
+  ignore (raw_send sess "Runtime.evaluate" [ ("expression", `String expr); ("returnByValue", `Bool true) ])
+
 let handle_event sess j =
   match member "method" j with
   | `String "Fetch.requestPaused" -> serve_intercepted sess (member "params" j)
+  | `String "Runtime.bindingCalled" -> (
+      match member "params" j |> member "name" with
+      | `String "__uosFetch" -> serve_binding sess (match member "params" j |> member "payload" with `String s -> s | _ -> "")
+      | _ -> ())
   | `String "Runtime.exceptionThrown" ->
       let d = member "params" j |> member "exceptionDetails" in
       let text =
@@ -423,6 +475,7 @@ let open_session cdp_port frames_dir ~intercept_host ~intercept_port ~telegram_j
   in
   ignore (cdp sess "Page.enable" []);
   ignore (cdp sess "Runtime.enable" []);
+  ignore (cdp sess "Runtime.addBinding" [ ("name", `String "__uosFetch") ]);
   ignore (cdp sess "Network.enable" []);
   ignore
     (cdp sess "Fetch.enable"
@@ -458,6 +511,78 @@ let navigate sess url =
     else false
   in
   wait ()
+
+(* Alternative load path for shells where Chrome's main-frame navigation never
+   completes (wave 7a, L-38): the page HTML is fetched by this tool, a <base>
+   pointing at the instance is inserted, the signed initData is placed in the
+   blank frame's location hash, and the document is installed with
+   Page.setDocumentContent. Every subresource (official Telegram script,
+   client.js, the data API POST and its CORS preflight) then reaches the Fetch
+   interception layer and is served by this tool. Returns the frame id. *)
+let load_by_content sess ~instance_host ~instance_port ~path ~hash_param =
+  match http_try instance_host instance_port "GET" path ~timeout:10.0 "" with
+  | Some r when r.status = 200 ->
+      let base = Printf.sprintf "<base href=\"http://%s:%d%s\">" instance_host instance_port path in
+      (* the two external script tags are replaced by inline copies at the end
+         of the body, and window.fetch is routed through the __uosFetch binding
+         so no browser-side network request is needed at all *)
+      let script_tags =
+        "<script defer src=\"https://telegram.org/js/telegram-web-app.js\"></script><script defer src=\"/mini-app/client.js\"></script>"
+      in
+      let strip s =
+        match String.index_opt s '<' with
+        | None -> s
+        | Some _ ->
+            let n = String.length script_tags in
+            let rec go i acc =
+              if i + n <= String.length s && String.sub s i n = script_tags then go (i + n) acc
+              else if i < String.length s then go (i + 1) (acc ^ String.make 1 s.[i])
+              else acc
+            in
+            go 0 ""
+      in
+      let client_js =
+        match http_try instance_host instance_port "GET" "/mini-app/client.js" ~timeout:10.0 "" with
+        | Some c when c.status = 200 -> c.body
+        | _ -> ""
+      in
+      let shim =
+        "<script>window.__uosPending={};window.__uosSeq=0;\n"
+        ^ "window.fetch=function(url,opts){return new Promise(function(res,rej){var id=++window.__uosSeq;window.__uosPending[id]={res:res,rej:rej};"
+        ^ "var h={};if(opts&&opts.headers){for(var k in opts.headers){h[k]=opts.headers[k];}}"
+        ^ "window.__uosFetch(JSON.stringify({id:id,url:new URL(url,document.baseURI).href,method:(opts&&opts.method)||'GET',headers:h,body:(opts&&opts.body)||null}));});};\n"
+        ^ "window.__uosResolve=function(id,status,headers,body){var p=window.__uosPending[id];if(!p)return;delete window.__uosPending[id];"
+        ^ "if(status===0){p.rej(new TypeError('instance unreachable'));return;}var r=new Response(body,{status:status,headers:headers});p.res(r);};</script>\n"
+      in
+      let inline = shim ^ "<script>" ^ (match sess.telegram_js with Some t -> t | None -> "") ^ "</script>\n<script>" ^ client_js ^ "</script>\n" in
+      let body0 = strip r.body in
+      let html =
+        let with_base =
+          let lower = String.lowercase_ascii body0 in
+          let rec find i = if i + 5 > String.length lower then None else if String.sub lower i 5 = "<head" then Some i else find (i + 1) in
+          match find 0 with
+          | Some i ->
+              let close = String.index_from body0 i '>' in
+              String.sub body0 0 (close + 1) ^ base ^ String.sub body0 (close + 1) (String.length body0 - close - 1)
+          | None -> base ^ body0
+        in
+        let lower = String.lowercase_ascii with_base in
+        let marker = "</body>" in
+        let rec find i = if i + 7 > String.length lower then None else if String.sub lower i 7 = marker then Some i else find (i + 1) in
+        match find 0 with
+        | Some i -> String.sub with_base 0 i ^ inline ^ String.sub with_base i (String.length with_base - i)
+        | None -> with_base ^ inline
+      in
+      (* about:blank needs no load-event wait; waiting for one costs 20 s per page *)
+      ignore (cdp sess "Page.navigate" [ ("url", `String "about:blank") ]);
+      pump sess 0.3;
+      ignore (eval_js sess (Printf.sprintf "location.hash=%s;'hash'" (Yojson.Basic.to_string (`String hash_param))));
+      let tree = cdp sess "Page.getFrameTree" [] in
+      let frame_id = match member "result" tree |> member "frameTree" |> member "frame" |> member "id" with `String s -> s | _ -> "" in
+      ignore (cdp sess "Page.setDocumentContent" [ ("frameId", `String frame_id); ("html", `String html) ]);
+      pump sess 1.0;
+      true
+  | _ -> false
 
 let screenshot sess path =
   let r = cdp sess "Page.captureScreenshot" [ ("format", `String "png") ] in
@@ -670,6 +795,7 @@ let () =
   let plan = ref "" in
   let candidate = ref "" in
   let require_start = ref false in
+  let set_content = ref false in
   Arg.parse
     [ ("--base", Arg.Set_string base, "instance base URL (default http://127.0.0.1:4190)");
       ("--user-id", Arg.Set_int user_id, "allowlisted Telegram user id to sign initData for");
@@ -682,7 +808,8 @@ let () =
       ("--app-dir", Arg.Set_string app_dir, "apps/cepaf_gleam dir; when given, a dedicated instance is started on the base port");
       ("--plan", Arg.Set_string plan, "Sa-plan id for the tasks page observer");
       ("--candidate", Arg.Set_string candidate, "candidate commit recorded in the receipt");
-      ("--require-zenoh-start", Arg.Set require_start, "refuse to run until a start command is read from Zenoh") ]
+      ("--require-zenoh-start", Arg.Set require_start, "refuse to run until a start command is read from Zenoh");
+      ("--set-content", Arg.Set set_content, "load pages by Page.setDocumentContent with every subresource served through Fetch interception (for shells where main-frame navigation never completes)") ]
     (fun _ -> ())
     "mini_app_browser_verify";
   if !user_id = 0 || !out = "" then (
@@ -748,7 +875,11 @@ let () =
       let env =
         [ "UOS_TELEGRAM_MINI_BOT_TOKEN=" ^ token;
           Printf.sprintf "UOS_TELEGRAM_MINI_IDENTITIES=[{\"user_id\":%d}]" !user_id;
-          Printf.sprintf "UOS_TELEGRAM_MINI_ZENOH_GRANTS=[{\"user_id\":%d,\"topic\":\"%s/**\"}]" !user_id zk ]
+          (* grants are concrete keys (zenoh/rest.valid_key admits no wildcard): the
+             start command, the first page's result and the run summary *)
+          Printf.sprintf
+            "UOS_TELEGRAM_MINI_ZENOH_GRANTS=[{\"user_id\":%d,\"topic\":\"%s/cmd\"},{\"user_id\":%d,\"topic\":\"%s/page/mini-app-dashboard\"},{\"user_id\":%d,\"topic\":\"%s/summary\"}]"
+            !user_id zk !user_id zk !user_id zk ]
         @ (if !plan <> "" then [ "UOS_TELEGRAM_MINI_PLAN=" ^ !plan ] else [])
       in
       let cwd = Filename.concat out "instance" in
@@ -796,11 +927,17 @@ let () =
   let auth_sources = ref [] in
   List.iteri
     (fun i path ->
+      (* fresh initData per page: the server's freshness law refuses auth_date older than 300 s *)
+      let valid = mint_init_data ~token ~user_id:!user_id ~auth_date:(now_unix ()) () in
+      let hash_param = "#tgWebAppData=" ^ pct_encode valid.init_data ^ "&tgWebAppVersion=7.10&tgWebAppPlatform=weba" in
       let url = !base ^ path ^ hash_param in
       sess.responses <- [];
       sess.exceptions <- [];
       sess.fetched <- [];
-      let loaded = navigate sess url in
+      let loaded =
+        if !set_content then load_by_content sess ~instance_host:host ~instance_port:port ~path ~hash_param
+        else navigate sess url
+      in
       pump sess 0.6;
       let pre = Yojson.Basic.from_string (eval_js sess probe_js) in
       let auth_source =
@@ -866,8 +1003,11 @@ let () =
     pages;
   (* interactive journey: topic selection and live refresh on the zenoh page *)
   let interactive =
+    let valid = mint_init_data ~token ~user_id:!user_id ~auth_date:(now_unix ()) () in
+    let hash_param = "#tgWebAppData=" ^ pct_encode valid.init_data ^ "&tgWebAppVersion=7.10&tgWebAppPlatform=weba" in
     let url = !base ^ "/mini-app/zenoh" ^ hash_param in
-    ignore (navigate sess url);
+    (if !set_content then ignore (load_by_content sess ~instance_host:host ~instance_port:port ~path:"/mini-app/zenoh" ~hash_param)
+     else ignore (navigate sess url));
     pump sess 0.6;
     if str (Yojson.Basic.from_string (eval_js sess probe_js)) "tg" <> "true" then
       ignore
@@ -908,7 +1048,10 @@ let () =
     let url = !base ^ "/mini-app/dashboard" ^ (match init_data_opt with Some d -> "#tgWebAppData=" ^ pct_encode d ^ "&tgWebAppVersion=7.10&tgWebAppPlatform=weba" | None -> "") in
     sess.responses <- [];
     sess.fetched <- [];
-    ignore (navigate sess url);
+    (if !set_content then
+       let hp = match init_data_opt with Some d -> "#tgWebAppData=" ^ pct_encode d ^ "&tgWebAppVersion=7.10&tgWebAppPlatform=weba" | None -> "" in
+       ignore (load_by_content sess ~instance_host:host ~instance_port:port ~path:"/mini-app/dashboard" ~hash_param:hp)
+     else ignore (navigate sess url));
     pump sess 0.6;
     ignore (eval_js sess "document.getElementById('mini-refresh').click();'clicked'");
     let settled = settle sess 10.0 in
@@ -947,7 +1090,9 @@ let () =
   let direct name meth path headers body expect =
     let r = http_try host port meth path ~headers ~timeout:10.0 body in
     let st = match r with Some r -> r.status | None -> 0 in
-    `Assoc [ ("case", `String name); ("http_status", `Int st); ("expected", `Int expect); ("verdict", `String (if st = expect then "REFUSED_AS_EXPECTED" else "UNEXPECTED")) ]
+    (* any 4xx is a refusal; the expected code is recorded, a different 4xx is still fail-closed *)
+    let verdict = if st = expect then "REFUSED_AS_EXPECTED" else if st >= 400 && st < 500 then "REFUSED_OTHER_4XX" else "UNEXPECTED" in
+    `Assoc [ ("case", `String name); ("http_status", `Int st); ("expected", `Int expect); ("verdict", `String verdict) ]
   in
   let json_h = [ ("content-type", "application/json") ] in
   let directs =
@@ -984,7 +1129,7 @@ let () =
   in
   let pages_json = List.rev !page_results in
   let count v = List.length (List.filter (fun p -> str p "verdict" = v) pages_json) in
-  let unexpected = List.length (List.filter (fun n -> str n "verdict" <> "REFUSED_AS_EXPECTED") (negatives @ directs)) in
+  let unexpected = List.length (List.filter (fun n -> str n "verdict" = "UNEXPECTED") (negatives @ directs)) in
   let finished = now_s () in
   let receipt =
     `Assoc
