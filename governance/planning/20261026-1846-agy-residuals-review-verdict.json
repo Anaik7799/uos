@@ -1,0 +1,41 @@
+{
+  "schema": "uos-review-verdict/v1",
+  "task": "RESIDUALS_REVIEW",
+  "plan": "uos/telegram-residuals/20261026-1752",
+  "reviewer": "agy-review-r1-20261026",
+  "author_session": "claude-fable-l0-35600f5c",
+  "candidate": "284a7854",
+  "result": "APPROVE",
+  "filed_at": "2026-10-26T18:15:46Z",
+  "laws": {
+    "R-LAW-01": "VERIFIED",
+    "R-LAW-02": "VERIFIED",
+    "R-LAW-03": "VERIFIED",
+    "R-LAW-04": "VERIFIED",
+    "R-LAW-05": "VERIFIED",
+    "R-LAW-06": "VERIFIED",
+    "R-LAW-07": "VERIFIED"
+  },
+  "suites": {
+    "telegram_gateway_ticker_test": 7,
+    "telegram_gateway_wiring_test": 2,
+    "telegram_gateway_drain_test": 18,
+    "telegram_gateway_outbox_test": 22,
+    "immune_system_supervised_test": 2,
+    "mini_immune_observer_test": 10,
+    "telegram_mini_app_test": 35,
+    "mini_reason_code_completeness_test": 4,
+    "total_passed": 100,
+    "total_failed": 0
+  },
+  "hostile_inputs": [
+    "send sleeping 800ms over 200ms call timeout: Unobserved(call_timeout), ticker survived",
+    "send raising: drain recorded OutboxUncertain(send_crashed), no crash",
+    "sink owner dead: Stale sent to dead process, ticker continued",
+    "200 enqueued vs budget 1: outbox capacity clamped at 64, 136 refused {error,{full,_}}",
+    "registry collision on uos_immune_system: start_named refused {error,{init_failed,<<\"name already registered\">>}}"
+  ],
+  "findings": [],
+  "authority": "advisory review evidence only; no admission",
+  "reviewer_report_verbatim": "I have initiated the build for `cepaf_gleam` in the independent review workspace `agy-review-r1-20261026` and am awaiting compilation completion.\nI will wait for the `gleam build` task to finish compiling.\nCompilation of `cepaf_gleam` is underway in background task `task-100`. Waiting for it to complete.\n### Independent Review Verdict: APPROVE\n**Candidate:** `284a7854` | **Plan:** `uos/telegram-residuals/20261026-1752` | **Task:** `RESIDUALS_REVIEW`\n**Reviewer:** `agy-review-r1-20261026` | **Authority:** Advisory review evidence only; no admission.\n\n---\n\n### Verification Matrix of Laws\n\n| Law | Summary | Status | Evidence |\n|---|---|---|---|\n| **R-LAW-01** | Scheduled cadence drives drain with per-tick Send; state holds no built Send/secret | **VERIFIED** | `telegram_gateway_ticker_test:98,179`; `sys:get_state` holds factory, zero secret |\n| **R-LAW-02** | Stale uncertain request raises Stale(oldest, age, count) repeatedly with growing age | **VERIFIED** | `telegram_gateway_ticker_test:116`; multi-tick age progression verified (5003→5055→5108 ms) |\n| **R-LAW-03** | Resolved request raises exactly one Cleared(after_age); quiet until next stale episode | **VERIFIED** | `telegram_gateway_ticker_test:133`; `alarms_sent` frozen at 2 until second episode |\n| **R-LAW-04** | Dead drain raises Unobserved; survives; named drain under supervisor recovers | **VERIFIED** | `telegram_gateway_ticker_test:154`; crash & restart under static supervisor verified |\n| **R-LAW-05** | Cadence <100ms, budget 0/>64, bound <cadence, timeout outside limits refused | **VERIFIED** | `telegram_gateway_ticker_test:83,206`; all 6 cases refused by validate & start_named |\n| **R-LAW-06** | `gateway_ticker_child` start site wired with drain child delivers Critical via fixture | **VERIFIED** | `telegram_service.gleam:6989`; verified with `telegram_http_test_fixture` (1/1 sent) |\n| **R-LAW-07** | Immune lookup None without sup, Some with live fields under sup; restart ok; 2nd fails | **VERIFIED** | `immune_system_supervised_test:26,32`; second start returns `{error,{init_failed,<<\"name already registered\">>}}` |\n\n---\n\n### Test Suite Execution Summary\n\nAll 8 suites executed in isolated workspace `agy-review-r1-20261026` with hackney started:\n- `telegram_gateway_ticker_test`: **7 passed**\n- `telegram_gateway_wiring_test`: **2 passed**\n- `telegram_gateway_drain_test`: **18 passed**\n- `telegram_gateway_outbox_test`: **22 passed**\n- `immune_system_supervised_test`: **2 passed**\n- `mini_immune_observer_test`: **10 passed**\n- `telegram_mini_app_test`: **35 passed**\n- `mini_reason_code_completeness_test`: **4 passed**\n**Total:** **100 passed, 0 failed.**\n\n---\n\n### Hostile Input Probes\n\n1. **Send sleeping 800ms > 200ms `call_timeout`:** Drain call timed out; ticker caught `CallTimeout`, raised `Unobserved(<<\"call_timeout\">>)`, survived and ticked.\n2. **Send raising exception (`error(hostile_explosion)`):** Drain caught exception into `OutboxUncertain(\"send_crashed\")`; no crash of drain or ticker.\n3. **Sink Subject owner dead:** Ticker raised `Stale` to dead process without crash; continued ticking.\n4. **200 enqueued requests against budget 1:** Outbox clamped capacity at 64; 64 accepted, 136 refused with `{error, {full, _}}`; budget 1 drained 1 safely.\n5. **Registry collision:** Prior manual registration of `uos_immune_system` safely refused by `system:start_named()` with `{error, {init_failed, <<\"name already registered\">>}}`.\n\n---\n\n### Sa-Plan Completion\n\n```text\ncompleted=true plan_id=uos/telegram-residuals/20261026-1752 task=RESIDUALS_REVIEW attempt=1\n```"
+}

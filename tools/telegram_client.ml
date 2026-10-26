@@ -324,18 +324,41 @@ let zenoh_put ~endpoint key payload =
    5. Telegram Bot API Invocation Core
    ---------------------------------------------------------------------------- *)
 
+(* Wave 7a (BRIDGE_TOKEN_HYGIENE): the bot token never enters a process
+   argument vector and never reaches a log line. The request URL travels to
+   curl as a config file on stdin (`-K -`), so `ps` and the systemd journal
+   see only the method name; and every error string that could echo a URL is
+   passed through [redact_token] before it is returned or printed. *)
+let redact_token s =
+  let b = Buffer.create (String.length s) in
+  let n = String.length s in
+  let i = ref 0 in
+  while !i < n do
+    if !i + 3 <= n && String.sub s !i 3 = "bot" && !i + 3 < n && s.[!i + 3] >= '0' && s.[!i + 3] <= '9' then begin
+      let j = ref (!i + 3) in
+      while !j < n && (match s.[!j] with '0' .. '9' | 'A' .. 'Z' | 'a' .. 'z' | ':' | '_' | '-' -> true | _ -> false) do incr j done;
+      Buffer.add_string b "bot<REDACTED>";
+      i := !j
+    end else begin
+      Buffer.add_char b s.[!i];
+      incr i
+    end
+  done;
+  Buffer.contents b
+
 let telegram_call ~token method_name (payload_json : Yojson.Safe.t) =
   let url = Printf.sprintf "https://api.telegram.org/bot%s/%s" token method_name in
   let body = Yojson.Safe.to_string payload_json in
   (* Wave 6s: transient exits 28 (timeout) and 35 (TLS handshake) are retried
      twice by curl itself with a short delay before the call is reported failed. *)
-  let cmd = Bos.Cmd.(v "curl" % "-s" % "--max-time" % "20" % "--connect-timeout" % "5" % "--retry" % "2" % "--retry-delay" % "1" % "--retry-all-errors" % "-X" % "POST" % "-H" % "Content-Type: application/json" % "-d" % body % url) in
-  match Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.to_string with
+  let cmd = Bos.Cmd.(v "curl" % "-s" % "--max-time" % "20" % "--connect-timeout" % "5" % "--retry" % "2" % "--retry-delay" % "1" % "--retry-all-errors" % "-X" % "POST" % "-H" % "Content-Type: application/json" % "-d" % body % "-K" % "-") in
+  let config = Printf.sprintf "url = %S\n" url in
+  match Bos.OS.Cmd.run_io cmd (Bos.OS.Cmd.in_string config) |> Bos.OS.Cmd.to_string with
   | Ok out ->
       (try Yojson.Safe.from_string out
-       with ex -> `Assoc ["ok", `Bool false; "error", `String (Printexc.to_string ex)])
+       with ex -> `Assoc ["ok", `Bool false; "error", `String (redact_token (Printexc.to_string ex))])
   | Error (`Msg e) ->
-      `Assoc ["ok", `Bool false; "error", `String e]
+      `Assoc ["ok", `Bool false; "error", `String (redact_token e)]
 
 let get_me ~token =
   telegram_call ~token "getMe" (`Assoc [])

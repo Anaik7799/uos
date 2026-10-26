@@ -113,6 +113,26 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 - Preconditions observed on 2026-10-26: no Telegram bridge is active on nas-1 (`uos-telegram-bridge` inactive) and no staging deployment is described in the tree; a staging service must be started from the worker runner with the staging bot token in its private configuration and, since wave 6q, `media_root` for the media rows.
 - User-side clients (the operator acts as the allowlisted user; the bot-side `tools/telegram-client` cannot act as a user): Telegram Desktop 7.3.3 is installed on nas-1 as a snap; Telegram Web (`https://web.telegram.org`) in the installed Google Chrome 154; the Telegram mobile app; terminal clients not installed here and provisionable only through the pinned Nix inputs (`tdl`, `nchat`, `tgt`); the second, non-allowlisted account for the stranger rows needs a second client session.
 
+## RESIDUALS_REVIEW — completed 2026-10-26 (plan `uos/telegram-residuals/20261026-1752`)
+
+- Completed attempt 1 by `agy-review-r1-20261026` at candidate `284a7854`: **APPROVE**, R-LAW-01..07 all VERIFIED, 8 suites 100 passed / 0 failed in an isolated workspace with hackney started, 5 hostile inputs (slow Send, raising Send, dead sink owner, 200 requests against budget 1 with the outbox clamped at 64, registry collision refused with `init_failed`). Verdict: `governance/planning/20261026-1846-agy-residuals-review-verdict.json`. Advisory review evidence only; no admission.
+
+## BRIDGE_TOKEN_HYGIENE — completed 2026-10-26 (production bridge, runtime lease `runtime:telegram-bridge` epoch 4)
+
+- Finding: the production bridge (`tools/telegram_client.exe --poll`, unit `uos-telegram-bridge`) passed the bot URL to curl in argv and printed the whole command, token included, into journald on every `getUpdates` failure.
+- Fix: `telegram_call` hands the URL to curl as a config file on stdin (`-K -`) and every error string passes `redact_token`. Canonical binary `42c9130a…` installed over `dfc2f907…` with the rollback copy `tools/telegram_client.exe.pre-20261026-1827`; unit active, 0 restarts, 0 `failed|error|locked` lines in the two minutes after the restart, `getMe` green through the new binary, the live curl child shows `-K -` and no token, 0 token lines in the journal since the restart.
+- Residual: lines written before the restart still carry the token in the user journal; rotating the token is an operator decision (`BotFather` → `vault-put` → restart under lease).
+- Correction (recorded, not rewritten): the Sa-plan completion result for `BRIDGE_TOKEN_HYGIENE` attempt 1 names `candidate` `284a78547052`, which is the wave 6z base; the first landing attempt had been refused by the coordinator (replayed heartbeat operation id) before that completion was written. The source change is in the wave 7a landing commit that follows this correction; the installed canonical binary `42c9130a…` is the same bytes in both. A corrected board message supersedes the premature report.
+
+## MINI_APP_BROWSER_VERIFY — executing (tool built, run blocked in the agent sandbox)
+
+- Tool: `tools/mini_app_browser_verify.ml` (pure OCaml CDP: dedicated instance on 4190 with a verification-only token and a throwaway TLS pair, official `telegram-web-app.js` served through `Fetch` interception, initData signed per the Telegram scheme, 14 pages with screenshot + data API verdict, screencast → mp4, live-refresh journey, 6 browser negative cases, 6 direct API cases, Zenoh start command consumed and every page result published to `indrajaal/telegram/mini_app_verify/<run>/…` and read back).
+- Blocker (L-38): headless Chrome 154 completes no URL load from the agent shell sandbox (net-log and strace under `var/telegram-mini-verify/`). Operator-run command is in the wave 7a journal; the task stays executing until a receipt exists.
+
+## COCKPIT_RESPONDER_AI — blocked (operator credential and cockpit release)
+
+- Observed: inbound messages 2244 and 2246 were answered with `dispatch_directive_status_default`; `handle_conversational` falls to the offline gateway because `c3i-gleam-server` has no `OPENROUTER_API_KEY`, and that unit runs from a release directory that no longer exists on disk. No effect taken; the Sa-plan task records the two blockers.
+
 ## Comprehensive verification checklist
 
 This is a process document; it asserts no runtime conformance.

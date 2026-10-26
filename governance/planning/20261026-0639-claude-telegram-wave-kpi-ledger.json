@@ -120,8 +120,8 @@
       "definition": "author-control residuals recorded by the independent reviews (G-04 staleness alarm consumer, Mini App immune actor never started) that are closed with laws on main; numerator = closed, denominator = recorded",
       "numerator": 2,
       "denominator": 2,
-      "value": "2/2 (G-04 closed by GATEWAY_TICKER; immune actor closed by IMMUNE_SUPERVISED)",
-      "observed_utc": "2026-10-26T17:30:47Z",
+      "value": "2/2 closed and independently reviewed (RESIDUALS_REVIEW APPROVE, 7/7 laws)",
+      "observed_utc": "2026-10-26T19:01:06Z",
       "source": "governance/planning/20261026-1752-claude-telegram-residuals-risk.json; docs/sop/20261026-1018-telegram-review-packets.md",
       "confidence": "Measured"
     },
@@ -134,6 +134,39 @@
       "value": "4/6: outbound Critical delivered, outbound Notice delivered, production bridge polling live with the vault-first token (0 lock errors since the restart), getMe through the repaired client; pending the operator: inbound command journeys (19 steps over 78 literals) and captioned media intake, which need messages sent to the staging bot",
       "observed_utc": "2026-10-26T17:53:34Z",
       "source": "governance/planning/20261026-1734-claude-telegram-real-traffic-outbound-receipt.json",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-15",
+      "name": "bridge_token_hygiene",
+      "definition": "production bridge secrets handling: numerator = exposures closed (token in curl argv, token in journald error lines), denominator = exposures found",
+      "numerator": 2,
+      "denominator": 2,
+      "value": "2/2 at canonical client 42c9130a: curl reads the URL from stdin (-K -), error strings pass redact_token; observed 0 token lines and 0 token argv after the restart",
+      "observed_utc": "2026-10-26T19:01:06Z",
+      "source": "tools/telegram_client.ml; journalctl uos-telegram-bridge; wave 7a journal",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-16",
+      "name": "mini_app_browser_verification",
+      "definition": "Mini App pages verified through real Chrome DevTools Protocol control with screenshot, screencast and data API verdicts; numerator = pages with a receipt, denominator = 14",
+      "numerator": 0,
+      "denominator": 14,
+      "value": "0/14: verifier built (tools/mini_app_browser_verify.ml), run blocked in the agent sandbox (L-38); operator-run pending",
+      "observed_utc": "2026-10-26T19:01:06Z",
+      "source": "tools/mini_app_browser_verify.ml; /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850",
+      "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-17",
+      "name": "inbound_ai_reply",
+      "definition": "free-text inbound messages answered by the inference path rather than the deterministic /status default; numerator = observed AI replies, denominator = observed free-text inbound in the window",
+      "numerator": 0,
+      "denominator": 2,
+      "value": "0/2 on 2026-10-26 (messages 2244, 2246 answered by dispatch_directive_status_default); cause: no OPENROUTER_API_KEY in c3i-gleam-server; blocked on an operator credential and a cockpit release",
+      "observed_utc": "2026-10-26T19:01:06Z",
+      "source": "journalctl uos-telegram-bridge; zenoh indrajaal/l5/cog/intent/res",
       "confidence": "Measured"
     }
   ],
@@ -579,6 +612,19 @@
       "process_defects": 2,
       "notes": "GATEWAY_TICKER in plan uos/telegram-residuals/20261026-1752 (opened per L-35): telegram_gateway_ticker drives the drain on a cadence with a Send built per tick, reads Counters and raises Stale (repeated while stale), Cleared (once) and Unobserved (silent drain) on a typed sink; gateway_ticker_child start site in telegram_service; 27 gateway laws green twice. Process defect: the silent-drain law first killed its own test process through the drain link (unlink before kill) and then timed out on a 1 s call timeout while the ticker was blocked in a scheduled tick (short call timeout in that law). IMMUNE_SUPERVISED (same plan, same landing): immune/system gains registry_name (fixed atom via immune_system_ffi), start_named, child_spec and lookup; mini_runtime discovers the actor by name at observation time instead of holding None; two laws (not running without a supervisor; discovered, restarted under the same name, observed, honest again after the supervisor stops); 51 immune and Mini App tests green twice. Process defect L-36: cp -p restores after the mutants left the mutant beams in the build; the first full suite ran against them; sources touched, rebuilt, laws green three times, full suite rerun.",
       "full_suite": "13906 passed, 0 failed"
+    },
+    {
+      "wave": "7a",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "RESIDUALS_REVIEW APPROVE (7/7 laws, 100 tests, 5 hostile inputs); production bridge token hygiene live (curl -K - on stdin, redacted errors); Mini App CDP verifier built, run blocked in the agent sandbox",
+      "tests_added": 0,
+      "mutants": "0 (OCaml tools only; no Gleam source changed)",
+      "workers": 1,
+      "wave_wall_minutes": null,
+      "checker_holds": 3,
+      "process_defects": 3,
+      "notes": "Verdict governance/planning/20261026-1846-agy-residuals-review-verdict.json. Bridge: canonical tools/telegram_client.exe 42c9130a installed over dfc2f907 under runtime:telegram-bridge epoch 4 with rollback copy; 0 token lines, curl child with -K -, getMe green. Mini App: tools/mini_app_browser_verify.ml compiles; headless Chrome 154 completes no URL load inside the agent shell sandbox (net-log evidence under /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850); operator-run command recorded in the journal. Root cause of the operator complaint (same reply every time): c3i-gleam-server has no OPENROUTER_API_KEY, so handle_conversational falls to the deterministic /status default; its release directory no longer exists on disk."
     }
   ],
   "forecasts": [
@@ -793,6 +839,15 @@
       "made_in": "wave 6z journal",
       "p": 0.75,
       "claim": "IMMUNE_SUPERVISED lands on main with laws and the full suite green by 2026-10-27T06:00:00Z",
+      "outcome": 1,
+      "brier": 0.0625,
+      "resolved_by": "claude-fable-l0-35600f5c",
+      "resolved_utc": "2026-10-26T19:01:06Z"
+    },
+    {
+      "made_in": "wave 7a journal",
+      "p": 0.6,
+      "claim": "The operator runs tools/mini_app_browser_verify.exe from a terminal and a receipt with 14/14 pages settled and a video exists under var/telegram-mini-verify by 2026-10-27T18:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -1015,6 +1070,24 @@
       "wave": "6z",
       "lesson": "A mutant restore with cp -p keeps the original mtime, so gleam build (and cargo fingerprints) keep the mutant beams and a rebuild recompiles nothing; the suite then fails exactly where the mutant bites and looks like a flake.",
       "applied": "restore then touch the file and rerun a law known to kill the mutant before reading any result; the mutant scripts touch on restore"
+    },
+    {
+      "id": "L-37",
+      "wave": "7a",
+      "lesson": "pgrep -f <pattern> matches the shell that is running the pgrep, so kill $(pgrep -f ...) kills the agent shell (exit 144). Twice in one session.",
+      "applied": "anchor the pattern to the binary path (^/usr/bin/google-chrome) or take the pid from ss -ltnp; never kill by a pattern that appears in your own command line"
+    },
+    {
+      "id": "L-38",
+      "wave": "7a",
+      "lesson": "Headless Chrome 154 completes no URL load from the agent shell sandbox: TCP connect to loopback succeeds, the URL request stalls right after COMPUTED_PRIVACY_MODE, Fetch interception never fires, data: URLs render, curl from the same shell answers in 1 ms. The sandbox bypass is refused by policy.",
+      "applied": "browser-driven verification runs from the operator terminal (the ! prefix); the tool records a net-log and refuses to start when its port already answers"
+    },
+    {
+      "id": "L-39",
+      "wave": "7a",
+      "lesson": "A tool that spawns Chrome and a server instance leaked both when an exception escaped before its cleanup; the next run then talked to the stale pair and failed for an unrelated reason.",
+      "applied": "register every child in at_exit and refuse to start when the target port already answers"
     }
   ]
 }
