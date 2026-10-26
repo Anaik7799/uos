@@ -95,12 +95,12 @@
     {
       "id": "TG-KPI-11",
       "name": "independent_review_closure",
-      "definition": "review tasks completed in Sa-plan by a claimant other than the author with a recorded verdict, over the five review tasks",
-      "numerator": 5,
-      "denominator": 5,
-      "value": "5/5 (COMMAND e, MEDIA f2, GATEWAY g, MINI_API h, VAULT_NIF v; all APPROVE by AGY claimants)",
-      "observed_utc": "2026-10-26T15:27:28Z",
-      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json",
+      "definition": "review tasks completed in Sa-plan by a claimant other than the author with a recorded verdict, over the six review tasks",
+      "numerator": 6,
+      "denominator": 6,
+      "value": "6/6 (COMMAND e, MEDIA f2, GATEWAY g, MINI_API h, VAULT_NIF v, VAULT_NIF_REVIEW2 v2; all APPROVE by AGY claimants)",
+      "observed_utc": "2026-10-26T16:10:29Z",
+      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json",
       "confidence": "Measured"
     },
     {
@@ -504,7 +504,7 @@
     },
     {
       "wave": "6w",
-      "landed_commit": null,
+      "landed_commit": "96ab356f",
       "landed_utc": null,
       "canonicals_answering": "77/77; VAULT_NIF_REVIEW APPROVE (7/7 laws, 141 tests); name validation closed after its probes",
       "tests_added": 2,
@@ -513,7 +513,7 @@
       "wave_wall_minutes": null,
       "checker_holds": 4,
       "process_defects": 1,
-      "notes": "VAULT_NIF_REVIEW completed by agy-review-v-20261026 with APPROVE: seven laws VERIFIED, 66 cargo and 75 eunit tests, eight hostile probes; probes 7 and 8 (empty name, NUL in name) were stored without refusal. VAULT_NIF_HARDEN: valid_name (non-empty, <= 512 bytes, no control bytes) checked before any disk access in kv_put, kv_get, kv_versions, kv_destroy with {error, {invalid_name, Name}}; cargo law, eunit law, mutant killed; library rebuilt and re-pinned 6db27c1e. Process defect: the portfolio crossed the checker byte bound (1 MiB, bounded.ml) and the four records cloned today carried copied media-wave rationale; they were rewritten with accurate compact content (L-35).",
+      "notes": "VAULT_NIF_REVIEW completed by agy-review-v-20261026 with APPROVE: seven laws VERIFIED, 66 cargo and 75 eunit tests, eight hostile probes; probes 7 and 8 (empty name, NUL in name) were stored without refusal. VAULT_NIF_HARDEN: valid_name (non-empty, <= 512 bytes, no control bytes) checked before any disk access in kv_put, kv_get, kv_versions, kv_destroy with {error, {invalid_name, Name}}; cargo law, eunit law, mutant killed; library rebuilt and re-pinned 6db27c1e. Process defect: the portfolio crossed the checker byte bound (1 MiB, bounded.ml) and the four records cloned today carried copied media-wave rationale; they were rewritten with accurate compact content (L-35). VAULT_NIF_REVIEW2 (plan uos/telegram-vault/20261026-1530) completed by agy-review-v2-20261026 with APPROVE: 4/4 laws VERIFIED, 143 tests, five new probes (512/513-byte names, spaces-only name accepted, 1 MiB value, NUL in lease id, 20 concurrent unseal/seal cycles with integrity_check ok). Residual for the next hardening: a name made only of spaces is accepted.",
       "full_suite": "13895 passed, 0 failed"
     }
   ],

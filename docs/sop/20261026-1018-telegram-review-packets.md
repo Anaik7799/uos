@@ -76,6 +76,13 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 - Evidence: the wave 6u journal (finding), the wave 6v journal (closure, mutants, three-process observation), `governance/sources/20261026-1420-vault-source-control-verification-and-c3i-telegram-gateway-ingestion.json`.
 - Known residuals the author recorded: the first unseal of an empty vault establishes the key (there is no separate init-with-key step), so an attacker who can write to an empty vault file first chooses its key; the audit row append is best-effort and not transactional with the row it describes; the lease id is stored in clear (it carries the secret name); the Telegram staging and production secrets still use the durable file store, not this NIF.
 
+## VAULT_NIF_REVIEW2 — "Independent review of the wave 6w hardening" (plan `uos/telegram-vault/20261026-1530`)
+
+- **Completed 2026-10-26 by `agy-review-v2-20261026` with verdict APPROVE** (advisory review evidence, no admission): V2-LAW-01 to V2-LAW-04 VERIFIED at main 96ab356f (name validation at all four entry points before disk; a bad-name row written directly with sqlite is neither read nor destroyed through the NIF, recorded as an administrative residual; the predecessor's seven laws re-checked including two-BEAM persistence; the installed library byte-identical to the pin), 67 cargo and 76 eunit tests, five new probes (512-byte name accepted and 513 refused, a spaces-only name accepted, a 1 MiB value round-trips, a NUL in a lease id answers `not_found`, 20 concurrent unseal/seal cycles from two BEAMs with `integrity_check` ok); the verdict JSON is filed as governance evidence `governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json`.
+- Candidate: `main` at 96ab356f (wave 6w).
+- Laws: V2-LAW-01 name validation; V2-LAW-02 pre-existing bad rows; V2-LAW-03 the predecessor's seven laws; V2-LAW-04 pin and provenance.
+- Residual for the next hardening: a name made only of spaces is accepted (0x20 is not a control byte); whether blank names are refused is a contract decision, not a defect of the law as written.
+
 ## TELEGRAM_E2E — "Verify complete staged Telegram operation and release readiness against current candidate"
 
 - Actor: an authorized human with the staging bot only; the production bridge is never touched (INV-TGJ-05).
