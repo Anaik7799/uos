@@ -41,6 +41,8 @@ Prior to this closure wave:
 
 ### 3.4 Complete Fractal ($L_0 \dots L_9$) Catalog of Supported Telegram Use Cases
 
+> **Full 7-Axis Encyclopedia Reference**: See [`docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md) for the complete 7-axis specification (**Usage**, **Control Plane**, **Data Plane**, **Fractal Architecture $L_0 \dots L_9$**, **Cross-Module Interactions**, **124 Verification & Test Suites**, and **Real-World Case Studies & Usage Scenarios**) for every item below.
+
 #### A. Fractal Layer Architecture ($L_0 \dots L_9$) of the Telegram Subsystem
 
 | Fractal Layer | Layer Name | Telegram Subsystem Responsibility & Governing Modules |
