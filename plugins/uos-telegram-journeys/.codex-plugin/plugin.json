@@ -1,0 +1,18 @@
+{
+  "name": "uos-telegram-journeys",
+  "version": "1.0.0",
+  "description": "UOS Telegram operator journeys plugin",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "UOS Telegram Journeys",
+    "shortDescription": "Add, run and accept Telegram operator journeys.",
+    "longDescription": "Packages the uos-telegram-journeys skill: staged journey tests, real-traffic run preparation and evidence rules for the Telegram command surface. No hooks, no network, no credentials.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Help me add or run a Telegram operator journey."
+  }
+}
