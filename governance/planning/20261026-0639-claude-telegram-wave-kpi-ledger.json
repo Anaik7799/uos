@@ -96,21 +96,21 @@
       "id": "TG-KPI-11",
       "name": "independent_review_closure",
       "definition": "review tasks completed in Sa-plan by a claimant other than the author with a recorded verdict, over the six review tasks",
-      "numerator": 7,
-      "denominator": 7,
-      "value": "7/7 (COMMAND, MEDIA, GATEWAY, MINI_API, VAULT_NIF, VAULT_NIF_REVIEW2, VAULT_NIF_REVIEW3 adversarial; all APPROVE by AGY claimants)",
-      "observed_utc": "2026-10-26T16:23:37Z",
-      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json; governance/planning/20261026-1637-agy-vault-nif-review3-independent-verdict.json",
+      "numerator": 8,
+      "denominator": 8,
+      "value": "8/8 (COMMAND, MEDIA, GATEWAY, MINI_API, VAULT_NIF, VAULT_NIF_REVIEW2, VAULT_NIF_REVIEW3 adversarial, VAULT_NIF_REVIEW4; all APPROVE by AGY claimants)",
+      "observed_utc": "2026-10-26T16:51:43Z",
+      "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json; governance/planning/20261026-1528-agy-vault-nif-review-independent-verdict.json; governance/planning/20261026-1629-agy-vault-nif-review2-independent-verdict.json; governance/planning/20261026-1637-agy-vault-nif-review3-independent-verdict.json; governance/planning/20261026-1643-agy-vault-nif-review4-independent-verdict.json",
       "confidence": "Measured"
     },
     {
       "id": "TG-KPI-12",
       "name": "vault_nif_law_closure",
       "definition": "VF-01 laws holding at the pinned library: persistence across handles and BEAMs, wrong-key refusal with the vault sealed, no plaintext or key on disk, audit append-only; numerator = laws observed green through the loaded NIF under OTP 29, denominator = laws declared",
-      "numerator": 7,
-      "denominator": 7,
-      "value": "7/7 at pin a5b63b75 (persistence, wrong key, no plaintext, audit append-only, name validation, no poison under a concurrent seal, audit chain tamper-evident; cargo 69/69, mutants 5/5, eunit 5/5)",
-      "observed_utc": "2026-10-26T16:29:53Z",
+      "numerator": 8,
+      "denominator": 8,
+      "value": "8/8 at pin ab61df88 (persistence, wrong key, no plaintext, audit append-only, name validation, no poison under a concurrent seal, chain tamper-evident, external root detects a full rewrite; cargo 70/70, mutants 6/6, eunit 6/6)",
+      "observed_utc": "2026-10-26T16:56:08Z",
       "source": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256; apps/cepaf_gleam/test/rusty_vault_persistence_test.erl; wave 6v journal",
       "confidence": "Measured"
     }
@@ -518,7 +518,7 @@
     },
     {
       "wave": "6x",
-      "landed_commit": null,
+      "landed_commit": "d75aa8f1",
       "landed_utc": null,
       "canonicals_answering": "77/77; VAULT_NIF_REVIEW3 (adversarial) APPROVE; its two findings closed",
       "tests_added": 3,
@@ -529,6 +529,20 @@
       "process_defects": 0,
       "notes": "VAULT_NIF_HARDEN2 in plan uos/telegram-vault/20261026-1530: poison-tolerant locks and a typed Sealed on an absent key close the seal-vs-read race that disabled a handle (V3-LAW-03); audit rows form a blake2s-256 hash chain appended under BEGIN IMMEDIATE with a 5 s busy timeout and verified by vault_audit_tail, which answers audit_chain_broken with the offending id (V3-LAW-05). Cargo 69 tests (12 vf01_laws), race law with a flipping thread, chain tamper law; eunit tamper law through the host sqlite3; library rebuilt, Cargo.lock updated once for the direct blake2 dependency, re-pinned a5b63b75.",
       "full_suite": "13896 passed, 0 failed"
+    },
+    {
+      "wave": "6y",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77; VAULT_NIF_REVIEW4 APPROVE 6/6; the chain residual closed with an external root",
+      "tests_added": 2,
+      "mutants": "1 planted, 1 killed (root verification ignores mismatch)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 1,
+      "process_defects": 1,
+      "notes": "VAULT_NIF_HARDEN3: vault_audit_root/1 answers the verified chain head {rows, digest}; vault_audit_verify_root/2 answers ok, audit_chain_broken or audit_root_mismatch with both digests, so a caller that keeps the head outside the file detects a consistent full rewrite that the in-file verification cannot see. Cargo 70 tests (13 vf01_laws, incl. a law that performs the consistent rewrite and shows in-file verify passes while the external root fails); eunit root law; 78 vault-suite tests twice; library re-pinned ab61df88. Process defect: the new record declared a score that was not its factor product (RP-INVALID five-factor product mismatch); corrected before the claim.",
+      "full_suite": "13897 passed, 0 failed"
     }
   ],
   "forecasts": [
@@ -725,6 +739,15 @@
       "made_in": "wave 6x journal",
       "p": 0.7,
       "claim": "VAULT_NIF_REVIEW4 is completed by an AGY claimant with APPROVE or APPROVE_WITH_CHANGES and no REFUTED law by 2026-10-27T12:00:00Z",
+      "outcome": 1,
+      "brier": 0.09,
+      "resolved_by": "VAULT_NIF_REVIEW4 APPROVE by agy-review-v4-20261026, 6/6 laws, 146 tests, 190661 seal cycles against 4960940 operations with zero panics",
+      "resolved_utc": "2026-10-26T16:51:43Z"
+    },
+    {
+      "made_in": "wave 6y journal",
+      "p": 0.7,
+      "claim": "VAULT_NIF_REVIEW5 is completed by an AGY claimant with APPROVE or APPROVE_WITH_CHANGES and no REFUTED law by 2026-10-27T12:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,

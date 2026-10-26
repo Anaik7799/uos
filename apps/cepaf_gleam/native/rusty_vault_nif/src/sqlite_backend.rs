@@ -482,6 +482,18 @@ impl SqliteKvBackend {
         Ok(out)
     }
 
+    /// The chain head: `(rows, digest of the last row)`, `(0, "")` when empty.
+    pub fn audit_head(&self) -> Result<(i64, String), BackendError> {
+        let conn = self.open_conn()?;
+        let rows: i64 = conn
+            .query_row("SELECT COUNT(*) FROM audit_log", [], |row| row.get(0))
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let digest: String = conn
+            .query_row("SELECT digest FROM audit_log ORDER BY id DESC LIMIT 1", [], |row| row.get(0))
+            .unwrap_or_default();
+        Ok((rows, digest))
+    }
+
     /// Read a `vault_meta` value.
     pub fn meta_get(&self, key: &str) -> Result<Option<Vec<u8>>, BackendError> {
         let conn = Connection::open(&self.path)

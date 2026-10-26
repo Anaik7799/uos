@@ -395,6 +395,38 @@ impl DiskVaultHandle {
         Ok(self.backend.audit_verify()?)
     }
 
+    /// The chain head after verifying the chain: `Ok(Ok((rows, digest)))`,
+    /// or `Ok(Err(id))` when the chain is broken at `id` (VAULT_NIF_HARDEN3).
+    /// A caller that keeps the head outside the file can detect a consistent
+    /// rewrite of the whole chain, which the in-file verification cannot.
+    pub fn audit_root(&self) -> Result<Result<(i64, String), i64>, VaultHandleError> {
+        match self.backend.audit_verify()? {
+            Err(id) => Ok(Err(id)),
+            Ok(_) => Ok(Ok(self.backend.audit_head()?)),
+        }
+    }
+
+    /// Verify the chain and compare its head with a root kept outside the
+    /// file: `Ok(Ok(rows))` when both match; `Ok(Err(Err(id)))` when the
+    /// chain is broken; `Ok(Err(Ok((expected, actual))))` when the chain
+    /// recomputes but its head is not the root, which is what a consistent
+    /// full rewrite, a truncation or a replaced file looks like.
+    pub fn audit_verify_root(
+        &self,
+        expected_digest: &str,
+    ) -> Result<Result<i64, Result<(String, String), i64>>, VaultHandleError> {
+        match self.audit_root()? {
+            Err(id) => Ok(Err(Err(id))),
+            Ok((rows, actual)) => {
+                if actual == expected_digest {
+                    Ok(Ok(rows))
+                } else {
+                    Ok(Err(Ok((expected_digest.to_string(), actual))))
+                }
+            }
+        }
+    }
+
     /// Read-only count of audit rows. Used by tests to confirm
     /// SC-VAULT-008 append behaviour.
     pub fn audit_row_count(&self) -> Result<i64, VaultHandleError> {

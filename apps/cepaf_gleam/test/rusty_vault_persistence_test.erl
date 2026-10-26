@@ -149,3 +149,28 @@ law_audit_tampering_is_detected_by_the_tail_test() ->
             _ = os:cmd("sqlite3 " ++ Db ++ " \"INSERT INTO audit_log (ts, event, name, version, caller) VALUES (1000, 'get', 'k', 1, 'forged');\""),
             ?assertEqual({error, {audit_chain_broken, 5}}, rusty_vault_nif:vault_audit_tail(H, 0))
     end.
+
+%% VAULT_NIF_HARDEN3: the chain head is exposed so a caller can keep it outside
+%% the file; verification against that root reports a moved head with both
+%% digests, which is what a consistent full rewrite or a replaced file looks
+%% like to the in-file verification that cannot see it.
+law_external_root_moves_with_every_append_and_detects_a_stale_head_test() ->
+    case nif_available() of
+        false -> ok;
+        true ->
+            Dir = fresh_dir(),
+            {ok, H} = rusty_vault_nif:vault_init(Dir, <<Dir/binary, "/audit.log">>),
+            {ok, nil} = rusty_vault_nif:vault_unseal(H, key(16#aa)),
+            {ok, _} = rusty_vault_nif:vault_kv_put(H, <<"k">>, <<"v1">>, 60, 600),
+            {ok, #{rows := 3, digest := Root1}} = rusty_vault_nif:vault_audit_root(H),
+            ?assertEqual(64, byte_size(Root1)),
+            ?assertEqual({ok, 3}, rusty_vault_nif:vault_audit_verify_root(H, Root1)),
+            {ok, _} = rusty_vault_nif:vault_kv_put(H, <<"k">>, <<"v2">>, 60, 600),
+            {ok, #{rows := 4, digest := Root2}} = rusty_vault_nif:vault_audit_root(H),
+            ?assertNotEqual(Root1, Root2),
+            ?assertEqual({ok, 4}, rusty_vault_nif:vault_audit_verify_root(H, Root2)),
+            ?assertEqual({error, {audit_root_mismatch, Root1, Root2}}, rusty_vault_nif:vault_audit_verify_root(H, Root1)),
+            %% a fresh handle on the same file sees the same head
+            {ok, H2} = rusty_vault_nif:vault_init(Dir, <<Dir/binary, "/audit.log">>),
+            {ok, #{rows := 4, digest := Root2}} = rusty_vault_nif:vault_audit_root(H2)
+    end.

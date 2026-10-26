@@ -81,6 +81,9 @@ mod atoms {
         decrypt_failed,
         invalid_name,
         audit_chain_broken,
+        audit_root_mismatch,
+        rows,
+        digest,
         nif_panic,
         version,
         lease_id,
@@ -494,6 +497,48 @@ fn vault_audit_tail<'a>(
 }
 
 // =====================================================================
+// NIF: vault_audit_root/1 and vault_audit_verify_root/2 (VAULT_NIF_HARDEN3)
+// =====================================================================
+
+/// The chain head after verification: `{ok, #{rows => N, digest => Hex}}`,
+/// or `{error, {audit_chain_broken, Id}}`. A caller that keeps the head
+/// outside the file (Sa-plan evidence, a ledger row) can later call
+/// `vault_audit_verify_root/2` and detect a consistent rewrite of the whole
+/// chain, which the in-file verification cannot.
+#[rustler::nif(schedule = "DirtyIo")]
+fn vault_audit_root<'a>(env: Env<'a>, handle: ResourceArc<VaultHandle>) -> NifResult<Term<'a>> {
+    match handle.disk.audit_root() {
+        Ok(Ok((rows, digest))) => {
+            let mut m = rustler::Term::map_new(env);
+            m = m.map_put(atoms::rows(), rows).unwrap();
+            m = m.map_put(atoms::digest(), digest).unwrap();
+            Ok((atoms::ok(), m).encode(env))
+        }
+        Ok(Err(id)) => Ok((atoms::error(), (atoms::audit_chain_broken(), id)).encode(env)),
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
+    }
+}
+
+/// Verify the chain and compare its head with `expected_digest`:
+/// `{ok, Rows}`, `{error, {audit_chain_broken, Id}}` or
+/// `{error, {audit_root_mismatch, Expected, Actual}}`.
+#[rustler::nif(schedule = "DirtyIo")]
+fn vault_audit_verify_root<'a>(
+    env: Env<'a>,
+    handle: ResourceArc<VaultHandle>,
+    expected_digest: String,
+) -> NifResult<Term<'a>> {
+    match handle.disk.audit_verify_root(&expected_digest) {
+        Ok(Ok(rows)) => Ok((atoms::ok(), rows).encode(env)),
+        Ok(Err(Err(id))) => Ok((atoms::error(), (atoms::audit_chain_broken(), id)).encode(env)),
+        Ok(Err(Ok((expected, actual)))) => {
+            Ok((atoms::error(), (atoms::audit_root_mismatch(), expected, actual)).encode(env))
+        }
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
+    }
+}
+
+// =====================================================================
 // Pass-22: kek_chain NIF entry points (exposes argon2 + tpm_present + salt)
 // =====================================================================
 
@@ -579,6 +624,8 @@ rustler::init!(
         vault_kv_destroy,
         vault_lease_renew,
         vault_audit_tail,
+        vault_audit_root,
+        vault_audit_verify_root,
         kek_derive_master_key,
         kek_generate_salt,
         kek_tpm_present,
@@ -784,6 +831,43 @@ mod vf01_laws {
         assert_eq!(a.disk.audit_verify().unwrap(), Ok(4));
         conn.execute("INSERT INTO audit_log (ts, event, name, version, caller) VALUES (1000, 'get', 'k', 1, 'forged')", []).unwrap();
         assert_eq!(a.disk.audit_verify().unwrap(), Err(5));
+    }
+
+    #[test]
+    fn law_external_root_detects_a_consistent_full_rewrite() {
+        // VAULT_NIF_REVIEW3/4 residual: a tamperer who recomputes every digest
+        // from the first row passes the in-file verification; a root kept
+        // outside the file catches it.
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("root.sqlite3");
+        let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        a.disk.unseal_verified(key(0xaa)).unwrap();
+        a.disk.put_with_lease("k", b"v1", 60, 600).unwrap();
+        let (rows1, root1) = a.disk.audit_root().unwrap().unwrap();
+        assert_eq!(rows1, 3, "key_established, unseal, put");
+        assert_eq!(root1.len(), 64);
+        a.disk.put_with_lease("k", b"v2", 60, 600).unwrap();
+        let (rows2, root2) = a.disk.audit_root().unwrap().unwrap();
+        assert_eq!((rows2, root2 == root1), (4, false), "the head moves with every append");
+        assert_eq!(a.disk.audit_verify_root(&root2).unwrap(), Ok(4));
+        assert_eq!(a.disk.audit_verify_root(&root1).unwrap(), Err(Ok((root1.clone(), root2.clone()))), "a stale root reports both digests");
+        // the consistent full rewrite: drop the triggers, rewrite row 3, recompute every digest
+        let conn = rusqlite::Connection::open(&db).unwrap();
+        conn.execute_batch("DROP TRIGGER audit_log_no_update; UPDATE audit_log SET event = 'destroy' WHERE id = 3;").unwrap();
+        let mut stmt = conn.prepare("SELECT id, ts, event, name, version, caller FROM audit_log ORDER BY id ASC").unwrap();
+        let rows: Vec<(i64, i64, String, String, i64, String)> = stmt
+            .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)))
+            .unwrap()
+            .map(|r| r.unwrap())
+            .collect();
+        let mut prev = String::new();
+        for (id, ts, event, name, version, caller) in rows {
+            let d = sqlite_backend::SqliteKvBackend::audit_digest(&prev, ts, &event, &name, version, &caller);
+            conn.execute("UPDATE audit_log SET digest = ?1 WHERE id = ?2", rusqlite::params![d, id]).unwrap();
+            prev = d;
+        }
+        assert_eq!(a.disk.audit_verify().unwrap(), Ok(4), "the in-file verification cannot see a consistent rewrite");
+        assert!(matches!(a.disk.audit_verify_root(&root2).unwrap(), Err(Ok(_))), "the external root does");
     }
 
     #[test]

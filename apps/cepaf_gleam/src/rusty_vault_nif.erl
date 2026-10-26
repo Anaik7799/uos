@@ -15,6 +15,8 @@
     vault_kv_destroy/3,
     vault_lease_renew/3,
     vault_audit_tail/2,
+    vault_audit_root/1,
+    vault_audit_verify_root/2,
     kek_derive_master_key/2,
     kek_generate_salt/0,
     kek_tpm_present/1
@@ -39,6 +41,9 @@ vault_kv_destroy(_Handle, _Name, _Version) ->
 vault_lease_renew(_Handle, _LeaseId, _Ttl) ->
     erlang:nif_error({not_loaded, ?MODULE}).
 vault_audit_tail(_Handle, _SinceTs)  -> erlang:nif_error({not_loaded, ?MODULE}).
+%% VAULT_NIF_HARDEN3: chain head and verification against an external root.
+vault_audit_root(_Handle)            -> erlang:nif_error({not_loaded, ?MODULE}).
+vault_audit_verify_root(_Handle, _Expected) -> erlang:nif_error({not_loaded, ?MODULE}).
 kek_derive_master_key(_Pass, _Salt)  -> erlang:nif_error({not_loaded, ?MODULE}).
 kek_generate_salt()                  -> erlang:nif_error({not_loaded, ?MODULE}).
 kek_tpm_present(_OverridePath)       -> erlang:nif_error({not_loaded, ?MODULE}).
