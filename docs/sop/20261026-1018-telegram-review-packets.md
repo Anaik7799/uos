@@ -65,6 +65,15 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 - Evidence: journals 20261026-0220 (wave 4) and 0640 (6a).
 - Known residuals: the immune actor is not started by any supervisor; browser verification not rerun.
 
+## VAULT_NIF_REVIEW — "Independent review of the VF-01 fix in the vault NIF"
+
+- Candidate: `main` at or after the wave 6v landing (the crate last changed in wave 6v; before it the NIF kept its store in RAM and unsealed with any 32-byte key, finding VF-01 in the wave 6u journal and manifest).
+- Files: `apps/cepaf_gleam/native/rusty_vault_nif/src/lib.rs` (entry points over the disk handle), `vault_handle.rs` (`unseal_verified`, `put_with_lease`, `get_latest_meta`, `destroy`, `lease_renew`, `audit_tail`), `sqlite_backend.rs` (`vault_meta`, append-only triggers, lease and audit queries), `crypto.rs` (AES-256-GCM envelope, unchanged), `apps/cepaf_gleam/test/rusty_vault_persistence_test.erl`, `apps/cepaf_gleam/priv/rusty_vault_nif.sha256` (pin 73be69d9, supersedes f5aaab89), the crate README.
+- Laws to verify: persistence across fresh handles and across BEAMs; a wrong or wrong-length key is refused and the vault stays sealed while the right key still works; neither the secret bytes nor the master key reach the sqlite file or its WAL; the audit table refuses UPDATE and DELETE and records `key_established`, `unseal`, `put`, `get`, `seal`, `unseal_refused` in order and is readable while sealed; a stale row returns `ttl_expired` and an undecryptable row `decrypt_failed`, never a value; the pinned library is a build of the tracked crate; no Tongsuo or SM2/3/4 dependency.
+- Suites: `cargo test --offline --locked` in the crate (66, nine of them `vf01_laws`); eunit `rusty_vault_persistence_test` (3), `vault_wiring_test`, `vault_migration_test`, `uos_vault_file_test`, `vault_kek_test`.
+- Evidence: the wave 6u journal (finding), the wave 6v journal (closure, mutants, three-process observation), `governance/sources/20261026-1420-vault-source-control-verification-and-c3i-telegram-gateway-ingestion.json`.
+- Known residuals the author recorded: the first unseal of an empty vault establishes the key (there is no separate init-with-key step), so an attacker who can write to an empty vault file first chooses its key; the audit row append is best-effort and not transactional with the row it describes; the lease id is stored in clear (it carries the secret name); the Telegram staging and production secrets still use the durable file store, not this NIF.
+
 ## TELEGRAM_E2E — "Verify complete staged Telegram operation and release readiness against current candidate"
 
 - Actor: an authorized human with the staging bot only; the production bridge is never touched (INV-TGJ-05).

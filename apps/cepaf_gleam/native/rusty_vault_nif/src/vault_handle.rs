@@ -68,6 +68,8 @@ pub enum VaultHandleError {
     BadMasterKeyLen(usize),
     #[error("secret not found: {0}")]
     NotFound(String),
+    #[error("wrong master key: the verifier row did not decrypt")]
+    WrongKey,
 }
 
 /// State machine for the disk-backed vault.
@@ -217,6 +219,151 @@ impl DiskVaultHandle {
     pub fn versions(&self, name: &str) -> Result<Vec<i64>, VaultHandleError> {
         self.require_active()?;
         Ok(self.backend.versions(name)?)
+    }
+
+    // =================================================================
+    // VF-01 closure (2026-10-26): the surface the NIF entry points use.
+    // =================================================================
+
+    /// Name of the `vault_meta` row that proves a master key.
+    pub const VERIFIER_KEY: &'static str = "uos_vault_verifier_v1";
+    /// Plaintext the verifier row encrypts.
+    pub const VERIFIER_PLAINTEXT: &'static [u8] = b"uos-vault-verifier-v1";
+
+    /// Transition Sealed → Active only with the key the vault was
+    /// established with.
+    ///
+    /// The first unseal of an empty vault establishes the key by writing
+    /// an encrypted verifier row; every later unseal must decrypt that
+    /// row, so a wrong key returns `VaultHandleError::WrongKey` and the
+    /// vault stays sealed. A verifier row that is not an envelope returns
+    /// `VaultHandleError::Crypto` and the vault stays sealed.
+    pub fn unseal_verified(
+        &self,
+        master_key: Zeroizing<Vec<u8>>,
+    ) -> Result<(), VaultHandleError> {
+        if master_key.len() != 32 {
+            return Err(VaultHandleError::BadMasterKeyLen(master_key.len()));
+        }
+        {
+            let state = self.state.lock().expect("state mutex poisoned");
+            if *state == DiskVaultState::Active {
+                return Err(VaultHandleError::AlreadyUnsealed);
+            }
+        }
+        match self.backend.meta_get(Self::VERIFIER_KEY)? {
+            Some(blob) => {
+                let envelope = crypto::deserialize(&blob)?;
+                match crypto::decrypt(&envelope, &master_key) {
+                    Ok(pt) if pt.as_slice() == Self::VERIFIER_PLAINTEXT => {}
+                    Ok(_) | Err(CryptoError::DecryptionFailed) => {
+                        self.backend.audit_append("unseal_refused", "", 0, "nif").ok();
+                        return Err(VaultHandleError::WrongKey);
+                    }
+                    Err(e) => return Err(VaultHandleError::Crypto(e)),
+                }
+            }
+            None => {
+                let env = crypto::encrypt(Self::VERIFIER_PLAINTEXT, &master_key)?;
+                let written = self
+                    .backend
+                    .meta_set_if_absent(Self::VERIFIER_KEY, &crypto::serialize(&env))?;
+                if !written {
+                    // Another opener established the key between our read and
+                    // our write: verify against what is on disk now.
+                    return self.unseal_verified(master_key);
+                }
+                self.backend.audit_append("key_established", "", 0, "nif").ok();
+            }
+        }
+        self.unseal(master_key)
+    }
+
+    /// Store a versioned secret and return `(version, lease_id)`.
+    pub fn put_with_lease(
+        &self,
+        name: &str,
+        plaintext: &[u8],
+        ttl_sec: i64,
+        max_ttl_sec: i64,
+    ) -> Result<(i64, String), VaultHandleError> {
+        self.require_active()?;
+        let envelope_bytes = {
+            let mk_guard = self.master_key.lock().expect("master_key mutex poisoned");
+            let mk = mk_guard.as_ref().expect("require_active guarantees Some");
+            crypto::serialize(&crypto::encrypt(plaintext, mk)?)
+        };
+        let next = match self.backend.versions(name)?.last().copied() {
+            Some(v) => v + 1,
+            None => 1,
+        };
+        let lease_id = format!("lease-{}-{}-{}", name, next, Utc::now().timestamp());
+        self.backend
+            .put_kv_with_lease(name, next, &envelope_bytes, ttl_sec, max_ttl_sec, &lease_id)?;
+        self.append_audit("put", name, next);
+        Ok((next, lease_id))
+    }
+
+    /// Latest version with its metadata:
+    /// `(version, plaintext, created_at, ttl_sec, max_ttl_sec, lease_id)`.
+    /// Decryption failure is returned, never a fake plaintext.
+    pub fn get_latest_meta(
+        &self,
+        name: &str,
+    ) -> Result<(i64, Vec<u8>, i64, i64, i64, String), VaultHandleError> {
+        self.require_active()?;
+        match self.backend.get_latest_row(name)? {
+            Some((v, blob, created_at, ttl, max_ttl, lease)) => {
+                let envelope = crypto::deserialize(&blob)?;
+                let plaintext = {
+                    let mk_guard = self.master_key.lock().expect("master_key mutex poisoned");
+                    let mk = mk_guard.as_ref().expect("require_active guarantees Some");
+                    crypto::decrypt(&envelope, mk)?
+                };
+                Ok((v, plaintext.to_vec(), created_at, ttl, max_ttl, lease))
+            }
+            None => Err(VaultHandleError::NotFound(name.to_string())),
+        }
+    }
+
+    /// `(version, created_at)` for every stored version, ascending.
+    pub fn versions_with_ts(&self, name: &str) -> Result<Vec<(i64, i64)>, VaultHandleError> {
+        self.require_active()?;
+        Ok(self.backend.versions_with_ts(name)?)
+    }
+
+    /// Hard-delete one version. `Ok(false)` when it did not exist.
+    pub fn destroy(&self, name: &str, version: i64) -> Result<bool, VaultHandleError> {
+        self.require_active()?;
+        let removed = self.backend.delete_version(name, version)?;
+        if removed {
+            self.append_audit("destroy", name, version);
+        }
+        Ok(removed)
+    }
+
+    /// Extend the ttl of the row carrying `lease_id`; returns the new
+    /// expiry `created_at + ttl_sec`, or `None` when no row carries it.
+    pub fn lease_renew(&self, lease_id: &str, ttl_sec: i64) -> Result<Option<i64>, VaultHandleError> {
+        self.require_active()?;
+        match self.backend.renew_lease(lease_id, ttl_sec)? {
+            None => Ok(None),
+            Some((name, version, created_at)) => {
+                self.append_audit("lease_renew", &name, version);
+                Ok(Some(created_at + ttl_sec))
+            }
+        }
+    }
+
+    /// Audit rows since `since_ts`: `(ts, event, name, version, caller)`.
+    /// Readable while sealed: the audit trail is not a secret.
+    pub fn audit_tail(&self, since_ts: i64) -> Result<Vec<(i64, String, String, i64, String)>, VaultHandleError> {
+        Ok(self.backend.audit_since(since_ts)?)
+    }
+
+    /// Record an audit event from the NIF layer (for example a stale read).
+    pub fn audit_event(&self, event: &str, name: &str, version: i64) {
+        self.append_audit(event, name, version);
     }
 
     fn require_active(&self) -> Result<(), VaultHandleError> {

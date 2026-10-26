@@ -102,6 +102,17 @@
       "observed_utc": "2026-10-26T14:46:13Z",
       "source": "governance/planning/20261026-1434-, -1448- (two), -1437-agy-*-review-independent-verdict.json",
       "confidence": "Measured"
+    },
+    {
+      "id": "TG-KPI-12",
+      "name": "vault_nif_law_closure",
+      "definition": "VF-01 laws holding at the pinned library: persistence across handles and BEAMs, wrong-key refusal with the vault sealed, no plaintext or key on disk, audit append-only; numerator = laws observed green through the loaded NIF under OTP 29, denominator = laws declared",
+      "numerator": 4,
+      "denominator": 4,
+      "value": "4/4 at pin 73be69d9 (cargo 66/66, mutants 2/2 killed, eunit 3/3, three-process observation)",
+      "observed_utc": "2026-10-26T15:05:53Z",
+      "source": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256; apps/cepaf_gleam/test/rusty_vault_persistence_test.erl; wave 6v journal",
+      "confidence": "Measured"
     }
   ],
   "waves": [
@@ -476,6 +487,20 @@
       "checker_holds": 0,
       "process_defects": 2,
       "notes": "Operator directive: get the bridge and vault source, all artifacts under UOS control. Finding: the vault NIF crate (apps/cepaf_gleam/native/rusty_vault_nif) and its vendored RustyVault 0.3.1 dependency (sub-projects/rusty_vault_vendored, 155 tracked files, PEM test fixtures redacted) were already ingested on 2026-10-25 and the .so was built from them; verified byte-identical against C3I rev 47f93223 today, and the duplicate copies this task first made under native/nifs/rust were removed (L-31). VF-01 recorded: the NIF source keeps its key-value store and audit log in RAM and its unseal is a TODO stub, so the wave 6r runtime finding is the source, not drift. The C3I Rust gateway and polling sources were ingested as inert evidence (2 files, 0 secret hits). MEDIA_REVIEW (207 tests), GATEWAY_REVIEW (94 tests) and MINI_API_REVIEW (244 tests) completed by AGY runs f2, g and h; verdicts filed; packets and portfolio mirrored."
+    },
+    {
+      "wave": "6v",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77; VF-01 closed in the tracked crate (persistence, wrong-key refusal, no plaintext on disk)",
+      "tests_added": 12,
+      "mutants": "2 planted, 2 killed (verifier skipped; plaintext stored)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 3,
+      "process_defects": 1,
+      "notes": "VAULT_NIF_FIX: the NIF resource now owns the disk-backed sqlite handle (AES-256-GCM envelopes, append-only audit triggers, vault_meta verifier row); vault_unseal refuses a wrong key and keeps the vault sealed; 9 vf01_laws cargo tests (66 in the crate), 2 mutants killed, rusty_vault_persistence_test.erl (3 laws) through the loaded NIF, three-process OTP 29 observation (put in one BEAM, get in the next, wrong key in a third, no plaintext on disk); release rebuilt from the tracked crate and re-pinned 73be69d9 (supersedes f5aaab89). Holds on the way to the claim: evidence postdating the assessment, declared deps differing from Sa-plan, and TELEGRAM_E2E (P1, 768) sitting ready although it is blocked on the staging token; its blocker is now recorded (L-33). Process defect: a stale completion helper posted a wrong board message (sequence 2746), corrected as 2747.",
+      "full_suite": "13894 passed, 0 failed"
     }
   ],
   "forecasts": [
@@ -645,6 +670,15 @@
       "made_in": "wave 6u journal",
       "p": 0.7,
       "claim": "the sovereign review of VF-01 (rusty_vault_nif in-RAM stub) is recorded by Codex or AGY as a Sa-plan task with a verdict by 2026-10-28T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6v journal",
+      "p": 0.65,
+      "claim": "VAULT_NIF_REVIEW is completed by an AGY claimant with APPROVE or APPROVE_WITH_CHANGES and no REFUTED law by 2026-10-27T12:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -843,6 +877,18 @@
       "wave": "6u",
       "lesson": "Under set -o pipefail a secret scan that finds nothing (grep exit 1) aborts the script before the manifest is written, so a clean scan looked like a failed ingestion twice.",
       "applied": "the scan is wrapped so no-match is the success path and the hit count is still recorded"
+    },
+    {
+      "id": "L-33",
+      "wave": "6v",
+      "lesson": "A record kept ready while its true blocker is a human or operator input makes the checker hold every other claim behind it (RP-SELECTION); readiness must say blocked with the blocker named, which is also the honest state.",
+      "applied": "TELEGRAM_E2E carries its blocker (staging token not supplied); readiness is flipped to ready the moment the token arrives"
+    },
+    {
+      "id": "L-34",
+      "wave": "6v",
+      "lesson": "rustler NIF arguments typed String decode from Erlang binaries, not charlists, and rustler atoms cannot be created in a cargo test outside a BEAM (unreachable_unchecked abort); laws on the resource type stay in Rust, laws on the atoms go through eunit against the loaded library.",
+      "applied": "vf01_laws test the handle; rusty_vault_persistence_test.erl tests the atoms; the BEAM script passes binaries"
     }
   ]
 }

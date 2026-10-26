@@ -10,16 +10,22 @@
 - **Install and pin**: `apps/cepaf_gleam/priv/rusty_vault_nif.so`, pinned by `apps/cepaf_gleam/priv/rusty_vault_nif.sha256`. A rebuild that changes the digest must re-pin with provenance.
 - **Loader**: `apps/cepaf_gleam/src/rusty_vault_nif.erl` (`-on_load`), safe wrapper `rusty_vault_safe.erl`.
 
-## Finding VF-01 (recorded 2026-10-26, status RECORDED_FOR_SOVEREIGN_REVIEW)
+## Finding VF-01 (recorded 2026-10-26; FIXED at the wave 6v revision; sovereign review VAULT_NIF_REVIEW pending)
 
-Observed at runtime (Telegram wave 6r): the loaded NIF persists nothing under its storage path (a `put` in one BEAM is `not_found` in the next) and unseals with any 32-byte key, including one never used to seal.
+Observed at runtime (Telegram wave 6r): the loaded NIF persisted nothing under its storage path (a `put` in one BEAM was `not_found` in the next) and unsealed with any 32-byte key, including one never used to seal.
 
-The source explains it exactly; this is the stub in the source, not a build or provisioning drift:
+The source explained it exactly; it was the stub in the source, not a build or provisioning drift:
 
-- `src/lib.rs` `VaultHandle` (the NIF resource) keeps `kv_store` as `Mutex<HashMap<String, Vec<KvEntry>>>` in RAM and `audit_log` as `Mutex<Vec<AuditEntry>>`.
-- `vault_unseal` carries the comment `TODO Slice B+: integrate RustyVault::core::Core::unseal(master_key)` and only checks `master_key.len() == 32` before storing the key in RAM.
-- `src/vault_handle.rs` defines a separate disk-backed `VaultHandle` over `src/sqlite_backend.rs` (rusqlite, WAL pragma) with unit tests, but no NIF entry point in `lib.rs` constructs or calls it.
+- `src/lib.rs` `VaultHandle` (the NIF resource) kept `kv_store` as `Mutex<HashMap<String, Vec<KvEntry>>>` in RAM and `audit_log` as `Mutex<Vec<AuditEntry>>`.
+- `vault_unseal` carried the comment `TODO Slice B+: integrate RustyVault::core::Core::unseal(master_key)` and only checked `master_key.len() == 32` before storing the key in RAM.
+- `src/vault_handle.rs` defined a disk-backed handle over `src/sqlite_backend.rs` (rusqlite, WAL pragma) with unit tests, but no NIF entry point in `lib.rs` constructed or called it.
 
-Until the NIF is completed, rebuilt from this crate, re-pinned and sovereign-reviewed (R5), the only persistent vault path in UOS is the durable file store `apps/cepaf_gleam/src/uos_vault_file.erl` with its OCaml twin `tools/uos_vault.ml` (same `UOSV1` format; cross-read verified both ways in wave 6r). Required follow-up: wire the disk-backed handle or RustyVault Core into the entry points, add a persistence law (put in one BEAM, get in the next) and a wrong-key law, rebuild, re-pin, review.
+### The closure (wave 6v)
+
+- The NIF resource now owns `DiskVaultHandle`; every secret is stored as an AES-256-GCM envelope (`crypto.rs`) in `kv_entries`, the audit trail is the `audit_log` table with triggers that refuse `UPDATE` and `DELETE`, and nothing is cached in the handle beyond the master key.
+- The first unseal of an empty vault writes an encrypted verifier row in `vault_meta`; every later unseal must decrypt it, so a wrong key returns `{error, wrong_key}` and the vault stays sealed. A verifier row that is not an envelope marks the handle `corrupt`.
+- `vault_init` accepts a directory (resolves to `<dir>/vault.sqlite3`) or a file path; paths and names are binaries.
+- Laws: 9 `vf01_laws` cargo tests (66 in the crate), 2 mutants killed (verifier skipped; plaintext stored), `test/rusty_vault_persistence_test.erl` through the loaded NIF, and a three-process OTP 29 observation (put in one BEAM, get in the next, wrong key in a third, no plaintext on disk) recorded in the wave 6v journal.
+- The durable file store `apps/cepaf_gleam/src/uos_vault_file.erl` with its OCaml twin `tools/uos_vault.ml` remains the path the Telegram staging and production secrets use; switching them to the NIF is a separate decision after the review.
 
 UOS footer: `nas-1.tail55d152.ts.net:4100` · source presence and a pinned digest grant no admission.

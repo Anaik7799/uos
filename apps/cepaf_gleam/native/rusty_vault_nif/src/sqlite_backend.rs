@@ -116,6 +116,16 @@ impl SqliteKvBackend {
                 version INTEGER NOT NULL,
                 caller  TEXT    NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS vault_meta (
+                key     TEXT    PRIMARY KEY,
+                value   BLOB    NOT NULL
+            );
+            CREATE TRIGGER IF NOT EXISTS audit_log_no_update
+                BEFORE UPDATE ON audit_log
+                BEGIN SELECT RAISE(ABORT, 'audit_log is append-only'); END;
+            CREATE TRIGGER IF NOT EXISTS audit_log_no_delete
+                BEFORE DELETE ON audit_log
+                BEGIN SELECT RAISE(ABORT, 'audit_log is append-only'); END;
             "#,
         )
         .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
@@ -241,6 +251,172 @@ impl SqliteKvBackend {
             )
             .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
         Ok(n)
+    }
+
+    // =================================================================
+    // VF-01 closure (2026-10-26): the rows the NIF entry points need.
+    // Every function here is a real SQL operation on the same file;
+    // nothing is cached in RAM beyond the call.
+    // =================================================================
+
+    /// Insert a versioned row carrying its lease id. `put_kv` keeps its
+    /// original signature and stores an empty lease id.
+    pub fn put_kv_with_lease(
+        &self,
+        name: &str,
+        version: i64,
+        ciphertext: &[u8],
+        ttl_sec: i64,
+        max_ttl_sec: i64,
+        lease_id: &str,
+    ) -> Result<i64, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let now = chrono_now_unix();
+        conn.execute(
+            "INSERT INTO kv_entries (name, version, value, created_at, ttl_sec, max_ttl_sec, lease_id) \
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
+            rusqlite::params![name, version, ciphertext, now, ttl_sec, max_ttl_sec, lease_id],
+        )
+        .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        Ok(now)
+    }
+
+    /// Latest row for `name` with its metadata:
+    /// `(version, ciphertext, created_at, ttl_sec, max_ttl_sec, lease_id)`.
+    pub fn get_latest_row(
+        &self,
+        name: &str,
+    ) -> Result<Option<(i64, Vec<u8>, i64, i64, i64, String)>, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut stmt = conn
+            .prepare(
+                "SELECT version, value, created_at, ttl_sec, max_ttl_sec, lease_id FROM kv_entries \
+                 WHERE name = ?1 ORDER BY version DESC LIMIT 1",
+            )
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut rows = stmt
+            .query(rusqlite::params![name])
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        match rows.next().map_err(|e| BackendError::MigrateFailed(e.to_string()))? {
+            None => Ok(None),
+            Some(row) => {
+                let get = |i: usize| -> Result<i64, BackendError> {
+                    row.get(i).map_err(|e| BackendError::MigrateFailed(e.to_string()))
+                };
+                let v = get(0)?;
+                let blob: Vec<u8> = row.get(1).map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+                let created = get(2)?;
+                let ttl = get(3)?;
+                let max_ttl = get(4)?;
+                let lease: String = row.get(5).map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+                Ok(Some((v, blob, created, ttl, max_ttl, lease)))
+            }
+        }
+    }
+
+    /// `(version, created_at)` for every row of `name`, ascending.
+    pub fn versions_with_ts(&self, name: &str) -> Result<Vec<(i64, i64)>, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut stmt = conn
+            .prepare("SELECT version, created_at FROM kv_entries WHERE name = ?1 ORDER BY version ASC")
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let rows = stmt
+            .query_map(rusqlite::params![name], |row| Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?)))
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut out = Vec::new();
+        for r in rows {
+            out.push(r.map_err(|e| BackendError::MigrateFailed(e.to_string()))?);
+        }
+        Ok(out)
+    }
+
+    /// Set `ttl_sec` on the row that carries `lease_id`. Returns
+    /// `(name, version, created_at)` of that row, or `None` when no row
+    /// carries the lease.
+    pub fn renew_lease(
+        &self,
+        lease_id: &str,
+        ttl_sec: i64,
+    ) -> Result<Option<(String, i64, i64)>, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let found: Option<(String, i64, i64)> = conn
+            .query_row(
+                "SELECT name, version, created_at FROM kv_entries WHERE lease_id = ?1 LIMIT 1",
+                rusqlite::params![lease_id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .ok();
+        match found {
+            None => Ok(None),
+            Some((name, version, created_at)) => {
+                conn.execute(
+                    "UPDATE kv_entries SET ttl_sec = ?1 WHERE lease_id = ?2",
+                    rusqlite::params![ttl_sec, lease_id],
+                )
+                .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+                Ok(Some((name, version, created_at)))
+            }
+        }
+    }
+
+    /// Append an audit row. The table refuses UPDATE and DELETE by trigger.
+    pub fn audit_append(&self, event: &str, name: &str, version: i64, caller: &str) -> Result<(), BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        conn.execute(
+            "INSERT INTO audit_log (ts, event, name, version, caller) VALUES (?1, ?2, ?3, ?4, ?5)",
+            rusqlite::params![chrono_now_unix(), event, name, version, caller],
+        )
+        .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        Ok(())
+    }
+
+    /// Audit rows with `ts >= since_ts`, oldest first:
+    /// `(ts, event, name, version, caller)`.
+    pub fn audit_since(&self, since_ts: i64) -> Result<Vec<(i64, String, String, i64, String)>, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut stmt = conn
+            .prepare("SELECT ts, event, name, version, caller FROM audit_log WHERE ts >= ?1 ORDER BY id ASC")
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let rows = stmt
+            .query_map(rusqlite::params![since_ts], |row| {
+                Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?, row.get(4)?))
+            })
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let mut out = Vec::new();
+        for r in rows {
+            out.push(r.map_err(|e| BackendError::MigrateFailed(e.to_string()))?);
+        }
+        Ok(out)
+    }
+
+    /// Read a `vault_meta` value.
+    pub fn meta_get(&self, key: &str) -> Result<Option<Vec<u8>>, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let v: Option<Vec<u8>> = conn
+            .query_row("SELECT value FROM vault_meta WHERE key = ?1", rusqlite::params![key], |row| row.get(0))
+            .ok();
+        Ok(v)
+    }
+
+    /// Insert a `vault_meta` value only when the key is absent. Returns
+    /// `true` when this call wrote it, `false` when a value already existed.
+    pub fn meta_set_if_absent(&self, key: &str, value: &[u8]) -> Result<bool, BackendError> {
+        let conn = Connection::open(&self.path)
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        let n = conn
+            .execute(
+                "INSERT OR IGNORE INTO vault_meta (key, value) VALUES (?1, ?2)",
+                rusqlite::params![key, value],
+            )
+            .map_err(|e| BackendError::MigrateFailed(e.to_string()))?;
+        Ok(n > 0)
     }
 
     /// Return all version numbers for a secret, ascending.

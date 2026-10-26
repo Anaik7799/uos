@@ -1,13 +1,19 @@
 //! rusty_vault_nif — Sealed K/V vault NIF for cepaf_gleam.
 //!
-//! This crate exposes 10 NIFs implementing the Vault contract specified by
-//! `.claude/rules/secrets-vault.md` (SC-VAULT-001..025 + SC-VAULT-CRYPTO-001).
+//! This crate exposes 10 vault NIFs plus 3 KEK-chain NIFs implementing the
+//! Vault contract specified by `.claude/rules/secrets-vault.md`
+//! (SC-VAULT-001..025 + SC-VAULT-CRYPTO-001).
 //!
 //! # Critical invariants
 //!
 //! - SC-VAULT-001: Vault MUST be sealed at process start
 //! - SC-VAULT-002: KEK MUST never be persisted in plaintext
 //! - SC-VAULT-005: Hot path MUST NOT make network calls
+//! - SC-VAULT-006: reads fail closed (sealed, stale, undecryptable)
+//! - SC-VAULT-008: the audit log is append-only (SQL triggers refuse
+//!   UPDATE and DELETE)
+//! - SC-VAULT-011: versions are monotonic per name (composite primary key)
+//! - SC-VAULT-012: WAL journal, synchronous=FULL
 //! - SC-VAULT-CRYPTO-001: NO Tongsuo / SM2/SM3/SM4 in dependency tree
 //!
 //! Verification gate (CI):
@@ -16,10 +22,23 @@
 //! # MUST be empty
 //! ```
 //!
-//! # NIF surface (10 functions)
+//! # VF-01 closure (2026-10-26)
 //!
-//! 1. `vault_init/2`  — bootstrap (creates sealed vault file)
-//! 2. `vault_unseal/2` — sealed → active (KEK chain decrypts master)
+//! Until this revision the NIF resource kept its key-value store and audit
+//! log in RAM and `vault_unseal` accepted any 32-byte key (a documented
+//! TODO). The resource now owns the disk-backed handle
+//! (`vault_handle::DiskVaultHandle` over `sqlite_backend::SqliteKvBackend`):
+//! every secret is stored as an AES-256-GCM envelope under the unsealed
+//! master key, the audit trail is a table with append-only triggers, and the
+//! first unseal of a vault writes an encrypted verifier row that every later
+//! unseal must decrypt, so a wrong key is refused and the vault stays sealed.
+//! Nothing is cached in the handle beyond the master key, so a fresh handle
+//! (or a fresh BEAM) on the same file reads what an earlier one wrote.
+//!
+//! # NIF surface (10 vault functions)
+//!
+//! 1. `vault_init/2`  — open or create the sqlite file; always sealed
+//! 2. `vault_unseal/2` — sealed → active after the verifier row decrypts
 //! 3. `vault_seal/1` — active → sealed (zeroizes master in RAM)
 //! 4. `vault_status/1` — query state
 //! 5. `vault_kv_put/5` — write secret + policy
@@ -29,18 +48,20 @@
 //! 9. `vault_lease_renew/3` — extend a lease
 //! 10. `vault_audit_tail/2` — read audit events for register sync
 //!
-//! All NIFs are dirty-IO scheduled (RustyVault's storage layer can block on disk).
+//! All vault NIFs are dirty-IO scheduled (the storage layer blocks on disk).
 
 use rustler::{Atom, Binary, Encoder, Env, NifResult, OwnedBinary, ResourceArc, Term};
-use std::collections::HashMap;
-use std::sync::{Mutex, RwLock};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::sync::RwLock;
 use zeroize::Zeroizing;
 
 pub mod crypto;
 pub mod kek_chain;
 pub mod sqlite_backend;
 pub mod vault_handle;
+
+use crypto::CryptoError;
+use vault_handle::{DiskVaultHandle, VaultHandleError};
 
 mod atoms {
     rustler::atoms! {
@@ -57,55 +78,35 @@ mod atoms {
         ttl_expired,
         storage_error,
         already_unsealed,
+        decrypt_failed,
         nif_panic,
         version,
         lease_id,
         ts,
         name,
         caller,
+        storage,
     }
 }
 
 // =====================================================================
-// VaultHandle — process-wide resource holding the RustyVault Core
+// VaultHandle — process-wide resource owning the disk-backed vault
 // =====================================================================
 
-/// One stored version of a secret. Pass-20 body-wiring: in-memory K/V.
-#[derive(Clone)]
-pub struct KvEntry {
-    pub version: i64,
-    pub value: Zeroizing<Vec<u8>>,
-    pub created_at: i64,
-    pub ttl_sec: i64,
-    pub max_ttl_sec: i64,
-    pub lease_id: String,
-}
+/// Default file name when `storage_path` names a directory.
+pub const DEFAULT_DB_FILE: &str = "vault.sqlite3";
 
-/// One audit log entry. Append-only — SC-VAULT-008.
-#[derive(Clone)]
-pub struct AuditEntry {
-    pub ts: i64,
-    pub event: String,    // "put" | "get" | "destroy" | "lease_renew" | "unseal" | "seal"
-    pub name: String,
-    pub version: i64,
-    pub caller: String,
-}
-
-/// State of a vault handle. We deliberately keep the inner core inside a Mutex
-/// so concurrent NIF calls serialize safely (RustyVault's storage layer is not
-/// internally Sync for all operations).
+/// State of a vault handle as reported to the BEAM.
 pub struct VaultHandle {
+    /// The sqlite file actually opened.
     storage_path: PathBuf,
+    /// Recorded for status; the audit trail lives in the sqlite file.
     audit_path: PathBuf,
     /// State machine: Sealed | Unsealing | Active | Sealing | Corrupt | Halted
     state: RwLock<VaultState>,
-    /// In-RAM master key, present only when Active. Zeroized on transition out.
-    master_in_ram: Mutex<Option<Zeroizing<Vec<u8>>>>,
-    /// Pass-20 body-wiring: in-memory K/V — name → versions (monotonic by SC-VAULT-011).
-    /// Future: replaced by RustyVault::Core::SqliteBackend in Slice B-full.
-    kv_store: Mutex<HashMap<String, Vec<KvEntry>>>,
-    /// Pass-20 body-wiring: append-only audit log — SC-VAULT-008.
-    audit_log: Mutex<Vec<AuditEntry>>,
+    /// The disk-backed vault: sqlite rows, AES-256-GCM envelopes, the
+    /// in-RAM master key (zeroized on seal) and the verifier row.
+    disk: DiskVaultHandle,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -131,76 +132,63 @@ impl VaultState {
     }
 }
 
+/// A `storage_path` that names an existing directory, or ends in a path
+/// separator, resolves to `<dir>/vault.sqlite3`; anything else is the file.
+pub fn resolve_db_path(storage_path: &str) -> PathBuf {
+    let p = Path::new(storage_path);
+    if p.is_dir() || storage_path.ends_with('/') {
+        p.join(DEFAULT_DB_FILE)
+    } else {
+        p.to_path_buf()
+    }
+}
+
 impl VaultHandle {
-    fn new(storage: PathBuf, audit: PathBuf) -> Self {
-        Self {
-            storage_path: storage,
-            audit_path: audit,
+    /// Open or create the vault file. Returns a sealed handle, or the
+    /// backend error when the file cannot be opened or migrated.
+    pub fn open(storage_path: &str, audit_path: &str) -> Result<Self, VaultHandleError> {
+        let db = resolve_db_path(storage_path);
+        if let Some(parent) = db.parent() {
+            if !parent.as_os_str().is_empty() {
+                // Best effort: a missing parent surfaces as the open error below.
+                let _ = std::fs::create_dir_all(parent);
+            }
+        }
+        let disk = DiskVaultHandle::new(&db)?;
+        Ok(Self {
+            storage_path: db,
+            audit_path: PathBuf::from(audit_path),
             state: RwLock::new(VaultState::Sealed),
-            master_in_ram: Mutex::new(None),
-            kv_store: Mutex::new(HashMap::new()),
-            audit_log: Mutex::new(Vec::new()),
+            disk,
+        })
+    }
+
+    fn set_state(&self, s: VaultState) {
+        if let Ok(mut st) = self.state.write() {
+            *st = s;
         }
     }
 
-    /// Pass-20 body: append an audit entry (SC-VAULT-008 append-only).
-    fn audit_append(&self, event: &str, name: &str, version: i64) {
-        let entry = AuditEntry {
-            ts: chrono::Utc::now().timestamp(),
-            event: event.to_string(),
-            name: name.to_string(),
-            version,
-            caller: "nif".to_string(),
-        };
-        if let Ok(mut log) = self.audit_log.lock() {
-            log.push(entry);
-        }
+    fn state(&self) -> VaultState {
+        self.state.read().map(|s| s.clone()).unwrap_or(VaultState::Halted)
     }
 
-    /// Pass-20 body: compute next monotonic version per SC-VAULT-011.
-    fn next_version(&self, name: &str) -> i64 {
-        if let Ok(store) = self.kv_store.lock() {
-            store
-                .get(name)
-                .and_then(|versions| versions.last())
-                .map(|last| last.version + 1)
-                .unwrap_or(1)
-        } else {
-            1
-        }
+    fn is_active(&self) -> bool {
+        self.state() == VaultState::Active
     }
 }
 
-// =====================================================================
-// Errors
-// =====================================================================
-
-#[derive(Debug, thiserror::Error)]
-pub enum VaultError {
-    #[error("vault is sealed")]
-    Sealed,
-    #[error("wrong master key")]
-    WrongKey,
-    #[error("secret not found: {0}")]
-    NotFound(String),
-    #[error("ttl expired for: {0}")]
-    TtlExpired(String),
-    #[error("storage error: {0}")]
-    StorageError(String),
-    #[error("vault already unsealed")]
-    AlreadyUnsealed,
-}
-
-impl VaultError {
-    fn to_atom(&self) -> Atom {
-        match self {
-            VaultError::Sealed => atoms::sealed(),
-            VaultError::WrongKey => atoms::wrong_key(),
-            VaultError::NotFound(_) => atoms::not_found(),
-            VaultError::TtlExpired(_) => atoms::ttl_expired(),
-            VaultError::StorageError(_) => atoms::storage_error(),
-            VaultError::AlreadyUnsealed => atoms::already_unsealed(),
-        }
+/// Map a disk-handle error to the atom the BEAM contract names.
+fn error_atom(e: &VaultHandleError) -> Atom {
+    match e {
+        VaultHandleError::Sealed => atoms::sealed(),
+        VaultHandleError::AlreadyUnsealed => atoms::already_unsealed(),
+        VaultHandleError::BadMasterKeyLen(_) => atoms::wrong_key(),
+        VaultHandleError::WrongKey => atoms::wrong_key(),
+        VaultHandleError::NotFound(_) => atoms::not_found(),
+        VaultHandleError::Crypto(CryptoError::DecryptionFailed) => atoms::decrypt_failed(),
+        VaultHandleError::Crypto(_) => atoms::storage_error(),
+        VaultHandleError::Backend(_) => atoms::storage_error(),
     }
 }
 
@@ -208,83 +196,74 @@ impl VaultError {
 // NIF: vault_init/2
 // =====================================================================
 
-/// Initialize a vault. Creates `storage_path` on disk if not present.
-/// Returns a sealed handle.
+/// Open or create the vault at `storage_path`. Always returns a sealed
+/// handle (SC-VAULT-001), or `{error, storage_error}` when the file cannot
+/// be opened.
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_init<'a>(env: Env<'a>, storage_path: String, audit_path: String) -> NifResult<Term<'a>> {
-    let handle = VaultHandle::new(PathBuf::from(storage_path), PathBuf::from(audit_path));
-    // SC-VAULT-001: sealed at process start (always; init never returns active)
-    let resource = ResourceArc::new(handle);
-    Ok((atoms::ok(), resource).encode(env))
+    match VaultHandle::open(&storage_path, &audit_path) {
+        Ok(handle) => Ok((atoms::ok(), ResourceArc::new(handle)).encode(env)),
+        Err(_) => Ok((atoms::error(), atoms::storage_error()).encode(env)),
+    }
 }
 
 // =====================================================================
 // NIF: vault_unseal/2
 // =====================================================================
 
-/// Transition Sealed → Active by decrypting the master key with `master_key`.
-/// Returns `{:ok, :unsealed}` or `{:error, :wrong_key | :already_unsealed}`.
+/// Transition Sealed → Active when `master_key` decrypts the verifier row
+/// (the first unseal of an empty vault establishes the key).
+/// Returns `{ok, nil}` or `{error, wrong_key | already_unsealed | storage_error}`.
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_unseal<'a>(
     env: Env<'a>,
     handle: ResourceArc<VaultHandle>,
     master_key: Binary,
 ) -> NifResult<Term<'a>> {
-    {
-        let state = handle.state.read().unwrap();
-        if *state == VaultState::Active {
-            return Ok((atoms::error(), atoms::already_unsealed()).encode(env));
+    match handle.state() {
+        VaultState::Active => return Ok((atoms::error(), atoms::already_unsealed()).encode(env)),
+        VaultState::Halted | VaultState::Corrupt => {
+            return Ok((atoms::error(), atoms::storage_error()).encode(env))
         }
-        if *state == VaultState::Halted || *state == VaultState::Corrupt {
-            return Ok((atoms::error(), atoms::storage_error()).encode(env));
+        _ => {}
+    }
+    handle.set_state(VaultState::Unsealing);
+    let key = Zeroizing::new(master_key.as_slice().to_vec());
+    match handle.disk.unseal_verified(key) {
+        Ok(()) => {
+            handle.set_state(VaultState::Active);
+            Ok((atoms::ok(), rustler::types::atom::nil()).encode(env))
+        }
+        Err(VaultHandleError::AlreadyUnsealed) => {
+            handle.set_state(VaultState::Active);
+            Ok((atoms::error(), atoms::already_unsealed()).encode(env))
+        }
+        Err(VaultHandleError::Crypto(CryptoError::DecryptionFailed)) | Err(VaultHandleError::WrongKey) => {
+            handle.set_state(VaultState::Sealed);
+            Ok((atoms::error(), atoms::wrong_key()).encode(env))
+        }
+        Err(VaultHandleError::Crypto(_)) => {
+            // The verifier row is not an envelope: the file is not ours.
+            handle.set_state(VaultState::Corrupt);
+            Ok((atoms::error(), atoms::storage_error()).encode(env))
+        }
+        Err(e) => {
+            handle.set_state(VaultState::Sealed);
+            Ok((atoms::error(), error_atom(&e)).encode(env))
         }
     }
-    {
-        let mut state = handle.state.write().unwrap();
-        *state = VaultState::Unsealing;
-    }
-
-    // TODO Slice B+: integrate RustyVault::core::Core::unseal(master_key)
-    // For now: validate key length (must be 32 bytes for AES-256) and store in RAM.
-    if master_key.len() != 32 {
-        let mut state = handle.state.write().unwrap();
-        *state = VaultState::Sealed;
-        return Ok((atoms::error(), atoms::wrong_key()).encode(env));
-    }
-
-    let key_bytes = Zeroizing::new(master_key.as_slice().to_vec());
-    {
-        let mut master = handle.master_in_ram.lock().unwrap();
-        *master = Some(key_bytes);
-    }
-    {
-        let mut state = handle.state.write().unwrap();
-        *state = VaultState::Active;
-    }
-
-    Ok((atoms::ok(), rustler::types::atom::nil()).encode(env))
 }
 
 // =====================================================================
 // NIF: vault_seal/1
 // =====================================================================
 
-/// Active → Sealed. Zeroizes the master key in RAM.
+/// Active → Sealed. Zeroizes the master key in RAM (SC-VAULT-002).
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_seal<'a>(env: Env<'a>, handle: ResourceArc<VaultHandle>) -> NifResult<Term<'a>> {
-    {
-        let mut state = handle.state.write().unwrap();
-        *state = VaultState::Sealing;
-    }
-    {
-        // SC-VAULT-002: master key zeroized on seal
-        let mut master = handle.master_in_ram.lock().unwrap();
-        *master = None;  // Zeroizing<Vec<u8>> drop zeros the memory
-    }
-    {
-        let mut state = handle.state.write().unwrap();
-        *state = VaultState::Sealed;
-    }
+    handle.set_state(VaultState::Sealing);
+    handle.disk.seal();
+    handle.set_state(VaultState::Sealed);
     Ok(atoms::ok().encode(env))
 }
 
@@ -292,27 +271,22 @@ fn vault_seal<'a>(env: Env<'a>, handle: ResourceArc<VaultHandle>) -> NifResult<T
 // NIF: vault_status/1
 // =====================================================================
 
-/// Returns the current state atom (sealed | active | …).
+/// Returns `#{name => State, storage => Path}`.
 #[rustler::nif]
 fn vault_status<'a>(env: Env<'a>, handle: ResourceArc<VaultHandle>) -> NifResult<Term<'a>> {
-    let state = handle.state.read().unwrap();
-    let state_atom = state.to_atom();
+    let state_atom = handle.state().to_atom();
     let mut map = rustler::Term::map_new(env);
     map = map.map_put(atoms::name(), state_atom).unwrap();
+    map = map
+        .map_put(atoms::storage(), handle.storage_path.to_string_lossy().to_string())
+        .unwrap();
+    let _ = &handle.audit_path;
     Ok(map)
 }
 
 // =====================================================================
-// NIF stubs for the remaining 6 functions
+// NIF: vault_kv_put/5
 // =====================================================================
-// These compile cleanly and return shaped responses. Full bodies wired to
-// RustyVault Core in follow-up Slice B continuation. SC-VAULT placeholder
-// invariants are still enforced (sealed → reject reads).
-
-// Pass-20 body wiring: real in-memory K/V backed by HashMap with monotonic
-// versioning (SC-VAULT-011). Disk persistence (RustyVault::Core::SqliteBackend)
-// remains deferred to Slice B-full continuation; this layer is process-local
-// but functionally complete for sealed/active state machine + audit log.
 
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_kv_put<'a>(
@@ -323,7 +297,7 @@ fn vault_kv_put<'a>(
     ttl_sec: i64,
     max_ttl_sec: i64,
 ) -> NifResult<Term<'a>> {
-    if *handle.state.read().unwrap() != VaultState::Active {
+    if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
     if value.is_empty() {
@@ -332,34 +306,20 @@ fn vault_kv_put<'a>(
     if ttl_sec <= 0 || max_ttl_sec < ttl_sec {
         return Ok((atoms::error(), atoms::ttl_expired()).encode(env));
     }
-
-    // SC-VAULT-011: monotonic version per name
-    let next_ver = handle.next_version(&name);
-    let now = chrono::Utc::now().timestamp();
-    let lease_id = format!("lease-{}-{}-{}", name, next_ver, now);
-
-    let entry = KvEntry {
-        version: next_ver,
-        value: Zeroizing::new(value.as_slice().to_vec()),
-        created_at: now,
-        ttl_sec,
-        max_ttl_sec,
-        lease_id: lease_id.clone(),
-    };
-
-    if let Ok(mut store) = handle.kv_store.lock() {
-        store.entry(name.clone()).or_insert_with(Vec::new).push(entry);
-    } else {
-        return Ok((atoms::error(), atoms::storage_error()).encode(env));
+    match handle.disk.put_with_lease(&name, value.as_slice(), ttl_sec, max_ttl_sec) {
+        Ok((version, lease_id)) => {
+            let mut map = rustler::Term::map_new(env);
+            map = map.map_put(atoms::version(), version).unwrap();
+            map = map.map_put(atoms::lease_id(), lease_id).unwrap();
+            Ok((atoms::ok(), map).encode(env))
+        }
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
     }
-
-    handle.audit_append("put", &name, next_ver);
-
-    let mut map = rustler::Term::map_new(env);
-    map = map.map_put(atoms::version(), next_ver).unwrap();
-    map = map.map_put(atoms::lease_id(), lease_id).unwrap();
-    Ok((atoms::ok(), map).encode(env))
 }
+
+// =====================================================================
+// NIF: vault_kv_get/2
+// =====================================================================
 
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_kv_get<'a>(
@@ -367,38 +327,36 @@ fn vault_kv_get<'a>(
     handle: ResourceArc<VaultHandle>,
     name: String,
 ) -> NifResult<Term<'a>> {
-    if *handle.state.read().unwrap() != VaultState::Active {
+    if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
-
-    let store = match handle.kv_store.lock() {
-        Ok(s) => s,
-        Err(_) => return Ok((atoms::error(), atoms::storage_error()).encode(env)),
-    };
-
-    // Snapshot the latest entry's needed fields, then drop the lock before audit.
-    let snapshot: Option<(i64, i64, i64, Vec<u8>)> = store
-        .get(&name)
-        .and_then(|versions| versions.last())
-        .map(|entry| (entry.version, entry.created_at, entry.max_ttl_sec, entry.value.as_slice().to_vec()));
-    drop(store);
-
-    match snapshot {
-        None => Ok((atoms::error(), (atoms::not_found(), name)).encode(env)),
-        Some((version, created_at, max_ttl, value_bytes)) => {
+    match handle.disk.get_latest_meta(&name) {
+        Ok((version, plaintext, created_at, _ttl, max_ttl, _lease)) => {
             // SC-VAULT-006: hard-stale fail-closed on max_ttl
             let age = chrono::Utc::now().timestamp() - created_at;
             if age >= max_ttl {
-                handle.audit_append("get_failed_stale", &name, version);
+                handle.disk.audit_event("get_failed_stale", &name, version);
                 return Ok((atoms::error(), (atoms::ttl_expired(), name)).encode(env));
             }
-            let mut bin = OwnedBinary::new(value_bytes.len()).unwrap();
-            bin.as_mut_slice().copy_from_slice(&value_bytes);
-            handle.audit_append("get", &name, version);
+            let mut bin = OwnedBinary::new(plaintext.len()).unwrap();
+            bin.as_mut_slice().copy_from_slice(&plaintext);
+            handle.disk.audit_event("get", &name, version);
             Ok((atoms::ok(), Binary::from_owned(bin, env)).encode(env))
         }
+        Err(VaultHandleError::NotFound(_)) => {
+            Ok((atoms::error(), (atoms::not_found(), name)).encode(env))
+        }
+        Err(VaultHandleError::Crypto(CryptoError::DecryptionFailed)) => {
+            handle.disk.audit_event("get_failed_decrypt", &name, 0);
+            Ok((atoms::error(), (atoms::decrypt_failed(), name)).encode(env))
+        }
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
     }
 }
+
+// =====================================================================
+// NIF: vault_kv_versions/2
+// =====================================================================
 
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_kv_versions<'a>(
@@ -406,31 +364,29 @@ fn vault_kv_versions<'a>(
     handle: ResourceArc<VaultHandle>,
     name: String,
 ) -> NifResult<Term<'a>> {
-    if *handle.state.read().unwrap() != VaultState::Active {
+    if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
-
-    let store = match handle.kv_store.lock() {
-        Ok(s) => s,
-        Err(_) => return Ok((atoms::error(), atoms::storage_error()).encode(env)),
-    };
-
-    let versions: Vec<(i64, i64)> = store
-        .get(&name)
-        .map(|entries| entries.iter().map(|e| (e.version, e.created_at)).collect())
-        .unwrap_or_default();
-
-    let terms: Vec<Term> = versions
-        .into_iter()
-        .map(|(v, ts)| {
-            let mut m = rustler::Term::map_new(env);
-            m = m.map_put(atoms::version(), v).unwrap();
-            m = m.map_put(atoms::ts(), ts).unwrap();
-            m
-        })
-        .collect();
-    Ok((atoms::ok(), terms).encode(env))
+    match handle.disk.versions_with_ts(&name) {
+        Ok(rows) => {
+            let terms: Vec<Term> = rows
+                .into_iter()
+                .map(|(v, ts)| {
+                    let mut m = rustler::Term::map_new(env);
+                    m = m.map_put(atoms::version(), v).unwrap();
+                    m = m.map_put(atoms::ts(), ts).unwrap();
+                    m
+                })
+                .collect();
+            Ok((atoms::ok(), terms).encode(env))
+        }
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
+    }
 }
+
+// =====================================================================
+// NIF: vault_kv_destroy/3
+// =====================================================================
 
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_kv_destroy<'a>(
@@ -439,28 +395,19 @@ fn vault_kv_destroy<'a>(
     name: String,
     version: i64,
 ) -> NifResult<Term<'a>> {
-    if *handle.state.read().unwrap() != VaultState::Active {
+    if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
-
-    let mut store = match handle.kv_store.lock() {
-        Ok(s) => s,
-        Err(_) => return Ok((atoms::error(), atoms::storage_error()).encode(env)),
-    };
-
-    if let Some(versions) = store.get_mut(&name) {
-        let before = versions.len();
-        versions.retain(|e| e.version != version);
-        if versions.len() == before {
-            return Ok((atoms::error(), (atoms::not_found(), name)).encode(env));
-        }
-    } else {
-        return Ok((atoms::error(), (atoms::not_found(), name)).encode(env));
+    match handle.disk.destroy(&name, version) {
+        Ok(true) => Ok(atoms::ok().encode(env)),
+        Ok(false) => Ok((atoms::error(), (atoms::not_found(), name)).encode(env)),
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
     }
-    drop(store);
-    handle.audit_append("destroy", &name, version);
-    Ok(atoms::ok().encode(env))
 }
+
+// =====================================================================
+// NIF: vault_lease_renew/3
+// =====================================================================
 
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_lease_renew<'a>(
@@ -469,58 +416,49 @@ fn vault_lease_renew<'a>(
     lease_id: String,
     ttl_sec: i64,
 ) -> NifResult<Term<'a>> {
-    if *handle.state.read().unwrap() != VaultState::Active {
+    if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
     if ttl_sec <= 0 {
         return Ok((atoms::error(), atoms::ttl_expired()).encode(env));
     }
-    // Find the entry by lease_id and extend its ttl_sec
-    let mut store = match handle.kv_store.lock() {
-        Ok(s) => s,
-        Err(_) => return Ok((atoms::error(), atoms::storage_error()).encode(env)),
-    };
-    for (_name, versions) in store.iter_mut() {
-        for entry in versions.iter_mut() {
-            if entry.lease_id == lease_id {
-                entry.ttl_sec = ttl_sec;
-                let new_expiry = entry.created_at + ttl_sec;
-                let nm = _name.clone();
-                let v = entry.version;
-                drop(store);
-                handle.audit_append("lease_renew", &nm, v);
-                return Ok((atoms::ok(), new_expiry).encode(env));
-            }
-        }
+    match handle.disk.lease_renew(&lease_id, ttl_sec) {
+        Ok(Some(new_expiry)) => Ok((atoms::ok(), new_expiry).encode(env)),
+        Ok(None) => Ok((atoms::error(), atoms::not_found()).encode(env)),
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
     }
-    Ok((atoms::error(), atoms::not_found()).encode(env))
 }
 
+// =====================================================================
+// NIF: vault_audit_tail/2
+// =====================================================================
+
+/// Audit rows with `ts >= since_ts`. Readable while sealed: the trail is
+/// not a secret and register sync must observe seal events.
 #[rustler::nif(schedule = "DirtyIo")]
 fn vault_audit_tail<'a>(
     env: Env<'a>,
     handle: ResourceArc<VaultHandle>,
     since_ts: i64,
 ) -> NifResult<Term<'a>> {
-    let log = match handle.audit_log.lock() {
-        Ok(l) => l,
-        Err(_) => return Ok((atoms::error(), atoms::storage_error()).encode(env)),
-    };
-
-    let entries: Vec<Term> = log
-        .iter()
-        .filter(|e| e.ts >= since_ts)
-        .map(|e| {
-            let mut m = rustler::Term::map_new(env);
-            m = m.map_put(atoms::ts(), e.ts).unwrap();
-            m = m.map_put("event", e.event.clone()).unwrap();
-            m = m.map_put(atoms::name(), e.name.clone()).unwrap();
-            m = m.map_put(atoms::version(), e.version).unwrap();
-            m = m.map_put(atoms::caller(), e.caller.clone()).unwrap();
-            m
-        })
-        .collect();
-    Ok((atoms::ok(), entries).encode(env))
+    match handle.disk.audit_tail(since_ts) {
+        Ok(rows) => {
+            let entries: Vec<Term> = rows
+                .into_iter()
+                .map(|(ts, event, name, version, caller)| {
+                    let mut m = rustler::Term::map_new(env);
+                    m = m.map_put(atoms::ts(), ts).unwrap();
+                    m = m.map_put("event", event).unwrap();
+                    m = m.map_put(atoms::name(), name).unwrap();
+                    m = m.map_put(atoms::version(), version).unwrap();
+                    m = m.map_put(atoms::caller(), caller).unwrap();
+                    m
+                })
+                .collect();
+            Ok((atoms::ok(), entries).encode(env))
+        }
+        Err(e) => Ok((atoms::error(), error_atom(&e)).encode(env)),
+    }
 }
 
 // =====================================================================
@@ -592,7 +530,7 @@ fn kek_tpm_present<'a>(env: Env<'a>, override_path: String) -> NifResult<Term<'a
 // =====================================================================
 
 fn on_load(env: Env, _info: Term) -> bool {
-    rustler::resource!(VaultHandle, env);
+    let _ = rustler::resource!(VaultHandle, env);
     true
 }
 
@@ -617,145 +555,147 @@ rustler::init!(
 );
 
 // =====================================================================
-// Pass-20 body-wiring unit tests — exercise KvEntry/AuditEntry directly
-// (NIF entry points need a BEAM environment so are tested via Gleam-side
-// integration tests, but the storage layer is unit-testable here).
+// VF-01 laws — exercised on the resource type without a BEAM. The NIF
+// functions themselves are thin adapters over these calls.
 // =====================================================================
 
 #[cfg(test)]
-mod body_tests {
+mod vf01_laws {
     use super::*;
-    use std::path::PathBuf;
+    use tempfile::tempdir;
 
-    fn make_handle() -> VaultHandle {
-        VaultHandle::new(
-            PathBuf::from("/tmp/test-vault.db"),
-            PathBuf::from("/tmp/test-vault-audit.log"),
-        )
-    }
-
-    fn unseal(h: &VaultHandle) {
-        *h.state.write().unwrap() = VaultState::Active;
+    fn key(b: u8) -> Zeroizing<Vec<u8>> {
+        Zeroizing::new(vec![b; 32])
     }
 
     #[test]
-    fn next_version_starts_at_one() {
-        let h = make_handle();
-        assert_eq!(h.next_version("anthropic_api_key"), 1);
+    fn init_is_sealed_and_creates_the_file() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("v.sqlite3");
+        let h = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        assert_eq!(h.state(), VaultState::Sealed);
+        assert!(db.exists());
+        assert!(h.disk.get_latest_meta("k").is_err(), "sealed reads fail closed");
     }
 
     #[test]
-    fn next_version_increments_after_put() {
-        let h = make_handle();
-        unseal(&h);
-        // Simulate a put by inserting an entry directly
-        let now = chrono::Utc::now().timestamp();
-        h.kv_store.lock().unwrap().insert(
-            "k1".to_string(),
-            vec![KvEntry {
-                version: 1,
-                value: Zeroizing::new(vec![0u8; 4]),
-                created_at: now,
-                ttl_sec: 60,
-                max_ttl_sec: 600,
-                lease_id: "l1".to_string(),
-            }],
-        );
-        assert_eq!(h.next_version("k1"), 2);
+    fn directory_storage_path_resolves_to_a_file_inside_it() {
+        let dir = tempdir().unwrap();
+        let h = VaultHandle::open(dir.path().to_str().unwrap(), "unused").unwrap();
+        assert_eq!(h.storage_path, dir.path().join(DEFAULT_DB_FILE));
+        assert!(h.storage_path.exists());
     }
 
     #[test]
-    fn audit_append_grows_log_monotonically() {
-        let h = make_handle();
-        h.audit_append("put", "k1", 1);
-        h.audit_append("get", "k1", 1);
-        h.audit_append("destroy", "k1", 1);
-        let log = h.audit_log.lock().unwrap();
-        assert_eq!(log.len(), 3);
-        assert_eq!(log[0].event, "put");
-        assert_eq!(log[1].event, "get");
-        assert_eq!(log[2].event, "destroy");
-        // SC-VAULT-008: monotonic timestamps
-        assert!(log[0].ts <= log[1].ts);
-        assert!(log[1].ts <= log[2].ts);
+    fn law_persistence_a_put_in_one_handle_is_read_by_a_fresh_handle() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("p.sqlite3");
+        {
+            let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+            a.disk.unseal_verified(key(0x11)).unwrap();
+            let (v, lease) = a.disk.put_with_lease("telegram/bot_token", b"123:abc", 60, 600).unwrap();
+            assert_eq!(v, 1);
+            assert!(lease.starts_with("lease-telegram/bot_token-1-"));
+        } // handle dropped: nothing survives in RAM
+        let b = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        b.disk.unseal_verified(key(0x11)).unwrap();
+        let (v, pt, _c, _t, _m, _l) = b.disk.get_latest_meta("telegram/bot_token").unwrap();
+        assert_eq!((v, pt.as_slice()), (1, &b"123:abc"[..]));
+        assert_eq!(b.disk.versions_with_ts("telegram/bot_token").unwrap().len(), 1);
     }
 
     #[test]
-    fn handle_starts_sealed_with_empty_kv() {
-        let h = make_handle();
-        assert_eq!(*h.state.read().unwrap(), VaultState::Sealed);
-        assert!(h.kv_store.lock().unwrap().is_empty());
-        assert!(h.audit_log.lock().unwrap().is_empty());
-        assert!(h.master_in_ram.lock().unwrap().is_none());
+    fn law_wrong_key_is_refused_and_the_vault_stays_sealed() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("w.sqlite3");
+        {
+            let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+            a.disk.unseal_verified(key(0x11)).unwrap();
+            a.disk.put_with_lease("k", b"v", 60, 600).unwrap();
+        }
+        let b = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        let err = b.disk.unseal_verified(key(0x22)).unwrap_err();
+        assert!(matches!(err, VaultHandleError::WrongKey), "got {err:?}");
+        assert!(matches!(b.disk.get_latest_meta("k").unwrap_err(), VaultHandleError::Sealed));
+        // the right key still works afterwards
+        b.disk.unseal_verified(key(0x11)).unwrap();
+        assert_eq!(b.disk.get_latest_meta("k").unwrap().1, b"v");
     }
 
     #[test]
-    fn kv_store_supports_multiple_versions_per_name() {
-        let h = make_handle();
-        let now = chrono::Utc::now().timestamp();
-        let mut store = h.kv_store.lock().unwrap();
-        store.insert(
-            "k1".to_string(),
-            vec![
-                KvEntry {
-                    version: 1,
-                    value: Zeroizing::new(b"v1".to_vec()),
-                    created_at: now,
-                    ttl_sec: 60,
-                    max_ttl_sec: 600,
-                    lease_id: "l1".to_string(),
-                },
-                KvEntry {
-                    version: 2,
-                    value: Zeroizing::new(b"v2".to_vec()),
-                    created_at: now + 1,
-                    ttl_sec: 60,
-                    max_ttl_sec: 600,
-                    lease_id: "l2".to_string(),
-                },
-            ],
-        );
-        drop(store);
-        assert_eq!(h.next_version("k1"), 3);
+    fn law_short_key_is_refused_before_touching_the_verifier() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("s.sqlite3");
+        let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        let err = a.disk.unseal_verified(Zeroizing::new(vec![1u8; 16])).unwrap_err();
+        assert!(matches!(err, VaultHandleError::BadMasterKeyLen(16)));
+        // no verifier was established, so a 32-byte key still establishes it
+        a.disk.unseal_verified(key(0x33)).unwrap();
     }
 
     #[test]
-    fn destroy_removes_specific_version() {
-        let h = make_handle();
-        let now = chrono::Utc::now().timestamp();
-        let mut store = h.kv_store.lock().unwrap();
-        store.insert(
-            "k1".to_string(),
-            vec![
-                KvEntry {
-                    version: 1,
-                    value: Zeroizing::new(b"v1".to_vec()),
-                    created_at: now,
-                    ttl_sec: 60,
-                    max_ttl_sec: 600,
-                    lease_id: "l1".to_string(),
-                },
-                KvEntry {
-                    version: 2,
-                    value: Zeroizing::new(b"v2".to_vec()),
-                    created_at: now,
-                    ttl_sec: 60,
-                    max_ttl_sec: 600,
-                    lease_id: "l2".to_string(),
-                },
-            ],
-        );
-        // Simulate destroy of version 1
-        store.get_mut("k1").unwrap().retain(|e| e.version != 1);
-        assert_eq!(store.get("k1").unwrap().len(), 1);
-        assert_eq!(store.get("k1").unwrap()[0].version, 2);
+    fn law_ciphertext_on_disk_never_contains_the_plaintext() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("c.sqlite3");
+        let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        a.disk.unseal_verified(key(0x44)).unwrap();
+        let secret = b"8660817750:AAAA-not-a-real-token-but-long-enough-to-find";
+        a.disk.put_with_lease("t", secret, 60, 600).unwrap();
+        let bytes = std::fs::read(&db).unwrap();
+        let wal = std::fs::read(db.with_extension("sqlite3-wal")).unwrap_or_default();
+        let hay = [bytes, wal].concat();
+        assert!(!hay.windows(secret.len()).any(|w| w == secret), "plaintext leaked to disk");
+        assert!(!hay.windows(32).any(|w| w == &[0x44u8; 32][..]), "master key leaked to disk");
     }
 
     #[test]
-    fn sealed_state_blocks_kv_write_path_via_state_check() {
-        let h = make_handle();
-        // h is Sealed by default; the NIF guards check state.read() == Active
-        assert_eq!(*h.state.read().unwrap(), VaultState::Sealed);
-        assert_ne!(*h.state.read().unwrap(), VaultState::Active);
+    fn law_stale_read_fails_closed_on_max_ttl() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("t.sqlite3");
+        let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        a.disk.unseal_verified(key(0x55)).unwrap();
+        a.disk.put_with_lease("k", b"v", 1, 1).unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(1100));
+        let (_v, _pt, created_at, _t, max_ttl, _l) = a.disk.get_latest_meta("k").unwrap();
+        assert!(chrono::Utc::now().timestamp() - created_at >= max_ttl);
+    }
+
+    #[test]
+    fn law_destroy_versions_and_lease_renew_are_disk_operations() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("d.sqlite3");
+        let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        a.disk.unseal_verified(key(0x66)).unwrap();
+        let (_, l1) = a.disk.put_with_lease("k", b"v1", 60, 600).unwrap();
+        let (_, _l2) = a.disk.put_with_lease("k", b"v2", 60, 600).unwrap();
+        assert_eq!(a.disk.versions_with_ts("k").unwrap().iter().map(|r| r.0).collect::<Vec<_>>(), vec![1, 2]);
+        assert!(a.disk.destroy("k", 1).unwrap());
+        assert!(!a.disk.destroy("k", 1).unwrap());
+        assert_eq!(a.disk.versions_with_ts("k").unwrap().len(), 1);
+        assert!(a.disk.lease_renew(&l1, 120).unwrap().is_none(), "destroyed row has no lease");
+        let b = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        b.disk.unseal_verified(key(0x66)).unwrap();
+        let (_v, _pt, created, _t, _m, lease2) = b.disk.get_latest_meta("k").unwrap();
+        assert_eq!(b.disk.lease_renew(&lease2, 120).unwrap(), Some(created + 120));
+    }
+
+    #[test]
+    fn law_audit_is_append_only_and_survives_a_fresh_handle() {
+        let dir = tempdir().unwrap();
+        let db = dir.path().join("a.sqlite3");
+        {
+            let a = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+            a.disk.unseal_verified(key(0x77)).unwrap();
+            a.disk.put_with_lease("k", b"v", 60, 600).unwrap();
+            a.disk.seal();
+        }
+        let b = VaultHandle::open(db.to_str().unwrap(), "unused").unwrap();
+        let rows = b.disk.audit_tail(0).unwrap();
+        let events: Vec<&str> = rows.iter().map(|r| r.1.as_str()).collect();
+        assert_eq!(events, vec!["key_established", "unseal", "put", "seal"]);
+        let conn = rusqlite::Connection::open(&db).unwrap();
+        assert!(conn.execute("UPDATE audit_log SET event = 'x'", []).is_err(), "UPDATE must be refused");
+        assert!(conn.execute("DELETE FROM audit_log", []).is_err(), "DELETE must be refused");
+        assert_eq!(b.disk.audit_tail(0).unwrap().len(), 4);
     }
 }
