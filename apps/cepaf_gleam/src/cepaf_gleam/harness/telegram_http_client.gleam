@@ -414,3 +414,159 @@ pub fn answer_callback_query(
       Error("answerCallbackQuery status: " <> int.to_string(code))
   }
 }
+
+// -----------------------------------------------------------------------------
+// getFile and bounded file body (wave 6i, media transport)
+// -----------------------------------------------------------------------------
+
+/// What `getFile` declared for a file id. `file_path` is joined into a URL by
+/// the download adapter and is validated there as well; it is validated here
+/// first so a hostile path never leaves this module.
+pub type FileLocator {
+  FileLocator(file_path: String, declared_size_bytes: Option(Int))
+}
+
+/// Largest file body this client reads in one bounded request: the HTTP FFI
+/// policy ceiling. Media whose cap exceeds it cannot be fetched by this
+/// transport and is reported, never truncated.
+pub const max_file_body_bytes = 10_485_760
+
+/// Bot API `getFile`. Errors carry no URL and no token.
+pub fn get_file(
+  config: TelegramHttpConfiguration,
+  file_id: String,
+  deadline_ms: Int,
+) -> Result(FileLocator, String) {
+  case file_id != "" && string.byte_size(file_id) <= 256 {
+    False -> Error("invalid_file_id")
+    True -> {
+      let url = config.base_url <> "/bot" <> config.bot_token <> "/getFile"
+      let req_body =
+        bit_array.from_string(
+          json.to_string(json.object([#("file_id", json.string(file_id))])),
+        )
+      let headers = [
+        #("content-type", "application/json; charset=utf-8"),
+        #("accept", "application/json"),
+      ]
+      case
+        ffi_http_request(
+          http.Post,
+          url,
+          headers,
+          req_body,
+          bounded_deadline(config, deadline_ms),
+          config.max_response_bytes,
+        )
+      {
+        Error(err) -> Error("get_file_transport: " <> err)
+        Ok(#(200, _, body_bytes)) ->
+          case bit_array.to_string(body_bytes) {
+            Error(_) -> Error("get_file_invalid_utf8")
+            Ok(body_str) -> decode_get_file(body_str)
+          }
+        Ok(#(code, _, _)) -> Error("get_file_status_" <> int.to_string(code))
+      }
+    }
+  }
+}
+
+fn decode_get_file(body_str: String) -> Result(FileLocator, String) {
+  let decoder = {
+    use ok <- decode.field("ok", decode.bool)
+    use path <- decode.subfield(["result", "file_path"], decode.string)
+    use size <- decode.optional_field(
+      "result",
+      None,
+      decode.optional({
+        use s <- decode.optional_field(
+          "file_size",
+          None,
+          decode.optional(decode.int),
+        )
+        decode.success(s)
+      }),
+    )
+    decode.success(#(ok, path, option.flatten(size)))
+  }
+  case json.parse(body_str, decoder) {
+    Error(_) -> Error("get_file_malformed_payload")
+    Ok(#(False, _, _)) -> Error("get_file_not_ok")
+    Ok(#(True, path, size)) ->
+      case valid_file_path(path) {
+        False -> Error("get_file_invalid_file_path")
+        True ->
+          case size {
+            Some(n) if n < 0 -> Error("get_file_negative_size")
+            _ -> Ok(FileLocator(file_path: path, declared_size_bytes: size))
+          }
+      }
+  }
+}
+
+/// A file_path is joined into a URL: refuse empty, absolute, traversal, query,
+/// fragment, NUL and anything over 256 bytes.
+pub fn valid_file_path(path: String) -> Bool {
+  path != ""
+  && string.byte_size(path) <= 256
+  && !string.starts_with(path, "/")
+  && !string.contains(path, "..")
+  && !string.contains(path, "?")
+  && !string.contains(path, "#")
+  && !string.contains(path, "\u{0}")
+}
+
+/// GET the file body at `<base_url>/file/bot<token>/<file_path>` with a hard
+/// byte bound (at most `max_file_body_bytes`). Oversize bodies are an error
+/// from the FFI, never a truncated success. The URL exists only inside this
+/// function; errors carry none of it.
+pub fn fetch_file_bytes(
+  config: TelegramHttpConfiguration,
+  file_path: String,
+  max_bytes: Int,
+  deadline_ms: Int,
+) -> Result(BitArray, String) {
+  case valid_file_path(file_path) {
+    False -> Error("fetch_file_invalid_file_path")
+    True -> {
+      let bound = case max_bytes < 1, max_bytes > max_file_body_bytes {
+        True, _ -> 1
+        _, True -> max_file_body_bytes
+        _, _ -> max_bytes
+      }
+      let url =
+        config.base_url <> "/file/bot" <> config.bot_token <> "/" <> file_path
+      case
+        ffi_http_request(
+          http.Get,
+          url,
+          [#("accept", "application/octet-stream")],
+          <<>>,
+          bounded_deadline(config, deadline_ms),
+          bound,
+        )
+      {
+        Error(err) -> Error("fetch_file_transport: " <> err)
+        Ok(#(200, _, body)) ->
+          case bit_array.byte_size(body) > bound {
+            True -> Error("fetch_file_body_exceeds_bound")
+            False -> Ok(body)
+          }
+        Ok(#(code, _, _)) -> Error("fetch_file_status_" <> int.to_string(code))
+      }
+    }
+  }
+}
+
+/// The smaller of the caller's deadline and the configured timeout, never
+/// below one millisecond.
+fn bounded_deadline(config: TelegramHttpConfiguration, deadline_ms: Int) -> Int {
+  case deadline_ms < 1 {
+    True -> 1
+    False ->
+      case deadline_ms > config.timeout_ms {
+        True -> config.timeout_ms
+        False -> deadline_ms
+      }
+  }
+}

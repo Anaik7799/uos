@@ -19,7 +19,7 @@
 -module(telegram_http_test_fixture).
 -behaviour(gen_server).
 
--export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1]).
+-export([start/0, start/1, stop/1, set_mode/2, set_updates/2, get_requests/1, clear_requests/1, set_file/4]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -record(state, {
@@ -27,6 +27,8 @@
     port,
     mode = normal,
     preset_updates = [],
+    %% wave 6i: file_id => {FilePath, Bytes}, served by getFile and /file/bot<token>/<path>
+    preset_files = #{},
     requests = []
 }).
 
@@ -70,6 +72,10 @@ get_requests(Pid) ->
 clear_requests(Pid) ->
     gen_server:call(Pid, clear_requests).
 
+%% wave 6i: register a file the fixture serves (test content only, never production).
+set_file(Pid, FileId, FilePath, Bytes) when is_binary(FileId), is_binary(FilePath), is_binary(Bytes) ->
+    gen_server:call(Pid, {set_file, FileId, FilePath, Bytes}).
+
 %% -----------------------------------------------------------------------------
 %% gen_server Callbacks
 %% -----------------------------------------------------------------------------
@@ -102,6 +108,9 @@ handle_call(get_requests, _From, State) ->
     {reply, lists:reverse(State#state.requests), State};
 handle_call(clear_requests, _From, State) ->
     {reply, ok, State#state{requests = []}};
+handle_call({set_file, FileId, FilePath, Bytes}, _From, State) ->
+    Files = maps:put(FileId, {FilePath, Bytes}, State#state.preset_files),
+    {reply, ok, State#state{preset_files = Files}};
 handle_call(_Req, _From, State) ->
     {reply, {error, unknown_call}, State}.
 
@@ -112,7 +121,7 @@ handle_info(accept, State) ->
     case gen_tcp:accept(State#state.listen_socket, 200) of
         {ok, ClientSocket} ->
             ServerPid = self(),
-            spawn_link(fun() -> handle_client(ClientSocket, ServerPid, State#state.mode, State#state.preset_updates) end),
+            spawn_link(fun() -> handle_client(ClientSocket, ServerPid, State#state.mode, State#state.preset_updates, State#state.preset_files) end),
             self() ! accept,
             {noreply, State};
         {error, timeout} ->
@@ -143,11 +152,15 @@ code_change(_OldVsn, State, _Extra) ->
 %% HTTP Request Handling
 %% -----------------------------------------------------------------------------
 
-handle_client(Socket, ServerPid, Mode, PresetUpdates) ->
+handle_client(Socket, ServerPid, Mode, PresetUpdates, PresetFiles) ->
     case read_request(Socket, <<>>) of
         {ok, Method, Path, Headers, Body} ->
             ServerPid ! {record_request, {Method, Path, Headers, Body}},
-            dispatch_response(Socket, Mode, Method, Path, Body, PresetUpdates);
+            case {Mode, is_subpath(Path, <<"/getFile">>), is_subpath(Path, <<"/file/bot">>)} of
+                {normal, true, _} -> serve_get_file(Socket, Body, PresetFiles);
+                {normal, _, true} -> serve_file_body(Socket, Path, PresetFiles);
+                _ -> dispatch_response(Socket, Mode, Method, Path, Body, PresetUpdates)
+            end;
         {error, _} ->
             gen_tcp:close(Socket)
     end.
@@ -318,6 +331,62 @@ send_json(Socket, StatusCode, Body) ->
         "Connection: close\r\n"
         "\r\n",
         [StatusCode, StatusText, Len]
+    ),
+    gen_tcp:send(Socket, [Header, Body]),
+    gen_tcp:close(Socket).
+
+%% -----------------------------------------------------------------------------
+%% wave 6i: getFile and file body (normal mode only)
+%% -----------------------------------------------------------------------------
+
+serve_get_file(Socket, Body, Files) ->
+    FileId = extract_json_string(Body, <<"\"file_id\":">>),
+    case maps:find(FileId, Files) of
+        {ok, {FilePath, Bytes}} ->
+            Resp = iolist_to_binary([
+                <<"{\"ok\":true,\"result\":{\"file_id\":\"">>, FileId,
+                <<"\",\"file_unique_id\":\"fx-">>, FileId,
+                <<"\",\"file_size\":">>, integer_to_binary(byte_size(Bytes)),
+                <<",\"file_path\":\"">>, FilePath, <<"\"}}">>
+            ]),
+            send_json(Socket, 200, Resp);
+        error ->
+            send_json(Socket, 400, <<"{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request: file not found\"}">>)
+    end.
+
+serve_file_body(Socket, Path, Files) ->
+    %% Path is /file/bot<token>/<file_path>; match on the file path suffix.
+    Matches = [Bytes || {_Id, {FilePath, Bytes}} <- maps:to_list(Files),
+                        binary:longest_common_suffix([Path, <<"/", FilePath/binary>>]) =:= byte_size(FilePath) + 1],
+    case Matches of
+        [Bytes | _] -> send_bytes(Socket, 200, Bytes);
+        [] -> send_json(Socket, 404, <<"{\"ok\":false,\"error_code\":404,\"description\":\"Not Found\"}">>)
+    end.
+
+extract_json_string(Body, Marker) ->
+    try
+        case binary:match(Body, Marker) of
+            {Pos, Len} ->
+                <<_:Pos/binary, _:Len/binary, Rest/binary>> = Body,
+                Trimmed = string:trim(Rest),
+                <<$", Tail/binary>> = Trimmed,
+                [Value | _] = binary:split(Tail, <<"\"">>),
+                Value;
+            nomatch -> <<>>
+        end
+    catch
+        _:_ -> <<>>
+    end.
+
+send_bytes(Socket, StatusCode, Body) ->
+    Len = byte_size(Body),
+    Header = io_lib:format(
+        "HTTP/1.1 ~p OK\r\n"
+        "Content-Type: application/octet-stream\r\n"
+        "Content-Length: ~p\r\n"
+        "Connection: close\r\n"
+        "\r\n",
+        [StatusCode, Len]
     ),
     gen_tcp:send(Socket, [Header, Body]),
     gen_tcp:close(Socket).

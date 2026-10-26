@@ -251,17 +251,31 @@
     },
     {
       "wave": "6h",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "a985c3a1",
+      "landed_utc": "2026-10-26T09:47:48Z",
       "canonicals_answering": "77/77 (unchanged); captioned media now answers a typed media reply",
       "tests_added": 17,
       "mutants": "4/4 integrator (guard caption fallback removed; poll never carries media; intake Stored not ok; malformed stored media decodes silently)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 50,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "Media intake at ingress: the guard accepts message.caption as the command text when message.text is absent and names bare media as media_without_caption; the stored input row carries the declared media reference as an optional top-level field (encode_input_verdict_with_media, decode_input_media; pre-6h rows unchanged); commit_prefix_media keyed by update id with commit_prefix delegating; the service collects references at poll time (poll_media_references) and, at dispatch, answers the typed media reply (telegram_media_intake: download, inspect, store; backend_unavailable without a transport, denied on any refusal, ok only when stored under the recomputed digest; caption directive reported, never executed). MediaConfiguration.transport added; configure_media takes it. Security journey SEC-J3/S1 flips from tombstone to MediaAccepted and S1b records the bare-media tombstone.",
       "full_suite": "13802/13802"
+    },
+    {
+      "wave": "6i",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); media intake now has a real HTTP transport",
+      "tests_added": 8,
+      "mutants": "3/3 integrator (URL prefix check dropped; fetch bound ignored; getFile path validation dropped), run with hackney started",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "HTTP media transport: telegram_http_client gains get_file (Bot API getFile, bounded, file_path validated, no URL in errors) and fetch_file_bytes (one bounded GET, at most the FFI ceiling of 10 MiB, oversize is an error never a truncation); telegram_media_transport.from_http builds the download Transport, accepting only the api.telegram.org prefix with the configured token and fetching from the configured base host (the only host contacted). The Erlang HTTP fixture serves set_file, getFile and /file/bot<token>/<path>. Intake through the real transport against the fixture stores the bytes under their sha256. Environment note: fixture-backed tests need hackney started; the gleam test runner does it, a bare erl eunit call does not (explains the nine baseline slice1 fixture failures under erl).",
+      "full_suite": "13810/13810"
     }
   ],
   "forecasts": [
@@ -461,6 +475,12 @@
       "wave": "6g",
       "lesson": "Running gleam format on a shared file that was never formatter-clean rewrites the whole file and hides the increment; format only new files and read jj diff --stat before trusting a build",
       "applied": "the two service files were restored from main and the six edits reapplied by hand; the landing diff is 217 lines"
+    },
+    {
+      "id": "L-20",
+      "wave": "6i",
+      "lesson": "Fixture-backed HTTP tests fail under a bare erl eunit call because hackney is not started there; the gleam test runner starts it",
+      "applied": "fable-mut-h.sh starts hackney before eunit; the nine baseline slice1 failures under erl are explained, not real"
     }
   ]
 }
