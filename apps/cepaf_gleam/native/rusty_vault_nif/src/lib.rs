@@ -79,6 +79,7 @@ mod atoms {
         storage_error,
         already_unsealed,
         decrypt_failed,
+        invalid_name,
         nif_panic,
         version,
         lease_id,
@@ -141,6 +142,16 @@ pub fn resolve_db_path(storage_path: &str) -> PathBuf {
     } else {
         p.to_path_buf()
     }
+}
+
+/// Longest secret name accepted.
+pub const MAX_NAME_BYTES: usize = 512;
+
+/// A secret name is non-empty, at most `MAX_NAME_BYTES` bytes, and carries
+/// no control byte (0x00..0x1f, 0x7f). Checked before any disk access
+/// (VAULT_NIF_REVIEW hostile inputs 7 and 8).
+pub fn valid_name(name: &str) -> bool {
+    !name.is_empty() && name.len() <= MAX_NAME_BYTES && !name.bytes().any(|b| b < 0x20 || b == 0x7f)
 }
 
 impl VaultHandle {
@@ -300,6 +311,9 @@ fn vault_kv_put<'a>(
     if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
+    if !valid_name(&name) {
+        return Ok((atoms::error(), (atoms::invalid_name(), name)).encode(env));
+    }
     if value.is_empty() {
         return Ok((atoms::error(), atoms::storage_error()).encode(env));
     }
@@ -329,6 +343,9 @@ fn vault_kv_get<'a>(
 ) -> NifResult<Term<'a>> {
     if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
+    }
+    if !valid_name(&name) {
+        return Ok((atoms::error(), (atoms::invalid_name(), name)).encode(env));
     }
     match handle.disk.get_latest_meta(&name) {
         Ok((version, plaintext, created_at, _ttl, max_ttl, _lease)) => {
@@ -367,6 +384,9 @@ fn vault_kv_versions<'a>(
     if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
     }
+    if !valid_name(&name) {
+        return Ok((atoms::error(), (atoms::invalid_name(), name)).encode(env));
+    }
     match handle.disk.versions_with_ts(&name) {
         Ok(rows) => {
             let terms: Vec<Term> = rows
@@ -397,6 +417,9 @@ fn vault_kv_destroy<'a>(
 ) -> NifResult<Term<'a>> {
     if !handle.is_active() {
         return Ok((atoms::error(), atoms::sealed()).encode(env));
+    }
+    if !valid_name(&name) {
+        return Ok((atoms::error(), (atoms::invalid_name(), name)).encode(env));
     }
     match handle.disk.destroy(&name, version) {
         Ok(true) => Ok(atoms::ok().encode(env)),
@@ -677,6 +700,19 @@ mod vf01_laws {
         b.disk.unseal_verified(key(0x66)).unwrap();
         let (_v, _pt, created, _t, _m, lease2) = b.disk.get_latest_meta("k").unwrap();
         assert_eq!(b.disk.lease_renew(&lease2, 120).unwrap(), Some(created + 120));
+    }
+
+    #[test]
+    fn law_secret_names_reject_empty_control_bytes_and_oversize() {
+        assert!(valid_name("telegram/staging/bot_token"));
+        assert!(valid_name("k"));
+        assert!(valid_name(&"a".repeat(MAX_NAME_BYTES)));
+        assert!(!valid_name(""), "empty name (reviewer probe 8)");
+        assert!(!valid_name("k\0nul"), "NUL byte (reviewer probe 7)");
+        assert!(!valid_name("k\nx"), "newline");
+        assert!(!valid_name("k\x7f"), "DEL");
+        assert!(!valid_name(&"a".repeat(MAX_NAME_BYTES + 1)), "oversize");
+        assert!(valid_name("名前/ключ"), "non-ASCII text is a name, not a control byte");
     }
 
     #[test]

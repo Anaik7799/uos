@@ -28,4 +28,9 @@ The source explained it exactly; it was the stub in the source, not a build or p
 - Laws: 9 `vf01_laws` cargo tests (66 in the crate), 2 mutants killed (verifier skipped; plaintext stored), `test/rusty_vault_persistence_test.erl` through the loaded NIF, and a three-process OTP 29 observation (put in one BEAM, get in the next, wrong key in a third, no plaintext on disk) recorded in the wave 6v journal.
 - The durable file store `apps/cepaf_gleam/src/uos_vault_file.erl` with its OCaml twin `tools/uos_vault.ml` remains the path the Telegram staging and production secrets use; switching them to the NIF is a separate decision after the review.
 
+### Independent review and hardening (wave 6w)
+
+- VAULT_NIF_REVIEW was completed by `agy-review-v-20261026` with APPROVE: seven laws VERIFIED (persistence across BEAMs, wrong key, disk secrecy, audit append-only, fail-closed reads, pinned library, barred dependencies), 66 cargo and 75 eunit tests, eight hostile probes. The reviewer's rebuild produced a different digest (debuginfo carries the workspace path), so V-LAW-06 rests on the identical test outcome, not on byte equality.
+- Probes 7 and 8 showed an empty name and a name carrying a NUL byte were stored. `valid_name` (non-empty, at most 512 bytes, no control byte) is now checked before any disk access in `vault_kv_put`, `vault_kv_get`, `vault_kv_versions` and `vault_kv_destroy`, which answer `{error, {invalid_name, Name}}`; a cargo law, an eunit law and a killed mutant pin it. Pin 6db27c1e supersedes 73be69d9.
+
 UOS footer: `nas-1.tail55d152.ts.net:4100` · source presence and a pinned digest grant no admission.

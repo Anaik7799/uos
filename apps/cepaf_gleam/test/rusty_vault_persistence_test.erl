@@ -15,8 +15,13 @@
 
 key(B) -> binary:copy(<<B>>, 32).
 
+%% unique_integer is unique within one BEAM only; a second `gleam test` run
+%% reproduced the same names and hit eexist (wave 6w), so the name carries
+%% the OS pid and the microsecond clock as well.
 fresh_dir() ->
-    Dir = filename:join(["/tmp", "rusty_vault_persistence_" ++ integer_to_list(erlang:unique_integer([positive]))]),
+    Name = io_lib:format("rusty_vault_persistence_~s_~b_~b",
+                         [os:getpid(), erlang:system_time(microsecond), erlang:unique_integer([positive])]),
+    Dir = filename:join("/tmp", lists:flatten(Name)),
     ok = file:make_dir(Dir),
     list_to_binary(Dir).
 
@@ -93,4 +98,28 @@ law_no_plaintext_or_key_on_disk_test() ->
             ?assert(byte_size(Bytes) > 0),
             ?assertEqual(nomatch, binary:match(Bytes, Secret)),
             ?assertEqual(nomatch, binary:match(Bytes, key(16#44)))
+    end.
+
+%% VAULT_NIF_REVIEW hostile inputs 7 and 8: an empty name and a name carrying
+%% a NUL byte were stored. Every entry point now refuses them before any disk
+%% access, and the refusal names the offending name.
+law_invalid_names_are_refused_before_disk_test() ->
+    case nif_available() of
+        false -> ok;
+        true ->
+            Dir = fresh_dir(),
+            {ok, H} = rusty_vault_nif:vault_init(Dir, <<Dir/binary, "/audit.log">>),
+            {ok, nil} = rusty_vault_nif:vault_unseal(H, key(16#55)),
+            Bad = [<<>>, <<"k", 0, "nul">>, <<"k\nx">>, <<"k", 16#7f>>, binary:copy(<<"a">>, 513)],
+            lists:foreach(fun(Name) ->
+                ?assertEqual({error, {invalid_name, Name}}, rusty_vault_nif:vault_kv_put(H, Name, <<"v">>, 60, 600)),
+                ?assertEqual({error, {invalid_name, Name}}, rusty_vault_nif:vault_kv_get(H, Name)),
+                ?assertEqual({error, {invalid_name, Name}}, rusty_vault_nif:vault_kv_versions(H, Name)),
+                ?assertEqual({error, {invalid_name, Name}}, rusty_vault_nif:vault_kv_destroy(H, Name, 1))
+            end, Bad),
+            %% nothing reached the store: the audit trail carries no put
+            {ok, Audit} = rusty_vault_nif:vault_audit_tail(H, 0),
+            ?assertEqual([], [M || M <- Audit, maps:get(<<"event">>, M) =:= <<"put">>]),
+            %% a well-formed non-ASCII name is a name
+            {ok, #{version := 1}} = rusty_vault_nif:vault_kv_put(H, <<"名前/ключ"/utf8>>, <<"v">>, 60, 600)
     end.
