@@ -296,12 +296,11 @@ fn media_reply(
   // runs; once the chain ran, its outcome is reported as it happened, because
   // a stored object is a fact whether or not the window closed afterwards.
   let outcome = case conversation_authorize(state) {
-    Error(reason) ->
-      media_intake.UsageUnavailable("observation_window: " <> reason)
+    Error(reason) -> media_intake.WindowClosed("observation_window: " <> reason)
     Ok(remaining) ->
       case remaining >= required_ms {
         False ->
-          media_intake.UsageUnavailable(
+          media_intake.WindowClosed(
             "observation_window: observation_authority_window_too_short",
           )
         True ->
@@ -309,7 +308,23 @@ fn media_reply(
             binding,
             ref,
             fn() { Ok(token) },
-            ffi_system_now_utc_us() / 1000,
+            fn() { ffi_system_now_utc_us() / 1000 },
+            // Review M2-06: the window is re-checked after download and
+            // inspection, before the store is touched. The put phase needs
+            // media_intake.put_budget_ms (2000 ms), not the full download budget.
+            fn() {
+              case conversation_authorize(state) {
+                Error(reason) -> Error("observation_window: " <> reason)
+                Ok(left) ->
+                  case left >= media_intake.put_budget_ms {
+                    True -> Ok(Nil)
+                    False ->
+                      Error(
+                        "observation_window: observation_authority_window_too_short_for_put",
+                      )
+                  }
+              }
+            },
           )
       }
   }
