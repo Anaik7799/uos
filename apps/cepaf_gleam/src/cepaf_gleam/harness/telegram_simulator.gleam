@@ -93,8 +93,11 @@ pub fn simulate_photo_upload(
   )
 }
 
-/// Simulate acoustic 1024-point Fourier FFT analysis on audio stream.
-pub fn simulate_acoustic_fft(sample_bytes: BitArray) -> AcousticSpectrum {
+/// Scripted acoustic spectrum FIXTURE for simulations. No transform runs:
+/// any non-empty input yields the same scripted values and the empty input
+/// yields zeros (media design T3: a name must not claim an FFT it does not
+/// perform; renamed from simulate_acoustic_fft in wave 6c).
+pub fn scripted_acoustic_spectrum(sample_bytes: BitArray) -> AcousticSpectrum {
   let size = bit_array.byte_size(sample_bytes)
   case size > 0 {
     True ->
@@ -114,8 +117,11 @@ pub fn simulate_acoustic_fft(sample_bytes: BitArray) -> AcousticSpectrum {
   }
 }
 
-/// Simulate computer vision chassis inspection on rack image.
-pub fn simulate_vision_inspection(
+/// Scripted rack-bay inspection FIXTURE for simulations. The image bytes are
+/// not examined; the result depends only on the bay number (media design T3:
+/// a name must not claim an inspection it does not perform; renamed from
+/// simulate_vision_inspection in wave 6c).
+pub fn scripted_vision_fixture(
   image_bytes: BitArray,
   target_bay: Int,
 ) -> VisionInspection {

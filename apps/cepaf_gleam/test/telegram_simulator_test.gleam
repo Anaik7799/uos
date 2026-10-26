@@ -173,27 +173,36 @@ pub fn telegram_domain_d_simulation_test() {
 }
 
 pub fn telegram_multimodal_vision_and_audio_simulation_test() {
-  // Acoustic FFT test
+  // Scripted acoustic fixture (media design T3): no FFT is performed, and the
+  // name says so. Two different non-empty inputs give the same scripted
+  // values, which is exactly why it may not be called an FFT.
   let empty_sample = bit_array.from_string("")
-  let spec_empty = telegram_simulator.simulate_acoustic_fft(empty_sample)
+  let spec_empty = telegram_simulator.scripted_acoustic_spectrum(empty_sample)
   spec_empty.anomaly_detected |> should.equal(False)
 
   let raw_pcm = bit_array.from_string("simulated-pcm-waveform-data-bytes-1024")
-  let spec_active = telegram_simulator.simulate_acoustic_fft(raw_pcm)
+  let spec_active = telegram_simulator.scripted_acoustic_spectrum(raw_pcm)
   spec_active.anomaly_detected |> should.equal(True)
   spec_active.fundamental_hz |> should.equal(1240)
   spec_active.flutter_hz |> should.equal(14)
+  let other_pcm = bit_array.from_string("entirely-different-bytes")
+  telegram_simulator.scripted_acoustic_spectrum(other_pcm)
+  |> should.equal(spec_active)
 
-  // Computer Vision Rack test
+  // Scripted rack-bay fixture: the bytes are not inspected; only the bay
+  // number selects the scripted result.
   let raw_img = bit_array.from_string("simulated-jpeg-bay-image-bytes")
-  let inspection_bay3 =
-    telegram_simulator.simulate_vision_inspection(raw_img, 3)
+  let inspection_bay3 = telegram_simulator.scripted_vision_fixture(raw_img, 3)
   inspection_bay3.amber_led |> should.equal(True)
   inspection_bay3.safe_to_pull |> should.equal(True)
   inspection_bay3.serial_number |> should.equal("S439NX0M819234")
+  telegram_simulator.scripted_vision_fixture(
+    bit_array.from_string("other-bytes"),
+    3,
+  )
+  |> should.equal(inspection_bay3)
 
-  let inspection_bay0 =
-    telegram_simulator.simulate_vision_inspection(raw_img, 0)
+  let inspection_bay0 = telegram_simulator.scripted_vision_fixture(raw_img, 0)
   inspection_bay0.safe_to_pull |> should.equal(False)
   inspection_bay0.serial_number
   |> should.equal(telegram_simulator.hard_denied_system_os_serial)
