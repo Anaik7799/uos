@@ -265,13 +265,13 @@
     },
     {
       "wave": "6i",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "6c65dd07",
+      "landed_utc": "2026-10-26T10:05:58Z",
       "canonicals_answering": "77/77 (unchanged); media intake now has a real HTTP transport",
       "tests_added": 8,
       "mutants": "3/3 integrator (URL prefix check dropped; fetch bound ignored; getFile path validation dropped), run with hackney started",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 18,
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "HTTP media transport: telegram_http_client gains get_file (Bot API getFile, bounded, file_path validated, no URL in errors) and fetch_file_bytes (one bounded GET, at most the FFI ceiling of 10 MiB, oversize is an error never a truncation); telegram_media_transport.from_http builds the download Transport, accepting only the api.telegram.org prefix with the configured token and fetching from the configured base host (the only host contacted). The Erlang HTTP fixture serves set_file, getFile and /file/bot<token>/<path>. Intake through the real transport against the fixture stores the bytes under their sha256. Environment note: fixture-backed tests need hackney started; the gleam test runner does it, a bare erl eunit call does not (explains the nine baseline slice1 fixture failures under erl).",
@@ -337,10 +337,10 @@
       "made_in": "wave 6c journal (07:50)",
       "p": 0.55,
       "claim": "a supervised caller landing on main wires telegram_media_inspect and telegram_media_store.put behind a bounded deadline with a test by 2026-10-27T12:00:00Z",
-      "outcome": null,
-      "brier": null,
-      "resolved_by": null,
-      "resolved_utc": null
+      "outcome": 1,
+      "brier": 0.2025,
+      "resolved_by": "main a985c3a1 (wave 6h): the service dispatch arm runs telegram_media_intake (inspect and store.put) inside a bounded observation window with an e2e test",
+      "resolved_utc": "2026-10-26T10:08:01Z"
     },
     {
       "made_in": "wave 6e journal (08:26)",
@@ -355,6 +355,42 @@
       "made_in": "wave 6f journal (08:47)",
       "p": 0.4,
       "claim": "an independent reviewer session claims MEDIA_REVIEW in Sa-plan and records a verdict by 2026-10-28T00:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6g journal (09:03)",
+      "p": 0.5,
+      "claim": "the media intake increment (guard accepts captioned media, verdict codec carries a media reference, service answers a typed media reply) lands on main with tests by 2026-10-27T12:00:00Z",
+      "outcome": 1,
+      "brier": 0.25,
+      "resolved_by": "main a985c3a1 (wave 6h) at 2026-10-26T09:49Z",
+      "resolved_utc": "2026-10-26T10:08:01Z"
+    },
+    {
+      "made_in": "wave 6h journal (09:36)",
+      "p": 0.45,
+      "claim": "an HTTP fetch transport (getFile plus streamed body on the existing HTTP client) lands on main with tests and is bound through configure_media in a staged service test by 2026-10-27T18:00:00Z",
+      "outcome": 1,
+      "brier": 0.3025,
+      "resolved_by": "main 6c65dd07 (wave 6i): telegram_media_transport.from_http with fixture-backed tests; bound through the intake binding in the transport suite rather than a staged service test, so the claim is scored as met at source with that caveat recorded",
+      "resolved_utc": "2026-10-26T10:08:01Z"
+    },
+    {
+      "made_in": "wave 6i journal (09:53)",
+      "p": 0.5,
+      "claim": "MEDIA_REVIEW is claimed and completed by an independent reviewer session with a recorded verdict by 2026-10-28T12:00:00Z",
+      "outcome": null,
+      "brier": null,
+      "resolved_by": null,
+      "resolved_utc": null
+    },
+    {
+      "made_in": "wave 6 close journal",
+      "p": 0.35,
+      "claim": "RETURN becomes claimable (COMMAND_REVIEW, GATEWAY_REVIEW, MEDIA_REVIEW, MINI_API_REVIEW and TELEGRAM_E2E completed in Sa-plan) by 2026-10-29T12:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
