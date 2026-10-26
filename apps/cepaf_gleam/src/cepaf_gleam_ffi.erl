@@ -603,7 +603,7 @@ http_post(UrlBinary, HeadersList, ContentTypeBinary, BodyBinary, TimeoutMs) ->
             {error, unicode:characters_to_binary(io_lib:format("http_post crash: ~p", [CatchReason]))}
     end.
 
-%% @doc Retrieve preference from env, state.sqlite3, or Smriti.db
+%% @doc Retrieve preference from env, UOS durable vault store, or state.sqlite3
 get_preference(KeyBinary) ->
     KeyStr = binary_to_list(KeyBinary),
     UpperKey = string:to_upper(KeyStr),
@@ -611,8 +611,24 @@ get_preference(KeyBinary) ->
         Val when is_list(Val), Val =/= "" ->
             {ok, unicode:characters_to_binary(string:trim(Val))};
         _ ->
-            DbPaths = ["var/telegram/state.sqlite3", "/home/an/NAS-setup/uos/var/telegram/state.sqlite3"],
-            find_in_sqlite(DbPaths, KeyBinary)
+            VStore = case os:getenv("UOS_VAULT_STORE") of
+                false -> <<"/home/an/NAS-setup/uos/var/vault/telegram/store">>;
+                "" -> <<"/home/an/NAS-setup/uos/var/vault/telegram/store">>;
+                S -> unicode:characters_to_binary(S)
+            end,
+            VPass = case os:getenv("UOS_VAULT_PASSPHRASE_FILE") of
+                false -> <<"/home/an/NAS-setup/uos/var/vault/telegram/passphrase">>;
+                "" -> <<"/home/an/NAS-setup/uos/var/vault/telegram/passphrase">>;
+                P -> unicode:characters_to_binary(P)
+            end,
+            VName = <<"telegram/production/", KeyBinary/binary>>,
+            case uos_vault_file:get(VStore, VName, VPass) of
+                {ok, Sealed} when is_binary(Sealed), Sealed =/= <<>> ->
+                    {ok, string:trim(Sealed, both, " \t\r\n")};
+                _ ->
+                    DbPaths = ["var/telegram/state.sqlite3", "/home/an/NAS-setup/uos/var/telegram/state.sqlite3"],
+                    find_in_sqlite(DbPaths, KeyBinary)
+            end
     end.
 
 find_in_sqlite([], _KeyBinary) -> {error, <<"not_found">>};

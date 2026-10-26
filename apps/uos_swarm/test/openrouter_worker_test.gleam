@@ -958,4 +958,20 @@ pub fn free_fixed_model_refuses_mismatched_model_identity_test() {
   )
 }
 
+@external(erlang, "uos_openrouter_ffi", "vault_key")
+fn ffi_vault_key(store: String, pass_file: String) -> Result(String, Nil)
+
+pub fn ffi_vault_key_refuses_missing_store_and_resolves_sealed_store_test() {
+  ffi_vault_key("/nonexistent/uos/vault/store", "/nonexistent/pass")
+  |> should.equal(Error(Nil))
+  let res =
+    ffi_vault_key(
+      "/home/an/NAS-setup/uos/var/vault/telegram/store",
+      "/home/an/NAS-setup/uos/var/vault/telegram/passphrase",
+    )
+  res |> should.be_ok
+  let assert Ok(key) = res
+  { string.length(key) >= 32 } |> should.be_true
+}
+
 

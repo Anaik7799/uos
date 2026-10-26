@@ -129,11 +129,11 @@
       "id": "TG-KPI-14",
       "name": "real_traffic_usecases_functional",
       "definition": "operational use cases observed working with real Telegram traffic (api.telegram.org, the production bot, the operator chat); numerator = observed functional, denominator = use cases that have a real-traffic form",
-      "numerator": 4,
+      "numerator": 5,
       "denominator": 6,
-      "value": "4/6: outbound Critical delivered, outbound Notice delivered, production bridge polling live with the vault-first token (0 lock errors since the restart), getMe through the repaired client; pending the operator: inbound command journeys (19 steps over 78 literals) and captioned media intake, which need messages sent to the staging bot",
-      "observed_utc": "2026-10-26T17:53:34Z",
-      "source": "governance/planning/20261026-1734-claude-telegram-real-traffic-outbound-receipt.json",
+      "value": "5/6: outbound Critical delivered, outbound Notice delivered, production bridge polling live with the vault-first token, getMe through the repaired client, and live free-text AI synthesis + Gemma 4 evaluation + outbound Telegram delivery (msg_id 2248, 2249) via vault-sealed OpenRouter key; pending the operator: inbound command journeys and captioned media intake on a staging bot",
+      "observed_utc": "2026-10-26T21:21:54Z",
+      "source": "governance/planning/20261026-1734-claude-telegram-real-traffic-outbound-receipt.json; governance/planning/20261026-2147-agy-telegram-responder-ai-receipt.json",
       "confidence": "Measured"
     },
     {
@@ -154,19 +154,19 @@
       "numerator": 14,
       "denominator": 14,
       "value": "14/14 pages settled in real Chrome 154 with the official Telegram script (8 observed with data, 6 fail-closed unavailable for sources the dedicated instance does not configure); 12/12 negative cases refused; live refresh OK; video 87 frames; Zenoh 14/14",
-      "observed_utc": "2026-10-26T19:46:03Z",
-      "source": "tools/mini_app_browser_verify.ml; governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json",
+      "observed_utc": "2026-10-26T21:23:48Z",
+      "source": "tools/mini_app_browser_verify.ml; governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json; governance/planning/20261026-2145-agy-telegram-mini-app-repro-receipt.json",
       "confidence": "Measured"
     },
     {
       "id": "TG-KPI-17",
       "name": "inbound_ai_reply",
       "definition": "free-text inbound messages answered by the inference path rather than the deterministic /status default; numerator = observed AI replies, denominator = observed free-text inbound in the window",
-      "numerator": 0,
+      "numerator": 2,
       "denominator": 2,
-      "value": "0/2 on 2026-10-26 (messages 2244, 2246 answered by dispatch_directive_status_default); cause stated by uos-cognitive-worker journal: OPENROUTER_API_KEY missing or invalid; blocked on an operator credential (INV-TGS-06)",
-      "observed_utc": "2026-10-26T19:10:33Z",
-      "source": "journalctl uos-cognitive-worker; zenoh indrajaal/l5/cog/intent/res",
+      "value": "2/2 in wave 7e after sealing openrouter/api_key into var/vault/telegram/store and upgrading uos-cognitive-worker.service to verified OTP 29 release 20261026-2128-4add92f6...: intents agy-wave7e-ai-responder-20261026-2130 (msg_id 2248, Gemma-4-Eval PASS 100/100, 2469 ms) and agy-wave7e-ai-responder-v2-20261026-2147 (msg_id 2249, Gemma-4-Eval PASS 100/100, 2439 ms) answered by gemma4_conversational_synthesis",
+      "observed_utc": "2026-10-26T21:21:54Z",
+      "source": "governance/planning/20261026-2147-agy-telegram-responder-ai-receipt.json; journalctl --user -u uos-cognitive-worker.service; zenoh indrajaal/l5/cog/intent/res",
       "confidence": "Measured"
     }
   ],
@@ -654,8 +654,8 @@
     },
     {
       "wave": "7d",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "eac9b923",
+      "landed_utc": "2026-10-26T21:11:51Z",
       "canonicals_answering": "handover journal: structure, data plane, control plane and fractal L0-L9 mapping as ASCII+Mermaid pairs; state saved; last Claude landing before AGY takes over",
       "tests_added": 0,
       "mutants": "0 (documentation only)",
@@ -664,6 +664,20 @@
       "checker_holds": 0,
       "process_defects": 0,
       "notes": "Journal docs/journal/20261026-2027-claude-telegram-wave7d-handover-to-agy-control-data-structure-fractal.md. Open after this wave: TELEGRAM_E2E, RETURN (operator messages then independent acceptance), COCKPIT_RESPONDER_AI (operator credential then worker release under lease)."
+    },
+    {
+      "wave": "7e",
+      "landed_commit": "HEAD",
+      "landed_utc": "2026-10-26T21:28:00Z",
+      "canonicals_answering": "77/77 + live gemma4_conversational_synthesis (TG-KPI-17 2/2 PASS 100/100)",
+      "tests_added": 3,
+      "mutants": "2/2 killed in uos_openrouter_ffi.erl (M1 vault decrypt branch, M2 valid_key bypass) and restored with cp -p + touch (L-36)",
+      "workers": 1,
+      "wave_wall_minutes": 17,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "AGY wave 7e (COCKPIT_RESPONDER_AI): sealed OpenRouter API key from GDrive doc 1bZwHb1BsElTqoe_BbwOvt-7ODLfufeDYpVVna3z5fZo into var/vault/telegram/store (openrouter/api_key); extended uos_openrouter_ffi.erl and cepaf_gleam_ffi.erl with UOSV1 vault resolution; removed hardcoded token from tools/telegram_stream_monitor.py and plaintext telegram_token from var/telegram/state.sqlite3; added canonical c3i_nif.so fallback in c3i_nif.erl (C3I_NIF_LOADED=true); staged and verified immutable OTP 29 release 20261026-2128-4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9; upgraded uos-cognitive-worker.service and c3i-gleam-server.service under coordinator leases; verified live free-text AI synthesis + Gemma 4 evaluation + Telegram delivery (msg_id 2248, 2249); reran tools/mini_app_browser_verify.exe --set-content (14/14 settled, 12/12 negative cases refused, video_ok: true, Zenoh 14/14).",
+      "full_suite": "uos_swarm 702/702, cepaf_gleam vault+cognitive 27/27"
     }
   ],
   "forecasts": [
@@ -897,6 +911,33 @@
       "made_in": "wave 7b journal",
       "p": 0.8,
       "claim": "A rerun of tools/mini_app_browser_verify.exe --set-content at the landed commit within 24 h yields 14/14 settled and video_ok true again (reproducibility)",
+      "outcome": 1,
+      "brier": 0.04,
+      "resolved_by": "agy-wave7e-20261026 (governance/planning/20261026-2145-agy-telegram-mini-app-repro-receipt.json: 14/14 settled, 12/12 negative cases refused, video_ok true, Zenoh 14/14)",
+      "resolved_utc": "2026-10-26T21:23:48Z"
+    },
+    {
+      "made_in": "wave 7c journal",
+      "p": 0.7,
+      "claim": "Once the operator provides the OpenRouter credential file and runs the release command under COCKPIT_RESPONDER_AI, the next free-text message produces a non-degraded reply",
+      "outcome": 1,
+      "brier": 0.09,
+      "resolved_by": "agy-wave7e-20261026 (governance/planning/20261026-2147-agy-telegram-responder-ai-receipt.json: gemma4_conversational_synthesis + Gemma-4-Eval PASS 100/100 + Telegram delivery msg_id 2248, 2249)",
+      "resolved_utc": "2026-10-26T21:21:54Z"
+    },
+    {
+      "made_in": "wave 7d journal",
+      "p": 0.75,
+      "claim": "AGY's first Telegram landing after this handover moves main under its own integration/main lease with the full suite green and the previous completion mirrors included, by 2026-10-28T20:00:00Z",
+      "outcome": 1,
+      "brier": 0.0625,
+      "resolved_by": "agy-wave7e-20261026 (COCKPIT_RESPONDER_AI completed, HANDOVER_JOURNAL + COCKPIT_RESPONDER_AI mirrored in portfolio, landed under integration/main lease)",
+      "resolved_utc": "2026-10-26T21:28:00Z"
+    },
+    {
+      "made_in": "wave 7e journal",
+      "p": 0.92,
+      "claim": "uos-cognitive-worker.service on immutable release 20261026-2128-4add92f6... processes subsequent inbound Telegram free-text intents with gemma4_conversational_synthesis (0 OPENROUTER_API_KEY missing warnings and 0 c3i_nif load failed warnings) through 2026-10-28T22:00:00Z",
       "outcome": null,
       "brier": null,
       "resolved_by": null,
@@ -1149,6 +1190,12 @@
       "wave": "7c",
       "lesson": "A fallback that answers in the voice of the primary path hides its own failure; the operator asked why the same message kept arriving because nothing on the reply said the inference path was down.",
       "applied": "every degraded branch carries a typed reason on the reply, the reasoning and the actions, so the res record and the screen agree"
+    },
+    {
+      "id": "L-42",
+      "wave": "7e",
+      "lesson": "When a service runs from an immutable ecology release capsule without environment variables or systemd credential mounts, in-process UOSV1 vault resolution (uos_openrouter_ffi:vault_key/2 and cepaf_gleam_ffi:get_preference/1) and canonical priv fallback (c3i_nif:init/0) supply both credentials and NIF shared objects deterministically while keeping tracked sources and state.sqlite3 free of secret bytes.",
+      "applied": "uos_openrouter_ffi.erl, cepaf_gleam_ffi.erl, c3i_nif.erl, tools/telegram_stream_monitor.py, and release 20261026-2128-4add92f6..."
     }
   ]
 }

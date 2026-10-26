@@ -3,7 +3,7 @@
 %% A monitored socket owner enforces one deadline across DNS/TLS/send/receive.
 -module(uos_openrouter_ffi).
 -include_lib("kernel/include/file.hrl").
--export([has_api_key/0,api_key/0,https_get/2,https_post_json/4]).
+-export([has_api_key/0,api_key/0,vault_key/0,vault_key/2,https_get/2,https_post_json/4]).
 -export([read_response/2,bounded_call/2,validate_request/5]).
 -define(HEADER_LIMIT,16384).
 -define(HTTP_LIMIT,4194304).
@@ -13,20 +13,24 @@
 has_api_key()->case api_key() of {ok,_}->true;_->false end.
 api_key()->case os:getenv("OPENROUTER_API_KEY") of
     false->credential_file();
+    ""->credential_file();
     V->K=unicode:characters_to_binary(string:trim(V)),
        case valid_key(K) of true->{ok,K};false->{error,nil} end
 end.
 %% systemd decrypts its encrypted credential outside the repository and exposes
 %% a service-private read-only mount. Never copy/hash/log credential contents.
 credential_file()->case os:getenv("CREDENTIALS_DIRECTORY") of
-    false->{error,nil};
+    false->vault_key();
+    ""->vault_key();
     Dir->case filename:pathtype(Dir) of
         absolute->Path=filename:join(Dir,"openrouter_api_key"),
             case file:read_file_info(Path) of
+                {error,enoent}->vault_key();
                 {ok,#file_info{type=regular,size=N}} when N>0,N=<8192->
                     case file:open(Path,[read,raw,binary]) of
                         {ok,F}->try case file:read(F,8193) of
-                            {ok,K}->case valid_key(K) of true->{ok,K};false->{error,nil} end;
+                            {ok,Raw}->K=string:trim(Raw,trailing,"\r\n"),
+                                case valid_key(K) of true->{ok,K};false->{error,nil} end;
                             _->{error,nil}
                         end after file:close(F) end;
                         _->{error,nil}
@@ -36,6 +40,41 @@ credential_file()->case os:getenv("CREDENTIALS_DIRECTORY") of
         _->{error,nil}
     end
 end.
+%% Durable UOSV1 vault fallback (PBKDF2-HMAC-SHA256 200k + AES-256-CBC + HMAC-SHA256).
+vault_key()->
+    Store=case os:getenv("UOS_VAULT_STORE") of
+        false-><<"/home/an/NAS-setup/uos/var/vault/telegram/store">>;
+        ""-><<"/home/an/NAS-setup/uos/var/vault/telegram/store">>;
+        S->unicode:characters_to_binary(S)
+    end,
+    PassFile=case os:getenv("UOS_VAULT_PASSPHRASE_FILE") of
+        false-><<"/home/an/NAS-setup/uos/var/vault/telegram/passphrase">>;
+        ""-><<"/home/an/NAS-setup/uos/var/vault/telegram/passphrase">>;
+        P->unicode:characters_to_binary(P)
+    end,
+    vault_key(Store,PassFile).
+vault_key(Store,PassFile) when is_binary(Store),is_binary(PassFile)->
+    Path=filename:join(Store,<<"openrouter__api_key.v1">>),
+    case {file:read_file(PassFile),file:read_file(Path)} of
+        {{ok,RawPass},{ok,<<"UOSV1",Salt:16/binary,Iv:16/binary,Mac:32/binary,Cipher/binary>>}}
+          when byte_size(Cipher)>0,byte_size(Cipher)=<8208->
+            case string:trim(RawPass,trailing,"\r\n") of
+                Pass when is_binary(Pass),byte_size(Pass)>=12->
+                    <<AesKey:32/binary,MacKey:32/binary>>=crypto:pbkdf2_hmac(sha256,Pass,Salt,200000,64),
+                    Expected=crypto:mac(hmac,sha256,MacKey,<<Iv/binary,Cipher/binary>>),
+                    case crypto:hash_equals(Mac,Expected) of
+                        false->{error,nil};
+                        true->try
+                            Plain=crypto:crypto_one_time(aes_256_cbc,AesKey,Iv,Cipher,[{encrypt,false},{padding,pkcs_padding}]),
+                            K=string:trim(Plain,trailing,"\r\n"),
+                            case valid_key(K) of true->{ok,K};false->{error,nil} end
+                        catch _:_->{error,nil} end
+                    end;
+                _->{error,nil}
+            end;
+        _->{error,nil}
+    end;
+vault_key(_,_)->{error,nil}.
 https_get(U,T)->request(get,U,<<>>,<<>>,T).
 https_post_json(U,K,B,T)->request(post,U,K,B,T).
 

@@ -214,6 +214,7 @@ pub fn evaluate_general_intent_test() {
 }
 
 pub fn actor_message_handling_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let state = init_worker("test-worker-1")
   state.worker_id |> should.equal("test-worker-1")
   state.intents_processed |> should.equal(0)
@@ -314,6 +315,7 @@ pub fn evaluate_directive_cockpit_test() {
 }
 
 pub fn evaluate_identity_query_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let intent =
     CognitiveIntent(
       intent_id: "cog-id-1",

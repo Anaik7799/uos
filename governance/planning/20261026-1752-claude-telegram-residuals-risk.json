@@ -1,1 +1,1693 @@
-[{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"claude-telegram-gateway_ticker-20261026","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"GATEWAY_TICKER","actor":"claude-fable-l0-35600f5c","scope":"Close gateway residual G-04 (packet GATEWAY_REVIEW): a supervised ticker actor drives the drain on a cadence with a per-tick Send built by the service, reads Counters after each tick and raises Stale (age over the bound, repeated while stale), Cleared (once) and Unobserved (drain unavailable or timeout) to a typed alarm sink; child spec and service start site; laws and mutants; full suite; nothing is admitted.","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T17:23:52Z","snapshot":{"kind":"working_tree","reference":"main db5e64c8","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam","sha256":"f7ab7f398fa4bcaa59c6f599d5e7efe46a2606b0c95f6714d4c1a3bd08390427","observed_at":"2026-10-26T20:09:22Z"},{"path":"apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam","sha256":"e45328c1249c46f85858a7b44c6711a0b2ed8ef7270d03ec3d2e11c3a59d98d4","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the milestone: the staleness alarm is a recorded caller obligation nobody fulfils","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"]},"stpa":{"value":3,"low":3,"high":3,"rationale":"Credible UCA with incomplete coverage: an uncertain Critical can age without any alarm","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"]},"fmea":{"value":4,"low":4,"high":4,"rationale":"Severity floor of FM-STALE-UNCERTAIN-UNALARMED (S4 O3 Det4 RPN48)","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"]},"dependency":{"value":3,"low":3,"high":3,"rationale":"A gateway deployment waits on a ticker","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service keeps serving after a race and can detect audit tampering","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"]}},"fmea_modes":[{"id":"FM-STALE-UNCERTAIN-UNALARMED","cause":"no ticker consumes uncertain_oldest_observed_at_ms","effect":"an uncertain Critical ages silently","controls":"ticker alarms Stale over a bound, Cleared on resolution, Unobserved when the drain is gone; laws; mutants","s":4,"o":3,"det":4,"rpn":48,"band":4}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P2","readiness":"ready","blockers":[],"dependencies":[],"score":324,"score_interval":[324,324],"decision":{"summary":"Add the supervised gateway ticker and its alarm","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["No production ticker exists yet; the start site is new"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["ticker laws: cadence, Stale, Cleared, Unobserved, no Send in state","mutants killed","full Gleam suite green; landed; pushed"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["the alarm sink is a Subject; routing it to Telegram itself is a deployment decision"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"claude-telegram-immune_supervised-20261026","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"IMMUNE_SUPERVISED","actor":"claude-fable-l0-35600f5c","scope":"Close the Mini App residual (packet MINI_API_REVIEW): the immune actor gains a supervised named start site and the Mini runtime discovers it by name, answering immune_actor_not_running only when it is really absent; laws; full suite; nothing is admitted.","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T17:28:54Z","snapshot":{"kind":"working_tree","reference":"main db5e64c8","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam","sha256":"8fe8bed58b42797c9c03520b82a8c304b35f38507aa52caf8de52ae0db3401ab","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the milestone: the recorded residual of two reviews","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"]},"stpa":{"value":3,"low":3,"high":3,"rationale":"Credible UCA with incomplete coverage: the page reports not running although an actor could be","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"]},"fmea":{"value":4,"low":4,"high":4,"rationale":"Severity floor of FM-IMMUNE-NEVER-OBSERVED (S4 O3 Det2 RPN24)","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"]},"dependency":{"value":2,"low":2,"high":2,"rationale":"Optional downstream use","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service keeps serving after a race and can detect audit tampering","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"]}},"fmea_modes":[{"id":"FM-IMMUNE-NEVER-OBSERVED","cause":"no supervisor starts the actor and the runtime holds None","effect":"the immune page never shows live state","controls":"named start site; discovery by name; laws","s":4,"o":3,"det":2,"rpn":24,"band":4}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P2","readiness":"ready","blockers":[],"dependencies":[],"score":216,"score_interval":[216,216],"decision":{"summary":"Supervised immune actor with discovery by name","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The observer already answers a typed reason; the gap is availability, not truthfulness"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["laws","full Gleam suite green; landed; pushed"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review (VAULT_NIF_REVIEW5)","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["placement under the production supervisor is deployment configuration"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"independent-telegram-residuals_review-20261026","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"RESIDUALS_REVIEW","actor":"agy-review-r1-20261026","scope":"Independent review of the residuals closure: ticker laws (cadence drives the drain with a per-tick Send, Stale repeated while stale, Cleared once, Unobserved on a silent drain, no built Send in state), the supervised discoverable immune actor (not running without a supervisor; discovered, restarted under the same name, observed, honest again), hostile inputs; verdict recorded in Sa-plan; nothing is admitted.","phase":"review","fractal_layer":9,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T18:06:41Z","snapshot":{"kind":"working_tree","reference":"main 284a7854 (wave 6z landed)","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam","sha256":"ea4a8eee418d44c98fff33bda9c2af91e53e1d7d62533e812dec43397e11fe9b","observed_at":"2026-10-26T20:09:22Z"},{"path":"apps/cepaf_gleam/src/cepaf_gleam/immune/system.gleam","sha256":"4fce0d076d1d01679bed11c5d86ce4222e519a8fd2e5915df68b1404301d94d2","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md","sha256":"d1e01c5d98384eba332c4a5c2c9af19adf3ee0d01557051a1077f9d7708f4976","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the milestone: the staleness alarm is a recorded caller obligation nobody fulfils","evidence_refs":["docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"]},"stpa":{"value":3,"low":3,"high":3,"rationale":"Credible UCA with incomplete coverage: an uncertain Critical can age without any alarm","evidence_refs":["docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"]},"fmea":{"value":4,"low":4,"high":4,"rationale":"Severity floor of FM-STALE-UNCERTAIN-UNALARMED (S4 O3 Det4 RPN48)","evidence_refs":["docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"]},"dependency":{"value":3,"low":3,"high":3,"rationale":"A gateway deployment waits on a ticker","evidence_refs":["docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service keeps serving after a race and can detect audit tampering","evidence_refs":["docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md","apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"]}},"fmea_modes":[{"id":"FM-STALE-UNCERTAIN-UNALARMED","cause":"no ticker consumes uncertain_oldest_observed_at_ms","effect":"an uncertain Critical ages silently","controls":"ticker alarms Stale over a bound, Cleared on resolution, Unobserved when the drain is gone; laws; mutants","s":4,"o":3,"det":4,"rpn":48,"band":4}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P2","readiness":"ready","blockers":[],"dependencies":["GATEWAY_TICKER","IMMUNE_SUPERVISED"],"score":324,"score_interval":[324,324],"decision":{"summary":"Independent review of the residuals closure Completed attempt 1 by agy-review-r1-20261026: APPROVE, 7/7 laws VERIFIED, 100 passed/0 failed, 5 hostile inputs; verdict governance/planning/20261026-1846-agy-residuals-review-verdict.json.","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The laws are the author's; the reviewer re-derives the alarm semantics from the drain"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["laws each VERIFIED, REFUTED or NOT_CHECKABLE","hostile inputs recorded","Sa-plan completion by the reviewer"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"AGY run agy-review-r1-20261026","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["placement under the production supervisor is deployment configuration"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"claude-telegram-real_traffic_outbound-20261026","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"REAL_TRAFFIC_OUTBOUND","actor":"claude-fable-l0-35600f5c","scope":"Real-traffic use case: the outbound gateway path end to end against api.telegram.org with the production bot, token and chat id read from the vault store inside the BEAM; drain and ticker under a one-for-one supervisor; one Critical and one Notice delivered to the operator chat; counts, alarms and elapsed recorded; two messages at most; the probe is a tracked operational tool; nothing is admitted.","phase":"release","fractal_layer":7,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T17:52:28Z","snapshot":{"kind":"working_tree","reference":"main db5e64c8","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam","sha256":"22af9609327be8c1d101f49507ce367ebf387aa08c624c51c7543217bea0726a","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the milestone: the operator asks for real-traffic use cases","evidence_refs":["apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"]},"stpa":{"value":4,"low":4,"high":4,"rationale":"Critical UCA with unverified enforcement until observed: the outbound path has only ever run against a fixture","evidence_refs":["apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"]},"fmea":{"value":5,"low":5,"high":5,"rationale":"Severity floor of FM-REAL-SEND-TO-WRONG-CHAT (S5 O1 Det1 RPN5)","evidence_refs":["apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"]},"dependency":{"value":4,"low":4,"high":4,"rationale":"RELEASE evidence depends on real-traffic observations","evidence_refs":["apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service observed with real traffic","evidence_refs":["apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"]}},"fmea_modes":[{"id":"FM-REAL-SEND-TO-WRONG-CHAT","cause":"chat id passed as an argument","effect":"a message to a stranger","controls":"chat id read from the vault store only; two messages at most; allowlist pair equals the chat","s":5,"o":1,"det":1,"rpn":5,"band":5}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P1","readiness":"ready","blockers":[],"dependencies":[],"score":720,"score_interval":[720,720],"decision":{"summary":"Run the outbound gateway path with real traffic to the operator chat","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["Telegram may rate-limit or the network may time out; both are typed outcomes"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["2 enqueued, 2 delivered, 0 failed, 0 uncertain, no Stale alarm","report recorded"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"operator sees the two messages in the chat","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["inbound real traffic needs the operator to send messages"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"claude-telegram-mini_app_browser_verify-20261026","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"MINI_APP_BROWSER_VERIFY","actor":"claude-fable-l0-35600f5c","scope":"Close the Mini App browser residual (packet MINI_API_REVIEW: browser verification not rerun): a dedicated cockpit instance on a separate port with a verification-only bot token and allowlist (no Telegram call is made), an OCaml CDP verifier that injects a Telegram.WebApp shim with initData signed per the Telegram scheme, loads all 14 Mini App pages in headless Chrome, asserts the status and fields of each, captures per-page PNG screenshots and a screencast video, and runs negative cases (tampered hash, expired auth_date, user outside the allowlist); receipts under var and governance; nothing is admitted.","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T18:12:41Z","snapshot":{"kind":"working_tree","reference":"main 284a7854","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam","sha256":"54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the milestone: the staleness alarm is a recorded caller obligation nobody fulfils","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"stpa":{"value":3,"low":3,"high":3,"rationale":"Credible UCA with incomplete coverage: the Mini App browser behaviour has never been observed in a real browser","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"fmea":{"value":4,"low":4,"high":4,"rationale":"Severity floor of FM-MINI-UNOBSERVED-BROWSER (S4 O3 Det4 RPN48)","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"dependency":{"value":2,"low":2,"high":2,"rationale":"Optional downstream use","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service keeps serving after a race and can detect audit tampering","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]}},"fmea_modes":[{"id":"FM-MINI-UNOBSERVED-BROWSER","cause":"pages tested only through handler functions","effect":"a page that renders nothing in a browser passes","controls":"CDP-driven load of every page with signed initData; screenshots; negative auth cases","s":4,"o":3,"det":4,"rpn":48,"band":4}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P2","readiness":"ready","blockers":[],"dependencies":[],"score":216,"score_interval":[216,216],"decision":{"summary":"Verify every Mini App page in a real browser with evidence STATUS 2026-10-26T19:5xZ: tool tools/mini_app_browser_verify.ml built and compiled; the run is blocked inside the agent shell sandbox: headless Chrome 154 completes no URL load from it (net-log: TCP connect to 127.0.0.1:4190 succeeds, the URL request stalls after COMPUTED_PRIVACY_MODE, no Fetch.requestPaused ever fires; data: URLs render; curl from the same shell answers in 1 ms). Evidence under /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850. The run is to be executed from the operator terminal; task stays executing until a receipt exists. COMPLETED attempt 1 at 55c91d947e28: 14/14 pages settled in real Chrome via --set-content, receipt governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json.","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The live instance has no Mini App environment; the verification instance is separate"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["14/14 pages load with a settled status","negative cases refused","screenshots and video captured","receipt recorded"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"uos/telegram-residuals/20261026-1752/BRIDGE_TOKEN_HYGIENE/1","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"BRIDGE_TOKEN_HYGIENE","actor":"claude-fable-l0-35600f5c","scope":"tools/telegram_client.ml and tools/telegram_client.exe: the bridge error path prints the full curl command including the bot token into journald and the token is visible in process argv; pass the URL through curl -K - on stdin and redact bot<token> in every error string","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T18:53:35Z","snapshot":{"kind":"working_tree","reference":"main 284a7854","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam","sha256":"54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":4,"low":4,"high":4,"rationale":"Imminent security constraint: live token in journald","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"stpa":{"value":4,"low":4,"high":4,"rationale":"Critical UCA: credential disclosure with no enforcement","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"fmea":{"value":4,"low":4,"high":4,"rationale":"S=4 O=3 Det=4 RPN=48 band 4","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"dependency":{"value":2,"low":2,"high":2,"rationale":"Optional downstream use","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]}},"fmea_modes":[{"id":"FM-BRIDGE-TOKEN-EXPOSED","cause":"curl receives the bot URL in argv and the failure message echoes the full command","effect":"the bot token is readable in ps and in journald by any local reader","controls":"URL on curl stdin (-K -), redact_token on every error string, journald grep after each restart","s":4,"o":3,"det":4,"rpn":48,"band":4}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P1","readiness":"ready","blockers":[],"dependencies":[],"score":384,"score_interval":[384,384],"decision":{"summary":"Keep the production bot token out of argv and logs. Rebuild telegram_client.exe, restart uos-telegram-bridge under a runtime lease, verify polling resumes and the next error line carries bot<REDACTED>. Completed attempt 1 at 284a78547052.","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The live instance has no Mini App environment; the verification instance is separate"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["14/14 pages load with a settled status","negative cases refused","screenshots and video captured","receipt recorded"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"uos/telegram-residuals/20261026-1752/COCKPIT_RESPONDER_AI/1","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"COCKPIT_RESPONDER_AI","actor":"claude-fable-l0-35600f5c","scope":"uos-cognitive-worker.service (release 20261001-0511, the consumer of indrajaal/l5/cog/intent/req) answers every free-text message with dispatch_directive_status_default because its journal reports OPENROUTER_API_KEY missing or invalid on every intent and c3i_nif fails to load from that release; observed for inbound messages 2244 and 2246; the operator asked why the same message arrives every time","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"available","ready_since":"2026-10-26T18:53:35Z","snapshot":{"kind":"working_tree","reference":"main 284a7854","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam","sha256":"54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the Telegram completion milestone","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"stpa":{"value":3,"low":3,"high":3,"rationale":"Credible UCA: reply path silently degrades to a canned directive","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"fmea":{"value":3,"low":3,"high":3,"rationale":"S=3 O=5 Det=2 RPN=30 band 3","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"dependency":{"value":2,"low":2,"high":2,"rationale":"Optional downstream use","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"impact":{"value":3,"low":3,"high":3,"rationale":"One critical service","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]}},"fmea_modes":[{"id":"FM-COG-CANNED-REPLY","cause":"generate_conversational_response errors (no OpenRouter credential or budget) and the offline gateway answers /status for every free-text message","effect":"the operator receives the same deterministic status reply for any question; the AI path is silently absent","controls":"credential presence check at boot, a typed reply reason on the intent/res record, one real free-text probe after each cockpit release","s":3,"o":5,"det":2,"rpn":30,"band":3}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P1","readiness":"blocked","blockers":["operator must provision OPENROUTER_API_KEY to uos-cognitive-worker (systemd LoadCredential or vault), INV-TGS-06","a fresh worker release with the NIF present and a restart under runtime:cognitive-worker"],"dependencies":[],"score":162,"score_interval":[162,162],"decision":{"summary":"Blocked on an operator credential and a cockpit release; no effect taken in wave 7a. When unblocked: store the key through the vault or the unit credential directory, cut a release from main, restart c3i-gleam-server under runtime:cockpit, send one free-text message and record the AI reply as evidence.","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The live instance has no Mini App environment; the verification instance is separate"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["14/14 pages load with a settled status","negative cases refused","screenshots and video captured","receipt recorded"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"uos/telegram-residuals/20261026-1752/RESPONDER_DEGRADED_REASON/1","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"RESPONDER_DEGRADED_REASON","actor":"claude-fable-l0-35600f5c","scope":"apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam: degraded_decision/2 prefixes the deterministic-gateway answer with the typed inference-unavailable reason (secrets redacted, empty normalised) on reply_markdown, reasoning and actions; two laws in cognitive_worker_test; two mutants killed; development source only, production cutover of uos-cognitive-worker stays under COCKPIT_RESPONDER_AI","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"completed","ready_since":"2026-10-26T19:54:54Z","snapshot":{"kind":"working_tree","reference":"main 284a7854","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam","sha256":"54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Necessary within the Telegram completion milestone","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"stpa":{"value":3,"low":3,"high":3,"rationale":"Credible UCA: a degraded reply presented as a conversational answer; this change makes the degradation visible on every channel","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"fmea":{"value":3,"low":3,"high":3,"rationale":"S=3 O=5 Det=2 RPN=30 band 3","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"dependency":{"value":2,"low":2,"high":2,"rationale":"Optional downstream use","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"impact":{"value":2,"low":2,"high":2,"rationale":"One bounded workflow until the worker is released","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]}},"fmea_modes":[{"id":"FM-COG-SILENT-DEGRADE","cause":"inference error branch returns the gateway decision unchanged","effect":"operator reads a canned status as an answer and cannot tell why","controls":"degraded_decision law pair; mutants on the action marker and the empty-reason normaliser","s":3,"o":5,"det":2,"rpn":30,"band":3}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P2","readiness":"ready","blockers":[],"dependencies":[],"score":108,"score_interval":[108,108],"decision":{"summary":"Make the degraded reply honest in development now; landing requires the full Gleam suite green at the candidate; deployment to uos-cognitive-worker is a separate release under lease once the credential exists. Completed attempt 1 at bb6556b94275.","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The live instance has no Mini App environment; the verification instance is separate"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["14/14 pages load with a settled status","negative cases refused","screenshots and video captured","receipt recorded"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"],"supersedes":null}},{"schema_version":1,"policy":"SC-RISK-PRIORITY-001","assessment_id":"uos/telegram-residuals/20261026-1752/HANDOVER_JOURNAL/1","plan_id":"uos/telegram-residuals/20261026-1752","task_id":"HANDOVER_JOURNAL","actor":"claude-fable-l0-35600f5c","scope":"docs/journal handover journal (13 sections) with ASCII and Mermaid diagram pairs for the control plane, the data plane, the repository structure and the fractal L0-L9 mapping of the Telegram feature; additive link from the handover document; documentation only","phase":"implementation","fractal_layer":4,"observed_at":"2026-10-26T20:09:22Z","valid_until":"2026-10-26T21:04:22Z","task_state":"executing","ready_since":"2026-10-26T20:09:22Z","snapshot":{"kind":"working_tree","reference":"main 284a7854","evidence":[{"path":"apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam","sha256":"54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b","observed_at":"2026-10-26T20:09:22Z"},{"path":"docs/sop/20261026-1018-telegram-review-packets.md","sha256":"787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb","observed_at":"2026-10-26T20:09:22Z"}]},"factors":{"criticality":{"value":3,"low":3,"high":3,"rationale":"Operator directive: save state and hand over with documentation","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"stpa":{"value":2,"low":2,"high":2,"rationale":"Scoped UCA: a successor acting on stale state; the journal records live state with sources","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"fmea":{"value":2,"low":2,"high":2,"rationale":"S=3 O=5 Det=2 RPN=30 band 3","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"dependency":{"value":2,"low":2,"high":2,"rationale":"Optional downstream use","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]},"impact":{"value":2,"low":2,"high":2,"rationale":"One bounded workflow until the worker is released","evidence_refs":["docs/sop/20261026-1018-telegram-review-packets.md","apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"]}},"fmea_modes":[{"id":"FM-HANDOVER-STALE","cause":"successor reads a state that moved after the handover","effect":"a claim or restart against the wrong assumption","controls":"journal names Sa-plan as the live source and every procedure recomputes state before acting","s":2,"o":3,"det":2,"rpn":12,"band":2}],"stpa_analysis":{"controller":"Gleam vault owner over the rusty_vault_nif resource","control_action":"Open, unseal, store, read and audit secrets through the NIF","losses":["L-RISK-SECRET-EXPOSURE","L-RISK-FALSE-CONFORMANCE"],"hazards":["H-RISK-FALSE-CLEARANCE","H-RISK-SECRET-LEAK"],"ucas":[{"type":"not_provided","applicability":"applicable","context":"no independent review is recorded","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"complete only with a recorded verdict"},{"type":"provided_unsafe","applicability":"applicable","context":"the reviewer claims from a drifting portfolio","hazard_ids":["H-RISK-SECRET-LEAK","H-RISK-FALSE-CLEARANCE"],"constraint":"still portfolio from launch to claim (L-30)"},{"type":"wrong_timing","applicability":"applicable","context":"the review runs before the landing","hazard_ids":["H-RISK-FALSE-CLEARANCE"],"constraint":"launch after landing"},{"type":"duration","applicability":"applicable","context":"the review workspace keeps stale artifacts","hazard_ids":["H-RISK-SECRET-LEAK"],"constraint":"fresh workspace at main"}]},"class":"P2","readiness":"ready","blockers":[],"dependencies":[],"score":48,"score_interval":[48,48],"decision":{"summary":"Write and land the handover journal; no runtime effect.","alternatives":["AGY claimant (chosen)","Codex claimant (equally acceptable)","Author self-review (rejected)"],"counterevidence":["The live instance has no Mini App environment; the verification instance is separate"],"assumptions":["The reviewer can rebuild offline and run eunit through the installed library"],"confidence":"analyst_estimate","forecast":"APPROVE or APPROVE_WITH_CHANGES with no REFUTED law","falsifier":"REQUEST_CHANGES or a REFUTED law","acceptance":["14/14 pages load with a settled status","negative cases refused","screenshots and video captured","receipt recorded"],"rollback":"None needed: a review is evidence, not an effect","reviewer":"Independent AGY review","budget":"Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token","residuals":["the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"],"supersedes":null}}]
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-telegram-gateway_ticker-20261026",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "GATEWAY_TICKER",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Close gateway residual G-04 (packet GATEWAY_REVIEW): a supervised ticker actor drives the drain on a cadence with a per-tick Send built by the service, reads Counters after each tick and raises Stale (age over the bound, repeated while stale), Cleared (once) and Unobserved (drain unavailable or timeout) to a typed alarm sink; child spec and service start site; laws and mutants; full suite; nothing is admitted.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T17:23:52Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main db5e64c8",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam",
+          "sha256": "f7ab7f398fa4bcaa59c6f599d5e7efe46a2606b0c95f6714d4c1a3bd08390427",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+          "sha256": "e45328c1249c46f85858a7b44c6711a0b2ed8ef7270d03ec3d2e11c3a59d98d4",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the milestone: the staleness alarm is a recorded caller obligation nobody fulfils",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA with incomplete coverage: an uncertain Critical can age without any alarm",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Severity floor of FM-STALE-UNCERTAIN-UNALARMED (S4 O3 Det4 RPN48)",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "A gateway deployment waits on a ticker",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service keeps serving after a race and can detect audit tampering",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_drain.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-STALE-UNCERTAIN-UNALARMED",
+        "cause": "no ticker consumes uncertain_oldest_observed_at_ms",
+        "effect": "an uncertain Critical ages silently",
+        "controls": "ticker alarms Stale over a bound, Cleared on resolution, Unobserved when the drain is gone; laws; mutants",
+        "s": 4,
+        "o": 3,
+        "det": 4,
+        "rpn": 48,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 324,
+    "score_interval": [
+      324,
+      324
+    ],
+    "decision": {
+      "summary": "Add the supervised gateway ticker and its alarm",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "No production ticker exists yet; the start site is new"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "ticker laws: cadence, Stale, Cleared, Unobserved, no Send in state",
+        "mutants killed",
+        "full Gleam suite green; landed; pushed"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "the alarm sink is a Subject; routing it to Telegram itself is a deployment decision"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-telegram-immune_supervised-20261026",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "IMMUNE_SUPERVISED",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Close the Mini App residual (packet MINI_API_REVIEW): the immune actor gains a supervised named start site and the Mini runtime discovers it by name, answering immune_actor_not_running only when it is really absent; laws; full suite; nothing is admitted.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T17:28:54Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main db5e64c8",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam",
+          "sha256": "8fe8bed58b42797c9c03520b82a8c304b35f38507aa52caf8de52ae0db3401ab",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the milestone: the recorded residual of two reviews",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA with incomplete coverage: the page reports not running although an actor could be",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Severity floor of FM-IMMUNE-NEVER-OBSERVED (S4 O3 Det2 RPN24)",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Optional downstream use",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service keeps serving after a race and can detect audit tampering",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/telegram/mini_runtime.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-IMMUNE-NEVER-OBSERVED",
+        "cause": "no supervisor starts the actor and the runtime holds None",
+        "effect": "the immune page never shows live state",
+        "controls": "named start site; discovery by name; laws",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 216,
+    "score_interval": [
+      216,
+      216
+    ],
+    "decision": {
+      "summary": "Supervised immune actor with discovery by name",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The observer already answers a typed reason; the gap is availability, not truthfulness"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "laws",
+        "full Gleam suite green; landed; pushed"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review (VAULT_NIF_REVIEW5)",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "placement under the production supervisor is deployment configuration"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "independent-telegram-residuals_review-20261026",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "RESIDUALS_REVIEW",
+    "actor": "agy-review-r1-20261026",
+    "scope": "Independent review of the residuals closure: ticker laws (cadence drives the drain with a per-tick Send, Stale repeated while stale, Cleared once, Unobserved on a silent drain, no built Send in state), the supervised discoverable immune actor (not running without a supervisor; discovered, restarted under the same name, observed, honest again), hostile inputs; verdict recorded in Sa-plan; nothing is admitted.",
+    "phase": "review",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T18:06:41Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 284a7854 (wave 6z landed)",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam",
+          "sha256": "ea4a8eee418d44c98fff33bda9c2af91e53e1d7d62533e812dec43397e11fe9b",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/immune/system.gleam",
+          "sha256": "4fce0d076d1d01679bed11c5d86ce4222e519a8fd2e5915df68b1404301d94d2",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md",
+          "sha256": "d1e01c5d98384eba332c4a5c2c9af19adf3ee0d01557051a1077f9d7708f4976",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the milestone: the staleness alarm is a recorded caller obligation nobody fulfils",
+        "evidence_refs": [
+          "docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA with incomplete coverage: an uncertain Critical can age without any alarm",
+        "evidence_refs": [
+          "docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Severity floor of FM-STALE-UNCERTAIN-UNALARMED (S4 O3 Det4 RPN48)",
+        "evidence_refs": [
+          "docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "A gateway deployment waits on a ticker",
+        "evidence_refs": [
+          "docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service keeps serving after a race and can detect audit tampering",
+        "evidence_refs": [
+          "docs/journal/20261026-1721-claude-telegram-wave6z-review-residuals-closed.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/gateway/telegram_gateway_ticker.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-STALE-UNCERTAIN-UNALARMED",
+        "cause": "no ticker consumes uncertain_oldest_observed_at_ms",
+        "effect": "an uncertain Critical ages silently",
+        "controls": "ticker alarms Stale over a bound, Cleared on resolution, Unobserved when the drain is gone; laws; mutants",
+        "s": 4,
+        "o": 3,
+        "det": 4,
+        "rpn": 48,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "GATEWAY_TICKER",
+      "IMMUNE_SUPERVISED"
+    ],
+    "score": 324,
+    "score_interval": [
+      324,
+      324
+    ],
+    "decision": {
+      "summary": "Independent review of the residuals closure Completed attempt 1 by agy-review-r1-20261026: APPROVE, 7/7 laws VERIFIED, 100 passed/0 failed, 5 hostile inputs; verdict governance/planning/20261026-1846-agy-residuals-review-verdict.json.",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The laws are the author's; the reviewer re-derives the alarm semantics from the drain"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "laws each VERIFIED, REFUTED or NOT_CHECKABLE",
+        "hostile inputs recorded",
+        "Sa-plan completion by the reviewer"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "AGY run agy-review-r1-20261026",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "placement under the production supervisor is deployment configuration"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-telegram-real_traffic_outbound-20261026",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "REAL_TRAFFIC_OUTBOUND",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Real-traffic use case: the outbound gateway path end to end against api.telegram.org with the production bot, token and chat id read from the vault store inside the BEAM; drain and ticker under a one-for-one supervisor; one Critical and one Notice delivered to the operator chat; counts, alarms and elapsed recorded; two messages at most; the probe is a tracked operational tool; nothing is admitted.",
+    "phase": "release",
+    "fractal_layer": 7,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T17:52:28Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main db5e64c8",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam",
+          "sha256": "22af9609327be8c1d101f49507ce367ebf387aa08c624c51c7543217bea0726a",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the milestone: the operator asks for real-traffic use cases",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Critical UCA with unverified enforcement until observed: the outbound path has only ever run against a fixture",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity floor of FM-REAL-SEND-TO-WRONG-CHAT (S5 O1 Det1 RPN5)",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "RELEASE evidence depends on real-traffic observations",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service observed with real traffic",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-REAL-SEND-TO-WRONG-CHAT",
+        "cause": "chat id passed as an argument",
+        "effect": "a message to a stranger",
+        "controls": "chat id read from the vault store only; two messages at most; allowlist pair equals the chat",
+        "s": 5,
+        "o": 1,
+        "det": 1,
+        "rpn": 5,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 720,
+    "score_interval": [
+      720,
+      720
+    ],
+    "decision": {
+      "summary": "Run the outbound gateway path with real traffic to the operator chat",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "Telegram may rate-limit or the network may time out; both are typed outcomes"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "2 enqueued, 2 delivered, 0 failed, 0 uncertain, no Stale alarm",
+        "report recorded"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "operator sees the two messages in the chat",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "inbound real traffic needs the operator to send messages"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "claude-telegram-mini_app_browser_verify-20261026",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "MINI_APP_BROWSER_VERIFY",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "Close the Mini App browser residual (packet MINI_API_REVIEW: browser verification not rerun): a dedicated cockpit instance on a separate port with a verification-only bot token and allowlist (no Telegram call is made), an OCaml CDP verifier that injects a Telegram.WebApp shim with initData signed per the Telegram scheme, loads all 14 Mini App pages in headless Chrome, asserts the status and fields of each, captures per-page PNG screenshots and a screencast video, and runs negative cases (tampered hash, expired auth_date, user outside the allowlist); receipts under var and governance; nothing is admitted.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T18:12:41Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 284a7854",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+          "sha256": "54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the milestone: the staleness alarm is a recorded caller obligation nobody fulfils",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA with incomplete coverage: the Mini App browser behaviour has never been observed in a real browser",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Severity floor of FM-MINI-UNOBSERVED-BROWSER (S4 O3 Det4 RPN48)",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Optional downstream use",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service keeps serving after a race and can detect audit tampering",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-MINI-UNOBSERVED-BROWSER",
+        "cause": "pages tested only through handler functions",
+        "effect": "a page that renders nothing in a browser passes",
+        "controls": "CDP-driven load of every page with signed initData; screenshots; negative auth cases",
+        "s": 4,
+        "o": 3,
+        "det": 4,
+        "rpn": 48,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 216,
+    "score_interval": [
+      216,
+      216
+    ],
+    "decision": {
+      "summary": "Verify every Mini App page in a real browser with evidence STATUS 2026-10-26T19:5xZ: tool tools/mini_app_browser_verify.ml built and compiled; the run is blocked inside the agent shell sandbox: headless Chrome 154 completes no URL load from it (net-log: TCP connect to 127.0.0.1:4190 succeeds, the URL request stalls after COMPUTED_PRIVACY_MODE, no Fetch.requestPaused ever fires; data: URLs render; curl from the same shell answers in 1 ms). Evidence under /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1850. The run is to be executed from the operator terminal; task stays executing until a receipt exists. COMPLETED attempt 1 at 55c91d947e28: 14/14 pages settled in real Chrome via --set-content, receipt governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json.",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The live instance has no Mini App environment; the verification instance is separate"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "14/14 pages load with a settled status",
+        "negative cases refused",
+        "screenshots and video captured",
+        "receipt recorded"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "uos/telegram-residuals/20261026-1752/BRIDGE_TOKEN_HYGIENE/1",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "BRIDGE_TOKEN_HYGIENE",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "tools/telegram_client.ml and tools/telegram_client.exe: the bridge error path prints the full curl command including the bot token into journald and the token is visible in process argv; pass the URL through curl -K - on stdin and redact bot<token> in every error string",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T18:53:35Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 284a7854",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+          "sha256": "54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Imminent security constraint: live token in journald",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Critical UCA: credential disclosure with no enforcement",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S=4 O=3 Det=4 RPN=48 band 4",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Optional downstream use",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-BRIDGE-TOKEN-EXPOSED",
+        "cause": "curl receives the bot URL in argv and the failure message echoes the full command",
+        "effect": "the bot token is readable in ps and in journald by any local reader",
+        "controls": "URL on curl stdin (-K -), redact_token on every error string, journald grep after each restart",
+        "s": 4,
+        "o": 3,
+        "det": 4,
+        "rpn": 48,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 384,
+    "score_interval": [
+      384,
+      384
+    ],
+    "decision": {
+      "summary": "Keep the production bot token out of argv and logs. Rebuild telegram_client.exe, restart uos-telegram-bridge under a runtime lease, verify polling resumes and the next error line carries bot<REDACTED>. Completed attempt 1 at 284a78547052.",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The live instance has no Mini App environment; the verification instance is separate"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "14/14 pages load with a settled status",
+        "negative cases refused",
+        "screenshots and video captured",
+        "receipt recorded"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "uos/telegram-residuals/20261026-1752/COCKPIT_RESPONDER_AI/1",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "COCKPIT_RESPONDER_AI",
+    "actor": "agy-wave7e-20261026",
+    "scope": "uos-cognitive-worker.service (release 20261001-0511, the consumer of indrajaal/l5/cog/intent/req) answers every free-text message with dispatch_directive_status_default because its journal reports OPENROUTER_API_KEY missing or invalid on every intent and c3i_nif fails to load from that release; observed for inbound messages 2244 and 2246; the operator asked why the same message arrives every time",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T18:53:35Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main eac9b923",
+      "evidence": [
+        {
+          "path": "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+          "sha256": "0ac7ed4cde2bb8ccc55fd846818b979221dc72bbdea20968c26686a932fcc305",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+          "sha256": "82c5e9fe9dbaa6ccec37e065bd56db7be36fc24e6c6e7f34cbe50921ecc1dc4f",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+          "sha256": "a6cd639a5a41cff36f5d65b75a903cc2f447675980cbc93db7e7b027ce822289",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "governance/planning/20261026-2147-agy-telegram-responder-ai-receipt.json",
+          "sha256": "7c81cfcd2debed4da79b1b7f38a4e57a18b9d21067470a751d844a9b29d9f3d2",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/journal/20261026-2140-agy-telegram-wave7e-vault-openrouter-responder-release-and-repro.md",
+          "sha256": "a7182f515c5ae06ae7b3ad354a3039c2f3ebef731d6298b54529605f178c6977",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the Telegram completion milestone",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA: reply path silently degrades to a canned directive",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "S=3 O=5 Det=2 RPN=30 band 3",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Optional downstream use",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical service",
+        "evidence_refs": [
+          "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+          "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COG-CANNED-REPLY",
+        "cause": "generate_conversational_response errors (no OpenRouter credential or budget) and the offline gateway answers /status for every free-text message",
+        "effect": "the operator receives the same deterministic status reply for any question; the AI path is silently absent",
+        "controls": "credential presence check at boot, a typed reply reason on the intent/res record, one real free-text probe after each cockpit release",
+        "s": 3,
+        "o": 5,
+        "det": 2,
+        "rpn": 30,
+        "band": 3
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 162,
+    "score_interval": [
+      162,
+      162
+    ],
+    "decision": {
+      "summary": "Completed attempt 1 in Wave 7e: sealed OpenRouter key into UOSV1 vault, wired vault fallback in uos_openrouter_ffi.erl and cepaf_gleam_ffi.erl, repaired c3i_nif.erl load path, staged release 20261026-2128-4add92f6..., upgraded uos-cognitive-worker.service and c3i-gleam-server.service under leases, and verified live Gemma 4 conversational synthesis (Gemma-4-Eval PASS 100/100, msg_id 2249).",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The live instance has no Mini App environment; the verification instance is separate"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "14/14 pages load with a settled status",
+        "negative cases refused",
+        "screenshots and video captured",
+        "receipt recorded"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "uos/telegram-residuals/20261026-1752/RESPONDER_DEGRADED_REASON/1",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "RESPONDER_DEGRADED_REASON",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "apps/cepaf_gleam/src/cepaf_gleam/harness/cognitive_worker.gleam: degraded_decision/2 prefixes the deterministic-gateway answer with the typed inference-unavailable reason (secrets redacted, empty normalised) on reply_markdown, reasoning and actions; two laws in cognitive_worker_test; two mutants killed; development source only, production cutover of uos-cognitive-worker stays under COCKPIT_RESPONDER_AI",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T19:54:54Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 284a7854",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+          "sha256": "54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary within the Telegram completion milestone",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible UCA: a degraded reply presented as a conversational answer; this change makes the degradation visible on every channel",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "S=3 O=5 Det=2 RPN=30 band 3",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Optional downstream use",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "impact": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "One bounded workflow until the worker is released",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COG-SILENT-DEGRADE",
+        "cause": "inference error branch returns the gateway decision unchanged",
+        "effect": "operator reads a canned status as an answer and cannot tell why",
+        "controls": "degraded_decision law pair; mutants on the action marker and the empty-reason normaliser",
+        "s": 3,
+        "o": 5,
+        "det": 2,
+        "rpn": 30,
+        "band": 3
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 108,
+    "score_interval": [
+      108,
+      108
+    ],
+    "decision": {
+      "summary": "Make the degraded reply honest in development now; landing requires the full Gleam suite green at the candidate; deployment to uos-cognitive-worker is a separate release under lease once the credential exists. Completed attempt 1 at bb6556b94275.",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The live instance has no Mini App environment; the verification instance is separate"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "14/14 pages load with a settled status",
+        "negative cases refused",
+        "screenshots and video captured",
+        "receipt recorded"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "uos/telegram-residuals/20261026-1752/HANDOVER_JOURNAL/1",
+    "plan_id": "uos/telegram-residuals/20261026-1752",
+    "task_id": "HANDOVER_JOURNAL",
+    "actor": "claude-fable-l0-35600f5c",
+    "scope": "docs/journal handover journal (13 sections) with ASCII and Mermaid diagram pairs for the control plane, the data plane, the repository structure and the fractal L0-L9 mapping of the Telegram feature; additive link from the handover document; documentation only",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-10-26T21:34:45Z",
+    "valid_until": "2026-10-26T22:29:45Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-26T20:09:22Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 284a7854",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam",
+          "sha256": "54beb2fd9caba7c2cc9ce4e77dea4720894252703ae7fd1888a1ea58ff29163b",
+          "observed_at": "2026-10-26T21:34:45Z"
+        },
+        {
+          "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+          "sha256": "787a9c86cb1f38ee823e4ed5a06bd6b1929273611d5b0c06254595a416321dbb",
+          "observed_at": "2026-10-26T21:34:45Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Operator directive: save state and hand over with documentation",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Scoped UCA: a successor acting on stale state; the journal records live state with sources",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "S=3 O=5 Det=2 RPN=30 band 3",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Optional downstream use",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      },
+      "impact": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "One bounded workflow until the worker is released",
+        "evidence_refs": [
+          "docs/sop/20261026-1018-telegram-review-packets.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mini_app_routes.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-HANDOVER-STALE",
+        "cause": "successor reads a state that moved after the handover",
+        "effect": "a claim or restart against the wrong assumption",
+        "controls": "journal names Sa-plan as the live source and every procedure recomputes state before acting",
+        "s": 2,
+        "o": 3,
+        "det": 2,
+        "rpn": 12,
+        "band": 2
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam vault owner over the rusty_vault_nif resource",
+      "control_action": "Open, unseal, store, read and audit secrets through the NIF",
+      "losses": [
+        "L-RISK-SECRET-EXPOSURE",
+        "L-RISK-FALSE-CONFORMANCE"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-SECRET-LEAK"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "no independent review is recorded",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "complete only with a recorded verdict"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "the reviewer claims from a drifting portfolio",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK",
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "still portfolio from launch to claim (L-30)"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "the review runs before the landing",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "launch after landing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "the review workspace keeps stale artifacts",
+          "hazard_ids": [
+            "H-RISK-SECRET-LEAK"
+          ],
+          "constraint": "fresh workspace at main"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 48,
+    "score_interval": [
+      48,
+      48
+    ],
+    "decision": {
+      "summary": "Write and land the handover journal; no runtime effect.",
+      "alternatives": [
+        "AGY claimant (chosen)",
+        "Codex claimant (equally acceptable)",
+        "Author self-review (rejected)"
+      ],
+      "counterevidence": [
+        "The live instance has no Mini App environment; the verification instance is separate"
+      ],
+      "assumptions": [
+        "The reviewer can rebuild offline and run eunit through the installed library"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "APPROVE or APPROVE_WITH_CHANGES with no REFUTED law",
+      "falsifier": "REQUEST_CHANGES or a REFUTED law",
+      "acceptance": [
+        "14/14 pages load with a settled status",
+        "negative cases refused",
+        "screenshots and video captured",
+        "receipt recorded"
+      ],
+      "rollback": "None needed: a review is evidence, not an effect",
+      "reviewer": "Independent AGY review",
+      "budget": "Pinned in-project toolchain; offline locked cargo; no package downloads; no production change; no real token",
+      "residuals": [
+        "the Telegram container itself (the client app embedding the page) is not exercised; the shim stands in for it"
+      ],
+      "supersedes": null
+    }
+  }
+]

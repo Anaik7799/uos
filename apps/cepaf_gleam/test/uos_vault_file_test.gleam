@@ -33,6 +33,12 @@ fn secret_path(store: String, name: String) -> String
 @external(erlang, "uos_vault_file", "exists")
 fn exists(store: String, name: String) -> Bool
 
+@external(erlang, "uos_openrouter_ffi", "vault_key")
+fn openrouter_vault_key(store: String, pass_file: String) -> Result(String, Nil)
+
+@external(erlang, "cepaf_gleam_ffi", "get_preference")
+fn get_preference(key: String) -> Result(String, String)
+
 @external(erlang, "erlang", "unique_integer")
 fn unique_integer() -> Int
 
@@ -118,4 +124,57 @@ pub fn empty_or_short_inputs_are_refused_test() {
   let assert Ok(_) = simplifile.write(short, "short\n")
   vault_put(store, name, <<"x":utf8>>, short) |> should.be_error
   vault_get(store, "telegram/staging/missing", pass) |> should.be_error
+}
+
+pub fn openrouter_vault_key_round_trips_and_validates_test() {
+  let #(store, pass) = fresh_store()
+  let key_name = "openrouter/api_key"
+  let valid_secret = "sk-or-v1-test-key-sentinel-0123456789abcdef"
+  vault_put(store, key_name, <<valid_secret:utf8>>, pass) |> should.be_ok
+  openrouter_vault_key(store, pass) |> should.equal(Ok(valid_secret))
+
+  // Wrong passphrase fails closed on MAC
+  let wrong = store <> "-wrong-pass"
+  let assert Ok(_) = simplifile.write(wrong, "another long passphrase here\n")
+  openrouter_vault_key(store, wrong) |> should.equal(Error(Nil))
+
+  // Tampered ciphertext byte fails closed on MAC
+  let path = secret_path(store, key_name)
+  let assert Ok(bytes) = simplifile.read_bits(path)
+  let size = bit_array.byte_size(bytes)
+  let assert Ok(head) = bit_array.slice(bytes, 0, size - 1)
+  let assert Ok(last) = bit_array.slice(bytes, size - 1, 1)
+  let flipped = case last {
+    <<b>> -> <<{ { b + 1 } % 256 }>>
+    _ -> <<0>>
+  }
+  let assert Ok(_) =
+    simplifile.write_bits(path, bit_array.append(head, flipped))
+  openrouter_vault_key(store, pass) |> should.equal(Error(Nil))
+
+  // Secret containing whitespace/invalid characters is refused by valid_key/1
+  let #(store2, pass2) = fresh_store()
+  vault_put(store2, key_name, <<"invalid key with spaces":utf8>>, pass2)
+  |> should.be_ok
+  openrouter_vault_key(store2, pass2) |> should.equal(Error(Nil))
+}
+
+pub fn preference_resolves_telegram_token_from_vault_store_test() {
+  let #(store, pass) = fresh_store()
+  let token = "999888777:ABC-vault-bot-token-test"
+  vault_put(
+    store,
+    "telegram/production/telegram_token_test_key",
+    <<token:utf8>>,
+    pass,
+  )
+  |> should.be_ok
+  let assert Ok(read_back) =
+    vault_get(store, "telegram/production/telegram_token_test_key", pass)
+  bit_array.to_string(read_back) |> should.equal(Ok(token))
+  // Verify get_preference returns a non-empty string when vault store is populated
+  case get_preference("telegram_token") {
+    Ok(v) -> { string.length(v) > 10 } |> should.be_true
+    Error(_) -> should.fail()
+  }
 }

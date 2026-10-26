@@ -24,7 +24,7 @@ DB_PATH = "/home/an/NAS-setup/uos/var/telegram/state.sqlite3"
 LOG_PATH = "/home/an/NAS-setup/uos/var/telegram/monitor_stream.log"
 ZENOH_URL = os.environ.get("ZENOH_REST_ENDPOINT", "http://127.0.0.1:8080")
 DEFAULT_CHAT = "6249174059"
-TOKEN = os.environ.get("TELEGRAM_TOKEN", "8660817750:AAH4cFzycWnwbl5yx3gW1rm-lvE_2GqICnI")
+TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
 
 def get_iso_now():
     return datetime.now(timezone.utc).isoformat()

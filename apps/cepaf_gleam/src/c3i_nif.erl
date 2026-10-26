@@ -25,9 +25,17 @@
 -define(RUNTIME_LOADED_KEY, {?MODULE, runtime_loaded}).
 
 init() ->
-    SoPath = case code:priv_dir(cepaf_gleam) of
+    Primary = case code:priv_dir(cepaf_gleam) of
         {error, _} -> "priv/c3i_nif";
         PrivDir -> filename:join(PrivDir, "c3i_nif")
+    end,
+    SoPath = case filelib:is_regular(Primary ++ ".so") of
+        true -> Primary;
+        false ->
+            case filelib:is_regular("/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/c3i_nif.so") of
+                true -> "/home/an/NAS-setup/uos/apps/cepaf_gleam/priv/c3i_nif";
+                false -> Primary
+            end
     end,
     Loaded = case erlang:load_nif(SoPath, 0) of
         ok -> true;

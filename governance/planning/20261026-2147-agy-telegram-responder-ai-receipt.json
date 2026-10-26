@@ -1,0 +1,80 @@
+{
+  "schema": "uos.telegram-responder-ai-receipt.v1",
+  "plan_id": "uos/telegram-residuals/20261026-1752",
+  "task_id": "COCKPIT_RESPONDER_AI",
+  "worker": "agy-wave7e-20261026",
+  "attempt": 1,
+  "observed_at": "2026-10-26T21:21:54Z",
+  "release": {
+    "path": "/home/an/NAS-setup/uos/var/releases/ecology/20261026-2128-4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9",
+    "candidate_sha256": "4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9",
+    "payload_sha256": "92c0825e50b1fcfdd8b5387723af4544201142f270e1fa1a986b629b81a2420c",
+    "source_sha256": "1eaee00b167d2365654d6ed9daae826b36336fef57e34cf90378c7da4bc8da3d",
+    "files": 1426,
+    "payload_bytes": 34675418,
+    "otp_release": "29",
+    "erts_version": "17.0.5",
+    "c3i_nif_loaded": true,
+    "application_admitted": false
+  },
+  "vault_secret_hygiene": {
+    "contract": "SC-TELEGRAM-SECRET-001",
+    "vault_store": "/home/an/NAS-setup/uos/var/vault/telegram/store",
+    "cipher": "UOSV1 (PBKDF2-HMAC-SHA256 200000 iterations + AES-256-CBC + HMAC-SHA256)",
+    "openrouter_api_key_sealed": true,
+    "openrouter_api_key_bytes": 73,
+    "gdrive_source_verified": "gdrive:4-Temp/AI-Accnts-Keys.docx (doc_id 1bZwHb1BsElTqoe_BbwOvt-7ODLfufeDYpVVna3z5fZo)",
+    "telegram_production_token_sealed": true,
+    "telegram_production_token_bytes": 46,
+    "telegram_production_chat_id_sealed": true,
+    "telegram_stream_monitor_sanitized": true,
+    "state_sqlite_plaintext_token_removed": true,
+    "secret_bytes_logged_or_committed": 0
+  },
+  "services_upgraded": [
+    {
+      "service": "uos-cognitive-worker.service",
+      "lease_resource": "runtime:cognitive-worker",
+      "lease_sequence_claim": 2815,
+      "lease_sequence_release": 2816,
+      "rollback_backup": "/home/an/.config/systemd/user/uos-cognitive-worker.service.pre-20261026-2133",
+      "active_state": "active",
+      "restarts": 0,
+      "c3i_nif_warning": false
+    },
+    {
+      "service": "c3i-gleam-server.service",
+      "lease_resource": "runtime:c3i-gleam-server",
+      "lease_sequence_claim": 2817,
+      "lease_sequence_release": 2818,
+      "rollback_backup": "/home/an/.config/systemd/user/c3i-gleam-server.service.pre-20261026-2133",
+      "active_state": "active",
+      "exec_start_pre_verify": "PASS"
+    }
+  ],
+  "live_free_text_intent_verification": {
+    "kpi_id": "TG-KPI-17",
+    "zenoh_req_topic": "indrajaal/l5/cog/intent/req",
+    "zenoh_res_topic": "indrajaal/l5/cog/intent/res",
+    "intent_id": "agy-wave7e-ai-responder-v2-20261026-2147",
+    "chat_id": "6249174059",
+    "actions": [
+      "gemma4_conversational_synthesis",
+      "directive_conversion_execution",
+      "multi_turn_context_persistence"
+    ],
+    "ooda_phase": "Act",
+    "confidence": 0.99,
+    "reply_bytes": 663,
+    "telegram_outbound_delivered": true,
+    "telegram_message_id": 2249,
+    "gemma4_eval": {
+      "model": "google/gemma-4-26b-a4b-it",
+      "verdict": "PASS",
+      "correctness_score": 100,
+      "completeness_score": 100,
+      "latency_ms": 2439
+    }
+  },
+  "authority": "observed runtime and test evidence; grants no system admission; EV ceiling remains 93"
+}
