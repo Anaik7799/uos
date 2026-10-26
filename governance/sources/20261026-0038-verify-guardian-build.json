@@ -1,0 +1,29 @@
+{
+  "schema": "uos.native-build-manifest.v1",
+  "observed_at": "2026-10-26T00:26:38Z",
+  "task": "uos/telegram-runtime/20261001-1150 COMMAND_IMPL attempt 18",
+  "artifact": {
+    "path": "tools/validation/verify_guardian.exe",
+    "sha256": "d1dc2995fe52915e9c2a7b39309f23a8197cfb273d025f3453ebd904b24f50f4"
+  },
+  "source": {
+    "path": "tools/validation/verify_guardian.ml",
+    "sha256": "ef09e0475c050d300399fa7432d900302a482f9cefedb57d2ec23bb355241e10",
+    "derived_from": {
+      "path": "tools/validation/obs_guardian.ml",
+      "sha256": "4ddae78d954989511c79196ab5d508ab362c2cf4efa704eb9950603c70be58e4",
+      "change": "distinct marker; partial output preserved, hashed and printed on every child-ran path"
+    }
+  },
+  "build": {
+    "command": "ocamlfind ocamlopt -linkpkg -package unix,cryptokit,mtime.clock.os verify_guardian.ml -o verify_guardian.exe",
+    "toolchain": "5.5.0\n/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit /home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/mtime ",
+    "reproducible": "two builds in separate directories produced the same sha256"
+  },
+  "consumers": [
+    "apps/cepaf_gleam/src/telegram_verify_exec_ffi.erl",
+    "apps/cepaf_gleam/test/telegram_verify_executor_test.gleam"
+  ],
+  "status": "IMPORTED_NOT_ADMITTED",
+  "review": "COMMAND_REVIEW outstanding"
+}
