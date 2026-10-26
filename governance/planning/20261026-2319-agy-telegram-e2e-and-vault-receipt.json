@@ -12,7 +12,7 @@
   },
   "vault_sealing": {
     "store_path": "/home/an/NAS-setup/uos/var/vault/telegram/store",
-    "cipher": "UOSV1-AES-256-GCM-Argon2id",
+    "cipher": "UOSV1 (PBKDF2-HMAC-SHA256 200000 iterations + AES-256-CBC + encrypt-then-MAC HMAC-SHA256)",
     "total_keys_sealed": 44,
     "secret_bytes_printed": 0,
     "key_namespaces": [

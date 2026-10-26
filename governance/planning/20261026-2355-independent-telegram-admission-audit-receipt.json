@@ -1,0 +1,89 @@
+{
+  "schema": "uos.independent-verification-audit.v1",
+  "plan_id": "uos/telegram-admission/20261001-1015",
+  "auditor_conversation_id": "9fec218b-99b7-4872-a007-d912343ff947",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026",
+  "candidate_bookmark": "main",
+  "candidate_commit": "244ce2afd556",
+  "observed_utc": "2026-10-26T22:55:17Z",
+  "overall_verdict": "APPROVE",
+  "audits": {
+    "SOURCE_REVIEW": {
+      "verdict": "APPROVE",
+      "files_inspected": [
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_real_traffic_probe.gleam",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/apps/cepaf_gleam/src/telegram_service_worker_runner.erl",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/apps/uos_swarm/src/uos_openrouter_ffi.erl",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/apps/cepaf_gleam/src/c3i_nif.erl",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/apps/cepaf_gleam/src/uos_vault_file.erl",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/tools/telegram-staging",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/tools/uos_vault.ml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/agy-wave7e-20261026/tools/telegram_stream_monitor.py"
+      ],
+      "law_checks": [
+        {
+          "law": "SC-TELEGRAM-SECRET-001",
+          "status": "VERIFIED",
+          "evidence": "Zero secret literals across all inspected source files. Zero token/key logging in Erlang/Gleam/OCaml paths; tools/telegram-staging redacts journal/verify output; live journalctl check on uos-telegram-bridge and uos-cognitive-worker returned 0 token exposures and 0 post-upgrade OPENROUTER_API_KEY missing lines. Secrets are sealed on disk (0600 files under 0700 /home/an/NAS-setup/uos/var/vault/telegram/store) and decrypted in process memory only."
+        },
+        {
+          "law": "L-42",
+          "status": "VERIFIED",
+          "evidence": "telegram_real_traffic_probe.gleam binds telegram_http_ffi:ensure_started/1 and calls ensure_http_started(5000) before starting the one-for-one supervisor. c3i_nif.erl resolves code:priv_dir(cepaf_gleam) and falls back to canonical /home/an/NAS-setup/uos/apps/cepaf_gleam/priv/c3i_nif.so. uos_openrouter_ffi.erl and cepaf_gleam_ffi.erl resolve UOSV1-sealed credentials in-process."
+        },
+        {
+          "law": "L-43",
+          "status": "VERIFIED",
+          "evidence": "tools/telegram-staging config enforces chmod go-w on UOS_ROOT and UOS_ROOT/var and writes init_store: true into config.json; telegram_service_worker_runner.erl calls telegram_store:initialize_store/2 when init_store is true. Host ancestor directory permissions verified via stat (750 /home/an, 755 /home/an/NAS-setup, 755 /home/an/NAS-setup/uos, 755 /home/an/NAS-setup/uos/var)."
+        },
+        {
+          "law": "L-44",
+          "status": "VERIFIED",
+          "evidence": "telegram_service_worker_runner.erl loop_forever/3 queries actor state via {get_state, Reply} and sleeps 200ms while Authority == none or InFlightPoll == true, and sleeps 5000ms on Generation == 0 once {{some, _}, false} is reached, eliminating the startup race against ExecStartPost."
+        }
+      ],
+      "findings_resolved": ["F-SRC-02 resolved in 20261026-2319-agy-telegram-e2e-and-vault-receipt.json"]
+    },
+    "RELEASE_REVIEW": {
+      "verdict": "APPROVE",
+      "manifests_inspected": [
+        "/home/an/NAS-setup/uos/var/releases/ecology/20261026-2128-4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9/release-manifest.json",
+        "/home/an/NAS-setup/uos/var/releases/ecology/20261026-2128-4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9/runtime-dependencies.json",
+        "/home/an/NAS-setup/uos/var/releases/telegram-staging/20261026-2255-d38674e456da/release-manifest.json"
+      ],
+      "law_checks": [
+        {
+          "law": "SC-NIX-DEVENV-001 (OTP 29.0.5 Derivation Pin)",
+          "status": "VERIFIED",
+          "evidence": "Ecology release-manifest.json and runtime-dependencies.json pin /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl (sha256: ef4292ee944622942f2e961553eae2222a9dce112eb7e5bfec04dcb9a0d54970, otp_release: 29, erts_version: 17.0.5)."
+        },
+        {
+          "law": "SC-RELEASE-ASSURANCE-001 (Immutable Release Directories & Pre-Start Verification)",
+          "status": "VERIFIED",
+          "evidence": "Ecology release directory has read-only mode 0555 and is verified before service start via ExecStartPre=.../tools/ecology_release.ml verify (status: PASS, payload_sha256: 92c0825e50b1fcfdd8b5387723af4544201142f270e1fa1a986b629b81a2420c). Staged release 20261026-2255-d38674e456da records commit d38674e456da and 35 OTP apps."
+        },
+        {
+          "law": "INV-TGS-03 (Rollback Targets Preserved)",
+          "status": "VERIFIED",
+          "evidence": "Systemd unit rollback copies, prior ecology release capsules, prior telegram-staging releases, and bridge client backups are preserved on disk."
+        }
+      ]
+    },
+    "ADMISSION": {
+      "verdict": "APPROVE",
+      "law_checks": [
+        {
+          "law": "SC-TELEGRAM-JOURNEY-001 & Candidate-Bound Capability Receipts",
+          "status": "VERIFIED",
+          "evidence": "Bounded capabilities are backed by candidate-bound receipts across Vault (44/44 keys), OpenRouter (3/3 keys HTTP 200), Outbound Gateway Probe (delivered=2/2), Staged Worker Runner (poll_empty, writer_state: clean), Cognitive Responder AI (Gemma-4-Eval PASS 100/100), and Mini-App Browser Repro (14/14 pages settled, 12/12 negatives refused)."
+        },
+        {
+          "law": "SC-PROVENANCE-001 & INV-PROV-05 (Global EV Ceiling Preservation)",
+          "status": "VERIFIED",
+          "evidence": "EV-93 remains the admitted ceiling; EV-94..EV-109 remain NOT_ADMITTED; no new EV numbers minted; bounded component verification is explicitly separated from global system admission."
+        }
+      ]
+    }
+  }
+}
