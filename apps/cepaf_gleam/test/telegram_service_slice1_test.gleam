@@ -28,6 +28,7 @@ import cepaf_gleam/harness/telegram_media_store as media_store
 import cepaf_gleam/telegram/telegram_media_janitor as janitor
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
+import gleam/dict
 import gleam/dynamic.{type Dynamic}
 import gleam/erlang/process.{type Pid}
 import gleam/int
@@ -1483,6 +1484,7 @@ pub fn store_worker_independent_test() {
       wm_ver,
       wm_sha,
       [verdict],
+      dict.new(),
       1_700_000_000_000,
       5000,
     )
@@ -2581,7 +2583,7 @@ pub fn supervised_service_starts_media_janitor_when_configured_test() {
       total_ceiling_bytes: 1_048_576,
     )
   // configure_media validates before anything starts
-  service.configure_media(base, policy, 999, 10, 4)
+  service.configure_media(base, policy, 999, 10, 4, None)
   |> should.equal(Error("cadence_invalid"))
   service.configure_media(
     base,
@@ -2589,6 +2591,7 @@ pub fn supervised_service_starts_media_janitor_when_configured_test() {
     1000,
     10,
     4,
+    None,
   )
   |> should.equal(Error("media_root_not_absolute"))
   service.configure_media(
@@ -2597,11 +2600,13 @@ pub fn supervised_service_starts_media_janitor_when_configured_test() {
     1000,
     10,
     4,
+    None,
   )
   |> should.equal(Error("policy_invalid"))
-  service.configure_media(base, policy, 1000, 0, 4)
+  service.configure_media(base, policy, 1000, 0, 4, None)
   |> should.equal(Error("max_objects_invalid"))
-  let assert Ok(config) = service.configure_media(base, policy, 1000, 10, 4)
+  let assert Ok(config) =
+    service.configure_media(base, policy, 1000, 10, 4, None)
 
   let assert Ok(svc) = service.start_supervised_service(config, None)
   let assert Some(name) = svc.media_janitor

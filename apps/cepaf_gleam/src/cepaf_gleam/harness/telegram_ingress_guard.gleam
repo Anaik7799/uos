@@ -13,6 +13,7 @@ import cepaf_gleam/harness/telegram_tool_command as tool_command
 import cepaf_gleam/harness/telegram_verification_report as verification
 import cepaf_gleam/harness/telegram_zenoh_report as zenoh_report
 import gleam/dict
+import cepaf_gleam/harness/telegram_media_ref as media_ref
 import gleam/dynamic/decode
 import gleam/json
 import gleam/list
@@ -337,8 +338,29 @@ fn message_identity_decoder() -> decode.Decoder(Identity) {
   use kind <- decode.subfield(["message", "chat", "type"], decode.string)
   use user <- decode.subfield(["message", "from", "id"], decode.int)
   use bot <- decode.subfield(["message", "from", "is_bot"], decode.bool)
-  use text <- decode.subfield(["message", "text"], decode.string)
+  use text <- decode.subfield(["message"], message_text_decoder())
   decode.success(Identity(uid, mid, cid, user, kind, bot, None, text))
+}
+
+/// The command text of a message: `text`, or the `caption` of a media message
+/// when `text` is absent (wave 6h). A message with neither is not identified
+/// here; `evaluate_identified` then names bare media explicitly.
+fn message_text_decoder() -> decode.Decoder(String) {
+  use text <- decode.optional_field(
+    "text",
+    None,
+    decode.optional(decode.string),
+  )
+  use caption <- decode.optional_field(
+    "caption",
+    None,
+    decode.optional(decode.string),
+  )
+  case text, caption {
+    Some(t), _ -> decode.success(t)
+    None, Some(c) -> decode.success(c)
+    None, None -> decode.failure("", "text_or_caption")
+  }
 }
 
 fn callback_query_identity_decoder() -> decode.Decoder(Identity) {
@@ -431,7 +453,14 @@ fn evaluate_identified(
     Error(_) -> json.parse(raw, callback_query_identity_decoder())
   }
   case id_result {
-    Error(_) -> reject("missing_or_malformed_message_identity")
+    Error(_) ->
+      // A media message without a caption is identified as such, so the
+      // tombstone says why it was refused instead of hiding it behind a
+      // generic identity failure (wave 6h). No command text is invented.
+      case media_ref.from_update(raw) {
+        Ok(Some(_)) -> reject("media_without_caption")
+        _ -> reject("missing_or_malformed_message_identity")
+      }
     Ok(id) ->
       case
         valid_positive_id(id.message_id)

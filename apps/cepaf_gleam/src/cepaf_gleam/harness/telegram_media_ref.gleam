@@ -329,3 +329,83 @@ pub fn is_unsupported(ref: MediaRef) -> Bool {
     _ -> False
   }
 }
+
+/// Inverse of `kind_label`; an unknown label is `Error`, never a guess.
+pub fn kind_from_label(label: String) -> Result(MediaKind, String) {
+  case label {
+    "photo" -> Ok(Photo)
+    "document" -> Ok(Document)
+    "audio" -> Ok(Audio)
+    "voice" -> Ok(Voice)
+    "video" -> Ok(Video)
+    "sticker" -> Ok(Sticker)
+    "animation" -> Ok(Animation)
+    "unsupported:" <> raw ->
+      bounded_string("raw_media_key", raw) |> result.map(Unsupported)
+    _ -> Error("unknown_media_kind_label")
+  }
+}
+
+/// Durable JSON form of a reference (media design T1 carried through the
+/// stored input row, wave 6h). Fixed key order; every string stays within
+/// `max_string_bytes`, so this is also a bounded carrier.
+pub fn to_json(ref: MediaRef) -> json.Json {
+  json.object([
+    #("kind", json.string(kind_label(ref.kind))),
+    #("file_unique_id", json.string(ref.file_unique_id)),
+    #("file_id", json.string(ref.file_id)),
+    #("declared_size_bytes", json.nullable(ref.declared_size_bytes, json.int)),
+    #("declared_mime", json.nullable(ref.declared_mime, json.string)),
+    #("declared_duration_s", json.nullable(ref.declared_duration_s, json.int)),
+    #("caption", json.nullable(ref.caption, json.string)),
+  ])
+}
+
+/// Decoder for `to_json`, re-applying the same bounds as parsing an update:
+/// a stored reference that no longer fits the bounds is refused.
+pub fn decoder() -> decode.Decoder(MediaRef) {
+  use label <- decode.field("kind", decode.string)
+  use unique <- decode.field("file_unique_id", decode.string)
+  use file_id <- decode.field("file_id", decode.string)
+  use size <- decode.optional_field(
+    "declared_size_bytes",
+    None,
+    decode.optional(decode.int),
+  )
+  use mime <- decode.optional_field(
+    "declared_mime",
+    None,
+    decode.optional(decode.string),
+  )
+  use duration <- decode.optional_field(
+    "declared_duration_s",
+    None,
+    decode.optional(decode.int),
+  )
+  use caption <- decode.optional_field(
+    "caption",
+    None,
+    decode.optional(decode.string),
+  )
+  let rebuilt = {
+    use kind <- result.try(kind_from_label(label))
+    use caption <- result.try(bounded_option("caption", caption))
+    use ref <- result.try(build(
+      kind,
+      RawFile(file_id, unique, size, mime, duration),
+      caption,
+    ))
+    case ref.file_id == "" || ref.file_unique_id == "" {
+      True -> Error("missing_file_identity")
+      False -> Ok(ref)
+    }
+  }
+  case rebuilt {
+    Ok(ref) -> decode.success(ref)
+    Error(reason) ->
+      decode.failure(
+        MediaRef(Unsupported(""), "", "", None, None, None, None),
+        reason,
+      )
+  }
+}

@@ -1,6 +1,7 @@
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import cepaf_gleam/harness/telegram_ingress_guard as guard
+import cepaf_gleam/harness/telegram_media_ref as media_ref
 import cepaf_gleam/harness/telegram_store as store
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
@@ -2472,4 +2473,38 @@ pub fn quiescence_cleanup_proof_and_reconciliation_test() {
   let commit_unc_json = "{\"ok\": false, \"error\": \"commit_uncertain\"}"
   codec.decode_apply_response_discriminated(commit_unc_json)
   |> should.equal(codec.DecodedApplyRefusal("commit_uncertain"))
+}
+
+// =============================================================================
+// Wave 6h: media reference carried by the stored input row
+// =============================================================================
+
+pub fn input_row_media_round_trip_and_backward_compatibility_test() {
+  let acc = sample_accepted(10, "/status", 123)
+  let plain = codec.encode_input_verdict("tg-123-10", 123, 10, acc)
+  // a row without media decodes to None and is byte-identical to the pre-6h form
+  codec.decode_input_media(plain) |> should.equal(Ok(None))
+  codec.encode_input_verdict_with_media("tg-123-10", 123, 10, acc, None)
+  |> should.equal(plain)
+
+  let ref =
+    media_ref.MediaRef(
+      kind: media_ref.Photo,
+      file_unique_id: "uniq-2",
+      file_id: "fid-2",
+      declared_size_bytes: Some(2000),
+      declared_mime: None,
+      declared_duration_s: None,
+      caption: Some("/status"),
+    )
+  let with_media =
+    codec.encode_input_verdict_with_media("tg-123-10", 123, 10, acc, Some(ref))
+  codec.decode_input_media(with_media) |> should.equal(Ok(Some(ref)))
+  // the verdict decoder ignores the media field entirely
+  let assert Ok(#(_, _, _, decoded)) = codec.decode_input_verdict(with_media)
+  decoded |> should.equal(acc)
+
+  // a malformed media field is a refusal, never a silent None
+  let bad = string.replace(with_media, "\"kind\":\"photo\"", "\"kind\":\"hologram\"")
+  codec.decode_input_media(bad) |> should.equal(Error("invalid_input_media"))
 }

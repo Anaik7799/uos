@@ -237,17 +237,31 @@
     },
     {
       "wave": "6g",
-      "landed_commit": null,
-      "landed_utc": null,
+      "landed_commit": "c92dd151",
+      "landed_utc": "2026-10-26T09:18:23Z",
       "canonicals_answering": "77/77 (unchanged)",
       "tests_added": 1,
       "mutants": "2/2 integrator (janitor child built but not added; configure_media skips validate)",
       "workers": 0,
-      "wave_wall_minutes": null,
+      "wave_wall_minutes": 42,
       "checker_holds": 0,
       "process_defects": 1,
       "notes": "ServiceConfiguration.media: Option(MediaConfiguration); configure_media validates through telegram_media_janitor.validate and an absolute-root check; start_supervised_service adds the janitor as an optional fifth named child under RestForOne after the service actor; SupervisedService.media_janitor exposes the name. Process defect: gleam format on two never-formatted shared files produced a 5,000-line diff; both restored from main and the edits reapplied (217-line diff).",
       "full_suite": "13785/13785"
+    },
+    {
+      "wave": "6h",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "77/77 (unchanged); captioned media now answers a typed media reply",
+      "tests_added": 17,
+      "mutants": "4/4 integrator (guard caption fallback removed; poll never carries media; intake Stored not ok; malformed stored media decodes silently)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Media intake at ingress: the guard accepts message.caption as the command text when message.text is absent and names bare media as media_without_caption; the stored input row carries the declared media reference as an optional top-level field (encode_input_verdict_with_media, decode_input_media; pre-6h rows unchanged); commit_prefix_media keyed by update id with commit_prefix delegating; the service collects references at poll time (poll_media_references) and, at dispatch, answers the typed media reply (telegram_media_intake: download, inspect, store; backend_unavailable without a transport, denied on any refusal, ok only when stored under the recomputed digest; caption directive reported, never executed). MediaConfiguration.transport added; configure_media takes it. Security journey SEC-J3/S1 flips from tombstone to MediaAccepted and S1b records the bare-media tombstone.",
+      "full_suite": "13802/13802"
     }
   ],
   "forecasts": [

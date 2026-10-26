@@ -208,7 +208,7 @@ flowchart LR
 
 | Step | Persona action | Literal and args | Family F1-F9 | Expected class | Required fields | Authority gate | Evidence kept | Failure meaning |
 |---|---|---|---|---|---|---|---|---|
-| S1 | SR sends a photo with a caption and no text | (photo with caption `/status`, no text field) | F8 | rejected (tombstone, no reply) | reason=missing_or_malformed_message_identity | guard | envelope digest in tombstone | A reply that describes or acts on the image. |
+| S1 | SR sends a photo with a caption and no text | (photo with caption `/status`, no text field) | F8 | media reply: backend_unavailable (no transport) \| denied \| ok | status, caption_directive, declared_kind, declared_file_unique_id, reason or sha256 | allowlisted pair; media intake chain (download, inspect, store) only when a transport and a media policy are configured | reply sha256 + UTC; stored object digest when ok | A reply that describes or acts on the image. |
 | S2 | SR asks for rack computer vision | `/rack-cv` | F8 | backend_unavailable | backend, reason | allowlisted pair (read-only) | reply sha256 + UTC | Any ok reply: no vision backend exists. |
 | S3 | SR asks for acoustic bearing analysis | `/acoustic` | F8 | backend_unavailable | backend, reason | allowlisted pair (read-only) | reply sha256 + UTC | Any bearing or number in the reply. |
 | S4 | SR asks for whiteboard-to-code synthesis | `/whiteboard` | F8 | backend_unavailable | backend, reason | allowlisted pair (read-only) | reply sha256 + UTC | Any synthesised code. |
@@ -247,7 +247,7 @@ flowchart LR
 
 | Step | Today | What real deployment must add |
 |---|---|---|
-| S1 (photo with caption `/status`, no text field) | rejected (tombstone, no reply) | Needs attachment intake: admit a file reference with size and type bounds, no automatic download, a quarantined scan path, and a typed reply naming what was and was not read (media design governance/planning/20261011-1354, MEDIA_IMPL). |
+| S1 (photo with caption `/status`, no text field) | media reply (wave 6h): the guard accepts the caption as the command text, the stored input row carries the declared media reference, and the service answers the typed media reply; backend_unavailable until a deployment binds a transport (media design governance/planning/20261011-1354; MEDIA_INTAKE). Previously: needs attachment intake: admit a file reference with size and type bounds, no automatic download, a quarantined scan path, and a typed reply naming what was and was not read (media design governance/planning/20261011-1354, MEDIA_IMPL). |
 | S2 `/rack-cv` | backend_unavailable | Needs a computer-vision backend (camera or ViT result) reachable from cepaf_gleam/harness/multimodal_features and the attachment intake path. |
 | S3 `/acoustic` | backend_unavailable | Needs an audio sample path and a running MAX daemon whose status the harness can observe. |
 | S4 `/whiteboard` | backend_unavailable | Needs an uploaded-photo intake and a vision model; the in-repo handler returns static text and is refused. |
@@ -470,7 +470,7 @@ Distinct catalog literals touched: 43 (exported by `covered_literals()` in the t
 1. `/simulate` is catalogued as an alias of `/whatif`, so `classify_directive` hands `/simulate n1:partitioned ...` to the `/whatif` grammar and the reply is `denied` (SEC-J4/S8). The peer-quorum simulation exists in `telegram_simulation_read_command` but is unreachable through the alias.
 2. `/verify` and its alias `/verification` are preserved at classify for the service's VerifyDispatch (wave 6b); without a signed verify packet the service answers that verification is not configured, and nothing executes from the text (SEC-J3/S7).
 3. `/voice-roll-call` is deliberately not used here: the integrator workspace denies it at classify (biometric arm), while an older adapter copy would preview it. The journeys avoid depending on that difference.
-4. A photo with a caption but no `text` is rejected by the guard as `missing_or_malformed_message_identity`; there is no attachment intake yet (SEC-J3/S1).
+4. A photo with a caption but no `text` is accepted by the guard with the caption as its command text (wave 6h); the service answers the typed media reply (`backend_unavailable` until a transport is bound, `denied` when download, inspection or storage refuses, `ok` only when the bytes are stored under their recomputed digest) and reports the caption directive instead of running it (SEC-J3/S1). A photo without any caption is a `media_without_caption` tombstone (SEC-J3/S1b).
 5. `/mesh` is an `ok` declared-configuration read with `deployment_confirmed=false`; it turns `backend_unavailable` if `UOS_MESH_CONFIG_JSON` is invalid.
 6. Previews `/lockbox`, `/rotate-keys`, `/export-audit`, `/sidecar` and `/commitments` report `status=preview` while naming an unavailable execute path or backend in a field; the class is `preview`, and the unavailable path is part of the required fields.
 

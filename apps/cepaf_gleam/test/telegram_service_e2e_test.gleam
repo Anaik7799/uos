@@ -4337,3 +4337,99 @@ pub fn e2e_exec_brief_scope_refusal_test() {
     "empty JSON object",
   )
 }
+
+/// Wave 6h: a captioned photo from the allowlisted pair is accepted at ingress
+/// with the caption as its command text, and the service answers the typed
+/// media reply. The runner's service has no media configuration, so the reply
+/// is `backend_unavailable` with the declared fields and the caption directive
+/// reported, never executed. A photo without a caption is tombstoned and
+/// produces no reply.
+pub fn e2e_captioned_photo_answers_typed_media_reply_test() {
+  use storage_config, db_path, sa_plan_db, coord_db, dir <- with_recovery_store()
+  let assert Ok(#(fixture_pid, _port, base_url)) = fixture_start()
+
+  let bot_id = 444_555
+  let worker_id = "worker-e2e-01"
+  let task_id = "lease-e2e-01"
+  let epoch = 1
+
+  let assert Ok(2) = store.initialize_store(storage_config, bot_id)
+
+  let nonce =
+    int.to_string(service.ffi_system_now_utc_us())
+    <> int.to_string(int.random(10_000))
+  let slice_name = "app-uos_tg_test_media_a" <> nonce <> ".slice"
+  let unit_name = "uos-tg-store-test-media-a" <> nonce <> ".service"
+  let ipc_dir = start_test_runner(dir, slice_name, unit_name)
+
+  start_runner_actor(
+    ipc_dir,
+    db_path,
+    base_url,
+    "test-bot-token-media",
+    bot_id,
+    worker_id,
+    task_id,
+    epoch,
+    sa_plan_db,
+    coord_db,
+    None,
+    None,
+    True,
+  )
+  runner_set_authority(ipc_dir, "lease-e2e-media-01", 1, 1, 3_000_000_000_000_000)
+
+  let captioned =
+    "{\"update_id\": 9101, \"message\": {\"message_id\": 301, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false, \"first_name\": \"Alice\"}, \"caption\": \"/status\", \"photo\": [{\"file_id\": \"AgAC-small\", \"file_unique_id\": \"AQAD-small\", \"width\": 90, \"height\": 90, \"file_size\": 1200}, {\"file_id\": \"AgAC-large\", \"file_unique_id\": \"AQAD-large\", \"width\": 800, \"height\": 600, \"file_size\": 48000}], \"date\": 1700000100}}"
+  fixture_set_updates(fixture_pid, [captioned])
+  let poll = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(poll, "\"type\":\"poll_committed\"") |> should.equal(True)
+  let dispatch =
+    runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(dispatch, "\"processed_count\":1") |> should.equal(True)
+
+  let sends =
+    list.filter(fixture_requests_typed(fixture_pid), fn(r) {
+      let #(_, path, _, _) = r
+      string.ends_with(path, "/sendMessage")
+    })
+  let assert [#(_, _, _, body)] = sends
+  string.contains(body, "media.intake") |> should.equal(True)
+  string.contains(body, "backend_unavailable") |> should.equal(True)
+  string.contains(body, "media_not_configured") |> should.equal(True)
+  string.contains(body, "caption_directive") |> should.equal(True)
+  string.contains(body, "declared_kind") |> should.equal(True)
+  // the largest declared photo size is the reference; the caption never executed
+  string.contains(body, "AQAD-large") |> should.equal(True)
+  string.contains(body, "Cluster Telemetry") |> should.equal(False)
+  string.contains(body, "test-bot-token-media") |> should.equal(False)
+
+  // a bare photo is a named tombstone: nothing is processed and nothing sent
+  let bare =
+    "{\"update_id\": 9102, \"message\": {\"message_id\": 302, \"chat\": {\"id\": 100, \"type\": \"private\"}, \"from\": {\"id\": 200, \"is_bot\": false}, \"photo\": [{\"file_id\": \"AgAC-bare\", \"file_unique_id\": \"AQAD-bare\", \"width\": 90, \"height\": 90}], \"date\": 1700000200}}"
+  fixture_set_updates(fixture_pid, [bare])
+  let _ = runner_poll_cycle(ipc_dir, service.ffi_system_now_utc_us())
+  let bare_dispatch =
+    runner_automatic_dispatch_tick(ipc_dir, service.ffi_system_now_utc_us())
+  string.contains(bare_dispatch, "\"processed_count\":0") |> should.equal(True)
+  let sends_after =
+    list.filter(fixture_requests_typed(fixture_pid), fn(r) {
+      let #(_, path, _, _) = r
+      string.ends_with(path, "/sendMessage")
+    })
+    |> list.length
+  sends_after |> should.equal(1)
+  let assert Ok(#(_, rows)) = store.read_inbox_records(storage_config, 10, None)
+  let tombstones =
+    list.filter(rows, fn(row) {
+      let #(rec, _, _) = row
+      case rec.status {
+        ledger.InboxRejected(reason) -> reason == "media_without_caption"
+        _ -> False
+      }
+    })
+  list.length(tombstones) |> should.equal(1)
+  runner_stop(ipc_dir)
+  fixture_stop(fixture_pid)
+  lifecycle.cleanup_test_unit_and_slice(slice_name, unit_name)
+}

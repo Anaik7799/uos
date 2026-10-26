@@ -59,6 +59,9 @@ import cepaf_gleam/harness/telegram_store as store
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import cepaf_gleam/harness/telegram_media_store as media_store
+import cepaf_gleam/harness/telegram_media_ref as media_ref
+import cepaf_gleam/harness/telegram_media_download as download
+import cepaf_gleam/harness/telegram_media_intake as media_intake
 import cepaf_gleam/telegram/telegram_media_janitor as janitor
 import gleam/bit_array
 import gleam/dynamic/decode
@@ -203,6 +206,10 @@ pub type MediaConfiguration {
     reclaim_cadence_ms: Int,
     reclaim_max_objects: Int,
     reclaim_history_limit: Int,
+    /// Fetch transport for media intake (wave 6h). `None` means the service
+    /// answers captioned media with `backend_unavailable` and fetches nothing;
+    /// no production transport exists in the tree, so a deployment injects one.
+    transport: Option(download.Transport),
   )
 }
 
@@ -249,6 +256,7 @@ pub fn configure_media(
   reclaim_cadence_ms: Int,
   reclaim_max_objects: Int,
   reclaim_history_limit: Int,
+  transport: Option(download.Transport),
 ) -> Result(ServiceConfiguration, String) {
   use _ <- result.try(case string.starts_with(store_policy.root, "/") {
     True -> Ok(Nil)
@@ -260,9 +268,39 @@ pub fn configure_media(
       reclaim_cadence_ms: reclaim_cadence_ms,
       reclaim_max_objects: reclaim_max_objects,
       reclaim_history_limit: reclaim_history_limit,
+      transport: transport,
     )
   use _ <- result.try(janitor.validate(janitor_config(media)))
   Ok(ServiceConfiguration(..config, media: Some(media)))
+}
+
+/// The typed media reply for a captioned media message (wave 6h). The intake
+/// chain runs inside the observation authority window; without a bound media
+/// policy or transport nothing is fetched and the reply says so.
+fn media_reply(
+  state: ServiceState,
+  ref: media_ref.MediaRef,
+  dir: guard.ParsedDirective,
+  request_id: String,
+) -> String {
+  let binding = case state.config.media {
+    None -> None
+    Some(m) -> Some(media_intake.Binding(m.store_policy, m.transport))
+  }
+  let required_ms = case binding {
+    Some(media_intake.Binding(_, Some(_))) -> 20_000
+    _ -> 1000
+  }
+  let token = state.config.http_config.bot_token
+  let outcome = case
+    current_read(state, required_ms, fn() {
+      media_intake.run(binding, ref, fn() { Ok(token) }, ffi_system_now_utc_us() / 1000)
+    })
+  {
+    Ok(outcome) -> outcome
+    Error(reason) -> media_intake.UsageUnavailable("observation_window: " <> reason)
+  }
+  media_intake.reply_json(outcome, ref, media_intake.directive_label(dir), request_id)
 }
 
 fn janitor_config(media: MediaConfiguration) -> janitor.Config {
@@ -1413,6 +1451,7 @@ fn svc_commit_prefix(
   watermark_version: Int,
   watermark_sha: String,
   verdicts: List(guard.IngressVerdict),
+  media: dict.Dict(Int, media_ref.MediaRef),
   now_ms: Int,
 ) -> Result(store.CommitPrefixResult, store.StoreError) {
   case state.store_worker {
@@ -1426,11 +1465,12 @@ fn svc_commit_prefix(
         watermark_version,
         watermark_sha,
         verdicts,
+        media,
         now_ms,
         5000,
       )
     None ->
-      store.commit_prefix(
+      store.commit_prefix_media(
         state.config.storage_config,
         bot_id,
         operation_id,
@@ -1439,9 +1479,32 @@ fn svc_commit_prefix(
         watermark_version,
         watermark_sha,
         verdicts,
+        media,
         now_ms,
       )
   }
+}
+
+/// Sender-declared media references of the accepted updates in a poll batch,
+/// keyed by update id (wave 6h). Parsing is total and advisory: a raw update
+/// whose media does not parse simply contributes no entry, and the verdict
+/// already decided acceptance on its own.
+fn poll_media_references(
+  raw_updates: List(String),
+  verdicts: List(guard.IngressVerdict),
+) -> dict.Dict(Int, media_ref.MediaRef) {
+  list.zip(raw_updates, verdicts)
+  |> list.fold(dict.new(), fn(acc, pair) {
+    let #(raw, verdict) = pair
+    case verdict {
+      guard.AcceptedEnvelope(update_id: uid, ..) ->
+        case media_ref.from_update(raw) {
+          Ok(Some(ref)) -> dict.insert(acc, uid, ref)
+          _ -> acc
+        }
+      _ -> acc
+    }
+  })
 }
 
 fn svc_claim_task_processing(
@@ -1799,6 +1862,7 @@ pub fn poll_cycle(
                                       state.watermark_version,
                                       state.watermark_sha,
                                       verdicts,
+                                      poll_media_references(raw_updates, verdicts),
                                       now_ms,
                                     )
 
@@ -2376,7 +2440,16 @@ fn execute_guarded_dispatch(
                         ..,
                       ),
                     )) -> {
-                      let payload = case dir {
+                      // wave 6h: a captioned media message answers the typed
+                      // media reply; the caption directive is reported in it,
+                      // never executed from a media message.
+                      let payload = case codec.decode_input_media(raw_json) {
+                        Ok(Some(media_reference)) ->
+                          media_reply(state, media_reference, dir, inbox_rec.request_id)
+                        Error(reason) ->
+                          media_intake.refusal_reply(reason, inbox_rec.request_id)
+                        Ok(None) ->
+                      case dir {
                         guard.PreservedDirective("/approval",selector) -> approval_status_reply(state,inbox_rec,selector)
                         guard.PreservedDirective("/rete",[facts]) -> rete_reply(state,facts)
                         guard.DirectReadTool("query_storage") -> storage_reply(state)
@@ -2497,6 +2570,7 @@ fn execute_guarded_dispatch(
                             #("request_id", json.string(inbox_rec.request_id)),
                           ])
                           |> json.to_string
+                      }
                       }
                       #(payload, cb_id)
                     }
@@ -3384,6 +3458,7 @@ pub type StoreWorkerMessage {
     watermark_version: Int,
     watermark_sha: String,
     verdicts: List(guard.IngressVerdict),
+    media: dict.Dict(Int, media_ref.MediaRef),
     now_ms: Int,
     reply_to: Subject(Result(store.CommitPrefixResult, store.StoreError)),
   )
@@ -3534,11 +3609,12 @@ fn handle_store_worker_message(
       watermark_version,
       watermark_sha,
       verdicts,
+      media,
       now_ms,
       reply_to,
     ) -> {
       let res =
-        store.commit_prefix(
+        store.commit_prefix_media(
           state.config,
           bot_id,
           operation_id,
@@ -3547,6 +3623,7 @@ fn handle_store_worker_message(
           watermark_version,
           watermark_sha,
           verdicts,
+          media,
           now_ms,
         )
       process.send(reply_to, res)
@@ -3769,6 +3846,7 @@ pub fn store_worker_commit_prefix(
   watermark_version: Int,
   watermark_sha: String,
   verdicts: List(guard.IngressVerdict),
+  media: dict.Dict(Int, media_ref.MediaRef),
   now_ms: Int,
   timeout_ms: Int,
 ) -> Result(store.CommitPrefixResult, store.StoreError) {
@@ -3781,6 +3859,7 @@ pub fn store_worker_commit_prefix(
       watermark_version,
       watermark_sha,
       verdicts,
+      media,
       now_ms,
       reply_to,
     )

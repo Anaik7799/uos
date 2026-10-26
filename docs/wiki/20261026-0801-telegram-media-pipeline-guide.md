@@ -48,7 +48,7 @@ flowchart LR
 
 ## Wiring a caller
 
-No production caller wires download, inspect and store yet; media updates are still rejected at ingress because the guard requires `message.text`. The janitor is a child of the service supervisor whenever `configure_media` bound a policy; binding one for a deployed service is operator configuration. A caller must:
+The service wires the stages (wave 6h): the guard accepts a captioned media message with the caption as its command text, the stored input row carries the declared reference, and at dispatch `telegram_media_intake` runs download, inspection and the store, answering `backend_unavailable` until a deployment binds a fetch transport through `configure_media`, `denied` when a stage refuses, and `ok` only when the bytes are stored under their recomputed digest. A photo without a caption is a `media_without_caption` tombstone. The janitor is a child of the service supervisor whenever `configure_media` bound a policy. A deployment must:
 
 1. Run `download` with a transport that holds the token outside the message and the logs.
 2. Hand the `Fetched` outcome to `inspect_fetched`; treat anything but `Accepted` as a refusal reply, never as a fallback to the declared mime.

@@ -343,3 +343,105 @@ pub fn finops_ingress_aliases_and_scope_test() {
  list.each(["/finops","/budget","/tool query_finops {}","/action query_finops"],fn(t){assert g.classify_directive(t)==g.DirectReadTool("query_finops")})
  list.each(["/finops {}","/budget tomorrow","/finops reserve","/tool query_finops {\"path\":\"foreign\"}"],fn(t){let assert g.DeniedMutation(_,_) = g.classify_directive(t) Nil})
 }
+
+// ---------------------------------------------------------------- wave 6h media
+
+fn media_payload(caption: Result(String, Nil)) -> String {
+  let caption_fields = case caption {
+    Ok(c) -> [#("caption", json.string(c))]
+    Error(_) -> []
+  }
+  json.object([
+    #("update_id", json.int(100)),
+    #(
+      "message",
+      json.object(
+        list.append(
+          [
+            #("message_id", json.int(10)),
+            #(
+              "chat",
+              json.object([#("id", json.int(1001)), #("type", json.string("private"))]),
+            ),
+            #(
+              "from",
+              json.object([#("id", json.int(501)), #("is_bot", json.bool(False))]),
+            ),
+            #(
+              "photo",
+              json.array([1, 2], fn(i) {
+                json.object([
+                  #("file_id", json.string("fid-" <> string.inspect(i))),
+                  #("file_unique_id", json.string("uniq-" <> string.inspect(i))),
+                  #("file_size", json.int(1000 * i)),
+                ])
+              }),
+            ),
+          ],
+          caption_fields,
+        ),
+      ),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn captioned_photo_is_accepted_with_the_caption_as_text_test() {
+  case g.evaluate_update(media_payload(Ok("/status")), allow()) {
+    g.AcceptedEnvelope(raw_text: txt, directive: dir, update_id: uid, ..) -> {
+      txt |> should.equal("/status")
+      uid |> should.equal(100)
+      dir |> should.equal(g.classify_directive("/status"))
+    }
+    other -> should.equal(string.inspect(other), "AcceptedEnvelope")
+  }
+}
+
+pub fn text_wins_over_caption_when_both_are_present_test() {
+  // a text field is still the command even if a caption is also present
+  let raw =
+    string.replace(
+      media_payload(Ok("/status")),
+      "\"caption\":\"/status\"",
+      "\"caption\":\"/status\",\"text\":\"/help\"",
+    )
+  case g.evaluate_update(raw, allow()) {
+    g.AcceptedEnvelope(raw_text: txt, ..) -> txt |> should.equal("/help")
+    other -> should.equal(string.inspect(other), "AcceptedEnvelope")
+  }
+}
+
+pub fn bare_photo_without_caption_is_rejected_by_name_test() {
+  case g.evaluate_update(media_payload(Error(Nil)), allow()) {
+    g.RejectedUpdate(reason: reason, ..) ->
+      reason |> should.equal("media_without_caption")
+    other -> should.equal(string.inspect(other), "RejectedUpdate")
+  }
+}
+
+pub fn blank_caption_is_invalid_text_not_a_command_test() {
+  case g.evaluate_update(media_payload(Ok("   ")), allow()) {
+    g.RejectedUpdate(reason: reason, ..) -> reason |> should.equal("invalid_text")
+    other -> should.equal(string.inspect(other), "RejectedUpdate")
+  }
+}
+
+pub fn message_without_text_or_media_stays_unidentified_test() {
+  let raw =
+    string.replace(
+      media_payload(Error(Nil)),
+      "\"photo\":",
+      "\"not_media_marker\":",
+    )
+  // `not_media_marker` is an unknown key, which media_ref reports as an
+  // Unsupported reference; so a truly bare message needs no extra keys at all.
+  let bare =
+    "{\"update_id\":100,\"message\":{\"message_id\":10,\"chat\":{\"id\":1001,\"type\":\"private\"},\"from\":{\"id\":501,\"is_bot\":false}}}"
+  case g.evaluate_update(bare, allow()) {
+    g.RejectedUpdate(reason: reason, ..) ->
+      reason |> should.equal("missing_or_malformed_message_identity")
+    other -> should.equal(string.inspect(other), "RejectedUpdate")
+  }
+  let _ = raw
+  Nil
+}

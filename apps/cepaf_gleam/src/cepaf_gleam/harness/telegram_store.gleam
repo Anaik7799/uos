@@ -17,6 +17,8 @@ import cepaf_gleam/harness/telegram_ingress_guard as guard
 import cepaf_gleam/harness/telegram_store_codec as codec
 import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/int
+import cepaf_gleam/harness/telegram_media_ref as media_ref
+import gleam/dict
 import gleam/dynamic/decode
 import gleam/json
 import gleam/list
@@ -1041,6 +1043,37 @@ pub fn commit_prefix(
   updates: List(guard.IngressVerdict),
   now_ms: Int,
 ) -> Result(CommitPrefixResult, StoreError) {
+  commit_prefix_media(
+    config,
+    bot_id,
+    operation_id,
+    expected_generation,
+    current_wm,
+    current_wm_version,
+    current_wm_sha,
+    updates,
+    dict.new(),
+    now_ms,
+  )
+}
+
+/// `commit_prefix` with the sender-declared media references of the accepted
+/// updates, keyed by update id (wave 6h). A reference is written into the
+/// input row of its update only; updates without one produce rows identical to
+/// `commit_prefix`. The media map is advisory input, not a verdict: it never
+/// changes which updates are accepted or rejected.
+pub fn commit_prefix_media(
+  config: transport.LocalConfiguration,
+  bot_id: Int,
+  operation_id: String,
+  expected_generation: Int,
+  current_wm: ledger.Watermark,
+  current_wm_version: Int,
+  current_wm_sha: String,
+  updates: List(guard.IngressVerdict),
+  media: dict.Dict(Int, media_ref.MediaRef),
+  now_ms: Int,
+) -> Result(CommitPrefixResult, StoreError) {
   use _ <- result.try(
     case
       updates != []
@@ -1240,7 +1273,17 @@ pub fn commit_prefix(
           )
 
           let input_val =
-            codec.encode_input_verdict(request_id, bot_id, rep_uid, rep)
+            codec.encode_input_verdict_with_media(
+              request_id,
+              bot_id,
+              rep_uid,
+              rep,
+              case rep {
+                guard.AcceptedEnvelope(..) ->
+                  option.from_result(dict.get(media, rep_uid))
+                _ -> None
+              },
+            )
           let inbox_val = codec.encode_inbox_record(record)
           let wm_val = codec.encode_watermark_value(new_wm)
 

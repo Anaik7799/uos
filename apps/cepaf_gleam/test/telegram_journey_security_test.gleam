@@ -32,8 +32,12 @@ type Field {
 type Expect {
   /// Update from a user outside the allowlist: tombstone, no reply.
   Stranger(reason: String)
-  /// Photo with caption and no text from the allowlisted user: tombstone.
+  /// Media from the allowlisted user without a caption: tombstone by name.
   Attachment(reason: String)
+  /// Captioned media from the allowlisted user (wave 6h): accepted at ingress
+  /// with the caption as the command text; the service answers the typed
+  /// media reply and reports the caption directive instead of running it.
+  MediaAccepted(caption: String)
   /// classify -> DirectReadTool(tool); the service executes it.
   DirectRead(tool: String)
   /// classify -> PreservedDirective(name, _) owned by the service, not an adapter.
@@ -161,18 +165,45 @@ fn run_step(step: Step) -> Nil {
         ),
         #(id, reason),
       )
+    MediaAccepted(caption) ->
+      case
+        guard.evaluate_update(
+          message_update(allowed_user, [
+            #("caption", json.string(caption)),
+            #(
+              "photo",
+              json.array([1], fn(i) {
+                json.object([
+                  #("file_id", json.string("placeholder-file-id")),
+                  #("file_unique_id", json.string("placeholder-unique-id")),
+                  #("width", json.int(i)),
+                  #("height", json.int(i)),
+                ])
+              }),
+            ),
+          ]),
+          allowlist(),
+        )
+      {
+        guard.AcceptedEnvelope(raw_text: txt, directive: dir, ..) -> {
+          should.equal(#(id, txt), #(id, caption))
+          should.equal(#(id, dir), #(id, guard.classify_directive(caption)))
+        }
+        other ->
+          should.equal(#(id, string.inspect(other)), #(id, "AcceptedEnvelope"))
+      }
     Attachment(reason) ->
       should.equal(
         #(
           id,
           rejection_reason(
             message_update(allowed_user, [
-              #("caption", json.string("/status")),
               #(
                 "photo",
                 json.array([1], fn(i) {
                   json.object([
                     #("file_id", json.string("placeholder-file-id")),
+                    #("file_unique_id", json.string("placeholder-unique-id")),
                     #("width", json.int(i)),
                     #("height", json.int(i)),
                   ])
@@ -395,7 +426,14 @@ fn sec_j3() -> List(Step) {
       "",
       "(photo, caption /status)",
       "F8",
-      Attachment("missing_or_malformed_message_identity"),
+      MediaAccepted("/status"),
+    ),
+    Step(
+      "SEC-J3/S1b",
+      "",
+      "(photo, no caption)",
+      "F8",
+      Attachment("media_without_caption"),
     ),
     Step(
       "SEC-J3/S2",

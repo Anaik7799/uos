@@ -6,6 +6,7 @@ import cepaf_gleam/harness/files
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import cepaf_gleam/harness/telegram_ingress_guard as guard
 import gleam/bit_array
+import cepaf_gleam/harness/telegram_media_ref as media_ref
 import gleam/dynamic/decode
 import gleam/int
 import gleam/json
@@ -1202,12 +1203,62 @@ pub fn encode_input_verdict(
   update_id: Int,
   v: guard.IngressVerdict,
 ) -> String {
-  json.object([
-    #("schema", json.string("uos.telegram-input.v2")),
-    #("request_id", json.string(request_id)),
-    #("bot_id", json.int(bot_id)),
-    #("update_id", json.int(update_id)),
-    #("verdict", case v {
+  encode_input_verdict_with_media(request_id, bot_id, update_id, v, None)
+}
+
+/// Wave 6h: the stored input row may carry the sender-declared media reference
+/// of an accepted update as an optional top-level `media` object, so the
+/// dispatcher can act on media without the raw update bytes, which are never
+/// retained. With `None` the row is byte-identical to the pre-6h form, and
+/// `decode_input_verdict` ignores the field, so old and new rows decode alike.
+pub fn encode_input_verdict_with_media(
+  request_id: String,
+  bot_id: Int,
+  update_id: Int,
+  v: guard.IngressVerdict,
+  media: Option(media_ref.MediaRef),
+) -> String {
+  let media_fields = case media {
+    Some(ref) -> [#("media", media_ref.to_json(ref))]
+    None -> []
+  }
+  json.object(
+    list.append(
+      [
+        #("schema", json.string("uos.telegram-input.v2")),
+        #("request_id", json.string(request_id)),
+        #("bot_id", json.int(bot_id)),
+        #("update_id", json.int(update_id)),
+      ],
+      list.append(media_fields, [#("verdict", encode_verdict_object(v))]),
+    ),
+  )
+  |> json.to_string
+}
+
+/// The media reference carried by a stored input row: `Ok(None)` when the row
+/// has none (every pre-6h row), `Ok(Some(ref))` when it carries one within the
+/// media bounds, `Error` when a `media` field is present but malformed. A
+/// malformed field is a refusal, never a silent `None`.
+pub fn decode_input_media(
+  json_str: String,
+) -> Result(Option(media_ref.MediaRef), String) {
+  let decoder = {
+    use media <- decode.optional_field(
+      "media",
+      None,
+      decode.optional(media_ref.decoder()),
+    )
+    decode.success(media)
+  }
+  case json.parse(json_str, decoder) {
+    Ok(media) -> Ok(media)
+    Error(_) -> Error("invalid_input_media")
+  }
+}
+
+fn encode_verdict_object(v: guard.IngressVerdict) -> json.Json {
+  case v {
       guard.AcceptedEnvelope(
         update_id: _,
         message_id: mid,
@@ -1253,9 +1304,7 @@ pub fn encode_input_verdict(
           #("tag", json.string("unidentified")),
           #("reason", json.string(r)),
         ])
-    }),
-  ])
-  |> json.to_string
+  }
 }
 
 pub fn decode_input_verdict(
