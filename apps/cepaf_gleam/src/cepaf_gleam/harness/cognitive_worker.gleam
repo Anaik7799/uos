@@ -954,13 +954,43 @@ pub fn handle_conversational(
             timestamp_ms: intent.timestamp_ms,
           )
         }
-        Error(_) -> {
-          // Autonomous deterministic directive gateway when OpenRouter is offline or budget-exhausted
-          handle_conversational_offline_gateway(trimmed, intent)
+        Error(reason) -> {
+          // Autonomous deterministic directive gateway when OpenRouter is offline or
+          // budget-exhausted. The reason is carried as a typed prefix on the reply,
+          // the reasoning and the actions (INV-TGS-05): a canned directive answer
+          // presented as a conversational reply is a defect, not a fallback.
+          degraded_decision(
+            reason,
+            handle_conversational_offline_gateway(trimmed, intent),
+          )
         }
       }
     }
   }
+}
+
+/// Mark a deterministic-gateway decision as the degraded answer it is.
+/// Pure: the reason text (secrets redacted; empty becomes "unspecified") is
+/// prefixed to the reply, prepended to the reasoning as `inference_unavailable:`
+/// and recorded as the first action, so the `intent/res` record and the
+/// operator's screen both say why the inference path did not answer.
+pub fn degraded_decision(
+  reason: String,
+  fallback: CognitiveDecision,
+) -> CognitiveDecision {
+  let cause = case string.trim(reason) {
+    "" -> "unspecified"
+    r -> egress_redactor.redact_system_secrets(r)
+  }
+  CognitiveDecision(
+    ..fallback,
+    reasoning: "inference_unavailable:" <> cause <> "; " <> fallback.reasoning,
+    actions: ["inference_unavailable", ..fallback.actions],
+    reply_markdown: "⚠️ *Inference unavailable:* "
+      <> cause
+      <> ". The deterministic directive gateway answered instead; this is not a conversational reply.\n\n"
+      <> fallback.reply_markdown,
+  )
 }
 
 fn find_matching_code(

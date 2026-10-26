@@ -638,6 +638,19 @@
       "checker_holds": 0,
       "process_defects": 1,
       "notes": "Receipt governance/planning/20261026-1941-claude-telegram-mini-app-browser-verify-receipt.json; evidence root /home/an/NAS-setup/uos/var/telegram-mini-verify/20261026-1944. The sandbox stall (L-38) was worked around inside the tool: Page.setDocumentContent with the official telegram-web-app.js and client.js inlined and window.fetch routed through a Runtime.addBinding served by the tool; the official script parsed the signed hash (auth_source telegram-web-app.js on every page). Defects fixed on the way: the tool waited for EOF on keep-alive connections (15 s per request), initData expired across a long run (now re-minted per page), Zenoh grants need concrete keys (no wildcard), an oversize initData answers 413 (a refusal, recorded as REFUSED_OTHER_4XX)."
+    },
+    {
+      "wave": "7c",
+      "landed_commit": null,
+      "landed_utc": null,
+      "canonicals_answering": "responder degraded path made honest: degraded_decision/2 carries the typed inference-unavailable reason on reply, reasoning and actions (INV-TGS-05); BRIDGE_EVIDENCE closed in the runtime plan",
+      "tests_added": 2,
+      "mutants": "2 planted, 2 killed (action marker dropped; empty reason not normalised)",
+      "workers": 0,
+      "wave_wall_minutes": null,
+      "checker_holds": 0,
+      "process_defects": 0,
+      "notes": "Development only: the running uos-cognitive-worker still serves the 2026-10-01 release; the operator credential and a worker release under lease remain under COCKPIT_RESPONDER_AI. Earlier reports listed RELEASE and ADMISSION as open runtime tasks; they do not exist in that plan, whose open tasks are RETURN and TELEGRAM_E2E. Handover to AGY recorded at docs/handover/20261026-2031-claude-to-agy-telegram-operations-handover.md per operator directive; this is the last Claude-authored Telegram landing of 2026-10-26."
     }
   ],
   "forecasts": [
@@ -1117,6 +1130,12 @@
       "wave": "7b",
       "lesson": "When a browser cannot load URLs but can run scripts, inject the server-rendered document with Page.setDocumentContent, inline the scripts, and route window.fetch through a DevTools binding served by the tool; the page logic, DOM, screenshots and screencast are then real while the transport is owned by the verifier.",
       "applied": "tools/mini_app_browser_verify.exe --set-content; the receipt records mode and auth_source so the two load paths are never confused"
+    },
+    {
+      "id": "L-41",
+      "wave": "7c",
+      "lesson": "A fallback that answers in the voice of the primary path hides its own failure; the operator asked why the same message kept arriving because nothing on the reply said the inference path was down.",
+      "applied": "every degraded branch carries a typed reason on the reply, the reasoning and the actions, so the res record and the screen agree"
     }
   ]
 }

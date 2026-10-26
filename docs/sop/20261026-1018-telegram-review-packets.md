@@ -133,6 +133,11 @@ erl -noshell "${PA[@]}" -eval 'application:ensure_all_started(hackney), eunit:te
 - Tool: `tools/mini_app_browser_verify.ml` (pure OCaml CDP: dedicated instance on 4190 with a verification-only token and a throwaway TLS pair, official `telegram-web-app.js` served through `Fetch` interception, initData signed per the Telegram scheme, 14 pages with screenshot + data API verdict, screencast → mp4, live-refresh journey, 6 browser negative cases, 6 direct API cases, Zenoh start command consumed and every page result published to `indrajaal/telegram/mini_app_verify/<run>/…` and read back).
 - Blocker (L-38): headless Chrome 154 completes no URL load from the agent shell sandbox (net-log and strace under `var/telegram-mini-verify/`). Operator-run command is in the wave 7a journal; the task stays executing until a receipt exists.
 
+## RESPONDER_DEGRADED_REASON — wave 7c (development only)
+
+- `cognitive_worker.degraded_decision/2` now labels the deterministic-gateway answer whenever `generate_conversational_response` errors: a one-line notice on the reply, `inference_unavailable:<cause>` on the reasoning, `inference_unavailable` as the first action (INV-TGS-05). Two laws in `cognitive_worker_test` (21 passed), two mutants killed. The running `uos-cognitive-worker` still serves the 2026-10-01 release; deployment is a worker release under lease once the credential exists (`COCKPIT_RESPONDER_AI`).
+- Correction (recorded, not rewritten): session reports before wave 7c listed `RELEASE` and `ADMISSION` as open tasks of `uos/telegram-runtime/20261001-1150`; that plan has no such tasks. Its open tasks are `RETURN` (blocked on independent acceptance) and `TELEGRAM_E2E` (blocked on the staging token and a human run). `BRIDGE_EVIDENCE` was completed at `abf01c50` after its stale blocker was observed satisfied.
+
 ## COCKPIT_RESPONDER_AI — blocked (operator credential and cockpit release)
 
 - Observed: inbound messages 2244 and 2246 were answered with `dispatch_directive_status_default`; `handle_conversational` falls to the offline gateway because `c3i-gleam-server` has no `OPENROUTER_API_KEY`, and that unit runs from a release directory that no longer exists on disk. No effect taken; the Sa-plan task records the two blockers.

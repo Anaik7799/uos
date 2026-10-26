@@ -3,8 +3,60 @@
 //// =============================================================================
 
 import cepaf_gleam/harness/cognitive_worker.{
-  CognitiveIntent, GetWorkerStatus, ProcessIntent, decode_intent,
-  encode_decision, evaluate_intent, handle_message, init_worker,
+  CognitiveDecision, CognitiveIntent, GetWorkerStatus, ProcessIntent,
+  decode_intent, degraded_decision, encode_decision, evaluate_intent,
+  handle_message, init_worker,
+}
+
+// INV-TGS-05 (rule 20261026-1910): when the inference path fails, the
+// deterministic-gateway answer is marked as degraded on every channel the
+// operator or a reader of intent/res can see: reply, reasoning and actions.
+pub fn degraded_decision_carries_typed_reason_test() {
+  let fallback =
+    CognitiveDecision(
+      intent_id: "tg-1",
+      ooda_phase: "Completed",
+      reasoning: "gateway /status default",
+      actions: ["dispatch_directive_status_default"],
+      reply_markdown: "🤖 status body",
+      confidence: 0.98,
+      timestamp_ms: 1,
+    )
+  let d =
+    degraded_decision(
+      "OPENROUTER_API_KEY missing or invalid in environment",
+      fallback,
+    )
+  d.intent_id |> should.equal("tg-1")
+  d.actions
+  |> should.equal([
+    "inference_unavailable", "dispatch_directive_status_default",
+  ])
+  d.reasoning
+  |> string.starts_with(
+    "inference_unavailable:OPENROUTER_API_KEY missing or invalid in environment; ",
+  )
+  |> should.be_true
+  d.reply_markdown |> string.starts_with("⚠️ *Inference unavailable:* ") |> should.be_true
+  d.reply_markdown |> string.ends_with("🤖 status body") |> should.be_true
+  // the fallback body is never lost and never duplicated
+  d.reply_markdown |> string.contains("not a conversational reply") |> should.be_true
+}
+
+pub fn degraded_decision_empty_reason_is_unspecified_test() {
+  let fallback =
+    CognitiveDecision(
+      intent_id: "tg-2",
+      ooda_phase: "Completed",
+      reasoning: "r",
+      actions: [],
+      reply_markdown: "b",
+      confidence: 0.5,
+      timestamp_ms: 2,
+    )
+  let d = degraded_decision("   ", fallback)
+  d.reasoning |> string.starts_with("inference_unavailable:unspecified; ") |> should.be_true
+  d.actions |> should.equal(["inference_unavailable"])
 }
 import envoy
 import gleam/erlang/process
