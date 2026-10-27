@@ -5,6 +5,7 @@ import cepaf_gleam/harness/admission as a
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/planning_intents as planning
 import cepaf_gleam/harness/value
 import cepaf_gleam/planning/sa_plan_bridge as sa
 import gleam/bit_array
@@ -24,6 +25,14 @@ pub fn text(args: value.Value, key: String) -> Result(String, String) {
   }
 }
 
+/// Thin boundary so the dispatch arm and the tests share one entry point.
+pub fn submit_planning_outcome(
+  execution: a.Execution,
+  args: value.Value,
+) -> Result(json.Json, String) {
+  planning.submit(execution, args)
+}
+
 pub fn fields(name: String) -> List(String) {
   case name {
     "harness_claim" | "harness_attach" -> ["plan", "task", "intent_id"]
@@ -33,6 +42,15 @@ pub fn fields(name: String) -> List(String) {
     | "harness_test"
     | "harness_release"
     | "harness_reconcile" -> ["intent_id"]
+    "harness_plan_intent" -> [
+      "intent",
+      "logical_id",
+      "target_plan",
+      "task_id",
+      "title",
+      "evidence_path",
+      "evidence_body",
+    ]
     "harness_assess" -> ["intent_id", "assessment_json", "reason"]
     "harness_finish" -> [
       "intent_id",
@@ -46,6 +64,7 @@ pub fn fields(name: String) -> List(String) {
 }
 
 pub const names = [
+  "harness_plan_intent",
   "harness_status",
   "harness_clock",
   "harness_heartbeat",
@@ -464,6 +483,13 @@ pub fn effect(
   args: value.Value,
 ) -> Result(json.Json, String) {
   use intent <- result.try(text(args, "intent_id"))
+  // Shared durable parent-task Andon: one uncertain planning outcome
+  // stops every mutation for that parent task, across process, grant
+  // and attempt. Observations, status and reconcile do not call it.
+  use _ <- result.try(planning.andon_guard(
+    execution.binding.plan,
+    execution.binding.task,
+  ))
   use _ <- result.try(a.require(a.intent_valid(intent), "intent_id"))
   use _ <- result.try(a.fence(execution, 1000))
   let sig = signature(execution, name, args)
@@ -554,15 +580,20 @@ pub fn effect(
       }
       let record = case verified {
         Ok(#(output, after, final)) ->
-          json.object([
-            #("status", json.string("EXECUTED")),
-            #("kind", json.string("effect_result")),
-            #("output", json.string(dev.backend_diagnostic(output))),
-            #("output_sha256", json.string(files.digest(output))),
-            #("output_manifest", json.string(after)),
-            #("finished", clock.to_json(final)),
-            ..base
-          ])
+          json.object(
+            list.flatten([
+              [
+                #("status", json.string("EXECUTED")),
+                #("kind", json.string("effect_result")),
+              ],
+              effect_output_fields(output),
+              [
+                #("output_manifest", json.string(after)),
+                #("finished", clock.to_json(final)),
+              ],
+              base,
+            ]),
+          )
         Error(e) ->
           json.object([
             #("status", json.string("FAILED_OR_UNVERIFIED")),
@@ -791,6 +822,10 @@ pub fn finish(
 ) -> Result(json.Json, String) {
   use intent <- result.try(text(args, "intent_id"))
   use journal_path <- result.try(text(args, "journal_path"))
+  use _ <- result.try(planning.andon_guard(
+    execution.binding.plan,
+    execution.binding.task,
+  ))
   use verification_path <- result.try(text(args, "verification_path"))
   use build <- result.try(text(args, "build_intent_id"))
   use test_id <- result.try(text(args, "test_intent_id"))
@@ -1156,4 +1191,45 @@ pub fn recover(grant: a.Grant, intent: String) -> Result(json.Json, String) {
       epoch,
     )
   reconcile(a.Execution(grant, scope, binding, scope.portfolio), intent)
+}
+/// Retained diagnostic fields of an EXECUTED effect receipt.
+///
+/// The backend output is bounded before retention (`dev.backend_diagnostic`),
+/// so the record cannot carry every byte. What it MUST carry is a digest of
+/// the bytes it does retain, the digest of the full output under its own
+/// name, the byte count on both sides of the bound, and an explicit statement
+/// of the relationship between them.
+///
+/// Before this repair the only digest present hashed the FULL output while
+/// `output` held a truncated tail: a verifier holding the receipt could not
+/// check the bytes in front of it, and nothing disclosed that truncation had
+/// happened or how many bytes were dropped. Observed 2026-10-27 on a real
+/// harness_test receipt: retained 8192 bytes digesting to e019941e..., while
+/// `output_sha256` read 5055476a....
+///
+/// `output_retention` is derived by OBSERVING the bound's result, never by
+/// matching the fallback sentinel text:
+///   - "full"           the retained text is the whole output
+///   - "tail_truncated" the retained text is a proper suffix of the output
+///   - "unavailable"    the bound returned text that is not output bytes
+///
+/// The integrity property holds in all three cases: `output_retained_sha256`
+/// covers exactly the bytes stored in `output`. `output_sha256` keeps its
+/// original name and meaning (the full output) so historical receipts remain
+/// readable under one vocabulary.
+pub fn effect_output_fields(output: String) -> List(#(String, json.Json)) {
+  let retained = dev.backend_diagnostic(output)
+  let retention = case retained == output, string.ends_with(output, retained) {
+    True, _ -> "full"
+    False, True -> "tail_truncated"
+    False, False -> "unavailable"
+  }
+  [
+    #("output", json.string(retained)),
+    #("output_sha256", json.string(files.digest(output))),
+    #("output_retained_sha256", json.string(files.digest(retained))),
+    #("output_retained_bytes", json.int(string.byte_size(retained))),
+    #("output_bytes", json.int(string.byte_size(output))),
+    #("output_retention", json.string(retention)),
+  ]
 }

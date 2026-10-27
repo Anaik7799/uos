@@ -11,6 +11,16 @@ Use actual AGY/Gemini sessions discovered by the Gleam Herdr adapter. Bind pane 
 
 Follow [root policy](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md), [operations manual](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261001-1117-uos-agent-symbiosis-operations.md) and [harness contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md). The user’s existing scope/authorization and higher-priority instructions govern. This skill grants no effect authority or runtime admission. Use standalone JJ, exact Sa-plan tasks and independent candidate verification. No new EV identifier.
 
+## Observed API and reference clarifications
+
+Factual reference drawn from refusals observed on 2026-10-27, per [`SC-LEARN-001`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261027-0836-core-development-learnings.md) and its [bindings](http://nas-1.tail55d152.ts.net:4100/files/governance/agents/20261027-0836-learning-bindings.md). No peer workflow behaviour is changed and no new discipline is claimed; nothing here was behaviour-pressure-tested against a client, and client adoption is UNRUN.
+
+- Report provider identity and quota truthfully. A quota-blocked peer is recorded as blocked; never impersonate it, never speak as it, and never assert a Google or client success that was not observed. Google and client activation remain HOLD.
+- A peer acknowledgement, board message or model verdict is not runtime evidence and grants no authority. An independent reviewer must not be the implementer and may return HOLD.
+- Preserve an ambiguous dispatch as unknown and reconcile it before a fresh intent or grant, with an oracle specific to the operation attempted; an unchanged source map does not establish the absence of a network or other physical effect. No automatic retry of the same unresolved dispatch; required negative cases are still expected.
+- A frozen model stays valid under its declared assumptions; when the graph changes, recheck its closure and minimality rather than treating its theorems as false. The 13-node closure predates the 28th audit-repair task and this grant's review authority, so cite it as frozen with its closure recheck outstanding, not as current functionality or optimality.
+- Exchange compact work and evidence references rather than regenerated narrative; soft cost targets are targets, not gates, and no global cost or reliability optimum is claimed.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

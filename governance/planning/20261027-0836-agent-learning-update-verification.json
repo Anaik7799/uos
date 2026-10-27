@@ -1,0 +1,204 @@
+{
+  "schema": "uos.harness-task-verification.v1",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "AGENT_PARITY",
+  "attempt": 3,
+  "candidate_sha256": "9103d092c5d4ecbd269752c59adb58020c9ace7c2c41500c313f063e3c1062ef",
+  "build_receipt_sha256": "2cfbdf849d1b10940d3cc744aae9d4bda966b47f6a18e8d6a5a2e24cd3c1d196",
+  "test_receipt_sha256": "7439492c4e76374addd321cd48176013482bdfdf5b84228db44ef21defd41184",
+  "verdict": "PARTIAL_NOT_COMPLETE",
+  "verdict_note": "Deliberately NOT the literal VERIFIED that operations.finish requires. Qualifier fields never justify VERIFIED while required scope is unfinished: AGENT_PARITY stays open, so this is an honest partial artifact plus a release. No finish was called.",
+  "peer_review_path": "PENDING_ROOT_INDEPENDENT_REVIEW",
+  "peer_review_sha256": "PENDING",
+  "formal_evidence_path": "NOT_APPLICABLE_DOCUMENTATION_ONLY",
+  "formal_evidence_sha256": "PENDING",
+  "status": "PARTIAL_READY_FOR_INDEPENDENT_REVIEW",
+  "task_completed": false,
+  "production_admission": false,
+  "two_key_complete": false,
+  "observed_utc": "2026-10-27T09:46:00Z",
+  "worker": "claude-hive-receipt-fix-2585",
+  "session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+  "grant_sha256": "02f673027a29d0dc7c2e884a4feb8b74ba25c6423c92d891ded046e67ee304a8",
+  "grant_review_sha256": "a3f85704eea4ab2a68433a226944162dfc543479def8f8dc2b03bfb127cebf24",
+  "workspace_epoch_acquired": 9,
+  "coordinator_task_epoch": 3,
+  "journal_path": "docs/journal/20261027-0836-agent-learning-update-journal.md",
+  "journal_sha256": "460282c268cbe3831787c5ac329275d531a408b117febbfc8c4d73e128e25723",
+  "validation_path": "governance/planning/20261027-0836-agent-learning-validation.json",
+  "validation_sha256": "ccc96de034c7402a797bb00a566092f31a8e9e4bb2ebc173156a6f85e98d1be7",
+  "guidance_changes": [
+    {
+      "path": "contracts/rules/20261027-0836-core-development-learnings.md",
+      "sha256": "7e332b39ef738ca4ffaf8a25788a48c38364e07cc11858c794c79886d8a2644f"
+    },
+    {
+      "path": "governance/agents/20261027-0836-learning-bindings.md",
+      "sha256": "fbb0e69001d9aec70a6bbe3508fc760ffeca4892c8071962b134a048fa5ab02a"
+    },
+    {
+      "path": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+      "sha256": "75b1fe25781d86f268528df28d6ad0a2099c5b80d6df9a71f8bba98eb6f11790"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md",
+      "sha256": "ad7a75a61153f1349927517ee6386aca05b28013c7c6dd2eadf97f89eff43f7b"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md",
+      "sha256": "fbd0f2c69d50c3dcd7be584b524c7f3d788829461e026b758e931f153649da59"
+    }
+  ],
+  "bounded_checks": {
+    "build_intent": "claude-2585-g5-build-1",
+    "test_intent": "claude-2585-g5-test-1",
+    "candidate_manifest_entries": 20,
+    "tests_reported": 84,
+    "failed": 0,
+    "skipped": 0,
+    "module_count": 6
+  },
+  "adoption": {
+    "state": "UNRUN",
+    "clients_observed_loading_any_change": 0,
+    "enforcement_claimed": false
+  },
+  "open_blockers": [
+    "Google activation HOLD",
+    "client adoption and activation UNRUN",
+    "hidden and plugin-cache config paths unobserved",
+    "harness_assess full-portfolio scope gap unprobed and unresolved",
+    "frozen 13-node closure awaits closure and minimality recheck",
+    "risk portfolio at ~94% of the read cap; bounded representation design outstanding"
+  ],
+  "next_step": "root independent review of the five documents plus fresh bounded checks; this record is the input to that review, not a completion packet",
+  "authority": "Sa-plan is the sole execution authority. This record is evidence and grants no admission.",
+  "ev_boundary": "EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted.",
+  "state_after_release": "EXPLICITLY_PARTIAL_NOT_A_NEW_READINESS_BASELINE",
+  "tool_surface": {
+    "private_harness_advertised": 13,
+    "private_harness_fully_verified": "core workflow only",
+    "native_readonly": 4,
+    "note": "exposure is not verification"
+  },
+  "binding_state": "HELD_ATTACHED_AWAITING_ROOT_REVIEW_PAYLOAD",
+  "statistics_policy": {
+    "bayesian_update": "NONE_OFFERED_AND_NONE_JUSTIFIED",
+    "lyapunov_claim": "WITHDRAWN",
+    "alternative_posterior_supplied": false
+  },
+  "forecast_resolution": {
+    "id": "F1",
+    "original_p": 0.80,
+    "outcome": 0,
+    "resolved": "FALSE",
+    "brier_loss": 0.64,
+    "reopened_or_restated": false
+  },
+  "additive_correction_of_two_completed_journals": {
+    "verdict": "probability and derivative claims in both are NOT admissible reliability evidence",
+    "preserved_unchanged": [
+      {
+        "path": "docs/journal/20261027-0745-receipt-core-journal.md",
+        "sha256": "e0f35c15907fd862de50c4318f773343ed4c3123a1822e7064da9b1cb76a0bbd"
+      },
+      {
+        "path": "docs/journal/20261027-0745-mcp-core-journal.md",
+        "sha256": "e7da6ab32cdd85757767bc205af9adfc74a12af0a9123baa83cf22762df40aeb"
+      }
+    ],
+    "outside_this_grant_write_paths": true,
+    "raw_evidence_still_valid": [
+      "84-test results",
+      "source and receipt digests",
+      "replay observation"
+    ]
+  },
+  "root_review_payload": {
+    "state": "AWAITED",
+    "authored_by": "root",
+    "persisted_by": "claude via MCP into this artifact",
+    "reason": "peer review file publication is out of scope for this grant"
+  },
+  "checklist": {
+    "domains": 6,
+    "ids": 24,
+    "chk_24_failclosed": "UNCHECKED in all three owned docs: Metric-path fail-closed runtime behavior UNRUN in this documentation scope; no passing claim"
+  },
+  "final_narrow_corrections": [
+    {
+      "id": "A",
+      "correction": "L-08 opener wrongly barred reconciliation lookups by forbidding intent-id reuse",
+      "applied": "opener now: keep the stable logical effect identity for status lookup and reconciliation; while unresolved, do not redispatch it or mint a new intent or grant to evade the stop line. Operation-specific oracle and pre-dispatch evidence retained. Mirrored in the full-symbiosis SKILL."
+    },
+    {
+      "id": "B",
+      "correction": "CHK-24 was a checked absence claim, which is not what SC tests",
+      "applied": "UNCHECKED in both new docs and in the journal, with the exact text: Metric-path fail-closed runtime behavior UNRUN in this documentation scope; no passing claim"
+    },
+    {
+      "id": "C",
+      "correction": "journal section 9 carried old four-only task list and offered retirement",
+      "applied": "to-be now preserves the full user goal (all required services and capabilities for data and control via MCP, declarative typed intent, Sa-plan execution, verified feature-DB coverage, actual client/agent/service/Telegram operation); retirement explicitly not offered and exclusions need existing authorization; 17 open rows tabulated in four groups with the four-item core path marked immediate only; evidence-to-reuse mapping required before closing; census and sizing proceed alongside the MCP planner; 1-2 weeks stated as a verification allowance not a completion promise; whole to-be ETA unknown until census and T01 sizing"
+    }
+  ],
+  "open_rows": {
+    "total": 17,
+    "immediate_core": [
+      "AGENT_PARITY",
+      "PLANNING_MCP",
+      "SERVICE_VERIFY",
+      "HIVE_VERIFY"
+    ],
+    "covered_by_core": [
+      "READINESS_CENSUS",
+      "SCHEDULER_GATES",
+      "FAULT_RECOVERY",
+      "FORMAL_EVIDENCE",
+      "COST_EFFICIENCY"
+    ],
+    "conditional": [
+      "NATIVE_BOUNDARY_REPAIR",
+      "DEV_INTEGRATE"
+    ],
+    "broader": [
+      "CAPABILITY_PARITY",
+      "OPERATOR_SURFACES",
+      "PERF_SCALE",
+      "TELEGRAM_ACCEPT",
+      "KNOWLEDGE_SYNC",
+      "DEV_READY_REVIEW"
+    ],
+    "note": "not all are new implementation tasks; map actual evidence to reuse before closing"
+  },
+  "to_be_goal": {
+    "preserved_in_full": true,
+    "retirement_offered_as_removal": false,
+    "exclusions_require_existing_explicit_authorization": true,
+    "whole_to_be_eta": "UNKNOWN until readiness census and T01 sizing",
+    "one_to_two_weeks": "verification allowance, not a completion promise"
+  },
+  "root_review_json": "{\n  \"schema\": \"uos.agent-guidance-independent-review.v1\",\n  \"reviewer\": {\n    \"session_id\": \"01a0ba74-d654-7de3-bdcf-25a0a85b93da\",\n    \"role\": \"Codex independent coordinator; source implementer was Claude\"\n  },\n  \"verdict\": \"ACCEPT_REFERENCE_GUIDANCE_WITH_RUNTIME_HOLD\",\n  \"plan\": \"uos/hive-development/20261027-0532\",\n  \"task\": \"AGENT_PARITY\",\n  \"attempt\": 3,\n  \"task_completed\": false,\n  \"candidate_sha256\": \"9103d092c5d4ecbd269752c59adb58020c9ace7c2c41500c313f063e3c1062ef\",\n  \"artifacts\": [\n    {\n      \"path\": \"contracts/rules/20261027-0836-core-development-learnings.md\",\n      \"sha256\": \"7e332b39ef738ca4ffaf8a25788a48c38364e07cc11858c794c79886d8a2644f\"\n    },\n    {\n      \"path\": \"governance/agents/20261027-0836-learning-bindings.md\",\n      \"sha256\": \"fbb0e69001d9aec70a6bbe3508fc760ffeca4892c8071962b134a048fa5ab02a\"\n    },\n    {\n      \"path\": \"docs/sop/20261001-1117-uos-agent-symbiosis-operations.md\",\n      \"sha256\": \"75b1fe25781d86f268528df28d6ad0a2099c5b80d6df9a71f8bba98eb6f11790\"\n    },\n    {\n      \"path\": \"governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md\",\n      \"sha256\": \"ad7a75a61153f1349927517ee6386aca05b28013c7c6dd2eadf97f89eff43f7b\"\n    },\n    {\n      \"path\": \"governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md\",\n      \"sha256\": \"fbd0f2c69d50c3dcd7be584b524c7f3d788829461e026b758e931f153649da59\"\n    }\n  ],\n  \"checks\": {\n    \"source_manifest\": \"20 entries independently rehashed, zero drift;14 baseline entries unchanged\",\n    \"build_receipt_sha256\": \"2cfbdf849d1b10940d3cc744aae9d4bda966b47f6a18e8d6a5a2e24cd3c1d196\",\n    \"test_receipt_sha256\": \"7439492c4e76374addd321cd48176013482bdfdf5b84228db44ef21defd41184\",\n    \"test_retained_sha256\": \"ecf2077bb234aa3d859c34cc00ec359eb48a3788fc723d89bfa86bd8b49096a8\",\n    \"test_result\": \"84 reported passed; finite six-module no-regression observation, not guidance-adoption evidence\",\n    \"retained_integrity\": \"GNU SHA256 matches actual retained build and test bytes; full unavailable test text not rehashed\",\n    \"journal\": \"13 sections and24 canonical check IDs; journal-check10/10PASS; diagram-check six existing documents0unverified0failed\",\n    \"semantic_review\": \"Corrected typed-time/lease semantics, operation-specific outcome evidence, stable-intent reconciliation, full flat completion binding, negative-coverage preservation, unsupported statistics and current model/plan limits\",\n    \"historical_journals\": \"Original e0f35c15... and e7da6ab3... bytes unchanged; unsupported posterior/derivative claims superseded additively\"\n  },\n  \"risk_reassessment\": {\n    \"receipt\": \"var/harness/20261027-0836-reobserved-active.json\",\n    \"observed_at\": \"2026-10-27T09:41:34Z\",\n    \"status\": \"ACTIVE_OBSERVATION_PASS\",\n    \"sources_checked\": 6,\n    \"findings\": 0,\n    \"scope\": \"Full28-task source/task/clock reobservation; ordinal ratings unchanged. Expired assessment preserved. Finite Gleam metadata setup route used because current harness_assess grant lacks a required evidence read path.\"\n  },\n  \"limits\": [\n    \"Documentation reference changes accepted; actual client loading and pressure tests UNRUN.\",\n    \"Full agent parity, Google execution, service/integrated hive and Telegram acceptance remain HOLD.\",\n    \"Catalog65declarations/53unprobed/12unavailable is not a functionality denominator; taskprogress11/28 is administrative progress only.\",\n    \"Private13-tool harness core workflow observed; all13 tool obligations and normal connected-client mutations not fully verified.\",\n    \"Existing47-theorem model and other bounded analyses remain conditional, separately source-bound evidence, not full runtime refinement or new executions.\",\n    \"No calibrated Bayesian posterior, Lyapunov stability, global utility/cost optimum or whole-system completion date is claimed.\",\n    \"Review authorship is cooperative local provenance, not a cryptographic signature or system admission.\"\n  ]\n}\n",
+  "root_review_sha256": "f29221cd62f1e4c8d61698d5c143e49018e93f9cae17335c6257cfb016a9acfc",
+  "root_review_path": "var/harness/20261027-0836-root-guidance-review.json",
+  "root_review_verdict": "ACCEPT_REFERENCE_GUIDANCE_WITH_RUNTIME_HOLD",
+  "root_review_authored_by": "root",
+  "root_review_persisted_by": "claude via MCP; exact file bytes embedded as a string, no peer or formal file published outside the 8 write paths",
+  "root_review_binds": "the 5 source reference documents at their exact hashes, not this journal",
+  "env_readiness": "NOT_FULLY_READY",
+  "risk_reassessment": {
+    "observed_utc": "2026-10-27T09:41:34Z",
+    "status": "ACTIVE_PASS",
+    "expires_about": "09:53Z",
+    "grant_expires": "09:58Z",
+    "disclosure": "finite Gleam metadata reassessment, a disclosed setup gap, not full MCP availability"
+  },
+  "planned_release": {
+    "attempt": 3,
+    "workspace_epoch": 9,
+    "server": "owned, to be stopped",
+    "state": "PLANNED until the actual RPC returns; a canonical readback proving available is the evidence",
+    "harness_finish_broad_parity": false
+  },
+  "residuals_state": "ALL HOLD or UNRUN as enumerated in residuals"
+}

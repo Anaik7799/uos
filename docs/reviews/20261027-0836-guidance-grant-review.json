@@ -1,0 +1,80 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "observed_at": "2026-10-27T08:36:23.768413Z",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-core-recovery",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "CONTROL_ACCEPT",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-0836-guidance-grant-proposal.json",
+    "sha256": "6181f7947424f3fc2da4c8e08f0a51e1dc3d689e98af8648503e8f2ab3e6b644",
+    "grant_id": "20261027-0836-guidance-learning",
+    "target_session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+    "target_worker": "claude-hive-receipt-fix-2585"
+  },
+  "core_acceptance": {
+    "verdict": "VERIFIED_BOUNDED_LOCAL_DEVELOPMENT_CONTROL",
+    "candidate_sha256": "4366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92",
+    "receipt_fix": {
+      "task": "RECEIPT_FIX",
+      "attempt": 2,
+      "canonical_state": "completed",
+      "peer_review": "docs/reviews/20261027-0745-receipt-core-peer-review.json"
+    },
+    "mcp_activate": {
+      "task": "MCP_ACTIVATE",
+      "attempt": 2,
+      "canonical_state": "completed",
+      "completion_intent_sha256": "be8b59fcfeb65b8955d53eeaf73e007e9f682c525fc3fcd188987f87157a0d18",
+      "peer_review": "docs/reviews/20261027-0745-mcp-core-peer-review.json"
+    },
+    "observed": "Actual stdio MCP initialized13tools; positive scoped read/write, bounded build/test84reportedPASS, retained digest integrity, pure scope/occupied-task refusals, same-new-intent replay and canonicalfinish. Both13-section journals passed10/10 plus0unverifieddiagrams.",
+    "formal": "Fresh finite executable specifications plus source-bound reusable47-theorem model; no universal runtime refinement.",
+    "baseline": "Existing14-source product/control baseline stays unchanged. Guidance edits are bounded public development work; verify the expanded20-source candidate afterward.",
+    "full_hive_admission": "HOLD"
+  },
+  "findings": [
+    {
+      "id": "scope",
+      "status": "PASS",
+      "detail": "Reuse existing AGENT_PARITY. Eight writes:3 UOS-owned shared guidance files,2 timestamped public learning references,3 evidence artifacts. No product/control source, hidden client settings, plugin caches, external trees, production or provider calls. Actual scope_valid=true."
+    },
+    {
+      "id": "source",
+      "status": "PASS",
+      "detail": "Actual20-source capture1ed565d9fcc66a06d5efdd474d58669ad7748a66fcdcf93285d18d19d6793ecb;18 existing files and2 absent new public docs. Runner f0ede6caa... now included. Existing instruction sources remain owned public files;8skillaliases resolve to2 canonical files."
+    },
+    {
+      "id": "controls",
+      "status": "PASS",
+      "detail": "Fresh20 loaded module IDs equal prior accepted grant; ecology guardian b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b unchanged."
+    },
+    {
+      "id": "authority",
+      "status": "PASS_SCOPED",
+      "detail": "CONTROL_ACCEPT passed canonical preflight/claim1/active-check. Root workspace actualepoch5 after peer releasedepoch4. First malformed heartbeat was refused; corrected exactrevision/refs heartbeat thenworkspaceclaim succeeded before public metadata writes."
+    },
+    {
+      "id": "limits",
+      "status": "REQUIRED",
+      "detail": "Existing broad AGENT_PARITY completion needs actual acceptance. Publish honest partial guidance evidence and release owned attempt if Google/client parity remains blocked; do not finish unfinished scope. No new plugin installation/framework or automatic global propagation. Active client adoption and hidden-path typed ingress remain unverified."
+    }
+  ],
+  "evidence": [
+    "var/harness/20261027-0836-guidance-source-manifest.json",
+    "var/harness/20261027-0836-guidance-clock.json",
+    "var/harness/20261027-0836-guidance-control-ids.json",
+    "var/harness/20261027-0836-core-accept-active.json",
+    "governance/planning/20261027-0634-core-gate-proof-receipt.json"
+  ],
+  "limits": [
+    "This review approves finite local development guidance adaptation and core-control acceptance only.",
+    "No production/system admission, allservices/Telegram verification, AGY model execution, complete source-to-binary closure or global exactly-once claim.",
+    "The native connected MCP still exposes4read tools; private13tool successor has narrower explicit grants.",
+    "Sa-plan metadata/grant setup uses the finite documented Gleam bootstrap while normal planning mutation ingress remains a trackedgap; no claim of universal MCP enforcement."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "grant_proposal": {
+    "path": "var/harness/20261027-2000-pi-bound-grant-proposal.json",
+    "sha256": "b200ab8e9c28ff39130ceaea5e6e34cb177b8e0eadae27483a692b640f6e8215",
+    "grant_id": "pi-bound-20261027",
+    "target_session": "pi-session-20261027",
+    "target_worker": "pi-worker-20261027"
+  },
+  "reviewer": {
+    "session_id": "openrouter-claude-20261027",
+    "plan_id": "uos/symbiosis-sync/20261027-1741",
+    "task_id": "GRANT_REVIEW",
+    "worker": "openrouter-claude",
+    "attempt": 1
+  },
+  "advisory_only": true
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "uos.mcp-command-matrix.v2",
+  "observed_utc": "2026-10-28T00:45:00Z",
+  "goal": "ensure all mcp__uos_harness commands are invokable with deterministic outcomes",
+  "parallel_agents": {
+    "codex": {
+      "mode": "analysis",
+      "command": "codex exec ...",
+      "artifact": "docs/reviews/20261028-0038-codex-uos-mcp-analysis.md",
+      "result": "root-cause analysis and minimal change plan captured"
+    },
+    "claude": {
+      "mode": "execution",
+      "command": "claude --print ...",
+      "scope": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+      "result": "implemented deterministic binding and not-found error shaping"
+    }
+  },
+  "code_changes": [
+    {
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+      "changes": [
+        "tool_task_bound_feature now maps known binding failures to deterministic UNAVAILABLE tool errors",
+        "tool_plan_get now maps no-row adapter replies to deterministic NOT_FOUND: plan_get id=<id>",
+        "helper functions added: binding_error_codes, known_binding_error, adapter_no_rows"
+      ]
+    }
+  ],
+  "verification": {
+    "build_check": {
+      "command": "cd apps/cepaf_gleam && gleam check",
+      "status": "pass-with-existing-warnings"
+    },
+    "full_sweep": {
+      "namespace": "mcp__uos_harness__",
+      "total_tools": 53,
+      "ok": 53,
+      "throws": 0,
+      "ok_isError": 11
+    },
+    "residual_isError": [
+      "UNAVAILABLE: harness_execution_progress — role_binding_missing",
+      "UNAVAILABLE: harness_system_feature_catalog — role_binding_missing",
+      "UNAVAILABLE: harness_system_feature_intent — role_binding_missing",
+      "UNAVAILABLE: harness_system_feature_observations — role_binding_missing",
+      "UNAVAILABLE: plan_add — transport-bound task authority unavailable on read surface",
+      "NOT_FOUND: plan_get id=00000000",
+      "UNAVAILABLE: plan_update — transport-bound task authority unavailable on read surface",
+      "UNAVAILABLE: sa_job_enqueue — transport-bound task authority unavailable on read surface",
+      "UNAVAILABLE: sa_task_claim — transport-bound task authority unavailable on read surface",
+      "UNAVAILABLE: sa_task_complete — transport-bound task authority unavailable on read surface",
+      "UNAVAILABLE: sa_workflow_start — transport-bound task authority unavailable on read surface"
+    ]
+  },
+  "risk_gate": {
+    "portfolio": "governance/planning/20261028-0044-hive-live-risk-active-v3.json",
+    "active_check": "ACTIVE_OBSERVATION_PASS",
+    "runtime_admission": "NOT_GRANTED",
+    "assessment_sha256": "6c2dca7f48b04020fb08535086b660630b7b557bc6c5cc498a822a06728402f9"
+  },
+  "conclusion": "All mcp__uos_harness commands now execute without transport throws in this environment. Remaining isError outcomes are deterministic, explicit, and policy-expected refusals/lookup-miss signals rather than untyped failures.",
+  "completion_claimed": false,
+  "authority": "Sa-plan remains sole execution authority; no mutation authority was granted in this run."
+}

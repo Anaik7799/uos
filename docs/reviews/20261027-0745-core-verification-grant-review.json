@@ -1,0 +1,72 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-core-recovery",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "CONTROL_RECOVERY",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-0745-core-verification-grant-proposal.json",
+    "sha256": "7d8eeda444857a6718b04bc989f04df376354c44b6d67971da80a02341c04efc",
+    "grant_id": "20261027-0745-core-verification",
+    "target_session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+    "target_worker": "claude-hive-receipt-fix-2585"
+  },
+  "findings": [
+    {
+      "id": "scope",
+      "status": "PASS",
+      "detail": "Two exact existing tasks RECEIPT_FIX and MCP_ACTIVATE; six NEW evidence write paths only. No source/config/control/instruction edit path. 14 read/source paths include candidate source/test, AGENTS, Lean model and dependency manifests. Both scopes pass actual scope_valid."
+    },
+    {
+      "id": "identity",
+      "status": "PASS",
+      "detail": "Actual peer session/worker ACK_SCOPE recorded, original expired attempt1 replaced by canonical attempt2 after exact reclaim preflight, then active-check passed. Reviewer is independent of target session/worker and receipt implementation author."
+    },
+    {
+      "id": "control",
+      "status": "PASS",
+      "detail": "20 fresh loaded control MD5s match proposal. Exactly operations changed versus prior grant (841df5eb... ->1a5ad65a...), all19 others unchanged; source/control edits are not allowed."
+    },
+    {
+      "id": "candidate",
+      "status": "PASS",
+      "detail": "14 source hashes re-computed with zero drift. Source manifest SHA2564366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92. Receipt constructor preserves full digest, adds retained digest/count and declared retention; independent earlier 10-fixture/20-digest comparison matches. Fresh live MCP evidence remains required."
+    },
+    {
+      "id": "clock",
+      "status": "PASS",
+      "detail": "Fresh chrony-backed host/boot clock captured, original host/boot domain verified, 90-minute grant expiry <=24h. Old child task lease is separate and expires1793090786610339814ns; heartbeat does not renew it."
+    },
+    {
+      "id": "unknown",
+      "status": "PASS",
+      "detail": "All10 stopped intents have terminal results; nine EXECUTED and one deliberate backend_exit:1 RED test. No missing result was observed; old artifacts are retained."
+    },
+    {
+      "id": "risk",
+      "status": "PASS",
+      "detail": "Full27-task current assessment, exact reclaim observation/preflight and current active-owner observation passed. Future unknown-risk packages remain blocked. Core grants/sources remain candidate-specific."
+    }
+  ],
+  "evidence": [
+    "var/harness/20261027-0745-grant-static-review.json",
+    "var/harness/20261027-0745-core-clock.json",
+    "var/harness/20261027-0745-core-source-manifest.json",
+    "var/harness/20261027-0745-reclaim-preflight.json",
+    "var/harness/20261027-0745-reclaimed-active.json",
+    "var/harness/20261027-0745-peer-scope-ack-full.txt",
+    "governance/planning/20261027-0634-core-gate-proof-receipt.json"
+  ],
+  "limits": [
+    "This authorizes bounded development verification only; no system admission or production effect.",
+    "Local client/session coordination is cooperative; actual policy-loading pressure tests and hard sandbox enforcement remain open.",
+    "Cross-grant stable logical identity remains a refinement question. Do not replay old physical effects; new smoke/test evidence uses new scoped intents, and writes use expected absent/CAS.",
+    "The 47-theorem model is not full runtime refinement. Fresh real MCP build/test/read/write/refusal and independent result evidence must precede task completion.",
+    "Dependency manifests are pinned but no universal source-to-release or all-service acceptance is claimed. No package fetch or provider spend.",
+    "Normal source/config/instruction activation stays held; guidance updates must remain isolated candidates until core acceptance."
+  ]
+}

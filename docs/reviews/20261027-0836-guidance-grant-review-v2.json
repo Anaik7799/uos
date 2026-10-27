@@ -1,0 +1,53 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-core-recovery",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "GUIDANCE_REBIND",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-0836-guidance-grant-proposal-v2.json",
+    "sha256": "671d00fb9a31c73f9ee1694b7d1b3bf4bdb3c8144b60feb4c28f1b95ad0c0bf9",
+    "grant_id": "20261027-0836-guidance-learning-v2",
+    "target_session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+    "target_worker": "claude-hive-receipt-fix-2585"
+  },
+  "supersedes": {
+    "review_path": "docs/reviews/20261027-0836-guidance-grant-review.json",
+    "review_sha256": "6b20c74c5696640a4426ec523a6626898ec2a1b066a9b923e6077bebfee16f67",
+    "reason": "Original expiry encoded JSON number; runtime decoder requires string and refused startup before task/effects. Existing core acceptance runtime evidence remains valid; original grant approval cannot launch."
+  },
+  "findings": [
+    {
+      "id": "actual_decoder",
+      "status": "PASS",
+      "detail": "Public admission.decode_grant accepted corrected immutable proposal; this includes exact scalar types, role, identifiers,20-source/8-write scope_valid and unique task scope. Original startup grant_decode refusal preserved."
+    },
+    {
+      "id": "minimal_delta",
+      "status": "PASS",
+      "detail": "Only expiry type and required fresh grant/review identity/proposal references change. Write/source/test sets unchanged; one review read reference updated. No broadened source/control/config/provider permission."
+    },
+    {
+      "id": "source_control",
+      "status": "PASS_REUSED_SAME_BYTES",
+      "detail": "Prior18present+2absent source capture1ed565d9fcc66a06d5efdd474d58669ad7748a66fcdcf93285d18d19d6793ecb and20module IDs unchanged; executor quiescence acknowledgement confirms0draft/source/taskeffects. Fresh full load checks them again."
+    },
+    {
+      "id": "authority",
+      "status": "PASS",
+      "detail": "GUIDANCE_REBIND independent root attempt1 passed preflight and activecheck; workspaceepoch6. AGENT_PARITY correctly blocked pending this review, avoiding artificial equal-score dispatch. Full28-task assessment245KB remains under262144bytes."
+    }
+  ],
+  "limits": [
+    "This review approves finite local development guidance adaptation and core-control acceptance only.",
+    "No production/system admission, allservices/Telegram verification, AGY model execution, complete source-to-binary closure or global exactly-once claim.",
+    "The native connected MCP still exposes4read tools; private13tool successor has narrower explicit grants.",
+    "Sa-plan metadata/grant setup uses the finite documented Gleam bootstrap while normal planning mutation ingress remains a trackedgap; no claim of universal MCP enforcement.",
+    "Existing broad AGENT_PARITY is not eligible for false completion: Google/client/config gaps require honest partial artifacts and release.",
+    "Normal planner mutationMCP remains unavailable; this one metadata correction uses the finite development setup route. No source effect ran from refused grant."
+  ]
+}

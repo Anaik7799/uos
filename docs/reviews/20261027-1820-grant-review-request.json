@@ -1,0 +1,26 @@
+{
+  "schema": "uos.grant-review-request.v1",
+  "request_id": "20261027-1820-grant-review-request",
+  "status": "OUTSTANDING_AWAITING_PEER_REVIEW",
+  "requester": "pi-session-resumed",
+  "created_utc": "2026-10-27T18:20:00Z",
+  "proposal": {
+    "path": "var/harness/20261027-1808-pi-bound-grant-proposal.json",
+    "sha256": "7205d9bf1fc9c0142954d604fc5ac8ddcb1293777bba6739475a8924030279dc"
+  },
+  "review_scope": [
+    "Finite read_paths (13) and write_paths (2) are additive only (docs/journal + governance/planning); no source write, no production path, no secret path.",
+    "source_paths (8) are the frozen 18-source candidate subset; test_modules (6) are the canary modules.",
+    "expires_utc_us is a decimal string of integral microseconds (bounded +1 day).",
+    "scopes bound to Sa-plan plan uos/symbiosis-sync/20261027-1741 (P1_GRANT, C_MCP_ADMIT) and hive MCP_ACTIVATE.",
+    "code_writes = 0; no merge, no production admission, EV ceiling 93."
+  ],
+  "requested_dispositions": ["APPROVE", "HOLD", "REJECT"],
+  "peers_observed_live": {
+    "codex": "session 01a0ba74-d654-7de3-bdcf-25a0a85b93da (resumed, live)",
+    "agy": "conversation eb7a42c0-03e5-4814-9e55-4414c7c4eb28 (live)",
+    "claude": "interactive CLI not observed live; scratchpad web-server beam only",
+    "herdr": "server + session attach herdr-1 (live)"
+  },
+  "fencing_note": "Peer review is requested through canonical durable records, not auto-dispatched. A model verdict or board ACK does not sign the grant; operator authorization + harness signature remain required for admission."
+}

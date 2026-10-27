@@ -1,0 +1,47 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-control-review",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "PLANNING_CONTROL_REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-1130-planning-repair-proposal.json",
+    "sha256": "d022398e82f8ad478d31ea20d153ef96bfeaa1ace6dea4f6ce03094d71d1b6a7",
+    "grant_id": "20261027-1130-planning-replay-repair",
+    "target_session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+    "target_worker": "claude-hive-planning-2585"
+  },
+  "findings": [
+    {
+      "id": "typed-scope",
+      "status": "PASS",
+      "detail": "Actual full decode_grant PASS. Only planning_intents.gleam source write and four existing evidence files. Empty planning_targets disables new-tool backend dispatch."
+    },
+    {
+      "id": "candidate",
+      "status": "PASS",
+      "detail": "18-source candidate d2c25588bbda94e9fb801ac108fa5865f58b20bbc8ef96ffacb026cba33f603e matches104-test receipt; new21 compiled identities observed. Guardian SHA b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b"
+    },
+    {
+      "id": "authority",
+      "status": "PASS",
+      "detail": "Root exact task attempt1/workspaceepoch12, preflight and active checks PASS after truthful state refresh. Worker reports exact release/zero leases,65terminal effects,zero planning dispatch."
+    },
+    {
+      "id": "known-repair",
+      "status": "REQUIRED",
+      "detail": "Add current-authority fence immediately after pure precheck, before grant/ledger reads; retain fresh post-risk25s dispatch fence and clock continuity. Fresh baseline before mutation and final source-bound build/test required."
+    }
+  ],
+  "limits": [
+    "Development repair only; new-tool backend targets empty. No full PLANNING_MCP completion, live acceptance, source integration, production, provider, package or EV change.",
+    "No native atomic fencing, hostile-writer safety or complete runtime refinement claimed.",
+    "Preserve exact serving binaries for this grant; source freeze and root ACK before planned release/stop within lease."
+  ],
+  "acceptance_reference": "docs/design/20261027-1013-typed-planning-intent-design.md",
+  "journal_path": "docs/journal/20261027-1130-planning-control-rebind-journal.md"
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-live-review",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "PLANNING_LIVE_REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-1104-planning-live-proposal-v2.json",
+    "sha256": "caf472f4220f08400c8d3b987737ec53c82e315774f1b0bae648547203cb4a2d",
+    "grant_id": "20261027-1104-planning-live-acceptance",
+    "target_session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+    "target_worker": "claude-hive-planning-2585"
+  },
+  "findings": [
+    {
+      "id": "frozen-candidate",
+      "status": "PASS",
+      "detail": "18sources95e8176240646ee506e0a39a57c0f8f1e2267ed4a38bb66d663b986d7fd4583f;104tests; retained digest independently verified;21control IDs observed; source frozen."
+    },
+    {
+      "id": "scope",
+      "status": "PASS",
+      "detail": "Two exact tasks including future T_PROOF; only sandbox target;9evidence paths; zero code writes. Predictive child assessment blocked until canonical MCP creation/readback."
+    },
+    {
+      "id": "authority",
+      "status": "PASS",
+      "detail": "Root reviewattempt1/workspace14; preflight and active checksPASS; worker released oldtask/workspace and retained matching controller/binaries."
+    },
+    {
+      "id": "runtime",
+      "status": "REQUIRED",
+      "detail": "Observe create/readback, task creation, evidence publication/readback, lost-client-reply known-result replay, across-attempt replay and actual proof-task lifecycle. Preserve unknown and unrun limitations; no task completion from unit count."
+    }
+  ],
+  "limits": [
+    "Development sandbox acceptance only; no source edits, package/provider/production effects, newEV, global admission or full runtime-refinement claim.",
+    "Current-pointer concurrency and native effect-time atomicity are not established by existing unit tests.",
+    "Do not stop the matching repair controller before coordinated live-controller handoff; preserve exact binaries."
+  ],
+  "journal_path": "docs/journal/20261027-1104-planning-live-review-journal.md",
+  "acceptance_reference": "docs/design/20261027-1013-typed-planning-intent-design.md"
+}

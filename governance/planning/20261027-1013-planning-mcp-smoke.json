@@ -1,0 +1,245 @@
+{
+  "schema": "uos.planning-mcp-smoke.v1",
+  "observed_utc": "2026-10-27T11:42:00Z",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "PLANNING_MCP",
+  "attempt": 2,
+  "coordinator_epoch": 2,
+  "workspace_epoch": 13,
+  "worker": "claude-hive-planning-2585",
+  "session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+  "grant_sha256": "dc1d1da4ef08f3f6d1dd0e00742be5a126e3803b8e9769a81820583d8ce7a086",
+  "grant_review_sha256": "b73c743185827d18a91e123152502a74da4ed67a4e48f4fe798280b296e3ef8b",
+  "status": "CONTROL_REPAIR_IMPLEMENTED_AND_TESTED_SOURCE_FROZEN_PENDING_ROOT_REVIEW",
+  "task_completed": false,
+  "activation_performed": false,
+  "hotload_performed": false,
+  "production_admission": false,
+  "acceptance_claimed_by_implementer": false,
+  "pre_edit_canary": {
+    "candidate_sha256": "8c51eb2b522f161c75d9374ab17ea24521a58cf4df6cd051dda69deaf3a78d00",
+    "manifest_entries": 18,
+    "tests": "All 84 tests passed.",
+    "build_receipt_sha256": "88ee1f7a155bc97d9674ac151d9e52f81c24a79e0a3d109779a46c670f12ed9b",
+    "test_receipt_sha256": "7baf49b9c954d852d70ea2ddaddc64b6d1414ecb4d78b90b39fd49fecf31fbd7",
+    "tool_count": 13
+  },
+  "red": {
+    "intent_id": "claude-2585-red-test",
+    "receipt_sha256": "245bb61ff17eadefc1f1c7cd4bf38c38a474295fe3df79b2934aecf513ba61c9",
+    "result": "Failed: 6.  Skipped: 0.  Passed: 90.",
+    "behavioural": true,
+    "preserved": true
+  },
+  "final": {
+    "candidate_sha256": "95e8176240646ee506e0a39a57c0f8f1e2267ed4a38bb66d663b986d7fd4583f",
+    "build": {
+      "intent_id": "claude-2585-repair-build",
+      "receipt_sha256": "ed0a93384a9725c4f3697ad337596b78bacb6917b168f93cec3c2f69e65c9244"
+    },
+    "test": {
+      "intent_id": "claude-2585-repair-test",
+      "receipt_sha256": "b8c1148905cbeece361d76cd7e721f6f8bc2122b52b17f36b8cf6705ab475846",
+      "result": "All 104 tests passed",
+      "passed": 104,
+      "failed": 0,
+      "skipped": 0,
+      "baseline": 84,
+      "planning_laws": 20,
+      "modules": 6,
+      "new_test_files": 0
+    }
+  },
+  "final_source": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intents.gleam",
+      "sha256": "0f2ba0c19634e9270d97d2fd6aabdb46bfd772f27f43734aef139a82e5c2ba94",
+      "lines": 893
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "a258bac052bfd712b7c453af9f8f1852e5acdd375eff39fa96123cbb2fa1c8cb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "sha256": "8248d099dd550051b4cddbbec4f5f338a1a5acf13e517356d98c8e6842cdd404"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "4e6b88e9299732a26a84bc3943bded9bef8bb4225873ecde19e86df9ebdabe70"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "sha256": "9064a39f900895c8337793874ce5843bf60c7b5def5d0984a4ee803f6037028b"
+    }
+  ],
+  "review_findings_addressed": [
+    {
+      "id": "R1",
+      "finding": "submit was a stub returning gated_pending_activation and never invoked target/evidence/size guards",
+      "fix": "pure prepare(args,targets,writes) is the single prevalidation path, called by submit; guards are reached and tested positively and negatively"
+    },
+    {
+      "id": "R2",
+      "finding": "PublishEvidence only called plan show and never wrote evidence",
+      "fix": "evidence write performed via the backend, then the WRITTEN FILE is read back and its digest compared; plan metadata is no longer the evidence"
+    },
+    {
+      "id": "R3",
+      "finding": "settled replay returned Error(replayed) regardless of saved outcome",
+      "fix": "typed Decision ReplaySaved(record) returns the saved record; a saved Uncertain re-surfaces as uncertain, never as success"
+    },
+    {
+      "id": "R4",
+      "finding": "andon_clear read a marker nothing wrote, and did not cover a crash after reservation",
+      "fix": "single CURRENT pointer per parent task, created or CAS-replaced via files.replace with the old digest, never deleted; a reservation with no settled result holds"
+    },
+    {
+      "id": "R5",
+      "finding": "a .released file would release all future uncertainties and its second create would fail",
+      "fix": "release file removed entirely; the hold is derived from the pointer plus the pointed-at result record"
+    },
+    {
+      "id": "R6",
+      "finding": "fence(0) reserved no window and post-fence ran after the success record was saved",
+      "fix": "fence widened to 25s covering dispatch and readback; post-fence runs BEFORE the settled record is saved"
+    },
+    {
+      "id": "R7",
+      "finding": "records kept only the hash",
+      "fix": "ledger records carry schema, key, parent_plan, parent_task and the exact canonical_payload alongside payload_sha256; validate_saved checks all of them"
+    },
+    {
+      "id": "R8",
+      "finding": "errors after reservation could read as refusals",
+      "fix": "andon_reserve, pointer_create, pointer_cas, reserve, post_fence, result_save, evidence_write all classify uncertain:"
+    },
+    {
+      "id": "R9",
+      "finding": "dispatch arm bypassed state.unresolved and never armed it",
+      "fix": "arm refuses when unresolved, and arms it on a.outcome_unknown or an uncertain: prefix; reads, status and reconcile stay usable"
+    },
+    {
+      "id": "R10",
+      "finding": "native names need >=2 lowercase slash segments and task_id was overloaded as name",
+      "fix": "normalize_name per sa_plan_name.ml:7,18; plan name derived from the allowlisted target, task name planning/<lowercased id>; validated pre-dispatch and compared normalized on readback"
+    },
+    {
+      "id": "R11",
+      "finding": "title unvalidated",
+      "fix": "title_valid requires nonempty, <=4096 bytes, no NUL, before anything is reserved"
+    },
+    {
+      "id": "R12",
+      "finding": "readback assumed JSON stdout and a plan_id field",
+      "fix": "explicit --format json; exactly one JSON record line plus one known diagnostic line; exact id plus parent, name and title; ambiguous or unexpected output refused"
+    },
+    {
+      "id": "R13",
+      "finding": "guard test accepted missing-file and grant errors so proved nothing, and the backend left real grant/file reads in the path",
+      "fix": "guards and ledger/Andon decisions factored into pure functions the real path calls, driven by positive traces with no file, grant, clock or CLI access"
+    },
+    {
+      "id": "R14",
+      "finding": "prepare and decide_ledger were definitions only, never called, so the shared-path comments were false",
+      "fix": "submit_with now calls precheck, then authorized_targets, then prepare(args,targets,execution.scope.writes), then decide_ledger(saved,pending,...) and branches on ReplaySaved/Dispatch; the duplicated inline ledger logic is removed, so the tests cover the actual branches. Verified by grep: calls at planning_intents.gleam:324, :331 and :587."
+    },
+    {
+      "id": "R15",
+      "finding": "ReplaySaved returned the saved Applied tag",
+      "fix": "a replay now reports typed outcome Replayed and carries the immutable original record plus its digest under original_record/original_sha256; the saved Applied record itself is never rewritten"
+    },
+    {
+      "id": "R16",
+      "finding": "fence(25s) ran BEFORE the bounded 15s risk phase, so risk could consume the backend window",
+      "fix": "fence(0) before risk, then a re-observed fence(25s) AFTER risk immediately before pointer and intent reservation and the two 10s backend calls; its clock is preserved and checked with clock.continuity against the final fence, as ops.effect does"
+    },
+    {
+      "id": "R17",
+      "finding": "the new ordering made no-IO refusals depend on reading the grant",
+      "fix": "precheck(args) runs structural key, intent and logical_id validation with no grant, file or clock access, before authorized_targets; prepare re-checks idempotently on the full path"
+    },
+    {
+      "id": "R18",
+      "finding": "submit_with fenced only Dispatch, so ReplaySaved bypassed expiry, current-owner and control checks",
+      "fix": "a.fence(execution,0) immediately after the pure precheck and BEFORE the grant and ledger reads, so a read-only replay carries current reviewed authority exactly as harness_read_file does; the post-risk 25s window remains for Dispatch only and its clock is still carried into clock.continuity"
+    }
+  ],
+  "traces_tested": [
+    "Dispatch on first intent; Replayed with the saved record on same id; Dispatch unaffected for a different id; payload_conflict on changed payload; recorded Uncertain re-surfaced; pending never redispatched including from another attempt with the identical key",
+    "Andon: open with no pointer; open after a first Applied; open after a second Applied at another key; held for the whole parent task on an Uncertain; the same hold blocks a different logical id; unsettled reservation holds; corrupt pointer and foreign-parent result hold"
+  ],
+  "boundaries_not_claimed": [
+    "No cross-command atomicity: Store.with_transaction is atomic only inside one OCaml invocation",
+    "No hostile-writer or production guarantee; fences remain cooperative",
+    "No canonical Sa-plan row created and no CLI run from any test; effects stay behind the production adapter",
+    "planning_targets is empty under this grant, so no dispatch is possible: control repair only, not planning acceptance"
+  ],
+  "activation_only_obligations": [
+    "Real canonical sandbox CreatePlan, CreateTask and PublishEvidence against the live store; impossible under this grant because planning_targets is empty",
+    "Live lost-reply and crash-after-reservation behaviour",
+    "Pointer CAS under genuine concurrency",
+    "Runtime exercise of the cross-process Andon that is already implemented in source (see cross_process_andon)"
+  ],
+  "authority": "Sa-plan is the sole execution authority. This record is evidence and grants no admission.",
+  "ev_boundary": "EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted.",
+  "cooperative_limits_open": [
+    "fence and lease remain cooperative, not kernel-enforced",
+    "native transactional fencing absent: two CLI calls are not one transaction",
+    "no production claim of any kind"
+  ],
+  "repair_grant": {
+    "grant_id": "20261027-1130-planning-replay-repair",
+    "proposal_sha256": "d022398e82f8ad478d31ea20d153ef96bfeaa1ace6dea4f6ce03094d71d1b6a7",
+    "pinned_control_ids": 21,
+    "planning_targets": [],
+    "planning_targets_note": "EMPTY by design: the new backend cannot dispatch, so this is scoped control repair only and not real planning acceptance",
+    "risk_portfolio": "var/harness/20261027-1130-replay-current-risk.json",
+    "risk_rows": 30,
+    "risk_bytes": 257262
+  },
+  "canary_before_mutation": {
+    "candidate_sha256": "d2c25588bbda94e9fb801ac108fa5865f58b20bbc8ef96ffacb026cba33f603e",
+    "tests": "All 104 tests passed",
+    "clock_offset_us": 198,
+    "read_ok": true,
+    "tool_count": 14
+  },
+  "beam_retention": {
+    "retained": 21,
+    "matched_pinned_ids": 21,
+    "mismatched": 0,
+    "missing": 0,
+    "location": "scratchpad/retained-beams-20261027-1130 (private, outside the build tree)",
+    "manifest_sha256": "9d7cc3361f47b8ed4e4253b30a159ca87268fd3dcd5af0568e9b0c841f49f6ea",
+    "purpose": "restart no longer depends on memory-only code",
+    "compiled_artifacts_overwritten": 0
+  },
+  "fence_order": [
+    "precheck (no IO)",
+    "a.fence(execution,0) - authority for every path incl. replay",
+    "authorized_targets + prepare",
+    "ledger reads + decide_ledger",
+    "ReplaySaved returns here, already fenced",
+    "andon_guard",
+    "a.fence(execution,0) before bounded 15s risk",
+    "risk_check",
+    "a.fence(execution,25000) re-observed, covers two 10s backend calls",
+    "reserve pointer + intent",
+    "dispatch, evidence write, readback",
+    "final fence with clock.continuity against the 25s proof",
+    "result save"
+  ],
+  "source_frozen": true,
+  "cross_process_andon": {
+    "status": "IMPLEMENTED_IN_SOURCE_RUNTIME_UNRUN",
+    "mechanism": "planning.andon_guard derives the hold from the durable CURRENT pointer plus the pointed-at result record, so it does not depend on in-memory state and survives a fresh process, grant and attempt",
+    "call_sites": [
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:489 inside effect (defined :480)",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:825 inside finish (defined :819)"
+    ],
+    "verified_by": "grep over the frozen source, independently confirmed by root",
+    "correction": "an earlier revision of this artifact said NOT_IMPLEMENTED and claimed an admission-layer change was required. That was wrong: it conflated untested at runtime with missing in source. The guard is wired at both generic mutation entry points; what remains is runtime exercise, not implementation.",
+    "separate_limitation": "legacy generic uncertainties unrelated to planning still rely on in-memory state.unresolved within one process; that is a distinct pre-existing limitation and is not what this entry describes"
+  }
+}

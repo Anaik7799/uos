@@ -1,0 +1,51 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-planning-review",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "PLANNING_GRANT_REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-1013-planning-grant-proposal.json",
+    "sha256": "aac93f89c00787ff872e855dc4ec9c2f2327380eb0e34ba243853ec499086f9e",
+    "grant_id": "20261027-1013-planning-implementation",
+    "target_session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+    "target_worker": "claude-hive-planning-2585"
+  },
+  "findings": [
+    {
+      "id": "scope",
+      "status": "PASS",
+      "detail": "Existing PLANNING_MCP only. Five explicit Gleam implementation/test write paths and four evidence paths. No standard-server stub, native source, client config or production edits. Approved sandbox target uos/development/planning-proof/20261027-1013 only; live activation is a separate reviewed gate."
+    },
+    {
+      "id": "decode",
+      "status": "PASS",
+      "detail": "Actual decode_grant including scope_valid passes; expiry decimal STRING; original six test modules permit84-test baseline before source edits. All six risk-source references are explicitly readable, repairing the earlier assessment scope mismatch."
+    },
+    {
+      "id": "source",
+      "status": "PASS",
+      "detail": "18 source paths captured;17 present and only new planning_intents.gleam absent. ManifestSHA8c51eb2b522f161c75d9374ab17ea24521a58cf4df6cd051dda69deaf3a78d00. Fresh20 loaded control IDs and existing guardian digest bound; new interpreter must be pinned before activation."
+    },
+    {
+      "id": "authority",
+      "status": "PASS",
+      "detail": "Independent root review attempt1 preflight and active checks passed. Root workspace actualepoch10. Actual Claude session acknowledged read-only design advice and waits for grant; no bindable AGY session was observed, no Google execution claimed."
+    },
+    {
+      "id": "semantics",
+      "status": "REQUIRED",
+      "detail": "Closed three-intent algebra, explicit approved targets, stable per-logical-ID exclusive files across grant/attempt, canonical readback and truthful uncertain outcomes. Nonzero process exit is not pre-effect proof. No shared JSONL CAS or multi-call atomicity assertion. Preserve all13 old tool behaviors."
+    }
+  ],
+  "limits": [
+    "Development implementation scope only. Do not complete PLANNING_MCP from unit tests; actual sandbox client acceptance requires independent new-control activation review.",
+    "No production, Telegram, external provider call, package install, new EV, full runtime refinement or hostile-writer guarantee.",
+    "Source edits/build/tests and evidence publication run through MCP. Finite metadata setup uses existing Gleam/Sa-plan bridge until typed ingress is verified."
+  ],
+  "acceptance_reference": "docs/design/20261027-1013-typed-planning-intent-design.md"
+}

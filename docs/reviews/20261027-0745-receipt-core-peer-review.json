@@ -1,0 +1,69 @@
+{
+  "schema": "uos.harness-core-peer-review.v1",
+  "verdict": "APPROVE_RECEIPT_FIX_DEVELOPMENT_ONLY",
+  "observed_at": "2026-10-27T08:17:30Z",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "role": "Codex independent coordinator; not implementation author"
+  },
+  "binding": {
+    "plan": "uos/hive-development/20261027-0532",
+    "task": "RECEIPT_FIX",
+    "attempt": 2,
+    "worker": "claude-hive-receipt-fix-2585",
+    "grant_sha256": "c4c98b8a72a4cb96255c50f285ecf803b49550d5f5541670c3299856db128566",
+    "candidate_sha256": "4366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92"
+  },
+  "findings": [
+    {
+      "id": "candidate",
+      "status": "PASS",
+      "detail": "Independently recomputed all14 input_manifest source hashes with0drift. Both fresh build/test manifest string SHA256 equals4366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92."
+    },
+    {
+      "id": "retained_integrity",
+      "status": "PASS",
+      "detail": "GNU sha256sum independently matches build retained8408bytes b1dd2d6458da5740387da445e927d07f9e390c1c803b359620c71de2cfb07c9d and test retained8192bytes09632374f55505c81e21df94a5e49ca3604ca2e7af21e4f2b42d9700edd3f5f3. Test full19023bytes explicitly tail_truncated. Full digest68c7f77a... is metadata only: unavailable full text was not rehashed."
+    },
+    {
+      "id": "bounded_test",
+      "status": "PASS",
+      "detail": "Retained integrity-checked tail reports All84 tests passed and successor verification: ok. Source test declarations count25+15+17+5+17+5=84. Five module headers visible in tail; successor module head is truncated. No individual assertion coverage claim inferred from total. Reviewed finite runner actually delegates named modules to EUnit and exits nonzero on failure."
+    },
+    {
+      "id": "smoke",
+      "status": "PASS",
+      "detail": "Positive in-scope MCP write produced EXECUTED receipt and public artifact hash4994654a2ad4eddb094274bac7090348639d964bf9363ffeeb0aaba9c4d58373; smoke declares development-only/no production admission."
+    },
+    {
+      "id": "refusal_recovery",
+      "status": "PASS_SCOPED",
+      "detail": "Out-of-scope read refusals observed. Source-write request returned FAILED_OR_UNVERIFIED write_scope_refused; follow-ups hit unresolved stop line. Recorded reconciliation returns exact terminal refusal, all14 source pins unchanged; release/re-attach retains canonical attempt2 and assigns coordinator epoch3. Refused effect is not success and was not replayed."
+    },
+    {
+      "id": "transport",
+      "status": "PASS_AFTER_REPAIR",
+      "detail": "Attach refused295864-byte risk JSON above262144 cap. Compact236991-byte data verified equal, current active-checkPASS; no task lease/effect before failed read. Historical failure preserved."
+    }
+  ],
+  "receipts": {
+    "build": {
+      "path": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-build-1@result.json",
+      "sha256": "6d44f790ae16dac389c0b2525b434198c3e2e2127d232ab233d2a4f0664c9ac2"
+    },
+    "test": {
+      "path": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-test-1@result.json",
+      "sha256": "a325c51ad4193eb26a5b812f1e867caf1be76028e85d8fb843211e348c8b0bc8"
+    },
+    "smoke": {
+      "path": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-smoke-write@result.json",
+      "sha256": "0b0c6a804a43a4bbfe507645d8a9887f43a39285fcdef500514fa76f877ab461"
+    }
+  },
+  "limits": [
+    "Only RECEIPT_FIX development evidence accepted; MCP_ACTIVATE and core/client/service acceptance remain separate.",
+    "14 pins are a selected candidate, not a complete transitive repository/toolchain/binary provenance closure. Runner f0ede6caa4081e7e2fb3edb566a671d4778f8e137c2641616974d0b24c862fba independently read but outside14pins.",
+    "No production, Telegram, Google AGY success, hostile-writer isolation, global exactly-once or full formal refinement claim.",
+    "Guidance changes remain isolated pending core acceptance."
+  ]
+}

@@ -62,6 +62,20 @@ These are obligations, not a passing score. Each needs candidate-bound evidence 
 
 Global admission remains HOLD. Presence-only CLI checks and hardcoded ratification claims require correction and real obligation verification. EV-93 is the admitted ceiling; EV-94..109 remain NOT_ADMITTED and new EV identifiers remain barred. Historical policy snapshots are inert under [preserved source history](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20261001-1118-symbiosis-history/GEMINI.md). The existing main bookmark is an observed repository state, not proof of new system admission. This manual does not rewrite historical EV claims or admit imported artifacts.
 
+## Core development learnings
+
+Apply [the core development learnings](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261027-0836-core-development-learnings.md) (`SC-LEARN-001`) and their [lifecycle bindings](http://nas-1.tail55d152.ts.net:4100/files/governance/agents/20261027-0836-learning-bindings.md), which extend the existing [Superpowers bindings](http://nas-1.tail55d152.ts.net:4100/files/plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md). They are normative guidance motivated by refusals and receipts observed on 2026-10-27, recorded in the [receipt-core](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0745-receipt-core-journal.md) and [mcp-core](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0745-mcp-core-journal.md) journals. They install nothing and enforce nothing; client adoption is UNRUN.
+
+Keep specification, model proof, runtime observation and admission as four separate claims. When the graph a model was built over changes, recheck that model's closure and minimality claims rather than treating its theorems as false: the 13-node closure was frozen on a 27-task graph and predates both the 28th audit-repair task and this grant's mandatory review authority, so it is not a statement of current functionality or optimality and its closure recheck is outstanding.
+
+Verify the control surface before using it for ordinary work, with an isolated recovery path. Keep evidence JSON compact and within the 262144-byte read cap, and use each field's actual type: a grant's `expires_utc_us` is a decimal string of integral microseconds, risk `ready_since` and `observed_at` are whole-second canonical UTC, and a clock observation may validly carry fractional seconds, which must not be stripped. Publish retained bytes with a digest of those retained bytes, counts on both sides of the bound and an explicit truncation statement.
+
+Heartbeat immediately before each effect phase, and keep the three renewal scopes distinct: a native coordinator heartbeat renews the coordinator session only; `harness_heartbeat` with a task attached renews the session and the active coordinator task-lease, and its receipt carries `coordinator_renewal`; the Sa-plan task lease is renewed by neither, and the same receipt reports `sa_plan_renewal` as `NOT_IMPLEMENTED_RELEASE_AND_RECLAIM_BEFORE_EXPIRY`. Release and reclaim before Sa-plan expiry.
+
+Reconcile an unknown outcome before any fresh intent or grant, using an oracle specific to the operation attempted: an unchanged source map suffices only when the whole effect was a source-tree write, and never establishes the absence of a network, service or other physical effect. Do not automatically retry the same unresolved effect; preserve all required negative cases, isolate effectful fault cases with a planned recovery path, and prefer read-class or claim-class refusals where they test the same guard.
+
+Build the completion packet from flat top-level fields and run the journal and diagram linters before finish. Treat soft cost or size targets as targets, not gates; reuse existing tasks and evidence; claim no global cost or reliability optimum. Report provider identity and quota truthfully, and never assert an unobserved client success.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

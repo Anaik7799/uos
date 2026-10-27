@@ -1,0 +1,322 @@
+{
+  "schema": "uos.core-gate-proof-receipt.v1",
+  "status": "MODEL_AND_SELECTED_COMPONENT_CHECKS_PASS_WITH_OPEN_RUNTIME_GAPS",
+  "observed_at": "2026-10-27T06:54:55Z",
+  "overall_goal_state": "paused",
+  "model": {
+    "source": "formal/lean/DevelopmentCoreGate.lean",
+    "source_sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+    "tool": "Lean4.33.0",
+    "named_theorems": 47,
+    "satisfiable_examples": 12,
+    "wall_timeout_seconds": 30,
+    "max_heap_mb": 512,
+    "max_heartbeats": 2000000,
+    "foundations": [
+      "Lean.Init",
+      "propext",
+      "Quot.sound"
+    ],
+    "custom_axioms": 0,
+    "unchecked_placeholders": 0,
+    "proof_log": "governance/planning/20261027-0634-core-gate-proof.log",
+    "proof_log_sha256": "650b32c1948d70d2531eaee83343c4e951c001d531be93714d7d3d3a53e4ca5c",
+    "scope": "Abstract gate/effect/health/growth laws and frozen task graph; no general runtime refinement or cryptographic theorem."
+  },
+  "negative_controls": {
+    "lean": {
+      "mutants": 3,
+      "all_rejected": true,
+      "semantics": [
+        "remove healthy-core check",
+        "allow unknown outcome redispatch",
+        "add unneeded PERF_SCALE to minimum core"
+      ],
+      "logs": [
+        "var/harness/20261027-0634-mutant-final-healthy-guard.log",
+        "var/harness/20261027-0634-mutant-final-unknown-retry.log",
+        "var/harness/20261027-0634-mutant-final-unnecessary-task.log"
+      ],
+      "limits": "Rejected mutant files may show Lean error placeholders; they are not accepted proofs."
+    },
+    "quint": {
+      "mutants": 2,
+      "all_rejected": true,
+      "semantics": [
+        "stale fence",
+        "budget overspend"
+      ],
+      "logs": [
+        "var/harness/20261027-0634-quint-fence-mutant.log",
+        "var/harness/20261027-0634-quint-budget-mutant.log"
+      ]
+    }
+  },
+  "runtime_correspondence": {
+    "budget_cases": 216,
+    "replay_cases": 16,
+    "parser_refusals": 2,
+    "output_fixtures": 10,
+    "independent_retained_hashes": 10,
+    "independent_full_hashes": 10,
+    "loaded_admission_md5": "7120e07d22d18c4f658826b581c48046",
+    "loaded_operations_md5": "1a5ad65ac5f0208951dc179c25ee127f",
+    "admission_source_sha256": "8edc624fce450c9401a59c22b65fe21335da8eb8c974ffe0748a38262d972630",
+    "operations_source_sha256": "f64da7e1c46212b09d7c6c905ce0b69fba4ac035b70a14697009f91144e4c35b",
+    "evidence": [
+      {
+        "path": "var/harness/20261027-0634-model-runtime-correspondence.json",
+        "sha256": "901f14a7736e42f610defb5ae29cb835d6355996479d06ca19f9d64a1e39df27"
+      },
+      {
+        "path": "var/harness/20261027-0634-replay-correspondence.json",
+        "sha256": "57a9b3f60541f1b6e95a0226f501a6abaeeac4533c6331fa79db06a1dca6077a"
+      },
+      {
+        "path": "var/harness/20261027-0634-independent-byte-check.json",
+        "sha256": "acaa53331832d241f086ab8a6ff3fb482cb90f0d39d2bc2819cac1903c3083e4"
+      },
+      {
+        "path": "var/harness/20261027-0634-refinement-gap.json",
+        "sha256": "2d2f72b8a4d1b126649e365b51e802fb6dbd4272beb3e9432ff065caf03a201a"
+      }
+    ],
+    "execution": "Isolated pure-function calls in a private VM; no production effects."
+  },
+  "other_tools": {
+    "quint": {
+      "tool": "Quint0.32.0 TypeScript backend",
+      "source": "formal/quint/agentic_coordination.qnt",
+      "scenarios_passed": 9,
+      "seed": 634,
+      "max_samples": 500,
+      "max_steps": 30,
+      "invariant": "inv_all",
+      "result": "NO_VIOLATION_FOUND_IN_BOUNDED_SEEDED_SIMULATION",
+      "logs": [
+        "var/harness/20261027-0634-quint-tests.log",
+        "var/harness/20261027-0634-quint-simulation.log"
+      ],
+      "limits": "Not exhaustive state-space verification, liveness proof or runtime refinement."
+    },
+    "z3": {
+      "tool": "Z3 4.16.0",
+      "input": "var/harness/20261027-0634-core-safety.smt2",
+      "logic": "QF_LIA",
+      "solver_timeout_ms": 3000,
+      "wall_timeout_seconds": 10,
+      "kill_after_seconds": 1,
+      "unsafe_counterexample_queries": 5,
+      "results": "5 UNSAT; satisfiable valid-work control SAT",
+      "log": "var/harness/20261027-0634-z3-check.log",
+      "limits": "Formula/guard properties only; no runtime code generated or solver authority."
+    },
+    "stan": {
+      "component": "pre-existing Run_analysis.Stan_model adapter executable",
+      "tests_passed": 6,
+      "fixture": "synthetic unit fixtures, report-only, no new reliability posterior",
+      "checks": [
+        "population completeness",
+        "receipt binding",
+        "missing data",
+        "duplicate evidence",
+        "invalid prior"
+      ],
+      "log": "var/harness/20261027-0634-stan-adapter-tests.log",
+      "new_sampler_run": false,
+      "real_reliability_inference": "NOT_JUSTIFIED_WITH_CURRENT_DATA",
+      "limits": "No CmdStan/NUTS or full Stan serving stack is claimed from adapter tests; current source-to-prebuilt-binary binding not established."
+    },
+    "rule_engine": {
+      "component": "prebuilt Rete_ul-named rule adapter with Hermes_rete oracle",
+      "tests_passed": 7,
+      "log": "var/harness/20261027-0634-rule-adapter-tests.log",
+      "limits": "The Hermes_harness matcher explicitly calls itself naive, not Rete-UL. This does not establish algorithm identity or live integration of the separately named adapter."
+    },
+    "ruliad": {
+      "component": "pre-existing bounded multiway explorer test executable",
+      "tests_passed": 31,
+      "layers": [
+        "unit",
+        "property",
+        "chaos",
+        "fuzz"
+      ],
+      "log": "var/harness/20261027-0634-ruliad-tests.log",
+      "limits": "Synthetic explorer tests, not complete exploration or proof of a universally optimal hive strategy; current source-to-prebuilt-binary binding not established."
+    }
+  },
+  "traceability": [
+    {
+      "claim": "Grant horizon/lifetime arithmetic",
+      "implementation": "admission.grant_budget_valid/3",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam:259",
+      "status": "PASS_BOUNDED_DIFFERENTIAL",
+      "cases": 216,
+      "limits": "No proof of whole-clock or request-admission refinement."
+    },
+    {
+      "claim": "Replay binding and success status",
+      "implementation": "operations.replay/2",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:231",
+      "status": "PASS_BRANCH_DIFFERENTIAL",
+      "cases": 16,
+      "parser_refusals": 2,
+      "limits": "Truth-table classes covered; arbitrary JSON/parser/adversarial storage not exhaustive."
+    },
+    {
+      "claim": "Retained-output byte integrity",
+      "implementation": "operations.effect_output_fields/1",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:1190",
+      "status": "PASS_10_FIXTURES_AND_20_INDEPENDENT_DIGESTS",
+      "limits": "A fresh admitted live MCP receipt and full Unicode domain remain separate."
+    },
+    {
+      "claim": "Stable logical ID across grants/attempts",
+      "implementation": "operations.effect_path_for/3 and signature",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:191",
+      "status": "REFINEMENT_NOT_ESTABLISHED",
+      "evidence": "var/harness/20261027-0634-refinement-gap.json",
+      "limits": "Same intent yields grant-specific paths. No duplicate physical side effect was demonstrated; higher-level reconciliation/CAS may constrain it."
+    },
+    {
+      "claim": "Live owner/attempt/epoch/host/boot fencing",
+      "implementation": "admission.fence; development.fence_for",
+      "status": "MODEL_PROVED_LIVE_CHECKS_UNRUN",
+      "limits": "Requires fresh scoped grant and actual process/lease scenarios."
+    },
+    {
+      "claim": "Fresh core health before every normal mutation",
+      "implementation": "core health receipt + effect-time admission policy",
+      "status": "RUNTIME_BINDING_NOT_ESTABLISHED",
+      "limits": "The Boolean model gate is a specification; do not claim current runtime enforcement."
+    },
+    {
+      "claim": "Actual policy/rules/skills/Superpowers/SOP loading",
+      "implementation": "UOS-local agent adapters and real clients",
+      "status": "PRESSURE_TESTS_UNRUN",
+      "limits": "Presence, symlinks and advisory hooks are insufficient."
+    },
+    {
+      "claim": "Protected baseline, candidate promotion and rollback",
+      "implementation": "development/candidate/release workflow",
+      "status": "MODEL_PROVED_RUNTIME_ACCEPTANCE_UNRUN",
+      "limits": "External failures, operational liveness and physical recovery require actual evidence."
+    },
+    {
+      "claim": "Recursive holon health and scope restriction",
+      "implementation": "supervision/capability inheritance",
+      "status": "MODEL_PROVED_REFINEMENT_UNRUN",
+      "limits": "Only required profile children are modeled; hidden dependencies must be inventoried."
+    },
+    {
+      "claim": "Minimum useful work set",
+      "implementation": "canonical dependency snapshot",
+      "status": "MODEL_MINIMALITY_PROVED_FOR_FROZEN_GRAPH",
+      "limits": "Hidden operational edges and real benefits/costs are not proved away."
+    }
+  ],
+  "live_core": {
+    "status": "HOLD",
+    "risk_preflight": "var/harness/20261027-0634-prechange-risk-observation.json",
+    "reasons": [
+      "Portfolio omits canonical tasks after expansion",
+      "Requested task not first eligible",
+      "Fresh runtime activation/policy/recovery evidence pending",
+      "Cross-grant effect-identity refinement not established"
+    ],
+    "normal_runtime_changes_authorized_by_this_packet": false
+  },
+  "authority": "Operator-authorized planning/formal-analysis metadata only; no system or production admission.",
+  "artifact_manifest": [
+    {
+      "path": "var/harness/20261027-0634-core-gate-model.lean",
+      "sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4"
+    },
+    {
+      "path": "var/harness/20261027-0634-core-gate-model-check.log",
+      "sha256": "650b32c1948d70d2531eaee83343c4e951c001d531be93714d7d3d3a53e4ca5c"
+    },
+    {
+      "path": "var/harness/20261027-0634-mutant-final-healthy-guard.log",
+      "sha256": "abf8527b493056fabdb7308fab8a113dd26950975c0dcca97175d9e2a0172c0e"
+    },
+    {
+      "path": "var/harness/20261027-0634-mutant-final-unknown-retry.log",
+      "sha256": "edd0918414196059699565a3b6caa052b969e3914cecdfc9eed1cdb956e55bb5"
+    },
+    {
+      "path": "var/harness/20261027-0634-mutant-final-unnecessary-task.log",
+      "sha256": "2abc839f2942049217f084a5fa16dabd4c73ce42de8c8e2c474529c4a72bb83d"
+    },
+    {
+      "path": "var/harness/20261027-0634-model-runtime-correspondence.json",
+      "sha256": "901f14a7736e42f610defb5ae29cb835d6355996479d06ca19f9d64a1e39df27"
+    },
+    {
+      "path": "var/harness/20261027-0634-replay-correspondence.json",
+      "sha256": "57a9b3f60541f1b6e95a0226f501a6abaeeac4533c6331fa79db06a1dca6077a"
+    },
+    {
+      "path": "var/harness/20261027-0634-independent-byte-check.json",
+      "sha256": "acaa53331832d241f086ab8a6ff3fb482cb90f0d39d2bc2819cac1903c3083e4"
+    },
+    {
+      "path": "var/harness/20261027-0634-refinement-gap.json",
+      "sha256": "2d2f72b8a4d1b126649e365b51e802fb6dbd4272beb3e9432ff065caf03a201a"
+    },
+    {
+      "path": "var/harness/20261027-0634-quint-tests.log",
+      "sha256": "2d2a96afb8f27aa7cef02ef2b949c6f078d583cfede73e6d189885ca38a46aec"
+    },
+    {
+      "path": "var/harness/20261027-0634-quint-simulation.log",
+      "sha256": "158f3b5644e5a1214900f2cd148676cfc45b1791f3393ebc2a6539677d184faf"
+    },
+    {
+      "path": "var/harness/20261027-0634-quint-fence-mutant.log",
+      "sha256": "0b21089904c480c891ca3c9fe7dccdd9b208e8a504d524692cd9814ababf79d0"
+    },
+    {
+      "path": "var/harness/20261027-0634-quint-budget-mutant.log",
+      "sha256": "850217400f9384ffc81c4fb75e417110ddcfb46362cd8972d2c279137c5f83b1"
+    },
+    {
+      "path": "var/harness/20261027-0634-z3-check.log",
+      "sha256": "a4cf48d84be8b33036d6065f85b5e93e709cdec935db5f1276f6fe21ecd9ea75"
+    },
+    {
+      "path": "var/harness/20261027-0634-core-safety.smt2",
+      "sha256": "66cfb6ef40bdba9212edcaef43ee9ad9e94a08ae8d5536629bab253e73558e1d"
+    },
+    {
+      "path": "var/harness/20261027-0634-stan-adapter-tests.log",
+      "sha256": "d4e766f49ebbede85abf7188f3358f16c50a93264b1cdf3243e12d4a8025fe2e"
+    },
+    {
+      "path": "var/harness/20261027-0634-rule-adapter-tests.log",
+      "sha256": "fdf842d0c0254b812c3309cee40129453ca5e2e6327a1002c86c64e5a3d48d92"
+    },
+    {
+      "path": "var/harness/20261027-0634-ruliad-tests.log",
+      "sha256": "2fa7523a016d1793f65e0953a6a0f39bb60b7b1e7dd1cc6c50b3ceba2730a098"
+    },
+    {
+      "path": "formal/quint/agentic_coordination.qnt",
+      "sha256": "9bb51b8b153339f951b2b2892ac92a3ae4186c6c8fe67792d1ec192bc2798b06"
+    },
+    {
+      "path": "engines/hermes/_build/default/modules/hermes_ops/test_external_access_stan.exe",
+      "sha256": "aa80974a7992eca66ec222f09028544e52f8d63b90f13f55c1625695be407683"
+    },
+    {
+      "path": "engines/hermes/_build/default/modules/hermes_ops/test_external_access_rete.exe",
+      "sha256": "03f39b2783b86e326e21629f60d50a259a4ccc35caf216a47a5390ba210ec6c0"
+    },
+    {
+      "path": "engines/hermes/_build/default/modules/hermes_harness/test_ruliad.exe",
+      "sha256": "efdccb0c2ca2647dffa449b30beef37709215745e33a91250027944912bad9c1"
+    }
+  ],
+  "snapshot_through": "2026-10-27T07:06:44Z"
+}

@@ -70,6 +70,7 @@ pub const control_modules = [
   "uos_swarm@session_store", "uos_swarm@session_sync", "session_store_cli",
   "session_store_ffi", "uos_swarm@coord", "uos_swarm@board", "uos_swarm_ffi",
   "session_sync_ffi", "esqlite3", "esqlite3_nif",
+  "cepaf_gleam@harness@planning_intents",
 ]
 
 // C4: the guardian at tools/ecology_process.ml bounds every effect's time,

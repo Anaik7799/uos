@@ -1,0 +1,3752 @@
+{
+  "schema": "uos.telegram-fractal-test-plan.v1",
+  "status": "PLANNED_NOT_EXECUTED",
+  "authority": "Sa-plan only; declarative projection, not a second queue",
+  "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+  "created_utc": "2026-10-27T03:56:47Z",
+  "filename_prefix_clock": "2026-10-27T03:56:12Z",
+  "prefix_format": "YYYYMMDD-HHSS",
+  "candidate_base": "73df20c4c9a67e76b670cdddc4e53e8d1379925e",
+  "source_evidence": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+      "observed_at": "2026-10-27T03:56:47Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+      "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+      "observed_at": "2026-10-27T03:56:47Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+      "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+      "observed_at": "2026-10-27T03:56:47Z"
+    },
+    {
+      "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+      "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+      "observed_at": "2026-10-27T03:56:47Z"
+    }
+  ],
+  "launcher_exception": "User yes to bounded planning-only direct writes and canonical Sa-plan CLI; no execution/deploy/merge/push",
+  "inventory_complete": false,
+  "inventory_status": "SOURCE_BOUND_SEED_T00_MUST_CLOSE_ALL_SOURCES",
+  "seed_counts": {
+    "parser_invocations": 78,
+    "canonical_targets": 69,
+    "documented_parser_gaps": 16,
+    "mini_app_pages": 14,
+    "media_kinds": 8,
+    "cross_cutting_capabilities": 20,
+    "total_test_target_seeds": 136
+  },
+  "features": [
+    {
+      "id": "cmd:/start",
+      "literal": "/start",
+      "canonical": "/help",
+      "kind": "Information",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/start",
+      "required_capability": "/help",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/help",
+      "literal": "/help",
+      "canonical": "/help",
+      "kind": "Information",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/help",
+      "required_capability": "/help",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/status",
+      "literal": "/status",
+      "canonical": "/status",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/status",
+      "required_capability": "/status",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/storage",
+      "literal": "/storage",
+      "canonical": "/storage",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/storage",
+      "required_capability": "/storage",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/dark",
+      "literal": "/dark",
+      "canonical": "/dark",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/dark",
+      "required_capability": "/dark",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/andon",
+      "literal": "/andon",
+      "canonical": "/andon",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/andon",
+      "required_capability": "/andon",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/zigvm",
+      "literal": "/zigvm",
+      "canonical": "/zigvm",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/zigvm",
+      "required_capability": "/zigvm",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/plan",
+      "literal": "/plan",
+      "canonical": "/plan",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/plan",
+      "required_capability": "/plan",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/sutra",
+      "literal": "/sutra",
+      "canonical": "/sutra",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/sutra",
+      "required_capability": "/sutra",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/zk",
+      "literal": "/zk",
+      "canonical": "/zk",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/zk",
+      "required_capability": "/zk",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/checklist",
+      "literal": "/checklist",
+      "canonical": "/checklist",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/checklist",
+      "required_capability": "/checklist",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/cockpit",
+      "literal": "/cockpit",
+      "canonical": "/cockpit",
+      "kind": "Information",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/cockpit",
+      "required_capability": "/cockpit",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/approval",
+      "literal": "/approval",
+      "canonical": "/approval",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/approval",
+      "required_capability": "/approval",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/resuscitate",
+      "literal": "/resuscitate",
+      "canonical": "/resuscitate",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/resuscitate",
+      "required_capability": "/resuscitate",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/chaos",
+      "literal": "/chaos",
+      "canonical": "/chaos",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/chaos",
+      "required_capability": "/chaos",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/repro",
+      "literal": "/repro",
+      "canonical": "/repro",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/repro",
+      "required_capability": "/repro",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/merge",
+      "literal": "/merge",
+      "canonical": "/merge",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/merge",
+      "required_capability": "/merge",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/bisect",
+      "literal": "/bisect",
+      "canonical": "/bisect",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/bisect",
+      "required_capability": "/bisect",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/escalate",
+      "literal": "/escalate",
+      "canonical": "/escalate",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/escalate",
+      "required_capability": "/escalate",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/rotate-keys",
+      "literal": "/rotate-keys",
+      "canonical": "/rotate-keys",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/rotate-keys",
+      "required_capability": "/rotate-keys",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/mesh",
+      "literal": "/mesh",
+      "canonical": "/mesh",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/mesh",
+      "required_capability": "/mesh",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/migrate",
+      "literal": "/migrate",
+      "canonical": "/migrate",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/migrate",
+      "required_capability": "/migrate",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/adr",
+      "literal": "/adr",
+      "canonical": "/adr",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/adr",
+      "required_capability": "/adr",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/blast-radius",
+      "literal": "/blast-radius",
+      "canonical": "/blast-radius",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/blast-radius",
+      "required_capability": "/blast-radius",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/pacing",
+      "literal": "/pacing",
+      "canonical": "/pacing",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/pacing",
+      "required_capability": "/pacing",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/whatif",
+      "literal": "/whatif",
+      "canonical": "/whatif",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/whatif",
+      "required_capability": "/whatif",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/simulate",
+      "literal": "/simulate",
+      "canonical": "/simulate",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/simulate",
+      "required_capability": "/simulate",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/rack-cv",
+      "literal": "/rack-cv",
+      "canonical": "/rack-cv",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/rack-cv",
+      "required_capability": "/rack-cv",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/acoustic",
+      "literal": "/acoustic",
+      "canonical": "/acoustic",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/acoustic",
+      "required_capability": "/acoustic",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/rewind",
+      "literal": "/rewind",
+      "canonical": "/rewind",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/rewind",
+      "required_capability": "/rewind",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/postmortem",
+      "literal": "/postmortem",
+      "canonical": "/postmortem",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/postmortem",
+      "required_capability": "/postmortem",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/finops",
+      "literal": "/finops",
+      "canonical": "/finops",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/finops",
+      "required_capability": "/finops",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/budget",
+      "literal": "/budget",
+      "canonical": "/finops",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/budget",
+      "required_capability": "/finops",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/eco-schedule",
+      "literal": "/eco-schedule",
+      "canonical": "/eco-schedule",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/eco-schedule",
+      "required_capability": "/eco-schedule",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/radar",
+      "literal": "/radar",
+      "canonical": "/radar",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/radar",
+      "required_capability": "/radar",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/canvas",
+      "literal": "/canvas",
+      "canonical": "/canvas",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/canvas",
+      "required_capability": "/canvas",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/lockbox",
+      "literal": "/lockbox",
+      "canonical": "/lockbox",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/lockbox",
+      "required_capability": "/lockbox",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/export-audit",
+      "literal": "/export-audit",
+      "canonical": "/export-audit",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/export-audit",
+      "required_capability": "/export-audit",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/sidecar",
+      "literal": "/sidecar",
+      "canonical": "/sidecar",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/sidecar",
+      "required_capability": "/sidecar",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/voice-roll-call",
+      "literal": "/voice-roll-call",
+      "canonical": "/voice-roll-call",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/voice-roll-call",
+      "required_capability": "/voice-roll-call",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/babel",
+      "literal": "/babel",
+      "canonical": "/babel",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/babel",
+      "required_capability": "/babel",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/whiteboard",
+      "literal": "/whiteboard",
+      "canonical": "/whiteboard",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/whiteboard",
+      "required_capability": "/whiteboard",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/socratic",
+      "literal": "/socratic",
+      "canonical": "/socratic",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/socratic",
+      "required_capability": "/socratic",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/handover",
+      "literal": "/handover",
+      "canonical": "/handover",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/handover",
+      "required_capability": "/handover",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/pair-voice",
+      "literal": "/pair-voice",
+      "canonical": "/pair-voice",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/pair-voice",
+      "required_capability": "/pair-voice",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/exec-brief",
+      "literal": "/exec-brief",
+      "canonical": "/exec-brief",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/exec-brief",
+      "required_capability": "/exec-brief",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/commitments",
+      "literal": "/commitments",
+      "canonical": "/commitments",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/commitments",
+      "required_capability": "/commitments",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/acoustic-hud",
+      "literal": "/acoustic-hud",
+      "canonical": "/acoustic-hud",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/acoustic-hud",
+      "required_capability": "/acoustic-hud",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/retro",
+      "literal": "/retro",
+      "canonical": "/retro",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/retro",
+      "required_capability": "/retro",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/gameday",
+      "literal": "/gameday",
+      "canonical": "/gameday",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/gameday",
+      "required_capability": "/gameday",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/aspects",
+      "literal": "/aspects",
+      "canonical": "/aspects",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/aspects",
+      "required_capability": "/aspects",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/ecology",
+      "literal": "/ecology",
+      "canonical": "/ecology",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/ecology",
+      "required_capability": "/ecology",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/health",
+      "literal": "/health",
+      "canonical": "/health",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/health",
+      "required_capability": "/health",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/tasks",
+      "literal": "/tasks",
+      "canonical": "/plan",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/tasks",
+      "required_capability": "/plan",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/task",
+      "literal": "/task",
+      "canonical": "/task",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/task",
+      "required_capability": "/task",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/search",
+      "literal": "/search",
+      "canonical": "/search",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/search",
+      "required_capability": "/search",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/immune",
+      "literal": "/immune",
+      "canonical": "/immune",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/immune",
+      "required_capability": "/immune",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/fmea",
+      "literal": "/fmea",
+      "canonical": "/fmea",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/fmea",
+      "required_capability": "/fmea",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/ha",
+      "literal": "/ha",
+      "canonical": "/ha",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/ha",
+      "required_capability": "/ha",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/zenoh",
+      "literal": "/zenoh",
+      "canonical": "/zenoh",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/zenoh",
+      "required_capability": "/zenoh",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/inference",
+      "literal": "/inference",
+      "canonical": "/inference",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/inference",
+      "required_capability": "/inference",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/verify",
+      "literal": "/verify",
+      "canonical": "/verify",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/verify",
+      "required_capability": "/verify",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/verification",
+      "literal": "/verification",
+      "canonical": "/verify",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/verification",
+      "required_capability": "/verify",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/rete",
+      "literal": "/rete",
+      "canonical": "/rete",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/rete",
+      "required_capability": "/rete",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/km",
+      "literal": "/km",
+      "canonical": "/km",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/km",
+      "required_capability": "/km",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/wiki",
+      "literal": "/wiki",
+      "canonical": "/wiki",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/wiki",
+      "required_capability": "/wiki",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/nvme",
+      "literal": "/nvme",
+      "canonical": "/storage",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/nvme",
+      "required_capability": "/storage",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/doctor",
+      "literal": "/doctor",
+      "canonical": "/doctor",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/doctor",
+      "required_capability": "/doctor",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/ev",
+      "literal": "/ev",
+      "canonical": "/doctor",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/ev",
+      "required_capability": "/doctor",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/agy",
+      "literal": "/agy",
+      "canonical": "/agy",
+      "kind": "ConversationModel",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/agy",
+      "required_capability": "/agy",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/board",
+      "literal": "/board",
+      "canonical": "/board",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/board",
+      "required_capability": "/board",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/peers",
+      "literal": "/peers",
+      "canonical": "/peers",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/peers",
+      "required_capability": "/peers",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/memory",
+      "literal": "/memory",
+      "canonical": "/memory",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/memory",
+      "required_capability": "/memory",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/messages",
+      "literal": "/messages",
+      "canonical": "/messages",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/messages",
+      "required_capability": "/messages",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/history",
+      "literal": "/history",
+      "canonical": "/messages",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/history",
+      "required_capability": "/messages",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/tool",
+      "literal": "/tool",
+      "canonical": "/tool",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/tool",
+      "required_capability": "/tool",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/action",
+      "literal": "/action",
+      "canonical": "/tool",
+      "kind": "ControlledAction",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/action",
+      "required_capability": "/tool",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "cmd:/saplan",
+      "literal": "/saplan",
+      "canonical": "/plan",
+      "kind": "ReadObservation",
+      "kind_of_target": "parser_invocation",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:cmd:/saplan",
+      "required_capability": "/plan",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/cost",
+      "literal": "/cost",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/cost",
+      "required_capability": "/cost",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/swarm",
+      "literal": "/swarm",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/swarm",
+      "required_capability": "/swarm",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/ADR",
+      "literal": "/ADR",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/ADR",
+      "required_capability": "/ADR",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/ask",
+      "literal": "/ask",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md",
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/ask",
+      "required_capability": "/ask",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/chat",
+      "literal": "/chat",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/chat",
+      "required_capability": "/chat",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/brief",
+      "literal": "/brief",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/brief",
+      "required_capability": "/brief",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/profile",
+      "literal": "/profile",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/profile",
+      "required_capability": "/profile",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/intent",
+      "literal": "/intent",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/intent",
+      "required_capability": "/intent",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/redteam",
+      "literal": "/redteam",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/redteam",
+      "required_capability": "/redteam",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/warroom",
+      "literal": "/warroom",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/warroom",
+      "required_capability": "/warroom",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/standup",
+      "literal": "/standup",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/standup",
+      "required_capability": "/standup",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/pair",
+      "literal": "/pair",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/pair",
+      "required_capability": "/pair",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/kudos",
+      "literal": "/kudos",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/kudos",
+      "required_capability": "/kudos",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/oncall",
+      "literal": "/oncall",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/oncall",
+      "required_capability": "/oncall",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/voice-brief",
+      "literal": "/voice-brief",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/voice-brief",
+      "required_capability": "/voice-brief",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "doc:/voice-cmd",
+      "literal": "/voice-cmd",
+      "sources": [
+        "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+      ],
+      "status": "DOCUMENTED_NOT_IN_PARSER_CATALOG",
+      "expected_parser": "UnknownCommand until separately implemented/admitted",
+      "kind_of_target": "documented_delivery_gap",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:doc:/voice-cmd",
+      "required_capability": "/voice-cmd",
+      "availability": "DOCUMENTED_NOT_IMPLEMENTED_OR_UNRECONCILED",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:dashboard",
+      "route": "/mini-app/dashboard",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:dashboard",
+      "required_capability": "mini:dashboard",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:health",
+      "route": "/mini-app/health",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:health",
+      "required_capability": "mini:health",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:alerts",
+      "route": "/mini-app/alerts",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:alerts",
+      "required_capability": "mini:alerts",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:immune",
+      "route": "/mini-app/immune",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:immune",
+      "required_capability": "mini:immune",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:tasks",
+      "route": "/mini-app/tasks",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:tasks",
+      "required_capability": "mini:tasks",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:inference",
+      "route": "/mini-app/inference",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:inference",
+      "required_capability": "mini:inference",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:chat",
+      "route": "/mini-app/chat",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:chat",
+      "required_capability": "mini:chat",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:config",
+      "route": "/mini-app/config",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:config",
+      "required_capability": "mini:config",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:containers",
+      "route": "/mini-app/containers",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:containers",
+      "required_capability": "mini:containers",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:federation",
+      "route": "/mini-app/federation",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:federation",
+      "required_capability": "mini:federation",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:verify",
+      "route": "/mini-app/verify",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:verify",
+      "required_capability": "mini:verify",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:fmea",
+      "route": "/mini-app/fmea",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:fmea",
+      "required_capability": "mini:fmea",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:telemetry",
+      "route": "/mini-app/telemetry",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:telemetry",
+      "required_capability": "mini:telemetry",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "mini:zenoh",
+      "route": "/mini-app/zenoh",
+      "kind_of_target": "mini_app_page",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/telegram/types.gleam",
+      "availability": "SOURCE_DECLARED_RUNTIME_UNVERIFIED",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:mini:zenoh",
+      "required_capability": "mini:zenoh",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:photo",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:photo",
+      "required_capability": "media:photo",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:document",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:document",
+      "required_capability": "media:document",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:audio",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:audio",
+      "required_capability": "media:audio",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:voice",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:voice",
+      "required_capability": "media:voice",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:video",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:video",
+      "required_capability": "media:video",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:sticker",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:sticker",
+      "required_capability": "media:sticker",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:animation",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:animation",
+      "required_capability": "media:animation",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "media:unsupported",
+      "kind_of_target": "media_kind",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_media_ref.gleam",
+      "availability": "ACCEPTANCE_OR_REFUSAL_REQUIRES_KIND_SPECIFIC_ORACLE",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:media:unsupported",
+      "required_capability": "media:unsupported",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:identity",
+      "title": "Identity, bot/chat/user authorization and WebApp signatures",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:identity",
+      "required_capability": "runtime:identity",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:approval",
+      "title": "Distinct-signer quorum and proposal binding",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:approval",
+      "required_capability": "runtime:approval",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:authority",
+      "title": "Sa-plan attempt, coordinator epoch, expiry and effect fencing",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:authority",
+      "required_capability": "runtime:authority",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:ingress",
+      "title": "Ingress validation, parsing and specialized dispatch",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:ingress",
+      "required_capability": "runtime:ingress",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:inbox",
+      "title": "Durable inbox deduplication and ordering",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:inbox",
+      "required_capability": "runtime:inbox",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:outbox",
+      "title": "Priority delivery, rate limits and uncertain outcomes",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:outbox",
+      "required_capability": "runtime:outbox",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:gateway",
+      "title": "Drain, ticker, alarms and recovery",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:gateway",
+      "required_capability": "runtime:gateway",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:supervision",
+      "title": "OTP start ordering, isolation and restart budgets",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:supervision",
+      "required_capability": "runtime:supervision",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:conversation",
+      "title": "Inference selection, degraded replies and bounded context",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:conversation",
+      "required_capability": "runtime:conversation",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:memory",
+      "title": "Eight-turn context, history, clear and tenant isolation",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:memory",
+      "required_capability": "runtime:memory",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:media_lifecycle",
+      "title": "Fetch, inspect, persist, expire, reclaim and orphan cleanup",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:media_lifecycle",
+      "required_capability": "runtime:media_lifecycle",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:vault_file",
+      "title": "Current file-vault crypto, permissions and persistence",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:vault_file",
+      "required_capability": "runtime:vault_file",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:vault_nif",
+      "title": "Separately verified NIF persistence, seal race and audit root",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:vault_nif",
+      "required_capability": "runtime:vault_nif",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:verification",
+      "title": "Signed verify packet, reservation, execution and reconciliation",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:verification",
+      "required_capability": "runtime:verification",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:telemetry",
+      "title": "Trace correlation, time, provenance and cross-surface consistency",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:telemetry",
+      "required_capability": "runtime:telemetry",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:planning",
+      "title": "Sa-plan task/job/workflow observation and permitted actions",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:planning",
+      "required_capability": "runtime:planning",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:knowledge",
+      "title": "Wiki, ZK, ADR, checklist, search and provenance",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:knowledge",
+      "required_capability": "runtime:knowledge",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:federation",
+      "title": "Tailnet/Zenoh peers, partitions and reconnect",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:federation",
+      "required_capability": "runtime:federation",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:budget",
+      "title": "Durable inference budget, quotas and resource bounds",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:budget",
+      "required_capability": "runtime:budget",
+      "implementation_status": "UNVERIFIED"
+    },
+    {
+      "id": "runtime:release",
+      "title": "Candidate identity, startup, rollback and evidence admission",
+      "kind_of_target": "cross_cutting_capability",
+      "source": "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+      "availability": "PLANNED_INVENTORY_OBLIGATION",
+      "layer_mapping_status": "UNKNOWN",
+      "delivery_obligation_id": "DELIVERY:runtime:release",
+      "required_capability": "runtime:release",
+      "implementation_status": "UNVERIFIED"
+    }
+  ],
+  "layers": [
+    {
+      "id": "L0",
+      "obligation": "Constitutional authority, identity, deny rules and storage interlocks",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L1",
+      "obligation": "Deterministic atomic primitives, VFS, byte and object identity",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L2",
+      "obligation": "Component health, clocks, freshness and local quorum observations",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L3",
+      "obligation": "Supervised durable tasks, jobs, workflows, inbox/outbox and leases",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L4",
+      "obligation": "Service composition, operational monitoring and recovery",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L5",
+      "obligation": "Inference, memory, prediction and rule evaluation",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L6",
+      "obligation": "Agent/operator coordination, approvals and dispatch",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L7",
+      "obligation": "Federated interfaces, Tailnet, transport and knowledge exchange",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L8",
+      "obligation": "Independent formal, differential and adversarial verification",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    },
+    {
+      "id": "L9",
+      "obligation": "System-wide evidence closure, release decisions and learning",
+      "status": "PROPOSED_CROSSWALK_REQUIRES_T00_RECONCILIATION",
+      "source": "AGENTS.md sections 5.1 and 6; planning/sa_plan_bridge.gleam actor catalog; existing test-local mapping is a separate namespace"
+    }
+  ],
+  "layer_pairs": [
+    {
+      "from": "L0",
+      "to": "L0",
+      "id": "L0->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L1",
+      "id": "L0->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L2",
+      "id": "L0->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L3",
+      "id": "L0->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L4",
+      "id": "L0->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L5",
+      "id": "L0->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L6",
+      "id": "L0->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L7",
+      "id": "L0->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L8",
+      "id": "L0->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L0",
+      "to": "L9",
+      "id": "L0->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L0",
+      "id": "L1->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L1",
+      "id": "L1->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L2",
+      "id": "L1->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L3",
+      "id": "L1->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L4",
+      "id": "L1->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L5",
+      "id": "L1->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L6",
+      "id": "L1->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L7",
+      "id": "L1->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L8",
+      "id": "L1->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L1",
+      "to": "L9",
+      "id": "L1->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L0",
+      "id": "L2->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L1",
+      "id": "L2->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L2",
+      "id": "L2->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L3",
+      "id": "L2->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L4",
+      "id": "L2->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L5",
+      "id": "L2->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L6",
+      "id": "L2->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L7",
+      "id": "L2->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L8",
+      "id": "L2->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L2",
+      "to": "L9",
+      "id": "L2->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L0",
+      "id": "L3->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L1",
+      "id": "L3->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L2",
+      "id": "L3->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L3",
+      "id": "L3->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L4",
+      "id": "L3->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L5",
+      "id": "L3->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L6",
+      "id": "L3->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L7",
+      "id": "L3->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L8",
+      "id": "L3->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L3",
+      "to": "L9",
+      "id": "L3->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L0",
+      "id": "L4->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L1",
+      "id": "L4->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L2",
+      "id": "L4->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L3",
+      "id": "L4->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L4",
+      "id": "L4->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L5",
+      "id": "L4->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L6",
+      "id": "L4->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L7",
+      "id": "L4->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L8",
+      "id": "L4->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L4",
+      "to": "L9",
+      "id": "L4->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L0",
+      "id": "L5->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L1",
+      "id": "L5->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L2",
+      "id": "L5->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L3",
+      "id": "L5->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L4",
+      "id": "L5->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L5",
+      "id": "L5->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L6",
+      "id": "L5->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L7",
+      "id": "L5->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L8",
+      "id": "L5->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L5",
+      "to": "L9",
+      "id": "L5->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L0",
+      "id": "L6->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L1",
+      "id": "L6->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L2",
+      "id": "L6->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L3",
+      "id": "L6->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L4",
+      "id": "L6->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L5",
+      "id": "L6->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L6",
+      "id": "L6->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L7",
+      "id": "L6->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L8",
+      "id": "L6->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L6",
+      "to": "L9",
+      "id": "L6->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L0",
+      "id": "L7->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L1",
+      "id": "L7->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L2",
+      "id": "L7->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L3",
+      "id": "L7->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L4",
+      "id": "L7->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L5",
+      "id": "L7->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L6",
+      "id": "L7->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L7",
+      "id": "L7->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L8",
+      "id": "L7->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L7",
+      "to": "L9",
+      "id": "L7->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L0",
+      "id": "L8->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L1",
+      "id": "L8->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L2",
+      "id": "L8->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L3",
+      "id": "L8->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L4",
+      "id": "L8->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L5",
+      "id": "L8->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L6",
+      "id": "L8->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L7",
+      "id": "L8->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L8",
+      "id": "L8->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L8",
+      "to": "L9",
+      "id": "L8->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L0",
+      "id": "L9->L0",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L1",
+      "id": "L9->L1",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L2",
+      "id": "L9->L2",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L3",
+      "id": "L9->L3",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L4",
+      "id": "L9->L4",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L5",
+      "id": "L9->L5",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L6",
+      "id": "L9->L6",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L7",
+      "id": "L9->L7",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L8",
+      "id": "L9->L8",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    },
+    {
+      "from": "L9",
+      "to": "L9",
+      "id": "L9->L9",
+      "applicability": "UNKNOWN_UNTIL_T00_T01"
+    }
+  ],
+  "interaction_types": [
+    "control_request",
+    "data_response",
+    "event_stream",
+    "persistent_state",
+    "authority_and_lease",
+    "feedback_and_alarm",
+    "supervision_restart",
+    "replay_and_recovery",
+    "concurrent_contention",
+    "cross_host_federation",
+    "budget_and_backpressure",
+    "cross_surface_projection"
+  ],
+  "usecase_obligations": {
+    "domains": [
+      "A foundational SRE/governance/KM",
+      "B advanced SRE/disaster recovery",
+      "C creative/cognitive/FinOps/twins",
+      "D collaboration/voice",
+      "journeys/Mini-App/media/vault/live runtime"
+    ],
+    "journey_sets": [
+      "SEC-J1..SEC-J6",
+      "defence journey_1..journey_6",
+      "responder journey_r1..journey_r6"
+    ],
+    "steps": "Extract actual stable step IDs/ordinals from source; preserve all branches and recovery paths; no hardcoded 114-step total",
+    "additional": "Each command/alias/route/media/cross-cutting lifecycle has own usecase ID; documented-only usecases remain delivery gaps"
+  },
+  "production_scenarios": [
+    {
+      "id": "PS01",
+      "name": "nominal",
+      "oracle": "Named backend values agree with independently observed state; no unsolicited effect",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS02",
+      "name": "storage_incident",
+      "oracle": "Storage incident produces redacted evidence and denied OS-drive mutation; no disk writes in production probe",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS03",
+      "name": "partition_split_brain",
+      "oracle": "Partition isolates writers, denies expired owners, labels uncertain peer health and reconciles on recovery",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS04",
+      "name": "release_rollback",
+      "oracle": "Candidate-bound verification, held release on missing evidence, bounded rollback state proven",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS05",
+      "name": "field_diagnostic_handover",
+      "oracle": "Captioned diagnostic retained by digest; no caption command execution; handover preserves provenance",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS06",
+      "name": "identity_abuse",
+      "oracle": "Unauthorized identity learns no protected state and causes no task, media, inference or outbound effect",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS07",
+      "name": "expired_authority",
+      "oracle": "Expiry/revocation between approval and effect is refused; no stale attempt resumes",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS08",
+      "name": "duplicate_reordered_update",
+      "oracle": "Duplicate/reordered updates do not duplicate logical effects or regress durable cursor",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS09",
+      "name": "uncertain_send",
+      "oracle": "Lost send acknowledgement stays uncertain; no blind resend or invented Telegram receipt",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS10",
+      "name": "rate_limit",
+      "oracle": "429/retry-after and backlog priority obey configured deadlines and preserve Critical capacity",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS11",
+      "name": "inference_outage_budget",
+      "oracle": "Provider timeout, schema failure and budget exhaustion produce labelled degraded/unavailable behavior",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS12",
+      "name": "media_truncation_poison",
+      "oracle": "Truncated, changed-total, MIME-confused and oversize media are refused without partial adoption",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS13",
+      "name": "vault_seal_rotation",
+      "oracle": "Sealed/wrong-key store refuses access; cross-process persistence and rotation failure preserve recoverable state",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS14",
+      "name": "supervisor_crash",
+      "oracle": "Crash before/after each durable boundary restarts within budget without authority or outcome invention",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS15",
+      "name": "resource_exhaustion",
+      "oracle": "Bounded resource-pressure tests preserve safety and expose backpressure; no silent accepted-work loss",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS16",
+      "name": "clock_skew",
+      "oracle": "Clock steps/skew create uncertainty or refusal; authorization never gains lifetime from wall-clock rollback",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS17",
+      "name": "schema_recovery",
+      "oracle": "Schema migration/recovery compatibility verified on isolated stores; unknown schema rejected",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS18",
+      "name": "telemetry_loss",
+      "oracle": "Missing telemetry stream is Unobserved/Stale, never healthy; recovery clears alarms exactly as specified",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS19",
+      "name": "privacy_leak",
+      "oracle": "Secret sentinel absent in replies, traces, argv, actor snapshots and sanitized evidence",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS20",
+      "name": "offline_reconnect",
+      "oracle": "Offline mode labels capabilities and data age; reconnect reconciles before retry",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS21",
+      "name": "long_soak",
+      "oracle": "24h staging soak reports age, queues, memory, error rate and all interruptions, no extrapolated production claim",
+      "state": "UNRUN"
+    },
+    {
+      "id": "PS22",
+      "name": "overlapping_incidents",
+      "oracle": "All compatible scenario pairs plus authority-expiry/partition/restart triple preserve invariants",
+      "state": "UNRUN"
+    }
+  ],
+  "data_modes": [
+    "deterministic_fixture",
+    "sanitized_recorded_replay",
+    "live_staging",
+    "live_production_readonly",
+    "approved_production_canary"
+  ],
+  "data_states": [
+    "fresh",
+    "stale",
+    "missing",
+    "late",
+    "reordered",
+    "duplicate",
+    "contradictory",
+    "malformed",
+    "oversized",
+    "partial",
+    "replayed",
+    "wrong_tenant",
+    "wrong_schema",
+    "clock_uncertain"
+  ],
+  "matrix_contract": {
+    "universe": "(F union F×F) × Unit×Unit × L×L × I × U × P × Dmode × Dstate × M × Deployment × Config × AuthorityState × Trace",
+    "self_interactions": true,
+    "feature_pairs": "Every ordered source/target feature pair is classified; multi-feature cycles covered by bounded traces, not inferred from pair coverage",
+    "applicability_partition": [
+      "REQUIRED_POSITIVE",
+      "REQUIRED_REFUSAL",
+      "STRUCTURALLY_NOT_APPLICABLE",
+      "UNKNOWN"
+    ],
+    "na_fields": [
+      "rule_id",
+      "reason",
+      "source",
+      "reviewer",
+      "candidate"
+    ],
+    "unknown_blocks_complete_claim": true,
+    "shard_case_limit": 10000,
+    "shard_deadline_seconds": 600,
+    "retry_identity": "Same logical case ID; separate attempt_id, never more numerator credit",
+    "dedup": "Stable canonical tuple encoding and independently checked collision-free identity",
+    "trace_depth_initial": 6,
+    "critical_recovery_trace_depth": 12,
+    "concurrent_actors_initial": [
+      1,
+      2,
+      3
+    ],
+    "bound_expansion": "Longer paths, greater concurrency and unbounded histories remain explicit uncovered scope; increase bound under reviewed campaign",
+    "enumeration_policy": "Exhaust all applicable finite tuples across shards; pairwise/3-way sampling only a labelled early screen; budget exhaustion yields INCOMPLETE",
+    "total_applicable_cases": null,
+    "reason_total_unknown": "Feature, usecase, configuration and legal transition registries require T00/T01",
+    "modality_semantics": "Classify every modality at every applicable fractal tuple; TDD is lifecycle evidence and cannot be manufactured by executing a negative case. Unit evidence never inherits integration/production credit.",
+    "accounting_identity": "enumerated = required_positive + required_refusal + reviewed_not_applicable + unknown",
+    "feasibility_gate": "T01 must supply exact cardinalities, throughput pilot estimate, resource ceilings and critical path before T03; all-scope completion remains blocked if infeasible. Named subcampaigns may finish independently; screened remainder is never exhaustive.",
+    "raw_seed_product_lower_dimensions": 5784565248000,
+    "raw_seed_product_note": "136*(136+1)*100*12*22*5*14*12*14 before units/usecases/configuration/authority/traces and applicability filtering; not a count of required cases.",
+    "scenario_compatibility": {
+      "status": "UNKNOWN",
+      "required": "T01 finite nonrecursive base-scenario pair registry with compatible/incompatible/unknown, rule, reviewer; PS22 aggregate is not recursively paired with itself"
+    }
+  },
+  "result_contract": {
+    "fields": [
+      "case_id",
+      "attempt_id",
+      "plan",
+      "task",
+      "candidate",
+      "manifest_digest",
+      "toolchain_digest",
+      "configuration_digest",
+      "input_sanitized_digest",
+      "source_locator",
+      "source_epoch",
+      "trace_id",
+      "span_id",
+      "event_time_utc",
+      "ingest_time_utc",
+      "decision_time_utc",
+      "effect_time_utc",
+      "monotonic_duration",
+      "clock_uncertainty",
+      "freshness_limit",
+      "watermark",
+      "sequence",
+      "expected_reply",
+      "actual_reply",
+      "state_before",
+      "state_after",
+      "effect_receipts",
+      "prohibited_effect_observations",
+      "data_mode",
+      "data_state",
+      "oracle_id",
+      "safety_verdict",
+      "capability_verdict",
+      "result",
+      "reviewer",
+      "obligation_id",
+      "execution_id",
+      "unit_id",
+      "target_unit_id",
+      "evidence_kind",
+      "oracle_input_digest",
+      "oracle_author_identity",
+      "implementation_author_identity",
+      "observing_adapter",
+      "transport",
+      "environment_id",
+      "effect_policy",
+      "capture_id",
+      "redaction_policy_digest",
+      "original_event_time",
+      "replay_execution_time"
+    ],
+    "results": [
+      "UNRUN",
+      "PASS",
+      "FAIL",
+      "BLOCKED",
+      "STALE",
+      "INCONCLUSIVE"
+    ],
+    "refusal_rule": "Correct unavailable/refusal may PASS safety while capability remains NOT_DELIVERED; never grants operational capability coverage",
+    "modality_evidence": {
+      "M01": [
+        "unit_contract_id",
+        "input",
+        "expected_state",
+        "actual_state",
+        "parent_edge_law"
+      ],
+      "M02": [
+        "exact_response_class",
+        "state_delta",
+        "effect_receipts"
+      ],
+      "M03": [
+        "verified_given",
+        "ordered_when",
+        "exact_then",
+        "cleanup_receipt"
+      ],
+      "M04": [
+        "red_revision",
+        "failing_assertion",
+        "green_revision",
+        "refactor_revision",
+        "regression_receipt"
+      ],
+      "M05": [
+        "generator_digest",
+        "seed",
+        "trial_count",
+        "shrunk_counterexample",
+        "oracle_comparison"
+      ],
+      "M06": [
+        "baseline",
+        "fault_cutpoint",
+        "activation_witness",
+        "blast_radius",
+        "recovery_witness"
+      ],
+      "M07": [
+        "load_profile",
+        "concurrency",
+        "throughput",
+        "queue_peaks",
+        "resource_caps"
+      ],
+      "M08": [
+        "sample_distribution",
+        "warmup",
+        "sample_count",
+        "window",
+        "clock_uncertainty",
+        "threshold"
+      ],
+      "M09": [
+        "artifact_digest",
+        "running_identity",
+        "schema_pair",
+        "migration",
+        "rollback",
+        "restore_checkpoint"
+      ],
+      "M10": [
+        "corpus_digest",
+        "seed",
+        "iterations",
+        "typed_outcome",
+        "minimized_failure"
+      ],
+      "M11": [
+        "operator",
+        "mutant_revision",
+        "equivalence_disposition",
+        "killing_assertion",
+        "oracle_kill",
+        "restored_baseline"
+      ],
+      "M12": [
+        "real_transport",
+        "component_identities",
+        "request_receipt",
+        "state_effect_observer"
+      ]
+    },
+    "credit_rules": [
+      "Many obligations may reference one execution only with explicit independent assertions; unique execution count is separate.",
+      "No TDD RED credit for infrastructure errors or legacy negative tests.",
+      "Unactivated faults yield INCONCLUSIVE.",
+      "Refusal cannot prove deployment support or delivered capability."
+    ]
+  },
+  "acceptance": {
+    "registry": "100% discovered features and obligations reconciled; unknown=0; full source digest binding",
+    "structural": "100% of directed layer/feature pairs classified with reviewed exclusions",
+    "execution": "100% required finite cases pass or production claim stays incomplete; no averaging away critical gaps",
+    "live": "All designated real-data usecases have fresh source-correlated live evidence at exact candidate/configuration",
+    "safety": "Zero unauthorized effects, secret leaks, falsely acknowledged delivery or silent accepted-work loss",
+    "production": "Independent release authority, verified recovery, no open blocking safety findings, EV-93 ceiling unchanged"
+  },
+  "tasks": [
+    {
+      "id": "T00",
+      "title": "Inventory and reconcile contracts",
+      "dependencies": [
+        "AUTHOR"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Source-derived feature IDs, canonical aliases, layer roles, existing tests and doc/source contradictions; no implicit unknown-to-L9 mapping. Bidirectional source census across commands, aliases, callbacks, subscriptions, routes, media and journey branches; source hashes; reconcile twelve modalities with CHK-10-9MOD.",
+      "raw_fmea": {
+        "severity": 4,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Catalog/doc and layer-map drift hides required behavior",
+      "required_control": "Source-derived registry plus discrepancy disposition",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          4,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Source-derived registry plus discrepancy disposition"
+      }
+    },
+    {
+      "id": "T01",
+      "title": "Define coverage schema and pure enumerator",
+      "dependencies": [
+        "T00"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Versioned feature/layer/edge/use-case/scenario/data registries, stable case IDs, counts, disjoint partitions, exhaustive applicable tuples. Explicit recursive units and trace models; manifest shape validation; scenario compatibility; exact finite cardinality and reviewed feasibility gate.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Enumerator drops cases, overflows counts or double-counts retries",
+      "required_control": "Independent small-universe oracle, partition law and resumable shard census",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Independent small-universe oracle, partition law and resumable shard census"
+      }
+    },
+    {
+      "id": "T02",
+      "title": "Define oracle and evidence contracts",
+      "dependencies": [
+        "T00"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Per-case exact response, state transition, prohibited effects, measurement window, independent oracle and evidence kind.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Preview, synthetic reply or refusal is labelled successful delivery",
+      "required_control": "Independent state/effect oracle and separate safety/capability verdicts",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Independent state/effect oracle and separate safety/capability verdicts"
+      }
+    },
+    {
+      "id": "T03",
+      "title": "Authorize and configure isolated campaign",
+      "dependencies": [
+        "T01",
+        "T02"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Canonical Sa-plan tasks, fresh risk assessment, approved launcher scope, separate staging identity/store, synchronized clock, finite budgets and cleanup.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Wrong environment, principal, grant or task allows uncontrolled test effects",
+      "required_control": "Fail-closed scoped launch, signed configuration and finite budgets",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Fail-closed scoped launch, signed configuration and finite budgets"
+      }
+    },
+    {
+      "id": "T04",
+      "title": "Control and security invariants",
+      "dependencies": [
+        "T03"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "All identity/approval/lease/replay boundaries fail closed; no unsafe state/effect on refusal.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Invalid identity, stale lease or replay triggers a protected effect",
+      "required_control": "Every authority boundary rechecked at effect time; distinct-signer laws",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Every authority boundary rechecked at effect time; distinct-signer laws"
+      }
+    },
+    {
+      "id": "T05",
+      "title": "Storage, vault and media state machines",
+      "dependencies": [
+        "T03"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Crash/restart, corruption, range/limit/retention, wrong-key and cross-process persistence laws; no caption side effects.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Crash, corrupt media or vault race loses state or exposes secrets",
+      "required_control": "Cross-process persistence and no-effect/refusal oracles",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Cross-process persistence and no-effect/refusal oracles"
+      }
+    },
+    {
+      "id": "T06",
+      "title": "All command and Mini-App surfaces",
+      "dependencies": [
+        "T03"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Every feature and alias routed through real service or truthful unavailable path; 14 route journeys, real browser navigation and async refresh.",
+      "raw_fmea": {
+        "severity": 4,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "A parser or HTML render passes while real operator path fails",
+      "required_control": "Service-dispatch and actual-client journeys, all aliases and routes",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          4,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Service-dispatch and actual-client journeys, all aliases and routes"
+      }
+    },
+    {
+      "id": "T07",
+      "title": "All directed layer and feature interactions",
+      "dependencies": [
+        "T04",
+        "T05",
+        "T06"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "All layer pairs and feature pairs classified; every admissible edge and specified bounded trace covered; forbidden edges refused with effect oracle.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Inter-layer composition bypasses a valid local invariant",
+      "required_control": "All directed pair classifications and bounded history/model witnesses",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "All directed pair classifications and bounded history/model witnesses"
+      }
+    },
+    {
+      "id": "T08",
+      "title": "Real-time data and telemetry",
+      "dependencies": [
+        "T03"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Source versus response receipts at event/ingest/decision/effect times; freshness, ordering, tenant isolation and gaps visible across all surfaces.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Stale or contradictory real-time data is presented as current truth",
+      "required_control": "Time uncertainty, source identity, watermarks and age-aware projections",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Time uncertainty, source identity, watermarks and age-aware projections"
+      }
+    },
+    {
+      "id": "T09",
+      "title": "Full operator and production-scenario journeys",
+      "dependencies": [
+        "T07",
+        "T08"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Every journey step, branch, rollback and handover uses a backend and state oracle; unit/preview evidence never relabelled as production.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Independent step successes hide broken sequence or recovery",
+      "required_control": "Run entire ordered journeys with before/after state evidence",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Run entire ordered journeys with before/after state evidence"
+      }
+    },
+    {
+      "id": "T10",
+      "title": "Load, race, fault and recovery campaign",
+      "dependencies": [
+        "T09"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Bounded concurrency/load profiles, latency distributions, mailbox/RSS/queue peaks, restart budgets, loss accounting, partition recovery and 24h staging soak.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Overload, races or recovery lose accepted work or exceed budgets",
+      "required_control": "Measured pressure profiles, conservation accounting and tested termination",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Measured pressure profiles, conservation accounting and tested termination"
+      }
+    },
+    {
+      "id": "T11",
+      "title": "Human-operated live staging validation",
+      "dependencies": [
+        "T09"
+      ],
+      "owner_role": "authorized_human_operator",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Actual Telegram mobile and WebApp client evidence with distinct staging credentials; exact messages/replies and delivery IDs; zero automated outbound under this planning request.",
+      "raw_fmea": {
+        "severity": 4,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Fixture or browser injection is mislabelled real Telegram delivery",
+      "required_control": "Human-operated dedicated staging identity and real client receipts",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          4,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Human-operated dedicated staging identity and real client receipts"
+      }
+    },
+    {
+      "id": "T12",
+      "title": "Deployment lifecycle, production observation and bounded canary",
+      "dependencies": [
+        "T10",
+        "T11"
+      ],
+      "owner_role": "authorized_release_controller",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "All 14 deployment usecases covered in isolated staging with candidate/state identity, rollback/restore and migration or refusal evidence; live production read-only first, separately authorized finite canary after independent release approval.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Canary causes unauthorized production effect or rollback fails",
+      "required_control": "Independent release decision, exact target/budget and tested recovery",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Independent release decision, exact target/budget and tested recovery"
+      }
+    },
+    {
+      "id": "T13",
+      "title": "Independent coverage and claim audit",
+      "dependencies": [
+        "T10",
+        "T11",
+        "T12"
+      ],
+      "owner_role": "independent_verifier",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "No uncovered/unknown required tuples in the frozen full campaign; all N/A independently reviewed; no stale receipts, fabricated success or swallowed failures. Scoped subset reports cannot close the full programme. Auditor authored none of T00..T12; two-key evidence required.",
+      "raw_fmea": {
+        "severity": 5,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Incomplete or stale matrix is accepted as full coverage",
+      "required_control": "Independent denominator reconstruction and adverse claim audit",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          5,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Independent denominator reconstruction and adverse claim audit"
+      }
+    },
+    {
+      "id": "T14",
+      "title": "Publish results and close scoped programme",
+      "dependencies": [
+        "T13"
+      ],
+      "owner_role": "future_scoped_implementer",
+      "execution_status": "UNRUN",
+      "readiness": "BLOCKED_PENDING_EXECUTION_AUTHORITY_AND_FRESH_ASSESSMENT",
+      "acceptance": "Sa-plan projection plus journal, wiki/ZK links, reproducible manifest, deficits and residual risks; EV-93 preserved.",
+      "raw_fmea": {
+        "severity": 4,
+        "occurrence": null,
+        "detection_difficulty": null,
+        "rpn": null,
+        "reason": "Future campaign exposure/population has not been observed; do not invent a residual rate"
+      },
+      "failure_mode": "Published report or Sa-plan closure conceals remaining gaps",
+      "required_control": "Reconciled projections, honest UNRUN/STALE states and residual ownership",
+      "utility_priority": {
+        "U": null,
+        "F": null,
+        "C": null,
+        "T": null,
+        "O": null,
+        "Q": null,
+        "Q_interval": [
+          4,
+          3125
+        ],
+        "reason": "Fresh operational-use and task-specific factors not yet observed; FMEA severity floor is known estimate",
+        "operational_outcome": "Reconciled projections, honest UNRUN/STALE states and residual ownership"
+      }
+    }
+  ],
+  "admitted_ev_ceiling": 93,
+  "execution_authority": false,
+  "system_admission": false,
+  "test_modalities": [
+    {
+      "id": "M01",
+      "name": "fractal_unit",
+      "required_evidence": "At every layer test the smallest owned pure function/actor/protocol; parent composition does not substitute for child laws",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M02",
+      "name": "functional",
+      "required_evidence": "Exact request/response plus persistent-state and effect oracle for successful, degraded and forbidden behavior",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M03",
+      "name": "bdd",
+      "required_evidence": "Given real preconditions, When exact action/ordered journey, Then response, state, timing and forbidden effects",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M04",
+      "name": "tdd",
+      "required_evidence": "Retained failing assertion before implementation, minimal change, passing regression after refactor at pinned revisions; malformed input test alone is not RED evidence",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M05",
+      "name": "property",
+      "required_evidence": "Generators, shrinking, seeds, metamorphic laws, independent reference model and bounded exhaustive temporal invariants",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M06",
+      "name": "chaos",
+      "required_evidence": "Controlled faults at every relevant boundary, bounded duration and blast radius, no-effect checks and witnessed recovery",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M07",
+      "name": "scalability",
+      "required_evidence": "Concurrency, tenant count, sustained arrival rate, queue length, media volume and backpressure under declared capacity bounds",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M08",
+      "name": "performance",
+      "required_evidence": "Warm/cold latency, end-to-end freshness, p50/p95/p99, CPU/RSS/mailboxes, sample counts and uncertainty at fixed load",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M09",
+      "name": "deployment",
+      "required_evidence": "Fresh install, upgrade, rollback, restart, restore, migration, rotation, failover and environment identity evidence",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M10",
+      "name": "fuzz",
+      "required_evidence": "Seeded malformed/protocol/UTF-8/size/state fuzzing with typed response and no-effect assertions",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M11",
+      "name": "mutation",
+      "required_evidence": "Compiled non-equivalent mutants at authority, freshness, bounds and coverage boundaries; killing assertions plus restored baseline",
+      "execution_status": "UNRUN"
+    },
+    {
+      "id": "M12",
+      "name": "integration",
+      "required_evidence": "Actual Gleam/OTP to native workers, SQLite/vault, HTTP/Zenoh and UI service paths with independent observations",
+      "execution_status": "UNRUN"
+    }
+  ],
+  "deployment_usecases": [
+    {
+      "id": "DEP01",
+      "name": "fresh_install",
+      "oracle": "Empty approved staging paths and pinned artifacts; no secret argv, wrong path or phantom ready state",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP02",
+      "name": "clean_restart",
+      "oracle": "Preserve inbox/outbox/authority semantics; initialize only intended stores",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP03",
+      "name": "crash_restart",
+      "oracle": "Crash around every durable commit/effect boundary; reconcile uncertain outcomes",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP04",
+      "name": "same_schema_upgrade",
+      "oracle": "Candidate/configuration identity changes atomically with health and authority checks",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP05",
+      "name": "schema_migration",
+      "oracle": "Forward/backward compatibility on isolated fixture/replay stores; no unauthorized live migration",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP06",
+      "name": "rolling_mixed_version",
+      "oracle": "Old/new workers coexist only if protocol compatible; otherwise safe refusal, never assumed support",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP07",
+      "name": "blue_green_or_canary",
+      "oracle": "Distinct state/identity, one effect writer, bounded traffic and measured cutover",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP08",
+      "name": "rollback",
+      "oracle": "Restore known candidate/configuration with compatible state; no blind database downgrade",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP09",
+      "name": "backup_restore",
+      "oracle": "Recover sanitized representative state; integrity, cursor continuity, RPO/RTO and audit-chain checks",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP10",
+      "name": "credential_rotation",
+      "oracle": "Old/new/revoked credentials, sealed store, no disclosure, durable recovery",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP11",
+      "name": "configuration_change",
+      "oracle": "Allowlist, budgets, limits, model policy and observer changes validated before activation",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP12",
+      "name": "host_failover_failback",
+      "oracle": "nas-1.tail55d152.ts.net and vm-1.tail55d152.ts.net; single writer and reconciliation under partitions",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP13",
+      "name": "offline_reconnect",
+      "oracle": "Missing packages/network/models yield truthful state; only realized pinned dependencies",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    },
+    {
+      "id": "DEP14",
+      "name": "resource_drain_shutdown",
+      "oracle": "Stop intake, reconcile work, bound drain time and retain pending/uncertain effects",
+      "status": "UNRUN",
+      "authority": "Isolated development/staging first; production effects require separate candidate-bound authorization"
+    }
+  ],
+  "unit_registry": {
+    "status": "UNRECONCILED",
+    "units": [],
+    "required_fields": [
+      "unit_id",
+      "parent_unit_id",
+      "kind",
+      "owning_layer",
+      "source_locator",
+      "contract_id",
+      "feature_ids"
+    ],
+    "recursive_laws": [
+      "parent_child_contract_refinement",
+      "error_propagation",
+      "authority_attenuation",
+      "budget_conservation",
+      "state_conservation"
+    ],
+    "closure": "Every source-derived unit and parent-child edge reconciled; child pass never substitutes for parent composition"
+  },
+  "trace_model_contract": {
+    "required_fields": [
+      "model_digest",
+      "initial_states",
+      "transition_alphabet",
+      "finite_parameter_domains",
+      "actor_schedules",
+      "temporal_horizon",
+      "declared_journey_traces",
+      "reduction_proofs"
+    ],
+    "long_journeys": "Entire declared journey remains required even beyond default trace bound",
+    "status": "PLANNED"
+  },
+  "realtime_source_registry": {
+    "status": "UNRECONCILED",
+    "sources": [],
+    "required_fields": [
+      "source_id",
+      "schema",
+      "epoch",
+      "authoritative_observer",
+      "expected_cadence",
+      "ttl",
+      "clock_uncertainty",
+      "watermark",
+      "missing_event_rule",
+      "capture_redaction_lineage"
+    ],
+    "clock_witness": "Synchronized host receipt and independent host/time witness for time-sensitive claims; missing witness -> BLOCKED/INCONCLUSIVE"
+  },
+  "release_gate": {
+    "task": "T12",
+    "before": "Any production observation or canary",
+    "prerequisites": [
+      "T10",
+      "T11",
+      "All DEP01..DEP14 applicable staging evidence",
+      "independent candidate-bound release review",
+      "separate explicit production scope/grant",
+      "approved numeric RPO RTO drain restart and queue-age limits"
+    ],
+    "independence": "Oracle author differs from implementation author; T13 auditor authored none of T00..T12; two-key acceptance still required",
+    "production_effects_authorized": false
+  },
+  "soak_contract": {
+    "duration_hours": 24,
+    "chunk_deadline_seconds": 600,
+    "required": [
+      "stable_soak_id",
+      "continuous_runtime_epoch",
+      "heartbeat_gap_accounting",
+      "fixed_workload",
+      "no_restart_to_erase_faults"
+    ],
+    "completion": "All chunks cover continuous 24h observation window; gaps or restarts trigger declared failure/restart policy"
+  },
+  "execution_allocation": {
+    "status": "PLANNED_NOT_ENFORCED",
+    "cohort_slots": 5,
+    "claude_slots": 1,
+    "other_slots": 4,
+    "denominator": "Actual unique executing agent identities assigned useful tasks; coordinator and review-only sessions excluded",
+    "restarts": "Same logical worker retains provider slot; record each actual session and replacement separately. Actual launched-session ratio must also equal 1/5 at cohort closure; mismatch is deviation, never erased. Do not start filler sessions to repair ratio.",
+    "work_metrics": [
+      "distinct_cases",
+      "attempts",
+      "active_wall_time",
+      "input_tokens",
+      "output_tokens"
+    ],
+    "first_parallel_lanes": [
+      "T04",
+      "T05/storage_vault",
+      "T05/media",
+      "T06",
+      "T08"
+    ],
+    "child_registration": "T03 must register T05 children via Sa-plan before claims; not registered or executed in planning phase.",
+    "claude_lane": "T04 or independent oracle/recovery lane with real deliverable, not review-only",
+    "aggregate_caps": [
+      "host_cpu",
+      "host_ram",
+      "io",
+      "inference_spend",
+      "telegram_traffic"
+    ],
+    "isolated_namespaces": [
+      "bot",
+      "chat",
+      "store",
+      "topic",
+      "port"
+    ],
+    "unavailable": "HOLD, no substitution; enforce actual concurrency cap"
+  },
+  "review_feedback": {
+    "status": "ADVISORY_FEEDBACK_INCORPORATED_NOT_RUNTIME_APPROVAL",
+    "reviewed_plan_sha256": "1ffd0e254c9d000fe59859dec98fe7d2d17de1ba259906ab02c9a43117c34b6c",
+    "reviewed_matrix_sha256": "422f0b2c47d39a78d2f27fb8b9bfefe1ef7281d9fa08d4fa5998075ac750e7a5",
+    "native_reviewers": [
+      "/root/fractal_coverage_review",
+      "/root/modality_review",
+      "/root/realtime_parallel_review"
+    ],
+    "claude": {
+      "session_id": "8ef8d687-3c5b-49c6-a3d1-5f8745852288",
+      "agent": "claude",
+      "model_self_reported": "claude-opus-5",
+      "model_independently_verified": false,
+      "verdict": "ACCEPT WITH REQUIRED PRE-T03 AMENDMENTS",
+      "actual_tokens": null,
+      "work_kind": "advisory_only",
+      "process_deviation": "Reviewer used Python for read-only JSON inspection despite repository language boundary; no source/runtime changes observed. This is not an admitted execution path."
+    },
+    "dispositions": [
+      {
+        "id": "R01",
+        "status": "ACCEPTED",
+        "change": "Explicit recursive unit and edge registry, trace models and conservation laws"
+      },
+      {
+        "id": "R02",
+        "status": "ACCEPTED",
+        "change": "Tagged modality evidence and obligation/execution accounting"
+      },
+      {
+        "id": "R03",
+        "status": "ACCEPTED",
+        "change": "T13 requires every required full-campaign tuple, not only release-critical subset"
+      },
+      {
+        "id": "R04",
+        "status": "ACCEPTED",
+        "change": "Preproduction independent release gate; continuous soak; source/clock witnesses and bounded resources"
+      },
+      {
+        "id": "C01",
+        "status": "PARTIALLY_ACCEPTED",
+        "change": "Mandatory feasibility gate and separately named scoped campaigns accepted; reducing full requested denominator without explicit scope decision rejected. Correct raw arithmetic is 5.784565248e12, not reviewer estimate approximately 6e11."
+      },
+      {
+        "id": "C02",
+        "status": "ACCEPTED",
+        "change": "Actual agent/session accounting plus realized case, time and token shares; failed/replacement sessions retained"
+      },
+      {
+        "id": "C03",
+        "status": "ACCEPTED",
+        "change": "Distinct oracle author, specification-derived oracle, oracle-specific mutant kills, adapter and input provenance"
+      },
+      {
+        "id": "C04",
+        "status": "ACCEPTED",
+        "change": "Finite scenario compatibility, gap availability fields, modality gate crosswalk and build identity on both failover hosts"
+      }
+    ],
+    "rereview_of_amendments": "NOT_REQUESTED_OR_OBSERVED; author disposition only"
+  },
+  "utility_optimization": {
+    "requested_by_operator": "utility × FMEA × criticality × STPA × operational use",
+    "formula": "Q = U × F × C × T × O",
+    "range": [
+      1,
+      3125
+    ],
+    "factors": {
+      "U": {
+        "name": "utility",
+        "meaning": "Marginal operator outcome or avoided loss delivered by closing this gap",
+        "anchors": {
+          "1": "Minor convenience with a verified workaround",
+          "3": "Material improvement to a named operator journey",
+          "5": "Restores or protects a mission-essential outcome"
+        }
+      },
+      "F": {
+        "name": "FMEA",
+        "meaning": "Canonical severity-preserving FMEA band from raw S/O/Det, never an invented incident rate"
+      },
+      "C": {
+        "name": "criticality",
+        "meaning": "Canonical criticality factor grounded in consequence and service obligation"
+      },
+      "T": {
+        "name": "STPA",
+        "meaning": "Canonical unsafe-control significance covering not_provided, provided_unsafe, wrong_timing and duration"
+      },
+      "O": {
+        "name": "operational_use",
+        "meaning": "Observed affected actors, workflow frequency and mandatory incident/recovery use",
+        "anchors": {
+          "1": "Rare optional workflow",
+          "3": "Recurring operator workflow",
+          "5": "Continuous operational path or required incident/recovery path"
+        }
+      }
+    },
+    "gates": [
+      "effect authority",
+      "source/task/runtime fencing",
+      "dependency readiness",
+      "fresh evidence",
+      "hard safety obligations"
+    ],
+    "canonical_relationship": "Retain canonical C×T×F×Dependency×Impact score and class. Q is an explicit operator-value view within admissible ready work; it does not bypass safety classes, dependency gates or compulsory low-frequency recovery tests.",
+    "uncertainty": "If any factor is unknown, Q is null with product interval. Do not turn absent usage into zero value or infer production frequency from fixtures.",
+    "evidence_required": [
+      "usage_window",
+      "sanitized_usage_counts",
+      "affected_workflows",
+      "incident_recovery_obligations",
+      "utility_outcome",
+      "raw_fmea",
+      "four_uca_types",
+      "factor_rationales",
+      "evidence_age",
+      "reviewer"
+    ],
+    "cost_control": "Among equally admissible comparable-value work, prefer earlier risk reduction per bounded worker-hour/token; report confidence and cost separately rather than disguising cost as safety evidence.",
+    "update_policy": "T00 gathers usage and utility evidence; T03 freezes reviewed scores before dispatch; update after failures, changes or stale evidence. Authoring phase has no measured campaign Q.",
+    "status": "PLANNED_NOT_RUNTIME_ENFORCED"
+  }
+}

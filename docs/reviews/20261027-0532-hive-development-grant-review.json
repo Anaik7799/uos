@@ -1,0 +1,60 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "worker": "claude-hive-grant-review-20261027",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "GRANT_REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-0532-hive-grant-proposal.json",
+    "sha256": "299761691bfdc582d2d7c35a1a17963956ae851f0f273c4c651bbfcb2c003b42",
+    "grant_id": "20261027-0532-hive-dev",
+    "target_session": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "target_worker": "codex-01a0ba74-hive"
+  },
+  "findings": [
+    { "id": "F-SCOPE", "status": "PASS", "detail": "Exactly one task, uos/hive-development/20261027-0532 MCP_ACTIVATE. No second task and no wildcard. role=development, purpose states no product mutation, production effect or Telegram traffic." },
+    { "id": "F-EXPIRY", "status": "PASS", "detail": "expires_utc_us 1793120775831524 minus clock.json utc_us 1793077575831524 equals 43200000000 us, exactly 12 hours from the observed clock. Arithmetic re-derived by me, not accepted as stated." },
+    { "id": "F-CLOCK", "status": "PASS", "detail": "clock.json source chronyc:-c-tracking:reference-utc, offset_us -326, uncertainty_us 13893. host_id and boot_id in the proposal equal those in the clock receipt, so the grant is pinned to this boot and cannot survive a reboot." },
+    { "id": "F-IDENTITY", "status": "PASS", "detail": "One session 01a0ba74-d654-7de3-bdcf-25a0a85b93da and one worker codex-01a0ba74-hive. Single-holder as scoped." },
+    { "id": "F-WRITES", "status": "PASS", "detail": "Three write paths, all NEW artifact paths: governance/planning/20261027-0532-hive-mcp-smoke.json, docs/journal/20261027-0532-hive-mcp-activation-journal.md, governance/planning/20261027-0532-hive-mcp-verification.json. No source file, no config, no control dependency is writable. 19 read paths are source, tests, contracts and this review." },
+    { "id": "F-CONTROL-IDS", "status": "PASS", "detail": "All 20 loaded_control_ids compared against var/harness/20261027-0532-hive/control-ids.json: 20 compared, 0 mismatches, 0 extra keys in the receipt." },
+    { "id": "F-MANIFEST", "status": "PASS", "detail": "source-manifest.sha256 holds 10 entries and the proposal declares 10 source_paths. I RE-COMPUTED all 10 digests from disk: drift 0." },
+    { "id": "F-ECOLOGY", "status": "PASS", "detail": "control_dependencies pins tools/ecology_process.ml at b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b, a content digest rather than a path or basename." },
+    { "id": "F-TESTS", "status": "PASS_WITH_LIMIT", "detail": "Six test modules named: harness_successor_test, harness_development_test, harness_authority_test, harness_sa_plan_boundary_test, mcp_authz_wiring_test, mcp_catalog_truth_test. harness-build.log shows a clean compile and harness-manifest-tests.log reports All 83 tests passed plus successor verification: ok. LIMIT: 83 is a whole-suite count; I did NOT isolate that these six modules are inside it, and I did not rerun them." },
+    { "id": "F-INDEPENDENCE", "status": "PASS", "detail": "admission.gleam:491-496 requires component(peer_session) && peer_session != session under label independent_review_session_required. My reviewer session a65088e0-0f2b-497e-bd5c-97eeed9c3594 differs from the grant session, so the constraint is satisfied in code and not merely by assertion." },
+    { "id": "F-REVIEW-BINDING", "status": "PASS", "detail": "admission.gleam:445-451 requires schema uos.harness-successor-grant-review.v1 and verdict APPROVE_DEV_TEST_SCOPE; :408-413 requires reviewer plan_id, task_id, worker, session_id, attempt; :531 requires files.digest(reviewed) == grant.review_sha256; :397 requires terminal uos.harness-peer-review.v1:<digest>. This document supplies every one of those fields." },
+    { "id": "F-PLACEHOLDER", "status": "OBSERVED_CORRECT", "detail": "The immutable proposal carries review_sha256 = 64 zeros. That is correct and must stay: the final grant has to bind the ACTUAL digest of this review, which did not exist when the proposal was frozen. Minting that grant is not my step and I have not done it." }
+  ],
+  "evidence": {
+    "receipts_read": [
+      "var/harness/20261027-0532-hive/clock.json",
+      "var/harness/20261027-0532-hive/control-ids.json",
+      "var/harness/20261027-0532-hive/source-manifest.sha256",
+      "var/harness/20261027-0532-hive/harness-build.log",
+      "var/harness/20261027-0532-hive/harness-manifest-tests.log"
+    ],
+    "source_read": ["apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam"],
+    "base_revision": "73df20c4c9a67e76b670cdddc4e53e8d1379925e",
+    "independent_recomputation": "10/10 source manifest digests and the proposal sha256 were recomputed by me from disk; the expiry arithmetic was re-derived from clock.json."
+  },
+  "gate_record": {
+    "preflight": "PREFLIGHT_PASS 2026-10-27T05:13:11Z, 0 findings",
+    "initial_active_check": "HOLD 2026-10-27T05:14:07Z, RP-SA-PLAN: executing worker does not match assessment actor. PRESERVED, not overwritten. I declined to rewrite another agent's actor field and reported instead.",
+    "coordinator_repair": "Coordinator repaired the assessment actor to the observed worker and refreshed the observation; 10 source hashes verified unchanged.",
+    "post_repair_active_check": "ACTIVE_OBSERVATION_PASS 2026-10-27T05:16:15Z, 0 findings",
+    "claim": "attempt 1, lease_until_ns 1793079800670192308, finite 30 minutes, arithmetic verified",
+    "portfolio_mirror": "task_state only, 24 to 24 fields, exactly 1 entry changed, actor field deliberately not touched"
+  },
+  "limits": [
+    "This review approves a DEVELOPMENT and TEST scope only. It is not system admission, not production authority, and not permission for any Telegram traffic.",
+    "I did not mint the final grant and must not: the proposal's review_sha256 placeholder has to be replaced with this document's real digest by the issuing step.",
+    "F-TESTS is PASS_WITH_LIMIT. The 83-test count is a suite total; I did not prove the six named modules are within it. If that binding matters to the grant, require a per-module receipt before activation.",
+    "I did not rebuild, did not change any control source, and ran no test myself. Build and test evidence is read from receipts produced by the coordinator.",
+    "I read admission.gleam for the review schema and the independence constraint. I did not audit the whole admission pathway, operations.gleam, successor_mcp.gleam or development.gleam.",
+    "Pinned to boot_id b0cc84fb-12ae-40ae-a5be-6d488272efb3 and base revision 73df20c4. A reboot or a source change invalidates this review."
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "uos.planning-mcp-restart-smoke.v1",
+  "observed_utc": "2026-10-28T00:21:00Z",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "PLANNING_MCP",
+  "worker": "pi-agent-20261028",
+  "attempt": 4,
+  "task_state": "executing",
+  "risk_refresh": {
+    "preflight_input": "governance/planning/20261028-0016-hive-live-risk-refresh-v2.json",
+    "active_input": "governance/planning/20261028-0016-hive-live-risk-active.json",
+    "preflight_status": "PREFLIGHT_PASS",
+    "active_status": "ACTIVE_OBSERVATION_PASS",
+    "runtime_admission": "NOT_GRANTED",
+    "authority": "NONE",
+    "preflight_assessment_sha256": "5435d18982317fd220cd6e7ea635b16b8300cdcfd1091ddf0f4baeb01e323e99",
+    "active_assessment_sha256": "73c850070342adcfb26d0af5acc8b5f8513c28bc82c9c3b478c8180939d1caa9"
+  },
+  "session_authority": {
+    "coordinator_db": "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3",
+    "registered_session": "pi-session-20261027",
+    "register_operation_id": "pi-register-20261028-0019",
+    "register_sequence": 3309,
+    "lease_probe_claim": {
+      "operation_id": "pi-session-claim-probe-20261028-0020",
+      "sequence": 3310,
+      "epoch": 17
+    },
+    "lease_probe_release": {
+      "operation_id": "pi-session-release-probe-20261028-0020",
+      "sequence": 3311,
+      "epoch": 17
+    }
+  },
+  "mcp_surface_probe": {
+    "read_path": {
+      "tool": "mcp__uos_harness__sa_plan_status_for",
+      "plan": "uos/hive-development/20261027-0532",
+      "status_line": "plan=uos/hive-development/20261027-0532 total=31 completed=14 ready=3 executing=1"
+    },
+    "mutation_path": {
+      "tool": "mcp__uos_harness__plan_add",
+      "result": "Transport-bound task authority unavailable; legacy mutation refused"
+    }
+  },
+  "sa_plan_snapshot": {
+    "task_show": "plan_id=uos/hive-development/20261027-0532 id=PLANNING_MCP name=hive/planning-mcp title=Provide typed canonical planning and evidence publication through MCP parent_id=- state=executing priority=1000 worker=pi-agent-20261028 attempt=4"
+  },
+  "local_test_probe": {
+    "command": "cd apps/cepaf_gleam && gleam test",
+    "result": "failed",
+    "summary": "619 passed, 11 failures",
+    "key_failures": [
+      "beam_load error loading module c3i_nif: corrupt atom table",
+      "actors_test freshness/observer tests failed with Undef",
+      "agui_cockpit_test module load failure"
+    ]
+  },
+  "status": "STARTED", 
+  "two_key_complete": false,
+  "completion_claimed": false,
+  "boundaries": [
+    "Runtime admission remains NOT_GRANTED in risk checker output.",
+    "Once task state moved to executing, risk preflight for PLANNING_MCP and AGENT_PARITY returned HOLD with RP-SELECTION (active-check remains the correct gate for the executing attempt).",
+    "This artifact records start/progress evidence only; no task completion is claimed."
+  ],
+  "authority": "Sa-plan remains sole execution authority; this file is evidence-only."
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "uos.code-peer-review.v1",
+  "review_id": "20261027-claude-code-review",
+  "reviewer": "openrouter/anthropic/claude-haiku-4.5",
+  "model": "anthropic/claude-haiku-4.5",
+  "reviewed_at": "2026-10-27T22:30:00Z",
+  "bundle": "docs/reviews/20261027-1910-code-review-bundle.md",
+  "verdict": "HOLD",
+  "residual_risks": [
+    "cwd containment validation insufficient (no symlink/realpath check); verification_run JSON schema change undocumented; number_decoder may deserialize out-of-range floats; process cleanup on timeout not verified in OCaml guardian."
+  ],
+  "advisory_only": true
+}

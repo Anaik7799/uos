@@ -1,0 +1,58 @@
+{
+  "schema": "uos.hive-mcp-formal-evidence.v1",
+  "candidate_binding": {
+    "candidate_sha256": "f217359b368f8a0714503bc7a87b001ee1e41d51919608382ec0bfd5e580da65",
+    "basis": "SHA256 of the exact input_manifest string shared by all three activation effect receipts",
+    "manifest_entries": 10,
+    "manifest_vs_disk": "10/10 recomputed from current bytes, drift 0",
+    "plan": "uos/hive-development/20261027-0532",
+    "parent_task": "MCP_ACTIVATE",
+    "review_task": "ACTIVATE_REVIEW"
+  },
+  "method": "finite_executable_specification_checks",
+  "theorem_proving": "NOT_RUN",
+  "method_statement": "What exists here is a finite set of executable checks over concrete inputs: Gleam test modules exercising typed specification functions, plus digest comparisons I performed. These establish that the named properties held FOR THE CASES RUN. They do not establish universal refinement, and no theorem prover, model checker or SMT solver was invoked by anyone in this activation. No solver run is claimed or implied.",
+  "what_is_NOT_claimed": [
+    "No universal quantification over inputs. A passing finite suite is not a proof.",
+    "No theorem proving. Lean, Rocq, Z3, Quint and TLA+ were NOT run; theorem_proving is NOT_RUN and that is a statement of fact, not a deferral.",
+    "No refinement proof between the specification functions and their callers.",
+    "No admission of any kind, and no production or Telegram capability.",
+    "No claim that the six modules collectively cover the invariant space of development.gleam."
+  ],
+  "executable_checks_observed": {
+    "test_modules_named_in_grant": [
+      "harness_successor_test",
+      "harness_development_test",
+      "harness_authority_test",
+      "harness_sa_plan_boundary_test",
+      "mcp_authz_wiring_test",
+      "mcp_catalog_truth_test"
+    ],
+    "all_six_observed_in_retained_output": true,
+    "reported_terminal": "All 83 tests passed. / successor verification: ok",
+    "integrity_of_that_terminal": "UNVERIFIED. The activate-test-1 output is head-truncated to 8192 bytes and its declared output_sha256 covers the untruncated text, so the retained bytes carry no checkable digest. See the activation review finding A-TEST-DIGEST.",
+    "digest_verified_receipts": [
+      "activate-build-1 (7911 bytes, digest matches)",
+      "activate-smoke-write-1 (64 bytes, digest matches)"
+    ]
+  },
+  "specification_surface_observed": {
+    "module": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+    "public_functions_total": 36,
+    "specification_shaped_functions_identified": [
+      "validate_arguments (line 897)",
+      "validate_bootstrap_receipt (line 1023)",
+      "terminal_matches (line 1418)",
+      "verify_artifact_durability (line 1471)"
+    ],
+    "coverage_claim": "NONE ASSERTED. I identified these four by signature and did not trace which test asserts which function, nor with what inputs. Stating that the six modules 'cover' these invariants would be an inference I did not perform, and this plan has repeatedly shown such inferences to be wrong."
+  },
+  "bounded_scope": "Local development activation of the successor MCP under grant 20261027-0532-hive-dev. Writes confined to three declared artifact paths; one observed. production_admission false, telegram_traffic false per the smoke artifact.",
+  "residuals": [
+    "R-1 The central 83/83 evidence is not integrity-verifiable as stored; see M-1 to M-3 in the activation review.",
+    "R-2 No per-invariant coverage mapping exists, so the relationship between the six modules and the specification functions is unmeasured.",
+    "R-3 Finite checks only. Any universal property of admission, authority or durability remains unproven.",
+    "R-4 I reproduced no build and no test; build and test evidence is read from coordinator receipts.",
+    "R-5 Evidence is pinned to candidate f217359b and current disk bytes; any source change invalidates it."
+  ]
+}

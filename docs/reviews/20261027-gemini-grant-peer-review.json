@@ -1,0 +1,12 @@
+{
+  "schema": "uos.grant-peer-review.v1",
+  "review_id": "20261027-gemini-grant-peer-review",
+  "reviewer": "openrouter/google/gemini-3.8-flash",
+  "model": "google/gemini-3.8-flash",
+  "reviewed_at": "2026-10-27T20:00:00Z",
+  "proposal_path": "var/harness/20261027-1808-pi-bound-grant-proposal.json",
+  "proposal_sha256": "7205d9bf1fc9c0142954d604fc5ac8ddcb1293777bba6739475a8924030279dc",
+  "verdict": "APPROVE",
+  "residual_risks": [],
+  "advisory_only": true
+}

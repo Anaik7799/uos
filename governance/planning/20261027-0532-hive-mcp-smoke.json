@@ -1,0 +1,9 @@
+{
+  "schema": "uos.hive-mcp-smoke.v1",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "MCP_ACTIVATE",
+  "observation": "written through initialized Gleam successor MCP under canonical task attempt 1",
+  "scope": "local_development_only",
+  "production_admission": false,
+  "telegram_traffic": false
+}

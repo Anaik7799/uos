@@ -1,0 +1,37 @@
+{
+  "schema": "uos.harness-core-formal-evidence.v1",
+  "method": "finite_executable_specification_and_reusable_bounded_model",
+  "candidate_sha256": "4366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "RECEIPT_FIX",
+  "attempt": 2,
+  "verdict": "FINITE_SCOPED_CHECKS_PASS",
+  "fresh_observation": {
+    "tests_reported": 84,
+    "build_result_sha256": "6d44f790ae16dac389c0b2525b434198c3e2e2127d232ab233d2a4f0664c9ac2",
+    "test_result_sha256": "a325c51ad4193eb26a5b812f1e867caf1be76028e85d8fb843211e348c8b0bc8",
+    "retained_digest_matches": 2,
+    "specification": "operations.effect_output_fields retains full-output hash and separately hashes/counts precisely dev.backend_diagnostic(output); fresh real tail_truncated receipt satisfies retained digest/count relation."
+  },
+  "reused_model": {
+    "path": "formal/lean/DevelopmentCoreGate.lean",
+    "sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+    "receipt": "governance/planning/20261027-0634-core-gate-proof-receipt.json",
+    "named_theorems": 47,
+    "satisfiable_examples": 12,
+    "fresh_rerun_in_this_task": false,
+    "scope": "Model guard/lease/dependency/protected-baseline properties; does not prove entire runtime refinement."
+  },
+  "reused_independent_oracle": {
+    "fixtures": 10,
+    "digests": 20,
+    "source_binding": "operations f64da7e1c46212b09d7c6c905ce0b69fba4ac035b70a14697009f91144e4c35b unchanged; prior0634proof packet retains comparison evidence",
+    "fresh_rerun_in_this_task": false
+  },
+  "limits": [
+    "Finite tests are not universal proof.",
+    "No posterior reliability probability from synthetic/correlated passes.",
+    "Selected source manifest is not full dependency closure; five module headers retained, full invocation uses six named modules.",
+    "No new Lean/Quint/Z3/Stan/Ruliad run claimed in this recovery invocation."
+  ]
+}

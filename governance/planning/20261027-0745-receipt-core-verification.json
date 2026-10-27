@@ -1,0 +1,194 @@
+{
+  "schema": "uos.harness-task-verification.v1",
+  "observed_utc": "2026-10-27T08:22:00Z",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "RECEIPT_FIX",
+  "attempt": 2,
+  "worker": "claude-hive-receipt-fix-2585",
+  "session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+  "candidate_sha256": "4366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92",
+  "grant_path": "var/harness/20261027-0745-core-verification-grant.json",
+  "grant_sha256": "c4c98b8a72a4cb96255c50f285ecf803b49550d5f5541670c3299856db128566",
+  "grant_review_sha256": "a9e2604f850bf4c8ab047c3331d7672aa9af10e104c25edcddd67922be5f89f3",
+  "status": "VERIFIED_DEVELOPMENT_ONLY",
+  "production_admission": false,
+  "two_key_complete": false,
+  "two_key_note": "Fresh runtime observation is present and candidate-bound. The formal key is a REUSED bounded model, not rerun in this invocation, so two-key verification is not asserted complete.",
+  "independent_review": {
+    "peer": {
+      "path": "docs/reviews/20261027-0745-receipt-core-peer-review.json",
+      "sha256": "aa8ec5cfe1adc4b80a049d5862e7e9a30e0fcefa442f554c339257492b70e696",
+      "verdict": "APPROVE_RECEIPT_FIX_DEVELOPMENT_ONLY",
+      "reviewer": "Codex independent coordinator, session 01a0ba74-d654-7de3-bdcf-25a0a85b93da, not the implementation author",
+      "authored_by_this_worker": false
+    },
+    "formal": {
+      "path": "governance/planning/20261027-0745-receipt-core-formal-evidence.json",
+      "sha256": "6e9888f1a828630904f525cc411f7a91f3bdf2be8d2a86e279b7101b2779a5ef",
+      "verdict": "FINITE_SCOPED_CHECKS_PASS",
+      "method": "finite_executable_specification_and_reusable_bounded_model",
+      "reused_model": "formal/lean/DevelopmentCoreGate.lean",
+      "reused_model_sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+      "named_theorems": 47,
+      "satisfiable_examples": 12,
+      "fresh_rerun_in_this_task": false,
+      "authored_by_this_worker": false
+    }
+  },
+  "effects": {
+    "receipt_pairs": 10,
+    "dangling_intents": 0,
+    "attach": [
+      {
+        "intent_id": "claude-2585-core-attach-1",
+        "verdict": "REFUSED_UNKNOWN",
+        "error": "attachment_outcome_unknown:regular_single_link_file_bound",
+        "durable_receipt": "none",
+        "pre_effect": true
+      },
+      {
+        "intent_id": "claude-2585-core-attach-2",
+        "verdict": "EXECUTED",
+        "coordinator_epoch": 2
+      },
+      {
+        "intent_id": "claude-2585-core-attach-3",
+        "verdict": "EXECUTED",
+        "coordinator_epoch": 3
+      }
+    ],
+    "build": {
+      "intent_id": "claude-2585-core-build-1",
+      "status": "EXECUTED",
+      "receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-build-1@result.json",
+      "result_sha256": "6d44f790ae16dac389c0b2525b434198c3e2e2127d232ab233d2a4f0664c9ac2",
+      "retained_bytes": 8408,
+      "output_retained_sha256": "b1dd2d6458da5740387da445e927d07f9e390c1c803b359620c71de2cfb07c9d"
+    },
+    "test": {
+      "intent_id": "claude-2585-core-test-1",
+      "status": "EXECUTED",
+      "receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-test-1@result.json",
+      "result_sha256": "a325c51ad4193eb26a5b812f1e867caf1be76028e85d8fb843211e348c8b0bc8",
+      "reported": "All 84 tests passed.",
+      "passed": 84,
+      "failed": 0,
+      "skipped": 0,
+      "modules": [
+        "harness_successor_test",
+        "harness_development_test",
+        "harness_authority_test",
+        "harness_sa_plan_boundary_test",
+        "mcp_authz_wiring_test",
+        "mcp_catalog_truth_test"
+      ],
+      "module_count": 6,
+      "output_bytes": 19023,
+      "retained_bytes": 8192,
+      "output_retention": "tail_truncated",
+      "output_retained_sha256": "09632374f55505c81e21df94a5e49ca3604ca2e7af21e4f2b42d9700edd3f5f3",
+      "output_sha256": "68c7f77aebe7656b9b49155fe5654f8542325f5bb26cd46f0a9a8ffae4323b6c",
+      "coverage_claim": "NONE. 84 is a reported total equal to the source declaration count 25+15+17+5+17+5. Five module headers retained in the tail; the successor module head is truncated. No per-assertion coverage is inferred."
+    },
+    "negative_write": {
+      "intent_id": "claude-2585-refuse-src-write",
+      "target": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "observed": "effect_unverified:write_scope_refused",
+      "result_status": "FAILED_OR_UNVERIFIED",
+      "result_failure": "write_scope_refused",
+      "result_signature": "a61147425262b037bd79e7547746a184f761646e6e47aaf74f1bebeec8f0cd21",
+      "intent_receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-refuse-src-write@intent.json",
+      "result_receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-refuse-src-write@result.json",
+      "refused_before_mutation": true,
+      "mutation_evidence": "All 14 entries of the receipt's own input_manifest verified byte-identical by sha256sum -c after the refusal; root independently recomputed the same 14 with 0 drift.",
+      "side_effect": "Set the unresolved-operation stop line, which blocked two further probes and cleared the active execution on reconcile.",
+      "reconciliation_verdict": "RESOLVED_KNOWN_NO_EFFECT",
+      "reconciliation_basis": "Terminal result receipt naming write_scope_refused plus unchanged guarded manifest; harness_reconcile returned the bound execution and the failure; harness_status then reported unresolved_operation false. No failure was represented as a pass.",
+      "not_run": [
+        "W2 other-task write path",
+        "W3 wrong expected_sha256"
+      ],
+      "not_run_reason": "blocked by the stop line, then withheld on operator instruction to avoid further negative effectful writes"
+    },
+    "read_refusals": [
+      {
+        "check": "out-of-scope read",
+        "path": "flake.nix",
+        "observed": "read_scope_refused"
+      },
+      {
+        "check": "traversal read",
+        "path": "../../etc/passwd",
+        "observed": "read_scope_refused"
+      },
+      {
+        "check": "absolute-path read",
+        "path": "/etc/passwd",
+        "observed": "read_scope_refused"
+      },
+      {
+        "check": "read before attach",
+        "observed": "current_task_required"
+      },
+      {
+        "check": "stale session heartbeat on write",
+        "observed": "refused: session heartbeat is stale; heartbeat before claiming or renewing",
+        "pre_effect": true
+      }
+    ]
+  },
+  "reconciliation_of_root_compaction": {
+    "preserved": "var/harness/20261027-0745-risk-oversize-preserved.json",
+    "preserved_bytes": 295864,
+    "canonical": "var/harness/20261027-0745-core-current-risk.json",
+    "canonical_bytes": 236991,
+    "read_cap_bytes": 262144,
+    "sorted_compact_digest_both_sides": "8d6116ab33832285dde7aba17a3f6e2223ffa4dde8b7a73d6507e56ba0b700a6",
+    "records_each_side": 27,
+    "verdict": "FORMATTING_ONLY_VALUE_IDENTICAL",
+    "independently_verified_by_this_worker": true
+  },
+  "files_written": [
+    {
+      "path": "governance/planning/20261027-0745-receipt-core-smoke.json",
+      "sha256": "4994654a2ad4eddb094274bac7090348639d964bf9363ffeeb0aaba9c4d58373"
+    },
+    {
+      "path": "docs/journal/20261027-0745-receipt-core-journal.md",
+      "sha256": "b08472553fcbb6126da757ae76b173bf704f44c9b7e7492af486999ed78bc2e2"
+    }
+  ],
+  "scope_conformance": {
+    "source_edits": 0,
+    "config_edits": 0,
+    "guidance_edits": 0,
+    "production_effects": 0,
+    "network_or_provider_calls": 0,
+    "external_messages": 0,
+    "new_ev_numbers_minted": 0,
+    "prior_receipts_preserved": 20,
+    "guarded_source_hashes_verified": 14,
+    "guarded_source_drift": 0
+  },
+  "residuals": [
+    "No fresh Lean/Quint/Z3/Stan run in this invocation; the formal key is reused. Two-key verification is therefore not complete.",
+    "Finite tests are not universal proof; no posterior reliability figure is derived from correlated passes.",
+    "Per-assertion coverage is not asserted; the selected manifest is not the full dependency closure.",
+    "output_sha256 is metadata: the unavailable full output text was not rehashed by either party.",
+    "The repair discloses truncation; it does not recover the dropped prefix. The attempt-1 RED diagnostic was itself lost in that prefix.",
+    "W2 and W3 refusal checks remain NOT_RUN.",
+    "The 262144-byte read cap is a live constraint on evidence inputs; an oversize portfolio fails attach with an outcome labelled unknown, deterministically and pre-effect.",
+    "backend_diagnostic's 16384-byte fallback remains in development.gleam, outside every write scope used so far.",
+    "MCP_ACTIVATE is untouched and still available; it requires root acceptance, risk readiness and its own fresh task-specific receipts."
+  ],
+  "authority": "Sa-plan is the sole execution authority. This record is evidence and grants no admission.",
+  "ev_boundary": "EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted.",
+  "verdict": "VERIFIED",
+  "build_receipt_sha256": "6d44f790ae16dac389c0b2525b434198c3e2e2127d232ab233d2a4f0664c9ac2",
+  "test_receipt_sha256": "a325c51ad4193eb26a5b812f1e867caf1be76028e85d8fb843211e348c8b0bc8",
+  "peer_review_path": "docs/reviews/20261027-0745-receipt-core-peer-review.json",
+  "peer_review_sha256": "aa8ec5cfe1adc4b80a049d5862e7e9a30e0fcefa442f554c339257492b70e696",
+  "formal_evidence_path": "governance/planning/20261027-0745-receipt-core-formal-evidence.json",
+  "formal_evidence_sha256": "6e9888f1a828630904f525cc411f7a91f3bdf2be8d2a86e279b7101b2779a5ef",
+  "verdict_scope": "Development only. The VERIFIED verdict asserts that this task's verification bindings hold at the named candidate. It is not production admission and not a two-key completion claim; see two_key_complete and residuals."
+}

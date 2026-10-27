@@ -1,0 +1,69 @@
+{
+  "schema": "uos.harness-core-peer-review.v1",
+  "verdict": "APPROVE_MCP_ACTIVATION_DEVELOPMENT_ONLY",
+  "observed_at": "2026-10-27T08:30:26Z",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "role": "Independent Codex coordinator"
+  },
+  "binding": {
+    "plan": "uos/hive-development/20261027-0532",
+    "task": "MCP_ACTIVATE",
+    "attempt": 2,
+    "worker": "claude-hive-receipt-fix-2585",
+    "candidate_sha256": "4366da874475ca47b747cbc89c1c3382c589c1c11bf14c54905ae98ca7180b92",
+    "grant_sha256": "c4c98b8a72a4cb96255c50f285ecf803b49550d5f5541670c3299856db128566"
+  },
+  "checks": [
+    {
+      "id": "source",
+      "status": "PASS",
+      "detail": "All14 manifest hashes independently recomputed without drift; manifestSHA4366da...; input/output manifests equal on build,test,smoke."
+    },
+    {
+      "id": "output",
+      "status": "PASS",
+      "detail": "GNU sha256sum matches all3 retained outputs. Build8408bytes/full7d0cf03c40608afd894abe2143d23d1f102839569271c4fb54eeedb2d58a454f; test8192retained/19013full, explicittail_truncated, retained54f3d9bdb8b2c96b6f3f25f4dbeecd7cfc5d3d556e6c02369171facf12e6f4ee. Unavailable fulltestbytes not rehashed."
+    },
+    {
+      "id": "tests",
+      "status": "PASS",
+      "detail": "Integrity-checked terminal All84 tests passed / successor verification: ok; selectedsix-module invocation. Five headers retained; no complete per-invariant coverage claim."
+    },
+    {
+      "id": "read_refusal",
+      "status": "PASS",
+      "detail": "Actual RPC57-60 and63 refuse out-of-scope reads;62reads scoped harnesscontract;61refuses claim while task active. Read-scope rejection is expected behavior, not service failure."
+    },
+    {
+      "id": "write_replay",
+      "status": "PASS",
+      "detail": "Smokeartifact hash137614fd0055a32792a8f352f4f5aeb3a7a6b00ffa8f930dafd4f53589b72bf1 equals receipt output. Two RPC65 responses structurally identical. ABSENT write cannot independently succeed twice with existing target, consistent with cached same-intent replay."
+    },
+    {
+      "id": "clock_trace",
+      "status": "PASS",
+      "detail": "All3 receipts have ACTIVE_OBSERVATION_PASS, matching task2epoch2 and valid32hex/16hex trace/span strings. Actual source/lifetime/policy fencing remains invocation-specific."
+    }
+  ],
+  "receipts": {
+    "build": {
+      "path": "var/harness/effects/20261027-0745-core-verification@claude-2585-mcp-build-1@result.json",
+      "sha256": "018b820ec0fc2232efb8de8c296b3c59841f1892ea9ef85a0edebf30f524cff5"
+    },
+    "test": {
+      "path": "var/harness/effects/20261027-0745-core-verification@claude-2585-mcp-test-1@result.json",
+      "sha256": "97c05ac700c29dcc17fed6c672852f25be95df28c33f0fd3867bfb2238ccbf17"
+    },
+    "smoke": {
+      "path": "var/harness/effects/20261027-0745-core-verification@claude-2585-mcp-smoke-write@result.json",
+      "sha256": "c4cd278c40b50f822c1d702633c5bd30520e41ee7279f93ad78d11e81fce6a82"
+    }
+  },
+  "limits": [
+    "Local private development MCP only. Standard connectedMCP still4readonly tools; capability catalog not runtimeadmission.",
+    "No cross-grant/physical exactly-once, hostile-writer isolation or full transitive binary provenance proof.",
+    "No full client-loaded policy, AGY execution, allservices, production or Telegram acceptance. AGENT_PARITY remains separate.",
+    "Completion packet requires exact flat fields and passing journal/diagram validation before finish."
+  ]
+}

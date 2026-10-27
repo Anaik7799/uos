@@ -1,0 +1,50 @@
+{
+  "schema": "uos.harness-activation-review.v1",
+  "verdict": "HOLD",
+  "reviewer": {
+    "session_id": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "worker": "claude-hive-grant-review-20261027",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "ACTIVATE_REVIEW",
+    "attempt": 1
+  },
+  "candidate_sha256": "f217359b368f8a0714503bc7a87b001ee1e41d51919608382ec0bfd5e580da65",
+  "candidate_binding": {
+    "basis": "SHA256 of the exact input_manifest string, identical in all three effect receipts",
+    "manifest_entries": 10,
+    "manifest_vs_disk": "10/10 recomputed by me from current bytes, drift 0",
+    "grant_id": "20261027-0532-hive-dev",
+    "parent_task": "MCP_ACTIVATE"
+  },
+  "receipt_hashes": {
+    "var/harness/effects/20261027-0532-hive-dev@activate-build-1@result.json": "8d3c4f8f9b1c3aff91feefb2fdffd5a070d84e7cc48709ec13bd10cc4307a07e",
+    "var/harness/effects/20261027-0532-hive-dev@activate-test-1@result.json": "503a6e4f1d29f692c0b63931418338a272277725b8731c6a976b4a5cab3228d2",
+    "var/harness/effects/20261027-0532-hive-dev@activate-smoke-write-1@result.json": "df6a8fad744d9b74023b544d05a2464b7f92b2424a97b267b4bf9dfb8d9ea3b1",
+    "governance/planning/20261027-0532-hive-mcp-smoke.json": "af250349c20b8e6ab504945dd8873757376d4585e1d349116b6bbaac0a34f685",
+    "var/harness/20261027-0532-hive/activation-transcript.json": "c4702f8b51fc00bd735bd9af4f2cfcf73ad016250301c0613138c854d8561666"
+  },
+  "findings": [
+    { "id": "A-MANIFEST-PARITY", "status": "PASS", "detail": "input_manifest is byte-identical across activate-build-1, activate-test-1 and activate-smoke-write-1: same 1420-character string, same SHA256 f217359b368f8a0714503bc7a87b001ee1e41d51919608382ec0bfd5e580da65. Each receipt's declared input_sha256 equals my recomputation." },
+    { "id": "A-MANIFEST-DISK", "status": "PASS", "detail": "The manifest's 10 entries were each recomputed by me from current disk bytes: 10/10 match, drift 0. Coverage is exactly the 4 harness sources (admission, operations, successor_mcp, development) and the 6 named test modules." },
+    { "id": "A-BUILD-DIGEST", "status": "PASS", "detail": "activate-build-1 output is 7911 bytes and its declared output_sha256 equals my recomputation over those bytes." },
+    { "id": "A-SMOKE-DIGEST", "status": "PASS", "detail": "activate-smoke-write-1 output is 64 bytes and its declared output_sha256 equals my recomputation." },
+    { "id": "A-TEST-DIGEST", "status": "FAIL", "detail": "activate-test-1 output is stored at EXACTLY 8192 bytes and its declared output_sha256 910c48f99747567f1e229ef5c430ab9bb707440d6dabd10c1ca5053b39bd5a30 does NOT equal my recomputation 0ad542ecab6cd78de29bca327b4c087b98dba7837f9cbd5572296311957f478e over the stored bytes. The stored output begins mid-word with \"est...ok\", so it is head-truncated and the tail was retained. The declared digest therefore attests an untruncated output I do not possess. This is not evidence of tampering; it is an absence of verifiable integrity for the one artifact that carries the central 83/83 claim. Because the digest cannot match the retained bytes either way, a mismatch here is uninformative and the digest provides no integrity guarantee for what I can read." },
+    { "id": "A-MODULES", "status": "PASS", "detail": "All six named modules occur in the retained output, searched as substrings rather than line-start, as instructed: harness_successor_test x1 (at the truncated head, consistent with interleaved diagnostics), harness_development_test x16, harness_authority_test x18, harness_sa_plan_boundary_test x6, mcp_authz_wiring_test x18, mcp_catalog_truth_test x6." },
+    { "id": "A-TERMINALS", "status": "PASS_UNDER_A-TEST-DIGEST", "detail": "The retained tail contains 'All 83 tests passed.' and 'successor verification: ok'. Reported count parsed as 83. These are read from bytes whose integrity I could not verify; see A-TEST-DIGEST." },
+    { "id": "A-NO-SCOPE-EXPANSION", "status": "PASS", "detail": "Scanned the test output for sendMessage, api.telegram.org, production and admitted tokens. The only hit is one occurrence of 'production' inside the TEST NAME harness_development_test: production_wrong_worker_attempt_and_expiry_are_rejected_test, which is a rejection test and not an effect. The smoke artifact declares scope local_development_only, production_admission false, telegram_traffic false." },
+    { "id": "A-WRITE-CONFINEMENT", "status": "PASS", "detail": "The only observed write artifact is governance/planning/20261027-0532-hive-mcp-smoke.json, which is inside the three declared write paths of the approved grant. No write outside the declared set was observed in these receipts." }
+  ],
+  "hold_reason": "A-TEST-DIGEST. Every other check passes and the candidate binding is strong, but the single artifact carrying the activation's central claim (83/83 tests passed) has no verifiable integrity against the bytes available to me.",
+  "missing_evidence_required_to_clear": [
+    "M-1 Supply the UNTRUNCATED activate-test-1 output whose SHA256 equals the declared 910c48f997..., or",
+    "M-2 Supply an additional digest computed over the RETAINED 8192 bytes together with an explicit truncation declaration (for example retained_bytes, truncation: head, full_output_sha256), so that what a reviewer can read is itself integrity-checked, or",
+    "M-3 Supply a per-module pass/count receipt for the six named modules, which would make the 83 total verifiable by parts rather than by an unverifiable whole."
+  ],
+  "limits": [
+    "This review concerns DEVELOPMENT scope only. It is not system admission, not production authority, and asserts no Telegram capability.",
+    "I did not complete or modify the parent MCP_ACTIVATE, did not touch control, source, config or the grant, and ran no build or test myself.",
+    "The 83/83 claim and the successor-verification line are read from a truncated artifact; see A-TEST-DIGEST and M-1 to M-3.",
+    "I did not construct a per-invariant mapping from the six test modules to the specification functions in development.gleam. I observed module presence and terminal counts only; see the formal evidence artifact for what is and is not claimed.",
+    "The one 'production' token is a test name; I verified its surrounding context rather than inferring from the count."
+  ]
+}

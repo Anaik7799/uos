@@ -1,0 +1,13 @@
+{
+  "schema": "uos.code-peer-review.v1",
+  "review_id": "20261027-gemini-code-review",
+  "reviewer": "openrouter/google/gemini-3.8-flash",
+  "model": "google/gemini-3.8-flash",
+  "reviewed_at": "2026-10-27T22:30:00Z",
+  "bundle": "docs/reviews/20261027-1910-code-review-bundle.md",
+  "verdict": "APPROVE",
+  "residual_risks": [
+    "Hardcoded fallback path in verification.rs assumes specific host environment if repo root"
+  ],
+  "advisory_only": true
+}

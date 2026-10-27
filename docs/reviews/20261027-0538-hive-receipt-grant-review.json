@@ -1,0 +1,46 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "reviewer": {
+    "session_id": "01a0ba74-d654-7de3-bdcf-25a0a85b93da",
+    "worker": "codex-01a0ba74-hive",
+    "plan_id": "uos/hive-development/20261027-0532",
+    "task_id": "RECEIPT_GRANT_REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261027-0538-hive-receipt-grant-proposal.json",
+    "sha256": "f5a786adac31a6db5668b69f7b8a9088cfead7ef5886f05c019f2c530459a3e1",
+    "grant_id": "20261027-0538-hive-receipt-fix",
+    "target_session": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "target_worker": "claude-hive-receipt-fix-20261027"
+  },
+  "findings": [
+    {
+      "id": "scope",
+      "status": "PASS",
+      "detail": "One canonical RECEIPT_FIX task. Only operations.gleam, harness_successor_test.gleam and two new evidence artifacts writable. Same six test modules. Identity and worker independent of reviewer."
+    },
+    {
+      "id": "need",
+      "status": "PASS",
+      "detail": "Independent A-TEST-DIGEST HOLD reproduced from source: backend_diagnostic(output) stored while digest(output) records full output hash. Finite repair and actual failing regression required."
+    },
+    {
+      "id": "candidate",
+      "status": "PASS",
+      "detail": "All ten original source hashes recomputed, unchanged. Existing loaded-control identities, boot and host pins preserved. Source writes intentionally change candidate under bounded grant; no production or admission authority."
+    },
+    {
+      "id": "limits",
+      "status": "PASS",
+      "detail": "Expiry remains original 2026-10-27 finite 12-hour horizon. Scope grants implementation/test only. New loaded control identities require new reviewed activation grant; do not restart using outdated identity pins."
+    }
+  ],
+  "limits": [
+    "This approves development work only, not the resulting code.",
+    "Codex has not implemented candidate changes and will independently review Claude's output.",
+    "Keep full_output_sha256 and explicit retained bytes/truncation semantics; bounded diagnostics may omit passing test details.",
+    "No arbitrary shell, hidden client configuration, production or Telegram effects authorized by this grant."
+  ]
+}

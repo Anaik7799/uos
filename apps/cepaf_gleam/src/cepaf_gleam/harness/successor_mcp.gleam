@@ -6,6 +6,7 @@ import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/mcp
 import cepaf_gleam/harness/operations as ops
+import cepaf_gleam/harness/planning_intents as planning
 import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/protocol.{type ToolDefinition, ToolDefinition}
 import cepaf_gleam/planning/sa_plan_bridge as sa
@@ -262,6 +263,26 @@ fn dispatch(
 ) -> #(State, Result(json.Json, String)) {
   case name {
     "harness_status" -> #(state, status(state))
+    // The 14th private tool. It deliberately does NOT route through the
+    // generic grant+intent effect wrapper: that outer path keys receipts by
+    // grant id and includes attempt in the signature, so wrapping it would
+    // refuse a replayed logical id before the inner ledger could gate it.
+    // The inner ledger gates before every CLI dispatch instead.
+    "harness_plan_intent" -> {
+      let outcome = case state.unresolved, state.execution {
+        True, _ -> Error("unresolved_operation_stop_line")
+        False, Some(execution) -> planning.submit(execution, args)
+        False, None -> Error("current_task_required")
+      }
+      let unresolved = case outcome {
+        Error(reason) ->
+          state.unresolved
+          || a.outcome_unknown(reason)
+          || string.starts_with(reason, "uncertain:")
+        Ok(_) -> state.unresolved
+      }
+      #(State(..state, unresolved: unresolved), outcome)
+    }
     "harness_clock" -> #(
       state,
       a.check(state.grant) |> result.map(clock.to_json),

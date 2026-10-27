@@ -1,0 +1,427 @@
+{
+  "schema": "uos.agent-learning-validation.v1",
+  "observed_utc": "2026-10-27T09:46:00Z",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "AGENT_PARITY",
+  "attempt": 3,
+  "coordinator_task_epoch": 3,
+  "workspace_epoch_acquired": 9,
+  "worker": "claude-hive-receipt-fix-2585",
+  "session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+  "grant": "var/harness/20261027-0836-guidance-grant-v2.json",
+  "grant_sha256": "02f673027a29d0dc7c2e884a4feb8b74ba25c6423c92d891ded046e67ee304a8",
+  "grant_review_sha256": "a3f85704eea4ab2a68433a226944162dfc543479def8f8dc2b03bfb127cebf24",
+  "status": "PARTIAL_READY_FOR_INDEPENDENT_REVIEW",
+  "task_completed": false,
+  "state_after_release": "EXPLICITLY_PARTIAL_NOT_A_NEW_READINESS_BASELINE",
+  "task_completion_blocked_by": [
+    "Google activation HOLD",
+    "client adoption UNRUN",
+    "hidden and plugin-cache config paths out of scope and unobserved",
+    "harness_assess full-portfolio scope gap unresolved"
+  ],
+  "production_admission": false,
+  "final_five_documents": [
+    {
+      "n": 1,
+      "path": "contracts/rules/20261027-0836-core-development-learnings.md",
+      "sha256": "7e332b39ef738ca4ffaf8a25788a48c38364e07cc11858c794c79886d8a2644f",
+      "source": "root review artifacts, authoritative"
+    },
+    {
+      "n": 2,
+      "path": "governance/agents/20261027-0836-learning-bindings.md",
+      "sha256": "fbb0e69001d9aec70a6bbe3508fc760ffeca4892c8071962b134a048fa5ab02a",
+      "source": "root review artifacts, authoritative"
+    },
+    {
+      "n": 3,
+      "path": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+      "sha256": "75b1fe25781d86f268528df28d6ad0a2099c5b80d6df9a71f8bba98eb6f11790",
+      "source": "root review artifacts, authoritative"
+    },
+    {
+      "n": 4,
+      "path": "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md",
+      "sha256": "ad7a75a61153f1349927517ee6386aca05b28013c7c6dd2eadf97f89eff43f7b",
+      "source": "root review artifacts, authoritative"
+    },
+    {
+      "n": 5,
+      "path": "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md",
+      "sha256": "fbd0f2c69d50c3dcd7be584b524c7f3d788829461e026b758e931f153649da59",
+      "source": "root review artifacts, authoritative"
+    }
+  ],
+  "review_corrections_applied": [
+    {
+      "id": 1,
+      "correction": "mandatory 18-checkpoint plus Domain 6 checklist and navigation missing from both new docs",
+      "applied": "both new docs now carry all 6 domains, 24 checkpoints, with runtime items left UNCHECKED because a documentation package executes nothing; navigation and Tailnet links added"
+    },
+    {
+      "id": 2,
+      "correction": "time wording overbroad; precision must not be banned globally",
+      "applied": "L-05 now a three-row table: grant expires_utc_us is a decimal STRING of integral microseconds; risk ready_since and observed_at are whole-second canonical UTC; clock-observation UTC MAY carry fractional seconds and must not be stripped"
+    },
+    {
+      "id": 3,
+      "correction": "heartbeat scopes conflated",
+      "applied": "L-07 now distinguishes native coordinator heartbeat (session only), harness_heartbeat with a task attached (session AND active coordinator task-lease, receipt carries coordinator_renewal), and the Sa-plan lease (renewed by neither)",
+      "evidence": "attached heartbeat receipt observed this attempt: keys [coordinator_renewal, heartbeat, sa_plan_lease_until_ns, sa_plan_renewal]; coordinator_renewal operation=renew epoch=2; sa_plan_renewal=NOT_IMPLEMENTED_RELEASE_AND_RECLAIM_BEFORE_EXPIRY; source successor_mcp.gleam:290-320"
+    },
+    {
+      "id": 4,
+      "correction": "L-08 generalization unsafe: terminal receipt plus unchanged source map does not prove absence of network or physical effect",
+      "applied": "L-08 now requires an oracle specific to the operation attempted, states that an unchanged source map suffices only for a source-tree write, and records that the original known-no-effect verdict also rested on the refusal occurring BEFORE the file primitive was reached"
+    },
+    {
+      "id": 5,
+      "correction": "'negative effectful test at most once' read as a blanket negative-coverage ban",
+      "applied": "L-09 now scoped to the SAME unresolved effect: no automatic retry of that effect, all required negative cases preserved and expected, effectful fault cases isolated with planned recovery, read/claim-class refusals preferred only where they test the same guard. SOP and bindings reworded to match"
+    },
+    {
+      "id": 6,
+      "correction": "L-02 implied model theorems become false",
+      "applied": "L-02 now says a graph change forces a recheck of the model's closure and minimality claims, and that theorems proved under declared assumptions remain proved under those assumptions"
+    },
+    {
+      "id": 7,
+      "correction": "intro overclaimed 'every item observed, none a model opinion'",
+      "applied": "new section 0 states these are normative instructions motivated by observations, distinguishes normative instruction from fact, and marks purely factual statements as observed. Public baseline journal and review links plus the existing Superpowers bindings link added to both new docs for human inspection"
+    },
+    {
+      "id": "8a",
+      "correction": "L-10 flat binding list incomplete",
+      "applied": "L-10 and the full SKILL now list the complete set: schema exactly uos.harness-task-verification.v1, plan, task, attempt, candidate_sha256, build_receipt_sha256, test_receipt_sha256, verdict exactly VERIFIED, peer_review_path/_sha256, formal_evidence_path/_sha256, each review file re-verified against its digest"
+    },
+    {
+      "id": "8b",
+      "correction": "qualifiers must never justify VERIFIED with unfinished scope",
+      "applied": "both documents now state that an open scope takes an honest partial artifact with a non-VERIFIED verdict plus a release, never a completion packet. This record itself follows that rule"
+    },
+    {
+      "id": "9a",
+      "correction": "13 tools are advertised, not all verified",
+      "applied": "both new docs now say the harness ADVERTISES 13 scoped tools, the core workflow is exercised, not all 13 are fully verified, and exposure is not verification"
+    },
+    {
+      "id": "9b",
+      "correction": "harness_assess full-portfolio scope gap",
+      "applied": "recorded as an UNPROBED scope and configuration gap under PLANNING_MCP, inferred from source and NOT an observed failed run; no bypass attempted",
+      "independently_verified": "assessment_paths_allowed at operations.gleam:627 called at :678; governance/planning/20261027-0634-hive-development-readiness-plan.json exists at 71312 bytes and is absent from this grant's AGENT_PARITY read_paths, so such a call would be rejected"
+    }
+  ],
+  "transclusion_and_link_check": {
+    "zk_and_wiki_ids": "verified to exist by root; retained, not phantom",
+    "journal_and_review_links": "all targets verified present on disk this attempt",
+    "superpowers_bindings_link": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md, verified present"
+  },
+  "alias_wiring_verified": {
+    "claim": "8 aliases resolve to the 2 owned SKILL files",
+    "observed": "4 x full-symbiosis and 4 x gemini-symbiosis under .claude, .gemini, .agents, .codex",
+    "verdict": "CONFIRMED"
+  },
+  "finding_sibling_workspace_aliases_bypass_owned_files": {
+    "observed": ".uos-workspaces/w-lifecycle/.claude/skills/* resolve to external read-only trees (/home/an/.codex, /home/an/dev/ver/zigvm, /home/an/dev/ver/c3i)",
+    "consequence": "an agent working there reads unowned guidance; the canonical checkout's four surfaces are correctly wired",
+    "action": "recorded; out of this grant's write scope"
+  },
+  "measured_scaling_gap_for_planning_mcp": {
+    "portfolio_bytes": 245379,
+    "read_cap_bytes": 262144,
+    "occupancy_percent": 94,
+    "headroom_bytes": 16765,
+    "task_rows": 28,
+    "statement": "The earlier compaction fixed a pretty-format incident; it does not bound future growth. The currently accepted 28-task scope fits.",
+    "requirement": "Before any large task expansion, design a bounded plan and assessment representation WITH coverage tests under its own reviewed task.",
+    "explicitly_not_claimed": [
+      "raising the cap",
+      "relaxing limits generally",
+      "full scalability of the current design"
+    ]
+  },
+  "adoption": {
+    "state": "UNRUN",
+    "clients_observed_loading_any_change": 0,
+    "plugins_installed_or_updated": 0,
+    "hooks_registered": 0,
+    "enforcement_claimed": false,
+    "native_4_tool_surface_can_read_public_guidance": true,
+    "readability_is_not_adoption": true
+  },
+  "scope_conformance": {
+    "hidden_path_edits": 0,
+    "client_config_edits": 0,
+    "plugin_cache_edits": 0,
+    "source_or_control_edits": 0,
+    "install_calls": 0,
+    "provider_calls": 0,
+    "production_calls": 0,
+    "new_skill_or_framework_created": 0,
+    "new_tasks_created": 0,
+    "new_ev_numbers_minted": 0,
+    "guarded_source_hashes_verified": 14,
+    "guarded_source_drift": 0,
+    "solver_reruns": 0,
+    "new_theorem_runs": 0,
+    "api_bypass_attempts": 0
+  },
+  "final_candidate_checks": {
+    "candidate_sha256": "9103d092c5d4ecbd269752c59adb58020c9ace7c2c41500c313f063e3c1062ef",
+    "manifest_entries": 20,
+    "build": {
+      "intent_id": "claude-2585-g5-build-1",
+      "receipt_sha256": "2cfbdf849d1b10940d3cc744aae9d4bda966b47f6a18e8d6a5a2e24cd3c1d196",
+      "status": "EXECUTED"
+    },
+    "test": {
+      "intent_id": "claude-2585-g5-test-1",
+      "receipt_sha256": "7439492c4e76374addd321cd48176013482bdfdf5b84228db44ef21defd41184",
+      "status": "EXECUTED",
+      "reported": "All 84 tests passed.",
+      "passed": 84,
+      "failed": 0,
+      "skipped": 0,
+      "output_retained_sha256": "ecf2077bb234aa3d859c34cc00ec359eb48a3788fc723d89bfa86bd8b49096a8"
+    }
+  },
+  "status_snapshot": {
+    "source": "harness_status canonical_cli_jsonl read this attempt",
+    "rows": 28,
+    "completed": 11,
+    "executing": 1,
+    "available": 16,
+    "task_completion_percent": 39,
+    "percent_means": "TASKS in this plan, including one audit-repair task. NOT functionality, NOT capability coverage, NOT readiness.",
+    "telegram_plan": {
+      "plan": "uos/telegram-fractal-tests/20261027-0312",
+      "complete": 1,
+      "total": 16,
+      "source": "root-reported"
+    },
+    "capability_inventory": {
+      "declared": 65,
+      "unprobed": 53,
+      "unavailable": 12,
+      "admission": "unknown",
+      "coverage_percent": "NOT COMPUTABLE"
+    },
+    "mcp_surfaces": {
+      "natively_connected_readonly_operations": 4,
+      "private_harness_advertised_tools": 13,
+      "private_harness_fully_verified_tools": "core workflow only, not all 13",
+      "note": "exposure is not verification; neither figure is a coverage percentage"
+    },
+    "frozen_model": {
+      "artifact": "13-node closure, 9 of 13 gates",
+      "frozen_on": "27-task graph",
+      "status": "theorems remain proved under declared assumptions; closure and minimality claims require recheck",
+      "not": "current functionality, runtime refinement or optimality",
+      "invalidated_as_current_by": [
+        "28th task GUIDANCE_REBIND, outside the original DAG closure",
+        "this grant's mandatory review authority, also outside it"
+      ]
+    },
+    "major_remaining": [
+      "AGENT_PARITY",
+      "PLANNING_MCP",
+      "SERVICE_VERIFY",
+      "HIVE_VERIFY"
+    ]
+  },
+  "eta_estimates": {
+    "basis": "analyst estimates, not commitments, not from a measured velocity model",
+    "guidance_update": "30-90 minutes",
+    "remaining_core": "1-3 focused working days",
+    "broader_hive_and_telegram": "1-2 weeks, PROVISIONAL, covering verification of implementations that already exist; missing implementations are UNSIZED pending a capability census",
+    "bottlenecks": [
+      "Google activation",
+      "client adoption and activation",
+      "normal planning MCP",
+      "service faults",
+      "soak duration"
+    ],
+    "critical_path": "capability census -> PLANNING_MCP -> SERVICE_VERIFY -> HIVE_VERIFY; AGENT_PARITY closable only after observed client and Google activation",
+    "no_whole_system_eta": "not defensible while 53 capabilities are unprobed and 12 unavailable",
+    "no_full_hive_coverage_claim": true
+  },
+  "residuals": [
+    "Client adoption of all five changes is UNRUN; readability by the 4-tool surface is not adoption.",
+    "SKILL edits are factual API reference only, not behaviour-pressure-tested, and claim no new discipline.",
+    "Google and client activation remain HOLD; AGENT_PARITY stays open.",
+    "Hidden, client-config and plugin-cache paths neither read nor edited.",
+    "harness_assess full-portfolio scope gap is unprobed and unresolved; it needs a grant whose read paths include the readiness plan, decided by root.",
+    "Of 13 advertised harness tools, only the core workflow is exercised.",
+    "w-lifecycle sibling workspace aliases resolve to external trees; recorded, out of scope.",
+    "Frozen 13-node closure needs closure and minimality recheck through a real planning API.",
+    "Risk portfolio at ~94% of the read cap; bounded representation design with coverage tests is prerequisite to large task expansion.",
+    "State after this release is explicitly partial, not a new normal readiness baseline.",
+    "No global token, cost, reliability or optimality optimum claimed; no full hive coverage claim."
+  ],
+  "next_step": "root independent review of the five FINAL documents against this record and the final-candidate receipts",
+  "authority": "Sa-plan is the sole execution authority. This record is evidence and grants no admission.",
+  "ev_boundary": "EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted.",
+  "binding_state": "HELD_ATTACHED_AWAITING_ROOT_REVIEW_PAYLOAD",
+  "statistics_policy": {
+    "bayesian_or_beta_binomial_update": "NONE_OFFERED_AND_NONE_JUSTIFIED",
+    "reason": "the twelve learnings are correlated outputs of the same few sessions; no likelihood function and no data model exist, so no posterior is computable",
+    "alternative_posterior_supplied": false,
+    "lyapunov_or_stability_claim": "WITHDRAWN",
+    "lyapunov_reason": "a discrete count of unresolved effects observed at zero is not a continuous derivative and proves no stability property",
+    "plain_observation_retained": "unresolved or unverified effects were 0 at every point in this attempt; no effectful negative probe was run",
+    "earlier_drafts_corrected": "this journal previously stated a 0.85 to 0.95 posterior; that was unsupported and is removed"
+  },
+  "additive_correction_of_two_completed_journals": {
+    "scope": "ADDITIVE NOTICE ONLY. Both files are outside this grant write paths and their bytes are preserved unchanged.",
+    "records": [
+      {
+        "path": "docs/journal/20261027-0745-receipt-core-journal.md",
+        "sha256": "e0f35c15907fd862de50c4318f773343ed4c3123a1822e7064da9b1cb76a0bbd",
+        "unsupported_claims": [
+          "0.85 to 0.97 Bayesian posterior",
+          "dV/dt <= 0 although its own V went 0 to 1 to 0"
+        ]
+      },
+      {
+        "path": "docs/journal/20261027-0745-mcp-core-journal.md",
+        "sha256": "e7da6ab32cdd85757767bc205af9adfc74a12af0a9123baa83cf22762df40aeb",
+        "unsupported_claims": [
+          "0.90 to 0.96 posterior on a qualitative unlikely, with no calibrated likelihood"
+        ]
+      }
+    ],
+    "verdict": "those probability and derivative claims are NOT admissible reliability evidence; scope qualifiers do not repair them",
+    "alternative_posterior_supplied": false,
+    "raw_evidence_still_valid": [
+      "84-test results",
+      "source and receipt digests",
+      "replay observation"
+    ],
+    "cross_referenced_from": [
+      "contracts/rules/20261027-0836-core-development-learnings.md L-11",
+      "docs/journal/20261027-0836-agent-learning-update-journal.md section 11"
+    ]
+  },
+  "forecast_resolution": {
+    "id": "F1",
+    "original_p": 0.80,
+    "original_text_unchanged": true,
+    "outcome": 0,
+    "resolved": "FALSE",
+    "brier_loss": 0.64,
+    "falsified_by": "root material 7-point review plus a 2-point and a 6-point correction packet, returning factual corrections to L-02, L-05, L-07, L-08, L-09, L-10",
+    "reopened_or_restated": false,
+    "replacement_forecast_written_after_outcome": false
+  },
+  "semantic_corrections_this_pass": [
+    {
+      "id": "J1",
+      "correction": "journal carried zero CHK IDs",
+      "applied": "canonical 6-domain 24-ID checklist appended; CHK-SECT still PASS"
+    },
+    {
+      "id": "J2",
+      "correction": "CHK-24 must be UNRUN, not PASS",
+      "applied": "CHK-24 marked UNRUN: no document metric was reported, so no metric path was exercised; absence of a passing number is not evidence of fail-closed behaviour"
+    },
+    {
+      "id": "J3",
+      "correction": "remove unsupported 0.85 to 0.95 posterior",
+      "applied": "removed, no replacement number"
+    },
+    {
+      "id": "J4",
+      "correction": "discrete V observations are not a derivative or stability proof",
+      "applied": "Lyapunov claim withdrawn; plain observation retained"
+    },
+    {
+      "id": "J5",
+      "correction": "F1 must resolve FALSE at original p with Brier 0.64",
+      "applied": "resolved FALSE, p unchanged at 0.80, Brier 0.64 recorded; not reopened and not replaced"
+    },
+    {
+      "id": "L08",
+      "correction": "unchanged-source sufficiency claim unsafe even for a tree write",
+      "applied": "clause removed entirely; an unchanged source map is stated NOT sufficient for any operation, since even a byte-identical rewrite can carry side effects. Retained basis: refusal occurred pre-dispatch before the file primitive, plus terminal receipt, plus an operation-specific oracle requirement"
+    },
+    {
+      "id": "L09",
+      "correction": "invented blanket retry-once allowance",
+      "applied": "removed; a quarantined unknown is not retryable, and once an outcome is known retry is governed by actual policy and budget controls, not any fixed count"
+    }
+  ],
+  "journal_sha256": "460282c268cbe3831787c5ac329275d531a408b117febbfc8c4d73e128e25723",
+  "root_review_payload": {
+    "state": "AWAITED",
+    "authored_by": "root",
+    "persisted_by": "claude via MCP into governance/planning/20261027-0836-agent-learning-update-verification.json",
+    "note": "peer review file publication is out of scope for this grant; the payload is embedded in the allowed verification artifact instead"
+  },
+  "guidance_changes": [
+    {
+      "path": "contracts/rules/20261027-0836-core-development-learnings.md",
+      "sha256": "7e332b39ef738ca4ffaf8a25788a48c38364e07cc11858c794c79886d8a2644f"
+    },
+    {
+      "path": "governance/agents/20261027-0836-learning-bindings.md",
+      "sha256": "fbb0e69001d9aec70a6bbe3508fc760ffeca4892c8071962b134a048fa5ab02a"
+    },
+    {
+      "path": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+      "sha256": "75b1fe25781d86f268528df28d6ad0a2099c5b80d6df9a71f8bba98eb6f11790"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md",
+      "sha256": "ad7a75a61153f1349927517ee6386aca05b28013c7c6dd2eadf97f89eff43f7b"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md",
+      "sha256": "fbd0f2c69d50c3dcd7be584b524c7f3d788829461e026b758e931f153649da59"
+    }
+  ],
+  "stale_digest_correction": "final_five_documents and guidance_changes are now taken from root review .artifacts; earlier drafts of this file and of journal section 8 carried pre-final digests and are superseded.",
+  "root_review": {
+    "path": "var/harness/20261027-0836-root-guidance-review.json",
+    "sha256": "f29221cd62f1e4c8d61698d5c143e49018e93f9cae17335c6257cfb016a9acfc",
+    "verdict": "ACCEPT_REFERENCE_GUIDANCE_WITH_RUNTIME_HOLD",
+    "authored_by": "root",
+    "persisted_by": "claude via MCP into the allowed verification artifact",
+    "binds": "the 5 source reference documents, not this journal"
+  },
+  "env_readiness": {
+    "answer": "NOT_FULLY_READY",
+    "standing": [
+      "31 toolchain preflight checks",
+      "local MCP harness with 84 passing tests"
+    ],
+    "outstanding": [
+      "standard connected client exposes only 4 read-only operations",
+      "normal MCP planner unavailable",
+      "Google client services and recovery unverified",
+      "full Telegram acceptance pending"
+    ]
+  },
+  "modelling_tool_evidence": {
+    "lean": "reused conditional",
+    "quint": "reused conditional",
+    "z3": "reused conditional",
+    "stan": "reused conditional",
+    "rete_ul": "reused conditional",
+    "ruliad": "reused conditional",
+    "new_executions_this_attempt": 0,
+    "full_refinement_claimed": false
+  },
+  "risk_reassessment": {
+    "observed_utc": "2026-10-27T09:41:34Z",
+    "status": "ACTIVE_PASS",
+    "basis": "six source hashes plus current task binding plus NTP",
+    "expires_about": "09:53Z",
+    "grant_expires": "09:58Z",
+    "disclosure": "this finite Gleam metadata reassessment is a disclosed setup gap, not full MCP availability"
+  },
+  "diagram": {
+    "ascii_and_mermaid_pair": true,
+    "parity": "diagram-check reports 1 verified, edge sets compared"
+  }
+}

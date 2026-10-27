@@ -1,0 +1,3302 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "codex-telegram-fractal-author-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "AUTHOR",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Planning only: create timestamped test plan, declarative coverage matrix, risk portfolio and 13-section journal; register 15 future work packages through canonical Sa-plan; validate documents. User explicitly approved direct planning exception after grant_path_missing. No test campaign, Telegram messaging, deployment, merge or push. User subsequently requested actual Claude advisory review and parallel native advisory reviews.",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "completed",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary requested planning milestone with no live runtime effects",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Coverage and response-class gaps could mislead later release decisions; bounded planning repairs feedback",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 F4; ordinal planning estimate of overstated coverage, not a measured incident rate",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Execution and independent acceptance depend on explicit scope, cases and evidence contracts",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One critical Telegram service programme obtains testable acceptance criteria",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COVERAGE-OVERCLAIM",
+        "cause": "Layer partition and preview assertions mistaken for full production Cartesian coverage",
+        "effect": "A release can be accepted without feature, interaction or real-data evidence",
+        "controls": "Source reconciliation, exhaustive applicable tuple registry, explicit evidence modes and independent release audit",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Test planner and later independent release reviewer",
+      "control_action": "Define coverage and permit interpretation of verification evidence",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 432,
+    "score_interval": [
+      432,
+      432
+    ],
+    "decision": {
+      "summary": "Author a declarative bounded full-product test programme and register future work without executing it",
+      "alternatives": [
+        "Reuse the existing 1280+ claim without scope audit (rejected)",
+        "Register exhaustive coverage accounting and preserve all missing evidence (selected)"
+      ],
+      "counterevidence": [
+        "Current source tests include separate matrices rather than the requested full product",
+        "Write harness lacks a launcher grant; user approved only planning bypass"
+      ],
+      "assumptions": [
+        "Repository-pinned validation tools and canonical Sa-plan are available"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Within this planning session the four artifacts and 15 future work packages will be registered and mechanically checked",
+      "falsifier": "Missing artifact/task, malformed matrix or falsely claimed runtime evidence at session closure",
+      "acceptance": [
+        "15 dependency-valid work packages registered in canonical Sa-plan",
+        "Full dimensions, independent oracles, real-time data contract and production gates specified",
+        "Plan/matrix/risk/journal syntax and applicable document gates pass; test execution remains UNRUN"
+      ],
+      "rollback": "Preserve existing files and tasks; correct new planning records through Sa-plan; no runtime rollback needed",
+      "reviewer": "Three native advisory reviews plus actual Claude session 8ef8d687-3c5b-49c6-a3d1-5f8745852288; author disposition; runtime audit remains future T13",
+      "budget": "Planning-only session; repository-pinned tools; user-requested installed Claude review, actual token use unknown; no test traffic or package installation",
+      "residuals": [
+        "Exact complete feature/usecase inventory and applicability denominator require T00/T01",
+        "Future execution needs reviewed launcher/runtime authority"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T00-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T00",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Inventory and reconcile contracts",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 4,
+        "high": 5,
+        "rationale": "Severity 4 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T00",
+        "cause": "Catalog/doc and layer-map drift hides required behavior",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Source-derived registry plus discrepancy disposition",
+        "s": 4,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T00",
+      "control_action": "Inventory and reconcile contracts",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Inventory and reconcile contracts: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Inventory and reconcile contracts: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Inventory and reconcile contracts: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Inventory and reconcile contracts: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "AUTHOR"
+    ],
+    "score": null,
+    "score_interval": [
+      4,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T00 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Source-derived feature IDs, canonical aliases, layer roles, existing tests and doc/source contradictions; no implicit unknown-to-L9 mapping. Bidirectional source census across commands, aliases, callbacks, subscriptions, routes, media and journey branches; source hashes; reconcile twelve modalities with CHK-10-9MOD."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Catalog/doc and layer-map drift hides required behavior",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T01-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T01",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Define coverage schema and pure enumerator",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T01",
+        "cause": "Enumerator drops cases, overflows counts or double-counts retries",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Independent small-universe oracle, partition law and resumable shard census",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T01",
+      "control_action": "Define coverage schema and pure enumerator",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Define coverage schema and pure enumerator: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Define coverage schema and pure enumerator: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Define coverage schema and pure enumerator: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Define coverage schema and pure enumerator: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T00"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T01 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Versioned feature/layer/edge/use-case/scenario/data registries, stable case IDs, counts, disjoint partitions, exhaustive applicable tuples. Explicit recursive units and trace models; manifest shape validation; scenario compatibility; exact finite cardinality and reviewed feasibility gate."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Enumerator drops cases, overflows counts or double-counts retries",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T02-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T02",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Define oracle and evidence contracts",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T02",
+        "cause": "Preview, synthetic reply or refusal is labelled successful delivery",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Independent state/effect oracle and separate safety/capability verdicts",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T02",
+      "control_action": "Define oracle and evidence contracts",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Define oracle and evidence contracts: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Define oracle and evidence contracts: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Define oracle and evidence contracts: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Define oracle and evidence contracts: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T00"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T02 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Per-case exact response, state transition, prohibited effects, measurement window, independent oracle and evidence kind."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Preview, synthetic reply or refusal is labelled successful delivery",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T03-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T03",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Authorize and configure isolated campaign",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T03",
+        "cause": "Wrong environment, principal, grant or task allows uncontrolled test effects",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Fail-closed scoped launch, signed configuration and finite budgets",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T03",
+      "control_action": "Authorize and configure isolated campaign",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Authorize and configure isolated campaign: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Authorize and configure isolated campaign: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Authorize and configure isolated campaign: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Authorize and configure isolated campaign: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T01",
+      "T02"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T03 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Canonical Sa-plan tasks, fresh risk assessment, approved launcher scope, separate staging identity/store, synchronized clock, finite budgets and cleanup."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Wrong environment, principal, grant or task allows uncontrolled test effects",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T04-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T04",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Control and security invariants",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T04",
+        "cause": "Invalid identity, stale lease or replay triggers a protected effect",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Every authority boundary rechecked at effect time; distinct-signer laws",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T04",
+      "control_action": "Control and security invariants",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Control and security invariants: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Control and security invariants: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Control and security invariants: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Control and security invariants: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T03"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T04 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "All identity/approval/lease/replay boundaries fail closed; no unsafe state/effect on refusal."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Invalid identity, stale lease or replay triggers a protected effect",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T05-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T05",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Storage, vault and media state machines",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T05",
+        "cause": "Crash, corrupt media or vault race loses state or exposes secrets",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Cross-process persistence and no-effect/refusal oracles",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T05",
+      "control_action": "Storage, vault and media state machines",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Storage, vault and media state machines: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Storage, vault and media state machines: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Storage, vault and media state machines: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Storage, vault and media state machines: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T03"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T05 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Crash/restart, corruption, range/limit/retention, wrong-key and cross-process persistence laws; no caption side effects."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Crash, corrupt media or vault race loses state or exposes secrets",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T06-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T06",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: All command and Mini-App surfaces",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 4,
+        "high": 5,
+        "rationale": "Severity 4 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T06",
+        "cause": "A parser or HTML render passes while real operator path fails",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Service-dispatch and actual-client journeys, all aliases and routes",
+        "s": 4,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T06",
+      "control_action": "All command and Mini-App surfaces",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "All command and Mini-App surfaces: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "All command and Mini-App surfaces: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "All command and Mini-App surfaces: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "All command and Mini-App surfaces: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T03"
+    ],
+    "score": null,
+    "score_interval": [
+      4,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T06 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Every feature and alias routed through real service or truthful unavailable path; 14 route journeys, real browser navigation and async refresh."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "A parser or HTML render passes while real operator path fails",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T07-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T07",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: All directed layer and feature interactions",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T07",
+        "cause": "Inter-layer composition bypasses a valid local invariant",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "All directed pair classifications and bounded history/model witnesses",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T07",
+      "control_action": "All directed layer and feature interactions",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "All directed layer and feature interactions: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "All directed layer and feature interactions: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "All directed layer and feature interactions: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "All directed layer and feature interactions: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T04",
+      "T05",
+      "T06"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T07 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "All layer pairs and feature pairs classified; every admissible edge and specified bounded trace covered; forbidden edges refused with effect oracle."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Inter-layer composition bypasses a valid local invariant",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T08-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T08",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Real-time data and telemetry",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T08",
+        "cause": "Stale or contradictory real-time data is presented as current truth",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Time uncertainty, source identity, watermarks and age-aware projections",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T08",
+      "control_action": "Real-time data and telemetry",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Real-time data and telemetry: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Real-time data and telemetry: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Real-time data and telemetry: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Real-time data and telemetry: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T03"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T08 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Source versus response receipts at event/ingest/decision/effect times; freshness, ordering, tenant isolation and gaps visible across all surfaces."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Stale or contradictory real-time data is presented as current truth",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T09-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T09",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Full operator and production-scenario journeys",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T09",
+        "cause": "Independent step successes hide broken sequence or recovery",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Run entire ordered journeys with before/after state evidence",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T09",
+      "control_action": "Full operator and production-scenario journeys",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Full operator and production-scenario journeys: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Full operator and production-scenario journeys: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Full operator and production-scenario journeys: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Full operator and production-scenario journeys: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T07",
+      "T08"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T09 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Every journey step, branch, rollback and handover uses a backend and state oracle; unit/preview evidence never relabelled as production."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Independent step successes hide broken sequence or recovery",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T10-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T10",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Load, race, fault and recovery campaign",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T10",
+        "cause": "Overload, races or recovery lose accepted work or exceed budgets",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Measured pressure profiles, conservation accounting and tested termination",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T10",
+      "control_action": "Load, race, fault and recovery campaign",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Load, race, fault and recovery campaign: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Load, race, fault and recovery campaign: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Load, race, fault and recovery campaign: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Load, race, fault and recovery campaign: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T09"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T10 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Bounded concurrency/load profiles, latency distributions, mailbox/RSS/queue peaks, restart budgets, loss accounting, partition recovery and 24h staging soak."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Overload, races or recovery lose accepted work or exceed budgets",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T11-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T11",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Human-operated live staging validation",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 4,
+        "high": 5,
+        "rationale": "Severity 4 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T11",
+        "cause": "Fixture or browser injection is mislabelled real Telegram delivery",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Human-operated dedicated staging identity and real client receipts",
+        "s": 4,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T11",
+      "control_action": "Human-operated live staging validation",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Human-operated live staging validation: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Human-operated live staging validation: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Human-operated live staging validation: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Human-operated live staging validation: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T09"
+    ],
+    "score": null,
+    "score_interval": [
+      4,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T11 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Actual Telegram mobile and WebApp client evidence with distinct staging credentials; exact messages/replies and delivery IDs; zero automated outbound under this planning request."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Fixture or browser injection is mislabelled real Telegram delivery",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T12-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T12",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Deployment lifecycle, production observation and bounded canary",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T12",
+        "cause": "Canary causes unauthorized production effect or rollback fails",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Independent release decision, exact target/budget and tested recovery",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T12",
+      "control_action": "Deployment lifecycle, production observation and bounded canary",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Deployment lifecycle, production observation and bounded canary: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Deployment lifecycle, production observation and bounded canary: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Deployment lifecycle, production observation and bounded canary: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Deployment lifecycle, production observation and bounded canary: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T10",
+      "T11"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T12 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "All 14 deployment usecases covered in isolated staging with candidate/state identity, rollback/restore and migration or refusal evidence; live production read-only first, separately authorized finite canary after independent release approval."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Canary causes unauthorized production effect or rollback fails",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T13-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T13",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Independent coverage and claim audit",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 5,
+        "high": 5,
+        "rationale": "Severity 5 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T13",
+        "cause": "Incomplete or stale matrix is accepted as full coverage",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Independent denominator reconstruction and adverse claim audit",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T13",
+      "control_action": "Independent coverage and claim audit",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Independent coverage and claim audit: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Independent coverage and claim audit: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Independent coverage and claim audit: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Independent coverage and claim audit: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T10",
+      "T11",
+      "T12"
+    ],
+    "score": null,
+    "score_interval": [
+      5,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T13 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "No uncovered/unknown required tuples in the frozen full campaign; all N/A independently reviewed; no stale receipts, fabricated success or swallowed failures. Scoped subset reports cannot close the full programme. Auditor authored none of T00..T12; two-key evidence required."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Incomplete or stale matrix is accepted as full coverage",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "telegram-fractal-T14-20261027-0312",
+    "plan_id": "uos/telegram-fractal-tests/20261027-0312",
+    "task_id": "T14",
+    "actor": "codex-01a17acf-1df9-72f0-adcf-420200b567be",
+    "scope": "Future work package, NOT authorized by planning request: Publish results and close scoped programme",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-10-27T03:56:47Z",
+    "valid_until": "2026-10-28T03:56:47Z",
+    "task_state": "available",
+    "ready_since": "2026-10-27T03:56:47Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "main 73df20c4c9a67e76b670cdddc4e53e8d1379925e; working change pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "sha256": "e254cfab191bc009c023702a6a6405a68de9b79032805b615ddde3a6bc92da3a",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "sha256": "8156bbec03d72401ef488ef7d0547e8ddc05e7f910d61c1e88e99bcccdc7bbe1",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "sha256": "286f3e188e4085c0ba58be6d63fe745991ae476d0d8c9b06d0ec7f4b76812cab",
+          "observed_at": "2026-10-27T03:56:47Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-10-27T03:56:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific criticality requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "stpa": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific stpa requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "fmea": {
+        "value": null,
+        "low": 4,
+        "high": 5,
+        "rationale": "Severity 4 is an analyst estimate; occurrence/detection unknown; severity floor preserved.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "dependency": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific dependency requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      },
+      "impact": {
+        "value": null,
+        "low": 1,
+        "high": 5,
+        "rationale": "Future task-specific impact requires observed environment and workload evidence; no fabricated priority",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_commands.gleam",
+          "apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam",
+          "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-T14",
+        "cause": "Published report or Sa-plan closure conceals remaining gaps",
+        "effect": "Unverified or unsafe Telegram capability is accepted or tested without controlled authority",
+        "controls": "Reconciled projections, honest UNRUN/STALE states and residual ownership",
+        "s": 4,
+        "o": null,
+        "det": null,
+        "rpn": null,
+        "band": null
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Scoped campaign worker and independent verifier for T14",
+      "control_action": "Publish results and close scoped programme",
+      "losses": [
+        "L-FALSE-ACCEPTANCE"
+      ],
+      "hazards": [
+        "H-UNTESTED-PATH-ACCEPTED"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Publish results and close scoped programme: No feature, layer or runtime gap inventory",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Every registry member is mapped or explicitly unresolved"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Publish results and close scoped programme: Synthetic success or refusal is counted as delivered runtime capability",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Separate safety verdict, capability verdict and data evidence mode"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Publish results and close scoped programme: Old code or stale data receipts are reused after source changes",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Bind source revision, input, configuration and freshness to each case"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Publish results and close scoped programme: Unbounded campaign or expired runtime authority",
+          "hazard_ids": [
+            "H-UNTESTED-PATH-ACCEPTED"
+          ],
+          "constraint": "Finite shards, leases, budgets, deadlines and explicit residual uncovered cases"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "blocked",
+    "blockers": [
+      "Campaign execution authority absent",
+      "Fresh task-specific exposure and detection evidence required",
+      "Dependency readiness and runtime/source fences must be checked at claim"
+    ],
+    "dependencies": [
+      "T13"
+    ],
+    "score": null,
+    "score_interval": [
+      4,
+      3125
+    ],
+    "decision": {
+      "summary": "Keep T14 blocked until execution authority, dependencies and fresh assessment are available",
+      "alternatives": [
+        "Run now with unknown exposure (rejected)",
+        "Register bounded obligations and reassess before claim (selected)"
+      ],
+      "counterevidence": [
+        "Planning records do not establish executable harness or effect authority"
+      ],
+      "assumptions": [
+        "Candidate inventory and runtime environment will be identified by authorized campaign"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Task remains unexecuted in this planning session",
+      "falsifier": "A claim or runtime effect occurs without fresh task-specific authority",
+      "acceptance": [
+        "Sa-plan projection plus journal, wiki/ZK links, reproducible manifest, deficits and residual risks; EV-93 preserved."
+      ],
+      "rollback": "Stop and preserve evidence; runtime recovery must be specified before execution",
+      "reviewer": "Future independent scoped verifier; current planning feedback is advisory only",
+      "budget": "No execution budget allocated; proposed cohort budgets require T03 admission",
+      "residuals": [
+        "Published report or Sa-plan closure conceals remaining gaps",
+        "Occurrence, detection and realized throughput remain UNKNOWN"
+      ],
+      "supersedes": null
+    }
+  }
+]

@@ -1,0 +1,1620 @@
+{
+  "schema": "uos.hive-development-readiness-plan.v1",
+  "observed_at": "2026-10-27T06:08:34Z",
+  "execution_authority": "sa-plan",
+  "plan_id": "uos/hive-development/20261027-0532",
+  "operation_scope": "planning_registration_and_new_document_publication_only",
+  "overall_goal_state": "paused",
+  "runtime_admission": "NOT_GRANTED",
+  "transport": "bounded operator-authorized metadata bootstrap through existing Gleam Sa-plan/file adapters; MCP mutation gap explicitly open",
+  "source_revision": {
+    "change": "pkyvxzuzrqyouyvnrvxpmzrmxnpmzskm",
+    "commit": "3b37bcbb91ad465b0c186d9987bfd542d98ab325",
+    "kind": "working_tree_observation_not_immutable_release"
+  },
+  "documents": {
+    "plan": "docs/plans/20261027-0634-hive-development-readiness-plan.md",
+    "journal": "docs/journal/20261027-0634-hive-development-readiness-plan-journal.md",
+    "manifest": "governance/planning/20261027-0634-hive-development-readiness-plan.json"
+  },
+  "existing_task_snapshot": [
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "BOOTSTRAP",
+      "name": "hive/bootstrap",
+      "title": "Observe current SOP and services; prepare finite development grant and rollback",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "1000",
+      "worker": "codex-01a0ba74-hive",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "GRANT_REVIEW",
+      "name": "hive/grant-review",
+      "title": "Independent candidate-bound review of development grant",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "900",
+      "worker": "claude-hive-grant-review-20261027",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "MCP_ACTIVATE",
+      "name": "hive/mcp-activate",
+      "title": "Initialize reviewed development MCP and verify refusal, claim, build, test and release",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "800",
+      "worker": "-",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "AGENT_PARITY",
+      "name": "hive/agent-parity",
+      "title": "Repair local rule and skill mirrors; verify real AGY Claude Codex coordination",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "700",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "SERVICE_VERIFY",
+      "name": "hive/service-verify",
+      "title": "Verify development OTP services, NIFs, dependency identities and truthful health evidence",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "600",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "HIVE_VERIFY",
+      "name": "hive/hive-verify",
+      "title": "Independent task exchange, recovery, runtime and environment acceptance",
+      "parent_id": "-",
+      "state": "available",
+      "priority": "500",
+      "worker": "-",
+      "attempt": "0"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "ACTIVATE_REVIEW",
+      "name": "hive/activation-review",
+      "title": "Independently verify MCP activation receipts and finite specification conformance",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "850",
+      "worker": "claude-hive-grant-review-20261027",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "RECEIPT_GRANT_REVIEW",
+      "name": "hive/receipt-grant-review",
+      "title": "Review finite Claude grant for receipt-integrity repair",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "1100",
+      "worker": "codex-01a0ba74-hive",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "RECEIPT_FIX",
+      "name": "hive/receipt-integrity-fix",
+      "title": "TDD: declare output truncation and bind retained diagnostic bytes",
+      "parent_id": "-",
+      "state": "executing",
+      "priority": "1050",
+      "worker": "claude-hive-receipt-fix-2585",
+      "attempt": "1"
+    },
+    {
+      "plan_id": "uos/hive-development/20261027-0532",
+      "id": "RECEIPT_GRANT_REBIND",
+      "name": "hive/receipt-grant-rebind",
+      "title": "Bind implementation grant to idle peer; preserve interrupted peer grant history",
+      "parent_id": "-",
+      "state": "completed",
+      "priority": "1100",
+      "worker": "codex-01a0ba74-hive",
+      "attempt": "1"
+    }
+  ],
+  "new_tasks": [
+    {
+      "id": "OPERATOR_RESUME",
+      "name": "hive/operator-resume",
+      "title": "Record explicit implementation resume and fresh eligible execution scope",
+      "dependencies": [],
+      "priority": 0,
+      "fractal_layers": [
+        0,
+        3,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A02",
+        "AINF-A08",
+        "AINF-A17"
+      ],
+      "files": [
+        "AGENTS.md",
+        "var/sa-plan/uos.sqlite3"
+      ],
+      "acceptance": [
+        "The user explicitly resumes implementation; this planning request does not discharge the gate.",
+        "Bind current actor, fresh risk portfolio, permitted scope and clock; no deployment authority is conferred.",
+        "Do not auto-complete from a model suggestion, Sa-plan availability, board ACK or existing full-access authorization that predates the pause."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "PAUSED; FRESH_TASK_AUTHORITY_REQUIRED",
+      "delivery_class": "gate",
+      "payoff": "Existing pause must be explicitly lifted before implementation.",
+      "narrowed_scope": "No product change; record resume evidence once.",
+      "canonical_name_original": "hive/operator-resume"
+    },
+    {
+      "id": "CONTROL_RECOVERY",
+      "name": "hive/control-recovery",
+      "title": "Reconcile stopped worker, uncertain effects and stale grant identities",
+      "dependencies": [
+        "OPERATOR_RESUME"
+      ],
+      "priority": 1200,
+      "fractal_layers": [
+        0,
+        1,
+        3,
+        4,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A02",
+        "AINF-A04",
+        "AINF-A06",
+        "AINF-A08",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+        "var/harness/20261027-0523-claude-session-handover.json"
+      ],
+      "acceptance": [
+        "Observe exact current task attempt, lease, coordinator epoch, process identity, clock and durable intent/result pairs before any reclaim.",
+        "Classify every relevant effect as known-success, known-failure or unresolved; reconcile unresolved outcomes before retry.",
+        "Use applicable expired-claim preflight and stable logical effect IDs; do not force another worker's ownership or delete historical records.",
+        "Prepare only the finite independently reviewed grant needed to finish the existing RECEIPT_FIX and MCP_ACTIVATE tasks; bind current loaded module identities.",
+        "Resolve the handover chronology discrepancy against observed UTC and receipts; retain the original handover unchanged."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "PAUSED; FRESH_TASK_AUTHORITY_REQUIRED",
+      "delivery_class": "gate",
+      "payoff": "Stopped ownership and stale grants prevent trustworthy execution.",
+      "narrowed_scope": "Reconcile existing attempts only; do not reimplement the receipt repair.",
+      "canonical_name_original": "hive/control-recovery"
+    },
+    {
+      "id": "CONTROL_ACCEPT",
+      "name": "hive/reuse-evidence/control-accept",
+      "title": "Independently verify repaired harness in a fresh process",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "CONTROL_RECOVERY",
+        "RECEIPT_FIX",
+        "MCP_ACTIVATE"
+      ],
+      "priority": 1100,
+      "fractal_layers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A04",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+        "apps/cepaf_gleam/test/harness_successor_test.gleam",
+        "apps/cepaf_gleam/test/harness_authority_test.gleam"
+      ],
+      "acceptance": [
+        "An independent reviewer checks exact source and actual red/green assertions, including empty, short, long ASCII and Unicode byte-bound fallback cases.",
+        "A fresh process using the reviewed current grant exercises initialization, scoped read/write/readback, build/test, clock, heartbeat, release and recovery.",
+        "An independent client hashes actual retained UTF-8 bytes of a real long-output receipt and matches output_retained_sha256 and byte counts; output_sha256 remains documented as full-output digest.",
+        "Missing grant, changed identity, out-of-scope path, stale attempt, expired lease, duplicate intent and lost reply all produce the specified refusal or reconciled outcome.",
+        "Do not infer fresh runtime acceptance from the old live harness's reported 84-test pass."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "PAUSED; FRESH_TASK_AUTHORITY_REQUIRED",
+      "delivery_class": "reuse",
+      "payoff": "Fresh-process acceptance is essential but already belongs to MCP_ACTIVATE.",
+      "narrowed_scope": "Consume the same independent evidence; no duplicate build, test suite or implementation.",
+      "canonical_name_original": "hive/control-accept"
+    },
+    {
+      "id": "PLANNING_MCP",
+      "name": "hive/planning-mcp",
+      "title": "Provide typed canonical planning and evidence publication through MCP",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "CONTROL_ACCEPT"
+      ],
+      "priority": 1000,
+      "fractal_layers": [
+        0,
+        2,
+        3,
+        4,
+        6,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A04",
+        "AINF-A08",
+        "AINF-A13",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intent.gleam (proposed new module)"
+      ],
+      "acceptance": [
+        "Define a closed Gleam PlanningIntent algebra for create-plan, create-task and publish-evidence; reuse the canonical Sa-plan bridge and bounded file primitives.",
+        "Every intent carries stable effect ID and a trusted task/session binding; caller-supplied backend, SQL, shell command, role and identity cannot grant authority.",
+        "Return a typed applied/refused/uncertain result with canonical readback and evidence digest; retry preserves exactly-once logical intent semantics.",
+        "A real client creates and reads a sandbox plan/task and publishes a scoped timestamped journal through MCP; verify failure and lost-reply behavior.",
+        "Archive this bounded metadata bootstrap as an explicit exception; subsequent planning/publication uses the verified ingress."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "PAUSED; FRESH_TASK_AUTHORITY_REQUIRED",
+      "delivery_class": "next",
+      "payoff": "Missing canonical plan/journal writes caused repeated manual bootstrap and block the requested MCP workflow.",
+      "narrowed_scope": "One small typed planning/publication vertical slice; reuse Sa-plan and bounded file adapters.",
+      "canonical_name_original": "hive/planning-mcp"
+    },
+    {
+      "id": "READINESS_CENSUS",
+      "name": "hive/covered-by-core/readiness-census",
+      "title": "Reconcile actual services, agents, features and existing work without duplicate registries",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "CONTROL_ACCEPT"
+      ],
+      "priority": 950,
+      "fractal_layers": [
+        1,
+        2,
+        4,
+        6,
+        7,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_census.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_sources.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam"
+      ],
+      "acceptance": [
+        "Observe actual agent sessions, OTP applications/processes, service units, ports, native libraries, toolchains and required capability bindings without printing secrets.",
+        "Reuse the existing feature DB; identify its real schema and authority before any migration. Do not create another tracker.",
+        "Map every required feature to implementation, MCP and any admitted mesh exposure, responsible task, candidate and current evidence; preserve unavailable and unknown states.",
+        "Treat historical 21-service/357-obligation figures as specification baseline; enumerate the actual current runtime set and justify differences.",
+        "For every observed service/capability create all 17 canonical aspect dispositions and L0-L9 applicability entries: direct, inherited with evidence, N/A with review, or UNKNOWN."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "absorb",
+      "payoff": "A bounded inventory is necessary; a separate universal census project is not.",
+      "narrowed_scope": "Include only the first workflow dependencies and existing feature DB entries in SERVICE_VERIFY.",
+      "canonical_name_original": "hive/readiness-census"
+    },
+    {
+      "id": "NATIVE_BOUNDARY_REPAIR",
+      "name": "hive/conditional/native-boundary-repair",
+      "title": "Repair demonstrated service health and native-boundary defects",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "READINESS_CENSUS"
+      ],
+      "priority": 925,
+      "fractal_layers": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A09"
+      ],
+      "files": [
+        "apps/cepaf_gleam/native/c3i_nif/src/system.rs",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+        "apps/cepaf_gleam/test/c3i_nif_mcp_test.gleam",
+        "services/inference/max"
+      ],
+      "acceptance": [
+        "Write independent failing oracles for each observed health fallthrough: absent source, command failure, unhealthy container, missing verification evidence and unsupported topic count must not become nominal/success.",
+        "Inventory scheduler class, bounded duration, ownership/lifetime and actual ABI/load behavior per required NIF; move blocking OS/network work behind supervised isolated services owned by Gleam.",
+        "Exercise representative ZigVM deterministic/VFS confinement, bounded Hermes workers and isolated MAX protocol only where required by the accepted profile.",
+        "Preserve the denied system-OS storage serial; tests use fixtures/refusal paths and never allocate or wipe a physical device.",
+        "Fix only demonstrated gaps and rerun affected behavior tests; if a boundary already conforms, retain the evidence instead of refactoring it."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "PAUSED; FRESH_TASK_AUTHORITY_REQUIRED",
+      "delivery_class": "conditional",
+      "payoff": "Repair only an observed blocker, unsafe boundary or false-success path used by the current slice.",
+      "narrowed_scope": "Unknown/failed dependency remains unavailable until fixed; no blanket NIF redesign.",
+      "canonical_name_original": "hive/native-boundary-repair"
+    },
+    {
+      "id": "SCHEDULER_GATES",
+      "name": "hive/covered-by-core/scheduler-gates",
+      "title": "Enforce task eligibility and truthful planning projection at effect time",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "PLANNING_MCP",
+        "READINESS_CENSUS"
+      ],
+      "priority": 900,
+      "fractal_layers": [
+        0,
+        3,
+        4,
+        6,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A04",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A11",
+        "AINF-A13",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam"
+      ],
+      "acceptance": [
+        "Distinguish canonical task state from risk eligibility, global pause, lease freshness and component evidence; status views must agree on source and observation time.",
+        "Recheck current owner/attempt/epoch, prerequisite acceptance and evidence freshness at effect dispatch; preflight receipts alone do not establish atomic enforcement.",
+        "Demonstrate rejection of task available + risk HOLD, completed review + HOLD verdict, expired heartbeat with live lease, changed source, missing dependency evidence and concurrent claims.",
+        "Exercise durable job/workflow cancellation, bounded retry and compensation through Sa-plan; acknowledge unsupported semantics rather than claim Oban/Temporal parity from names.",
+        "Generate dashboard status from canonical data; no independent writable completion queue."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "absorb",
+      "payoff": "Authority and stale-worker refusal are non-negotiable; a scheduler rewrite is not yet justified.",
+      "narrowed_scope": "Verify existing fences in MCP_ACTIVATE/HIVE_VERIFY; open a scoped repair only for a demonstrated failure.",
+      "canonical_name_original": "hive/scheduler-gates"
+    },
+    {
+      "id": "CAPABILITY_PARITY",
+      "name": "hive/backlog/capability-parity",
+      "title": "Close required MCP capability gaps with declarative functional interfaces",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "READINESS_CENSUS",
+        "PLANNING_MCP",
+        "AGENT_PARITY",
+        "SERVICE_VERIFY",
+        "NATIVE_BOUNDARY_REPAIR"
+      ],
+      "priority": 850,
+      "fractal_layers": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A13",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_intent.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_api.gleam"
+      ],
+      "acceptance": [
+        "For each required inventoried capability expose a typed MCP intent or read projection with finite parameters, result/error algebra, policy, resource bounds and supervised backend.",
+        "Keep deterministic decisions pure and isolate effects; no generic unrestricted shell, eval or raw SQL facade.",
+        "Use registry-derived contract tests across discovery, authorization, real runtime binding, unsupported/refused cases and transport equivalence for admitted alternate ingress.",
+        "Verify every required agent and native capability through actual clients; loaded configuration, tool declaration, NIF load and successful operation are distinct evidence.",
+        "Full readiness requires all required capabilities verified; a reviewed reduced profile is DEGRADED and lists exclusions explicitly."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "later",
+      "payoff": "Full MCP parity remains the overall goal, but exposing all unused features upfront has uncertain immediate payoff.",
+      "narrowed_scope": "Grow one required capability end to end; retain remaining features as explicit backlog.",
+      "canonical_name_original": "hive/capability-parity"
+    },
+    {
+      "id": "FAULT_RECOVERY",
+      "name": "hive/covered-by-core/fault-recovery",
+      "title": "Verify hive supervision, persistence and cross-agent failure recovery",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "SCHEDULER_GATES",
+        "AGENT_PARITY",
+        "SERVICE_VERIFY"
+      ],
+      "priority": 800,
+      "fractal_layers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_authority.gleam"
+      ],
+      "acceptance": [
+        "Fault injection uses isolated development stores, ports and owned processes, bounded duration and tested stop/recovery commands.",
+        "Exercise interruption before dispatch, during effect, after durable commit/before reply, and after reply/before follow-up; compare against an independent durable-state oracle.",
+        "Kill and restart a worker; lose coordination/store connectivity; expire leases; duplicate and reorder messages; test a partitioned peer and stale leader.",
+        "Verify single-effect outcome, no stale writer, bounded restart/queue behavior, eventual progress after recovery and sanitized causal trace.",
+        "Record observed recovery time and any lost or uncertain work; do not infer replication/consensus from OTP supervision."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "absorb",
+      "payoff": "Core crash and lost-reply recovery are necessary; a complete federation chaos programme is not a first-use prerequisite.",
+      "narrowed_scope": "Test bounded interruption/duplicate cases in HIVE_VERIFY; add partition depth when the operating profile uses it.",
+      "canonical_name_original": "hive/fault-recovery"
+    },
+    {
+      "id": "OPERATOR_SURFACES",
+      "name": "hive/backlog/operator-surfaces",
+      "title": "Verify consistent accessible operator surfaces and live evidence projections",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "SCHEDULER_GATES",
+        "CAPABILITY_PARITY"
+      ],
+      "priority": 775,
+      "fractal_layers": [
+        0,
+        2,
+        4,
+        6,
+        7,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A08",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/feature_tracker_view.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/agui",
+        "tools/uos"
+      ],
+      "acceptance": [
+        "Project the same task/effect/authorization meaning through required web, API, TUI, AG-UI SSE and admitted mesh surfaces; document unavailable surfaces explicitly.",
+        "Use typed declarative components; reject arbitrary executable model markup, unauthorized state changes and private data disclosure.",
+        "On the actual candidate verify HTTP status, final route, page identity, visible evidence state, keyboard/mobile checklist usability and rendered/raw parity.",
+        "Test sanitized event sequence, authenticated subscription, reconnect cursor, bounded buffering/backpressure and expired evidence display.",
+        "Use the current 18-checkpoint navigation contract plus provenance domain; actual browser screenshots require inspection, and fixture-injected pages cannot substitute for real route behavior."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "later",
+      "payoff": "Accurate status and accessible primary controls are core; every UI component/surface is a later expansion.",
+      "narrowed_scope": "Repair primary planning/evidence views only when they block or mislead the actual workflow.",
+      "canonical_name_original": "hive/operator-surfaces"
+    },
+    {
+      "id": "PERF_SCALE",
+      "name": "hive/backlog/perf-scale",
+      "title": "Measure bounded development and Telegram workloads including saturation and soak",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "FAULT_RECOVERY",
+        "CAPABILITY_PARITY",
+        "OPERATOR_SURFACES"
+      ],
+      "priority": 750,
+      "fractal_layers": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A13",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+        "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/living_swarm.gleam"
+      ],
+      "acceptance": [
+        "Precommit workload mix, concurrency ramp, payload distribution, warm-up, duration, host identity and resource ceilings before executing the benchmark.",
+        "Freeze required throughput, p95/p99 latency, error/uncertainty rate, queue age, RSS, recovery and cost limits in a reviewed profile; missing numerical thresholds block acceptance.",
+        "Measure p50/p95/p99, throughput, process/mailbox/queue depth, CPU, RSS, store contention and rejected work at increasing concurrency and at saturation.",
+        "Verify bounded backpressure and fairness, preserve failures, then run recovery and the 24-hour operational soak required by the existing Telegram campaign.",
+        "Sequential parser loops and one aggregate timing are not concurrency/scalability evidence; rerun only changed or inconclusive workload slices."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "later",
+      "payoff": "Resource bounds and a baseline smoke load are core; broad scale and soak have value after correctness.",
+      "narrowed_scope": "Run targeted baseline in HIVE_VERIFY; preserve the full Telegram soak for its operational campaign.",
+      "canonical_name_original": "hive/performance-scale"
+    },
+    {
+      "id": "FORMAL_EVIDENCE",
+      "name": "hive/covered-by-core/formal-evidence",
+      "title": "Bind executable laws and applicable bounded formal checks to current candidates",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "CAPABILITY_PARITY",
+        "SCHEDULER_GATES",
+        "FAULT_RECOVERY"
+      ],
+      "priority": 700,
+      "fractal_layers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A02",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A17"
+      ],
+      "files": [
+        "engines/hermes",
+        "formal/lean",
+        "formal/quint",
+        "apps/cepaf_gleam/test/harness_authority_test.gleam"
+      ],
+      "acceptance": [
+        "Extract laws for intent idempotency, receipt-byte integrity, exclusive writer/lease, authorization noninterference, budget conservation and trace-coordinate preservation from actual implementations.",
+        "Map each applicable law to property tests, independent oracle and actual bounded formal invocation; state method, assumptions, toolchain, timeout and candidate.",
+        "Run solver/prover workers with bounds and satisfiable controls; missing tools, timeout, unsupported syntax, sorry/Admitted or undeclared axioms fail closed.",
+        "Keep finite executable checks, bounded model checks and general proofs distinct; textual checklist validation never substitutes for a proof-engine run."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "absorb",
+      "payoff": "Applicable authority/receipt laws and independent oracles are core; universal proof work is not an automatic gate.",
+      "narrowed_scope": "Use invocation-specific relevant properties in MCP_ACTIVATE/HIVE_VERIFY; deepen only for risk or a changed guarantee.",
+      "canonical_name_original": "hive/formal-evidence"
+    },
+    {
+      "id": "TELEGRAM_ACCEPT",
+      "name": "hive/backlog/telegram-accept",
+      "title": "Accept the existing Telegram campaign using current operational evidence",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "FAULT_RECOVERY",
+        "CAPABILITY_PARITY"
+      ],
+      "priority": 650,
+      "fractal_layers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A04",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A13",
+        "AINF-A17"
+      ],
+      "files": [
+        "docs/plans/20261027-0312-telegram-fractal-test-plan.md",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_service.gleam",
+        "apps/cepaf_gleam/test/telegram_service_e2e_test.gleam",
+        "apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam"
+      ],
+      "acceptance": [
+        "Reuse plan uos/telegram-fractal-tests/20261027-0312; this task is an evidence-consumption gate, not a second campaign queue.",
+        "Machine-check required external task states AND accepted candidate-bound evidence; cross-plan prerequisites are not natively enforced by the current DAG and must fail closed at this gate.",
+        "Replace fabricated successful adapter replies and crash-only security loops with independent assertions; verify identity, authority, routing and real service effects.",
+        "Verify durable inbox/outbox progression, duplicate delivery, uncertain send outcome, media bounds, restart and observer errors; reconcile all seven carried AUTO findings by exact locator and evidence.",
+        "Perform human-operated actual-client journeys with explicit numeric test identity and recipient/message scope; no production sends or legacy polling overlap under a development grant.",
+        "Consume the performance/scalability and operational-soak results, preserving full scenario and coverage dispositions."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "later",
+      "payoff": "Telegram verification remains required for the stated Telegram goal, separate from initial editor/build hive usability.",
+      "narrowed_scope": "Execute the existing Telegram plan once the control path is safe; no duplicate campaign.",
+      "canonical_name_original": "hive/telegram-accept"
+    },
+    {
+      "id": "COST_EFFICIENCY",
+      "name": "hive/covered-by-core/cost-efficiency",
+      "title": "Validate agent selection, budgets and useful work per resource",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "PERF_SCALE",
+        "AGENT_PARITY"
+      ],
+      "priority": 600,
+      "fractal_layers": [
+        0,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A03",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A17"
+      ],
+      "files": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+        "governance/agents"
+      ],
+      "acceptance": [
+        "Reobserve real AGY models, modes, quota and measured eligibility; prefer Google execution under the user preference and record any authorized fallback.",
+        "Compare candidates on the same bounded acceptance task; choose the cheapest capable option after correctness, safety and criticality gates, with actual token/latency/cost receipts.",
+        "Unknown or uncertain charges remain liabilities; enforce existing explicit aggregate OpenRouter USD10/UTC-day ceiling without enabling paid calls merely for evaluation.",
+        "Bound concurrent agents and expensive builds; stop retrying quota failures and avoid new contexts, duplicate reviews or repeated passing suites without evidence value.",
+        "Report useful verified work, rework, blocked time and total resource cost; do not claim an optimal model from a catalog alone."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "absorb",
+      "payoff": "Measure cost and rework on useful tasks; a separate all-model benchmark has no demonstrated payoff.",
+      "narrowed_scope": "Record per-slice tokens, latency, retries, failures and useful output; compare models only when a routing decision needs evidence.",
+      "canonical_name_original": "hive/cost-efficiency"
+    },
+    {
+      "id": "KNOWLEDGE_SYNC",
+      "name": "hive/backlog/knowledge-sync",
+      "title": "Reconcile current evidence, rules and knowledge graph without rewriting history",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "READINESS_CENSUS",
+        "FORMAL_EVIDENCE",
+        "OPERATOR_SURFACES"
+      ],
+      "priority": 550,
+      "fractal_layers": [
+        0,
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "files": [
+        "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+        "docs/zk",
+        "docs/wiki",
+        "governance/agents",
+        "tools/km-gate"
+      ],
+      "acceptance": [
+        "Map requirements, implementation, candidate, tasks, formal contracts, scenarios and evidence to existing Wiki/ZK/ontology and dashboard projections.",
+        "Use current source artifacts to classify unverifiable EV evidence; never mint EVs above93 or turn historical claims into admission.",
+        "Investigate KMP-ENTROPY before changing tags; any retagging must reflect substantive layer ownership, not merely satisfy the numerical threshold.",
+        "Verify Tailscale FQDN links, rendered/raw parity, navigation, keyboard/mobile checklist access and sanitized evidence visibility on actual pages.",
+        "All new or changed explanatory diagrams have equivalent editable ASCII and Mermaid sources; preserve historical originals."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "later",
+      "payoff": "Current rules/skills/SOP correctness and task journals are core; entropy/global historical cleanup is separate.",
+      "narrowed_scope": "Repair active references and contradictions in AGENT_PARITY; defer unrelated retagging and EV documentation projects.",
+      "canonical_name_original": "hive/knowledge-sync"
+    },
+    {
+      "id": "DEV_READY_REVIEW",
+      "name": "hive/backlog/dev-ready-review",
+      "title": "Independently accept full development hive against the frozen coverage profile",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "HIVE_VERIFY",
+        "CAPABILITY_PARITY",
+        "PLANNING_MCP",
+        "SCHEDULER_GATES",
+        "FAULT_RECOVERY",
+        "PERF_SCALE",
+        "FORMAL_EVIDENCE",
+        "TELEGRAM_ACCEPT",
+        "COST_EFFICIENCY",
+        "KNOWLEDGE_SYNC",
+        "NATIVE_BOUNDARY_REPAIR",
+        "OPERATOR_SURFACES"
+      ],
+      "priority": 500,
+      "fractal_layers": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "files": [
+        "governance/planning",
+        "docs/reviews",
+        "docs/journal"
+      ],
+      "acceptance": [
+        "A reviewer independent of implementation verifies exact candidate and all required per-capability/per-aspect evidence, expiry, residual risks and rollback.",
+        "For every observed service/capability each AINF-A01..A17 and applicable L0..L9 cell has a direct or inherited evidence reference; justified N/A is reviewed; UNKNOWN/UNRUN/STALE/HOLD cannot pass a required cell.",
+        "A real operator-to-MCP-to-Sa-plan-to-agent-to-service-to-independent-review workflow completes, then recovers from an interrupted worker without an unauthorized or duplicate effect.",
+        "Require zero unresolved outcomes and conflicting active writers in the accepted profile; no open P0/P1 for included capabilities.",
+        "Record READY only when all required providers/features pass. DEGRADED or HOLD must name exclusions and may not be presented as fully functional.",
+        "No production admission, new EV claim or review-by-ACK is implied."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "DEFERRED_AS_SEPARATE_WORK; PAUSED",
+      "delivery_class": "later",
+      "payoff": "A full-profile acceptance milestone is useful later; independent review of the first slice already exists in HIVE_VERIFY.",
+      "narrowed_scope": "First verdict is scoped CORE_DEV_READY or HOLD; full-profile readiness awaits its real feature/operational evidence.",
+      "canonical_name_original": "hive/development-ready-review"
+    },
+    {
+      "id": "DEV_INTEGRATE",
+      "name": "hive/conditional/dev-integrate",
+      "title": "Integrate reviewed candidate and publish reproducible development entrypoint",
+      "dependencies": [
+        "OPERATOR_RESUME",
+        "DEV_READY_REVIEW"
+      ],
+      "priority": 450,
+      "fractal_layers": [
+        0,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9
+      ],
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "files": [
+        ".jj",
+        "docs/sop",
+        "docs/journal",
+        "governance/planning"
+      ],
+      "acceptance": [
+        "Take separate integration ownership; preserve unrelated working changes and use standalone JJ feature/integration bookmarks and immutable candidate identities.",
+        "Observe build/test/evidence scope after integration and rerun affected checks only when candidate content, build environment or runtime changed.",
+        "Publish the verified development startup, agent enrollment, MCP capability discovery, stop/recovery, evidence readback and rollback commands with prerequisites.",
+        "Demonstrate reproducibility using already-realized pinned inputs or authorized Tailnet fetches; no implicit public package fetch, external tree mutation or model-weight ingestion.",
+        "Serialize any operator-authorized main integration after required acceptance; production deployment remains governed by its own release/state authority.",
+        "Emit SC-JOURNAL-v3 completion ledger and verify canonical task/evidence readback before announcing development readiness."
+      ],
+      "execution_status": "NOT_STARTED",
+      "eligibility": "PAUSED; FRESH_TASK_AUTHORITY_REQUIRED",
+      "delivery_class": "conditional",
+      "payoff": "Reviewed source integration and rollback are necessary when the slice changes source.",
+      "narrowed_scope": "Use existing serialized JJ process after candidate review; no new deployment mechanism or production cutover.",
+      "canonical_name_original": "hive/development-integrate"
+    }
+  ],
+  "fractal_layers": [
+    {
+      "layer": 0,
+      "name": "Constitutional authority",
+      "obligation": "Authorization, pause, release and safety constraints precede scores and model advice.",
+      "owners": "OPERATOR_RESUME, CONTROL_RECOVERY, DEV_READY_REVIEW"
+    },
+    {
+      "layer": 1,
+      "name": "Atomic evidence",
+      "obligation": "Byte integrity, paths, clock domains, identity, ABI and bounded errors.",
+      "owners": "CONTROL_ACCEPT, NATIVE_BOUNDARY_REPAIR"
+    },
+    {
+      "layer": 2,
+      "name": "Component contracts",
+      "obligation": "Pure typed intent/result laws, real operations, invalid input and truthful absence.",
+      "owners": "PLANNING_MCP, CAPABILITY_PARITY"
+    },
+    {
+      "layer": 3,
+      "name": "Transactions",
+      "obligation": "Stable effect IDs, current attempt/epoch, durable result, replay and cancellation.",
+      "owners": "CONTROL_RECOVERY, SCHEDULER_GATES, FAULT_RECOVERY"
+    },
+    {
+      "layer": 4,
+      "name": "System supervision",
+      "obligation": "Observed OTP tree, resource bounds, shutdown, dependency failure and recovery.",
+      "owners": "SERVICE_VERIFY, NATIVE_BOUNDARY_REPAIR, FAULT_RECOVERY"
+    },
+    {
+      "layer": 5,
+      "name": "Cognition",
+      "obligation": "Eligible model/mode, finite budget, task quality, uncertainty and advice/effect separation.",
+      "owners": "AGENT_PARITY, COST_EFFICIENCY"
+    },
+    {
+      "layer": 6,
+      "name": "Hive collaboration",
+      "obligation": "Real identities, explicit ACKs, disjoint ownership, independent review and handoff.",
+      "owners": "AGENT_PARITY, HIVE_VERIFY, FAULT_RECOVERY"
+    },
+    {
+      "layer": 7,
+      "name": "Federation",
+      "obligation": "Authenticated transport, tenant namespace, correlation, duplicate/partition/reconnect behavior.",
+      "owners": "CAPABILITY_PARITY, OPERATOR_SURFACES, FAULT_RECOVERY"
+    },
+    {
+      "layer": 8,
+      "name": "Evolution",
+      "obligation": "Pinned reproducibility, isolated experiments, formal bounds, useful work per resource and rollback.",
+      "owners": "PERF_SCALE, FORMAL_EVIDENCE, DEV_INTEGRATE"
+    },
+    {
+      "layer": 9,
+      "name": "Assurance",
+      "obligation": "Exact candidate, applicable runtime+formal evidence, independent verdict and visible residuals.",
+      "owners": "DEV_READY_REVIEW, KNOWLEDGE_SYNC, DEV_INTEGRATE"
+    }
+  ],
+  "aspects": [
+    {
+      "id": "AINF-A01",
+      "ordinal": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "existing_gate": "G-DRIVE-NVME",
+      "obligation": "Reject the denied OS serial and prove filesystem/resource isolation at the service's execution and storage dependencies.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A02",
+      "ordinal": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "existing_gate": "G-BOOT1-JJ",
+      "obligation": "Bind code, schemas, policy, model and fixtures to a standalone JJ candidate plus source digests; serialize integration.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A03",
+      "ordinal": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "existing_gate": "G-ZERO-MUDA",
+      "obligation": "Reuse admitted UOS carriers; scan dependencies and dispatch plans for barred engines and forbidden language placement.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A04",
+      "ordinal": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "existing_gate": "G-OTP29-SUPER",
+      "obligation": "Show the real service actor in a live domain tree; exercise restart tolerance, fencing, bounded queues and shutdown.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A05",
+      "ordinal": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "existing_gate": "G-VFS-8LAWS",
+      "obligation": "Trace deterministic work and file access to an admitted ZigVM/VFS boundary; demonstrate confinement or the explicit delegated boundary.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A06",
+      "ordinal": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "existing_gate": "G-HERMES-EVID",
+      "obligation": "Provide a typed contract, independent oracle and fresh bounded verifier receipt for the service revision.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A07",
+      "ordinal": 7,
+      "name": "Mathematical Authority & Conservation",
+      "existing_gate": "G-LEAN4-MATH",
+      "obligation": "Prove relevant authorization, budget, trace-coordinate and lease laws; establish projection equivalence without undeclared axioms.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A08",
+      "ordinal": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "existing_gate": "G-ROCHA-SEMIOT",
+      "obligation": "Show that proposals, retrieved text, model outputs and Rete facts cannot directly create dispatch authority.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A09",
+      "ordinal": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "existing_gate": "G-MAX-INFER",
+      "obligation": "Route any inference through an admitted isolated boundary; non-inference services prove no hidden inference or Python dispatch.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A10",
+      "ordinal": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "existing_gate": "G-ZENOH-MESH",
+      "obligation": "Test tenant namespace ACLs, authenticated routing, loss/retry/duplicate handling and observation/control separation.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A11",
+      "ordinal": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "existing_gate": "G-AGUI-32EVENT",
+      "obligation": "Expose sanitized typed service events with authenticated subscription, bounded buffering and sequence-aware reconnection.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A12",
+      "ordinal": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "existing_gate": "G-A2UI-CATALOG",
+      "obligation": "Render typed catalog projections of capability, health, approval and evidence; no arbitrary model HTML or executable markup.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A13",
+      "ordinal": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "existing_gate": "G-PENTA-STACK",
+      "obligation": "Prove consistent authorized meaning across Lustre Web, Wisp API, ANSI TUI, AG-UI SSE and MoZ/Zenoh surfaces.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A14",
+      "ordinal": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "existing_gate": "G-TAILSCALE-WEB",
+      "obligation": "Verify full FQDN discovery/docs/evidence links and authenticated navigation; Tailnet location alone is not authorization.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A15",
+      "ordinal": 15,
+      "name": "Comprehensive Verification Checklist",
+      "existing_gate": "G-CHECKLIST",
+      "obligation": "Render the 5-domain/18-checkpoint structure with current scoped receipts, truthful UNRUN states and uniform navigation.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A16",
+      "ordinal": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "existing_gate": "G-KM-TRIAD",
+      "obligation": "Link the requirement, implementation, formal contract, scenario, evidence, wiki, ADR and ontology without dropping tenant ACLs.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A17",
+      "ordinal": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "existing_gate": "G-SAPLAN-BIONIC",
+      "obligation": "Track work and runtime steps through persistent leases, idempotency, cancellation, compensation and tested crash recovery.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    }
+  ],
+  "risk": {
+    "policy": "SC-RISK-PRIORITY-001",
+    "eligibility": "HOLD: paused; task-specific current assessment and authority required before claim",
+    "class": "P1 for blocked control/evidence effects; unrelated planning effect bounded",
+    "score": null,
+    "score_interval": [
+      1,
+      3125
+    ],
+    "score_reason": "No complete fresh task-specific C/T/F/Dep/I assessment; priority hints are not risk scores.",
+    "fmea": [
+      {
+        "id": "FM-AUTHORITY",
+        "cause": "stale grant, attempt or epoch accepted",
+        "effect": "unauthorized effect or false acceptance",
+        "s": 5,
+        "o": null,
+        "det": 1,
+        "rpn_interval": [
+          5,
+          25
+        ],
+        "f": 5,
+        "evidence": "loaded-control mismatch refusal is reported by handover; current worker/lease must be reobserved",
+        "residual": "UNKNOWN until fresh control/reclaim tests"
+      },
+      {
+        "id": "FM-RECEIPT",
+        "cause": "retained bytes and declared full-output hash confused",
+        "effect": "evidence cannot be independently checked",
+        "s": 4,
+        "o": 5,
+        "det": 4,
+        "rpn": 80,
+        "f": 5,
+        "evidence": "two observed long-output receipts; source repair and 84-pass report exist but fresh-process review pending",
+        "residual": "UNKNOWN after implemented-but-not-accepted repair"
+      },
+      {
+        "id": "FM-HEALTH",
+        "cause": "missing or failed observation replaced with healthy/default count",
+        "effect": "operator acts on false service status",
+        "s": 4,
+        "o": null,
+        "det": 4,
+        "rpn_interval": [
+          16,
+          80
+        ],
+        "f_interval": [
+          4,
+          5
+        ],
+        "evidence": "C3I system.rs fallbacks recorded in bootstrap plan; live reproduction required",
+        "residual": "UNKNOWN"
+      },
+      {
+        "id": "FM-DUPLICATE",
+        "cause": "blind retry after commit/reply loss or uncertain Telegram send",
+        "effect": "duplicate external action or conflicting writer",
+        "s": 4,
+        "o": null,
+        "det": null,
+        "rpn_interval": [
+          4,
+          100
+        ],
+        "f_interval": [
+          4,
+          5
+        ],
+        "evidence": "existing service contracts and pending recovery/Telegram campaign",
+        "residual": "UNKNOWN"
+      },
+      {
+        "id": "FM-LOAD",
+        "cause": "unbounded queue, blocking native work or unfair dispatch",
+        "effect": "outage or cascading latency under concurrent work",
+        "s": 3,
+        "o": null,
+        "det": null,
+        "rpn_interval": [
+          3,
+          75
+        ],
+        "f_interval": [
+          3,
+          5
+        ],
+        "evidence": "no accepted concurrency/saturation/soak profile yet",
+        "residual": "UNKNOWN"
+      },
+      {
+        "id": "FM-INTERFERENCE",
+        "cause": "agent dispatch overwrites a human pane or shared source owner",
+        "effect": "lost work or unintended execution",
+        "s": 4,
+        "o": null,
+        "det": 2,
+        "rpn_interval": [
+          8,
+          40
+        ],
+        "f": 4,
+        "evidence": "human-input panes were preserved; dedicated repair pane was used and then stopped",
+        "residual": "runtime handoff and multi-owner tests pending"
+      },
+      {
+        "id": "FM-SUPPLY",
+        "cause": "implicit dependency fetch or unvetted external ingestion",
+        "effect": "unreproducible candidate or exposure to excluded/secret artifacts",
+        "s": 5,
+        "o": null,
+        "det": null,
+        "rpn_interval": [
+          5,
+          125
+        ],
+        "f": 5,
+        "evidence": "historical unauthorized Hex fetch recorded as unadmitted; use pinned realized inputs",
+        "residual": "candidate supply-chain scan pending"
+      }
+    ],
+    "uca_types": [
+      "not_provided",
+      "provided_unsafe",
+      "wrong_timing",
+      "duration"
+    ],
+    "invalidation": "The prior 10-record portfolio does not cover this expanded plan. Preserve it; generate and validate a complete fresh source-bound portfolio for all canonical tasks before any new claim.",
+    "utility": "Measure verified useful work, rework, operator use, latency and resource cost after hard authority/safety/readiness constraints; do not multiply correlated ordinal factors into a probability.",
+    "current_preflight": {
+      "status": "HOLD",
+      "receipt": "var/harness/20261027-0634-prechange-risk-observation.json",
+      "findings": [
+        "Portfolio does not match the expanded 27-task plan",
+        "Requested task is not first eligible"
+      ],
+      "effect_authority": false
+    }
+  },
+  "external_gate": {
+    "task": "TELEGRAM_ACCEPT",
+    "plan": "uos/telegram-fractal-tests/20261027-0312",
+    "native_cross_plan_dependencies": false,
+    "required": "Gate must inspect exact external task states AND current accepted candidate-bound evidence before completion; not merely a textual reference."
+  },
+  "evidence": [
+    {
+      "path": "var/harness/20261027-0523-claude-session-handover.json",
+      "sha256": "3d18fbfbf21faf6e13f762c04fea5c011ed8973f51bbcb77d1a03d0a40d731f5",
+      "state": "OBSERVED_WITH_CHRONOLOGY_CAVEAT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "f64da7e1c46212b09d7c6c905ce0b69fba4ac035b70a14697009f91144e4c35b",
+      "state": "IMPLEMENTED_NOT_INDEPENDENTLY_ACCEPTED"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "sha256": "7c7787cb2e465bde9d7595ee86ff1734deaf50015182ec44681b76e6d2c07f2b",
+      "state": "REPORTED_84_PASSES_IN_OLD_LOADED_HARNESS"
+    },
+    {
+      "path": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+      "sha256": "c49af0363f1afb3a5e1fe0e37a5aea8de6ac9cc08414c540c6dac668945322d2",
+      "state": "SPECIFICATION_NOT_RUNTIME_EVIDENCE"
+    }
+  ],
+  "coverage_semantics": "For each actual capability/service and AINF aspect plus applicable fractal layer, record direct, inherited with exact evidence, N/A reviewed, or UNKNOWN. Required UNKNOWN/UNRUN/STALE/HOLD cannot pass.",
+  "readiness_verdicts": [
+    "HOLD",
+    "DEGRADED",
+    "READY_FOR_DEVELOPMENT"
+  ],
+  "production_release_authority": false,
+  "review_revision": "utility-pass-after-registration",
+  "scope_correction": "17 work packages were registered before the user challenged mandatory scope. Most are deferred, conditional or absorbed into existing core work. Their rows are preserved and visibly renamed, never falsely completed. The first usable slice does not depend on completing the entire roadmap.",
+  "core_execution_tasks": [
+    "RECEIPT_FIX",
+    "MCP_ACTIVATE",
+    "AGENT_PARITY",
+    "SERVICE_VERIFY",
+    "HIVE_VERIFY"
+  ],
+  "new_distinct_core_feature": "PLANNING_MCP",
+  "first_milestone": "CORE_DEV_READY for the explicitly named development workflow; not full provider/capability/Telegram admission.",
+  "grand_milestone": "Full required MCP/capability coverage and Telegram operational acceptance remain explicit later obligations.",
+  "first_slice_invariants": [
+    "Current scoped authority",
+    "Durable intent/result and safe unknown-outcome reconciliation",
+    "Isolation and finite resource bounds",
+    "Truthful candidate-bound evidence",
+    "Bounded recovery and useful progress",
+    "Observed policy/skill/SOP loading and resistance to conflicting unsafe instructions"
+  ],
+  "core_policy_pressure_cases": [
+    "Pause versus inherited autonomous work",
+    "Missing/unavailable tool versus forbidden bypass",
+    "Git instruction versus standalone JJ",
+    "Automatic delegation versus current session restrictions",
+    "Caller-supplied role/identity/backend versus trusted admission",
+    "Historical pass/EV/ACK versus fresh candidate evidence",
+    "Quota failure versus repeated or paid retries",
+    "Missing/stale clock/grant/attempt/epoch versus claimed authority",
+    "Lost reply versus duplicate effect",
+    "Truncated/Unicode diagnostics versus false integrity claim"
+  ],
+  "fractal_evolution": {
+    "unit": "One useful capability vertical slice, governed by the same core invariants at every nested boundary.",
+    "cycle": [
+      "Observe actual use/failure",
+      "Select smallest risk-ready useful change",
+      "Write typed contract and falsifier",
+      "Implement isolated candidate",
+      "Verify model/runtime correspondence and failure behavior",
+      "Review and reversible promotion",
+      "Observe outcomes; grow, revise or retire"
+    ],
+    "promotion_triggers": [
+      "Measured user need",
+      "Demonstrated safety/reliability failure",
+      "SLO breach",
+      "Recurring manual work with measurable cost"
+    ],
+    "prohibited_shortcuts": [
+      "More tasks or theorems treated as evidence of utility",
+      "Adding unused distributed abstractions",
+      "Inherited healthy status hiding a required unknown child",
+      "Unbounded recursion or experiments without an evidence question"
+    ],
+    "utility_model": "Dependency closure is proved minimal for the frozen declared targets; nonnegative additive task cost is monotone. Actual benefit, hidden dependencies, shared costs and regression cost require measurements, so global economic optimality is NOT proved."
+  },
+  "prechange_gate": {
+    "required_for_normal_implementation_changes": true,
+    "required": [
+      "Fresh CORE_GREEN evidence bound to actual baseline",
+      "Current task/owner/attempt/epoch/host/boot and grant",
+      "Observed loaded canonical rules/skills/Superpowers/SOP policy",
+      "Isolated candidate, finite resources, preserved baseline",
+      "Tested rollback and independent promotion review"
+    ],
+    "current": "HOLD",
+    "if_failed": "Stop feature work. Allow only independently scoped isolated recovery after explicit resume; keep the baseline protected and expose unknown/unavailable states.",
+    "planning_exception": "The operator explicitly requested this metadata/document/formal-analysis recording while implementation remains paused. No runtime/core implementation is changed.",
+    "smoke_budget": "Initial target <=60s for a small golden workflow, measured and revised from actual baseline; this is a proposed execution limit, not an observed SLO."
+  },
+  "formal_evidence": {
+    "path": "formal/lean/DevelopmentCoreGate.lean",
+    "receipt": "governance/planning/20261027-0634-core-gate-proof-receipt.json",
+    "source_sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+    "named_theorems": 47,
+    "satisfiable_controls": 12,
+    "foundations": [
+      "Lean Init",
+      "propext",
+      "Quot.sound"
+    ],
+    "custom_axioms": 0,
+    "unchecked_placeholders": 0,
+    "mutation_controls": 3,
+    "budget_differential_cases": 216,
+    "replay_differential_cases": 16,
+    "parser_refusals": 2,
+    "independent_output_fixtures": 10,
+    "full_runtime_refinement": "UNPROVEN",
+    "live_core_acceptance": "HOLD",
+    "proof_scope": "Abstract admission/effect/health/growth laws and frozen canonical task graph; bounded direct comparison to two compiled pure Gleam functions plus actual output constructor.",
+    "proof_log": "governance/planning/20261027-0634-core-gate-proof.log",
+    "cross_grant_refinement_gap": true
+  },
+  "core_dependency_closure": [
+    "HIVE_VERIFY",
+    "AGENT_PARITY",
+    "MCP_ACTIVATE",
+    "GRANT_REVIEW",
+    "BOOTSTRAP",
+    "SERVICE_VERIFY",
+    "PLANNING_MCP",
+    "CONTROL_ACCEPT",
+    "CONTROL_RECOVERY",
+    "OPERATOR_RESUME",
+    "RECEIPT_FIX",
+    "RECEIPT_GRANT_REVIEW",
+    "ACTIVATE_REVIEW"
+  ],
+  "new_work_packages_outside_core": [
+    "READINESS_CENSUS",
+    "NATIVE_BOUNDARY_REPAIR",
+    "SCHEDULER_GATES",
+    "CAPABILITY_PARITY",
+    "FAULT_RECOVERY",
+    "OPERATOR_SURFACES",
+    "PERF_SCALE",
+    "FORMAL_EVIDENCE",
+    "TELEGRAM_ACCEPT",
+    "COST_EFFICIENCY",
+    "KNOWLEDGE_SYNC",
+    "DEV_READY_REVIEW",
+    "DEV_INTEGRATE"
+  ],
+  "human_diagram": {
+    "ascii": "[Canonical Sa-plan snapshot] --> [Minimal core model]\n[Minimal core model] --> [Lean kernel check: PASS]\n[Lean kernel check: PASS] --> [232 model vectors]\n[232 model vectors] --> [Isolated Gleam evaluation: MATCH]\n[Isolated Gleam evaluation: MATCH] --> [Independent byte checks: PASS]\n[Independent byte checks: PASS] --> [Journal and task dispositions]\n[Live-core preflight: HOLD] --> [Feature changes: BLOCKED]\n[Live-core preflight: HOLD] --> [Journal and task dispositions]\n[Minimal core model] --> [Quint: 9 scenarios + 500 traces]\n[Quint: 9 scenarios + 500 traces] --> [Journal and task dispositions]\n[Minimal core model] --> [Z3: 5 UNSAT + 1 SAT]\n[Z3: 5 UNSAT + 1 SAT] --> [Journal and task dispositions]\n[Stan / rules / Ruliad: 6 / 7 / 31] --> [Journal and task dispositions]\n[Isolated Gleam evaluation: MATCH] --> [Cross-grant refinement: OPEN]\n[Cross-grant refinement: OPEN] --> [Feature changes: BLOCKED]",
+    "mermaid": "flowchart TD\n  A[\"Canonical Sa-plan snapshot\"] --> B[\"Minimal core model\"]\n  B --> C[\"Lean kernel check: PASS\"]\n  C --> D[\"232 model vectors\"]\n  D --> E[\"Isolated Gleam evaluation: MATCH\"]\n  E --> F[\"Independent byte checks: PASS\"]\n  F --> G[\"Journal and task dispositions\"]\n  H[\"Live-core preflight: HOLD\"] --> I[\"Feature changes: BLOCKED\"]\n  H --> G\n  B --> J[\"Quint: 9 scenarios + 500 traces\"]\n  J --> G\n  B --> K[\"Z3: 5 UNSAT + 1 SAT\"]\n  K --> G\n  L[\"Stan / rules / Ruliad: 6 / 7 / 31\"] --> G\n  E --> M[\"Cross-grant refinement: OPEN\"]\n  M --> I\n  classDef passed fill:#d9f2df,stroke:#297a3b,color:#123b1c\n  classDef held fill:#ffe0df,stroke:#af3030,color:#651515\n  class C,E,F,J,K,L passed\n  class H,I,M held"
+  },
+  "runtime_traceability": [
+    {
+      "claim": "Grant horizon/lifetime arithmetic",
+      "implementation": "admission.grant_budget_valid/3",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam:259",
+      "status": "PASS_BOUNDED_DIFFERENTIAL",
+      "cases": 216,
+      "limits": "No proof of whole-clock or request-admission refinement."
+    },
+    {
+      "claim": "Replay binding and success status",
+      "implementation": "operations.replay/2",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:231",
+      "status": "PASS_BRANCH_DIFFERENTIAL",
+      "cases": 16,
+      "parser_refusals": 2,
+      "limits": "Truth-table classes covered; arbitrary JSON/parser/adversarial storage not exhaustive."
+    },
+    {
+      "claim": "Retained-output byte integrity",
+      "implementation": "operations.effect_output_fields/1",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:1190",
+      "status": "PASS_10_FIXTURES_AND_20_INDEPENDENT_DIGESTS",
+      "limits": "A fresh admitted live MCP receipt and full Unicode domain remain separate."
+    },
+    {
+      "claim": "Stable logical ID across grants/attempts",
+      "implementation": "operations.effect_path_for/3 and signature",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam:191",
+      "status": "REFINEMENT_NOT_ESTABLISHED",
+      "evidence": "var/harness/20261027-0634-refinement-gap.json",
+      "limits": "Same intent yields grant-specific paths. No duplicate physical side effect was demonstrated; higher-level reconciliation/CAS may constrain it."
+    },
+    {
+      "claim": "Live owner/attempt/epoch/host/boot fencing",
+      "implementation": "admission.fence; development.fence_for",
+      "status": "MODEL_PROVED_LIVE_CHECKS_UNRUN",
+      "limits": "Requires fresh scoped grant and actual process/lease scenarios."
+    },
+    {
+      "claim": "Fresh core health before every normal mutation",
+      "implementation": "core health receipt + effect-time admission policy",
+      "status": "RUNTIME_BINDING_NOT_ESTABLISHED",
+      "limits": "The Boolean model gate is a specification; do not claim current runtime enforcement."
+    },
+    {
+      "claim": "Actual policy/rules/skills/Superpowers/SOP loading",
+      "implementation": "UOS-local agent adapters and real clients",
+      "status": "PRESSURE_TESTS_UNRUN",
+      "limits": "Presence, symlinks and advisory hooks are insufficient."
+    },
+    {
+      "claim": "Protected baseline, candidate promotion and rollback",
+      "implementation": "development/candidate/release workflow",
+      "status": "MODEL_PROVED_RUNTIME_ACCEPTANCE_UNRUN",
+      "limits": "External failures, operational liveness and physical recovery require actual evidence."
+    },
+    {
+      "claim": "Recursive holon health and scope restriction",
+      "implementation": "supervision/capability inheritance",
+      "status": "MODEL_PROVED_REFINEMENT_UNRUN",
+      "limits": "Only required profile children are modeled; hidden dependencies must be inventoried."
+    },
+    {
+      "claim": "Minimum useful work set",
+      "implementation": "canonical dependency snapshot",
+      "status": "MODEL_MINIMALITY_PROVED_FOR_FROZEN_GRAPH",
+      "limits": "Hidden operational edges and real benefits/costs are not proved away."
+    }
+  ],
+  "other_tools": {
+    "quint": {
+      "tool": "Quint0.32.0 TypeScript backend",
+      "source": "formal/quint/agentic_coordination.qnt",
+      "scenarios_passed": 9,
+      "seed": 634,
+      "max_samples": 500,
+      "max_steps": 30,
+      "invariant": "inv_all",
+      "result": "NO_VIOLATION_FOUND_IN_BOUNDED_SEEDED_SIMULATION",
+      "logs": [
+        "var/harness/20261027-0634-quint-tests.log",
+        "var/harness/20261027-0634-quint-simulation.log"
+      ],
+      "limits": "Not exhaustive state-space verification, liveness proof or runtime refinement."
+    },
+    "z3": {
+      "tool": "Z3 4.16.0",
+      "input": "var/harness/20261027-0634-core-safety.smt2",
+      "logic": "QF_LIA",
+      "solver_timeout_ms": 3000,
+      "wall_timeout_seconds": 10,
+      "kill_after_seconds": 1,
+      "unsafe_counterexample_queries": 5,
+      "results": "5 UNSAT; satisfiable valid-work control SAT",
+      "log": "var/harness/20261027-0634-z3-check.log",
+      "limits": "Formula/guard properties only; no runtime code generated or solver authority."
+    },
+    "stan": {
+      "component": "pre-existing Run_analysis.Stan_model adapter executable",
+      "tests_passed": 6,
+      "fixture": "synthetic unit fixtures, report-only, no new reliability posterior",
+      "checks": [
+        "population completeness",
+        "receipt binding",
+        "missing data",
+        "duplicate evidence",
+        "invalid prior"
+      ],
+      "log": "var/harness/20261027-0634-stan-adapter-tests.log",
+      "new_sampler_run": false,
+      "real_reliability_inference": "NOT_JUSTIFIED_WITH_CURRENT_DATA",
+      "limits": "No CmdStan/NUTS or full Stan serving stack is claimed from adapter tests; current source-to-prebuilt-binary binding not established."
+    },
+    "rule_engine": {
+      "component": "prebuilt Rete_ul-named rule adapter with Hermes_rete oracle",
+      "tests_passed": 7,
+      "log": "var/harness/20261027-0634-rule-adapter-tests.log",
+      "limits": "The Hermes_harness matcher explicitly calls itself naive, not Rete-UL. This does not establish algorithm identity or live integration of the separately named adapter."
+    },
+    "ruliad": {
+      "component": "pre-existing bounded multiway explorer test executable",
+      "tests_passed": 31,
+      "layers": [
+        "unit",
+        "property",
+        "chaos",
+        "fuzz"
+      ],
+      "log": "var/harness/20261027-0634-ruliad-tests.log",
+      "limits": "Synthetic explorer tests, not complete exploration or proof of a universally optimal hive strategy; current source-to-prebuilt-binary binding not established."
+    }
+  },
+  "operator_prompt": "continue. are these tasks absolutely necessary. are we adding complexity and tasks for the correct utility and payoff. take fractal organic evolutionary approach. the core parts must be absolutely robust. make sure the mcp, rules, skills , superpowers, sop etc are absolutely robust. the core capabilities must always be functional and robustly working before any chnages are made.so fractal and evolutionary analysis to ensure we are working with the correct set and capabilities. document this . makthematically prove and robust check. make the lean model as robust and sophisticated as possible. goal is that the core is extremely sophisticated and robust and resilient. fractal and biomorphically evolvable. document the analyis, thinking , approach , expected utility and behavior  and results in the journal. keep improving the lean model till we have very high confidence that it will actually give us the results we are looking for in the runtime system. use the full power and intelligence of the model. keep recursing and improving till we are getting very very high quality results. cross check lean model  with runtime code to verify. graphically show analyis and logs to explain to a human what is happening. use all the mathematical and modellling tools - lean, quint, etc, stan, rete ul, ruliad etc - all system capabilities and sops and processes. summarize the results and learnigs till now. explain in detail what you mean and what the results are showing. use all decision analysis techniques also. write the promptt in journal also. provide tailscale fqdn link",
+  "journal_scope": "Reviewable decision rationale, expected utility, tests/results and residuals; no full-runtime assurance claim.",
+  "decision_methods": [
+    "STPA",
+    "FMEA with uncertainty",
+    "ACH and causal/fractal RCA",
+    "Dependency closure and least-set proof",
+    "Nonnegative additive cost monotonicity",
+    "Expected utility with unmeasured terms explicit",
+    "Dominance/Pareto reasoning",
+    "Sensitivity and scenario analysis",
+    "Value of information",
+    "Mutation/adversarial testing",
+    "Bayesian data-quality discipline",
+    "Sequential stopping and evidence-driven evolution"
+  ],
+  "registration_receipt": "var/harness/20261027-0634-readiness-registration-receipt.json",
+  "utility_correction_receipt": "var/harness/20261027-0634-utility-correction-receipt.json"
+}

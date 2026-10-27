@@ -281,22 +281,24 @@ pub fn verify_mutating_action_preflight(
   action: String,
   raw_line: String,
 ) -> fractal_forecast.AgenticPreflightCertificate {
+  let number_decoder =
+    decode.one_of(decode.float, [decode.map(decode.int, int.to_float)])
   let actor_decoder = {
     use a <- decode.subfield(["params", "arguments", "actor"], decode.string)
     decode.success(a)
   }
   let benefit_decoder = {
-    use b <- decode.subfield(["params", "arguments", "benefit"], decode.float)
+    use b <- decode.subfield(["params", "arguments", "benefit"], number_decoder)
     decode.success(b)
   }
   let cost_decoder = {
-    use c <- decode.subfield(["params", "arguments", "cost"], decode.float)
+    use c <- decode.subfield(["params", "arguments", "cost"], number_decoder)
     decode.success(c)
   }
   let risk_decoder = {
     use r <- decode.subfield(
       ["params", "arguments", "risk_score"],
-      decode.float,
+      number_decoder,
     )
     decode.success(r)
   }
@@ -399,14 +401,15 @@ fn execute_tool(
                   // Legacy payload identities do not establish effect authority.
                   // Only the separately task-bound development harness may
                   // expose its finite development effects.
-                  error_response(
+                  tool_error_response(
                     id,
-                    -32_003,
-                    "Transport-bound task authority unavailable; legacy mutation refused",
+                    "UNAVAILABLE: "
+                      <> name
+                      <> " — Transport-bound task authority unavailable; legacy mutation refused; no action or verification was performed.",
                   )
                 }
                 fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
-                  error_response(id, -32_001, "Preflight veto: " <> reason)
+                  tool_error_response(id, "Preflight veto: " <> reason)
                 }
               }
             }
@@ -555,7 +558,13 @@ fn tool_plan_get(id: Option(json.Json), raw_line: String) -> String {
     decode.success(i)
   }
   case json.parse(raw_line, id_decoder) {
-    Ok(task_id) -> tool_adapter_response(id, c3i_nif.plan_get_task(task_id))
+    Ok(task_id) -> {
+      let out = c3i_nif.plan_get_task(task_id)
+      case adapter_no_rows(out) {
+        True -> tool_error_response(id, "NOT_FOUND: plan_get id=" <> task_id)
+        False -> tool_adapter_response(id, out)
+      }
+    }
     Error(_) -> error_response(id, -32_602, "Missing params.arguments.id")
   }
 }
@@ -657,8 +666,39 @@ fn tool_knowledge_search(id: Option(json.Json), raw_line: String) -> String {
 }
 
 fn tool_verification_run(id: Option(json.Json)) -> String {
-  tool_adapter_response(id, c3i_nif.verification_run())
+  case
+    run_bounded_cd(
+      "/home/an/.nix-profile/bin/gleam",
+      ["check"],
+      "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      60_000,
+    )
+  {
+    Ok(#(exit_code, output)) -> {
+      let warnings = list.length(string.split(output, "warning:")) - 1
+      let errors = list.length(string.split(output, "error:")) - 1
+      let truncated = string.slice(output, 0, 2000)
+      tool_content_response(
+        id,
+        json.to_string(json.object([
+          #("ok", json.bool(exit_code == 0)),
+          #("output", json.string(truncated)),
+          #("warnings", json.int(warnings)),
+          #("errors", json.int(errors)),
+        ])),
+      )
+    }
+    Error(err) -> tool_error_response(id, err)
+  }
 }
+
+@external(erlang, "ecology_capability_ffi", "run_bounded_cd")
+fn run_bounded_cd(
+  path: String,
+  args: List(String),
+  cwd: String,
+  timeout_ms: Int,
+) -> Result(#(Int, String), String)
 
 fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
   let path_decoder = {
@@ -837,6 +877,8 @@ fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
 }
 
 fn tool_preflight_check(id: Option(json.Json), raw_line: String) -> String {
+  let number_decoder =
+    decode.one_of(decode.float, [decode.map(decode.int, int.to_float)])
   let decoder = {
     use actor <- decode.subfield(
       ["params", "arguments", "actor"],
@@ -848,9 +890,12 @@ fn tool_preflight_check(id: Option(json.Json), raw_line: String) -> String {
     )
     use benefit <- decode.subfield(
       ["params", "arguments", "benefit"],
-      decode.float,
+      number_decoder,
     )
-    use cost <- decode.subfield(["params", "arguments", "cost"], decode.float)
+    use cost <- decode.subfield(
+      ["params", "arguments", "cost"],
+      number_decoder,
+    )
     decode.success(#(actor, action, benefit, cost))
   }
   case json.parse(raw_line, decoder) {
@@ -977,7 +1022,15 @@ fn tool_task_bound_feature(
     Ok(args) ->
       case task_mcp.call_task_bound(name, args) {
         Ok(result) -> tool_content_response(id, json.to_string(result))
-        Error(reason) -> tool_error_response(id, reason)
+        Error(reason) ->
+          case known_binding_error(reason) {
+            Some(code) ->
+              tool_error_response(
+                id,
+                "UNAVAILABLE: " <> name <> " \u{2014} " <> code,
+              )
+            None -> tool_error_response(id, reason)
+          }
       }
     Error(_) -> tool_error_response(id, "Missing required params.arguments")
   }
@@ -1619,6 +1672,32 @@ fn tool_error_response(id: Option(json.Json), text: String) -> String {
       ),
     ]),
   )
+}
+
+// Known task-binding error codes reported by the Gleam harness boundary.
+// Mapped to a deterministic "UNAVAILABLE: <tool> — <reason>" text so callers
+// can distinguish a missing binding from an adapter or protocol failure.
+const binding_error_codes = [
+  "role_binding_missing", "plan_binding_missing", "task_binding_missing",
+  "worker_binding_missing", "attempt_binding_missing",
+  "session_binding_missing", "epoch_binding_missing",
+  "development_bootstrap_grant_mismatch",
+]
+
+fn known_binding_error(reason: String) -> Option(String) {
+  binding_error_codes
+  |> list.find(fn(code) { string.contains(reason, code) })
+  |> option.from_result
+}
+
+// Report-only detection of an adapter result carrying no rows for the
+// requested identifier. No mutation and no authority decision is implied.
+fn adapter_no_rows(text: String) -> Bool {
+  let lowered = string.lowercase(text)
+  string.contains(lowered, "no rows")
+  || string.contains(lowered, "no_rows")
+  || string.contains(lowered, "not found")
+  || string.contains(lowered, "not_found")
 }
 
 fn adapter_failed(text: String) -> Bool {

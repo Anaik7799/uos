@@ -1,0 +1,153 @@
+{
+  "schema": "uos.harness-core-smoke.v1",
+  "observed_utc": "2026-10-27T08:16:00Z",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "RECEIPT_FIX",
+  "attempt": 2,
+  "worker": "claude-hive-receipt-fix-2585",
+  "session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+  "grant_path": "var/harness/20261027-0745-core-verification-grant.json",
+  "grant_sha256": "c4c98b8a72a4cb96255c50f285ecf803b49550d5f5541670c3299856db128566",
+  "review_path": "docs/reviews/20261027-0745-core-verification-grant-review.json",
+  "review_sha256": "a9e2604f850bf4c8ab047c3331d7672aa9af10e104c25edcddd67922be5f89f3",
+  "risk_portfolio": "var/harness/20261027-0745-core-current-risk.json",
+  "status": "READY_FOR_INDEPENDENT_REVIEW",
+  "task_completed": false,
+  "production_admission": false,
+  "server": {
+    "name": "uos-gleam-successor-harness",
+    "version": "0.2.0",
+    "protocol": "2024-11-05",
+    "tool_count": 13,
+    "transport": "private FIFO stdio bridge, non-canonical, transport only",
+    "erl": "pinned +S 2:2 +A 2, /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5",
+    "restarted_to_clear_unresolved_protocol_state": true
+  },
+  "attach_sequence": [
+    {
+      "intent_id": "claude-2585-core-attach-1",
+      "verdict": "REFUSED_UNKNOWN",
+      "error": "attachment_outcome_unknown:regular_single_link_file_bound",
+      "durable_receipt": "none",
+      "preserved_raw_response": "scratchpad/preserved-failed-attach-claude-2585-core-attach-1.json",
+      "independent_root_cause": "files.max_bytes is 262144 (files.gleam:17); admission.attach reads scope.portfolio through state_assessment -> files.read (admission.gleam:707,773) and the guard at files.gleam:134 requires size <= max_bytes. The portfolio was 295864 bytes, 33720 over. The error is wrapped at admission.gleam:806.",
+      "effect_boundary": "The failing read precedes both risk_check and the coordinator claim, so no task effect, no task-resource lease and no effect intent were created. Independently verified."
+    },
+    {
+      "intent_id": "claude-2585-core-attach-2",
+      "verdict": "EXECUTED",
+      "attempt": 2,
+      "coordinator_epoch": 2,
+      "after": "root reconciliation compacted the portfolio, formatting only"
+    },
+    {
+      "intent_id": "claude-2585-core-attach-3",
+      "verdict": "EXECUTED",
+      "attempt": 2,
+      "coordinator_epoch": 3,
+      "after": "reconcile of the adversarial write cleared the active execution, so re-attach was required"
+    }
+  ],
+  "reconciliation_of_root_compaction": {
+    "preserved": "var/harness/20261027-0745-risk-oversize-preserved.json",
+    "preserved_bytes": 295864,
+    "canonical": "var/harness/20261027-0745-core-current-risk.json",
+    "canonical_bytes": 236991,
+    "under_cap": true,
+    "sorted_compact_digest_both_sides": "8d6116ab33832285dde7aba17a3f6e2223ffa4dde8b7a73d6507e56ba0b700a6",
+    "records_each_side": 27,
+    "verdict": "FORMATTING_ONLY_VALUE_IDENTICAL",
+    "method": "jq -S -c piped to sha256sum on each file, compared"
+  },
+  "refusal_checks": [
+    { "id": "R1", "check": "in-scope read", "path": "docs/reviews/20261027-0745-core-verification-grant-review.json", "expected": "ok", "observed": "ok" },
+    { "id": "R2", "check": "out-of-scope read", "path": "flake.nix", "expected": "refused", "observed": "read_scope_refused" },
+    { "id": "R3", "check": "traversal read", "path": "../../etc/passwd", "expected": "refused", "observed": "read_scope_refused" },
+    { "id": "R4", "check": "absolute-path read", "path": "/etc/passwd", "expected": "refused", "observed": "read_scope_refused" },
+    { "id": "R5", "check": "read before attach", "expected": "refused", "observed": "current_task_required" },
+    {
+      "id": "W1",
+      "check": "write to guarded source outside write_paths",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "expected": "refused with no mutation",
+      "observed": "effect_unverified:write_scope_refused",
+      "intent_receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-refuse-src-write@intent.json",
+      "result_receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-refuse-src-write@result.json",
+      "result_status": "FAILED_OR_UNVERIFIED",
+      "result_failure": "write_scope_refused",
+      "result_signature": "a61147425262b037bd79e7547746a184f761646e6e47aaf74f1bebeec8f0cd21",
+      "mutation_check": "All 14 entries of the receipt's own input_manifest, which include AGENTS.md and operations.gleam, verified byte-identical on disk after the refusal via sha256sum -c. The write was refused before mutation.",
+      "side_effect": "The refusal set the unresolved-operation stop line, which then blocked two further probes with unresolved_operation_stop_line.",
+      "reconciliation": {
+        "tool": "harness_reconcile",
+        "intent_id": "claude-2585-refuse-src-write",
+        "verdict": "RESOLVED_KNOWN_NO_EFFECT",
+        "basis": "The result receipt is terminal and names write_scope_refused; the guarded manifest is unchanged. reconcile returned the bound execution and the failure, and harness_status then reported unresolved_operation false. No failure was represented as a pass.",
+        "note": "reconcile quarantines a dangling intent rather than force-resolving it; it was not used as a bypass."
+      }
+    }
+  ],
+  "refusal_checks_not_run": [
+    { "id": "W2", "check": "write to the other task's scoped path", "status": "NOT_RUN", "reason": "blocked by the W1 stop line, then withheld on operator instruction to avoid further negative effectful writes" },
+    { "id": "W3", "check": "write with a wrong expected_sha256", "status": "NOT_RUN", "reason": "same" }
+  ],
+  "build": {
+    "intent_id": "claude-2585-core-build-1",
+    "status": "EXECUTED",
+    "output_sha256": "b1dd2d6458da5740387da445e927d07f9e390c1c803b359620c71de2cfb07c9d",
+    "signature": "8f99581500db47d3a26517713bb244b9d379ea7df2730b08e15d3c0f3ac9b644",
+    "receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-build-1@result.json",
+    "note": "warnings only, all in files unrelated to this task"
+  },
+  "test": {
+    "intent_id": "claude-2585-core-test-1",
+    "status": "EXECUTED",
+    "result": "All 84 tests passed.",
+    "failed": 0,
+    "skipped": 0,
+    "modules": [
+      "harness_successor_test",
+      "harness_development_test",
+      "harness_authority_test",
+      "harness_sa_plan_boundary_test",
+      "mcp_authz_wiring_test",
+      "mcp_catalog_truth_test"
+    ],
+    "module_count": 6,
+    "output_sha256": "68c7f77aebe7656b9b49155fe5654f8542325f5bb26cd46f0a9a8ffae4323b6c",
+    "signature": "0dbb6aad371f1ee11d5db6f10c50f71e3b2cc30ab74e88896bb02c085f8205cf",
+    "receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-test-1@result.json"
+  },
+  "live_receipt_integrity_observation": {
+    "claim": "The receipt-integrity repair already present in operations.gleam is now exercised by the SERVING harness, not only by the test subprocess.",
+    "receipt": "var/harness/effects/20261027-0745-core-verification@claude-2585-core-test-1@result.json",
+    "output_retention": "tail_truncated",
+    "output_bytes": 19023,
+    "output_retained_bytes": 8192,
+    "output_retained_sha256": "09632374f55505c81e21df94a5e49ca3604ca2e7af21e4f2b42d9700edd3f5f3",
+    "output_sha256": "68c7f77aebe7656b9b49155fe5654f8542325f5bb26cd46f0a9a8ffae4323b6c",
+    "independent_measurement": "The receipt's own output field was extracted and hashed outside the harness: 8192 bytes, digest 09632374f55505c81e21df94a5e49ca3604ca2e7af21e4f2b42d9700edd3f5f3, equal to output_retained_sha256.",
+    "verdict": "RETAINED_DIGEST_CORRESPONDS_TO_RETAINED_BYTES",
+    "contrast": "Under the previous control the same situation produced a receipt whose only digest hashed 19023 bytes that the record did not contain, with no byte counts and no disclosure of truncation."
+  },
+  "scope_conformance": {
+    "source_or_config_edits": 0,
+    "guidance_edits": 0,
+    "production_effects": 0,
+    "network_or_provider_calls": 0,
+    "external_messages": 0,
+    "new_ev_numbers_minted": 0,
+    "old_receipts_preserved": 20,
+    "workspace_lease_epoch": 4,
+    "task_resource_epoch_at_last_attach": 3
+  },
+  "residuals": [
+    "No peer or formal review artifact is asserted by this record. Codex review is outstanding and is not fabricated here.",
+    "W2 and W3 refusal checks remain NOT_RUN by instruction.",
+    "MCP_ACTIVATE is untouched and still available; it requires root acceptance, risk readiness and its own fresh task-specific receipts.",
+    "The 262144-byte read cap is a real operational constraint on evidence inputs: any portfolio that grows past it fails attach with an outcome labelled unknown, before any effect. That label is conservative, but the failure point is deterministic and pre-effect.",
+    "A correctly refused out-of-scope write still costs a reconcile cycle, so adversarial write probes are not free."
+  ],
+  "authority": "Sa-plan is the sole execution authority. This record is evidence and grants no admission.",
+  "ev_boundary": "EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted."
+}

@@ -2,9 +2,11 @@ import cepaf_gleam/harness/admission as a
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/operations as ops
+import cepaf_gleam/harness/planning_intents as planning
 import cepaf_gleam/harness/successor_mcp as mcp
 import cepaf_gleam/harness/value
 import gleam/json
+import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
@@ -599,4 +601,667 @@ pub fn task_completion_cannot_bypass_an_unresolved_effect_test() {
     ])
   mcp.call(state, "harness_finish", args)
   |> should.equal(#(state, Error("unresolved_operation_stop_line")))
+}
+
+// --- Retained diagnostic integrity (RECEIPT_FIX) ---------------------------
+//
+// Observed defect, 2026-10-27, receipt of a real harness_test effect under
+// grant 20261027-0538-hive-receipt-dedicated: the EXECUTED record retained
+// 8192 bytes of the tail, whose digest is
+//   e019941e9c2ba9ac4388890fbef184ffc5461d90b254f2a0d452673097231c1e
+// while the record's only digest, output_sha256, claimed
+//   5055476adedd97820354aad00baa1469b3a8b9b06043c7ce061e3262192fe3ea
+// (the digest of the FULL output). A verifier holding the receipt therefore
+// could not check the bytes in front of it, and nothing in the record
+// disclosed that truncation had occurred or how many bytes were dropped.
+//
+// Assertions below reuse the production pure constructor
+// ops.effect_output_fields and the production bound dev.backend_diagnostic;
+// there is no test-local reimplementation of either.
+
+fn receipt_field(output: String, key: String) -> Result(json.Json, Nil) {
+  list.key_find(ops.effect_output_fields(output), key)
+}
+
+fn assert_retained_bytes_are_verifiable(output: String, retention: String) {
+  let retained = dev.backend_diagnostic(output)
+  // the retained text is exactly what the production bound produced
+  receipt_field(output, "output")
+  |> should.equal(Ok(json.string(retained)))
+  // and the receipt carries a digest OF THOSE RETAINED BYTES
+  receipt_field(output, "output_retained_sha256")
+  |> should.equal(Ok(json.string(files.digest(retained))))
+  // byte counts are explicit on both sides of the bound
+  receipt_field(output, "output_retained_bytes")
+  |> should.equal(Ok(json.int(string.byte_size(retained))))
+  receipt_field(output, "output_bytes")
+  |> should.equal(Ok(json.int(string.byte_size(output))))
+  // the full-output digest is preserved, under its documented meaning
+  receipt_field(output, "output_sha256")
+  |> should.equal(Ok(json.string(files.digest(output))))
+  // and the relationship between the two is stated, never implied
+  receipt_field(output, "output_retention")
+  |> should.equal(Ok(json.string(retention)))
+}
+
+pub fn executed_receipt_digest_covers_the_bytes_it_retains_test() {
+  // short output: nothing is dropped
+  assert_retained_bytes_are_verifiable("ok\n", "full")
+  // empty output: a measured zero, not an absence
+  assert_retained_bytes_are_verifiable("", "full")
+  // long ASCII: the grapheme tail bound drops a prefix
+  assert_retained_bytes_are_verifiable(string.repeat("x", 20_000), "tail_truncated")
+  // Unicode: 8192 three-byte graphemes exceed the 16384-byte bound, so the
+  // production fallback retains a sentinel that is NOT output bytes at all
+  assert_retained_bytes_are_verifiable(string.repeat("\u{d55c}", 9000), "unavailable")
+}
+
+// --- Typed planning intents (PLANNING_MCP) --------------------------------
+//
+// Source-bound unit laws over the pure planning surface. These assertions use
+// the production module, never a test-local reimplementation, and they do NOT
+// mutate the canonical Sa-plan store: no CLI dispatch happens in a unit test.
+// Real canonical sandbox create/read/publish is a later activation gate.
+
+fn planning_binding() {
+  dev.Binding(
+    "development",
+    "uos/hive-development/20261027-0532",
+    "PLANNING_MCP",
+    "claude-hive-planning-2585",
+    1,
+    "2585c3a9-4685-457d-84af-74238f66aa7c",
+    1,
+  )
+}
+
+pub fn planning_intent_set_is_closed_test() {
+  planning.parse_intent("CreatePlan") |> should.equal(Ok(planning.CreatePlan))
+  planning.parse_intent("CreateTask") |> should.equal(Ok(planning.CreateTask))
+  planning.parse_intent("PublishEvidence")
+  |> should.equal(Ok(planning.PublishEvidence))
+  // Anything outside the closed set, including a generic runner or an
+  // identity/backend/SQL/shell carrier, is refused by name.
+  planning.parse_intent("RunSql") |> should.equal(Error("unknown_intent"))
+  planning.parse_intent("") |> should.equal(Error("unknown_intent"))
+  planning.parse_intent("createplan") |> should.equal(Error("unknown_intent"))
+}
+
+pub fn planning_outcomes_are_four_and_labelled_test() {
+  planning.outcome_label(planning.Applied) |> should.equal("Applied")
+  planning.outcome_label(planning.Replayed) |> should.equal("Replayed")
+  planning.outcome_label(planning.Refused("x")) |> should.equal("Refused")
+  planning.outcome_label(planning.Uncertain("x")) |> should.equal("Uncertain")
+}
+
+pub fn planning_logical_key_is_unambiguous_and_grant_attempt_free_test() {
+  let b = planning_binding()
+  let key = planning.logical_key(b.plan, b.task, "L-001")
+  // Stable across attempt: the key is computed from the tuple only.
+  let other_attempt = dev.Binding(..b, attempt: 7)
+  planning.logical_key(other_attempt.plan, other_attempt.task, "L-001")
+  |> should.equal(key)
+  // A different logical id is a different key.
+  planning.logical_key(b.plan, b.task, "L-002") |> should.not_equal(key)
+  // Unambiguous encoding: these two tuples must NOT collide, which a slash or
+  // newline concatenation would allow.
+  planning.logical_key("a/b", "c", "d")
+  |> should.not_equal(planning.logical_key("a", "b/c", "d"))
+  planning.logical_key("a", "b", "c\nd")
+  |> should.not_equal(planning.logical_key("a", "b\nc", "d"))
+}
+
+pub fn planning_ledger_path_excludes_grant_and_attempt_test() {
+  let b = planning_binding()
+  let key = planning.logical_key(b.plan, b.task, "L-003")
+  let intent_path = planning.ledger_path(key, "intent")
+  let result_path = planning.ledger_path(key, "result")
+  // One exclusive pair inside the EXISTING effects directory.
+  intent_path
+  |> string.starts_with("var/harness/effects/planning@")
+  |> should.be_true
+  intent_path |> should.not_equal(result_path)
+  // The path must not carry the grant id or the attempt.
+  intent_path
+  |> string.contains("20261027-1013-planning-implementation")
+  |> should.be_false
+  intent_path |> string.contains("-a1") |> should.be_false
+}
+
+pub fn planning_transport_receipt_id_comes_from_trusted_attempt_test() {
+  let b = planning_binding()
+  let key = planning.logical_key(b.plan, b.task, "L-004")
+  // The transport id is derived from the trusted attempt, so a caller cannot
+  // supply a second identity to bypass the ledger.
+  planning.transport_receipt_id(b, key) |> should.equal(key <> "-a1")
+  planning.transport_receipt_id(dev.Binding(..b, attempt: 2), key)
+  |> should.equal(key <> "-a2")
+  // The ledger key itself is unchanged by attempt.
+  planning.transport_receipt_id(dev.Binding(..b, attempt: 2), key)
+  |> should.not_equal(planning.transport_receipt_id(b, key))
+}
+
+pub fn planning_payload_keys_are_closed_test() {
+  // Identity, role, backend, SQL and shell carriers are absent from the
+  // allowed set, so they are refused as unknown keys.
+  planning.allowed_keys |> list.contains("logical_id") |> should.be_true
+  planning.allowed_keys |> list.contains("target_plan") |> should.be_true
+  planning.allowed_keys |> list.contains("worker") |> should.be_false
+  planning.allowed_keys |> list.contains("role") |> should.be_false
+  planning.allowed_keys |> list.contains("session") |> should.be_false
+  planning.allowed_keys |> list.contains("attempt") |> should.be_false
+  planning.allowed_keys |> list.contains("sql") |> should.be_false
+  planning.allowed_keys |> list.contains("backend") |> should.be_false
+  planning.allowed_keys |> list.contains("command") |> should.be_false
+}
+
+pub fn planning_target_must_be_allowlisted_test() {
+  let approved = "uos/development/planning-proof/20261027-1013"
+  planning.target_allowed(approved, [approved]) |> should.equal(Ok(Nil))
+  // An arbitrary canonical target is refused even though it is a real plan.
+  planning.target_allowed("uos/hive-development/20261027-0532", [approved])
+  |> should.equal(Error("planning_target_refused"))
+  planning.target_allowed("", [approved])
+  |> should.equal(Error("planning_target_refused"))
+  // An empty allowlist authorizes nothing.
+  planning.target_allowed(approved, [])
+  |> should.equal(Error("planning_target_refused"))
+}
+
+pub fn planning_evidence_path_allows_md_and_json_only_test() {
+  planning.evidence_path_allowed("docs/journal/20261027-1013-x.md")
+  |> should.equal(Ok(Nil))
+  planning.evidence_path_allowed("governance/planning/20261027-1013-x.json")
+  |> should.equal(Ok(Nil))
+  // Never code or configuration.
+  planning.evidence_path_allowed("apps/cepaf_gleam/src/x.gleam")
+  |> should.equal(Error("evidence_path_refused"))
+  planning.evidence_path_allowed("flake.nix")
+  |> should.equal(Error("evidence_path_refused"))
+  planning.evidence_path_allowed("tools/preflight")
+  |> should.equal(Error("evidence_path_refused"))
+  planning.evidence_path_allowed("../../etc/passwd")
+  |> should.equal(Error("evidence_path_refused"))
+}
+
+pub fn planning_payload_byte_bound_is_exact_at_the_edge_test() {
+  let limit = planning.max_payload_bytes
+  // 64 KiB encoded intent, large enough for a real 13-section journal plus the
+  // canonical checklist, and bounded so the ledger record and the MCP frame
+  // both stay inside their own limits once escaped.
+  limit |> should.equal(65_536)
+  planning.payload_within_bound(string.repeat("a", limit))
+  |> should.equal(Ok(Nil))
+  planning.payload_within_bound(string.repeat("a", limit - 1))
+  |> should.equal(Ok(Nil))
+  planning.payload_within_bound(string.repeat("a", limit + 1))
+  |> should.equal(Error("payload_bound_exceeded"))
+  // Unicode is measured in BYTES, not graphemes: one 3-byte grapheme at the
+  // boundary must not be counted as one byte.
+  planning.payload_within_bound(string.repeat("界", limit / 3))
+  |> should.equal(Ok(Nil))
+  planning.payload_within_bound(string.repeat("界", limit / 3 + 1))
+  |> should.equal(Error("payload_bound_exceeded"))
+}
+
+pub fn planning_nonzero_exit_is_never_a_pre_effect_refusal_test() {
+  // Only proven pre-dispatch validation refuses. A nonzero exit, a timeout or
+  // a readback disagreement is uncertain, because the effect may have landed.
+  planning.classify_backend(Error("backend_exit:1\nboom"))
+  |> planning.outcome_label
+  |> should.equal("Uncertain")
+  planning.classify_backend(Error("timeout"))
+  |> planning.outcome_label
+  |> should.equal("Uncertain")
+  planning.classify_backend(Error("readback_mismatch"))
+  |> planning.outcome_label
+  |> should.equal("Uncertain")
+}
+
+pub fn planning_readback_must_match_the_requested_identity_test() {
+  // Captured actual CLI output, plan show --format json: one JSON record
+  // line followed by the sa-plan-pipeline diagnostic line.
+  let plan_raw =
+    "{\"id\":\"uos/development/planning-proof/20261027-1013\",\"name\":\"proof\",\"title\":\"T\"}\nsa-plan-pipeline {\"request_id\":\"sa-plan-1\",\"command\":\"--plan-show\"}"
+  planning.readback_matches(
+    "uos/development/planning-proof/20261027-1013",
+    "",
+    "proof",
+    "T",
+    plan_raw,
+  )
+  |> should.equal(Ok(Nil))
+  // An alias that resolves to a different id is refused.
+  planning.readback_matches(
+    "uos/development/planning-proof/20261027-1013",
+    "",
+    "proof",
+    "T",
+    "{\"id\":\"uos/other/alias\",\"name\":\"proof\",\"title\":\"T\"}",
+  )
+  |> should.equal(Error("readback_identity_mismatch"))
+  // Captured actual CLI output, task show --format json: parent binding
+  // must match as well as the identity.
+  let task_raw =
+    "{\"plan_id\":\"uos/development/planning-proof/20261027-1013\",\"id\":\"T01\",\"name\":\"T01\",\"title\":\"T\",\"parent_id\":\"-\",\"state\":\"available\"}\nsa-plan-pipeline {\"command\":\"--task-show\"}"
+  planning.readback_matches(
+    "T01",
+    "uos/development/planning-proof/20261027-1013",
+    "T01",
+    "T",
+    task_raw,
+  )
+  |> should.equal(Ok(Nil))
+  planning.readback_matches(
+    "T01",
+    "uos/wrong/parent",
+    "T01",
+    "T",
+    task_raw,
+  )
+  |> should.equal(Error("readback_parent_mismatch"))
+  // Title carries spaces, and the JSON record keeps them intact.
+  planning.readback_matches(
+    "T01",
+    "uos/development/planning-proof/20261027-1013",
+    "T01",
+    "wrong title",
+    task_raw,
+  )
+  |> should.equal(Error("readback_title_mismatch"))
+  // Stdout as a whole is not JSON, and extra records are ambiguous.
+  planning.record_line("not json\nsa-plan-pipeline {}")
+  |> should.equal(Error("readback_unexpected_output"))
+  planning.record_line("{\"id\":\"a\"}\n{\"id\":\"b\"}")
+  |> should.equal(Error("readback_ambiguous"))
+  planning.record_line("sa-plan-pipeline {}")
+  |> should.equal(Error("readback_absent"))
+}
+
+pub fn planning_submit_refuses_unknown_and_pending_before_dispatch_test() {
+  let execution =
+    a.Execution(
+      grant(),
+      scope(),
+      planning_binding(),
+      "var/harness/20261027-1013-planning-current-risk.json",
+    )
+  // An unknown intent is refused by prevalidation, with no dispatch at all.
+  ops.submit_planning_outcome(execution, value.Object([#("intent", value.Text("RunSql"))]))
+  |> should.equal(Error("unknown_intent"))
+  // A missing logical id is refused before dispatch.
+  ops.submit_planning_outcome(execution, value.Object([#("intent", value.Text("CreatePlan"))]))
+  |> should.equal(Error("logical_id_required"))
+  // An unknown payload key is refused before dispatch.
+  ops.submit_planning_outcome(
+    execution,
+    value.Object([
+      #("intent", value.Text("CreatePlan")),
+      #("logical_id", value.Text("L-100")),
+      #("worker", value.Text("impostor")),
+    ]),
+  )
+  |> should.equal(Error("unknown_payload_key:worker"))
+}
+
+// --- Interpreter transition laws, driven through the real shared path -------
+//
+// These exercise planning.submit_with, the same decision path the dispatch arm
+// uses, with a bounded in-memory backend. No canonical Sa-plan row is created
+// and no CLI runs: the backend is injected.
+
+fn planning_execution() {
+  a.Execution(
+    grant(),
+    scope(),
+    dev.Binding(
+      "development",
+      "uos/test/planning",
+      "PLANNING_LAWS",
+      "worker",
+      1,
+      "session",
+      1,
+    ),
+    "var/harness/20261027-1013-planning-current-risk.json",
+  )
+}
+
+fn ok_plan_readback(id: String, title: String) -> String {
+  "{\"id\":\""
+  <> id
+  <> "\",\"name\":\""
+  <> id
+  <> "\",\"title\":\""
+  <> title
+  <> "\"}\nsa-plan-pipeline {\"command\":\"--plan-show\"}"
+}
+
+fn stub_backend(dispatch: Result(String, String), readback: Result(String, String)) {
+  planning.Backend(
+    dispatch: fn(_argv) { dispatch },
+    readback: fn(_argv) { readback },
+    write_evidence: fn(_path, _body) { Ok(Nil) },
+  )
+}
+
+pub fn planning_prevalidation_refuses_before_any_dispatch_test() {
+  let execution = planning_execution()
+  // A dispatch that would panic if reached proves these refusals are pre-effect.
+  let backend =
+    planning.Backend(
+      dispatch: fn(_argv) { Error("DISPATCH_MUST_NOT_RUN") },
+      readback: fn(_argv) { Error("READBACK_MUST_NOT_RUN") },
+      write_evidence: fn(_path, _body) { Error("WRITE_MUST_NOT_RUN") },
+    )
+  planning.submit_with(
+    execution,
+    value.Object([#("intent", value.Text("RunSql"))]),
+    backend,
+  )
+  |> should.equal(Error("unknown_intent"))
+  planning.submit_with(
+    execution,
+    value.Object([#("intent", value.Text("CreatePlan"))]),
+    backend,
+  )
+  |> should.equal(Error("logical_id_required"))
+  planning.submit_with(
+    execution,
+    value.Object([
+      #("intent", value.Text("CreatePlan")),
+      #("logical_id", value.Text("L-1")),
+      #("worker", value.Text("impostor")),
+    ]),
+    backend,
+  )
+  |> should.equal(Error("unknown_payload_key:worker"))
+  planning.submit_with(
+    execution,
+    value.Object([
+      #("intent", value.Text("CreatePlan")),
+      #("logical_id", value.Text("L-1")),
+      #("logical_id", value.Text("L-2")),
+    ]),
+    backend,
+  )
+  |> should.equal(Error("duplicate_payload_key:logical_id"))
+}
+
+pub fn planning_saved_record_is_validated_whole_test() {
+  let binding = planning_execution().binding
+  let key = planning.logical_key(binding.plan, binding.task, "L-9")
+  let payload =
+    planning.canonical_payload("CreatePlan", "L-9", "t", "T", "ti", "", "")
+  let good =
+    planning.ledger_record(key, binding, "CreatePlan", payload, planning.Applied, "d")
+    |> json.to_string
+  planning.validate_saved(good, key, binding, payload)
+  |> should.equal(Ok(Nil))
+  // A record for another key, parent or payload is never usable as a replay.
+  planning.validate_saved(good, "other-key", binding, payload)
+  |> should.equal(Error("ledger_key_mismatch"))
+  planning.validate_saved(
+    good,
+    key,
+    dev.Binding(..binding, task: "OTHER_TASK"),
+    payload,
+  )
+  |> should.equal(Error("ledger_parent_mismatch"))
+  planning.validate_saved(good, key, binding, "different payload")
+  |> should.equal(Error("payload_conflict"))
+  planning.validate_saved("{\"schema\":\"wrong\"}", key, binding, payload)
+  |> should.equal(Error("ledger_schema_mismatch"))
+}
+
+pub fn planning_uncertain_outcome_is_never_a_refusal_test() {
+  // Every post-reservation failure class classifies as Uncertain, because the
+  // canonical effect may already have landed.
+  planning.classify_backend(Error("backend_exit:1"))
+  |> planning.outcome_label
+  |> should.equal("Uncertain")
+  planning.classify_backend(Error("timeout"))
+  |> planning.outcome_label
+  |> should.equal("Uncertain")
+  planning.classify_backend(Ok("anything"))
+  |> planning.outcome_label
+  |> should.equal("Applied")
+}
+
+
+pub fn planning_readback_failure_yields_uncertain_not_applied_test() {
+  // A dispatch that succeeds with a readback that disagrees must not be
+  // reported as success. The identity check is what makes it evidence.
+  planning.readback_matches(
+    "uos/development/planning-proof/20261027-1013",
+    "",
+    "uos/development/planning-proof/20261027-1013",
+    "T",
+    ok_plan_readback("uos/other/alias", "T"),
+  )
+  |> should.equal(Error("readback_identity_mismatch"))
+  planning.readback_matches(
+    "uos/development/planning-proof/20261027-1013",
+    "",
+    "uos/development/planning-proof/20261027-1013",
+    "T",
+    ok_plan_readback("uos/development/planning-proof/20261027-1013", "T"),
+  )
+  |> should.equal(Ok(Nil))
+}
+
+
+pub fn planning_payload_bounds_hold_at_the_byte_edge_test() {
+  planning.payload_within_bound(string.repeat("a", planning.max_payload_bytes))
+  |> should.equal(Ok(Nil))
+  planning.payload_within_bound(
+    string.repeat("a", planning.max_payload_bytes + 1),
+  )
+  |> should.equal(Error("payload_bound_exceeded"))
+  planning.payload_within_bound(
+    string.repeat("界", planning.max_payload_bytes / 3 + 1),
+  )
+  |> should.equal(Error("payload_bound_exceeded"))
+  planning.evidence_path_allowed("docs/journal/x.md") |> should.equal(Ok(Nil))
+  planning.evidence_path_allowed("apps/x.gleam")
+  |> should.equal(Error("evidence_path_refused"))
+}
+
+fn laws_binding() {
+  dev.Binding(
+    "development",
+    "uos/test/planning",
+    "PLANNING_LAWS",
+    "worker",
+    1,
+    "session",
+    1,
+  )
+}
+
+fn applied_result(binding, key, payload) {
+  planning.ledger_record(key, binding, "CreatePlan", payload, planning.Applied, "d")
+  |> json.to_string
+}
+
+fn uncertain_result(binding, key, payload) {
+  planning.ledger_record(
+    key,
+    binding,
+    "CreatePlan",
+    payload,
+    planning.Uncertain("backend_exit:1"),
+    "d",
+  )
+  |> json.to_string
+}
+
+pub fn planning_prepare_reaches_target_name_and_size_guards_test() {
+  let approved = "uos/development/planning-proof/20261027-1013"
+  let base = fn(extra) {
+    value.Object(
+      list.append(
+        [
+          #("intent", value.Text("CreateTask")),
+          #("logical_id", value.Text("L-1")),
+          #("target_plan", value.Text(approved)),
+          #("task_id", value.Text("t01")),
+          #("title", value.Text("a title")),
+        ],
+        extra,
+      ),
+    )
+  }
+  // POSITIVE: the guards are reached and pass, and the native name is derived
+  // rather than overloading the caller's task id.
+  let prepared = planning.prepare(base([]), [approved], [])
+  case prepared {
+    Ok(p) -> {
+      p.native_name |> should.equal("planning/t01")
+      p.target |> should.equal(approved)
+      p.payload |> string.contains("CreateTask") |> should.be_true
+    }
+    Error(reason) -> should.equal(reason, "PREPARE_MUST_SUCCEED")
+  }
+  // A plan name is derived from the allowlisted target, already hierarchical.
+  planning.plan_name(approved) |> should.equal(Ok(approved))
+  // Native contract: at least two lowercase segments, so a bare id is invalid.
+  planning.normalize_name("T01") |> should.equal(Error("native_name_invalid"))
+  planning.task_name("T01") |> should.equal(Ok("planning/t01"))
+  planning.normalize_name("a/B") |> should.equal(Ok("a/b"))
+  planning.normalize_name("a/-bad") |> should.equal(Error("native_name_invalid"))
+  // Target guard reached, with the same payload otherwise valid.
+  planning.prepare(base([]), ["uos/other/allowed"], [])
+  |> should.equal(Error("planning_target_refused"))
+  // Title guard reached.
+  planning.prepare(
+    value.Object([
+      #("intent", value.Text("CreateTask")),
+      #("logical_id", value.Text("L-1")),
+      #("target_plan", value.Text(approved)),
+      #("task_id", value.Text("t01")),
+      #("title", value.Text("")),
+    ]),
+    [approved],
+    [],
+  )
+  |> should.equal(Error("title_required"))
+  // Unknown and duplicate field guards reached.
+  planning.prepare(base([#("worker", value.Text("x"))]), [approved], [])
+  |> should.equal(Error("unknown_payload_key:worker"))
+  planning.prepare(base([#("task_id", value.Text("t02"))]), [approved], [])
+  |> should.equal(Error("duplicate_payload_key:task_id"))
+  // Size guard reached through prepare, at the byte edge.
+  planning.prepare(
+    value.Object([
+      #("intent", value.Text("PublishEvidence")),
+      #("logical_id", value.Text("L-2")),
+      #("target_plan", value.Text(approved)),
+      #("title", value.Text("t")),
+      #("evidence_path", value.Text("docs/journal/x.md")),
+      #("evidence_body", value.Text(string.repeat("a", 70_000))),
+    ]),
+    [approved],
+    ["docs/journal/x.md"],
+  )
+  |> should.equal(Error("payload_bound_exceeded"))
+  // Evidence write scope guard reached.
+  planning.prepare(
+    value.Object([
+      #("intent", value.Text("PublishEvidence")),
+      #("logical_id", value.Text("L-3")),
+      #("target_plan", value.Text(approved)),
+      #("title", value.Text("t")),
+      #("evidence_path", value.Text("docs/journal/x.md")),
+      #("evidence_body", value.Text("body")),
+    ]),
+    [approved],
+    [],
+  )
+  |> should.equal(Error("evidence_write_scope_refused"))
+}
+
+pub fn planning_ledger_trace_applied_replay_next_and_conflict_test() {
+  let b = laws_binding()
+  let k1 = planning.logical_key(b.plan, b.task, "L-1")
+  let k2 = planning.logical_key(b.plan, b.task, "L-2")
+  let p1 = planning.canonical_payload("CreatePlan", "L-1", "t", "t01", "ti", "", "")
+  let p2 = planning.canonical_payload("CreatePlan", "L-2", "t", "t02", "ti", "", "")
+  let rp = planning.ledger_path(k1, "result")
+  let ip = planning.ledger_path(k1, "intent")
+  // 1. First intent, nothing recorded: dispatch.
+  planning.decide_ledger(None, None, k1, b, p1, rp, ip)
+  |> should.equal(Ok(planning.Dispatch))
+  // 2. Same id after success: Replayed, returning the SAVED record.
+  let saved = applied_result(b, k1, p1)
+  planning.decide_ledger(Some(saved), None, k1, b, p1, rp, ip)
+  |> should.equal(Ok(planning.ReplaySaved(saved)))
+  // 3. A different logical id is unaffected by the first one's record.
+  planning.decide_ledger(None, None, k2, b, p2, rp, ip)
+  |> should.equal(Ok(planning.Dispatch))
+  // 4. Same id, changed payload: conflict, never a silent replay.
+  planning.decide_ledger(Some(saved), None, k1, b, p2, rp, ip)
+  |> should.equal(Error("payload_conflict"))
+  // 5. A recorded uncertainty is re-surfaced, not replayed as success.
+  planning.decide_ledger(Some(uncertain_result(b, k1, p1)), None, k1, b, p1, rp, ip)
+  |> should.equal(Error("uncertain:recorded_Uncertain;ledger:" <> rp))
+  // 6. A pending reservation with the same payload is never redispatched.
+  let pending =
+    planning.ledger_record(k1, b, "CreatePlan", p1, planning.Uncertain("reserved"), "r")
+    |> json.to_string
+  planning.decide_ledger(None, Some(pending), k1, b, p1, rp, ip)
+  |> should.equal(Error("uncertain:pending_not_redispatched;ledger:" <> ip))
+  // 7. Cross-attempt and cross-grant: the key is identical, so the same
+  // pending record blocks a redispatch from any attempt.
+  let other_attempt = dev.Binding(..b, attempt: 9)
+  planning.logical_key(other_attempt.plan, other_attempt.task, "L-1")
+  |> should.equal(k1)
+  planning.decide_ledger(None, Some(pending), k1, other_attempt, p1, rp, ip)
+  |> should.equal(Error("uncertain:pending_not_redispatched;ledger:" <> ip))
+}
+
+pub fn planning_andon_trace_applied_applied_uncertain_blocks_next_test() {
+  let b = laws_binding()
+  let k1 = planning.logical_key(b.plan, b.task, "L-1")
+  let k2 = planning.logical_key(b.plan, b.task, "L-2")
+  let p1 = planning.canonical_payload("CreatePlan", "L-1", "t", "t01", "ti", "", "")
+  let p2 = planning.canonical_payload("CreatePlan", "L-2", "t", "t02", "ti", "", "")
+  // No pointer yet: open.
+  planning.decide_andon(None, None, b.plan, b.task)
+  |> should.equal(Ok(Nil))
+  // First Applied: pointer at k1 with a settled Applied result: still open, so
+  // a success never latches the line shut.
+  let ptr1 = planning.pointer_record(b.plan, b.task, k1)
+  planning.decide_andon(Some(ptr1), Some(applied_result(b, k1, p1)), b.plan, b.task)
+  |> should.equal(Ok(Nil))
+  // Second Applied at a different key: still open.
+  let ptr2 = planning.pointer_record(b.plan, b.task, k2)
+  planning.decide_andon(Some(ptr2), Some(applied_result(b, k2, p2)), b.plan, b.task)
+  |> should.equal(Ok(Nil))
+  // Third is Uncertain: the line holds for the WHOLE parent task.
+  planning.decide_andon(Some(ptr2), Some(uncertain_result(b, k2, p2)), b.plan, b.task)
+  |> should.equal(Error("planning_andon_held;Uncertain:" <> k2))
+  // Fourth, a different logical id, is blocked by that same hold.
+  planning.decide_andon(Some(ptr2), Some(uncertain_result(b, k2, p2)), b.plan, b.task)
+  |> should.equal(Error("planning_andon_held;Uncertain:" <> k2))
+  // A reservation with no settled result holds, covering a crash after
+  // reservation.
+  planning.decide_andon(Some(ptr2), None, b.plan, b.task)
+  |> should.equal(Error("planning_andon_held;unsettled:" <> k2))
+  // A corrupt pointer or a result for another parent holds.
+  planning.decide_andon(Some("{\"schema\":\"wrong\"}"), None, b.plan, b.task)
+  |> should.equal(Error("planning_andon_held;pointer_corrupt"))
+  planning.decide_andon(
+    Some(ptr2),
+    Some(applied_result(dev.Binding(..b, task: "OTHER"), k2, p2)),
+    b.plan,
+    b.task,
+  )
+  |> should.equal(Error("planning_andon_held;result_corrupt:" <> k2))
+  // The pointer path excludes grant and attempt, so the hold spans both.
+  planning.andon_path(b.plan, b.task)
+  |> string.contains("20261027-1013-planning-implementation")
+  |> should.be_false
+  planning.andon_path(b.plan, b.task)
+  |> should.not_equal(planning.andon_path(b.plan, "OTHER_TASK"))
 }

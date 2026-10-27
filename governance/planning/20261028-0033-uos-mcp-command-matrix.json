@@ -1,0 +1,85 @@
+{
+  "schema": "uos.mcp-command-matrix.v1",
+  "observed_utc": "2026-10-28T00:33:00Z",
+  "scope": "uos-harness MCP command surface",
+  "plan_context": {
+    "plan": "uos/hive-development/20261027-0532",
+    "task": "PLANNING_MCP",
+    "worker": "pi-agent-20261028",
+    "attempt": 4
+  },
+  "tool_inventory": {
+    "namespace": "mcp__uos_harness__",
+    "total_tools": 53,
+    "ok_calls": 53,
+    "throw_calls": 0,
+    "ok_is_error": 11
+  },
+  "ok_is_error_tools": [
+    {
+      "tool": "mcp__uos_harness__harness_execution_progress",
+      "reason": "role_binding_missing"
+    },
+    {
+      "tool": "mcp__uos_harness__harness_system_feature_catalog",
+      "reason": "role_binding_missing"
+    },
+    {
+      "tool": "mcp__uos_harness__harness_system_feature_intent",
+      "reason": "role_binding_missing"
+    },
+    {
+      "tool": "mcp__uos_harness__harness_system_feature_observations",
+      "reason": "role_binding_missing"
+    },
+    {
+      "tool": "mcp__uos_harness__plan_get",
+      "reason": "query id not found in legacy Planning.db (expected for probe id 00000000)"
+    },
+    {
+      "tool": "mcp__uos_harness__plan_add",
+      "reason": "UNAVAILABLE: transport-bound task authority not present on read surface"
+    },
+    {
+      "tool": "mcp__uos_harness__plan_update",
+      "reason": "UNAVAILABLE: transport-bound task authority not present on read surface"
+    },
+    {
+      "tool": "mcp__uos_harness__sa_task_claim",
+      "reason": "UNAVAILABLE: transport-bound task authority not present on read surface"
+    },
+    {
+      "tool": "mcp__uos_harness__sa_task_complete",
+      "reason": "UNAVAILABLE: transport-bound task authority not present on read surface"
+    },
+    {
+      "tool": "mcp__uos_harness__sa_job_enqueue",
+      "reason": "UNAVAILABLE: transport-bound task authority not present on read surface"
+    },
+    {
+      "tool": "mcp__uos_harness__sa_workflow_start",
+      "reason": "UNAVAILABLE: transport-bound task authority not present on read surface"
+    }
+  ],
+  "source_change": {
+    "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+    "change": "mutating-tool denial path converted from JSON-RPC hard error to tool_error_response(isError=true)",
+    "reason": "ensure command invocation consistency (no transport throws) while preserving fail-closed mutation denial"
+  },
+  "restart_required": {
+    "action": "pkill -f 'cepaf_gleam@mcp@server:main\\(\\)'",
+    "result": "existing MCP server processes restarted; codemode calls now return typed tool errors instead of thrown transport errors"
+  },
+  "manual_stdio_smoke": {
+    "read_surface_before": "var/harness/20261028-0032-uos-mcp-mutation-smoke.json",
+    "read_surface_after": "var/harness/20261028-0033-uos-mcp-mutation-smoke.json",
+    "successor_dev_surface": "var/harness/20261028-0030-successor-mcp-smoke.json"
+  },
+  "risk_gate": {
+    "portfolio": "governance/planning/20261028-0032-hive-live-risk-active-v2.json",
+    "active_check": "ACTIVE_OBSERVATION_PASS",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "authority": "Sa-plan remains sole execution authority; read-surface mutators stay fail-closed without transport-bound task authority.",
+  "completion_claimed": false
+}

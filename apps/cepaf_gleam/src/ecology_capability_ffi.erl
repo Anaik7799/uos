@@ -17,6 +17,7 @@
 -module(ecology_capability_ffi).
 
 -export([uos_root/0, probe_executable/1, run_bounded/3, run_bounded_env/4,
+         run_bounded_cd/4,
          ets_backend_probe/0, km_nif_loaded/0, env_present/1,
          ets_init/0, ets_request/1, invoke_external/2, max_request/1]).
 
@@ -133,6 +134,30 @@ run_bounded_env(Path, Args, TimeoutMs, Env) when is_list(Env), length(Env) =< 8 
         false -> {error,<<"invalid_environment_bound">>}
     end;
 run_bounded_env(_,_,_,_) -> {error,<<"invalid_environment_bound">>}.
+
+%% As run_bounded/3 but runs the child with {cd, Cwd}. Cwd must be an absolute
+%% path at or under the UOS root. Used to run `gleam check` from the project
+%% directory (the BEAM reaps the port child correctly, avoiding the ECHILD
+%% fork/wait conflict seen in the Rust NIF).
+run_bounded_cd(Path, Args, Cwd, TimeoutMs)
+  when is_binary(Path), is_list(Args), is_binary(Cwd),
+       is_integer(TimeoutMs), TimeoutMs>0, TimeoutMs=<60000 ->
+    try
+        Root=utf8_chars(uos_root()),
+        CwdList=utf8_chars(Cwd),
+        true = (CwdList =:= Root) orelse lists:prefix(Root ++ "/", CwdList),
+        Ocaml=dependency(Root,<<"ocaml">>,"toolchains/opam-ocaml/bin/ocaml"),
+        Guardian=filename:join(Root,"tools/ecology_process.ml"),
+        A=["-I","+unix",Guardian,integer_to_list(TimeoutMs),
+           integer_to_list(?OUTPUT_LIMIT),"merged",utf8_chars(Path)] ++
+          [utf8_chars(Argument)||Argument<-Args],
+        Port = erlang:open_port({spawn_executable, Ocaml},
+                              [stream,use_stdio,exit_status,binary,{args,A},{cd,CwdList}]),
+        collect(Port, erlang:monotonic_time(millisecond)+TimeoutMs+1000, 0, [])
+    catch
+        _:_ -> {error, <<"backend_spawn_failed">>}
+    end;
+run_bounded_cd(_,_,_,_) -> {error,<<"invalid_resource_bound">>}.
 
 utf8_chars(Bytes) when is_binary(Bytes) ->
     case unicode:characters_to_list(Bytes,utf8) of

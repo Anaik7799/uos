@@ -1,0 +1,114 @@
+{
+  "schema": "uos.harness-task-verification.v1",
+  "observed_utc": "2026-10-27T05:45:34Z",
+  "plan": "uos/hive-development/20261027-0532",
+  "task": "RECEIPT_FIX",
+  "worker": "claude-hive-receipt-fix-2585",
+  "session": "2585c3a9-4685-457d-84af-74238f66aa7c",
+  "attempt": 1,
+  "grant_path": "var/harness/20261027-0538-hive-receipt-dedicated-grant.json",
+  "grant_sha256": "f0b94f9ef9e02e7cc3a03dd45c1c63761257f3bb6c8d8d1fb6947abeb7b3337d",
+  "base_revision": "73df20c4c9a67e76b670cdddc4e53e8d1379925e",
+  "workspace_revision_at_claim": "3b37bcbb91ad465b0c186d9987bfd542d98ab325",
+  "status": "READY_FOR_INDEPENDENT_REVIEW",
+  "task_completed": false,
+  "production_admission": false,
+  "defect": {
+    "id": "RECEIPT-INTEGRITY-001",
+    "surface": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+    "statement": "The EXECUTED effect receipt stored a bounded diagnostic in `output` while its only digest, `output_sha256`, hashed the full backend output. The digest therefore did not correspond to the retained bytes, no byte counts were recorded, and nothing in the record disclosed that truncation had occurred.",
+    "observed_instance": {
+      "receipt": "var/harness/effects/20261027-0538-hive-receipt-dedicated@claude-2585-extract-test@result.json",
+      "retained_bytes": 8192,
+      "digest_of_retained_bytes": "e019941e9c2ba9ac4388890fbef184ffc5461d90b254f2a0d452673097231c1e",
+      "receipt_output_sha256": "5055476adedd97820354aad00baa1469b3a8b9b06043c7ce061e3262192fe3ea",
+      "match": false,
+      "note": "Measured by reading the receipt produced by a real harness_test effect under this grant, not by constructing a synthetic example."
+    }
+  },
+  "tdd_sequence": [
+    {
+      "step": "EXTRACT",
+      "intent_write": "claude-2585-extract-write",
+      "intent_build": "claude-2585-extract-build",
+      "intent_test": "claude-2585-extract-test",
+      "change": "Inline receipt field construction lifted into the pure production constructor `effect_output_fields/1`. Field names, order and values byte-identical; no behavioural change.",
+      "operations_sha256": "fd04370b05320e87894201cf86bb228da628a479db9e7d007684e9281eb855ee",
+      "test_result": "All 83 tests passed",
+      "verdict": "BASELINE_GREEN"
+    },
+    {
+      "step": "RED",
+      "intent_write": "claude-2585-red-write",
+      "intent_build": "claude-2585-red-build",
+      "intent_test": "claude-2585-red-test",
+      "change": "Added `executed_receipt_digest_covers_the_bytes_it_retains_test` asserting the integrity contract against the existing production constructor.",
+      "test_sha256": "7c7787cb2e465bde9d7595ee86ff1734deaf50015182ec44681b76e6d2c07f2b",
+      "build_verdict": "EXECUTED",
+      "test_result": "Failed: 1.  Skipped: 0.  Passed: 83.",
+      "verdict": "BEHAVIOURAL_RED",
+      "red_is_behavioural": true,
+      "red_evidence": "The build succeeded, so every symbol referenced by the assertion already existed; the failure is a gleeunit should.equal panic on absent and non-corresponding digest fields, not a missing-symbol compile error.",
+      "receipt": "var/harness/effects/20261027-0538-hive-receipt-dedicated@claude-2585-red-test@result.json"
+    },
+    {
+      "step": "GREEN",
+      "intent_write": "claude-2585-green-write",
+      "intent_build": "claude-2585-green-build",
+      "intent_test": "claude-2585-green-test",
+      "change": "`effect_output_fields/1` now emits `output`, `output_sha256` (full output, name and meaning preserved), `output_retained_sha256`, `output_retained_bytes`, `output_bytes` and `output_retention`.",
+      "operations_sha256": "f64da7e1c46212b09d7c6c905ce0b69fba4ac035b70a14697009f91144e4c35b",
+      "test_result": "All 84 tests passed",
+      "verdict": "GREEN",
+      "receipt": "var/harness/effects/20261027-0538-hive-receipt-dedicated@claude-2585-green-test@result.json"
+    }
+  ],
+  "test_manifest": {
+    "modules": [
+      "harness_successor_test",
+      "harness_development_test",
+      "harness_authority_test",
+      "harness_sa_plan_boundary_test",
+      "mcp_authz_wiring_test",
+      "mcp_catalog_truth_test"
+    ],
+    "module_count": 6,
+    "baseline_total": 83,
+    "final_total": 84,
+    "final_failed": 0,
+    "final_skipped": 0,
+    "executed_through": "harness_test over the Gleam successor MCP; no direct test invocation"
+  },
+  "coverage": [
+    { "case": "short ASCII", "input": "ok\\n", "expected_retention": "full" },
+    { "case": "empty", "input": "", "expected_retention": "full", "note": "measured zero, not absence" },
+    { "case": "long ASCII", "input": "20000 x", "expected_retention": "tail_truncated" },
+    { "case": "Unicode byte-bound fallback", "input": "9000 U+D55C", "expected_retention": "unavailable", "note": "8192 three-byte graphemes exceed the 16384-byte bound, so the production fallback retains text that is not output bytes" }
+  ],
+  "retention_classification": {
+    "derived_from": "observation of the bound's result",
+    "not_derived_from": "matching the fallback sentinel literal",
+    "values": ["full", "tail_truncated", "unavailable"],
+    "invariant": "output_retained_sha256 covers exactly the bytes stored in output, in all three cases"
+  },
+  "preservation": {
+    "historical_receipts_rewritten": 0,
+    "output_sha256_name_or_meaning_changed": false,
+    "replay_or_fence_logic_touched": false,
+    "known_backend_exit_remains_effect_failed": true,
+    "risk_portfolio_records_preserved": 9
+  },
+  "files_written": [
+    { "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam", "sha256": "f64da7e1c46212b09d7c6c905ce0b69fba4ac035b70a14697009f91144e4c35b" },
+    { "path": "apps/cepaf_gleam/test/harness_successor_test.gleam", "sha256": "7c7787cb2e465bde9d7595ee86ff1734deaf50015182ec44681b76e6d2c07f2b" }
+  ],
+  "live_harness_note": "The serving harness process kept the control modules pinned by the grant for the whole session, so its own receipts were produced by the pre-fix constructor. The repaired constructor is exercised by the rebuilt code inside the harness_test subprocess. A launcher activation that serves the new fields needs fresh reviewed control IDs.",
+  "residuals": [
+    "No independent peer or formal artifact is asserted by this record; Codex review is outstanding.",
+    "No live harness receipt yet carries the new fields; that requires a re-reviewed launcher grant.",
+    "`output_retention` classifies retention; it does not recover the dropped prefix. A diagnostic whose signal is in the prefix is still lost, now explicitly rather than silently.",
+    "The 16384-byte fallback remains in `development.gleam`, which is outside this grant's write scope."
+  ],
+  "authority": "Sa-plan is the sole execution authority. This record is evidence and grants no admission.",
+  "ev_boundary": "EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted."
+}

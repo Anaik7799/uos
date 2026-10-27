@@ -16,10 +16,20 @@ struct VerificationResult {
 
 #[rustler::nif(schedule = "DirtyCpu")]
 pub fn verification_run() -> NifResult<String> {
+    // NOTE(20261027-full-integration): resolve the UOS Gleam project first;
+    // the old `/home/an/dev/ver/c3i` fallback targeted the stale external C3I
+    // tree and mis-scoped `gleam check` when the harness runs from UOS.
+    // The fork/wait ECHILD defect is separate — see docs/reviews/
+    // 20261027-1830-verification-run-nif-diagnosis.md; a governed rebuild must
+    // also switch the spawn to posix_spawn/open_port for BEAM-safety.
     let gleam_dir = if std::path::Path::new("lib/cepaf_gleam/gleam.toml").exists() {
         "lib/cepaf_gleam"
+    } else if std::path::Path::new("apps/cepaf_gleam/gleam.toml").exists() {
+        "apps/cepaf_gleam"
     } else if std::path::Path::new("gleam.toml").exists() {
         "."
+    } else if std::path::Path::new("/home/an/NAS-setup/uos/apps/cepaf_gleam/gleam.toml").exists() {
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam"
     } else {
         "/home/an/dev/ver/c3i/lib/cepaf_gleam"
     };
