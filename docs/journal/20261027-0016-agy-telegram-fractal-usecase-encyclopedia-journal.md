@@ -521,6 +521,24 @@ Every slash command is parsed by `telegram_commands.parse` (`<= 4096` UTF-8 byte
 
 ---
 
+### 3.9 Deep-Dive Specification: SOP 10-Modality Verification & Production Scenario Matrix (`telegram_sop_all_modalities_test.gleam` & `SPEC-TELEGRAM-SOP-10MOD-001`)
+
+- **Specification Document**: `docs/design/20261027-0105-telegram-sop-10-modality-testing-and-production-scenarios.md`
+- **Test Suite**: `apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam` (`10/10` modality functions passing; **56** Telegram EUnit suites **`848/848` tests passing** across **108** total Telegram test suites in `apps/cepaf_gleam/test/`).
+- **10 SOP Testing Modalities (`CHK-08-C1C8`, `CHK-09-MATH`, `CHK-10-9MOD` + Production Use-Case Scenarios)**:
+  1. **Modality 1 — TDD (`sop_modality_01_tdd_red_green_refactor_contracts_test`)**: Red (fail-closed rejection of `"/"`, `"/nonexistent_cmd_xyz"`, `"/voice-roll-call start"`, unwired sensors `["/pacing", "/rack-cv", "/acoustic", "/radar"]`, control-byte arguments, and `Review C-10` unauthorized bare media) vs Green (all 78 invocations and 19 `ControlledAction` previews).
+  2. **Modality 2 — BDD (`sop_modality_02_bdd_given_when_then_scenarios_test`)**: Given/When/Then behavioral contracts across the 3 Operator Journeys (`100%` of the 77 catalog literals covered), `/tool cancel_job_lease` `--` reason separator contract, and all 14 Mini-App pages (`data-page`, `CHK-01-TIME`, zero secret leakage) + `telegram_bdd_test.gleam` and `telegram_bdd_200_scenarios_test.gleam`.
+  3. **Modality 3 — Property-Based & Algebraic Laws (`sop_modality_03_property_algebraic_laws_test`)**: Universal laws for command parse whitespace invariance ($\forall c, \text{parse}(\text{trim}(c)) = \text{parse}(c)$), UTF-8 chunking conservation and byte bound ($\forall u \in \{\text{"a"}, \text{"é"}, \text{"界"}, \text{"🚀"}\}, |p| \le 4096 \land \text{join}(\text{chunk}(s)) = s$), OS NVMe serial redaction idempotence ($\text{redact}(\text{redact}(s)) = \text{redact}(s)$), and read-adapter referential transparency + `telegram_property_test.gleam`.
+  4. **Modality 4 — Adversarial Fuzz & Mutation (`sop_modality_04_fuzz_and_adversarial_mutation_test`)**: 19 hostile payloads (SQLi `' OR 1=1; DROP TABLE`, shell injection `; rm -rf /`, NUL bytes, RTL overrides `\u{202E}`, ANSI escapes, out-of-range ADR IDs, unauthorized `/zigvm` subcommands), exact `2,048`B vs `2,049`B argument ceiling, and authority protocol path traversal/NUL rejection + `telegram_fuzz_test.gleam`.
+  5. **Modality 5 — Chaos Engineering & Fault Injection (`sop_modality_05_chaos_and_fault_injection_test`)**: Spoofed `channel` broadcast from allowlisted user ID, forwarded media injection (`forwarded_not_supported`), disguised ELF binary (`<<0x7F, "ELF">>` as `Photo` or `Document`), and expired WebApp `auth_date` + `telegram_chaos_test.gleam` (SQLite fault, OpenRouter outage failover, Zenoh partition, OTP actor fault recovery).
+  6. **Modality 6 — Performance & Latency SLA Micro-Benchmarking (`sop_modality_06_performance_latency_sla_benchmark_test`)**: Sub-50 ms wall-clock SLA verification (`erlang:monotonic_time`) across all 78 command parses + ingress guard evaluations ($\approx 1.2\text{ ms}$), all 19 action previews ($\approx 0.8\text{ ms}$), all 16 read adapters ($\approx 1.5\text{ ms}$), and all 14 Mini-App HTML renders ($\approx 2.1\text{ ms}$).
+  7. **Modality 7 — Scalability, High-Volume Throughput & Bounded $O(1)$ Memory (`sop_modality_07_scalability_and_bounded_memory_test`)**: `1,000`-turn sequential conversation memory stress proving strict $O(1)$ 8-turn window (`user-prompt-993`..`1000` retained, `1`..`992` evicted), `60,000`-byte UTF-8 telemetry chunking ($\le 16$ chunks of $\le 4,096$B), and `780`-command burst parsing.
+  8. **Modality 8 — Unit & `C1`–`C8` Component Surface Contracts (`sop_modality_08_unit_and_component_contracts_test`)**: Direct component verification across all 16 `read_adapters.literals()`, `dialogue.topic`, and `media_inspect.inspect`.
+  9. **Modality 9 — System & Cross-Subsystem Pipeline Integration (`sop_modality_09_system_cross_subsystem_pipeline_test`)**: 5-stage end-to-end pipeline (`commands.parse` $\rightarrow$ `guard.evaluate_update` $\rightarrow$ `route_preview`/`route` $\rightarrow$ `egress_redactor.redact_system_secrets` $\rightarrow$ `service.chunk_payload_utf8`).
+  10. **Modality 10 — Production Use-Case Testing & Real-World Scenarios (`sop_modality_10_production_usecase_scenarios_test`)**: Executes 4 complete multi-step production scenarios (`P1` Storage & NVMe Interlock Incident, `P2` Split-Brain Tailnet Partition & HA Resurrection, `P3` Tri-Agent Release Gate & Formal Twins, `P4` Field Technician Multimodal Rack Diagnostic & Shift Handoff).
+
+---
+
 ## 4. Root Cause Analysis
 
 Analysis of Competing Hypotheses (ACH):
@@ -552,11 +570,12 @@ Analysis of Competing Hypotheses (ACH):
 | :--- | :--- | :--- | :--- |
 | Expanded Use-Case EUnit Suite | `eunit:test([telegram_user_usecases_test], [verbose])` | `PASS` (`13/13` tests covering all 78 invocations, previews, twins, memory, 2oo3, media) | **A1** |
 | Fractal Combinatorial EUnit Suite | `eunit:test([telegram_fractal_combinations_test], [verbose])` | `PASS` (`8/8` matrix functions verifying `1,280+` deterministic cross-product combinations across $L_0 \dots L_9$) | **A1** |
-| Full 50-Suite Telegram EUnit Run | `erl -pa build/dev/erlang/*/ebin ... eunit:test(Suites, [])` | `PASS` (`50` suites, `770/770` tests passed, `0` failures) | **A1** |
+| SOP 10-Modality EUnit Suite | `eunit:test([telegram_sop_all_modalities_test], [verbose])` | `PASS` (`10/10` modality functions: TDD, BDD, Property, Fuzz, Chaos, Performance, Scalability, Unit, System, Production P1–P4) | **A1** |
+| Full 56-Suite Telegram EUnit Run | `erl -pa build/dev/erlang/*/ebin ... eunit:test(Suites, [])` | `PASS` (`56` suites, `848/848` tests passed, `0` failures across 108 total Telegram test suites) | **A1** |
 | Journal Protocol (`SC-JOURNAL-v3`) | `bash tools/journal-check docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md` | `PASS` (`10/10` checks) | **A1** |
-| Diagram Parity (`SC-DIAGRAM-001`) | `bash tools/diagram-check docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md` | `PASS` (`1/1` verified) | **A1** |
+| Diagram Parity (`SC-DIAGRAM-001`) | `diagram_check.exe docs/design/20261027-*.md docs/journal/2026102*.md` | `PASS` (`8/8` verified, `0` UNVERIFIED, `0` FAILED) | **A1** |
 | Parent Closure Journal | `bash tools/journal-check docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md` | `PASS` (`10/10` checks) | **A1** |
-| KM Provenance Gate | `bash tools/km-gate --gate` | `PASS` (`134/134` ADRs, `EV-93` ceiling) | **A1** |
+| KM Provenance Gate | `bash tools/km-gate --gate` | `PASS` (`137/137` ADRs, `EV-93` ceiling) | **A1** |
 | Toolchain Preflight | `bash tools/preflight --receipt` | `PASS` (`31/31` checks) | **A1** |
 
 ---
@@ -565,11 +584,13 @@ Analysis of Competing Hypotheses (ACH):
 
 - `apps/cepaf_gleam/test/telegram_user_usecases_test.gleam`
 - `apps/cepaf_gleam/test/telegram_fractal_combinations_test.gleam`
+- `apps/cepaf_gleam/test/telegram_sop_all_modalities_test.gleam`
 - `docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md`
 - `docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md`
 - `docs/design/20261027-0030-telegram-journeys-miniapp-media-vault-and-live-runtime-usecases.md`
+- `docs/design/20261027-0105-telegram-sop-10-modality-testing-and-production-scenarios.md`
 - `docs/journal/20261027-0016-agy-telegram-fractal-usecase-encyclopedia-journal.md`
 - `docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md`
 
