@@ -17,6 +17,7 @@ fn halt(status: Int) -> Nil
 pub fn main() {
   let modules = [
     "harness_development_test",
+    "harness_cas_critical_section_test",
     "harness_authority_test",
     "harness_tracking_test",
     "harness_sa_plan_boundary_test",
