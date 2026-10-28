@@ -49,15 +49,26 @@ fn read_stdio_line() -> StdioLine
 @external(erlang, "cepaf_gleam_ffi", "file_read")
 fn erl_file_read(path: String) -> Result(BitArray, String)
 
+@external(erlang, "erlang", "halt")
+fn halt(status: Int) -> Nil
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
 pub fn main() {
-  io.println_error(
-    "[mcp-server] Starting C3I Planning MCP Server (stdio transport)...",
-  )
-  loop()
+  case task_mcp.configure_stdout_utf8() {
+    Ok(Nil) -> {
+      io.println_error(
+        "[mcp-server] Starting C3I Planning MCP Server (stdio transport)...",
+      )
+      loop()
+    }
+    Error(reason) -> {
+      io.println_error("[mcp-server] stdout encoding setup failed: " <> reason)
+      halt(1)
+    }
+  }
 }
 
 pub fn start() {

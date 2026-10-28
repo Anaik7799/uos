@@ -42,6 +42,9 @@ pub fn perform(
       "client_action_not_admitted",
     ))
     use source_root <- result.try(a.source_root(execution.grant))
+    use profile_home <- result.try(
+      client_profile_home(client, action, execution.grant.id),
+    )
     let profile = profiles.profile_at(client, source_root)
     let owned_name = profile.server_name <> execution.grant.id
     let env = grant_environment(execution)
@@ -54,6 +57,7 @@ pub fn perform(
           command,
           profile,
           env,
+          profile_home,
           timeout,
         ))
         case observed {
@@ -81,6 +85,7 @@ pub fn perform(
           command,
           profile,
           env,
+          profile_home,
           timeout,
         ))
         case observed {
@@ -107,13 +112,16 @@ pub fn perform(
                 profile.args,
                 env,
               )
-            use _ <- result.try(safe_run(command, argv, timeout))
+            use _ <- result.try(
+              safe_run_client(command, argv, client, profile_home, timeout),
+            )
             use after <- result.try(lookup_entry(
               client,
               owned_name,
               command,
               profile,
               env,
+              profile_home,
               timeout,
             ))
             case after {
@@ -144,6 +152,7 @@ pub fn perform(
           command,
           profile,
           env,
+          profile_home,
           timeout,
         ))
         case observed {
@@ -161,17 +170,26 @@ pub fn perform(
               "client_entry_conflict_no_remove",
             ))
             let argv = rollback_args(client, owned_name)
-            use _ <- result.try(safe_run(command, argv, timeout))
+            use _ <- result.try(
+              safe_run_client(command, argv, client, profile_home, timeout),
+            )
             use after <- result.try(lookup_entry(
               client,
               owned_name,
               command,
               profile,
               env,
+              profile_home,
               timeout,
             ))
             case after {
-              None -> Ok(summary(execution, client, action, owned_name, False))
+              None -> {
+                use _ <- result.try(case profile_home {
+                  Some(_) -> client_config.cleanup_agy_profile(execution.grant.id)
+                  None -> Ok(Nil)
+                })
+                Ok(summary(execution, client, action, owned_name, False))
+              }
               Some(_) -> Error("client_rollback_readback_failed")
             }
           }
@@ -190,6 +208,38 @@ fn safe_run(
   case dev.bounded(command, argv, timeout) {
     Ok(output) -> Ok(output)
     Error(_) -> Error("client_cli_failed_redacted")
+  }
+}
+
+fn safe_run_client(
+  command: String,
+  argv: List(String),
+  client: profiles.Client,
+  profile_home: Option(String),
+  timeout: Int,
+) -> Result(String, String) {
+  case client, profile_home {
+    profiles.Agy, Some(home) ->
+      dev.bounded_profile(command, argv, home, timeout)
+      |> result.map_error(fn(_) { "client_cli_failed_redacted" })
+    _, _ -> safe_run(command, argv, timeout)
+  }
+}
+
+fn client_profile_home(
+  client: profiles.Client,
+  action: String,
+  grant_id: String,
+) -> Result(Option(String), String) {
+  case client {
+    profiles.Agy -> {
+      let path = case action {
+        "prepare" -> client_config.agy_profile_root(grant_id)
+        _ -> client_config.agy_profile_path(grant_id)
+      }
+      result.map(path, Some)
+    }
+    profiles.Gemini | profiles.Codex | profiles.Claude | profiles.Pi -> Ok(None)
   }
 }
 
@@ -222,10 +272,31 @@ fn lookup_entry(
   command: String,
   profile: profiles.Profile,
   env: List(String),
+  profile_home: Option(String),
   timeout: Int,
 ) -> Result(Option(String), String) {
   case client {
-    profiles.Agy | profiles.Gemini | profiles.Pi ->
+    profiles.Agy ->
+      case profile_home {
+        Some(home) ->
+          case
+            client_config.observe_agy_profile(
+              home,
+              owned_name,
+              profile.command,
+              profile.args,
+              env,
+            )
+          {
+            Ok(client_config.Missing) -> Ok(None)
+            Ok(client_config.Exact) -> Ok(Some("UOS_TYPED_METADATA_EXACT"))
+            Ok(client_config.Conflict) ->
+              Error("client_entry_conflict_manual_review")
+            Error(_) -> Error("client_metadata_lookup_failed_redacted")
+          }
+        None -> Error("agy_private_profile_missing")
+      }
+    profiles.Gemini | profiles.Pi ->
       case
         client_config.observe(
           client,
@@ -302,12 +373,61 @@ fn exact_entry(
     profiles.Codex ->
       codex_entry_matches(output, name, command, expected_args, expected_env)
     profiles.Claude ->
-      string.contains(output, name)
-      && string.contains(output, command)
-      && string.contains(output, "cepaf_gleam@harness@successor_mcp:main()")
-      && list.all(expected_env, fn(pair) { string.contains(output, pair) })
+      claude_entry_matches(output, name, command, expected_args, expected_env)
     profiles.Agy | profiles.Gemini | profiles.Pi ->
       output == "UOS_TYPED_METADATA_EXACT"
+  }
+}
+
+/// Claude's targeted getter output is accepted only as a complete JSON
+/// entry with exact fields, argument order, and environment. Substring
+/// coincidences and extra fields fail closed.
+pub fn claude_entry_matches(
+  output: String,
+  name: String,
+  command: String,
+  expected_args: List(String),
+  expected_env: List(String),
+) -> Bool {
+  case json.parse(output, value.decoder()) {
+    Ok(record) ->
+      case record {
+        value.Object(fields) -> {
+          let keys_ok =
+            list.all(fields, fn(field) {
+              list.contains(["name", "command", "args", "env", "type"], field.0)
+            })
+          let name_ok = value.get(record, "name") == Ok(value.Text(name))
+          let command_ok =
+            value.get(record, "command") == Ok(value.Text(command))
+          let args_ok = case value.get(record, "args") {
+            Ok(value.Array(found)) -> string_array_equals(found, expected_args)
+            _ -> False
+          }
+          let env_ok = case value.get(record, "env") {
+            Ok(value.Object(found)) ->
+              list.length(found) == list.length(expected_env)
+              && list.all(expected_env, fn(pair) {
+                case string.split(pair, "=") {
+                  [key, expected] ->
+                    list.any(found, fn(entry) {
+                      entry.0 == key && entry.1 == value.Text(expected)
+                    })
+                  _ -> False
+                }
+              })
+            _ -> False
+          }
+          let type_ok = case value.get(record, "type") {
+            Error(_) -> True
+            Ok(value.Text("stdio")) -> True
+            _ -> False
+          }
+          keys_ok && name_ok && command_ok && args_ok && env_ok && type_ok
+        }
+        _ -> False
+      }
+    Error(_) -> False
   }
 }
 
@@ -407,10 +527,11 @@ fn grant_environment(execution: a.Execution) -> List(String) {
     "UOS_HARNESS_ATTEMPT=" <> int.to_string(binding.attempt),
     "UOS_HARNESS_SESSION=" <> binding.session,
     "UOS_HARNESS_EPOCH=" <> int.to_string(binding.epoch),
+    "ERL_CRASH_DUMP_SECONDS=0",
   ]
 }
 
-fn prepare_args(
+pub fn prepare_args(
   client: profiles.Client,
   owned_name: String,
   command: String,
@@ -421,7 +542,7 @@ fn prepare_args(
     profiles.Agy -> [
       "mcp",
       "add",
-      ..list.append(env_args(env), [owned_name, command, ..server_args])
+      ..list.append(env_args(env), [owned_name, "--", command, ..server_args])
     ]
     profiles.Gemini -> [
       "mcp",

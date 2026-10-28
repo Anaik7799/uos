@@ -135,6 +135,14 @@ fn run_bounded_env(
   env: List(#(String, String)),
 ) -> Result(#(Int, BitArray), String)
 
+@external(erlang, "ecology_capability_ffi", "run_bounded_profile")
+fn run_bounded_profile(
+  path: String,
+  args: List(String),
+  timeout_ms: Int,
+  profile_root: String,
+) -> Result(#(Int, BitArray), String)
+
 /// `bounded` with extra environment pairs for the child, for binding a tool to
 /// one database path. At most eight pairs; values never carry credentials.
 pub fn bounded_env(
@@ -144,6 +152,29 @@ pub fn bounded_env(
   timeout: Int,
 ) -> Result(String, String) {
   case run_bounded_env(path, args, timeout, env) {
+    Ok(#(0, bytes)) ->
+      bit_array.to_string(bytes)
+      |> result.map_error(fn(_) { "backend_output_invalid_utf8" })
+    Ok(#(code, bytes)) -> {
+      let diagnostic = case bit_array.to_string(bytes) {
+        Ok(output) -> backend_diagnostic(output)
+        Error(_) -> "diagnostic_invalid_utf8"
+      }
+      Error("backend_exit:" <> int.to_string(code) <> "\n" <> diagnostic)
+    }
+    Error(e) -> Error(e)
+  }
+}
+
+/// Runs only the fixed AGY CLI in its private per-grant HOME and cwd. The
+/// Erlang boundary verifies the runtime path, owner, mode and absent registries.
+pub fn bounded_profile(
+  path: String,
+  args: List(String),
+  profile_root: String,
+  timeout: Int,
+) -> Result(String, String) {
+  case run_bounded_profile(path, args, timeout, profile_root) {
     Ok(#(0, bytes)) ->
       bit_array.to_string(bytes)
       |> result.map_error(fn(_) { "backend_output_invalid_utf8" })
