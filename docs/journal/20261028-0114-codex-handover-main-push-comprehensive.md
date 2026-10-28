@@ -14,22 +14,27 @@
 
 ## 2) Merge and push receipts (authoritative)
 
-### 2.1 Local main
+### 2.1 Local main (head)
+```text
+plykzztklsol c3bc36228544 docs(handover): add comprehensive codex handover with merge/push receipts, full plan state, and skill-rule-superpower contract
+```
+
+### 2.2 Remote main@origin (head)
+```text
+plykzztklsol c3bc36228544 docs(handover): add comprehensive codex handover with merge/push receipts, full plan state, and skill-rule-superpower contract
+```
+
+### 2.3 Integrated code merge commit (parent of head)
 ```text
 pkyvxzuzrqyo 16cbf1541257 feat(hive): merge pending hive development artifacts, harness updates, and codex handover state
 ```
 
-### 2.2 Remote main@origin
+### 2.4 Bookmark mapping
 ```text
-pkyvxzuzrqyo 16cbf1541257 feat(hive): merge pending hive development artifacts, harness updates, and codex handover state
+main: plykzztk c3bc3622 docs(handover): add comprehensive codex handover with merge/push receipts, full plan state, and skill-rule-superpower contract
 ```
 
-### 2.3 Bookmark mapping
-```text
-main: pkyvxzuz 16cbf154 feat(hive): merge pending hive development artifacts, harness updates, and codex handover state
-```
-
-### 2.4 Remote endpoint
+### 2.5 Remote endpoint
 ```text
 origin git@github.com:Anaik7799/uos.git
 ```
