@@ -90,7 +90,15 @@ pub fn inspect_agy_profile_json(
       case pair.0 == name {
         False -> Error("agy_profile_has_unexpected_servers")
         True ->
-          case exact_entry(pair.1, command, expected_args, expected_env) {
+          case
+            exact_entry(
+              profiles.Agy,
+              pair.1,
+              command,
+              expected_args,
+              expected_env,
+            )
+          {
             True -> Ok(Exact)
             False -> Ok(Conflict)
           }
@@ -122,7 +130,7 @@ pub fn inspect_json(
   case value.get(servers, name) {
     Error(_) -> Ok(Missing)
     Ok(entry) ->
-      case exact_entry(entry, command, expected_args, expected_env) {
+      case exact_entry(client, entry, command, expected_args, expected_env) {
         True -> Ok(Exact)
         False -> Ok(Conflict)
       }
@@ -157,6 +165,7 @@ fn server_map(
 }
 
 fn exact_entry(
+  client: profiles.Client,
   entry: value.Value,
   command: String,
   expected_args: List(String),
@@ -166,7 +175,7 @@ fn exact_entry(
     value.Object(fields) -> {
       let keys_ok =
         list.all(fields, fn(field) {
-          list.contains(["command", "args", "env", "type"], field.0)
+          list.contains(allowed_entry_fields(client), field.0)
         })
       let command_ok = value.get(entry, "command") == Ok(value.Text(command))
       let args_ok = case value.get(entry, "args") {
@@ -182,9 +191,21 @@ fn exact_entry(
         Ok(value.Text("stdio")) -> True
         _ -> False
       }
-      keys_ok && command_ok && args_ok && env_ok && type_ok
+      let disabled_ok = case value.get(entry, "disabled") {
+        Error(_) -> True
+        Ok(value.Boolean(False)) -> client == profiles.Agy
+        _ -> False
+      }
+      keys_ok && command_ok && args_ok && env_ok && type_ok && disabled_ok
     }
     _ -> False
+  }
+}
+
+fn allowed_entry_fields(client: profiles.Client) -> List(String) {
+  case client {
+    profiles.Agy -> ["command", "args", "env", "type", "disabled"]
+    _ -> ["command", "args", "env", "type"]
   }
 }
 

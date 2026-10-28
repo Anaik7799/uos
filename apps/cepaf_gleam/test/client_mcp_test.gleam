@@ -101,6 +101,9 @@ pub fn empty_client_permissions_deny_before_native_dispatch_test() {
       1,
     )
   let execution = a.Execution(grant, scope, binding, scope.portfolio)
+  client_mcp.grant_environment(execution)
+  |> list.contains("ERL_CRASH_DUMP_SECONDS=0")
+  |> should.be_true()
   let args =
     value.Object([
       #("intent_id", value.Text("client-config-deny")),

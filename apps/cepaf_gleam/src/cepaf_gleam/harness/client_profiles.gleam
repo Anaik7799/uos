@@ -79,6 +79,7 @@ pub fn profile_at(client: Client, source_root: String) -> Profile {
       "UOS_HARNESS_ATTEMPT",
       "UOS_HARNESS_SESSION",
       "UOS_HARNESS_EPOCH",
+      "ERL_CRASH_DUMP_SECONDS",
     ],
     configuration_mode(client),
   )

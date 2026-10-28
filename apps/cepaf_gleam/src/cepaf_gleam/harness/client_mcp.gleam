@@ -466,7 +466,7 @@ fn cli(client: profiles.Client) -> String {
   }
 }
 
-fn grant_environment(execution: a.Execution) -> List(String) {
+pub fn grant_environment(execution: a.Execution) -> List(String) {
   let binding = execution.binding
   [
     "UOS_HARNESS_GRANT_PATH=" <> execution.grant.path,
@@ -478,6 +478,7 @@ fn grant_environment(execution: a.Execution) -> List(String) {
     "UOS_HARNESS_ATTEMPT=" <> int.to_string(binding.attempt),
     "UOS_HARNESS_SESSION=" <> binding.session,
     "UOS_HARNESS_EPOCH=" <> int.to_string(binding.epoch),
+    "ERL_CRASH_DUMP_SECONDS=0",
   ]
 }
 

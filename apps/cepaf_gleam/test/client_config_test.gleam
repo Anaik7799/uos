@@ -2,6 +2,7 @@ import cepaf_gleam/harness/client_config
 import cepaf_gleam/harness/client_profiles as profiles
 import cepaf_gleam/harness/value
 import gleam/json
+import gleam/list
 import gleam/string
 import gleeunit/should
 import simplifile
@@ -55,6 +56,46 @@ fn expected_env() -> List(String) {
     "UOS_HARNESS_SESSION=" <> session,
     "UOS_HARNESS_GRANT_SHA256=" <> grant_sha,
   ]
+}
+
+fn agy_expected_env() -> List(String) {
+  [
+    "UOS_HARNESS_GRANT_PATH=var/harness/fake-grant.json",
+    "UOS_HARNESS_GRANT_SHA256=" <> grant_sha,
+    "UOS_HARNESS_ROLE=development",
+    "UOS_HARNESS_PLAN=uos/development-harness/20261028-0105",
+    "UOS_HARNESS_TASK=CLIENT_PARITY",
+    "UOS_HARNESS_WORKER=codex-client-parity-fixture",
+    "UOS_HARNESS_ATTEMPT=1",
+    "UOS_HARNESS_SESSION=session-fixture",
+    "UOS_HARNESS_EPOCH=2",
+    "ERL_CRASH_DUMP_SECONDS=0",
+  ]
+}
+
+fn agy_native_fixture(disabled: value.Value) -> String {
+  let profile = profiles.profile_at(profiles.Agy, "/candidate")
+  let env =
+    value.Object(
+      list.map(agy_expected_env(), fn(pair) {
+        case string.split(pair, "=") {
+          [key, text] -> #(key, value.Text(text))
+          _ -> #("invalid", value.Null)
+        }
+      }),
+    )
+  let entry =
+    value.Object([
+      #("command", value.Text(profile.command)),
+      #("args", value.Array(list.map(profile.args, value.Text))),
+      #("env", env),
+      #("disabled", disabled),
+    ])
+  value.Object([
+    #("mcpServers", value.Object([#("uos-gleam-dev-fixture", entry)])),
+  ])
+  |> value.encode
+  |> json.to_string
 }
 
 pub fn unrelated_private_values_do_not_escape_metadata_receipts_test() {
@@ -141,6 +182,72 @@ pub fn agy_private_profile_accepts_only_the_single_owned_server_test() {
     expected_env(),
   )
   |> should.equal(Error("agy_profile_has_unexpected_servers"))
+}
+
+pub fn agy_native_disabled_false_entry_and_all_grant_environment_fields_are_exact_test() {
+  let profile = profiles.profile_at(profiles.Agy, "/candidate")
+  client_config.inspect_agy_profile_json(
+    agy_native_fixture(value.Boolean(False)),
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    agy_expected_env(),
+  )
+  |> should.equal(Ok(client_config.Exact))
+}
+
+pub fn agy_profile_disabled_true_nonboolean_and_unknown_fields_fail_closed_test() {
+  let profile = profiles.profile_at(profiles.Agy, "/candidate")
+  let base = agy_native_fixture(value.Boolean(False))
+  client_config.inspect_agy_profile_json(
+    agy_native_fixture(value.Boolean(True)),
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    agy_expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+  client_config.inspect_agy_profile_json(
+    string.replace(base, "\"disabled\":false", "\"disabled\":\"false\""),
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    agy_expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+  client_config.inspect_agy_profile_json(
+    string.replace(
+      base,
+      "\"disabled\":false",
+      "\"disabled\":false,\"unknown\":true",
+    ),
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    agy_expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+}
+
+pub fn agy_profile_changed_args_or_environment_fail_closed_test() {
+  let profile = profiles.profile_at(profiles.Agy, "/candidate")
+  let body = agy_native_fixture(value.Boolean(False))
+  client_config.inspect_agy_profile_json(
+    body,
+    "uos-gleam-dev-fixture",
+    profile.command,
+    list.append(profile.args, ["unexpected-arg"]),
+    agy_expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+  client_config.inspect_agy_profile_json(
+    body,
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    list.append(agy_expected_env(), ["EXTRA=value"]),
+  )
+  |> should.equal(Ok(client_config.Conflict))
 }
 
 pub fn cleanup_agy_profile_success_returns_gleam_ok_and_removes_private_tree_test() {
