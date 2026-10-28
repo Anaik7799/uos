@@ -481,7 +481,7 @@ fn grant_environment(execution: a.Execution) -> List(String) {
   ]
 }
 
-fn prepare_args(
+pub fn prepare_args(
   client: profiles.Client,
   owned_name: String,
   command: String,
@@ -492,7 +492,7 @@ fn prepare_args(
     profiles.Agy -> [
       "mcp",
       "add",
-      ..list.append(env_args(env), [owned_name, command, ..server_args])
+      ..list.append(env_args(env), [owned_name, "--", command, ..server_args])
     ]
     profiles.Gemini -> [
       "mcp",

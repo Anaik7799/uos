@@ -36,6 +36,27 @@ pub fn every_client_has_a_nonlegacy_exact_metadata_path_test() {
   |> should.be_true()
 }
 
+pub fn agy_mcp_add_places_delimiter_before_command_and_flag_like_args_test() {
+  let profile = profiles.profile_at(profiles.Agy, "/candidate")
+  client_mcp.prepare_args(
+    profiles.Agy,
+    "uos-gleam-dev-test",
+    profile.command,
+    profile.args,
+    ["UOS_HARNESS_TASK=CLIENT_PARITY"],
+  )
+  |> should.equal([
+    "mcp",
+    "add",
+    "--env",
+    "UOS_HARNESS_TASK=CLIENT_PARITY",
+    "uos-gleam-dev-test",
+    "--",
+    profile.command,
+    ..profile.args
+  ])
+}
+
 pub fn agy_profile_runner_rejects_caller_selected_command_and_home_test() {
   dev.bounded_profile("/bin/true", [], "/tmp", 100)
   |> should.equal(Error("agy_profile_isolation_refused"))
@@ -139,16 +160,18 @@ fn assessment_grant(reads: List(String)) -> a.Grant {
 }
 
 fn evidence_body(path: String) -> String {
-  value.Object([
-    #(
-      "snapshot",
-      value.Object([
-        #(
-          "evidence",
-          value.Array([value.Object([#("path", value.Text(path))])]),
-        ),
-      ]),
-    ),
+  value.Array([
+    value.Object([
+      #(
+        "snapshot",
+        value.Object([
+          #(
+            "evidence",
+            value.Array([value.Object([#("path", value.Text(path))])]),
+          ),
+        ]),
+      ),
+    ]),
   ])
   |> value.encode
   |> json.to_string
