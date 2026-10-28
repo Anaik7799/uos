@@ -17,6 +17,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
+import simplifile
 
 pub fn text(args: value.Value, key: String) -> Result(String, String) {
   use found <- result.try(value.get(args, key))
@@ -374,16 +375,12 @@ fn perform(
       dev.bounded(dev.root <> "/toolchains/nix-profile/bin/env", args, timeout)
     }
     "harness_test" -> {
-      use args <- result.try(
-        build_args_for(execution, [
-          "run",
-          "-m",
-          "harness_task_verification",
-          "--",
-          ..execution.scope.tests
-        ]),
-      )
-      dev.bounded(dev.root <> "/toolchains/nix-profile/bin/env", args, timeout)
+      use source_root <- result.try(a.source_root(execution.grant))
+      use args <- result.try(test_runner_arguments(
+        source_root,
+        execution.scope.tests,
+      ))
+      dev.bounded(dev.root <> "/toolchains/nix-profile/bin/erl", args, timeout)
     }
     _ -> Error("effect_not_admitted")
   }
@@ -578,7 +575,10 @@ pub fn effect(
   let result_path = effect_path(execution, intent, "result")
   use saved <- result.try(a.read_optional(result_path))
   case saved {
-    Some(body) -> replay(body, sig)
+    Some(body) -> {
+      use receipt <- result.try(replay(body, sig))
+      Ok(effect_response_summary(receipt, result_path, True))
+    }
     None -> {
       use pending <- result.try(
         a.read_optional(effect_path(execution, intent, "intent")),
@@ -689,7 +689,7 @@ pub fn effect(
         json.to_string(record),
       ))
       case verified {
-        Ok(_) -> Ok(record)
+        Ok(_) -> Ok(effect_response_summary(record, result_path, False))
         Error(e) -> {
           let known_exit = case outcome {
             Error(cause) ->
@@ -705,6 +705,192 @@ pub fn effect(
         }
       }
     }
+  }
+}
+
+/// Build a literal OTP invocation for the one test dispatcher compiled from
+/// the candidate's test tree. No caller-provided eval text, shell or executable
+/// is accepted. Every `-pa` entry is an immediate compiled package ebin under
+/// the already-admitted candidate root.
+pub fn test_runner_arguments(
+  source_root: String,
+  modules: List(String),
+) -> Result(List(String), String) {
+  use _ <- result.try(a.require(
+    test_module_manifest_valid(modules),
+    "test_module_manifest_invalid",
+  ))
+  let package_root = source_root <> "/apps/cepaf_gleam/build/dev/erlang"
+  use packages <- result.try(
+    simplifile.read_directory(package_root)
+    |> result.map_error(fn(_) { "test_runner_packages_unavailable" }),
+  )
+  use _ <- result.try(a.require(
+    packages != []
+      && list.length(packages) <= 128
+      && list.all(packages, a.component),
+    "test_runner_packages_invalid",
+  ))
+  let paths =
+    list.fold(packages, [], fn(paths, package) {
+      let ebin = package_root <> "/" <> package <> "/ebin"
+      case simplifile.read_directory(ebin) {
+        Ok(_) -> [ebin, ..paths]
+        Error(_) -> paths
+      }
+    })
+  use app_entries <- result.try(
+    simplifile.read_directory(package_root <> "/cepaf_gleam/ebin")
+    |> result.map_error(fn(_) { "test_runner_application_ebin_missing" }),
+  )
+  use _ <- result.try(a.require(
+    list.contains(app_entries, "harness_task_verification.beam")
+      && list.all(modules, fn(module) {
+      list.contains(app_entries, module <> ".beam")
+    }),
+    "test_runner_module_not_compiled",
+  ))
+  test_runner_argv(paths, modules)
+}
+
+pub fn test_runner_argv(
+  ebin_paths: List(String),
+  modules: List(String),
+) -> Result(List(String), String) {
+  use _ <- result.try(a.require(
+    test_module_manifest_valid(modules),
+    "test_module_manifest_invalid",
+  ))
+  use _ <- result.try(a.require(
+    ebin_paths != []
+      && list.length(ebin_paths) <= 128
+      && list.all(ebin_paths, fn(path) {
+      string.starts_with(path, "/")
+      && !string.contains(path, "\u{0}")
+      && string.byte_size(path) <= 1024
+    }),
+    "test_runner_ebin_paths_invalid",
+  ))
+  Ok([
+    "+S",
+    "2:2",
+    "+A",
+    "2",
+    "-noshell",
+    ..list.flatten([
+      list.flatten(list.map(ebin_paths, fn(path) { ["-pa", path] })),
+      ["-s", "harness_task_verification", "main", "-extra", ..modules],
+    ])
+  ])
+}
+
+pub fn test_module_manifest_valid(modules: List(String)) -> Bool {
+  modules != []
+  && list.length(modules) <= 32
+  && list.all(modules, fn(name) {
+    string.ends_with(name, "_test")
+    && string.byte_size(name) <= 120
+    && list.all(string.to_graphemes(name), fn(character) {
+      string.contains("abcdefghijklmnopqrstuvwxyz0123456789_", character)
+    })
+  })
+}
+
+/// Return only a compact response projection. The exact full receipt remains
+/// durably stored and addressable by path and digest.
+pub fn effect_response_summary(
+  receipt: json.Json,
+  receipt_path: String,
+  replayed: Bool,
+) -> json.Json {
+  let serialized = json.to_string(receipt)
+  let parsed = case json.parse(serialized, value.decoder()) {
+    Ok(value.Object(fields)) -> value.Object(fields)
+    _ -> value.Object([])
+  }
+  let retained = text_or_empty(parsed, "output")
+  let tail = bounded_suffix(retained, 2048)
+  json.object([
+    #("status", json.string(text_or_empty(parsed, "status"))),
+    #("kind", json.string(text_or_empty(parsed, "kind"))),
+    #(
+      "candidate_manifest_sha256",
+      json.string(text_or_empty(parsed, "input_sha256")),
+    ),
+    #("failure", json.string(text_or_empty(parsed, "failure"))),
+    #("replayed", json.bool(replayed)),
+    #("replayed_from", json.string(text_or_empty(parsed, "replayed_from"))),
+    #("original_sha256", json.string(text_or_empty(parsed, "original_sha256"))),
+    #("receipt_path", json.string(receipt_path)),
+    #("receipt_sha256", json.string(files.digest(serialized))),
+    #("receipt_bytes", json.int(string.byte_size(serialized))),
+    #("output_tail", json.string(tail)),
+    #("output_tail_sha256", json.string(files.digest(tail))),
+    #("output_tail_bytes", json.int(string.byte_size(tail))),
+    #("output_tail_truncated", json.bool(tail != retained)),
+    #(
+      "output_truncated",
+      json.bool(text_or_empty(parsed, "output_retention") != "full"),
+    ),
+    #(
+      "output_retained_bytes",
+      json.int(int_or_zero(parsed, "output_retained_bytes")),
+    ),
+    #("output_bytes", json.int(int_or_zero(parsed, "output_bytes"))),
+    #("output_sha256", json.string(text_or_empty(parsed, "output_sha256"))),
+    #(
+      "output_retained_sha256",
+      json.string(text_or_empty(parsed, "output_retained_sha256")),
+    ),
+    #(
+      "output_retention",
+      json.string(text_or_empty(parsed, "output_retention")),
+    ),
+  ])
+}
+
+fn bounded_suffix(text: String, byte_limit: Int) -> String {
+  take_suffix_graphemes(
+    string.to_graphemes(text) |> list.reverse,
+    byte_limit,
+    0,
+    [],
+  )
+}
+
+fn take_suffix_graphemes(
+  reversed_graphemes: List(String),
+  byte_limit: Int,
+  used_bytes: Int,
+  selected_reversed: List(String),
+) -> String {
+  case reversed_graphemes {
+    [grapheme, ..rest] -> {
+      let grapheme_bytes = string.byte_size(grapheme)
+      case used_bytes + grapheme_bytes <= byte_limit {
+        True ->
+          take_suffix_graphemes(rest, byte_limit, used_bytes + grapheme_bytes, [
+            grapheme,
+            ..selected_reversed
+          ])
+        False -> string.concat(selected_reversed)
+      }
+    }
+    _ -> string.concat(selected_reversed)
+  }
+}
+
+fn text_or_empty(record: value.Value, key: String) -> String {
+  case value.get(record, key) {
+    Ok(value.Text(text)) -> text
+    _ -> ""
+  }
+}
+
+fn int_or_zero(record: value.Value, key: String) -> Int {
+  case value.get(record, key) {
+    Ok(value.Integer(number)) -> number
+    _ -> 0
   }
 }
 

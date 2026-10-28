@@ -406,6 +406,108 @@ pub fn literal_sa_plan_argument_construction_does_not_admit_arbitrary_shell_test
   ])
 }
 
+pub fn task_test_runner_uses_fixed_pinned_otp_dispatch_test() {
+  let args =
+    ops.test_runner_argv(
+      ["/reviewed/candidate/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin"],
+      [
+        "harness_successor_test",
+        "harness_authority_test",
+      ],
+    )
+    |> should.be_ok
+  list.contains(args, "+S") |> should.be_true
+  list.contains(args, "2:2") |> should.be_true
+  list.contains(args, "+A") |> should.be_true
+  list.contains(args, "2") |> should.be_true
+  list.contains(args, "-noshell") |> should.be_true
+  list.contains(args, "-s") |> should.be_true
+  list.contains(args, "harness_task_verification") |> should.be_true
+  list.contains(args, "main") |> should.be_true
+  list.contains(args, "-extra") |> should.be_true
+  list.contains(args, "harness_successor_test") |> should.be_true
+  list.contains(args, "harness_authority_test") |> should.be_true
+  list.contains(args, "-eval") |> should.be_false
+  list.contains(args, "bash") |> should.be_false
+  ops.test_module_manifest_valid([]) |> should.be_false
+  ops.test_module_manifest_valid(["../outside_test"]) |> should.be_false
+  ops.test_module_manifest_valid(["arbitrary_module"]) |> should.be_false
+  let source_root = a.source_root(grant()) |> should.be_ok
+  let dynamic_args =
+    ops.test_runner_arguments(source_root, ["harness_successor_test"])
+    |> should.be_ok
+  list.contains(dynamic_args, "harness_task_verification") |> should.be_true
+  list.contains(dynamic_args, "harness_successor_test") |> should.be_true
+  list.contains(
+    dynamic_args,
+    source_root <> "/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin",
+  )
+  |> should.be_true
+}
+
+pub fn effect_response_projection_is_bounded_and_receipt_bound_test() {
+  let output = string.repeat("x", 20_000)
+  let receipt =
+    json.object([
+      #("status", json.string("EXECUTED")),
+      #("kind", json.string("effect_result")),
+      #("input_sha256", json.string(files.digest("candidate-manifest"))),
+      #("input_manifest", json.string(string.repeat("large", 1000))),
+      ..ops.effect_output_fields(output)
+    ])
+  let path = "var/harness/effects/test@result.json"
+  let response = ops.effect_response_summary(receipt, path, False)
+  let parsed =
+    json.to_string(response) |> json.parse(value.decoder()) |> should.be_ok
+  let full_receipt = json.to_string(receipt)
+  value.get(parsed, "receipt_path")
+  |> should.equal(Ok(value.Text(path)))
+  value.get(parsed, "receipt_sha256")
+  |> should.equal(Ok(value.Text(files.digest(full_receipt))))
+  value.get(parsed, "candidate_manifest_sha256")
+  |> should.equal(Ok(value.Text(files.digest("candidate-manifest"))))
+  value.get(parsed, "receipt_bytes")
+  |> should.equal(Ok(value.Integer(string.byte_size(full_receipt))))
+  value.get(parsed, "replayed") |> should.equal(Ok(value.Boolean(False)))
+  value.get(parsed, "output_tail_bytes")
+  |> should.equal(Ok(value.Integer(2048)))
+  value.get(parsed, "output_tail_truncated")
+  |> should.equal(Ok(value.Boolean(True)))
+  value.get(parsed, "output_truncated")
+  |> should.equal(Ok(value.Boolean(True)))
+  value.get(parsed, "output_retained_bytes")
+  |> should.equal(Ok(value.Integer(8192)))
+  value.get(parsed, "output_bytes")
+  |> should.equal(Ok(value.Integer(20_000)))
+  value.get(parsed, "input_manifest") |> should.be_error
+  let replay_response = ops.effect_response_summary(receipt, path, True)
+  let parsed_replay =
+    json.to_string(replay_response)
+    |> json.parse(value.decoder())
+    |> should.be_ok
+  value.get(parsed_replay, "replayed")
+  |> should.equal(Ok(value.Boolean(True)))
+  let giant_cluster = "x" <> string.repeat("\u{301}", 1500)
+  let cluster_receipt =
+    json.object([
+      #("status", json.string("EXECUTED")),
+      #("kind", json.string("effect_result")),
+      #("input_sha256", json.string(files.digest("candidate-manifest"))),
+      ..ops.effect_output_fields(giant_cluster)
+    ])
+  let cluster_summary =
+    ops.effect_response_summary(cluster_receipt, path, False)
+    |> json.to_string
+    |> json.parse(value.decoder())
+    |> should.be_ok
+  value.get(cluster_summary, "output_tail")
+  |> should.equal(Ok(value.Text("")))
+  value.get(cluster_summary, "output_tail_bytes")
+  |> should.equal(Ok(value.Integer(0)))
+  value.get(cluster_summary, "output_tail_truncated")
+  |> should.equal(Ok(value.Boolean(True)))
+}
+
 pub fn task_namespace_conforms_to_the_real_coordinator_and_separates_plans_test() {
   let first =
     dev.Binding(
