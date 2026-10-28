@@ -1,0 +1,23 @@
+{
+  "schema": "uos.harness-task-verification.v1",
+  "plan": "uos/development-harness/lease-renewal/20261028-1317",
+  "task": "IMPLEMENT",
+  "attempt": 4,
+  "candidate_sha256": "4683bf3d1e5c4368cd8c440985a970513abd2963e9d1b13cf116338c7188ba63",
+  "build_receipt_sha256": "56fceb831a4cc7d43da909267c9e2e6bf6b275a332f2f194010af58021296dca",
+  "test_receipt_sha256": "3d0bf03cc4c987eb8850087ca4789ed2635365833ed5acd99e23923f458fce24",
+  "verdict": "VERIFIED",
+  "peer_review_path": "governance/planning/20261028-2111-lease-completion/20261028-2111-peer-review.json",
+  "peer_review_sha256": "418885d3dffa76baae7bfd41484501bcbd89cb7451a7dad9679b40316713baec",
+  "formal_evidence_path": "governance/planning/20261028-2111-lease-completion/20261028-2111-formal-laws.json",
+  "formal_evidence_sha256": "25be981c5df3e367fe39677aca369f91e70d18160debe0bf7f10f6afd1467b7c",
+  "scope": "Lease own-task renewal implementation at exact frozen candidate; source39/control26/nativeCFE,122MCPtests,native baseline and prior scoped renewal8/8. Independent ACCEPT remains separate.",
+  "formal_qualification": "Machine-checkable source contracts and observed property laws; Lean/Gospel theorem proof UNRUN.",
+  "remaining": [
+    "Shared default Unicode stdout source fix",
+    "Ordinary build-intent reconciliation mismatch",
+    "Four native clients and full command matrix",
+    "Concurrent distinct-client recovery/fairness",
+    "Full goal and system admission"
+  ]
+}

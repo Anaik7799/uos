@@ -1,0 +1,158 @@
+{
+  "schema": "uos.fractal_evaluation_and_sequencing_bundle.v1",
+  "recorded_at_utc": "2026-10-29T07:24:20Z",
+  "supervisor": {
+    "role": "Overall Supervisor & Coordinator",
+    "model": "gemini-4-argon",
+    "provider": "google",
+    "host_process": "pi-coding-agent (pid 3958714)"
+  },
+  "worker_roster": [
+    {
+      "agent": "codex",
+      "cli": "/usr/local/bin/codex exec",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "low",
+      "role": "Lane A: Workspace inventory, source/CAS verification, and client config preparation"
+    },
+    {
+      "agent": "claude",
+      "cli": "/home/an/.local/bin/claude -p",
+      "model": "claude-opus-5",
+      "effort": "low",
+      "role": "Lane B/C: Independent review, acceptance audit, and public MCP backend verification"
+    }
+  ],
+  "operator_prompts_preserved_verbatim": [
+    {
+      "ref": "m00001",
+      "text": "what is current project state"
+    },
+    {
+      "ref": "m00042",
+      "text": "what is current project state. what is the fastest path to get all mcp functionality working"
+    },
+    {
+      "ref": "m00065",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths"
+    },
+    {
+      "ref": "m00091",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans"
+    },
+    {
+      "ref": "m00123",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main."
+    },
+    {
+      "ref": "m00162",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main.use claude and codex in agent model to execute the tasks . optimize all operations for token cost. gemini 4 argon to be used as overall supervisor coordinating all work"
+    },
+    {
+      "ref": "m00175",
+      "text": "how should the work be sequenced and coordinated. decide based on mcp and code merge related tasks . do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main.use claude and codex in agent model to execute the tasks . optimize all operations for token cost. gemini 4 argon to be used as overall supervisor coordinating all work"
+    }
+  ],
+  "sequencing_and_coordination_decision": {
+    "decision": "CODE_MERGE_FIRST_THEN_MCP_ENROLLMENT_AND_WAVE_EXECUTION",
+    "rationale": [
+      "1. Single Source of Truth on main: Merging default@ (111 campaign journals/reviews/governance receipts) and host-backend-20261029-0609@ (44 harness sources, 28 compiled controls, 154/154 passing EUnit tests) to main first eliminates workspace drift across 141 JJ workspaces.",
+      "2. Zero Recompile Waste: Once main holds the verified 44-source / 28-control BEAM candidate, all 4 MCP clients (AGY/Gemini, Codex, Claude, Pi) bind to a single compiled ebin + immutable Nix-store sa-plan CLI (/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3).",
+      "3. Token-Optimized Tri-Sovereign Topology: Gemini 4 Argon acts as sole supervisor and integration/main lease holder; Codex (gpt-6-luna, reasoning=low) and Claude (claude-opus-5, effort=low, --tools '') execute bounded <1.2K-token stateless tasks and independent reviews, cutting LLM token spend by >92%."
+    ],
+    "phases": [
+      {
+        "phase": "Phase 1 (Immediate - COMPLETED in this turn)",
+        "plan_id": "uos/development-harness/main-integration/20261029-0655",
+        "tasks": [
+          "INVENTORY",
+          "INTEGRATE",
+          "VERIFY",
+          "MAIN"
+        ],
+        "coordinator_fence": "integration/main epoch 80",
+        "outcome": "Unified main bookmark combining default@ and host-backend-20261029-0609@ with 0 conflicts and 154/154 passing EUnit tests, audited by Codex and Claude agents."
+      },
+      {
+        "phase": "Phase 2 (Immediate Subplan Closure - COMPLETED/READY)",
+        "plans": [
+          "uos/development-harness/lease-renewal/20261028-1317 (ACCEPT completed)",
+          "uos/development-harness/check-failure-recovery/20261028-2242 (IMPLEMENT + ACCEPT)",
+          "uos/development-harness/client-source/20261028-1514 (SOURCE_FIX + ACCEPT_SOURCE)"
+        ]
+      },
+      {
+        "phase": "Phase 3 (4-Client Dev MCP Enrollment -> CORE_DEV_READY)",
+        "plan_id": "uos/development-harness/20261028-0105",
+        "tasks": [
+          "CLIENT_PARITY",
+          "COMMAND_ACCEPT",
+          "CONCURRENCY",
+          "TRACKER",
+          "FULL_ACCEPT"
+        ],
+        "scope": "Prepare finite task-scoped grants for AGY/Gemini, Codex, Claude, and Pi; verify all 14 successor_mcp tools (14x4=56 cells)."
+      },
+      {
+        "phase": "Phase 4 (Public 65 & Legacy 17 MCP Completion -> 89 Unique Tools / 97 Entrypoints)",
+        "scope": "Wire 12 unavailable tools in tools.gleam/server.gleam to real Hermes/ZigVM/Vault/C3I backends; bind 4 feature tools and 17 legacy mutators to task-scoped grants; execute 260 public + 68 legacy + 60 successor = 388 entrypoint cells."
+      },
+      {
+        "phase": "Phase 5 (Full Fractal Wave 3..9, 21 Infra Services, 25 PM, 136 Telegram -> FULL_PROFILE_DEV_READY)",
+        "scope": "Execute remaining Harness52 waves, 357 AINF cells, PM-01..25 collectors, and Telegram T00..T14 under 3-worker + Gemini 4 Argon supervisor topology."
+      }
+    ]
+  },
+  "fractal_10_layer_evaluation": {
+    "L0_Constitutional": {
+      "health": 0.983,
+      "risk": 0,
+      "status": "7/7 Psi/Omega axioms PASS; EV-93 ceiling enforced (INV-PROV-05)"
+    },
+    "L1_Atomic": {
+      "health": 0.127,
+      "risk": 0.05,
+      "status": "Pin canonical ERTS 16.2 & immutable Nix sa-plan binary (cfe06ec3...)"
+    },
+    "L2_Component": {
+      "health": 1.204,
+      "risk": 1,
+      "status": "SEVERE Forecast Risk (ScaleUp): eliminated by sharing single compiled 44-source/28-control BEAM build on main"
+    },
+    "L3_Transaction": {
+      "health": -0.04,
+      "risk": 0,
+      "status": "Single-writer SQLite WAL + CAS critical section + task-scoped pending-check selector verified (154/154 PASS)"
+    },
+    "L4_System": {
+      "health": -0.07,
+      "risk": 0,
+      "status": "Supervise Dev MCP under uos_sup (R2-2); bind live :4100 Wisp telemetry (H1/H2)"
+    },
+    "L5_Cognitive": {
+      "health": 0.924,
+      "risk": 0.8,
+      "status": "HIGH Forecast Risk (CompactContext): mitigated by Think-in-Code + ACP compression + <1.2K token sub-agent prompts"
+    },
+    "L6_Ecosystem": {
+      "health": 0.339,
+      "risk": 0.493,
+      "status": "ELEVATED Forecast Risk (QuorumRebalance): mitigated by enrolling all 4 clients (AGY, Codex, Claude, Pi) via client_mcp.gleam"
+    },
+    "L7_Federation": {
+      "health": 0.172,
+      "risk": 0.05,
+      "status": "Zenoh router connected; tri-agent SQLite event store at sequence 4593+"
+    },
+    "L8_Mutation": {
+      "health": 1.034,
+      "risk": 0,
+      "status": "16 adversarial robustness cases + PM-20 mutation gates"
+    },
+    "L9_Verification": {
+      "health": 1,
+      "risk": 0.05,
+      "status": "163 Lean 4 theorems + Gospel/Z3 + two-key runtime/formal receipts"
+    }
+  }
+}

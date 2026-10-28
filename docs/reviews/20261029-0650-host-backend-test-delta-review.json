@@ -1,0 +1,44 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "grant_proposal": {
+    "grant_id": "20261029-0620-host-backend",
+    "path": "var/harness/20261029-0650-host-backend-proposal-v3.json",
+    "sha256": "a545e4252349c0e75d66aab455ea5b23d5fb5821ce840f2155da0a21659e8a6a",
+    "target_session": "01a182ca-7135-71b3-a9cd-479caa8aa503",
+    "target_worker": "codex-check-recovery-01a182ca"
+  },
+  "reviewer": {
+    "plan_id": "uos/harness-reviews/pipe-recovery/20261028-2310",
+    "task_id": "HOST_BACKEND_TEST_REVIEW",
+    "worker": "codex-host-backend-test-01a18314",
+    "session_id": "01a18314-55ba-7d43-998b-9b78c123aaf3",
+    "attempt": 1
+  },
+  "supplemental_test_fix": {
+    "target": "apps/cepaf_gleam/test/harness_pre_attach_assessment_test.gleam",
+    "before_sha256": "bd707409e2573f164c390ad448570254beaa5f5e9c0dc357ac23032038093d98",
+    "after_sha256": "d0e75527b0d00a74ce610fc0e52ec9d1f96fd679662b0ff3370db681aa652c17",
+    "inert_draft_path": ".uos-workspaces/lease-runtime-20261028-2000/apps/cepaf_gleam/build/private-fixtures/20261029-0620-host-backend-review/harness_pre_attach_assessment_test.corrected-draft.gleam",
+    "delta": [
+      "Control module count expectation updated from 26 to 28.",
+      "Existing ecology_capability_ffi assertion preserved.",
+      "Assertions added for cepaf_gleam@harness@native_backend and harness_native_backend_ffi."
+    ]
+  },
+  "findings": [
+    "The exact proposal v3 digest was read and matches the supplied review binding.",
+    "The supplemental target is an existing in-scope test path; its before digest matches the candidate source and its after digest matches the complete inert corrected copy.",
+    "The correction adds only the intended control-count and control-presence assertions; the remaining test body is byte-preserved.",
+    "The proposal delta adds this test path to the reviewed write scope and binds before/after bytes. Other source scope, payload pins, serving runtime and host-backend qualifications remain as previously reviewed."
+  ],
+  "limitations": [
+    "This approves the finite development authoring/test scope only; the draft was not compiled or run.",
+    "No runtime host-backend activation, host positive UID/stat/startup proof, provider/native-client/config/package actions, finish, or admission is approved.",
+    "Fresh task/workspace/risk/clock/CFE/ABI fences and actual same-candidate MCP build/test are still required; host proof and full acceptance remain open."
+  ],
+  "authorized_effects": false,
+  "finish_authorized": false,
+  "host_activation_authorized": false,
+  "admission": false
+}

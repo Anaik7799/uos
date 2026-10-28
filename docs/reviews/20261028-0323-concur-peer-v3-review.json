@@ -1,0 +1,71 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "observed_at": "2026-10-28T03:40:14Z",
+  "reviewer": {
+    "session_id": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+    "worker": "codex-dev-harness-01a18014",
+    "plan_id": "uos/harness-grant-reviews/20261028-0323",
+    "task_id": "CONCURRENCY_PEER",
+    "attempt": 2
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261028-0323-concurrency-peer-grant-proposal-v3.json",
+    "sha256": "01980d6bd14d88b18747fee425395a9ece79a34f6b9d754bea0f09718deabac1",
+    "grant_id": "20261028-0323-concur-peer-v3-01a1802b",
+    "target_session": "01a1802b-0ee7-7822-b734-42b95dc5515f",
+    "target_worker": "codex-client-parity-01a1802b"
+  },
+  "scope": "Finite development same-task distinct-session contention, ownership transfer, stale-owner refusal, same-ID replay and bounded recovery observations only. Writes limited to unique peer journal/verification plus one explicitly shared disposable fixture. No source/client-config/production effects.",
+  "independent_checks": {
+    "admission_decode": "PASS actual canonical admission.decode_grant",
+    "source_count": 16,
+    "canonical_candidate_byte_equality": true,
+    "loaded_control_ids_count": 21,
+    "loaded_control_ids_match": true,
+    "control_dependency_check": "PASS actual control_dependencies_match",
+    "candidate_root": ".uos-workspaces/codex-concurrency-fresh-0323",
+    "candidate_revision": "328be0715734317c2864a4e97d1add7b781d5d74",
+    "candidate_preflight": "PASS31 independently rerun at03:40:14UTC",
+    "candidate_preflight_source_sha256": "abf3ca8d82639908347a65dc31123dd1f6eb3c8de3c72483051c66b690fc543d",
+    "risk_preflight": "PREFLIGHT_PASS03:35:01UTC",
+    "active_check": "ACTIVE_OBSERVATION_PASS03:35:47UTC",
+    "grant_id_length": 37,
+    "max_grant_id_length": 48
+  },
+  "preconditions": [
+    "Native runtime remains canonical dev.root; matching16source bytes in the immutable candidate support only this finite closure, not general workspace source isolation.",
+    "Keep canonical root preflight FAIL1 for ignored unadmitted verify_guardian.exe visible; it is outside this fixture/read/write protocol and must not be executed, hidden or deleted.",
+    "Peer may claim CONCURRENCY only after owner intentionally releases it; canonical attempt, actor, session and coordinator epoch must be rechecked through actual harness ingress.",
+    "Peer must maintain its own complete13-record fresh risk portfolio and scoped grant; shared fixture is the only shared writable output.",
+    "Preserve original unsupported review and oversized proposal versions. Never reinterpret them as passing admission.",
+    "Old files.replace is cooperative recheck+rename, not cross-process atomic CAS. Observe race honestly; do not mark concurrency acceptance without a tested admitted-writer serialization fix."
+  ],
+  "residuals": [
+    "Full14command negative/recovery matrix UNRUN.",
+    "Native four-client/full65public-command matrix UNRUN.",
+    "Same-task transfer and stale-owner observations pending; this review is not runtime proof.",
+    "Cooperative filesystem/session fencing is not hostile-writer IAM.",
+    "No production admission."
+  ],
+  "previous_failures_preserved": [
+    "Initial concurrency review had incompatible reviewer keys; loader refused before handshake.",
+    "Peer-v2 grant identifier54bytes exceeded max48; replaced by this correctly bounded37byte ID.",
+    "Earlier peer proposal shared non-fixture outputs; this proposal uses unique peer evidence/portfolio."
+  ],
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l5",
+    "#fractal-l6",
+    "#fractal-l7",
+    "#fractal-l8",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "production_admission": false
+}

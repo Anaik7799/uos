@@ -1,0 +1,29 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "grant_proposal": {
+    "grant_id": "20261029-0620-host-backend",
+    "path": "var/harness/20261029-0620-host-backend-proposal-v2.json",
+    "sha256": "ce4d127e9ecbd25f13dfb3f5a1374feeed000057b758b00da533a8d72dc97a03",
+    "target_session": "01a182ca-7135-71b3-a9cd-479caa8aa503",
+    "target_worker": "codex-check-recovery-01a182ca"
+  },
+  "reviewer": {
+    "plan_id": "uos/harness-reviews/pipe-recovery/20261028-2310",
+    "task_id": "HOST_BACKEND_SCHEMA_REVIEW",
+    "worker": "codex-host-backend-schema-01a18314",
+    "session_id": "01a18314-55ba-7d43-998b-9b78c123aaf3",
+    "attempt": 1
+  },
+  "findings": [
+    "Proposal v2 SHA is the reviewed proposal binding. The finite development source scope and payload set are unchanged from the semantically reviewed v1; v2 adds the correctly bound schema review task/reference.",
+    "The source payload index and inert manifest v4 pins were independently observed and match: payload index 9fef9f09b613dd49226e631fd728e15cfef1b3218a15226054d5e1ea24ea9573; manifest 98c6a2befe5ce33eb5dee9507418499de6518f3da2c913ece10f45374a899641.",
+    "The grant is bounded to source authoring and fixed development build/tests, with actual same-candidate MCP build/test still mandatory. Serving runtime remains the frozen542cf/source39/control26/CFE context."
+  ],
+  "limitations": [
+    "This verdict approves development/test scope only; it does not establish that source compiled or tests passed.",
+    "No runtime host-backend activation or host positive UID/stat/startup/selected-CLI proof is approved.",
+    "No finish, admission, provider, native client/config, package-fetch, or production effects are approved.",
+    "Fresh task, workspace, risk, clock, CFE and ABI fences remain required at effect time; host proof and full worker/receipt, command/client/concurrency acceptance remain open."
+  ]
+}

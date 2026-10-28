@@ -1,0 +1,151 @@
+{
+  "schema": "uos.command-accept-partial-verification.v1",
+  "observed_utc": "2026-10-28T06:37:10.784592Z",
+  "plan": "uos/development-harness/20261028-0105",
+  "task": "COMMAND_ACCEPT",
+  "attempt": 3,
+  "worker": "codex-command-01a1802b",
+  "session": "01a1802b-38f3-7201-8629-f521dbc373d0",
+  "candidate": {
+    "workspace": ".uos-workspaces/dev-harness-cas-integration-20261028-0850",
+    "commit": "872a477d2117b81ac95c3b8478557092a5104d01",
+    "grant": "var/harness/20261028-0551-command-cas-grant-v5.json",
+    "grant_sha256": "f056748a9ea3990d2e80b5f34448dc63e9ae7389cfcf8d46258cb7b83a59de39",
+    "manifest_sha256": "5106ef38ad69931224ceb15cd5b8bd668da690b4b6360c846c1f5e8027b9b57a",
+    "admission": "PASS"
+  },
+  "recovery": {
+    "intent_id": "cmdaccept-candidate-root-proof-conflict-v1",
+    "known_failure": "refused: source_digest_conflict",
+    "resolved_as": "known no-effect refusal",
+    "retry_performed": false,
+    "pre_restart_unresolved": true,
+    "post_restart_status": {
+      "unresolved_operation": false,
+      "active": null
+    },
+    "post_reconcile_attach_attempt": 3,
+    "post_reconcile_coordinator_epoch": 4,
+    "restart_persistence_gap": true
+  },
+  "execution": {
+    "build": {
+      "status": "EXECUTED",
+      "failure": "",
+      "receipt_path": "var/harness/effects/20261028-0538-cmdcas-01a1802b@cmdaccept-build-v1@result.json",
+      "receipt_sha256": "175bf2c939e41f565d998ac03f47b3be6e6ac68984bcceb466cbfcded7b4f032",
+      "output_sha256": "da041c04517ba63a681e647a88edd1aa2e170e1b2cec22da3fc5782ec9f55673",
+      "output_bytes": 10519,
+      "output_tail_truncated": true
+    },
+    "test": {
+      "status": "EXECUTED",
+      "failure": "",
+      "summary": "All 125 tests passed; successor verification: ok",
+      "receipt_path": "var/harness/effects/20261028-0538-cmdcas-01a1802b@cmdaccept-test-v1@result.json",
+      "receipt_sha256": "ce1caa333b24f859801ba6aa6572d43bf4fd97e9d5e32183b6064b09336f0081",
+      "output_sha256": "6f0555b13e8f4dffcb480d8ed91a546f32b419c2c10399b0a07fb5c69e1af850",
+      "output_bytes": 14323,
+      "output_tail_truncated": true
+    },
+    "allowed_read": {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+    },
+    "denied_read": {
+      "path": "README.md",
+      "result": "read_scope_refused"
+    },
+    "unknown_probe": "unknown_tool",
+    "declared_client_route": "harness_client_mcp_config -> unknown_tool"
+  },
+  "candidate_root_isolation": {
+    "fixture": "apps/cepaf_gleam/test/fixtures/20261028-1018-command-candidate-proof.json",
+    "write_receipt_sha256": "59c58e448086357a69831ed7432e505d5270d95d7e57f4fcf9671b3d24b269df",
+    "readback_sha256": "e5ba626c8770ed6468b9cd676ebb24ee2785cd18fde963483be95d498903d26b",
+    "canonical_counterpart_absent_at_initial_observation": true,
+    "wrong_digest": "refused: source_digest_conflict"
+  },
+  "planning": {
+    "create_plan_logical_id": "cmdaccept-plan-create-v1",
+    "create_plan_receipt_key": "a2c08b82168f909ad082bbe0a452dae7a612eab8ccc71151dd8f1cd20c94b5b9",
+    "create_plan_payload_sha256": "6630404d399618cd5bf769ff3be44ee71d2e421c21df671fa276ab83136fd8d4",
+    "create_task_logical_id": "cmdaccept-task-create-v1",
+    "create_task_receipt_key": "fca54496a2c1f96e3d7518e3576bd9fa1a516a344847497f543a4d850849077e",
+    "create_task_payload_sha256": "3a646ee04d6a467866806b4e82a9fc4956457f068a31797b6b3c09064dd57f47",
+    "unresolved_publish_evidence_original_body": true,
+    "original_body_sha256_only": "b98a99be81a88b476c700593543a524e8f8b0667667dcf56942e5620b6dabd4c",
+    "original_logical_id_length": 53,
+    "reconcile_max_length": 48,
+    "old_resolution_sidecar_path": "var/harness/effects/planning@1b51983207edfeb8fee16780af3b2226503db186e4d6bde4e5c12937f9d62274@resolution.json",
+    "old_resolution_sidecar_sha256": "308c7f9490bb3efbf53159fc5c81ce41fb13c92a0597e5e637a3c0e224d515f3"
+  },
+  "partial_acceptance_journal": {
+    "path": "docs/journal/20261028-0538-command-cas-acceptance-journal.md",
+    "sha256": "d0c6cf24adfdeed0338d518e8a1293caff338f9789da14897c015222ff7cd28d",
+    "linter_status": "Parent rerun pending after final Section13 Forecast repair; prior result 9/10, only CHK-PRED.",
+    "write_receipt_sha256": "8f0703c246d763b208522685bc317cd2509864e72913bed73b69e2384bb86d37",
+    "final_forecast": {
+      "missed_0632": "unresolved_unscored_no_horizon_observation",
+      "new_horizon": "2026-10-28T06:40:00Z",
+      "subjective_probability": 0.8,
+      "outcome": "pending",
+      "brier_score": "pending"
+    }
+  },
+  "journal_linter_prior_failure": {
+    "checks": 5,
+    "failed_categories": [
+      "ACH H1/H2",
+      "scoped Admiralty B2",
+      "Red Team/Popperian falsifier",
+      "Bayesian/Lyapunov discussion",
+      "precommitted Brier forecast"
+    ],
+    "preserved_prior_result": true
+  },
+  "open_gaps": [
+    "Original PublishEvidence body unavailable; no retry",
+    "53-character logical ID exceeds 48-character reconcile limit",
+    "Native predecessor/effect-lineage binding incomplete",
+    "Full simultaneous CAS race and peer result pending",
+    "Five broad-suite failures unattributed",
+    "Unknown-outcome and restart-persistent stop-line recovery unproven",
+    "Declared harness_client_mcp_config route remains unknown_tool",
+    "Full 14-command positive/negative/recovery matrix incomplete"
+  ],
+  "result": "PARTIAL_ACCEPTANCE_ONLY",
+  "task_finished": false,
+  "production_admission": false,
+  "journal_linter_latest_before_repair": {
+    "checks": "9/10",
+    "failed_check": "CHK-PRED",
+    "repair": "Capitalized Forecast directly under Section13 conclusion; earlier missed 06:32 forecast marked unresolved/unscored."
+  },
+  "journal_write_history": [
+    {
+      "intent_id": "cmdaccept-journal-forecast-v2",
+      "status": "EXECUTED",
+      "receipt_sha256": "4d39decac8f3294f744c82d95d1b0d9c85d6c058338898655f93363c7ebfe86b",
+      "output_sha256": "7d3fd8bd47a7cdf0f3f9ec65866a8211003e0718ce3549abf379e18bfbae3d9a"
+    },
+    {
+      "intent_id": "cmdaccept-journal-forecast-v3",
+      "status": "REFUSED",
+      "failure": "refused: source_digest_conflict",
+      "result_sha256": "86177461ccb976ced60dcd8d2f11f019049088c7003775cfa9dcf4a95553ff26"
+    },
+    {
+      "intent_id": "cmdaccept-journal-forecast-final",
+      "status": "EXECUTED",
+      "receipt_sha256": "8f0703c246d763b208522685bc317cd2509864e72913bed73b69e2384bb86d37",
+      "content_sha256": "d0c6cf24adfdeed0338d518e8a1293caff338f9789da14897c015222ff7cd28d"
+    },
+    {
+      "intent_id": "cmdaccept-journal-forecast-final",
+      "status": "EXECUTED",
+      "receipt_sha256": "8f0703c246d763b208522685bc317cd2509864e72913bed73b69e2384bb86d37",
+      "content_sha256": "d0c6cf24adfdeed0338d518e8a1293caff338f9789da14897c015222ff7cd28d"
+    }
+  ]
+}

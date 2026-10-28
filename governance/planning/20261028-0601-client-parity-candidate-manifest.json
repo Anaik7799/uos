@@ -1,0 +1,211 @@
+{
+  "schema": "uos.development-candidate-manifest.v1",
+  "candidate_workspace": ".uos-workspaces/client-parity-20261028-0321",
+  "candidate_revision": "7ec49a37cb492260e8c0ec405a5e481985c268bb",
+  "candidate_change": "spnwkmtlvlqztvsurstoqvtpztutowry",
+  "source_bearing_parent": "fcc65d7d6a11e16a2d513c3893391e5280987b40",
+  "base_revision": "f8b73da0411b",
+  "observed_at_utc": "2026-10-28T06:00:47Z",
+  "source_manifest_path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0601-client-parity-source-manifest.txt",
+  "source_manifest_sha256": "baece431d40e9e7b7d7c29d02ceec664cdcde57fe4bd758742f6fe4bc9573ce3",
+  "source_files": [
+    {
+      "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+      "path": "AGENTS.md"
+    },
+    {
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+      "path": "apps/cepaf_gleam/gleam.toml"
+    },
+    {
+      "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+      "path": "apps/cepaf_gleam/manifest.toml"
+    },
+    {
+      "sha256": "98023586d671a329ed1e9c2ffca248c9a28157c03a5f93d88c7691ced97511b3",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam"
+    },
+    {
+      "sha256": "0226a96abfadd22ed9e7d1d7347971f30e0b375a370358cc9199d5b894126a87",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_config.gleam"
+    },
+    {
+      "sha256": "972f8a14e9d08dcf64ddb4d9beb11160dc40fe34ae519936acb3d7daadf7e916",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_mcp.gleam"
+    },
+    {
+      "sha256": "7fcb31c5b3b5dad91ab6d4147c67e25ca8ad79fbc950634d73460744b260c1b5",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_profiles.gleam"
+    },
+    {
+      "sha256": "88dfc26eeef7a32f8210d6d5f2b98de6bd8822bb3c22884d5730019ec861d4a2",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam"
+    },
+    {
+      "sha256": "383c0da5040758bd537f4e9a65ae15bf4a11d2542419605f96d2fb56637d9ad0",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam"
+    },
+    {
+      "sha256": "59dbc4f49885b1fcaaa8cd531b92e86b4a604ea489d76ee23231524c5339664d",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam"
+    },
+    {
+      "sha256": "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam"
+    },
+    {
+      "sha256": "f001c470800f1d0a6d9d81a12f7431d4f70046bb5f334a1eea5e377f1ebfdf5d",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam"
+    },
+    {
+      "sha256": "0f2ba0c19634e9270d97d2fd6aabdb46bfd772f27f43734aef139a82e5c2ba94",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intents.gleam"
+    },
+    {
+      "sha256": "ebb0967e076de2c69fd7ce07fe4e6ed29d0503e7f78b312f4013a8618d168dbb",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam"
+    },
+    {
+      "sha256": "c5ed1c8f561dc083e230ee6e45a124639859419daa4fc9a9358dee6b0155fda2",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/value.gleam"
+    },
+    {
+      "sha256": "e0d3c51f7a935ed3feb3d5b7eac77cdbb87559b61fcc7f770f45f0fa01b71a07",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+    },
+    {
+      "sha256": "bfecf923d39b139dacf8fa7e945c35a3d584b5d5d1c2767dae2e6f86d9374b48",
+      "path": "apps/cepaf_gleam/src/client_config_io.erl"
+    },
+    {
+      "sha256": "788b0f77d94b43104cc71f3f40fc9adf91977712eacccca13411ea11eb2f2aa1",
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl"
+    },
+    {
+      "sha256": "f0ede6caa4081e7e2fb3edb566a671d4778f8e137c2641616974d0b24c862fba",
+      "path": "apps/cepaf_gleam/test/harness_task_verification.gleam"
+    },
+    {
+      "sha256": "4cb28d33f49eff797030e9bb2b2e041480eeb3e90d4138503e0f6d1fe627c286",
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam"
+    },
+    {
+      "sha256": "7e50f4ef60123e9926d70e686fad816283e39299d955c8414b0ac781d8d8c6a7",
+      "path": "apps/cepaf_gleam/test/harness_development_test.gleam"
+    },
+    {
+      "sha256": "42d4de537ed90310a5ba3a6e6db8d084fff01eab69bc4d444536bfd22d62ca68",
+      "path": "apps/cepaf_gleam/test/harness_authority_test.gleam"
+    },
+    {
+      "sha256": "b073cf4e783200c78b1803dfe55e684a4eebec28509d08f912aa2b382e1fa565",
+      "path": "apps/cepaf_gleam/test/harness_sa_plan_boundary_test.gleam"
+    },
+    {
+      "sha256": "1342606ae2b96257cf8d4f2d18e306e3bc13cd6dff3b6846482d870fd2f7a9f6",
+      "path": "apps/cepaf_gleam/test/mcp_authz_wiring_test.gleam"
+    },
+    {
+      "sha256": "639d83b89f0d71196187922ab271ccbefe9501dfa0414334b1fb7e61f04abd58",
+      "path": "apps/cepaf_gleam/test/mcp_catalog_truth_test.gleam"
+    },
+    {
+      "sha256": "7d1bd61aea7871891a5092ece35d67d01d88f33698823e6dda9bb5c53a26c1f6",
+      "path": "apps/cepaf_gleam/test/client_config_test.gleam"
+    },
+    {
+      "sha256": "55ee6082c0c2a8fa555a84d05e4e4d3436f975f2b18c4d21529e92e61026b1f5",
+      "path": "apps/cepaf_gleam/test/client_mcp_test.gleam"
+    },
+    {
+      "sha256": "832f717250aae6f8b7a1a504867ed0ccc47ddc2c919ee79107d2a5840f8969e4",
+      "path": "apps/cepaf_gleam/test/client_profiles_test.gleam"
+    },
+    {
+      "sha256": "842c4ba9dcf505db4da91a59e1bde265b8daf1dc5d761fb35d7f71940a62e0a0",
+      "path": "apps/cepaf_gleam/test/system_feature_interfaces_test.gleam"
+    },
+    {
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b",
+      "path": "tools/ecology_process.ml"
+    }
+  ],
+  "control_ids_path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0601-client-parity-control-ids.json",
+  "control_ids_sha256": "ea11e2c423318af753f45d6075ec54837c78eb64b666cc6afbe96b3375a457be",
+  "loaded_control_ids": {
+    "cepaf_gleam@harness@admission": "63a24e66512b2557a9f8cce4f421caf9",
+    "cepaf_gleam@harness@operations": "2c790973df0ab42a952546b28b869fa1",
+    "cepaf_gleam@harness@successor_mcp": "956d8572944f899c07d4d2566ff0e423",
+    "cepaf_gleam@harness@mcp": "867e3ca21c53fb74ebbba48c4408cdf7",
+    "cepaf_gleam@harness@development": "54b6057ce2a4f2ffb64a81ada08e8058",
+    "cepaf_gleam@harness@clock": "97a94ee9e10fd52b144d97fdaaac4ac1",
+    "cepaf_gleam@harness@files": "9016b5ef3c680dd039beb5365b460735",
+    "cepaf_gleam@harness@value": "2698997cd9a9d6b365d14218d4e3faa3",
+    "cepaf_gleam@planning@sa_plan_bridge": "522f8e982ae5cd78ec21cca8572d9593",
+    "uos_swarm@session_authority": "d8153c8d0bf51a760f2be24312c7ca17",
+    "uos_swarm@session_store": "97b2057c063858378e3befc1107ea077",
+    "uos_swarm@session_sync": "3fae88ea61b0f4195507411d34aedf46",
+    "session_store_cli": "7b758634d57f2af3cbc61022d7a05567",
+    "session_store_ffi": "640bb2d1f550cc52743f13ec5efec3b4",
+    "uos_swarm@coord": "6c1530113e7b49b0d835446f0b5dbf66",
+    "uos_swarm@board": "852a4e29595fe187354232b75d6d9257",
+    "uos_swarm_ffi": "adb900ddb5a9d9d0744eab0b74317215",
+    "session_sync_ffi": "b485828b54809d456a54c3660bcdf45a",
+    "esqlite3": "559df945b9931ff4d5dfb312c46b240e",
+    "esqlite3_nif": "5b3ef93e642fff3efc7e69f45de83cbf",
+    "cepaf_gleam@harness@planning_intents": "efbdb5cccd999e31969297e8e1afdff4",
+    "cepaf_gleam@harness@client_mcp": "e3f5c987c86d0b9b7c3656f86a0e9199",
+    "cepaf_gleam@harness@client_profiles": "1fc2ab3b4f8202d7494b1a8d1dc1907c",
+    "cepaf_gleam@harness@client_config": "10970fe7516235238be35c2bb5b1e761",
+    "client_config_io": "7fa8444686d4eadbd6570fe55f9a042c",
+    "ecology_capability_ffi": "45085cb79cacacd0ba08f12276cba47f"
+  },
+  "preflight": {
+    "path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0601-client-parity-preflight.json",
+    "sha256": "495458ce90954c5bf00eceffc867402c4229b5ed2b8e3074d4dd66c8df3cab51",
+    "status": "PASS",
+    "full": false,
+    "observed_at_utc": "2026-10-28T06:00:45Z",
+    "checks": 31
+  },
+  "focused_native_otp_tests": {
+    "path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0554-client-parity-focused-otp.log",
+    "sha256": "a068c86938f717fd7e70e14b3c7b4c4c4b0feb1f98f1dd5e83b7708871e14647",
+    "result": "130/130 passed",
+    "scope": "Nine focused candidate native OTP modules; includes AGY delimiter argv, loaded-versus-declared control identity/count/digest regression, candidate evidence path tests, and cleanup ABI success/fail-closed cases."
+  },
+  "assessment_path_runtime_probe": {
+    "path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0530-assessment-scope-otp.log",
+    "sha256": "601eda735376bf16e64173b5bd826c72b05d53f04786f3a06dc9eb8c7209cfa4",
+    "result": "allowed public candidate manifest passed; candidate-prefixed workspace path refused by assessment_paths_allowed."
+  },
+  "full_suite_attempt": {
+    "path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0530-client-parity-full-test-attempt.txt",
+    "sha256": "0fe6360022b358b299cd410fbd1297a58706f35b8c76fad8c69d5ce3ec31e438",
+    "result": "INCOMPLETE; CPU-bound compile was interrupted after more than eight minutes; not a pass."
+  },
+  "candidate_binding": {
+    "workspace": ".uos-workspaces/client-parity-20261028-0321",
+    "jj_change": "spnwkmtlvlqztvsurstoqvtpztutowry",
+    "jj_commit": "7ec49a37cb492260e8c0ec405a5e481985c268bb",
+    "source_bearing_parent": "fcc65d7d6a11e16a2d513c3893391e5280987b40",
+    "base_commit": "f8b73da0411b",
+    "source_manifest_path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0601-client-parity-source-manifest.txt",
+    "source_manifest_sha256": "baece431d40e9e7b7d7c29d02ceec664cdcde57fe4bd758742f6fe4bc9573ce3",
+    "control_ids_path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0601-client-parity-control-ids.json",
+    "control_ids_sha256": "ea11e2c423318af753f45d6075ec54837c78eb64b666cc6afbe96b3375a457be",
+    "preflight_path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0601-client-parity-preflight.json",
+    "preflight_sha256": "495458ce90954c5bf00eceffc867402c4229b5ed2b8e3074d4dd66c8df3cab51",
+    "test_log_path": ".uos-workspaces/client-parity-20261028-0321/var/harness/20261028-0554-client-parity-focused-otp.log",
+    "test_log_sha256": "a068c86938f717fd7e70e14b3c7b4c4c4b0feb1f98f1dd5e83b7708871e14647"
+  },
+  "toolchain_preflight": {
+    "candidate_workspace": ".uos-workspaces/client-parity-20261028-0321",
+    "candidate_parent_revision": "f8b73da0411b",
+    "candidate_working_copy_revision": "7ec49a37cb492260e8c0ec405a5e481985c268bb",
+    "status": "PASS",
+    "observed_at_utc": "2026-10-28T06:00:45Z",
+    "source_manifest_sha256": "baece431d40e9e7b7d7c29d02ceec664cdcde57fe4bd758742f6fe4bc9573ce3",
+    "candidate_source_qualification": "Host candidate preflight PASS31/31, full=false, 22 resolver arms. Nine focused candidate native OTP modules passed130/130 on the rebuilt candidate, including loaded control ID closure matching exactly declared 26 modules. Full Gleam suite remains INCOMPLETE from the earlier >8m attempt; no provider/model call. Canonical root FAIL remains separately preserved."
+  }
+}

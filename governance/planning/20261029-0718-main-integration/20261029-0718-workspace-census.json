@@ -1,0 +1,95 @@
+{
+  "schema": "uos.main_integration.workspace_census.v1",
+  "recorded_at_utc": "2026-10-29T07:24:20Z",
+  "supervisor": {
+    "agent": "pi-agy-supervisor",
+    "provider": "google",
+    "model": "gemini-4-argon",
+    "session_id": "pi-agy-gemini4-argon-20261029-0718"
+  },
+  "plan_id": "uos/development-harness/main-integration/20261029-0655",
+  "task_id": "INVENTORY",
+  "previous_main_commit": "f8b73da0411b938fd37e766b65ce6f2a669d03fc",
+  "total_registered_workspaces": 141,
+  "ancestors_of_main_count": 32,
+  "post_main_heads_merged": [
+    {
+      "workspace": "host-backend-20261029-0609@",
+      "change_id": "krtktqou",
+      "commit_id": "c587648a493babcb05c878f8d19e155efd73c09e",
+      "role": "Superseding 44-source / 28-control V4 harness candidate (154/154 EUnit PASS)"
+    },
+    {
+      "workspace": "default@",
+      "change_id": "uqspuxsv",
+      "commit_id": "69fb0df468b70966a709419ac0e82d3aa07cc24f",
+      "role": "111 campaign journals, reviews, and governance receipts on root workspace"
+    }
+  ],
+  "post_main_superseded_ancestors": [
+    {
+      "workspace": "check-recovery-20261028-2242@",
+      "change_id": "rqpmuwnm",
+      "commit_id": "49b95995b4f0033e0f04bc0d1796a4e81bdbb322",
+      "disposition": "direct parent of host-backend-20261029-0609@"
+    },
+    {
+      "workspace": "client-integration-20261028-2143@",
+      "change_id": "ouqknzot",
+      "commit_id": "9322a0c78238fc084b9d6ee5aaefee5be1ca3257",
+      "disposition": "ancestor of host-backend-20261029-0609@"
+    },
+    {
+      "workspace": "lease-runtime-20261028-2000@",
+      "change_id": "uymsxyqq",
+      "commit_id": "7fd0162cb40a76b7938ab1a40529e656eb193cf9",
+      "disposition": "all source files superseded by host-backend-20261029-0609@; 0-byte tracker md superseded by 2299-byte version in default@"
+    },
+    {
+      "workspace": "client-source-editor-20261028-1514@",
+      "change_id": "vzzskxrn",
+      "commit_id": "efe7475922b23bf798c504b8ca4e1cf7a0866006",
+      "disposition": "all source files superseded by host-backend-20261029-0609@"
+    },
+    {
+      "workspace": "client-parity-fix-20261028-0620@",
+      "change_id": "squnzntw",
+      "commit_id": "f69133e3a4b2523a989fb0117c32c704f8bc2632",
+      "disposition": "all source files superseded by host-backend-20261029-0609@"
+    },
+    {
+      "workspace": "concurrency-cas-20261028@",
+      "change_id": "omputunv",
+      "commit_id": "21c739ee8ca8b4498a180cf13399cf80ab53ff77",
+      "disposition": "all source files superseded by host-backend-20261029-0609@"
+    },
+    {
+      "workspace": "dev-harness-20261028-0105@",
+      "change_id": "uxturtou",
+      "commit_id": "76e7e3fe59dd119c8e51789d76be82041bc51e1e",
+      "disposition": "source files superseded by host-backend-20261029-0609@; docs/reviews included via default@"
+    }
+  ],
+  "resolved_divergent_changes": [
+    {
+      "change_id": "uqspuxsv",
+      "kept": "69fb0df468b7",
+      "abandoned": "bf19b79cc0ce",
+      "reason": "bf19b79cc0ce contained only 20261028-0118 plan md already in default@"
+    },
+    {
+      "change_id": "uxturtou",
+      "kept": "76e7e3fe59dd",
+      "abandoned": "944ef3a13e2b",
+      "reason": "76e7e3fe59dd strictly adds 4 files over 944ef3a13e2b"
+    },
+    {
+      "change_id": "vzzskxrn",
+      "kept": "efe7475922b2",
+      "abandoned": "0950012b993f",
+      "reason": "superseded by efe7475922b2 and c587648a493b"
+    }
+  ],
+  "pre_main_preserved_heads_count": 15,
+  "pre_main_policy": "Historical pre-main heads (2026-09-09..2026-10-26) already absorbed into main or held on HOLD_UNRUN review gates remain preserved without forced merge."
+}

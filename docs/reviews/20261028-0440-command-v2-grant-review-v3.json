@@ -1,0 +1,68 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "observed_at": "2026-10-28T04:22:25Z",
+  "reviewer": {
+    "session_id": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+    "worker": "codex-dev-harness-01a18014",
+    "plan_id": "uos/harness-grant-reviews/20261028-0323",
+    "task_id": "COMMAND_V2",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261028-0440-command-v2-grant-proposal-v3.json",
+    "sha256": "bc78ec61386744ac5272d10e0695ab595b9b289983105a7071ef7bf49a56a95d",
+    "grant_id": "20261028-0440-command-v2-01a1802b",
+    "target_session": "01a1802b-38f3-7201-8629-f521dbc373d0",
+    "target_worker": "codex-command-01a1802b"
+  },
+  "scope": "Finite development runtime verification in exactly the registered approved candidate workspace; source routed fixture read/write, bounded build/test, command denial/recovery and explicitly shared disposable canonical CAS fixture. Client configuration actions denied by empty permissions. No production admission.",
+  "independent_checks": {
+    "candidate_decoder": "PASS actual candidate admission.decode_grant",
+    "candidate_loaded_controls_match": "PASS actual candidate control_ids_match",
+    "control_count": 25,
+    "control_dependencies": "PASS actual candidate native dependency check",
+    "source_root": ".uos-workspaces/dev-harness-command-accept-20261028-0420",
+    "source_entries": 26,
+    "source_completeness": "ACTIVATE16baseline union all13candidate changes dedup plus absent JSON fixture; includes manifests, entrypoint, bridge and all9targeted test modules",
+    "grant_id_length": 33,
+    "max_grant_id_length": 48,
+    "client_permissions_empty": true,
+    "canonical_fixture_before": "public read ENOENT; candidate-only fixture will need real routed-write/readback proof",
+    "targeted_tests": "120/120 passed in nine-module network-isolated pinned runner; output/patch hashes independently reviewable in retained artifacts",
+    "risk_preflight": "PREFLIGHT_PASS04:18:43UTC",
+    "active_check": "ACTIVE_OBSERVATION_PASS 2026-10-28T04:22:25Z"
+  },
+  "preconditions": [
+    "Use candidate ebin/25IDs, not canonical21control runtime. Before any effect obtain current canonical task/worker/attempt/session/epoch and approved source-root identity.",
+    "Do not mutate the sealed candidate while generating/using this grant; source-code changes require new candidate/control review. Shared CAS fixture resolves canonical root; candidate JSON fixture must leave canonical counterpart absent.",
+    "Keep initial/full source manifests, durable intents/results and output-retention metadata. Unknown outcomes reconcile against exact intent/canonical state; no blind retry.",
+    "Grant review authorizes finite testing only. Before harness_finish obtain actual candidate-bound positive/negative/recovery evidence, a proper13section journal, qualified independent result review and fresh machine-verifiable formal/specification evidence with correspondence limits explicit.",
+    "Old DevelopmentCoreGate formal evidence alone does not prove new workspace/client behavior; never relabel old source bindings as current runtime proof.",
+    "Four system-feature census checks fail identically in pre-existing canonical compiled tests; preserve them. They are outside the scoped nine-module120test observation, not globally passing.",
+    "Client adapter still has pending private-profile isolation work; these permissions are empty and must remain denied. No real native-client acceptance from this grant.",
+    "Current files.replace is not cross-process atomic CAS against another admitted writer; actual race/serialization/recovery remains a separate incomplete gate."
+  ],
+  "residuals": [
+    "Full65public-command/native-four-client matrix UNRUN.",
+    "Public/global MCP mutation/authority integration remains partial.",
+    "Canonical root preflight retains ignored unadmitted guardian failure; no binary deletion/hiding/admission.",
+    "Cooperative JJ/filesystem/session controls are not hostile-writer IAM or production authority.",
+    "Whole-repo format and four unrelated baseline census gates remain red; source changes scoped and tracked."
+  ],
+  "production_admission": false,
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l5",
+    "#fractal-l6",
+    "#fractal-l7",
+    "#fractal-l8",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ]
+}

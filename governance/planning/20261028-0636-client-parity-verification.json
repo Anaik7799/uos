@@ -1,0 +1,126 @@
+{
+  "schema": "uos.client-parity-verification.v1",
+  "observed_at_utc": "2026-10-28T07:12:08Z",
+  "scope": {
+    "client": "agy",
+    "grant_id": "20261028-0636-client-parity-v7",
+    "grant_sha256": "11e76877c3cfa90d38daa92dc635c3005c62a393e816fe8d4495430b7f9c0b3b",
+    "candidate_workspace": ".uos-workspaces/client-parity-fix-20261028-0620",
+    "candidate_revision": "f69133e3a4b2327623bde2baad0a344cb4670b65",
+    "task": "uos/development-harness/20261028-0105/CLIENT_PARITY",
+    "attempt": 3,
+    "coordinator_epoch": 5,
+    "production_admission": false
+  },
+  "journal": {
+    "path": "docs/journal/20261028-0636-client-parity-journal.md",
+    "sha256": "4a102a4a2a1d248660105d4eb3e203ff37335a92a33cf8e9e35d2474bea7b35e",
+    "status": "final; journal linter PASS 10/10; forecast resolved late (outcome 0, Brier 0.64)"
+  },
+  "bounded_observations": [
+    {
+      "action": "prepare",
+      "intent_id": "agy-v7-prepare-0644",
+      "status": "EXECUTED",
+      "configured": true,
+      "entry_readback_exact": true,
+      "output_sha256": "a51c48cbf1918444f55ff963e389f4312587ed4ab1a697058014f924926ce8af"
+    },
+    {
+      "action": "status",
+      "intent_id": "agy-v7-status-0644",
+      "status": "EXECUTED",
+      "configured": true,
+      "entry_readback_exact": true,
+      "output_sha256": "e948571ac37a937739ea37aa2096ae570cb132fce9d6caf95f7d3ac9bd960e71"
+    },
+    {
+      "action": "rollback",
+      "intent_id": "agy-v7-rollback-0644",
+      "status": "EXECUTED",
+      "configured": false,
+      "entry_readback_exact": true,
+      "output_sha256": "a7639b9d86b71db528f36e6db41f39f71d636dbfe82a258ab903611516b0a411"
+    },
+    {
+      "action": "status",
+      "intent_id": "agy-v7-postrollback-status-0644",
+      "status": "EXECUTED",
+      "configured": false,
+      "entry_readback_exact": true,
+      "output_sha256": "c5a4dec776ed325b8162a2a5bc05ac4951f4f5b81b3b4f8ddb64663415056d58"
+    }
+  ],
+  "candidate_checks": {
+    "focused_native_otp": {
+      "status": "PASS",
+      "passed": 133,
+      "failed": 0,
+      "sha256": "719baa57079fc5c9950a21ec51bdd4dc387464fa75d9f9049ddf4a09873c1c43"
+    },
+    "gleam_build": {
+      "status": "PASS",
+      "sha256": "3b83718903d4520e8bee3a51b689f7b96d02f0b399d84ae1cfe98ae31d6fa919"
+    },
+    "preflight": {
+      "status": "PASS",
+      "checks": "31/31",
+      "authority": "NONE",
+      "sha256": "8a2e1f88609a933d24d5a99593a42e7acd367377c883c56cb41deeb8c9d8d074"
+    },
+    "source_file_count": 30,
+    "loaded_control_count": 26,
+    "control_sha256": "18002426e4ef08592431df83a7fd8792677bed872a6fc2c6b7b8f3fc28a35747"
+  },
+  "checklist_obligations": 18,
+  "statistical_note": {
+    "beta_binomial": "Nominal Beta(5,1) from 4/4 same-profile calls under Beta(1,1), not a reliability estimate because lifecycle calls are dependent.",
+    "evidence_age_decay": "UNRUN",
+    "lyapunov_derivative": "UNRUN; no dV/dt < 0 claim."
+  },
+  "forecast": {
+    "claim": "Documentation-only journal linter repair passes by 2026-10-28T07:03:00Z",
+    "probability": 0.8,
+    "calibration": "uncalibrated",
+    "observed_outcome": 0,
+    "observed_at_utc": "2026-10-28T07:05:47Z",
+    "brier_score": 0.64,
+    "resolution": "passed after deadline"
+  },
+  "limitations": [
+    "No native model/provider tool turn.",
+    "Codex, Claude, Pi untested.",
+    "Old v6 known-applied entry and failure receipt preserved, cleanup open.",
+    "Overall CLIENT_PARITY incomplete."
+  ],
+  "journal_linter": {
+    "status": "PASS",
+    "checks": "10/10",
+    "authority": "NONE",
+    "exit_code": 0,
+    "observed_at_utc": "2026-10-28T07:11:40.296506Z",
+    "journal_sha256": "4a102a4a2a1d248660105d4eb3e203ff37335a92a33cf8e9e35d2474bea7b35e",
+    "path": "governance/planning/20261028-0711-agy-journal-validation.json",
+    "sha256": "441f8073be4711a04ffbd14c6ade8e64383857ef85509e44f1e0004d179bb20b",
+    "tool_source_path": "tools/journal_linter.ml",
+    "tool_source_sha256": "a86e15f7e856622d33035d4091beb37b8ed202f3c2ab73805d9f1fa1985118eb"
+  },
+  "risk_assessment": {
+    "status": "PASS",
+    "assessment_path": "var/harness/20261028-0636-client-parity-v7-agy-v7-doc-riskrefresh-0712-assessment.json",
+    "task_rows": 13,
+    "observed_at_utc": "2026-10-28T07:12:08Z",
+    "valid_until_utc": "2026-10-28T07:42:08Z",
+    "client_parity": {
+      "task_state": "executing",
+      "actor": "codex-client-parity-01a1802b",
+      "attempt": 3,
+      "coordinator_epoch": 5
+    },
+    "current_counts": {
+      "completed": 7,
+      "executing": 3,
+      "available": 3
+    }
+  }
+}

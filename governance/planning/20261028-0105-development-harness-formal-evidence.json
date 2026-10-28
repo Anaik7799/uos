@@ -1,0 +1,71 @@
+{
+  "schema": "uos.development-harness-formal-evidence.v1",
+  "timestamp": "2026-10-28T02:33:02Z",
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261028-0105-development-harness-formal-evidence.json",
+  "tags": ["#fractal-l0", "#fractal-l1", "#fractal-l3", "#fractal-l4", "#fractal-l9", "#zero-muda"],
+  "scope": {
+    "plan": "uos/development-harness/20261028-0105",
+    "task": "ACTIVATE",
+    "attempt": 2,
+    "worker": "codex-dev-harness-01a18014",
+    "review_task": "GRANT_REVIEW_V2",
+    "reviewer": "codex-luna-review-0105",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "candidate_binding": {
+    "base_revision": "bf19b79cc0ce4160b319bef307ce956d0ffeb665",
+    "workspace": ".uos-workspaces/dev-harness-20261028-0105",
+    "source_manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016",
+    "source_path_count": 16,
+    "runtime_receipts": [
+      "var/harness/effects/20261028-0105-dev-harness-codex@activate-build-01@result.json",
+      "var/harness/effects/20261028-0105-dev-harness-codex@activate-test-01@result.json"
+    ],
+    "source_manifest_note": "Both receipts carry the same manifest digest. Its 16 entries rehash to current canonical-root and candidate-workspace bytes."
+  },
+  "formal_source": {
+    "path": "formal/lean/DevelopmentCoreGate.lean",
+    "sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+    "candidate_copy_sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+    "declared_scope": "Finite model of development gates; its header disclaims runtime refinement and system admission."
+  },
+  "invocation": {
+    "tool": "toolchains/lean-4.33.0/bin/lean",
+    "version": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+    "command": "timeout 45s toolchains/lean-4.33.0/bin/lean formal/lean/DevelopmentCoreGate.lean",
+    "exit_code": 0,
+    "timeout_seconds": 45,
+    "output_log": "var/harness/20261028-0105-dev-formal.log",
+    "output_log_bytes": 3962,
+    "output_log_sha256": "483d8470a7dc0d8f4a1f4a88ad011528b08352ffabcc3704fd26a8dccc1624ef",
+    "reported_declaration_count": 47,
+    "declarations_reporting_axioms": 28,
+    "reported_axioms": ["propext", "Quot.sound"],
+    "custom_sorry_admit_or_axiom_tokens_found_in_source": false
+  },
+  "runtime_observations": {
+    "v1_build": {
+      "status": "EXECUTED",
+      "intent_id": "activate-build-01",
+      "output_retention": "tail_truncated",
+      "retained_bytes": 8695,
+      "retained_digest_recomputed": true,
+      "input_manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016"
+    },
+    "v1_test": {
+      "status": "EXECUTED",
+      "intent_id": "activate-test-01",
+      "output_retention": "tail_truncated",
+      "retained_bytes": 8192,
+      "retained_digest_recomputed": true,
+      "output_summary": "All 104 tests passed; successor verification: ok.",
+      "input_manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016"
+    },
+    "qualification": "These are attempt-2 observations under the V1 grant identity. V2 build/test have not run. The finish path recomputes signatures from the current grant digest, so the old receipts cannot stand in for V2 checks."
+  },
+  "assumptions_and_limits": [
+    "Exit 0 means Lean typechecked this source under the pinned tool. The output explicitly reports dependencies on Lean's propext and Quot.sound axioms for 28 declarations; no custom axiom/admission keyword was found in this source.",
+    "This is a model-level formal observation only. It does not prove that a live OTP process, MCP command, coordinator, build artifact, or client implements the model.",
+    "No package fetch, source edit, configuration edit, production effect, or harness runtime launch occurred for this formal invocation."
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "uos.harness-cas-peer-partial-verification.v1",
+  "observed_utc": "2026-10-28T08:17:05Z",
+  "plan": "uos/development-harness/20261028-0105",
+  "task": "CONCURRENCY",
+  "attempt": 4,
+  "worker": "codex-concurrency-01a1802a",
+  "session": "01a1802a-ea2e-70e2-b943-3b2037fc8af2",
+  "coordinator_epoch": 7,
+  "grant": {
+    "path": "var/harness/20261028-0712-cas-peer-grant-v4.json",
+    "sha256": "8ec17963932522337da78fc8a62593cdca56bdbf228828072813a2b67cce5e5c",
+    "expires_utc": "2026-10-28T08:46:26Z"
+  },
+  "review": {
+    "path": "docs/reviews/20261028-0636-cas-peer-grant-review.json",
+    "sha256": "88d914d6bd99be553356acecb76723af6dd926af667dfbca26c9fa63e2643079"
+  },
+  "candidate": {
+    "workspace": ".uos-workspaces/dev-harness-cas-integration-20261028-0850",
+    "commit": "817e8f20e8deae025db917f6187e0425285caaa9",
+    "control_count": 25,
+    "admission_load": "PASS",
+    "source_manifest_path": "governance/planning/20261028-0636-cas-peer-candidate-manifest.json",
+    "source_manifest_sha256": "994ac12a7400e26bd2897f12ed2b2f1b0eea2c2bfcd9320ecb19ccc24a276491",
+    "ffi_control_status": "manual observation; not an enforced 26th control"
+  },
+  "risk": {
+    "path": "var/harness/20261028-0658-cas-peer-v6-current-risk.json",
+    "sha256": "67da8cdd6664a20767f0d347e28fa172f8612d149b984dfd8056fd98fed89e20",
+    "active_check": "PASS"
+  },
+  "readiness": {
+    "preflight": "PASS",
+    "claim": "attempt4",
+    "attach": "same attempt4",
+    "unresolved_operation": false,
+    "production_admission": false
+  },
+  "fixture": {
+    "path": "governance/planning/20261028-0105-concurrency-shared-write.json",
+    "peer_initial_generation": 1,
+    "peer_initial_sha256": "c8a27245c0386b6582dfdad71982fcab08ee13e78a31bd740933a2258a78c112",
+    "peer_readback_generation": 2,
+    "peer_readback_sha256": "4d1477b483d6e71c9a6aa76a0048b892c4bcebe497fd4b971a90d4a221a29b54",
+    "readback_writer": "COMMAND_ACCEPT",
+    "target_barrier_utc": "2026-10-28T07:35:00Z"
+  },
+  "peer_barriers": [
+    {
+      "round": 1,
+      "target_utc": "2026-10-28T07:31:00Z",
+      "observed_clock_utc": "2026-10-28T07:31:08.002091Z",
+      "dispatch": false,
+      "reason": "clock arrived >2s after barrier"
+    },
+    {
+      "round": 2,
+      "target_utc": "2026-10-28T07:35:00Z",
+      "observed_clock_utc": "2026-10-28T07:35:02.781Z",
+      "dispatch": false,
+      "reason": "scheduled clock arrived >2s after barrier"
+    }
+  ],
+  "peer_write_count": 0,
+  "owner_write": {
+    "round": 2,
+    "writer": "COMMAND_ACCEPT",
+    "receipt_sha256": "29ee0a026684ed991d8554174f217a6efec85b2aec452a0cd9574c69b6709b5e",
+    "status": "EXECUTED",
+    "readback_sha256": "4d1477b483d6e71c9a6aa76a0048b892c4bcebe497fd4b971a90d4a221a29b54"
+  },
+  "journal": {
+    "path": "docs/journal/20261028-0636-development-harness-cas-peer-journal.md",
+    "sha256": "b0c6b81157af08a9cce2cbd287f8c45206ca4c1fdb825250bf603606ea467575"
+  },
+  "verdict": "PARTIAL_UNVERIFIED",
+  "unverified": [
+    "simultaneous winner/loser atomicity",
+    "same-content replay",
+    "altered replay refusal",
+    "crash recovery",
+    "fairness",
+    "formal correspondence",
+    "full four-client/14-command acceptance"
+  ],
+  "task_finished": false,
+  "production_admission": false,
+  "notes": "Peer did not dispatch either CAS write. Owner's single write and resulting generation 2 do not constitute a concurrency pass."
+}

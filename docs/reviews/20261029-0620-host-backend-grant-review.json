@@ -1,0 +1,99 @@
+{
+  "schema": "uos.independent-development-scope-review.v1",
+  "observed_at": "2026-10-29T06:25:09Z",
+  "reviewer": {
+    "plan": "uos/harness-reviews/pipe-recovery/20261028-2310",
+    "task": "HOST_BACKEND_REVIEW",
+    "worker": "codex-host-backend-review-01a18314",
+    "session": "01a18314-55ba-7d43-998b-9b78c123aaf3",
+    "attempt": 1
+  },
+  "decision": "APPROVE_DEV_TEST_SCOPE",
+  "proposal": {
+    "path": "var/harness/20261029-0620-host-backend-proposal.json",
+    "sha256": "23488d4ef0e3b6c1066a03b2f11185540e8eb14d542f6c89bae8dc6cb6d23cdf",
+    "seed_sha256": "9bb7c28320c0e5a9c070004bedab2ac850fda82c3ec1f4a909167728cf457cea"
+  },
+  "reviewed_bindings": {
+    "authoring_scope": {
+      "path": "governance/planning/20261029-0620-host-backend-authoring-scope.json",
+      "sha256": "eace0d3e0b883e375e5c97818d25db30a7d6ba391b2bace8307a8b67e8a304fc"
+    },
+    "source_payloads": {
+      "path": "governance/planning/20261029-0620-host-backend-source-payloads.json",
+      "sha256": "9fef9f09b613dd49226e631fd728e15cfef1b3218a15226054d5e1ea24ea9573"
+    },
+    "payload_manifest": {
+      "path": ".uos-workspaces/lease-runtime-20261028-2000/apps/cepaf_gleam/build/private-fixtures/20261029-0541-host-backend/20261029-0541-manifest-v4.json",
+      "sha256": "98c6a2befe5ce33eb5dee9507418499de6518f3da2c913ece10f45374a899641"
+    },
+    "candidate": {
+      "workspace": ".uos-workspaces/host-backend-20261029-0609",
+      "revision": "0f457e86059e4e78e7d7ce27a3629501db00ee5e",
+      "parent": "49b95995b4f0033e0f04bc0d1796a4e81bdbb322",
+      "source_count": 44,
+      "absent_new_sources": 3,
+      "test_modules": 9
+    },
+    "serving_runtime": {
+      "workspace": ".uos-workspaces/lease-runtime-20261028-2000",
+      "revision": "542cf941c09e37af8175ed69029fe0aad67e0597",
+      "frozen_source_manifest_sha256": "c066f93843fd7501e772800144c9986b019361a313a677f38bdf32ea387644dd",
+      "controls": 26,
+      "cfe_sha256": "cfe06ec3e54a6cca54e59d8f521d8ae903f0c8e4703c1d447fcf3fff5534cf91"
+    }
+  },
+  "reviewed_scope": {
+    "source_writes": 6,
+    "metadata_writes": 4,
+    "tests": [
+      "harness_pre_attach_assessment_test",
+      "harness_development_test",
+      "harness_successor_test",
+      "harness_sa_plan_boundary_test",
+      "client_config_test",
+      "client_mcp_test",
+      "client_profiles_test",
+      "harness_stdio_pipe_test",
+      "harness_native_backend_test"
+    ],
+    "allowed_operations": [
+      "harness_status",
+      "harness_clock",
+      "harness_read_file",
+      "harness_assess",
+      "harness_attach",
+      "harness_heartbeat",
+      "harness_write_file:exact10paths",
+      "harness_build:fixed",
+      "harness_test:exact9modules",
+      "harness_release",
+      "harness_reconcile"
+    ],
+    "excluded": [
+      "finish",
+      "provider calls",
+      "native client/config actions",
+      "package fetches",
+      "production/admission",
+      "host backend activation"
+    ],
+    "bootstrap": "Finite pinned Gleam preflight only under the documented bound; actual same-candidate MCP build/test still required."
+  },
+  "findings": [
+    "Proposal, scope, payload index and inert v4 manifest hashes match the supplied review pins.",
+    "The six payloads are limited to the native backend module/FFI, Sa-Plan bridge selector, successor MCP integration, admission binding, and focused backend test; the serving frozen runtime remains separately pinned.",
+    "The intended host backend metadata is informational for this authoring grant; no runtime activation authority is granted.",
+    "The fixed build/test exception is bounded, network-isolated and followed by required actual MCP build/test; no finish authority is present."
+  ],
+  "limitations": [
+    "This approves development authoring and validation scope only; it is not proof of compilation, test passage, or host backend selection.",
+    "Positive Nix UID/stat/startup and selected CLI identity remain unproved and require a separate reviewed host scope.",
+    "Actual task, workspace, risk, clock, CFE and ABI fences must be freshly rechecked at each effect.",
+    "Full check-worker receipt integration, all-command/client/concurrency acceptance, and Recovery completion remain open."
+  ],
+  "authorized_effects": false,
+  "finish_authorized": false,
+  "host_activation_authorized": false,
+  "admission": false
+}

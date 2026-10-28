@@ -1,0 +1,56 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "timestamp": "2026-10-28T03:20:23Z",
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20261028-0320-development-harness-concurrency-grant-review.json",
+  "tags": ["#fractal-l0", "#fractal-l1", "#fractal-l3", "#fractal-l4", "#fractal-l9", "#zero-muda"],
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "grant_proposal": {
+    "path": "var/harness/20261028-0315-concurrency-grant-proposal.json",
+    "sha256": "204d810df6a3b18fed3c2e79c5b5f43c84a29c6a21544b74f4f97cc9b3a94f4e",
+    "grant_id": "20261028-0315-dev-harness-concurrency-01a1802a",
+    "target_worker": "codex-concurrency-01a1802a",
+    "target_session": "01a1802a-ea2e-70e2-b943-3b2037fc8af2"
+  },
+  "reviewer": {
+    "task": "CONCURRENCY_GRANT_REVIEW",
+    "attempt": 1,
+    "worker": "codex-client-parity-01a1802b",
+    "session": "01a1802b-0ee7-7822-b734-42b95dc5515f",
+    "risk_portfolio": "var/harness/20261028-0319-codex-client-parity-review-current-risk.json",
+    "preflight": "PREFLIGHT_PASS",
+    "active_check": "ACTIVE_OBSERVATION_PASS"
+  },
+  "findings": [
+    {
+      "id": "identity_and_review_binding",
+      "severity": "pass_for_scope",
+      "detail": "The immutable v1 proposal binds one CONCURRENCY task to worker codex-concurrency-01a1802a and its distinct session 01a1802a-ea2e-70e2-b943-3b2037fc8af2. It binds the independent review task and finite expiry. Host, boot, control-module and ecology_process dependency digests are present."
+    },
+    {
+      "id": "finite_cas_effect_scope",
+      "severity": "pass_for_scope",
+      "detail": "The task has no source or client configuration writes. Its three write targets are the concurrency journal, verification record, and one named disposable shared CAS fixture; that fixture is also readable. The planned ABSENT seed and subsequent digest-bound compare-and-swap keep the shared mutation narrow."
+    },
+    {
+      "id": "candidate_and_toolchain_fence",
+      "severity": "qualified",
+      "detail": "The proposal reports a 31-check PASS but also states that the candidate workspace is not source-identical to canonical root and has a local test-file change and .pixi symlink. COMMAND is restoring retained source-root changes. Refresh candidate/source binding and pinned toolchain preflight before CONCURRENCY claim or any build/test/effect; the ACTIVATE receipt is not reusable."
+    },
+    {
+      "id": "concurrency_acceptance_boundary",
+      "severity": "qualified",
+      "detail": "This grant supports bounded development observations for the named task only. It does not prove stale-epoch refusal unless a distinct authorized owner can advance the same resource, and it does not establish four-client parity, all 14 commands, production behavior, or system admission. Preserve unknown outcomes and conflicts."
+    }
+  ],
+  "required_before_activation": [
+    "Create the task-specific current risk portfolio and pass fresh SC-RISK preflight/active-check under the target worker and current attempt.",
+    "Reobserve and bind the final candidate workspace, current source/control digests, and realized pinned toolchain checks before any candidate build/test or client/runtime effect.",
+    "Seed only governance/planning/20261028-0105-concurrency-shared-write.json through the reviewed ABSENT write, then race distinct sessions against its returned digest; preserve both outcomes and read back the final value.",
+    "Use separately reviewed grants and distinct worker/session identities for every concurrent executor; no review result itself grants effect authority."
+  ],
+  "limits": [
+    "This review approves only the exact finite CONCURRENCY development scope in the proposal SHA above.",
+    "The current review preflight and active-check are observations, not runtime admission or effect authority.",
+    "No concurrency operation has been executed by this review."
+  ]
+}

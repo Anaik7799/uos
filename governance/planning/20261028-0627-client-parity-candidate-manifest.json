@@ -1,0 +1,186 @@
+{
+  "schema": "uos.development-candidate-manifest.v1",
+  "candidate_workspace": ".uos-workspaces/client-parity-fix-20261028-0620",
+  "candidate_revision": "f69133e3a4b2327623bde2baad0a344cb4670b65",
+  "candidate_change": "squnzntwmklwsuwmzvwpvvzrorxnxqym",
+  "source_bearing_parent": "7ec49a37cb492260e8c0ec405a5e481985c268bb",
+  "base_revision": "f8b73da0411b",
+  "observed_at_utc": "2026-10-28T06:32:20Z",
+  "source_manifest_path": ".uos-workspaces/client-parity-fix-20261028-0620/var/harness/20261028-0627-client-parity-source-manifest.txt",
+  "source_manifest_sha256": "71e0f8488af74c43d74fceb8e4c89c2894bd563270d32dc73f1b7f79320df97e",
+  "source_files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa"
+    },
+    {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+    },
+    {
+      "path": "apps/cepaf_gleam/manifest.toml",
+      "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "98023586d671a329ed1e9c2ffca248c9a28157c03a5f93d88c7691ced97511b3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_config.gleam",
+      "sha256": "bac789819bf5cd9eb1877f64d2f74ae810f11ddc9d9460b764a69524d550610f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_mcp.gleam",
+      "sha256": "25ab81ba33a6b1e1b53ace7bfc2948beaf1f880e97964f0a6dd8cb7daada068d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_profiles.gleam",
+      "sha256": "1d2192c5ea2cefefc1d9a4eef3a62c2f79aabaab4be9a81b9d2d302189a96e4b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam",
+      "sha256": "88dfc26eeef7a32f8210d6d5f2b98de6bd8822bb3c22884d5730019ec861d4a2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "383c0da5040758bd537f4e9a65ae15bf4a11d2542419605f96d2fb56637d9ad0"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "59dbc4f49885b1fcaaa8cd531b92e86b4a604ea489d76ee23231524c5339664d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "f001c470800f1d0a6d9d81a12f7431d4f70046bb5f334a1eea5e377f1ebfdf5d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intents.gleam",
+      "sha256": "0f2ba0c19634e9270d97d2fd6aabdb46bfd772f27f43734aef139a82e5c2ba94"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "sha256": "ebb0967e076de2c69fd7ce07fe4e6ed29d0503e7f78b312f4013a8618d168dbb"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/value.gleam",
+      "sha256": "c5ed1c8f561dc083e230ee6e45a124639859419daa4fc9a9358dee6b0155fda2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "e0d3c51f7a935ed3feb3d5b7eac77cdbb87559b61fcc7f770f45f0fa01b71a07"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/client_config_io.erl",
+      "sha256": "bfecf923d39b139dacf8fa7e945c35a3d584b5d5d1c2767dae2e6f86d9374b48"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "788b0f77d94b43104cc71f3f40fc9adf91977712eacccca13411ea11eb2f2aa1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_task_verification.gleam",
+      "sha256": "f0ede6caa4081e7e2fb3edb566a671d4778f8e137c2641616974d0b24c862fba"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "sha256": "4cb28d33f49eff797030e9bb2b2e041480eeb3e90d4138503e0f6d1fe627c286"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_development_test.gleam",
+      "sha256": "7e50f4ef60123e9926d70e686fad816283e39299d955c8414b0ac781d8d8c6a7"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_authority_test.gleam",
+      "sha256": "42d4de537ed90310a5ba3a6e6db8d084fff01eab69bc4d444536bfd22d62ca68"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_sa_plan_boundary_test.gleam",
+      "sha256": "b073cf4e783200c78b1803dfe55e684a4eebec28509d08f912aa2b382e1fa565"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_authz_wiring_test.gleam",
+      "sha256": "1342606ae2b96257cf8d4f2d18e306e3bc13cd6dff3b6846482d870fd2f7a9f6"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_catalog_truth_test.gleam",
+      "sha256": "639d83b89f0d71196187922ab271ccbefe9501dfa0414334b1fb7e61f04abd58"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/client_config_test.gleam",
+      "sha256": "587bd04b85a693a991a51dd70fd114fe9ab1fd529dfb540ecdb8ecedd3a60728"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/client_mcp_test.gleam",
+      "sha256": "698c09b5abc0ecbf40c3d0e69bfb8eb7e0752d2d60d4013f2d4d22b2e31ff62f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/client_profiles_test.gleam",
+      "sha256": "d25b235c3ff5575d7c20026d6986e70766ef4538ed9be130b7a4772d4d4c3450"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_interfaces_test.gleam",
+      "sha256": "842c4ba9dcf505db4da91a59e1bde265b8daf1dc5d761fb35d7f71940a62e0a0"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b"
+    }
+  ],
+  "control_ids_path": ".uos-workspaces/client-parity-fix-20261028-0620/var/harness/20261028-0627-client-parity-control-ids.json",
+  "control_ids_sha256": "18002426e4ef08592431df83a7fd8792677bed872a6fc2c6b7b8f3fc28a35747",
+  "loaded_control_ids": {
+    "cepaf_gleam@harness@admission": "63a24e66512b2557a9f8cce4f421caf9",
+    "cepaf_gleam@harness@operations": "2c790973df0ab42a952546b28b869fa1",
+    "cepaf_gleam@harness@successor_mcp": "956d8572944f899c07d4d2566ff0e423",
+    "cepaf_gleam@harness@mcp": "867e3ca21c53fb74ebbba48c4408cdf7",
+    "cepaf_gleam@harness@development": "54b6057ce2a4f2ffb64a81ada08e8058",
+    "cepaf_gleam@harness@clock": "97a94ee9e10fd52b144d97fdaaac4ac1",
+    "cepaf_gleam@harness@files": "9016b5ef3c680dd039beb5365b460735",
+    "cepaf_gleam@harness@value": "2698997cd9a9d6b365d14218d4e3faa3",
+    "cepaf_gleam@planning@sa_plan_bridge": "522f8e982ae5cd78ec21cca8572d9593",
+    "uos_swarm@session_authority": "d8153c8d0bf51a760f2be24312c7ca17",
+    "uos_swarm@session_store": "97b2057c063858378e3befc1107ea077",
+    "uos_swarm@session_sync": "3fae88ea61b0f4195507411d34aedf46",
+    "session_store_cli": "7b758634d57f2af3cbc61022d7a05567",
+    "session_store_ffi": "4838dcaf7308534d4367c18c4ba873c3",
+    "uos_swarm@coord": "6c1530113e7b49b0d835446f0b5dbf66",
+    "uos_swarm@board": "852a4e29595fe187354232b75d6d9257",
+    "uos_swarm_ffi": "c10aa59407df5842db9d2d0bdf100f50",
+    "session_sync_ffi": "84df5c4ac97f59dfd224b70cd9b21701",
+    "esqlite3": "559df945b9931ff4d5dfb312c46b240e",
+    "esqlite3_nif": "5b3ef93e642fff3efc7e69f45de83cbf",
+    "cepaf_gleam@harness@planning_intents": "efbdb5cccd999e31969297e8e1afdff4",
+    "cepaf_gleam@harness@client_mcp": "705c0673546e9e86e4536a4dcf9403e9",
+    "cepaf_gleam@harness@client_profiles": "775605b18cf2e876510020f2b3da74dc",
+    "cepaf_gleam@harness@client_config": "f4fcab0db720696d540e8a29fb0e393b",
+    "client_config_io": "c824dd957a7dc611695066dd507e1ad9",
+    "ecology_capability_ffi": "d69bddc4c2dd5927187a56e60ec5eb7d"
+  },
+  "preflight": {
+    "status": "PASS",
+    "artifact_path": ".uos-workspaces/client-parity-fix-20261028-0620/var/harness/20261028-0627-client-parity-preflight.json",
+    "artifact_sha256": "8a2e1f88609a933d24d5a99593a42e7acd367377c883c56cb41deeb8c9d8d074",
+    "preflight_sha256": "abf3ca8d82639908347a65dc31123dd1f6eb3c8de3c72483051c66b690fc543d",
+    "revision": "f69133e3a4b2327623bde2baad0a344cb4670b65",
+    "observed_at_utc": "2026-10-28T06:32:45Z",
+    "scope": "31/31 bounded host resolver checks under bwrap; canonical .pixi read-only bind mount; network unshared"
+  },
+  "build": {
+    "status": "PASS",
+    "artifact_path": ".uos-workspaces/client-parity-fix-20261028-0620/var/harness/20261028-0627-client-parity-build.json",
+    "artifact_sha256": "3b83718903d4520e8bee3a51b689f7b96d02f0b399d84ae1cfe98ae31d6fa919",
+    "toolchain": "Gleam 1.16.0"
+  },
+  "focused_native_otp_tests": {
+    "status": "PASS",
+    "passed": 133,
+    "failed": 0,
+    "artifact_path": ".uos-workspaces/client-parity-fix-20261028-0620/var/harness/20261028-0621-client-parity-focused-otp.log",
+    "artifact_sha256": "719baa57079fc5c9950a21ec51bdd4dc387464fa75d9f9049ddf4a09873c1c43"
+  },
+  "scope_note": "AGY parser accepts native disabled:false only; config lifecycle source/tests; no external provider calls; no installed profile cleanup. Existing v6 profile readback remains an independent exact-known APPLIED observation with an unresolved old adapter receipt."
+}

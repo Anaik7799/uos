@@ -1,0 +1,63 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "timestamp": "2026-10-28T02:33:02Z",
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20261028-0105-development-harness-grant-review-v2.json",
+  "tags": ["#fractal-l0", "#fractal-l1", "#fractal-l3", "#fractal-l4", "#fractal-l9", "#zero-muda"],
+  "reviewer": {
+    "session_id": "codex-luna-review-0105",
+    "worker": "codex-luna-review-0105",
+    "plan_id": "uos/development-harness/20261028-0105",
+    "task_id": "GRANT_REVIEW_V2",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261028-0105-dev-harness-grant-proposal-v2.json",
+    "sha256": "adbb0f1dc688a9b98a2fc141b857b6b717bbc1198f8b857933c30d8a01fcefe5",
+    "grant_id": "20261028-0105-dev-harness-codex-v2",
+    "target_session": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+    "target_worker": "codex-dev-harness-01a18014"
+  },
+  "findings": [
+    {
+      "id": "scope_correction",
+      "severity": "material_corrected",
+      "detail": "V1 omitted the journal and verification output paths from read_paths, so operations.finish would fail its explicit completion_scope and evidence_scope checks. V2 adds exactly six required reads: the two output journals, verification JSON, activation peer review, formal-evidence JSON, and DevelopmentCoreGate.lean. The V2 write list remains three documents; source list remains the same 16 files; test list remains six modules. No source/config write or generic access was added."
+    },
+    {
+      "id": "v1_candidate_evidence",
+      "severity": "scoped_positive",
+      "detail": "V1 build and test result receipts are EXECUTED under the final V1 grant digest, worker codex-dev-harness-01a18014, ACTIVATE attempt 2, coordinator epoch 3. Intent/result signatures pair. Both retained output digests and byte counts recompute, and both input manifests rehash to cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016 with all 16 paths matching current root and candidate bytes. Test output reports 104 passed and successor verification: ok; build tail reports Compiled in 0.22s with unused-import warnings."
+    },
+    {
+      "id": "current_authority_and_controls",
+      "severity": "pass_for_scope",
+      "detail": "Proposal hash is exact. Host/boot and the 21 loaded BEAM module IDs match current observations; tools/ecology_process.ml digest matches; proposal base revision and the 16-file source manifest bind the unchanged candidate. Risk preflight and active-check passed; Sa-plan confirms GRANT_REVIEW_V2 attempt 1 is owned by this independent reviewer."
+    },
+    {
+      "id": "formal_model_observation",
+      "severity": "scoped_positive",
+      "detail": "Pinned Lean 4.33.0 invocation exited 0 on unchanged DevelopmentCoreGate.lean. It reported 47 declarations; 28 report built-in propext/Quot.sound dependencies. Evidence is linked at governance/planning/20261028-0105-development-harness-formal-evidence.json. This is model-level only."
+    },
+    {
+      "id": "root_toolchain_failure",
+      "severity": "open_qualified",
+      "detail": "Candidate preflight reports 31 checks PASS, while canonical root remains FAIL for ignored unadmitted tools/validation/verify_guardian.exe. The binary remains preserved, unexecuted, unmodified and outside this grant. The build adapter uses canonical dev.root; the selected finite six-module dispatcher excludes guardian tests. Do not call the canonical root clean."
+    }
+  ],
+  "review_artifacts": {
+    "activation_review_path": "docs/reviews/20261028-0105-development-harness-activation-review.json",
+    "activation_review_sha256": "892bf20526cbac591ef9f7c1330a8b0c33666a067c256974c68db61624ce6d97",
+    "formal_evidence_path": "governance/planning/20261028-0105-development-harness-formal-evidence.json",
+    "formal_evidence_sha256": "ac184e3519ea81a1e9975f8640821b13313ee6cbd6213a264d910d444af31d9e"
+  },
+  "required_before_finish": [
+    "Finalize and load only the grant derived from this exact reviewed V2 proposal, with this review digest and fresh startup identity/expiry/control checks.",
+    "Run harness_build and harness_test under the V2 grant and current ACTIVATE attempt; recompute their candidate manifest and retained-output digests. V1 receipts cannot be reused: successful_check recomputes signatures from the current grant digest and task binding.",
+    "Bind journal, verification, peer-review, and formal-evidence paths to their exact readable bytes before harness_finish. The activation-review artifact explicitly withholds completion approval pending these V2 checks."
+  ],
+  "limits": [
+    "This approves a finite development-only grant scope; it does not claim V2 execution, final ACTIVATE completion, all 14 MCP commands, four-client parity, concurrency/recovery acceptance, production behavior, or global UOS admission.",
+    "Any proposal/source/BEAM/dependency/host/boot/task/attempt/risk change invalidates this review. The preserved canonical-root failure remains a visible boundary."
+  ]
+}

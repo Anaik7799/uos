@@ -1,0 +1,31 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "REFUSE_EXPIRED_AND_PREREQUISITE_HOLD",
+  "observed_at": "2026-10-28T04:51:26Z",
+  "reviewer": {
+    "session_id": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+    "worker": "codex-dev-harness-01a18014",
+    "plan_id": "uos/harness-grant-reviews/20261028-0323",
+    "task_id": "CONCURRENCY_V4",
+    "attempt": 2
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261028-0429-concurrency-owner-grant-proposal-v6.json",
+    "sha256": "320360bf03b655b19122cd580d9e9aacb8a058dac387d321a94a2bb73cc4c7b6",
+    "grant_id": "20261028-0429-concur-v6-01a1802a",
+    "target_session": "01a1802a-ea2e-70e2-b943-3b2037fc8af2",
+    "target_worker": "codex-concurrency-01a1802a"
+  },
+  "reasons": [
+    "Fixed proposal expiry04:49:02Z passed before admission; it was never activated.",
+    "COMMAND_ACCEPT has an unresolved planning-ledger stop line and cannot perform the required simultaneous CAS participant effects.",
+    "The prior reviewer lease expired while source prerequisites changed; exact same-worker reclaim-preflight passed04:50:52, attempt2 reclaimed solely to seal this negative review, not enable runtime effects."
+  ],
+  "preserved_evidence": [
+    "Original v6 proposal unchanged; no expiry extension or positive verdict inferred.",
+    "V5 owner released before04:30 expiry, with same-task transfer/replay/fencing/disconnect recovery observations retained.",
+    "Typed planning reconciliation and true admitted-writer CAS source repairs are underway in isolated siblings."
+  ],
+  "next_step": "Prepare a fresh finite runtime grant only after the repaired COMMAND participant and CAS kernel have candidate-bound tests/controls; do not repeatedly renew20minute windows while dependencies are blocked.",
+  "production_admission": false
+}

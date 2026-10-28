@@ -1,0 +1,20 @@
+{
+  "schema": "uos.harness-task-verification.v1",
+  "plan": "uos/development-harness/20261028-0105",
+  "task": "ACTIVATE",
+  "attempt": 2,
+  "candidate_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016",
+  "build_receipt_sha256": "1294c5ff13317500e8740f085b78f4da5098c52a8485b035f9c0d00d24370a31",
+  "test_receipt_sha256": "785ba0c4387de84f0a7eda42bd2ac2c5dfb196fae9c7d7dfc56adc03a4acb1e8",
+  "verdict": "VERIFIED",
+  "peer_review_path": "docs/reviews/20261028-0105-development-harness-activation-review.json",
+  "peer_review_sha256": "16d1f8200436a08ea4d63c5c7429d26e2412554db6d90c86537c8a8f6ce04858",
+  "formal_evidence_path": "governance/planning/20261028-0105-development-harness-formal-evidence.json",
+  "formal_evidence_sha256": "ac184e3519ea81a1e9975f8640821b13313ee6cbd6213a264d910d444af31d9e",
+  "verification_scope": "Pre-completion candidate, build/test and bounded model evidence for ACTIVATE only; finish/reconcile are observed next.",
+  "tests_passed": 104,
+  "full_four_client_acceptance": "UNRUN",
+  "simultaneous_access_acceptance": "UNRUN",
+  "full_goal_complete": false,
+  "production_admission": false
+}

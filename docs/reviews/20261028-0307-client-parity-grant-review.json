@@ -1,0 +1,67 @@
+{
+  "findings": [
+    {
+      "detail": "The exact proposal binds one CLIENT_PARITY task, target worker codex-client-parity-01a1802b and its actual CODEX_THREAD_ID session 01a1802b-0ee7-7822-b734-42b95dc5515f. The independent review task is the current canonical CLIENT_GRANT_REVIEW attempt1. Grant expiry is 2026-10-28T03:55:00Z; current host/boot and 21 loaded BEAM IDs match the current runtime observation, and tools/ecology_process.ml matches its bound digest.",
+      "id": "exact_client_scope_and_identity",
+      "severity": "pass_for_scope"
+    },
+    {
+      "detail": "Eight declared source paths are finite; four existing files match the declared base revision and four not-yet-created client adapter/test files are each explicitly in the write allowlist. Write paths are limited to those code/tests, the launch-adapter design, the client journal, profiles JSON and verification JSON. No arbitrary hidden config path, credential/secret file or production path is in the allowlist.",
+      "id": "finite_source_and_write_paths",
+      "severity": "pass_for_scope"
+    },
+    {
+      "detail": "The proposal currently records candidate preflight PENDING with zero checks and candidate source files absent. The admission capture function supports absent allowlisted paths as null entries, so bounded creation through the reviewed grant is possible. This is not evidence that the candidate is ready to build or execute; the agent has confirmed no build/test/client call before candidate/source capture and toolchain preflight pass.",
+      "id": "toolchain_and_candidate_gate",
+      "severity": "qualified"
+    },
+    {
+      "detail": "The proposal points to var/harness/20261028-0307-client-parity-current-risk.json, which did not exist at review time. The task grant cannot claim until its task-specific current risk portfolio exists and the fresh SC-RISK preflight/active-check pass. This review does not treat my separate reviewer-task preflight as covering CLIENT_PARITY.",
+      "id": "risk_portfolio_gate",
+      "severity": "qualified"
+    },
+    {
+      "detail": "The purpose constrains client registration to the UOS server name, launcher argv and grant environment, with no arbitrary config path or config bytes; AGY add/list/remove must preserve unrelated entries and avoid reading private bytes. Use only this fixed adapter operation and record the public server-name inventory. No credential bytes may be read or logged.",
+      "id": "native_configuration_boundary",
+      "severity": "qualified"
+    }
+  ],
+  "grant_proposal": {
+    "grant_id": "20261028-0307-client-parity-01a1802b",
+    "path": "var/harness/20261028-0307-client-parity-grant-proposal.json",
+    "sha256": "61aee5b41c9d94b92126222d5f62daa0ddf46254c66847436c441aa3707fae51",
+    "target_session": "01a1802b-0ee7-7822-b734-42b95dc5515f",
+    "target_worker": "codex-client-parity-01a1802b"
+  },
+  "limits": [
+    "This review approves only the exact finite CLIENT_PARITY development scope. It does not establish that any new client source exists, builds, runs, or has been admitted.",
+    "Candidate preflight is pending and the separate CLIENT_PARITY risk portfolio is absent; neither client claim nor effect may start until those current task fences pass.",
+    "Any build/test receipt must bind the then-current source manifest, including the new allowlisted files; no existing ACTIVATE receipt is reusable for the new grant/task.",
+    "A bounded client adapter, one native client call, or AGY configuration operation does not establish all-four-client parity, full command coverage, concurrency/recovery acceptance, production behavior or global UOS admission."
+  ],
+  "required_before_finish": [
+    "Create the exact task-specific CLIENT_PARITY risk portfolio from current reviewed evidence, reobserve canonical Sa-plan state and pass fresh preflight/active-check under the target worker and attempt.",
+    "Prepare and rehash the candidate workspace/source inputs using pinned realized tools only; keep candidate preflight pending until actual checks pass. Run build/test only after this precondition and bind receipts to the final grant, task attempt and captured source manifest.",
+    "Keep actual client configuration operations limited to the named UOS server/launcher/grant fields; preserve unrelated entries and private bytes. Record truthful before/after public server-name inventory and rollback evidence without logging credentials.",
+    "Report only the actual native client surfaces exercised; keep unrun clients, command matrix, concurrency/recovery and production claims explicitly open."
+  ],
+  "reviewer": {
+    "attempt": 1,
+    "plan_id": "uos/development-harness/20261028-0105",
+    "session_id": "01a1802a-ea2e-70e2-b943-3b2037fc8af2",
+    "task_id": "CLIENT_GRANT_REVIEW",
+    "worker": "codex-concurrency-01a1802a"
+  },
+  "schema": "uos.harness-successor-grant-review.v1",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l9",
+    "#zero-muda"
+  ],
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20261028-0307-client-parity-grant-review.json",
+  "timestamp": "2026-10-28T03:12:30Z",
+  "verdict": "APPROVE_DEV_TEST_SCOPE"
+}

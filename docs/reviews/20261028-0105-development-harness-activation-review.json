@@ -1,0 +1,172 @@
+{
+  "candidate": {
+    "attempt": 2,
+    "base_revision": "bf19b79cc0ce4160b319bef307ce956d0ffeb665",
+    "plan": "uos/development-harness/20261028-0105",
+    "source_manifest_matches_current_root_and_candidate": true,
+    "source_manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016",
+    "source_paths": 16,
+    "task": "ACTIVATE",
+    "v2_proposal": {
+      "grant_id": "20261028-0105-dev-harness-codex-v2",
+      "path": "var/harness/20261028-0105-dev-harness-grant-proposal-v2.json",
+      "sha256": "adbb0f1dc688a9b98a2fc141b857b6b717bbc1198f8b857933c30d8a01fcefe5"
+    },
+    "worker": "codex-dev-harness-01a18014"
+  },
+  "completion_approval": false,
+  "completion_scope_correction": {
+    "code_basis": "operations.finish requires journal and verification paths in scope.reads, then requires peer-review and formal-evidence paths in scope.reads with matching digests. V1 omitted those paths; V2 includes each required read. The guards remain intact.",
+    "unchanged": "Write paths (3), source paths (16), selected tests (6), planning target, 21 loaded control IDs, control dependency, host/boot, and expiry are unchanged. No generic source/configuration write authority was added.",
+    "v1_missing_reads": [
+      "docs/journal/20261028-0105-development-harness-activation-journal.md",
+      "docs/journal/20261028-0105-development-harness-sandbox-proof.md",
+      "governance/planning/20261028-0105-development-harness-verification.json",
+      "docs/reviews/20261028-0105-development-harness-activation-review.json",
+      "governance/planning/20261028-0105-development-harness-formal-evidence.json",
+      "formal/lean/DevelopmentCoreGate.lean"
+    ],
+    "v2_read_paths_added": "Exactly the six paths listed above; V1 had 18 reads, V2 has 24."
+  },
+  "follow_up_observations": {
+    "build": {
+      "full_output_bytes": 8796,
+      "full_output_sha256": "b57736a9fdada955c141f70306f0301de556a5e6e3a05a6c10dc073da5ee03c1",
+      "intent_id": "v2-build-01",
+      "intent_path": "var/harness/effects/20261028-0105-dev-harness-codex-v2@v2-build-01@intent.json",
+      "intent_result_signature_match": true,
+      "intent_sha256": "d475cd0dc6a0761c534ef42766317368c010b5175d5c4c3031cf64c5e12b6023",
+      "observed": "Compiled in 0.22s; unused-import warnings remain.",
+      "output_retention": "tail_truncated",
+      "result_path": "var/harness/effects/20261028-0105-dev-harness-codex-v2@v2-build-01@result.json",
+      "result_sha256": "1294c5ff13317500e8740f085b78f4da5098c52a8485b035f9c0d00d24370a31",
+      "retained_bytes": 8695,
+      "retained_sha256": "63558fa0cca5bf6293d128c22cc781dac3117af7e6a5b1fc73fe53f293b314f0",
+      "status": "EXECUTED",
+      "tool": "harness_build"
+    },
+    "candidate": {
+      "manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016",
+      "root_and_candidate_bytes_match": true,
+      "source_paths": 16
+    },
+    "formal_evidence": {
+      "exit_code": 0,
+      "lean_source_sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+      "limit": "Model-level formal observation only; no runtime-refinement or admission proof.",
+      "path": "governance/planning/20261028-0105-development-harness-formal-evidence.json",
+      "sha256": "ac184e3519ea81a1e9975f8640821b13313ee6cbd6213a264d910d444af31d9e",
+      "tool_version": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)"
+    },
+    "observed_at": "2026-10-28T02:45:29Z",
+    "open_boundary": "Canonical root still has the ignored/unadmitted guardian binary failure recorded in root_toolchain_qualification. V2 effects establish only the bounded six-module build/test observation. Finish and reconcile remain pending; no broader matrix claim is made.",
+    "reviewer_task": {
+      "attempt": 1,
+      "plan": "uos/development-harness/20261028-0105",
+      "task": "ACTIVATE_RESULT_REVIEW",
+      "worker": "codex-luna-review-0105"
+    },
+    "scope": "V2 development activation evidence only; not task finish, reconcile, full MCP command acceptance, four-client parity, concurrency/recovery acceptance, production behavior, or global UOS admission.",
+    "test": {
+      "full_output_bytes": 21061,
+      "full_output_sha256": "db3fcff08a6c6c64217829e17c84b3c65ef4a0502c5b9bbc97b693a4a9e95f72",
+      "intent_id": "v2-test-01",
+      "intent_path": "var/harness/effects/20261028-0105-dev-harness-codex-v2@v2-test-01@intent.json",
+      "intent_result_signature_match": true,
+      "intent_sha256": "c1818f05803f8ee0cfa106ce407c9b7ac508202b2cf2dcf77fb427ae849f5832",
+      "observed": "All 104 tests passed; successor verification: ok.",
+      "output_retention": "tail_truncated",
+      "result_path": "var/harness/effects/20261028-0105-dev-harness-codex-v2@v2-test-01@result.json",
+      "result_sha256": "785ba0c4387de84f0a7eda42bd2ac2c5dfb196fae9c7d7dfc56adc03a4acb1e8",
+      "retained_bytes": 8192,
+      "retained_sha256": "0319ca55ed2fe86f27122ad1f4997785fd6f5f535744d5b49cf27daf31e74f1b",
+      "status": "EXECUTED",
+      "tool": "harness_test"
+    },
+    "v2_grant": {
+      "grant_id": "20261028-0105-dev-harness-codex-v2",
+      "path": "var/harness/20261028-0105-dev-harness-grant-v2.json",
+      "peer_review_path": "docs/reviews/20261028-0105-development-harness-grant-review-v2.json",
+      "peer_review_sha256": "c23ee2cd50da9f08726f6a1d6ea1045b4c308685c653c8803a1f72934474defb",
+      "proposal_path": "var/harness/20261028-0105-dev-harness-grant-proposal-v2.json",
+      "proposal_sha256": "adbb0f1dc688a9b98a2fc141b857b6b717bbc1198f8b857933c30d8a01fcefe5",
+      "sha256": "7a96721a28bec3df9c2191cf304c131295b0f81b5cf63e563b9b5f109de17a3e"
+    },
+    "worker_binding": {
+      "attempt": 2,
+      "coordinator_epoch": 4,
+      "plan": "uos/development-harness/20261028-0105",
+      "production_admission": false,
+      "session": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+      "task": "ACTIVATE",
+      "worker": "codex-dev-harness-01a18014"
+    }
+  },
+  "formal_evidence": {
+    "lean_source_sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+    "limit": "Model-level formal observation; no runtime-refinement or system-admission proof.",
+    "path": "governance/planning/20261028-0105-development-harness-formal-evidence.json",
+    "result": "Exit 0; 47 declarations reported; 28 report the standard propext/Quot.sound axioms.",
+    "sha256": "ac184e3519ea81a1e9975f8640821b13313ee6cbd6213a264d910d444af31d9e",
+    "tool_version": "Lean 4.33.0"
+  },
+  "limits": [
+    "No V2 build/test, finish, reconcile, four-client parity, concurrency acceptance, production effect, or global UOS admission is established here.",
+    "Any source, control ID, grant, task attempt, host/boot, or risk-fence change invalidates the corresponding reviewed evidence."
+  ],
+  "required_before_finish": [
+    "Read and bind the allowed journal, verification, peer-review, and formal-evidence files to exact current digests under V2 scope; perform canonical harness finish and reconcile with effect-time fences.",
+    "Keep full MCP command acceptance, four-client parity, concurrency/recovery acceptance, production behavior, and global UOS admission unclaimed until separately observed and reviewed."
+  ],
+  "review_status": "VERIFIED_ACTIVATION_EVIDENCE",
+  "reviewer": {
+    "attempt": 1,
+    "plan_id": "uos/development-harness/20261028-0105",
+    "session_id": "codex-luna-review-0105",
+    "task_id": "GRANT_REVIEW_V2",
+    "worker": "codex-luna-review-0105"
+  },
+  "root_toolchain_qualification": {
+    "candidate_preflight": "31 checks reported PASS using existing realized toolchain symlinks.",
+    "canonical_root": "FAIL remains for the ignored unadmitted tools/validation/verify_guardian.exe; it was not moved, deleted, hashed, or executed.",
+    "execution_path": "The build implementation uses canonical dev.root, not the isolated candidate workspace. The selected six test modules and finite dispatcher do not reference the guardian integration. This review does not certify the canonical root as clean or green."
+  },
+  "schema": "uos.development-harness-activation-review.v1",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l9",
+    "#zero-muda"
+  ],
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20261028-0105-development-harness-activation-review.json",
+  "timestamp": "2026-10-28T02:45:29Z",
+  "v1_runtime_evidence": {
+    "build": {
+      "input_manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016",
+      "intent_id": "activate-build-01",
+      "intent_path": "var/harness/effects/20261028-0105-dev-harness-codex@activate-build-01@intent.json",
+      "intent_sha256": "ade5b876366ac78c8fd63b2770d8a561f37a4e8c62623c4ce783d4b863b41bd0",
+      "output_tail": "Compiled in 0.22s; output also reports unused-import warnings.",
+      "result_path": "var/harness/effects/20261028-0105-dev-harness-codex@activate-build-01@result.json",
+      "result_sha256": "8f2c5ac080eae3c1bae7146e077abf0f3dc1ba34677848ffdcdb1e16922fe629",
+      "retained_output_digest_and_byte_count_recomputed": true,
+      "status": "EXECUTED"
+    },
+    "grant_sha256": "46655c8bef019601120fa6f61faa65e8edc0247410b3aafbb47fc70e6e36d54f",
+    "qualification": "V1 receipts are attempt-2 evidence for V1 grant digest only. The current successful_check recalculates a receipt signature from execution.grant.digest, plan, task, attempt, worker, tool, and args. The new V2 grant therefore requires fresh V2 build and test receipts; these were not run in this review.",
+    "test": {
+      "input_manifest_sha256": "cfe21be316f6244fdebe8a0352cc0e74c00fa340afa0983c63b9b43943e29016",
+      "intent_id": "activate-test-01",
+      "intent_path": "var/harness/effects/20261028-0105-dev-harness-codex@activate-test-01@intent.json",
+      "intent_sha256": "ea3c954566303de600b907244346a1659266f3f0e09151aa85c7dc68070017bf",
+      "output_summary": "All 104 tests passed; successor verification: ok.",
+      "result_path": "var/harness/effects/20261028-0105-dev-harness-codex@activate-test-01@result.json",
+      "result_sha256": "a1d5b25e5f9ad173754b8fd4f82e0a5eb3dbaa461e763d76be19886e44228bbf",
+      "retained_output_digest_and_byte_count_recomputed": true,
+      "status": "EXECUTED"
+    }
+  },
+  "verdict": "VERIFIED_ACTIVATION_EVIDENCE"
+}

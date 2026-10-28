@@ -1,0 +1,54 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "timestamp": "2026-10-28T02:00:32Z",
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20261028-0105-development-harness-grant-review.json",
+  "tags": ["#fractal-l0", "#fractal-l1", "#fractal-l3", "#fractal-l4", "#fractal-l9", "#zero-muda"],
+  "reviewer": {
+    "session_id": "codex-luna-review-0105",
+    "worker": "codex-luna-review-0105",
+    "plan_id": "uos/development-harness/20261028-0105",
+    "task_id": "GRANT_REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261028-0105-dev-harness-grant-proposal.json",
+    "sha256": "6772a29419b3b999adddd7bfcec98c0048839a91b04f9ec00c81272ea6fa0d65",
+    "grant_id": "20261028-0105-dev-harness-codex",
+    "target_session": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+    "target_worker": "codex-dev-harness-01a18014"
+  },
+  "checks": [
+    {
+      "id": "proposal_and_scope",
+      "status": "PASS",
+      "detail": "Exact proposal digest matches. One development ACTIVATE task; 18 read paths, 3 document/evidence writes, 16 source paths, 6 selected test modules, one sandbox planning target; expiry is a decimal microsecond string and is within the bounded window. No production, external client, credential, destructive storage, or general config-write scope."
+    },
+    {
+      "id": "current_bindings",
+      "status": "PASS",
+      "detail": "Proposal host and boot bindings match current host/boot observations. All 21 recorded loaded BEAM module MD5s match current local BEAM metadata; tools/ecology_process.ml digest matches. All 16 listed source files have matching bytes in the isolated candidate and canonical root; candidate revision is based on the proposed base revision."
+    },
+    {
+      "id": "risk_and_authority",
+      "status": "PASS",
+      "detail": "Risk-priority preflight returned PREFLIGHT_PASS; after the canonical claim (GRANT_REVIEW attempt 1, codex-luna-review-0105), reconciled task actor/state and active-check returned ACTIVE_OBSERVATION_PASS. Current operator authorization covers this bounded development review/bootstrap only. These observations do not grant runtime admission."
+    },
+    {
+      "id": "toolchain_qualifier",
+      "status": "PASS_WITH_LIMIT",
+      "detail": "The proposal preserves the candidate 31-check PASS and canonical-root FAIL caused by the ignored, unadmitted tools/validation/verify_guardian.exe. The binary was not inspected by execution, moved, deleted, or hashed. The current build implementation targets canonical dev.root, not the isolated workspace; the finite dispatcher runs only the six named modules, and none references the guardian binary. Treat the root failure as open and do not claim a clean canonical toolchain."
+    }
+  ],
+  "uca_review": {
+    "omitted_action": "The reviewed task identity, current grant, or startup binding could be missing; admission checks and the exact Sa-plan task/review bindings constrain this.",
+    "unsafe_action": "A broader path, tool, model, or production effect could be included; the proposal is one-task development scope and has no source/config writes.",
+    "wrong_timing_or_order": "Stale expiry, host/boot, BEAM, or proposal identity could be used; rechecked bindings and the runtime loader must revalidate them before activation.",
+    "duration_or_stop": "Work could continue beyond scope/lease or execute the guardian binary; task lease, finite test manifest, and explicit preserve/do-not-execute limit constrain this."
+  },
+  "limits": [
+    "Approval is for the exact proposal's finite ACTIVATE development scope only. The final grant must bind this review file digest, proposal path/digest, current session, host/boot, expiry, loaded control IDs, and dependency digest at startup.",
+    "Build/test commands operate from canonical dev.root. The 31 candidate checks do not erase the canonical-root failure; stop if activation would invoke the unadmitted guardian binary or if source, scope, identity, or task state changes.",
+    "No production admission, global UOS verification, four-client parity, complete 14-command acceptance, concurrent-session acceptance, or runtime behavior is established by this review."
+  ]
+}

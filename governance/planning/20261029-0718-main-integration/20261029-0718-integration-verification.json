@@ -1,0 +1,30 @@
+{
+  "schema": "uos.main_integration.verification_receipt.v1",
+  "recorded_at_utc": "2026-10-29T07:27:34Z",
+  "supervisor_model": "gemini-4-argon",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/main-integration-20261029-0718",
+  "parents": [
+    "29ce27ef1468202b4cc6d8582d057eda261c2142",
+    "c587648a493babcb05c878f8d19e155efd73c09e"
+  ],
+  "conflicts": false,
+  "test_elapsed_ms": 3528,
+  "test_modules": [
+    "harness_development_test",
+    "harness_successor_test",
+    "harness_pre_attach_assessment_test",
+    "harness_cas_critical_section_test",
+    "harness_sa_plan_boundary_test",
+    "client_config_test",
+    "client_mcp_test",
+    "client_profiles_test",
+    "harness_stdio_pipe_test",
+    "harness_native_backend_test"
+  ],
+  "tests_total": 161,
+  "tests_passed": 161,
+  "tests_failed": 0,
+  "eunit_summary_line": "All 161 tests passed.",
+  "status": "PASS",
+  "subset_154_tests_passed": 154
+}

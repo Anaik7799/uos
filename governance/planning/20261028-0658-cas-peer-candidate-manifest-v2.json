@@ -1,0 +1,231 @@
+{
+  "schema": "uos.harness-candidate-manifest.v1",
+  "observed_at": "2026-10-28T06:36:35.839785Z",
+  "candidate": {
+    "base_revision": "f8b73da0411b",
+    "sealed_commit": "817e8f20e8deae025db917f6187e0425285caaa9",
+    "change_id": "ookwvsku",
+    "workspace": ".uos-workspaces/dev-harness-cas-integration-20261028-0850",
+    "working_copy_commit": "99cf8bb041b456b22209c11e3bab5442d7fa4808",
+    "working_copy_parent": "817e8f20e8deae025db917f6187e0425285caaa9",
+    "working_copy_clean": true
+  },
+  "source_count": 32,
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e749dee09b14bc9b05e8a5858905b06cdf0c9c89ce059b05e3060a72f4fd1efa",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/manifest.toml",
+      "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "06ebd4c0dd76db94a3d34d20548aa81bab2692f8a0d0f797dcb627e3d88c9152",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "c024bf55558ac6702c28c32405fc52abdd9fdef0c01c87ab44aa1df27149561e",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "59dbc4f49885b1fcaaa8cd531b92e86b4a604ea489d76ee23231524c5339664d",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "ab0cf54e63dc5b1100bc769fd50627e4d276243306d1b4809bd7b16c871581a8",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intents.gleam",
+      "sha256": "cf45d338aa13d2e2020c62ff2a1f8528f070cb9b8142fae39d352ec0743b5f2a",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "sha256": "e80645ce588e41f6f5633766c46ee688660a7770d1196f935cf3ae29accf762b",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_config.gleam",
+      "sha256": "a9f69298305e81130ce018ba1394cd75562eaf747556c0004c14aed95ac2cd39",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_mcp.gleam",
+      "sha256": "5420b889fbdf2d3e260aa8d7e8f4a687966bf268064f4516879f55c5b085dcd6",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/client_profiles.gleam",
+      "sha256": "7fcb31c5b3b5dad91ab6d4147c67e25ca8ad79fbc950634d73460744b260c1b5",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/client_config_io.erl",
+      "sha256": "348f8de892a4000c34ef723b463632aae3dd05f4908a59572c3c92248d5a9987",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "e0d3c51f7a935ed3feb3d5b7eac77cdbb87559b61fcc7f770f45f0fa01b71a07",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "sha256": "70b22eaedaf7aa005926c4eadb58ecbb19ce140e180d651c478b488ad21c388a",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_development_test.gleam",
+      "sha256": "e7d0ac111fb84e27a2992a5dd83e5e15ba09e76b6fb4c0b1782361139971abc0",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_authority_test.gleam",
+      "sha256": "42d4de537ed90310a5ba3a6e6db8d084fff01eab69bc4d444536bfd22d62ca68",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_sa_plan_boundary_test.gleam",
+      "sha256": "b073cf4e783200c78b1803dfe55e684a4eebec28509d08f912aa2b382e1fa565",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_authz_wiring_test.gleam",
+      "sha256": "1342606ae2b96257cf8d4f2d18e306e3bc13cd6dff3b6846482d870fd2f7a9f6",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_catalog_truth_test.gleam",
+      "sha256": "639d83b89f0d71196187922ab271ccbefe9501dfa0414334b1fb7e61f04abd58",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_task_verification.gleam",
+      "sha256": "2cd073525c6427eae7b0c679616049fba3fd0847887209b2e9af08bc5b2d1cd0",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_verification.gleam",
+      "sha256": "654e25625676932c38d0ebff4be1da4ba61e7bc1d8114a27f29b3b1b4824e973",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_cas_critical_section_test.gleam",
+      "sha256": "83353a676de26f4265bcdd85b14b04015093169154bfbb2f66bffaa0ccd3dead",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/client_config_test.gleam",
+      "sha256": "339596bde2ab7e94232037ae8b54e9f8e2e15e6a15ccb5d7c94cf670ddfd4c64",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/client_mcp_test.gleam",
+      "sha256": "0cd134b7e2fbc99e07ceb9867df18168019a350883b7a453e3f838bd82675942",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/client_profiles_test.gleam",
+      "sha256": "832f717250aae6f8b7a1a504867ed0ccc47ddc2c919ee79107d2a5840f8969e4",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/system_feature_interfaces_test.gleam",
+      "sha256": "842c4ba9dcf505db4da91a59e1bde265b8daf1dc5d761fb35d7f71940a62e0a0",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_authority.gleam",
+      "sha256": "dbd7b6c830d8381c935eca819a142e6a0714644635985b1ae9b76560386ace04",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "sha256": "d8e12a5b7226578fa3155cb4e2f71251d94136f76523b326a54bb06846fbc321",
+      "status": "PRESENT"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b",
+      "status": "PRESENT"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+      "sha256": "df1c4c3c07856ee6da56bd7dd7279bed57b887558f560cf07e225b8a629eeb56",
+      "status": "PRESENT"
+    }
+  ],
+  "loaded_control_ids": {
+    "cepaf_gleam@harness@admission": "06813f23cd3c3e39d08e596ffd47b1e2",
+    "cepaf_gleam@harness@client_config": "a377b1f29aca22ea868ce52924d6e5bc",
+    "cepaf_gleam@harness@client_mcp": "65843b24dd588ff23af4c065b81256d5",
+    "cepaf_gleam@harness@client_profiles": "1fc2ab3b4f8202d7494b1a8d1dc1907c",
+    "cepaf_gleam@harness@clock": "97a94ee9e10fd52b144d97fdaaac4ac1",
+    "cepaf_gleam@harness@development": "b42e5a74a7a47a5b0e4a324fa3364b51",
+    "cepaf_gleam@harness@files": "9016b5ef3c680dd039beb5365b460735",
+    "cepaf_gleam@harness@mcp": "c4ada61e4f24d09e284d0633e346d4ac",
+    "cepaf_gleam@harness@operations": "31d3f4c6e4bdebdde76d82cb35654479",
+    "cepaf_gleam@harness@planning_intents": "2aec5c3b2510b931c56930051d4700b4",
+    "cepaf_gleam@harness@successor_mcp": "bcb9d2cb7b6ba0878ab5b5cfe6ac30d5",
+    "cepaf_gleam@harness@value": "2698997cd9a9d6b365d14218d4e3faa3",
+    "cepaf_gleam@planning@sa_plan_bridge": "522f8e982ae5cd78ec21cca8572d9593",
+    "client_config_io": "314fc97fdf813a7717f32492900c465b",
+    "esqlite3": "559df945b9931ff4d5dfb312c46b240e",
+    "esqlite3_nif": "5b3ef93e642fff3efc7e69f45de83cbf",
+    "session_store_cli": "dfe24f2fdb8db589fe8851a737e70c2f",
+    "session_store_ffi": "4838dcaf7308534d4367c18c4ba873c3",
+    "session_sync_ffi": "84df5c4ac97f59dfd224b70cd9b21701",
+    "uos_swarm@board": "852a4e29595fe187354232b75d6d9257",
+    "uos_swarm@coord": "6c1530113e7b49b0d835446f0b5dbf66",
+    "uos_swarm@session_authority": "46836db77dcca471a4fa3d54265f188c",
+    "uos_swarm@session_store": "7a39ae16fc9bf79a55125aaa7103ab63",
+    "uos_swarm@session_sync": "3fae88ea61b0f4195507411d34aedf46",
+    "uos_swarm_ffi": "c10aa59407df5842db9d2d0bdf100f50"
+  },
+  "loaded_control_count": 25,
+  "control_ids_sha256": "cbb0dc0a10c65652cf2e08ee56e0526e0a09653b5183d5518371faf8db3d11fb",
+  "observed_control_match": {
+    "serving_module": "cepaf_gleam@harness@admission",
+    "serving_path": "/home/an/NAS-setup/uos/.uos-workspaces/dev-harness-cas-integration-20261028-0850/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin",
+    "code_which_session_store": "/home/an/NAS-setup/uos/.uos-workspaces/dev-harness-cas-integration-20261028-0850/apps/cepaf_gleam/build/dev/erlang/uos_swarm/ebin/uos_swarm@session_store.beam",
+    "matched": true,
+    "count": 25
+  },
+  "control_dependencies": {
+    "tools/ecology_process.ml": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b"
+  },
+  "manual_ffi_observation": {
+    "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+    "sha256": "df1c4c3c07856ee6da56bd7dd7279bed57b887558f560cf07e225b8a629eeb56",
+    "md5": "c3a8539302fabb1f956d15d1c9c24661",
+    "included_in_25_control_map": false,
+    "limitation": "FFI MD5 is separately recorded; the loaded admission map has exactly 25 IDs and no extra FFI control."
+  },
+  "scope_limits": [
+    "This manifest binds 31 core source files plus ecology_capability_ffi.erl; it excludes the candidate proof fixture data.",
+    "Observed 25 loaded control IDs match the reviewed command grant reference when the exact serving CEPaf build path is prepended before module load.",
+    "Candidate is a sealed commit plus a clean empty working-copy child; no source or build changes are present in the current working copy.",
+    "Global SQLite writer serialization is within one coordinator database; no hostile-writer filesystem guarantee is claimed.",
+    "Sa-plan and coordinator authority are separate stores; no cross-store atomic fencing is claimed.",
+    "Broader compatibility failures remain unresolved: prior 697 passed/5 failed, session_sync timeout, and 10 full verification failures were not baseline-classified.",
+    "No all-client, all-command, full concurrency, formal-correspondence, or production admission is claimed."
+  ]
+}

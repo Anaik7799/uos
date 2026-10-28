@@ -1,0 +1,66 @@
+{
+  "findings": [
+    {
+      "detail": "The proposal binds one TRACKER task and exactly two tracker output write paths: the live tracker journal and dashboard JSON. It grants no application source, client configuration or production write. The purpose is limited to the user-requested bounded dashboard/tracker work.",
+      "id": "exact_finite_task_scope",
+      "severity": "pass_for_scope"
+    },
+    {
+      "detail": "The host/boot binding matches current observation; all 21 loaded BEAM control IDs match the current runtime; tools/ecology_process.ml digest matches current bytes. The fresh tracker review risk preflight and active-check passed under the independent reviewer identity and canonical task attempt1.",
+      "id": "current_identity_controls_and_risk",
+      "severity": "pass_for_scope"
+    },
+    {
+      "detail": "All 16 declared source paths exist in canonical root. Effect-time capture must hash those canonical-root bytes; the implementation hard-codes dev.root to /home/an/NAS-setup/uos. Re-capture and bind those bytes for each effect; V2 ACTIVATE receipts do not authorize TRACKER effects.",
+      "id": "canonical_source_manifest",
+      "severity": "pass_for_scope"
+    },
+    {
+      "detail": "The declared toolchain preflight reports candidate workspace `.uos-workspaces/dev-harness-20261028-0105` 31 checks PASS, while canonical root remains FAIL for preserved ignored/unadmitted verify_guardian.exe. Current candidate has a local change to apps/cepaf_gleam/test/harness_development_test.gleam and a .pixi symlink not present in canonical root. The public grant does not declare candidate equivalence; build/test, if needed for canonical completion, must use current canonical-root source capture and must not claim the dirty candidate as the tested source.",
+      "id": "candidate_workspace_qualification",
+      "severity": "qualified"
+    },
+    {
+      "detail": "Grant expires at 2026-10-28T05:05:00Z, within the 24-hour admission bound. Its two writes support bounded tracker snapshots; no automatic ten-minute scheduling is established. Six test modules are finite development test scope and should only be run if required by the task completion contract.",
+      "id": "bounded_outputs_and_expiry",
+      "severity": "qualified"
+    }
+  ],
+  "grant_proposal": {
+    "grant_id": "20261028-0303-dev-harness-tracker",
+    "path": "var/harness/20261028-0303-tracker-grant-proposal.json",
+    "sha256": "9910424ce9231e5ef2dc0c1dcf31a74b4f51016f0e0850c5123e0d798db46b78",
+    "target_session": "01a18014-f0ea-7aa2-be2e-3249609aeb60",
+    "target_worker": "codex-dev-harness-01a18014"
+  },
+  "limits": [
+    "This review approves only the exact finite TRACKER development grant, not recurring scheduler enforcement, complete MCP command acceptance, client parity, concurrency, production behavior or global UOS admission.",
+    "No canonical-root clean/green claim: the ignored/unadmitted guardian failure remains preserved and unexecuted.",
+    "The candidate workspace differs from root at one declared test path; its 31-check preflight is not equivalent to the effect-time source manifest.",
+    "A review result and risk pass do not authorize effects; actual claim, fresh task/grant/host/boot/control fences and exact output readbacks remain required."
+  ],
+  "required_before_finish": [
+    "Finalize a grant derived exactly from this proposal with this review digest and fresh source/control/host/boot validation; refresh the target session before claim.",
+    "Use only the two declared tracker write paths and capture exact output readbacks. Any build/test receipt must bind the then-current canonical-root manifest and tracker grant/task attempt.",
+    "Describe the output as a bounded snapshot unless an actual scheduler/refresh mechanism is separately implemented and observed."
+  ],
+  "reviewer": {
+    "attempt": 1,
+    "plan_id": "uos/development-harness/20261028-0105",
+    "session_id": "01a1802a-ea2e-70e2-b943-3b2037fc8af2",
+    "task_id": "TRACKER_GRANT_REVIEW",
+    "worker": "codex-concurrency-01a1802a"
+  },
+  "schema": "uos.harness-successor-grant-review.v1",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l9",
+    "#zero-muda"
+  ],
+  "tailscale_fqdn": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20261028-0303-development-harness-tracker-grant-review.json",
+  "timestamp": "2026-10-28T03:07:33Z",
+  "verdict": "APPROVE_DEV_TEST_SCOPE"
+}
