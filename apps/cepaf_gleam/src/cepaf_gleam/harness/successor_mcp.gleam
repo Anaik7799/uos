@@ -346,7 +346,7 @@ fn dispatch(
         case state.execution {
           None -> Ok(heartbeat)
           Some(e) -> {
-            use proof <- result.try(a.fence(e, 0))
+            use before <- result.try(a.fence(e, 0))
             use raw <- result.try(
               a.coordinate([
                 "renew",
@@ -355,22 +355,25 @@ fn dispatch(
                 int_string(e.binding.epoch),
                 "3600",
                 "successor-renew-"
-                  <> int_string(proof.clock.sample.observed.utc_us),
+                  <> int_string(before.clock.sample.observed.utc_us),
               ]),
             )
+            use sa_plan_renewal <- result.try(sa.renew_sa_task(
+              e.binding.plan, e.binding.task, e.binding.worker, e.binding.attempt,
+              3_600_000_000_000,
+            ))
+            use after_fence <- result.try(a.fence(e, 0))
             Ok(
               json.object([
                 #("heartbeat", heartbeat),
                 #("coordinator_renewal", json.string(raw)),
                 #(
                   "sa_plan_lease_until_ns",
-                  json.string(int_string(proof.lease_until_ns)),
+                  json.string(int_string(after_fence.lease_until_ns)),
                 ),
                 #(
                   "sa_plan_renewal",
-                  json.string(
-                    "NOT_IMPLEMENTED_RELEASE_AND_RECLAIM_BEFORE_EXPIRY",
-                  ),
+                  json.string(sa_plan_renewal),
                 ),
               ]),
             )

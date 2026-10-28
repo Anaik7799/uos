@@ -499,6 +499,36 @@ val claim_task :
   lease_ns:int64 ->
   (claim, string) Result.t
 
+(** Renewal law: only the same worker and exact original attempt may renew an
+    executing claim with lease_until_ns strictly greater than now_ns. Duration
+    is positive and at most one hour, with checked deadline arithmetic. Renewal
+    never shortens the lease or changes state, owner, or attempt. Rejection
+    changes no state. BEGIN IMMEDIATE serializes renewal against reclamation. *)
+(** Live callers sample their authoritative clock only after acquiring the
+    immediate write transaction, so waiting for a database lock cannot revive
+    a claim that expired during contention. *)
+val renew_task_observed :
+  t ->
+  plan_id:string ->
+  task_id:string ->
+  worker:string ->
+  expected_attempt:int ->
+  observe_now:(unit -> int64) ->
+  lease_ns:int64 ->
+  (int64, string) Result.t
+
+(** Deterministic clock adapter for callers that already own a sampled-time
+    authority or fixtures. Live CLI renewal uses [renew_task_observed]. *)
+val renew_task :
+  t ->
+  plan_id:string ->
+  task_id:string ->
+  worker:string ->
+  expected_attempt:int ->
+  now_ns:int64 ->
+  lease_ns:int64 ->
+  (int64, string) Result.t
+
 (** Finalization law: only the caller's original [expected_attempt], current
     worker, executing state and strictly unexpired lease permit a transition.
     Empty worker, non-positive attempt or negative time is rejected. Rejection

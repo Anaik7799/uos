@@ -1009,6 +1009,41 @@ pub fn claim_sa_task(
   run_sa_plan_cli(["task", "claim", worker, plan, "30000000000", task_id])
 }
 
+/// Exact original ownership/attempt and bounded duration are passed as literal argv.
+pub fn renewal_arguments(
+  plan: String,
+  task_id: String,
+  worker: String,
+  attempt: Int,
+  lease_ns: Int,
+) -> Result(List(String), String) {
+  case
+    attempt > 0 && lease_ns > 0 && lease_ns <= 3_600_000_000_000
+    && list.all([plan, task_id, worker], fn(value) {
+      !string.is_empty(string.trim(value)) && !string.contains(value, "\u{0}")
+    })
+  {
+    True -> Ok([
+      "task", "renew", plan, task_id, worker,
+      int.to_string(attempt), int.to_string(lease_ns),
+    ])
+    False -> Error("Renewal requires a positive attempt, bounded lease, and non-empty fields")
+  }
+}
+
+pub fn renew_sa_task(
+  plan: String,
+  task_id: String,
+  worker: String,
+  attempt: Int,
+  lease_ns: Int,
+) -> Result(String, String) {
+  case renewal_arguments(plan, task_id, worker, attempt, lease_ns) {
+    Ok(args) -> run_sa_plan_cli(args)
+    Error(reason) -> Error(reason)
+  }
+}
+
 /// Completes a task in sa-plan with execution receipt.
 pub fn complete_sa_task(
   plan: String,

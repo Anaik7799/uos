@@ -195,3 +195,27 @@ let () =
       (Sa_plan_cli.validate [|"sa-plan";flag|] = Ok ()
        && Result.is_error (Sa_plan_cli.validate [|"sa-plan";flag;"{}"|])))
     ["cancel-once","--job-cancel-once";"cancellation-result","--job-cancellation-result"]
+
+let () =
+  require "LAW CLI-TASK-RENEW-NORMALIZE"
+    (array_equal
+      (Sa_plan_cli.normalize [|"sa-plan";"task";"renew";"p";"t";"w";"2";"1000000000"|])
+      [|"sa-plan";"--task-renew";"p";"t";"w";"2";"1000000000"|]);
+  List.iter (fun duration ->
+    require "LAW CLI-TASK-RENEW-VALID-BOUNDS"
+      (Result.is_ok (Sa_plan_cli.validate
+        [|"sa-plan";"--task-renew";"p";"t";"w";"2";duration|])))
+    ["1";"1000000000";"3600000000000"];
+  List.iter (fun (attempt,duration) ->
+    require "LAW CLI-TASK-RENEW-INVALID-PREPROCESS"
+      (Result.is_error (Sa_plan_cli.validate
+        [|"sa-plan";"--task-renew";"p";"t";"w";attempt;duration|])))
+    ["0","1";"-1","1";"0x2","1";"2","0";"2","-1";
+     "2","3600000000001";"2","999999999999999999999";"2","+1";"2","1.0"];
+  require "LAW CLI-TASK-RENEW-EXACT-ARITY"
+    (Result.is_error (Sa_plan_cli.validate [|"sa-plan";"--task-renew";"p";"t";"w";"2";"1";"extra"|])
+     && Result.is_error (Sa_plan_cli.validate [|"sa-plan";"--task-renew";"p";"t";"w";"2"|]));
+  require "LAW CLI-TASK-RENEW-HELP-NO-EFFECT"
+    (array_equal
+      (Sa_plan_cli.normalize [|"sa-plan";"task";"renew";"--help"|])
+      [|"sa-plan";"--help";"task"|])
