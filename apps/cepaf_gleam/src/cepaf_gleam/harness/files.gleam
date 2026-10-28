@@ -123,6 +123,45 @@ pub fn checked_path(root: String, relative: String) -> Result(String, String) {
   Ok(root <> "/" <> relative)
 }
 
+/// Resolve one direct, real JJ candidate workspace below `.uos-workspaces`.
+/// The reviewed grant stores only this repository-relative locator; arbitrary
+/// roots, nested paths, traversal, and symlink aliases are rejected.
+pub fn workspace_root(
+  root: String,
+  relative: String,
+) -> Result(String, String) {
+  case string.split(relative, "/") {
+    [".uos-workspaces", name] ->
+      case workspace_name_valid(name) {
+        False -> Error("workspace_path_not_direct_candidate")
+        True -> {
+          let candidate = root <> "/" <> relative
+          use _ <- result.try(ancestors(root, [".uos-workspaces", name]))
+          use info <- result.try(
+            simplifile.link_info(candidate)
+            |> result.map_error(fn(_) { "workspace_unavailable" }),
+          )
+          case simplifile.file_info_type(info) == simplifile.Directory {
+            True -> Ok(candidate)
+            False -> Error("workspace_not_real_directory")
+          }
+        }
+      }
+    _ -> Error("workspace_path_not_direct_candidate")
+  }
+}
+
+fn workspace_name_valid(name: String) -> Bool {
+  string.byte_size(name) > 0
+  && string.byte_size(name) <= 120
+  && list.all(string.to_graphemes(name), fn(c) {
+    string.contains(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_",
+      c,
+    )
+  })
+}
+
 pub fn read(root: String, relative: String) -> Result(String, String) {
   use path <- result.try(checked_path(root, relative))
   use before <- result.try(
@@ -175,6 +214,18 @@ pub fn read(root: String, relative: String) -> Result(String, String) {
       let _ = close(fd)
       outcome
     }
+  }
+}
+
+pub fn read_optional(
+  root: String,
+  relative: String,
+) -> Result(Option(String), String) {
+  use path <- result.try(checked_path(root, relative))
+  case simplifile.link_info(path) {
+    Error(simplifile.Enoent) -> Ok(None)
+    Error(_) -> Error("file_stat_failed")
+    Ok(_) -> read(root, relative) |> result.map(Some)
   }
 }
 

@@ -257,6 +257,7 @@ fn successor_state() {
       [],
       "fixture",
       "fixture",
+      "fixture",
     ),
     True,
     False,

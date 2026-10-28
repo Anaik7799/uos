@@ -28,6 +28,8 @@ pub type Scope {
     sources: List(String),
     tests: List(String),
     portfolio: String,
+    allowed_clients: List(String),
+    allowed_client_actions: List(String),
   )
 }
 
@@ -42,6 +44,7 @@ pub type Grant {
     boot: String,
     expires_us: Int,
     scopes: List(Scope),
+    workspace_root: String,
     review_path: String,
     review_sha256: String,
   )
@@ -70,7 +73,9 @@ pub const control_modules = [
   "uos_swarm@session_store", "uos_swarm@session_sync", "session_store_cli",
   "session_store_ffi", "uos_swarm@coord", "uos_swarm@board", "uos_swarm_ffi",
   "session_sync_ffi", "esqlite3", "esqlite3_nif",
-  "cepaf_gleam@harness@planning_intents",
+  "cepaf_gleam@harness@planning_intents", "cepaf_gleam@harness@client_mcp",
+  "cepaf_gleam@harness@client_profiles", "cepaf_gleam@harness@client_config",
+  "client_config_io",
 ]
 
 // C4: the guardian at tools/ecology_process.ml bounds every effect's time,
@@ -164,18 +169,40 @@ pub fn scope_valid(scope: Scope) -> Bool {
     public_path,
   )
   && list.all(scope.writes, fn(p) {
-    // New implementation/control code is Gleam; documentation is data.
-    string.ends_with(p, ".gleam")
-    || string.ends_with(p, ".md")
-    || string.ends_with(p, ".json")
+    // Source-code writes must be in candidate identity. Data and docs stay
+    // on the canonical evidence root.
+    case string.ends_with(p, ".gleam") || string.ends_with(p, ".erl") {
+      True -> list.contains(scope.sources, p)
+      False -> string.ends_with(p, ".md") || string.ends_with(p, ".json")
+    }
   })
   && scope.tests != []
   && list.length(scope.tests) <= 32
   && list.all(scope.tests, fn(t) {
     component(t) && !string.contains(t, ".") && !string.contains(t, "-")
   })
+  && list.length(list.unique(scope.allowed_clients))
+  == list.length(scope.allowed_clients)
+  && list.all(scope.allowed_clients, fn(client) {
+    list.contains(["agy", "gemini", "codex", "claude", "pi"], client)
+  })
+  && list.length(list.unique(scope.allowed_client_actions))
+  == list.length(scope.allowed_client_actions)
+  && list.all(scope.allowed_client_actions, fn(action) {
+    list.contains(["prepare", "status", "rollback"], action)
+  })
+  && client_permissions_complete(scope)
   && risk_path(scope.portfolio)
   && string.ends_with(scope.portfolio, "-current-risk.json")
+}
+
+fn client_permissions_complete(scope: Scope) -> Bool {
+  case scope.allowed_clients, scope.allowed_client_actions {
+    [], [] -> True
+    [], _ -> False
+    _, [] -> False
+    _, _ -> True
+  }
 }
 
 fn scope_decoder() -> decode.Decoder(Scope) {
@@ -186,7 +213,27 @@ fn scope_decoder() -> decode.Decoder(Scope) {
   use sources <- decode.field("source_paths", decode.list(decode.string))
   use tests <- decode.field("test_modules", decode.list(decode.string))
   use portfolio <- decode.field("risk_portfolio", decode.string)
-  decode.success(Scope(plan, task, reads, writes, sources, tests, portfolio))
+  use clients <- decode.optional_field(
+    "allowed_clients",
+    [],
+    decode.list(decode.string),
+  )
+  use actions <- decode.optional_field(
+    "allowed_client_actions",
+    [],
+    decode.list(decode.string),
+  )
+  decode.success(Scope(
+    plan,
+    task,
+    reads,
+    writes,
+    sources,
+    tests,
+    portfolio,
+    clients,
+    actions,
+  ))
 }
 
 pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
@@ -200,6 +247,7 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
     use boot <- decode.field("boot_id", decode.string)
     use expiry <- decode.field("expires_utc_us", decode.string)
     use scopes <- decode.field("tasks", decode.list(scope_decoder()))
+    use workspace <- decode.optional_field("workspace_root", "", decode.string)
     use review <- decode.field("review_path", decode.string)
     use review_hash <- decode.field("review_sha256", decode.string)
     decode.success(#(
@@ -212,6 +260,7 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
       boot,
       expiry,
       scopes,
+      workspace,
       review,
       review_hash,
     ))
@@ -237,8 +286,9 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
       list.unique(list.map(fields.8, fn(s) { #(s.plan, s.task) })),
     )
       == list.length(fields.8)
-      && public_path(fields.9)
-      && digest_valid(fields.10)
+      && workspace_locator_valid(fields.9)
+      && public_path(fields.10)
+      && digest_valid(fields.11)
       && risk_path(path),
     "grant_scope_or_role_refused",
   ))
@@ -254,7 +304,72 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
     fields.8,
     fields.9,
     fields.10,
+    fields.11,
   ))
+}
+
+fn workspace_locator_valid(relative: String) -> Bool {
+  case relative {
+    "" -> True
+    _ -> result.is_ok(files.workspace_root(dev.root, relative))
+  }
+}
+
+/// Legacy grants use the canonical source root. A reviewed candidate grant
+/// selects one direct real JJ workspace, resolved again at each use.
+pub fn source_root(grant: Grant) -> Result(String, String) {
+  case grant.workspace_root {
+    "" -> Ok(dev.root)
+    relative -> files.workspace_root(dev.root, relative)
+  }
+}
+
+fn registered_workspace(
+  relative: String,
+  expected_root: String,
+) -> Result(Nil, String) {
+  case string.split(relative, "/") {
+    [".uos-workspaces", name] -> {
+      use listing <- result.try(dev.bounded(
+        dev.root <> "/toolchains/nix-profile/bin/jj",
+        ["--repository", dev.root, "workspace", "list"],
+        3000,
+      ))
+      use actual_root <- result.try(dev.bounded(
+        dev.root <> "/toolchains/nix-profile/bin/jj",
+        ["--repository", expected_root, "workspace", "root"],
+        3000,
+      ))
+      require(
+        workspace_identity_matches(
+          relative,
+          expected_root,
+          listing,
+          actual_root,
+        ),
+        "workspace_jj_registration_or_root_identity_mismatch",
+      )
+    }
+    _ -> Error("workspace_path_not_direct_candidate")
+  }
+}
+
+pub fn workspace_identity_matches(
+  relative: String,
+  expected_root: String,
+  listing: String,
+  actual_root: String,
+) -> Bool {
+  case string.split(relative, "/") {
+    [".uos-workspaces", name] -> {
+      let line_prefix = name <> ": " <> relative <> " "
+      list.any(string.split(listing, "\n"), fn(line) {
+        string.starts_with(line, line_prefix)
+      })
+      && string.trim(actual_root) == expected_root
+    }
+    _ -> False
+  }
 }
 
 pub fn grant_budget_valid(
@@ -578,6 +693,13 @@ pub fn check(grant: Grant) -> Result(clock.Observation, String) {
     "control_dependencies",
   ))
   use _ <- result.try(control_dependencies_match(recorded_dependencies))
+  use _ <- result.try(case grant.workspace_root {
+    "" -> Ok(Nil)
+    relative -> {
+      use root <- result.try(source_root(grant))
+      registered_workspace(relative, root)
+    }
+  })
   use now <- result.try(clock.observe())
   use _ <- result.try(validate_window(grant, now))
   Ok(now)
