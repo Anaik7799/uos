@@ -456,10 +456,12 @@ pub fn effect_response_projection_is_bounded_and_receipt_bound_test() {
       ..ops.effect_output_fields(output)
     ])
   let path = "var/harness/effects/test@result.json"
-  let response = ops.effect_response_summary(receipt, path, False)
-  let parsed =
-    json.to_string(response) |> json.parse(value.decoder()) |> should.be_ok
   let full_receipt = json.to_string(receipt)
+  let parsed =
+    ops.effect_response_summary(path, full_receipt, False)
+    |> json.to_string
+    |> json.parse(value.decoder())
+    |> should.be_ok
   value.get(parsed, "receipt_path")
   |> should.equal(Ok(value.Text(path)))
   value.get(parsed, "receipt_sha256")
@@ -480,13 +482,18 @@ pub fn effect_response_projection_is_bounded_and_receipt_bound_test() {
   value.get(parsed, "output_bytes")
   |> should.equal(Ok(value.Integer(20_000)))
   value.get(parsed, "input_manifest") |> should.be_error
-  let replay_response = ops.effect_response_summary(receipt, path, True)
+  let replay_body = " \n" <> full_receipt <> "\n"
+  let replay_response = ops.effect_response_summary(path, replay_body, True)
   let parsed_replay =
     json.to_string(replay_response)
     |> json.parse(value.decoder())
     |> should.be_ok
   value.get(parsed_replay, "replayed")
   |> should.equal(Ok(value.Boolean(True)))
+  value.get(parsed_replay, "receipt_sha256")
+  |> should.equal(Ok(value.Text(files.digest(replay_body))))
+  value.get(parsed_replay, "receipt_bytes")
+  |> should.equal(Ok(value.Integer(string.byte_size(replay_body))))
   let giant_cluster = "x" <> string.repeat("\u{301}", 1500)
   let cluster_receipt =
     json.object([
@@ -496,7 +503,7 @@ pub fn effect_response_projection_is_bounded_and_receipt_bound_test() {
       ..ops.effect_output_fields(giant_cluster)
     ])
   let cluster_summary =
-    ops.effect_response_summary(cluster_receipt, path, False)
+    ops.effect_response_summary(path, json.to_string(cluster_receipt), False)
     |> json.to_string
     |> json.parse(value.decoder())
     |> should.be_ok

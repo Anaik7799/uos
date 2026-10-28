@@ -577,7 +577,7 @@ pub fn effect(
   case saved {
     Some(body) -> {
       use receipt <- result.try(replay(body, sig))
-      Ok(effect_response_summary(receipt, result_path, True))
+      Ok(effect_response_summary(result_path, body, True))
     }
     None -> {
       use pending <- result.try(
@@ -683,13 +683,10 @@ pub fn effect(
             ..base
           ])
       }
-      use _ <- result.try(files.create(
-        dev.root,
-        result_path,
-        json.to_string(record),
-      ))
+      let record_body = json.to_string(record)
+      use _ <- result.try(files.create(dev.root, result_path, record_body))
       case verified {
-        Ok(_) -> Ok(effect_response_summary(record, result_path, False))
+        Ok(_) -> Ok(effect_response_summary(result_path, record_body, False))
         Error(e) -> {
           let known_exit = case outcome {
             Error(cause) ->
@@ -799,12 +796,11 @@ pub fn test_module_manifest_valid(modules: List(String)) -> Bool {
 /// Return only a compact response projection. The exact full receipt remains
 /// durably stored and addressable by path and digest.
 pub fn effect_response_summary(
-  receipt: json.Json,
   receipt_path: String,
+  exact_receipt_body: String,
   replayed: Bool,
 ) -> json.Json {
-  let serialized = json.to_string(receipt)
-  let parsed = case json.parse(serialized, value.decoder()) {
+  let parsed = case json.parse(exact_receipt_body, value.decoder()) {
     Ok(value.Object(fields)) -> value.Object(fields)
     _ -> value.Object([])
   }
@@ -822,8 +818,8 @@ pub fn effect_response_summary(
     #("replayed_from", json.string(text_or_empty(parsed, "replayed_from"))),
     #("original_sha256", json.string(text_or_empty(parsed, "original_sha256"))),
     #("receipt_path", json.string(receipt_path)),
-    #("receipt_sha256", json.string(files.digest(serialized))),
-    #("receipt_bytes", json.int(string.byte_size(serialized))),
+    #("receipt_sha256", json.string(files.digest(exact_receipt_body))),
+    #("receipt_bytes", json.int(string.byte_size(exact_receipt_body))),
     #("output_tail", json.string(tail)),
     #("output_tail_sha256", json.string(files.digest(tail))),
     #("output_tail_bytes", json.int(string.byte_size(tail))),
