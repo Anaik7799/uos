@@ -21,6 +21,8 @@ pub fn every_profile_uses_one_fixed_stdio_server_test() {
     && profile.args != []
     && list.contains(profile.env_names, "UOS_HARNESS_GRANT_PATH")
     && list.contains(profile.env_names, "UOS_HARNESS_GRANT_SHA256")
+    && list.contains(profile.env_names, "ERL_CRASH_DUMP_SECONDS")
+    && list.contains(profile.args, "-noinput")
   })
   |> should.be_true()
 }

@@ -17,7 +17,7 @@
 -module(ecology_capability_ffi).
 
 -export([uos_root/0, probe_executable/1, run_bounded/3, run_bounded_env/4,
-         run_bounded_cd/4,
+         run_bounded_cd/4, run_bounded_profile/4,
          ets_backend_probe/0, km_nif_loaded/0, env_present/1,
          ets_init/0, ets_request/1, invoke_external/2, max_request/1]).
 
@@ -134,6 +134,77 @@ run_bounded_env(Path, Args, TimeoutMs, Env) when is_list(Env), length(Env) =< 8 
         false -> {error,<<"invalid_environment_bound">>}
     end;
 run_bounded_env(_,_,_,_) -> {error,<<"invalid_environment_bound">>}.
+
+%% Run the fixed AGY CLI from its isolated, grant-scoped private HOME. The
+%% profile path is validated as a private runtime directory and is also the
+%% process cwd, so neither global nor repository-project MCP registries load.
+run_bounded_profile(Path, Args, TimeoutMs, ProfileRoot)
+  when is_binary(Path), is_list(Args), is_integer(TimeoutMs),
+       TimeoutMs>0, TimeoutMs=<60000, is_binary(ProfileRoot) ->
+    case valid_agy_profile(ProfileRoot) andalso
+         Path =:= <<"/home/an/.local/bin/agy">> of
+        true -> run_guarded_profile(Path,Args,TimeoutMs,ProfileRoot);
+        false -> {error,<<"agy_profile_isolation_refused">>}
+    end;
+run_bounded_profile(_,_,_,_) -> {error,<<"invalid_profile_bound">>}.
+
+valid_agy_profile(ProfileRoot) ->
+    try
+        Parts=filename:split(binary_to_list(ProfileRoot)),
+        ["/","run","user",Uid,"uos-harness-client-profiles","agy",Grant]=Parts,
+        true=length(Uid)>0 andalso lists:all(fun(C)->C >= $0 andalso C =< $9 end,Uid),
+        true=length(Grant)>=8 andalso length(Grant)=<64 andalso
+             lists:all(fun(C)->(C >= $a andalso C =< $z) orelse
+                              (C >= $0 andalso C =< $9) orelse C =:= $- orelse C =:= $_ end,
+                       Grant),
+        Owner=list_to_integer(Uid),
+        Runtime="/run/user/"++Uid,
+        Base=filename:join(Runtime,"uos-harness-client-profiles"),
+        Agy=filename:join(Base,"agy"),
+        Profile=binary_to_list(ProfileRoot),
+        true=private_profile_dir(Runtime,Owner),
+        true=private_profile_dir(Base,Owner),
+        true=private_profile_dir(Agy,Owner),
+        true=private_profile_dir(Profile,Owner),
+        true=private_profile_dir(filename:join(Profile,".gemini"),Owner),
+        true=private_profile_dir(filename:join([Profile,".gemini","config"]),Owner),
+        true=profile_absent(filename:join(binary_to_list(ProfileRoot),".agents")),
+        true=profile_absent(filename:join([binary_to_list(ProfileRoot),".gemini","extensions"])),
+        true
+    catch _:_ -> false end.
+
+private_profile_dir(Path, Owner) ->
+    case file:read_link_info(Path) of
+        {ok,#file_info{type=directory,uid=Owner,mode=Mode}} ->
+            (Mode band 8#777)=:=8#700;
+        _ -> false
+    end.
+
+profile_absent(Path) ->
+    case file:read_link_info(Path) of
+        {error,enoent} -> true;
+        _ -> false
+    end.
+
+run_guarded_profile(Path, Args, TimeoutMs, ProfileRoot) ->
+    try
+        Root=utf8_chars(uos_root()),
+        Profile=utf8_chars(ProfileRoot),
+        Ocaml=dependency(Root,<<"ocaml">>,"toolchains/opam-ocaml/bin/ocaml"),
+        Guardian=filename:join(Root,"tools/ecology_process.ml"),
+        %% The environment process starts with `env -i`; inherited API tokens,
+        %% plugin overrides, and client-specific config pointers never reach
+        %% AGY. Only fixed runtime lookup paths and the private profile survive.
+        CleanArgs=["-i","HOME="++Profile,
+          "XDG_CONFIG_HOME="++filename:join(Profile,".config"),
+          "PATH=/usr/bin:/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin",
+          utf8_chars(Path)] ++ [utf8_chars(Argument)||Argument<-Args],
+        A=["-I","+unix",Guardian,integer_to_list(TimeoutMs),
+           integer_to_list(?OUTPUT_LIMIT),"merged","/usr/bin/env"] ++ CleanArgs,
+        Port=erlang:open_port({spawn_executable,Ocaml},
+          [stream,use_stdio,exit_status,binary,{args,A},{cd,Profile}]),
+        collect(Port,erlang:monotonic_time(millisecond)+TimeoutMs+1000,0,[])
+    catch _:_ -> {error,<<"backend_spawn_failed">>} end.
 
 %% As run_bounded/3 but runs the child with {cd, Cwd}. Cwd must be an absolute
 %% path at or under the UOS root. Used to run `gleam check` from the project

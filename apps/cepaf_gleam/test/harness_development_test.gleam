@@ -299,3 +299,61 @@ pub fn generic_json_preserves_nested_types_test() {
     json.parse(json.to_string(value.encode(parsed)), value.decoder())
   again |> should.equal(parsed)
 }
+
+
+pub fn bounded_profile_refuses_noncanonical_executable_and_profile_test() {
+  dev.bounded_profile(
+    "/bin/true",
+    [],
+    "/tmp/not-an-agy-private-profile",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_refuses_non_private_profile_root_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/tmp/uos-harness-client-profiles/agy/fixture-grant",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_refuses_wrong_profile_root_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/run/user/1000/not-uos-harness-client-profiles/agy/fixture-grant",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_refuses_traversal_profile_root_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/run/user/1000/uos-harness-client-profiles/agy/../fixture-grant",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_rejects_timeout_outside_bounds_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/tmp/not-an-agy-private-profile",
+    0,
+  )
+  |> should.equal(Error("invalid_profile_bound"))
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/tmp/not-an-agy-private-profile",
+    60001,
+  )
+  |> should.equal(Error("invalid_profile_bound"))
+}

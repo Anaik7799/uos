@@ -1,3 +1,4 @@
+import gleam/list
 import cepaf_gleam/harness/client_config
 import cepaf_gleam/harness/client_profiles as profiles
 import cepaf_gleam/harness/value
@@ -121,4 +122,121 @@ pub fn json_byte_and_depth_bounds_fail_closed_test() {
   |> should.be_false()
   client_config.bounded_json(fixture())
   |> should.be_true()
+}
+
+pub fn agy_disabled_false_is_the_only_extra_allowed_entry_field_test() {
+  let args = ["-noshell", "cepaf_gleam@harness@successor_mcp:main()"]
+  let disabled_false =
+    string.replace(
+      fixture(),
+      "\"command\":\"/fixture/erl\"",
+      "\"command\":\"/fixture/erl\",\"disabled\":false",
+    )
+  client_config.inspect_json(
+    profiles.Agy,
+    "uos-gleam-dev-fixture",
+    disabled_false,
+    "/fixture/erl",
+    args,
+    expected_env(),
+  )
+  |> should.equal(Ok(client_config.Exact))
+
+  client_config.inspect_json(
+    profiles.Gemini,
+    "uos-gleam-dev-fixture",
+    disabled_false,
+    "/fixture/erl",
+    args,
+    expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+
+  let disabled_true =
+    string.replace(disabled_false, "\"disabled\":false", "\"disabled\":true")
+  client_config.inspect_json(
+    profiles.Agy,
+    "uos-gleam-dev-fixture",
+    disabled_true,
+    "/fixture/erl",
+    args,
+    expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+
+  let disabled_text =
+    string.replace(disabled_false, "\"disabled\":false", "\"disabled\":\"false\"")
+  client_config.inspect_json(
+    profiles.Agy,
+    "uos-gleam-dev-fixture",
+    disabled_text,
+    "/fixture/erl",
+    args,
+    expected_env(),
+  )
+  |> should.equal(Ok(client_config.Conflict))
+}
+
+pub fn agy_private_profile_parser_accepts_only_its_single_owned_entry_test() {
+  let profile = profiles.profile_at(profiles.Agy, "/candidate")
+  let env =
+    value.Object(
+      list.map(expected_env(), fn(pair) {
+        case string.split(pair, "=") {
+          [key, text] -> #(key, value.Text(text))
+          _ -> #("invalid", value.Null)
+        }
+      }),
+    )
+  let entry =
+    value.Object([
+      #("command", value.Text(profile.command)),
+      #("args", value.Array(list.map(profile.args, value.Text))),
+      #("env", env),
+      #("disabled", value.Boolean(False)),
+    ])
+  let one_server =
+    value.Object([
+      #("mcpServers", value.Object([#("uos-gleam-dev-fixture", entry)])),
+    ])
+    |> value.encode
+    |> json.to_string
+  client_config.inspect_agy_profile_json(
+    one_server,
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    expected_env(),
+  )
+  |> should.equal(Ok(client_config.Exact))
+
+  let two_servers =
+    value.Object([
+      #(
+        "mcpServers",
+        value.Object([
+          #("uos-gleam-dev-fixture", entry),
+          #("legacy", entry),
+        ]),
+      ),
+    ])
+    |> value.encode
+    |> json.to_string
+  client_config.inspect_agy_profile_json(
+    two_servers,
+    "uos-gleam-dev-fixture",
+    profile.command,
+    profile.args,
+    expected_env(),
+  )
+  |> should.equal(Error("agy_profile_has_unexpected_servers"))
+}
+
+pub fn agy_private_profile_helpers_reject_traversal_ids_without_io_test() {
+  client_config.agy_profile_path("../outside")
+  |> should.equal(Error("agy_private_profile_path_unavailable"))
+  client_config.agy_profile_root("../outside")
+  |> should.equal(Error("agy_private_profile_unavailable"))
+  client_config.cleanup_agy_profile("../outside")
+  |> should.equal(Error("agy_private_profile_cleanup_failed"))
 }

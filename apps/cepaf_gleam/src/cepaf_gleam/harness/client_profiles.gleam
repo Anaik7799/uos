@@ -63,6 +63,7 @@ pub fn profile_at(client: Client, source_root: String) -> Profile {
       "2:2",
       "+A",
       "2",
+      "-noinput",
       "-noshell",
       "-eval",
       "code:add_paths(filelib:wildcard(\""
@@ -79,6 +80,7 @@ pub fn profile_at(client: Client, source_root: String) -> Profile {
       "UOS_HARNESS_ATTEMPT",
       "UOS_HARNESS_SESSION",
       "UOS_HARNESS_EPOCH",
+      "ERL_CRASH_DUMP_SECONDS",
     ],
     configuration_mode(client),
   )
@@ -90,7 +92,7 @@ fn configuration_mode(client: Client) -> String {
     Gemini -> "--allowed-mcp-server-names with one named server"
     Codex -> "per-run -c mcp_servers.uos-gleam-development.*"
     Claude -> "--strict-mcp-config with one server JSON"
-    Pi -> "per-run --extension with filtered MCP SDK extension"
+    Pi -> "mcp add/list/remove; one named server entry"
   }
 }
 
