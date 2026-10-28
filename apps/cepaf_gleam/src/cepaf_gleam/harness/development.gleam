@@ -1157,7 +1157,7 @@ fn effect(
           })
           use dispatch <- result.try(fence(binding))
           use timeout <- result.try(dispatch_budget(dispatch, 60_000))
-          let outcome = perform(name, arguments, timeout)
+          let outcome = perform(name, arguments, timeout, binding)
           let source_after = case source_check {
             True -> capture_sources()
             False -> Ok([])
@@ -1753,24 +1753,35 @@ fn perform(
   name: String,
   arguments: value.Value,
   timeout_ms: Int,
+  binding: Binding,
 ) -> Result(String, String) {
   case name {
     "harness_write_file" -> {
       use path <- result.try(field(arguments, "path"))
       use content <- result.try(field(arguments, "content"))
       use expected <- result.try(field(arguments, "expected_sha256"))
+      use intent <- result.try(field(arguments, "intent_id"))
       case source_allowed(path) || document_allowed(path) {
         False -> Error("write_scope_denied")
         True -> {
-          use _ <- result.try(case expected {
-            "ABSENT" -> files.create(root, path, content)
-            _ -> files.replace(root, path, expected, content)
-          })
-          use observed <- result.try(files.read(root, path))
-          case observed == content {
-            True -> Ok(files.digest(observed))
-            False -> Error("write_readback_mismatch")
-          }
+          session_authority.with_cas_critical_section(
+            binding.session,
+            task_resource(binding),
+            binding.epoch,
+            path,
+            intent,
+            fn() {
+              use _ <- result.try(case expected {
+                "ABSENT" -> files.create(root, path, content)
+                _ -> files.replace(root, path, expected, content)
+              })
+              use observed <- result.try(files.read(root, path))
+              case observed == content {
+                True -> Ok(files.digest(observed))
+                False -> Error("write_readback_mismatch")
+              }
+            },
+          )
         }
       }
     }

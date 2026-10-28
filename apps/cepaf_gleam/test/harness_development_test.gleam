@@ -98,6 +98,8 @@ pub fn replay_preserves_failure_and_rejects_corrupt_or_unbound_receipts_test() {
     |> json.to_string
   dev.replay_receipt(success, "other", "harness_test", "digest")
   |> should.equal(Error("saved_receipt_binding_mismatch"))
+  dev.replay_receipt(success, "one", "harness_test", "altered-signature")
+  |> should.equal(Error("saved_receipt_binding_mismatch"))
   dev.replay_receipt(success, "one", "harness_test", "digest") |> should.be_ok
 }
 

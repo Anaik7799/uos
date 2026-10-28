@@ -113,6 +113,42 @@ pub opaque type Store {
   Store(conn: Conn, path: String, generation: String)
 }
 
+/// A bounded, path- and request-bound critical section. The operation id is
+/// diagnostic/replay context for the caller; durable idempotency remains the
+/// caller's responsibility. SQLite serializes all such sections globally.
+pub opaque type CriticalSection {
+  CriticalSection(path_key: String, operation_id: String)
+}
+
+pub fn critical_section(
+  path_key: String,
+  operation_id: String,
+) -> Result(CriticalSection, String) {
+  let path_parts = string.split(path_key, "/")
+  let path_valid =
+    string.byte_size(path_key) > 0
+    && string.byte_size(path_key) <= 512
+    && !string.starts_with(path_key, "/")
+    && !string.contains(path_key, "\\")
+    && !string.contains(path_key, "\u{0}")
+    && list.all(path_parts, fn(part) {
+      part != "" && part != "." && part != ".."
+    })
+  let operation_valid =
+    string.length(operation_id) > 0
+    && string.length(operation_id) <= 128
+    && list.all(string.to_graphemes(operation_id), fn(character) {
+      string.contains(
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.:",
+        character,
+      )
+    })
+  case path_valid && operation_valid {
+    True -> Ok(CriticalSection(path_key, operation_id))
+    False -> Error("critical_section_binding_invalid")
+  }
+}
+
 pub fn path(store: Store) -> String {
   store.path
 }
@@ -548,6 +584,34 @@ fn transactionally(
       Error(error)
     }
   }
+}
+
+/// Run a short external effect while this connection holds SQLite's writer
+/// transaction. This globally serializes admitted writers; it is not a lock
+/// against writers that bypass this store. The callback receives the already
+/// replayed and clock-rebased state so it must not reopen/reenter the store.
+/// If an external effect lands and COMMIT then fails, the result is uncertain
+/// and the caller must reconcile its durable intent rather than retry.
+pub fn with_critical_section(
+  store: Store,
+  section: CriticalSection,
+  body: fn(sync.State, String, Int) -> Result(a, String),
+) -> Result(a, StoreError) {
+  use _ <- result.try(recovery_current(store))
+  transactionally(store, fn() {
+    use _ <- result.try(recovery_current(store))
+    use journal_text <- result.try(reconstruct_journal(store))
+    use state <- result.try(
+      sync.replay(journal_text) |> result.map_error(CorruptError),
+    )
+    use #(host, boot, now, _utc) <- result.try(read_clock())
+    use current <- result.try(
+      sync.rebase_clock(state, host, boot, now)
+      |> result.map_error(RefusedError),
+    )
+    let _binding = section.path_key <> "\u{0}" <> section.operation_id
+    body(current, boot, now) |> result.map_error(RefusedError)
+  })
 }
 
 // ---------------------------------------------------------------------
@@ -1072,39 +1136,73 @@ pub fn observe_file(
   path: String,
   query: fn(sync.State, String, Int) -> Result(a, StoreError),
 ) -> Result(a, StoreError) {
-  use _ <- result.try(case string.starts_with(path, "/")
-    && !string.contains(path, "\u{0}") && string.byte_size(path) <= 1024 {
-    True -> Ok(Nil)
-    False -> Error(OpenError("observation_path_invalid"))
-  })
-  use info <- result.try(simplifile.link_info(path)
-    |> result.replace_error(OpenError("observation_file_unavailable")))
-  use _ <- result.try(case simplifile.file_info_type(info) == simplifile.File
-    && info.size > 0 && info.size <= 67_108_864 {
-    True -> Ok(Nil)
-    False -> Error(OpenError("observation_file_bound"))
-  })
+  use _ <- result.try(
+    case
+      string.starts_with(path, "/")
+      && !string.contains(path, "\u{0}")
+      && string.byte_size(path) <= 1024
+    {
+      True -> Ok(Nil)
+      False -> Error(OpenError("observation_path_invalid"))
+    },
+  )
+  use info <- result.try(
+    simplifile.link_info(path)
+    |> result.replace_error(OpenError("observation_file_unavailable")),
+  )
+  use _ <- result.try(
+    case
+      simplifile.file_info_type(info) == simplifile.File
+      && info.size > 0
+      && info.size <= 67_108_864
+    {
+      True -> Ok(Nil)
+      False -> Error(OpenError("observation_file_bound"))
+    },
+  )
   use _ <- result.try(recovery_clear(path))
   use generation <- result.try(recovery_generation(path))
-  let encoded = path |> string.split("/") |> list.map(uri.percent_encode) |> string.join("/")
+  let encoded =
+    path
+    |> string.split("/")
+    |> list.map(uri.percent_encode)
+    |> string.join("/")
   use conn <- result.try(
-    ffi_open_uri(ascii_charlist("file://" <> encoded <> "?mode=ro&cache=private"))
-    |> result.replace_error(OpenError("observation_open_failed")))
+    ffi_open_uri(ascii_charlist(
+      "file://" <> encoded <> "?mode=ro&cache=private",
+    ))
+    |> result.replace_error(OpenError("observation_open_failed")),
+  )
   let opened = Store(conn, path, generation)
   let outcome = {
-    use _ <- result.try(ffi_exec(conn, "PRAGMA busy_timeout=200") |> result.map_error(StorageError))
-    use _ <- result.try(ffi_exec(conn, "PRAGMA query_only=ON") |> result.map_error(StorageError))
-    use _ <- result.try(ffi_exec(conn, "BEGIN") |> result.map_error(StorageError))
-    use schema <- result.try(run(opened, "SELECT value FROM meta WHERE key = 'schema'", []))
+    use _ <- result.try(
+      ffi_exec(conn, "PRAGMA busy_timeout=200")
+      |> result.map_error(StorageError),
+    )
+    use _ <- result.try(
+      ffi_exec(conn, "PRAGMA query_only=ON") |> result.map_error(StorageError),
+    )
+    use _ <- result.try(
+      ffi_exec(conn, "BEGIN") |> result.map_error(StorageError),
+    )
+    use schema <- result.try(
+      run(opened, "SELECT value FROM meta WHERE key = 'schema'", []),
+    )
     use _ <- result.try(case schema {
       [[CellText(value)]] if value == sync.genesis -> Ok(Nil)
       _ -> Error(SchemaError("observation_schema_mismatch"))
     })
-    use sizes <- result.try(run(opened,
-      "SELECT count(*), COALESCE(sum(length(CAST(body_json AS BLOB)) + length(CAST(command_json AS BLOB)) + length(digest)),0) FROM events", []))
+    use sizes <- result.try(
+      run(
+        opened,
+        "SELECT count(*), COALESCE(sum(length(CAST(body_json AS BLOB)) + length(CAST(command_json AS BLOB)) + length(digest)),0) FROM events",
+        [],
+      ),
+    )
     use _ <- result.try(case sizes {
-      [[CellInt(count), CellInt(bytes)]] if count > 0 && count <= 20_000
-        && bytes > 0 && bytes <= 16_777_216 -> Ok(Nil)
+      [[CellInt(count), CellInt(bytes)]]
+        if count > 0 && count <= 20_000 && bytes > 0 && bytes <= 16_777_216
+      -> Ok(Nil)
       _ -> Error(RefusedError("observation_ledger_bound"))
     })
     use report <- result.try(verify(opened))
@@ -1120,7 +1218,6 @@ pub fn observe_file(
     Ok(value) -> closed |> result.replace(value)
   }
 }
-
 
 // ---------------------------------------------------------------------
 // Service Provider Migration (v1 -> v2)

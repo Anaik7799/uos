@@ -18,6 +18,7 @@ import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
 import simplifile
+import uos_swarm/session_authority
 
 pub fn text(args: value.Value, key: String) -> Result(String, String) {
   use found <- result.try(value.get(args, key))
@@ -357,18 +358,24 @@ fn perform(
       use path <- result.try(text(args, "path"))
       use body <- result.try(text(args, "content"))
       use expected <- result.try(text(args, "expected_sha256"))
+      use intent <- result.try(text(args, "intent_id"))
       use _ <- result.try(a.require(
         list.contains(execution.scope.writes, path),
         "write_scope_refused",
       ))
       use root <- result.try(root_for_path(execution, path))
-      use _ <- result.try(case expected {
-        "ABSENT" -> files.create(root, path, body)
-        _ -> files.replace(root, path, expected, body)
-      })
-      use readback <- result.try(files.read(root, path))
-      use _ <- result.try(a.require(readback == body, "write_readback_mismatch"))
-      Ok(files.digest(readback))
+      write_file_with_cas_at(
+        session_authority.database,
+        execution.binding.session,
+        dev.task_resource(execution.binding),
+        execution.binding.epoch,
+        execution.grant.id,
+        intent,
+        root,
+        path,
+        body,
+        expected,
+      )
     }
     "harness_build" -> {
       use args <- result.try(build_args_for(execution, ["build"]))
@@ -384,6 +391,41 @@ fn perform(
     }
     _ -> Error("effect_not_admitted")
   }
+}
+
+/// Task-authorized writes serialize on the resolved root identity plus relative
+/// target path while the SQLite coordinator transaction validates the epoch.
+/// `coordinator_path` is parameterized for isolated regression tests; production
+/// dispatch supplies the canonical database above.
+pub fn write_file_with_cas_at(
+  coordinator_path: String,
+  session: String,
+  resource: String,
+  epoch: Int,
+  grant_id: String,
+  intent: String,
+  root: String,
+  path: String,
+  body: String,
+  expected: String,
+) -> Result(String, String) {
+  session_authority.with_cas_critical_section_at(
+    coordinator_path,
+    session,
+    resource,
+    epoch,
+    files.digest(root) <> "/" <> path,
+    files.digest(grant_id <> "\u{0}" <> intent),
+    fn() {
+      use _ <- result.try(case expected {
+        "ABSENT" -> files.create(root, path, body)
+        _ -> files.replace(root, path, expected, body)
+      })
+      use readback <- result.try(files.read(root, path))
+      use _ <- result.try(a.require(readback == body, "write_readback_mismatch"))
+      Ok(files.digest(readback))
+    },
+  )
 }
 
 pub fn build_args(args: List(String)) -> List(String) {
