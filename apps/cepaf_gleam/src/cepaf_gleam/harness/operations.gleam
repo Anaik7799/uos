@@ -1078,6 +1078,17 @@ pub fn reconcile(
 ) -> Result(json.Json, String) {
   use _ <- result.try(a.require(a.intent_valid(intent), "intent_id"))
   use _ <- result.try(a.check(execution.grant))
+  use planning_resolution <- result.try(planning.reconcile(execution, intent))
+  case planning_resolution {
+    Some(receipt) -> Ok(receipt)
+    None -> reconcile_effect_or_completion(execution, intent)
+  }
+}
+
+fn reconcile_effect_or_completion(
+  execution: a.Execution,
+  intent: String,
+) -> Result(json.Json, String) {
   // Dispatch on the record's DECLARED kind, never on which filename exists:
   // before the "@" encoding those two questions had the same answer for some
   // intent ids, and a filename was never evidence of a record's meaning anyway.

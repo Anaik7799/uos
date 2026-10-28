@@ -329,7 +329,7 @@ fn registered_workspace(
   expected_root: String,
 ) -> Result(Nil, String) {
   case string.split(relative, "/") {
-    [".uos-workspaces", name] -> {
+    [".uos-workspaces", _name] -> {
       use listing <- result.try(dev.bounded(
         dev.root <> "/toolchains/nix-profile/bin/jj",
         ["--repository", dev.root, "workspace", "list"],
@@ -837,12 +837,13 @@ pub fn state_assessment(
   })
   let changed =
     list.map(records, fn(record) {
-      case value.get(record, "plan_id"), value.get(record, "task_id") {
-        Ok(value.Text(p)), Ok(value.Text(t))
-          if p == execution.scope.plan && t == execution.scope.task
-        -> value.set(record, "task_state", value.Text(state))
-        _, _ -> record
-      }
+      assessment_record_state(
+        record,
+        execution.scope.plan,
+        execution.scope.task,
+        state,
+        execution.binding.worker,
+      )
     })
   let updated = value.encode(value.Array(changed)) |> json.to_string
   let path =
@@ -857,6 +858,29 @@ pub fn state_assessment(
     updated,
   ))
   Ok(execution.scope.portfolio)
+}
+
+/// Bind an active assessment to the worker Sa-plan actually assigned after a
+/// successful claim. Planning-time actor estimates are not post-claim identity.
+pub fn assessment_record_state(
+  record: value.Value,
+  plan: String,
+  task: String,
+  state: String,
+  worker: String,
+) -> value.Value {
+  case value.get(record, "plan_id"), value.get(record, "task_id") {
+    Ok(value.Text(actual_plan)), Ok(value.Text(actual_task))
+      if actual_plan == plan && actual_task == task
+    -> {
+      let updated = value.set(record, "task_state", value.Text(state))
+      case state {
+        "executing" -> value.set(updated, "actor", value.Text(worker))
+        _ -> updated
+      }
+    }
+    _, _ -> record
+  }
 }
 
 pub fn attach(

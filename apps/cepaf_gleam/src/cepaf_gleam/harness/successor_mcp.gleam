@@ -296,10 +296,13 @@ fn dispatch(
         }
       }
       case outcome {
-        Ok(receipt) -> #(
-          State(..state, execution: None, unresolved: False),
-          Ok(receipt),
-        )
+        Ok(receipt) -> {
+          let next_state = case planning_resolution_receipt(receipt) {
+            True -> State(..state, unresolved: False)
+            False -> State(..state, execution: None, unresolved: False)
+          }
+          #(next_state, Ok(receipt))
+        }
         Error(e) -> #(
           State(..state, unresolved: state.unresolved || a.outcome_unknown(e)),
           Error(e),
@@ -384,6 +387,17 @@ fn dispatch(
         None -> #(state, Error("current_task_required"))
         Some(execution) -> active_call(state, execution, name, args)
       }
+  }
+}
+
+/// A planning resolution settles the old logical operation while the claimed
+/// task remains active for a fresh, distinct planning intent. Other recovery
+/// receipts retain the historical terminal behavior and clear the execution.
+pub fn planning_resolution_receipt(receipt: json.Json) -> Bool {
+  case json.parse(json.to_string(receipt), value.decoder()) {
+    Ok(parsed) ->
+      value.get(parsed, "kind") == Ok(value.Text("planning_resolution"))
+    _ -> False
   }
 }
 

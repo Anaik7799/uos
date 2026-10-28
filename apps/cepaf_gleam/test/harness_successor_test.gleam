@@ -1139,6 +1139,354 @@ pub fn planning_readback_failure_yields_uncertain_not_applied_test() {
   |> should.equal(Ok(Nil))
 }
 
+fn publication_execution() {
+  let e = planning_execution()
+  let publish_path = "governance/planning/command-publish-probe.json"
+  a.Execution(..e, scope: a.Scope(..e.scope, writes: [publish_path]))
+}
+
+fn uncertain_publish_records(
+  execution: a.Execution,
+  logical_id: String,
+  detail: String,
+) {
+  let target = "uos/test/proof/command-publish"
+  let path = "governance/planning/command-publish-probe.json"
+  let body = "{\"probe\":\"bounded\"}"
+  let key =
+    planning.logical_key(
+      execution.binding.plan,
+      execution.binding.task,
+      logical_id,
+    )
+  let payload =
+    planning.canonical_payload(
+      "PublishEvidence",
+      logical_id,
+      target,
+      "",
+      "bounded publish probe",
+      path,
+      body,
+    )
+  let intent =
+    planning.ledger_record(
+      key,
+      execution.binding,
+      "PublishEvidence",
+      payload,
+      planning.Uncertain("reserved"),
+      "intent reserved before dispatch",
+    )
+    |> json.to_string
+  let result =
+    planning.ledger_record(
+      key,
+      execution.binding,
+      "PublishEvidence",
+      payload,
+      planning.Uncertain(detail),
+      detail,
+    )
+    |> json.to_string
+  #(
+    key,
+    payload,
+    intent,
+    result,
+    planning.pointer_record(execution.binding.plan, execution.binding.task, key),
+  )
+}
+
+pub fn planning_publish_missing_target_refuses_before_writer_test() {
+  let prepared =
+    planning.Prepared(
+      planning.PublishEvidence,
+      "PublishEvidence",
+      "missing-target-probe",
+      "uos/test/proof/missing-target",
+      "",
+      "planning/evidence",
+      "missing target precondition",
+      "governance/planning/command-publish-probe.json",
+      "{\"probe\":\"bounded\"}",
+      "payload",
+    )
+  let backend =
+    planning.Backend(
+      dispatch: fn(_) { Error("DISPATCH_MUST_NOT_RUN") },
+      readback: fn(_) { Error("sa-plan exited 1") },
+      write_evidence: fn(_, _) { Error("WRITE_MUST_NOT_RUN") },
+    )
+  planning.preflight_target(backend, prepared)
+  |> should.equal(Error("refused:planning_target_precondition"))
+}
+
+pub fn planning_resolution_classifies_only_known_read_phase_failure_test() {
+  let execution = publication_execution()
+  let #(key, payload, intent, result, pointer) =
+    uncertain_publish_records(
+      execution,
+      "known-read-failure",
+      "sa-plan exited 1",
+    )
+  planning.classify_resolution(
+    execution,
+    "known-read-failure",
+    pointer,
+    intent,
+    result,
+    None,
+    Error("not-required-for-read-phase-failure"),
+    ["uos/test/proof/command-publish"],
+  )
+  |> should.equal(
+    Ok(planning.Resolution(
+      "RESOLVED_NOT_APPLIED",
+      key,
+      "known-read-failure",
+      files.digest(payload),
+      "governance/planning/command-publish-probe.json",
+      None,
+      None,
+      "read-only plan-show failed before the evidence writer",
+    )),
+  )
+  let #(key2, _, intent2, result2, pointer2) =
+    uncertain_publish_records(execution, "unknown-outcome", "backend timeout")
+  planning.classify_resolution(
+    execution,
+    "unknown-outcome",
+    pointer2,
+    intent2,
+    result2,
+    None,
+    Error("no-postcondition"),
+    ["uos/test/proof/command-publish"],
+  )
+  |> should.equal(Error("planning_resolution_inconclusive:" <> key2))
+  planning.classify_resolution(
+    execution,
+    "different-logical-id",
+    pointer,
+    intent,
+    result,
+    None,
+    Error("no-postcondition"),
+    ["uos/test/proof/command-publish"],
+  )
+  |> should.equal(Error("planning_resolution_not_current"))
+  planning.classify_resolution(
+    execution,
+    "known-read-failure",
+    pointer,
+    intent,
+    result,
+    None,
+    Error("no-postcondition"),
+    [],
+  )
+  |> should.equal(Error("planning_target_refused"))
+}
+
+pub fn planning_resolution_refuses_mutated_uncertain_payload_test() {
+  let execution = publication_execution()
+  let logical_id = "payload-bindings"
+  let #(key, _payload, intent, result, pointer) =
+    uncertain_publish_records(execution, logical_id, "sa-plan exited 1")
+  let parsed = result |> json.parse(value.decoder()) |> should.be_ok
+  let tampered =
+    value.set(parsed, "canonical_payload", value.Text("different payload"))
+    |> value.encode
+    |> json.to_string
+  planning.classify_resolution(
+    execution,
+    logical_id,
+    pointer,
+    intent,
+    tampered,
+    None,
+    Error("not-required"),
+    ["uos/test/proof/command-publish"],
+  )
+  |> should.equal(Error("planning_resolution_payload_conflict"))
+  // Ensure the hostile result could not redirect the immutable ledger key.
+  planning.ledger_path(key, "result")
+  |> string.starts_with("var/harness/effects/planning@")
+  |> should.be_true
+}
+
+pub fn planning_resolution_sidecar_binds_uncertain_record_and_andon_test() {
+  let execution = publication_execution()
+  let logical_id = "sidecar-bindings"
+  let #(key, _payload, intent, result, pointer) =
+    uncertain_publish_records(execution, logical_id, "sa-plan exited 1")
+  let resolution =
+    planning.classify_resolution(
+      execution,
+      logical_id,
+      pointer,
+      intent,
+      result,
+      None,
+      Error("not-required-for-read-phase-failure"),
+      ["uos/test/proof/command-publish"],
+    )
+    |> should.be_ok
+  let sidecar =
+    planning.resolution_record(
+      execution,
+      resolution,
+      intent,
+      result,
+      json.object([
+        #("utc_us", json.string("1793160000000000")),
+        #("boot_us", json.string("2425560000000")),
+        #("host_id", json.string("fixture-host")),
+        #("boot_id", json.string("fixture-boot")),
+      ]),
+    )
+  planning.validate_resolution(sidecar, execution, resolution, intent, result)
+  |> should.equal(Ok(Nil))
+  let parsed_sidecar = sidecar |> json.parse(value.decoder()) |> should.be_ok
+  let malformed_clock =
+    value.set(parsed_sidecar, "observed_at", value.Text("untrusted clock"))
+    |> value.encode
+    |> json.to_string
+  planning.validate_resolution(
+    malformed_clock,
+    execution,
+    resolution,
+    intent,
+    result,
+  )
+  |> should.equal(Error("planning_resolution_clock"))
+  let changed_scope =
+    a.Execution(..execution, scope: a.Scope(..execution.scope, writes: []))
+  planning.validate_resolution(
+    sidecar,
+    changed_scope,
+    resolution,
+    intent,
+    result,
+  )
+  |> should.equal(Error("planning_resolution_scope"))
+  planning.validate_resolution(
+    sidecar,
+    execution,
+    resolution,
+    intent,
+    result <> " ",
+  )
+  |> should.be_error
+  planning.validate_resolution(sidecar, execution, resolution, intent, result)
+  |> should.equal(Ok(Nil))
+  planning.decide_andon_with_resolution(
+    Some(pointer),
+    Some(result),
+    Some(sidecar),
+    execution.binding.plan,
+    execution.binding.task,
+  )
+  |> should.equal(Ok(Nil))
+  // The resolution is a sidecar; the original uncertainty remains byte-stable.
+  result |> json.parse(value.decoder()) |> should.be_ok
+  planning.resolution_path(key)
+  |> string.ends_with("@resolution.json")
+  |> should.be_true
+}
+
+pub fn planning_resolution_receipt_keeps_task_context_test() {
+  mcp.planning_resolution_receipt(
+    json.object([
+      #("kind", json.string("planning_resolution")),
+      #("disposition", json.string("RESOLVED_NOT_APPLIED")),
+    ]),
+  )
+  |> should.be_true
+  mcp.planning_resolution_receipt(
+    json.object([
+      #("state", json.string("completed")),
+    ]),
+  )
+  |> should.be_false
+}
+
+pub fn planning_resolution_applied_requires_exact_scoped_postcondition_test() {
+  let execution = publication_execution()
+  let logical_id = "exact-evidence-observation"
+  let #(key, payload, intent, result, pointer) =
+    uncertain_publish_records(
+      execution,
+      logical_id,
+      "evidence_readback_failed:closed",
+    )
+  let body = "{\"probe\":\"bounded\"}"
+  planning.classify_resolution(
+    execution,
+    logical_id,
+    pointer,
+    intent,
+    result,
+    Some(body),
+    Error("not-required"),
+    ["uos/test/proof/command-publish"],
+  )
+  |> should.equal(
+    Ok(planning.Resolution(
+      "RESOLVED_APPLIED",
+      key,
+      logical_id,
+      files.digest(payload),
+      "governance/planning/command-publish-probe.json",
+      Some(files.digest(body)),
+      None,
+      "exact evidence bytes observed at the scoped publish path",
+    )),
+  )
+  planning.classify_resolution(
+    execution,
+    logical_id,
+    pointer,
+    intent,
+    result,
+    Some("different bytes"),
+    Error("not-required"),
+    ["uos/test/proof/command-publish"],
+  )
+  |> should.equal(Error("planning_resolution_evidence_mismatch"))
+}
+
+pub fn active_assessment_actor_uses_canonical_claim_worker_test() {
+  let record =
+    value.Object([
+      #("plan_id", value.Text("uos/test/20261028")),
+      #("task_id", value.Text("COMMAND_ACCEPT")),
+      #("actor", value.Text("codex-risk-observer")),
+      #("task_state", value.Text("available")),
+    ])
+  let active =
+    a.assessment_record_state(
+      record,
+      "uos/test/20261028",
+      "COMMAND_ACCEPT",
+      "executing",
+      "codex-command-01a1802b",
+    )
+  value.get(active, "actor")
+  |> should.equal(Ok(value.Text("codex-command-01a1802b")))
+  value.get(active, "task_state")
+  |> should.equal(Ok(value.Text("executing")))
+  a.assessment_record_state(
+    record,
+    "uos/test/20261028",
+    "OTHER_TASK",
+    "executing",
+    "codex-command-01a1802b",
+  )
+  |> should.equal(record)
+}
+
 pub fn planning_payload_bounds_hold_at_the_byte_edge_test() {
   planning.payload_within_bound(string.repeat("a", planning.max_payload_bytes))
   |> should.equal(Ok(Nil))
