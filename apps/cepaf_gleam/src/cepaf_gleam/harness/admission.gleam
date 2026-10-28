@@ -42,6 +42,7 @@ pub type Grant {
     boot: String,
     expires_us: Int,
     scopes: List(Scope),
+    workspace_root: String,
     review_path: String,
     review_sha256: String,
   )
@@ -200,6 +201,7 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
     use boot <- decode.field("boot_id", decode.string)
     use expiry <- decode.field("expires_utc_us", decode.string)
     use scopes <- decode.field("tasks", decode.list(scope_decoder()))
+    use workspace <- decode.optional_field("workspace_root", "", decode.string)
     use review <- decode.field("review_path", decode.string)
     use review_hash <- decode.field("review_sha256", decode.string)
     decode.success(#(
@@ -212,6 +214,7 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
       boot,
       expiry,
       scopes,
+      workspace,
       review,
       review_hash,
     ))
@@ -237,8 +240,9 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
       list.unique(list.map(fields.8, fn(s) { #(s.plan, s.task) })),
     )
       == list.length(fields.8)
-      && public_path(fields.9)
-      && digest_valid(fields.10)
+      && (fields.9 == "" || result.is_ok(files.workspace_root(dev.root, fields.9)))
+      && public_path(fields.10)
+      && digest_valid(fields.11)
       && risk_path(path),
     "grant_scope_or_role_refused",
   ))
@@ -254,7 +258,17 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
     fields.8,
     fields.9,
     fields.10,
+    fields.11,
   ))
+}
+
+/// Legacy grants use the canonical source root. A reviewed candidate grant
+/// selects one direct real JJ workspace, resolved again at each use.
+pub fn source_root(grant: Grant) -> Result(String, String) {
+  case grant.workspace_root {
+    "" -> Ok(dev.root)
+    relative -> files.workspace_root(dev.root, relative)
+  }
 }
 
 pub fn grant_budget_valid(

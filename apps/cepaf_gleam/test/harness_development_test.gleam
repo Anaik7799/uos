@@ -103,6 +103,28 @@ pub fn traversal_and_absolute_paths_fail_test() {
   files.relative_path("a\u{0}") |> should.be_error
 }
 
+pub fn source_workspace_root_is_confined_to_a_real_direct_workspace_test() {
+  fixture(fn(root) {
+    let assert Ok(_) = simplifile.create_directory(root <> "/.uos-workspaces")
+    let assert Ok(_) = simplifile.create_directory(
+      root <> "/.uos-workspaces/candidate",
+    )
+    files.workspace_root(root, ".uos-workspaces/candidate")
+    |> should.equal(Ok(root <> "/.uos-workspaces/candidate"))
+    files.workspace_root(root, "apps/cepaf_gleam") |> should.be_error
+    files.workspace_root(root, ".uos-workspaces/candidate/nested")
+    |> should.be_error
+    files.workspace_root(root, ".uos-workspaces/../escape")
+    |> should.be_error
+    let assert Ok(_) = simplifile.create_directory(root <> "/outside")
+    let assert Ok(_) = simplifile.create_symlink(
+      root <> "/outside",
+      root <> "/.uos-workspaces/alias",
+    )
+    files.workspace_root(root, ".uos-workspaces/alias") |> should.be_error
+  })
+}
+
 pub fn symlink_and_parent_aliases_fail_without_reading_target_test() {
   fixture(fn(root) {
     let assert Ok(_) = simplifile.create_directory(root <> "/real")

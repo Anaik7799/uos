@@ -3,6 +3,7 @@
 
 import cepaf_gleam/harness/admission as a
 import cepaf_gleam/harness/clock
+import cepaf_gleam/harness/client_mcp
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/planning_intents as planning
@@ -37,6 +38,7 @@ pub fn fields(name: String) -> List(String) {
   case name {
     "harness_claim" | "harness_attach" -> ["plan", "task", "intent_id"]
     "harness_read_file" -> ["path"]
+    "harness_client_mcp_config" -> ["intent_id", "client", "action"]
     "harness_write_file" -> ["intent_id", "path", "content", "expected_sha256"]
     "harness_build"
     | "harness_test"
@@ -72,6 +74,7 @@ pub const names = [
   "harness_attach",
   "harness_release",
   "harness_read_file",
+  "harness_client_mcp_config",
   "harness_write_file",
   "harness_build",
   "harness_test",
@@ -90,11 +93,30 @@ pub fn validate_args(name: String, args: value.Value) -> Result(Nil, String) {
           && list.all(actual, fn(field) { list.contains(required, field.0) }),
         "unexpected_or_missing_fields",
       ))
-      list.try_each(required, fn(key) {
+      use _ <- result.try(list.try_each(required, fn(key) {
         text(args, key) |> result.map(fn(_) { Nil })
-      })
+      }))
+      validate_enum_fields(name, args)
     }
     _ -> Error("arguments_object_required")
+  }
+}
+
+fn validate_enum_fields(name: String, args: value.Value) -> Result(Nil, String) {
+  case name {
+    "harness_client_mcp_config" -> {
+      use client <- result.try(text(args, "client"))
+      use action <- result.try(text(args, "action"))
+      use _ <- result.try(a.require(
+        list.contains(["agy", "gemini", "codex", "claude", "pi"], client),
+        "client_enum_refused",
+      ))
+      a.require(
+        list.contains(["prepare", "status", "rollback"], action),
+        "client_action_refused",
+      )
+    }
+    _ -> Ok(Nil)
   }
 }
 
@@ -126,6 +148,29 @@ pub fn manifest_of(paths: List(String)) -> Result(String, String) {
   Ok(json.array(entries, fn(x) { x }) |> json.to_string)
 }
 
+fn root_for_path(execution: a.Execution, path: String) -> Result(String, String) {
+  case list.contains(execution.scope.sources, path) {
+    True -> a.source_root(execution.grant)
+    False -> Ok(dev.root)
+  }
+}
+
+fn manifest_for_execution(
+  execution: a.Execution,
+  paths: List(String),
+) -> Result(String, String) {
+  use entries <- result.try(list.try_map(paths, fn(path) {
+    use root <- result.try(root_for_path(execution, path))
+    use content <- result.try(files.read_optional(root, path))
+    let digest = case content {
+      Some(body) -> json.string(files.digest(body))
+      None -> json.null()
+    }
+    Ok(json.object([#("path", json.string(path)), #("sha256", digest)]))
+  }))
+  Ok(json.array(entries, fn(x) { x }) |> json.to_string)
+}
+
 /// Everything the grant authorizes to change: sources plus writes, sorted and
 /// deduplicated so the manifest is a function of the SET, not of declaration order.
 pub fn guard_capture(scope: a.Scope) -> Result(String, String) {
@@ -133,6 +178,16 @@ pub fn guard_capture(scope: a.Scope) -> Result(String, String) {
     list.unique(list.append(scope.sources, scope.writes)),
     string.compare,
   ))
+}
+
+fn guard_capture_execution(execution: a.Execution) -> Result(String, String) {
+  manifest_for_execution(
+    execution,
+    list.sort(
+      list.unique(list.append(execution.scope.sources, execution.scope.writes)),
+      string.compare,
+    ),
+  )
 }
 
 /// Every path in the manifest must be unchanged, except the declared write
@@ -198,6 +253,10 @@ pub fn capture(scope: a.Scope) -> Result(String, String) {
     }),
   )
   Ok(json.array(sources, fn(x) { x }) |> json.to_string)
+}
+
+fn capture_execution(execution: a.Execution) -> Result(String, String) {
+  manifest_for_execution(execution, execution.scope.sources)
 }
 
 // C2: the old encoding was "<grant>-<intent>-<suffix>.json". "-" is inside the
@@ -282,6 +341,7 @@ fn perform(
   timeout: Int,
 ) -> Result(String, String) {
   case name {
+    "harness_client_mcp_config" -> client_mcp.perform(execution, args, timeout)
     "harness_write_file" -> {
       use path <- result.try(text(args, "path"))
       use body <- result.try(text(args, "content"))
@@ -290,39 +350,56 @@ fn perform(
         list.contains(execution.scope.writes, path),
         "write_scope_refused",
       ))
+      use root <- result.try(root_for_path(execution, path))
       use _ <- result.try(case expected {
-        "ABSENT" -> files.create(dev.root, path, body)
-        _ -> files.replace(dev.root, path, expected, body)
+        "ABSENT" -> files.create(root, path, body)
+        _ -> files.replace(root, path, expected, body)
       })
-      use readback <- result.try(files.read(dev.root, path))
+      use readback <- result.try(files.read(root, path))
       use _ <- result.try(a.require(readback == body, "write_readback_mismatch"))
       Ok(files.digest(readback))
     }
-    "harness_build" ->
+    "harness_build" -> {
+      use args <- result.try(build_args_for(execution, ["build"]))
       dev.bounded(
         dev.root <> "/toolchains/nix-profile/bin/env",
-        build_args(["build"]),
+        args,
         timeout,
       )
-    "harness_test" ->
+    }
+    "harness_test" -> {
+      use args <- result.try(build_args_for(execution, [
+        "run",
+        "-m",
+        "harness_task_verification",
+        "--",
+        ..execution.scope.tests
+      ]))
       dev.bounded(
         dev.root <> "/toolchains/nix-profile/bin/env",
-        build_args([
-          "run",
-          "-m",
-          "harness_task_verification",
-          "--",
-          ..execution.scope.tests
-        ]),
+        args,
         timeout,
       )
+    }
     _ -> Error("effect_not_admitted")
   }
 }
 
 pub fn build_args(args: List(String)) -> List(String) {
+  build_args_at(dev.root, args)
+}
+
+fn build_args_for(
+  execution: a.Execution,
+  args: List(String),
+) -> Result(List(String), String) {
+  use source_root <- result.try(a.source_root(execution.grant))
+  Ok(build_args_at(source_root, args))
+}
+
+fn build_args_at(source_root: String, args: List(String)) -> List(String) {
   [
-    "--chdir=" <> dev.root <> "/apps/cepaf_gleam",
+    "--chdir=" <> source_root <> "/apps/cepaf_gleam",
     "PATH="
       <> dev.root
       <> "/toolchains/nix-profile/bin:"
@@ -390,7 +467,7 @@ pub fn record_quarantine(
   use tool <- result.try(text(parsed, "tool"))
   use original_input <- result.try(text(parsed, "input_sha256"))
   use now <- result.try(clock.observe())
-  use observed <- result.try(guard_capture(execution.scope))
+  use observed <- result.try(guard_capture_execution(execution))
   let record =
     json.object([
       #("schema", json.string("uos.harness-successor-quarantine.v1")),
@@ -513,10 +590,10 @@ pub fn effect(
         execution.binding.attempt,
         True,
       ))
-      use before <- result.try(capture(execution.scope))
+      use before <- result.try(capture_execution(execution))
       // The wider manifest guards concurrent modification; `before` above stays
       // the narrow candidate identity that the receipt binds.
-      use guard_before <- result.try(guard_capture(execution.scope))
+      use guard_before <- result.try(guard_capture_execution(execution))
       use proof <- result.try(a.fence(execution, 60_000))
       let trace =
         crypto.strong_random_bytes(16)
@@ -552,8 +629,8 @@ pub fn effect(
       let outcome = perform(execution, name, args, 60_000)
       let verified = {
         use output <- result.try(outcome)
-        use after <- result.try(capture(execution.scope))
-        use guard_after <- result.try(guard_capture(execution.scope))
+        use after <- result.try(capture_execution(execution))
+        use guard_after <- result.try(guard_capture_execution(execution))
         use _ <- result.try(case name {
           // Was: `name == "harness_write_file" || before == after`, which let ANY
           // file move underneath a write. Now the write target must carry exactly
@@ -638,7 +715,8 @@ pub fn read_file(
       || list.contains(execution.scope.sources, path),
     "read_scope_refused",
   ))
-  use body <- result.try(files.read(dev.root, path))
+  use root <- result.try(root_for_path(execution, path))
+  use body <- result.try(files.read(root, path))
   use _ <- result.try(a.fence(execution, 0))
   Ok(
     json.object([
@@ -843,7 +921,7 @@ pub fn finish(
     execution.binding.attempt,
     True,
   ))
-  use candidate <- result.try(capture(execution.scope))
+  use candidate <- result.try(capture_execution(execution))
   use build_hash <- result.try(successful_check(
     execution,
     build,
@@ -919,7 +997,7 @@ pub fn finish(
     ])
     |> json.to_string
   use _ <- result.try(a.fence(execution, 10_000))
-  use current <- result.try(capture(execution.scope))
+  use current <- result.try(capture_execution(execution))
   use _ <- result.try(a.require(
     current == candidate,
     "source_changed_before_completion",

@@ -36,6 +36,7 @@ fn grant() {
     "test-boot",
     1000,
     [scope()],
+    "",
     "docs/reviews/20260909-1751-test.json",
     string.repeat("c", 64),
   )
@@ -131,6 +132,44 @@ pub fn payload_identity_and_backend_are_refused_test() {
   )
   |> should.be_error
   ops.validate_args("arbitrary_shell", value.Object([])) |> should.be_error
+}
+
+pub fn client_mcp_config_accepts_only_typed_client_and_action_test() {
+  let valid = value.Object([
+    #("intent_id", value.Text("config")),
+    #("client", value.Text("codex")),
+    #("action", value.Text("prepare")),
+  ])
+  ops.validate_args("harness_client_mcp_config", valid) |> should.be_ok
+  ops.validate_args(
+    "harness_client_mcp_config",
+    value.Object([
+      #("intent_id", value.Text("config")),
+      #("client", value.Text("shell")),
+      #("action", value.Text("prepare")),
+    ]),
+  ) |> should.be_error
+  ops.validate_args(
+    "harness_client_mcp_config",
+    value.Object([
+      #("intent_id", value.Text("config")),
+      #("client", value.Text("codex")),
+      #("action", value.Text("write_file")),
+    ]),
+  ) |> should.be_error
+}
+
+pub fn reviewed_workspace_root_changes_only_source_root_test() {
+  a.source_root(grant()) |> should.equal(Ok(dev.root))
+  a.source_root(a.Grant(
+    ..grant(),
+    workspace_root: ".uos-workspaces/dev-harness-20261028-0105",
+  ))
+  |> should.equal(Ok(
+    dev.root <> "/.uos-workspaces/dev-harness-20261028-0105",
+  ))
+  a.source_root(a.Grant(..grant(), workspace_root: "apps/cepaf_gleam"))
+  |> should.be_error
 }
 
 // C4: tools/ecology_process.ml bounds every effect's time, output and process
