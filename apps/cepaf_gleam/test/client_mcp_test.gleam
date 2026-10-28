@@ -2,7 +2,9 @@ import cepaf_gleam/harness/admission as a
 import cepaf_gleam/harness/client_mcp
 import cepaf_gleam/harness/client_profiles as profiles
 import cepaf_gleam/harness/development as dev
+import cepaf_gleam/harness/operations as ops
 import cepaf_gleam/harness/value
+import gleam/json
 import gleam/list
 import gleeunit/should
 
@@ -86,4 +88,68 @@ pub fn empty_client_permissions_deny_before_native_dispatch_test() {
     ])
   client_mcp.perform(execution, args, 1000)
   |> should.equal(Error("client_or_action_permission_denied"))
+}
+
+pub fn assessment_evidence_accepts_scoped_public_candidate_manifest_test() {
+  let manifest =
+    "governance/planning/20261028-0530-client-parity-candidate-manifest.json"
+  let grant = assessment_grant([manifest, "AGENTS.md"])
+  ops.assessment_paths_allowed(grant, evidence_body(manifest))
+  |> should.equal(Ok(Nil))
+}
+
+pub fn assessment_evidence_rejects_candidate_absolute_workspace_prefix_test() {
+  let grant = assessment_grant(["AGENTS.md"])
+  ops.assessment_paths_allowed(
+    grant,
+    evidence_body(
+      ".uos-workspaces/client-parity-20261028-0321/apps/cepaf_gleam/src/cepaf_gleam/harness/client_mcp.gleam",
+    ),
+  )
+  |> should.equal(Error("assessment_source_outside_grant"))
+}
+
+fn assessment_grant(reads: List(String)) -> a.Grant {
+  let scope =
+    a.Scope(
+      "uos/development-harness/20261028-0105",
+      "CLIENT_PARITY",
+      reads,
+      [],
+      ["AGENTS.md"],
+      ["client_mcp_test"],
+      "var/harness/20261028-0530-codex-client-parity-current-risk.json",
+      ["agy"],
+      ["prepare", "status", "rollback"],
+    )
+  a.Grant(
+    "20261028-0530-client-v3-01a1802b",
+    "var/harness/20261028-0530-client-v3-grant.json",
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "01a1802b-0ee7-7822-b734-42b95dc5515f",
+    "codex-client-parity-01a1802b",
+    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "test-boot",
+    1_793_172_300_000_000,
+    [scope],
+    ".uos-workspaces/client-parity-20261028-0321",
+    "docs/reviews/20261028-0530-client-parity-grant-review-v3.json",
+    "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  )
+}
+
+fn evidence_body(path: String) -> String {
+  value.Object([
+    #(
+      "snapshot",
+      value.Object([
+        #(
+          "evidence",
+          value.Array([value.Object([#("path", value.Text(path))])]),
+        ),
+      ]),
+    ),
+  ])
+  |> value.encode
+  |> json.to_string
 }
