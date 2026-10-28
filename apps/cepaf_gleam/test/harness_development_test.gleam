@@ -65,6 +65,31 @@ pub fn client_control_ids_are_required_and_revision_bound_test() {
   }
 }
 
+pub fn control_ids_include_every_declared_module_and_its_loaded_digest_test() {
+  let ids = admission.control_ids()
+  case json.parse(json.to_string(ids), value.decoder()) {
+    Ok(value.Object(entries)) -> {
+      let actual = value.Object(entries)
+      admission.control_modules
+      |> list.contains("ecology_capability_ffi")
+      |> should.be_true()
+      list.length(entries)
+      |> should.equal(list.length(admission.control_modules))
+      admission.control_ids_match(actual, ids) |> should.be_true()
+      case value.get(actual, "ecology_capability_ffi") {
+        Ok(value.Text(digest)) -> string.length(digest) |> should.equal(32)
+        _ -> should.fail()
+      }
+      let without_ffi =
+        value.Object(
+          list.filter(entries, fn(entry) { entry.0 != "ecology_capability_ffi" }),
+        )
+      admission.control_ids_match(without_ffi, ids) |> should.be_false()
+    }
+    _ -> should.fail()
+  }
+}
+
 pub fn frame_deadline_is_absolute_and_supports_signed_monotonic_instants_test() {
   mcp.frame_budget(-10_000, -9000) |> should.equal(Ok(4000))
   mcp.frame_budget(-10_000, -5000) |> should.equal(Error("frame_deadline"))

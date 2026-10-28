@@ -75,13 +75,13 @@ pub const control_modules = [
   "session_sync_ffi", "esqlite3", "esqlite3_nif",
   "cepaf_gleam@harness@planning_intents", "cepaf_gleam@harness@client_mcp",
   "cepaf_gleam@harness@client_profiles", "cepaf_gleam@harness@client_config",
-  "client_config_io",
+  "client_config_io", "ecology_capability_ffi",
 ]
 
 // C4: the guardian at tools/ecology_process.ml bounds every effect's time,
 // output and process group, is invoked from ecology_capability_ffi.erl, and was
 // bound by NOTHING -- no path list, no control module. It could change while the
-// review, the task row, the candidate manifest and all nine control ids stayed
+// review, the task row, the candidate manifest and all declared control ids stayed
 // perfectly matched. These are control dependencies that are not BEAM modules,
 // so `module_info(md5)` cannot reach them; their digests are declared in the
 // grant, which the peer signs by hashing the proposal.
