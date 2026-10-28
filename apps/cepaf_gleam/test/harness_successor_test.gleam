@@ -205,6 +205,25 @@ pub fn workspace_root_requires_registered_canonical_jj_identity_test() {
   |> should.be_false
 }
 
+pub fn jj_workspace_identity_reads_ignore_working_copy_test() {
+  a.workspace_list_args("/canonical")
+  |> should.equal([
+    "--ignore-working-copy",
+    "--repository",
+    "/canonical",
+    "workspace",
+    "list",
+  ])
+  a.workspace_root_args("/candidate")
+  |> should.equal([
+    "--ignore-working-copy",
+    "--repository",
+    "/candidate",
+    "workspace",
+    "root",
+  ])
+}
+
 // C4: tools/ecology_process.ml bounds every effect's time, output and process
 // group, and was bound by nothing -- no path list, no control module. It could
 // change while the review, the task row, the candidate manifest and all nine
@@ -1856,4 +1875,14 @@ pub fn planning_andon_trace_applied_applied_uncertain_blocks_next_test() {
   |> should.be_false
   planning.andon_path(b.plan, b.task)
   |> should.not_equal(planning.andon_path(b.plan, "OTHER_TASK"))
+}
+
+pub fn active_mutations_require_prepared_assessment_guard_test() {
+  mcp.assessment_guard_required("harness_write_file") |> should.be_true
+  mcp.assessment_guard_required("harness_build") |> should.be_true
+  mcp.assessment_guard_required("harness_test") |> should.be_true
+  mcp.assessment_guard_required("harness_finish") |> should.be_true
+  mcp.assessment_guard_required("harness_release") |> should.be_true
+  mcp.assessment_guard_required("harness_client_mcp_config") |> should.be_true
+  mcp.assessment_guard_required("harness_read_file") |> should.be_false
 }

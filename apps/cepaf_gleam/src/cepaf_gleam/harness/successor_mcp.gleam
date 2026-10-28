@@ -35,6 +35,10 @@ pub fn initial(grant: a.Grant) -> State {
   State(grant, False, False, None, False)
 }
 
+pub fn assessment_guard_required(name: String) -> Bool {
+  name != "harness_read_file" && name != "harness_reconcile"
+}
+
 pub fn tool_definitions() -> List(ToolDefinition) {
   list.map(ops.names, fn(name) {
     ToolDefinition(
@@ -271,7 +275,11 @@ fn dispatch(
     "harness_plan_intent" -> {
       let outcome = case state.unresolved, state.execution {
         True, _ -> Error("unresolved_operation_stop_line")
-        False, Some(execution) -> planning.submit(execution, args)
+        False, Some(execution) -> case ops.assessment_pending(execution.scope) {
+          Error(reason) -> Error("assessment_guard_unavailable:" <> reason)
+          Ok(True) -> Error("assessment_prepared_stop_line")
+          Ok(False) -> planning.submit(execution, args)
+        }
         False, None -> Error("current_task_required")
       }
       let unresolved = case outcome {
@@ -290,18 +298,41 @@ fn dispatch(
     "harness_reconcile" -> {
       let outcome = {
         use intent <- result.try(ops.text(args, "intent_id"))
-        case state.execution {
-          Some(execution) -> ops.reconcile(execution, intent)
-          None -> ops.recover(state.grant, intent)
+        case state.unresolved, state.execution {
+          True, Some(execution) -> {
+            use pending <- result.try(
+              ops.reconciliation_intent_is_pending(execution, intent),
+            )
+            use _ <- result.try(a.require(
+              pending,
+              "reconciliation_intent_mismatch",
+            ))
+            ops.reconcile(execution, intent)
+          }
+          True, None -> Error("reconciliation_context_missing")
+          False, Some(execution) -> {
+            use pending <- result.try(
+              ops.reconciliation_intent_is_pending(execution, intent),
+            )
+            use _ <- result.try(a.require(
+              pending,
+              "reconciliation_intent_mismatch",
+            ))
+            ops.reconcile(execution, intent)
+          }
+          False, None -> ops.recover(state.grant, intent)
         }
       }
       case outcome {
-        Ok(receipt) -> {
-          let next_state = case planning_resolution_receipt(receipt) {
-            True -> State(..state, unresolved: False)
-            False -> State(..state, execution: None, unresolved: False)
+        Ok(receipt) -> case state.unresolved {
+          False -> #(state, Ok(receipt))
+          True -> {
+            let next_state = case planning_resolution_receipt(receipt) {
+              True -> State(..state, unresolved: False)
+              False -> State(..state, execution: None, unresolved: False)
+            }
+            #(next_state, Ok(receipt))
           }
-          #(next_state, Ok(receipt))
         }
         Error(e) -> #(
           State(..state, unresolved: state.unresolved || a.outcome_unknown(e)),
@@ -361,6 +392,8 @@ fn dispatch(
             use task <- result.try(ops.text(args, "task"))
             use intent <- result.try(ops.text(args, "intent_id"))
             use scope <- result.try(a.lookup(state.grant, plan, task))
+            use pending <- result.try(ops.assessment_pending(scope))
+            use _ <- result.try(a.require(!pending, "assessment_prepared_stop_line"))
             case name {
               "harness_claim" -> a.claim(state.grant, scope, intent)
               _ -> a.attach(state.grant, scope, intent)
@@ -382,6 +415,12 @@ fn dispatch(
         }
       }
     }
+    "harness_assess" ->
+      case state.unresolved, state.execution {
+        True, _ -> #(state, Error("unresolved_operation_stop_line"))
+        False, None -> #(state, ops.assess_initial(state.grant, args))
+        False, Some(execution) -> active_call(state, execution, name, args)
+      }
     _ ->
       case state.execution {
         None -> #(state, Error("current_task_required"))
@@ -405,6 +444,29 @@ pub fn planning_resolution_receipt(receipt: json.Json) -> Bool {
 fn int_string(n: Int) -> String
 
 fn active_call(
+  state: State,
+  execution: a.Execution,
+  name: String,
+  args: value.Value,
+) -> #(State, Result(json.Json, String)) {
+  case state.unresolved, name {
+    True, "harness_finish" ->
+      #(state, Error("unresolved_operation_stop_line"))
+    _, _ -> case assessment_guard_required(name) {
+      False -> active_call_dispatch(state, execution, name, args)
+      True -> case ops.assessment_pending(execution.scope) {
+        Error(reason) -> #(
+          state,
+          Error("assessment_guard_unavailable:" <> reason),
+        )
+        Ok(True) -> #(state, Error("assessment_prepared_stop_line"))
+        Ok(False) -> active_call_dispatch(state, execution, name, args)
+      }
+    }
+  }
+}
+
+fn active_call_dispatch(
   state: State,
   execution: a.Execution,
   name: String,

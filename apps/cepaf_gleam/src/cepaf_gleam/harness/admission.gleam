@@ -18,6 +18,7 @@ import gleam/result
 import gleam/string
 import simplifile
 import uos_swarm/session_authority
+import uos_swarm/session_store as session_store
 
 pub type Scope {
   Scope(
@@ -72,7 +73,7 @@ pub const control_modules = [
   "cepaf_gleam@planning@sa_plan_bridge", "uos_swarm@session_authority",
   "uos_swarm@session_store", "uos_swarm@session_sync", "session_store_cli",
   "session_store_ffi", "uos_swarm@coord", "uos_swarm@board", "uos_swarm_ffi",
-  "session_sync_ffi", "esqlite3", "esqlite3_nif",
+  "session_sync_ffi", "esqlite3", "esqlite3_nif", "ecology_capability_ffi",
   "cepaf_gleam@harness@planning_intents", "cepaf_gleam@harness@client_mcp",
   "cepaf_gleam@harness@client_profiles", "cepaf_gleam@harness@client_config",
   "client_config_io",
@@ -142,9 +143,20 @@ pub fn public_path(path: String) -> Bool {
   && {
     path == "AGENTS.md"
     || list.any(
-      ["apps/", "docs/", "formal/", "contracts/", "governance/", "tools/"],
+      ["apps/", "docs/", "formal/", "contracts/", "governance/", "tools/", "engines/"],
       fn(p) { string.starts_with(path, p) },
     )
+  }
+}
+
+fn source_code_path(path: String) -> Bool {
+  string.ends_with(path, ".gleam")
+  || string.ends_with(path, ".erl")
+  || {
+    case string.starts_with(path, "engines/") {
+      True -> string.ends_with(path, ".ml") || string.ends_with(path, ".mli")
+      False -> False
+    }
   }
 }
 
@@ -171,7 +183,7 @@ pub fn scope_valid(scope: Scope) -> Bool {
   && list.all(scope.writes, fn(p) {
     // Source-code writes must be in candidate identity. Data and docs stay
     // on the canonical evidence root.
-    case string.ends_with(p, ".gleam") || string.ends_with(p, ".erl") {
+    case source_code_path(p) {
       True -> list.contains(scope.sources, p)
       False -> string.ends_with(p, ".md") || string.ends_with(p, ".json")
     }
@@ -324,6 +336,14 @@ pub fn source_root(grant: Grant) -> Result(String, String) {
   }
 }
 
+pub fn workspace_list_args(repository: String) -> List(String) {
+  ["--ignore-working-copy", "--repository", repository, "workspace", "list"]
+}
+
+pub fn workspace_root_args(repository: String) -> List(String) {
+  ["--ignore-working-copy", "--repository", repository, "workspace", "root"]
+}
+
 fn registered_workspace(
   relative: String,
   expected_root: String,
@@ -332,12 +352,12 @@ fn registered_workspace(
     [".uos-workspaces", _name] -> {
       use listing <- result.try(dev.bounded(
         dev.root <> "/toolchains/nix-profile/bin/jj",
-        ["--repository", dev.root, "workspace", "list"],
+        workspace_list_args(dev.root),
         3000,
       ))
       use actual_root <- result.try(dev.bounded(
         dev.root <> "/toolchains/nix-profile/bin/jj",
-        ["--repository", expected_root, "workspace", "root"],
+        workspace_root_args(expected_root),
         3000,
       ))
       require(
@@ -822,44 +842,122 @@ pub fn risk_check(
   Ok(raw)
 }
 
+pub fn assessment_lock_path_for(root: String, portfolio: String) -> String {
+  "var/harness/assessment-path-lock-"
+    <> files.digest(root <> "\u{0}" <> portfolio)
+    <> ".json"
+}
+
+pub fn assessment_path_lock_path(portfolio: String) -> String {
+  assessment_lock_path_for(dev.root, portfolio)
+}
+
+/// Serialize every writer of one assessment portfolio with the same durable
+/// SQLite coordinator critical section. The callback must only perform the
+/// bounded target lock/read/write work; it must not call coordinator APIs.
+pub fn with_assessment_portfolio_lock(
+  portfolio: String,
+  operation_id: String,
+  body: fn() -> Result(a, String),
+) -> Result(a, String) {
+  with_assessment_portfolio_lock_at(
+    dev.root,
+    session_authority.database,
+    portfolio,
+    operation_id,
+    body,
+  )
+}
+
+/// Testable production serialization seam. Production delegates with the
+/// verified canonical coordinator path and source root; tests use a private
+/// verified coordinator fixture and disposable root.
+pub fn with_assessment_portfolio_lock_at(
+  root: String,
+  database: String,
+  portfolio: String,
+  operation_id: String,
+  body: fn() -> Result(a, String),
+) -> Result(a, String) {
+  let path_key = "harness-assessment/" <> files.digest(root <> "\u{0}" <> portfolio)
+  use section <- result.try(session_store.critical_section(path_key, operation_id))
+  use opened <- result.try(
+    session_store.open_existing(database)
+      |> result.map_error(session_store.error_to_string),
+  )
+  let outcome = session_store.with_critical_section(
+    opened,
+    section,
+    fn(_state, _boot, _now) { body() },
+  )
+  let closed = session_store.close(opened)
+  use value <- result.try(outcome |> result.map_error(session_store.error_to_string))
+  use _ <- result.try(closed |> result.map_error(session_store.error_to_string))
+  Ok(value)
+}
+
 pub fn state_assessment(
   execution: Execution,
   state: String,
   suffix: String,
 ) -> Result(String, String) {
-  use body <- result.try(files.read(dev.root, execution.risk_path))
-  use parsed <- result.try(
-    json.parse(body, value.decoder()) |> result.map_error(fn(_) { "risk_json" }),
-  )
-  use records <- result.try(case parsed {
-    value.Array(xs) -> Ok(xs)
-    _ -> Error("risk_array")
-  })
-  let changed =
-    list.map(records, fn(record) {
-      assessment_record_state(
-        record,
-        execution.scope.plan,
-        execution.scope.task,
-        state,
-        execution.binding.worker,
-      )
-    })
-  let updated = value.encode(value.Array(changed)) |> json.to_string
-  let path =
-    "var/harness/" <> execution.grant.id <> "-" <> suffix <> "-risk.json"
-  use _ <- result.try(files.create(dev.root, path, updated))
-  use original <- result.try(files.read(dev.root, execution.scope.portfolio))
-  use _ <- result.try(files.create(dev.root, path <> ".before.json", original))
-  use _ <- result.try(files.replace(
-    dev.root,
-    execution.scope.portfolio,
-    files.digest(original),
-    updated,
-  ))
-  Ok(execution.scope.portfolio)
+  state_assessment_with_owner(execution, state, suffix, None)
 }
 
+fn state_assessment_with_owner(
+  execution: Execution,
+  state: String,
+  suffix: String,
+  owner_lock: Option(String),
+) -> Result(String, String) {
+  with_assessment_portfolio_lock(
+    execution.scope.portfolio,
+    "state-assessment-" <> suffix,
+    fn() {
+      use lock <- result.try(files.read_optional(
+        dev.root,
+        assessment_path_lock_path(execution.scope.portfolio),
+      ))
+      let lock_allowed = case lock, owner_lock {
+        None, None -> True
+        Some(raw), Some(expected) -> raw == expected
+        _, _ -> False
+      }
+      use _ <- result.try(require(lock_allowed, "assessment_prepared_stop_line"))
+      use body <- result.try(files.read(dev.root, execution.risk_path))
+      use parsed <- result.try(
+        json.parse(body, value.decoder()) |> result.map_error(fn(_) { "risk_json" }),
+      )
+      use records <- result.try(case parsed {
+        value.Array(xs) -> Ok(xs)
+        _ -> Error("risk_array")
+      })
+      let changed =
+        list.map(records, fn(record) {
+          assessment_record_state(
+            record,
+            execution.scope.plan,
+            execution.scope.task,
+            state,
+            execution.binding.worker,
+          )
+        })
+      let updated = value.encode(value.Array(changed)) |> json.to_string
+      let path =
+        "var/harness/" <> execution.grant.id <> "-" <> suffix <> "-risk.json"
+      use _ <- result.try(files.create(dev.root, path, updated))
+      use original <- result.try(files.read(dev.root, execution.scope.portfolio))
+      use _ <- result.try(files.create(dev.root, path <> ".before.json", original))
+      use _ <- result.try(files.replace(
+        dev.root,
+        execution.scope.portfolio,
+        files.digest(original),
+        updated,
+      ))
+      Ok(execution.scope.portfolio)
+    },
+  )
+}
 /// Bind an active assessment to the worker Sa-plan actually assigned after a
 /// successful claim. Planning-time actor estimates are not post-claim identity.
 pub fn assessment_record_state(
@@ -881,6 +979,65 @@ pub fn assessment_record_state(
     }
     _, _ -> record
   }
+}
+
+fn task_transition_lock_record(
+  grant: Grant,
+  scope: Scope,
+  intent: String,
+  signature: String,
+) -> String {
+  json.object([
+    #("schema", json.string("uos.harness-assessment-path-lock.v1")),
+    #("state", json.string("HELD")),
+    #("canonical_root", json.string(dev.root)),
+    #("portfolio_path", json.string(scope.portfolio)),
+    #("plan", json.string(scope.plan)),
+    #("task", json.string(scope.task)),
+    #("grant_sha256", json.string(grant.digest)),
+    #("worker", json.string(grant.worker)),
+    #("intent_id", json.string(intent)),
+    #("request_signature", json.string(signature)),
+  ]) |> json.to_string
+}
+
+fn acquire_task_transition_lock(
+  grant: Grant,
+  scope: Scope,
+  intent: String,
+) -> Result(String, String) {
+  let signature = files.digest(
+    grant.digest <> "\u{0}" <> scope.plan <> "\u{0}" <> scope.task
+      <> "\u{0}" <> intent <> "\u{0}task_transition",
+  )
+  let record = task_transition_lock_record(grant, scope, intent, signature)
+  with_assessment_portfolio_lock(scope.portfolio, "transition-acquire-" <> intent, fn() {
+    use existing <- result.try(files.read_optional(
+      dev.root,
+      assessment_path_lock_path(scope.portfolio),
+    ))
+    use _ <- result.try(require(existing == None, "assessment_prepared_stop_line"))
+    use _ <- result.try(files.create(
+      dev.root,
+      assessment_path_lock_path(scope.portfolio),
+      record,
+    ) |> result.map_error(fn(_) { "assessment_path_lock_held_or_unavailable" }))
+    Ok(record)
+  })
+}
+
+fn release_task_transition_lock(
+  scope: Scope,
+  intent: String,
+  record: String,
+) -> Result(Nil, String) {
+  with_assessment_portfolio_lock(scope.portfolio, "transition-release-" <> intent, fn() {
+    let path = assessment_path_lock_path(scope.portfolio)
+    use current <- result.try(files.read_optional(dev.root, path))
+    use _ <- result.try(require(current == Some(record), "assessment_path_lock_owner_mismatch"))
+    simplifile.delete_file(dev.root <> "/" <> path)
+      |> result.map_error(fn(_) { "assessment_path_lock_release_failed" })
+  })
 }
 
 pub fn attach(
@@ -909,6 +1066,11 @@ pub fn attach(
       && row.attempt > 0,
     "attach_requires_current_owned_attempt",
   ))
+  use transition_lock <- result.try(acquire_task_transition_lock(
+    grant,
+    scope,
+    intent,
+  ))
   let outcome = {
     let preliminary =
       Execution(
@@ -917,10 +1079,11 @@ pub fn attach(
         dev.Binding(..base, attempt: row.attempt),
         scope.portfolio,
       )
-    use current_risk <- result.try(state_assessment(
+    use current_risk <- result.try(state_assessment_with_owner(
       preliminary,
       "executing",
       intent <> "-attach",
+      Some(transition_lock),
     ))
     use _ <- result.try(risk_check(
       current_risk,
@@ -948,6 +1111,11 @@ pub fn attach(
         binding: dev.Binding(..base, attempt: row.attempt, epoch: epoch),
       )
     use _ <- result.try(fence(active, 0))
+    use _ <- result.try(release_task_transition_lock(
+      scope,
+      intent,
+      transition_lock,
+    ))
     Ok(active)
   }
   result.map_error(outcome, fn(e) { "attachment_outcome_unknown:" <> e })
@@ -978,6 +1146,11 @@ pub fn claim(
     files.create(dev.root, begin_path, body)
     |> result.map_error(fn(e) { "claim_outcome_unknown:intent:" <> e }),
   )
+  use transition_lock <- result.try(acquire_task_transition_lock(
+    grant,
+    scope,
+    intent,
+  ))
   let outcome = {
     use _ <- result.try(
       sa.run_sa_plan_cli([
@@ -1011,7 +1184,12 @@ pub fn claim(
         dev.Binding(..base, attempt: row.attempt),
         scope.portfolio,
       )
-    use risk <- result.try(state_assessment(interim, "executing", intent))
+    use risk <- result.try(state_assessment_with_owner(
+      interim,
+      "executing",
+      intent,
+      Some(transition_lock),
+    ))
     use _ <- result.try(risk_check(risk, scope, grant.worker, row.attempt, True))
     use raw <- result.try(
       coordinate([
@@ -1033,6 +1211,11 @@ pub fn claim(
         binding: dev.Binding(..interim.binding, epoch: epoch),
       )
     use _ <- result.try(fence(active, 0))
+    use _ <- result.try(release_task_transition_lock(
+      scope,
+      intent,
+      transition_lock,
+    ))
     Ok(active)
   }
   result.map_error(outcome, fn(e) { "claim_outcome_unknown:" <> e })
