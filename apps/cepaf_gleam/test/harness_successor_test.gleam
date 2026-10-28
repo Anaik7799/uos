@@ -19,9 +19,11 @@ fn scope() {
     "clock",
     ["AGENTS.md"],
     ["apps/cepaf_gleam/test/harness_successor_test.gleam"],
-    ["AGENTS.md"],
+    ["AGENTS.md", "apps/cepaf_gleam/test/harness_successor_test.gleam"],
     ["harness_successor_test"],
     "var/harness/20260909-1751-current-risk.json",
+    [],
+    [],
   )
 }
 
@@ -36,6 +38,7 @@ fn grant() {
     "test-boot",
     1000,
     [scope()],
+    "",
     "docs/reviews/20260909-1751-test.json",
     string.repeat("c", 64),
   )
@@ -85,6 +88,8 @@ pub fn task_scope_excludes_old_bootstrap_and_secrets_test() {
   |> should.be_false
   a.scope_valid(a.Scope(..scope(), writes: ["tools/unreviewed.ml"]))
   |> should.be_false
+  a.scope_valid(a.Scope(..scope(), sources: ["AGENTS.md"]))
+  |> should.be_false
 }
 
 pub fn path_components_and_empty_evidence_fail_closed_test() {
@@ -131,6 +136,86 @@ pub fn payload_identity_and_backend_are_refused_test() {
   )
   |> should.be_error
   ops.validate_args("arbitrary_shell", value.Object([])) |> should.be_error
+}
+
+pub fn client_mcp_config_accepts_only_typed_client_and_action_test() {
+  let valid =
+    value.Object([
+      #("intent_id", value.Text("config")),
+      #("client", value.Text("codex")),
+      #("action", value.Text("prepare")),
+    ])
+  ops.validate_args("harness_client_mcp_config", valid) |> should.be_ok
+  ops.validate_args(
+    "harness_client_mcp_config",
+    value.Object([
+      #("intent_id", value.Text("config")),
+      #("client", value.Text("shell")),
+      #("action", value.Text("prepare")),
+    ]),
+  )
+  |> should.be_error
+  ops.validate_args(
+    "harness_client_mcp_config",
+    value.Object([
+      #("intent_id", value.Text("config")),
+      #("client", value.Text("codex")),
+      #("action", value.Text("write_file")),
+    ]),
+  )
+  |> should.be_error
+}
+
+pub fn client_mcp_config_is_declared_and_dispatched_to_task_handler_test() {
+  let args =
+    value.Object([
+      #("intent_id", value.Text("config")),
+      #("client", value.Text("codex")),
+      #("action", value.Text("status")),
+    ])
+  let state = mcp.State(..mcp.initial(grant()), initialized: True)
+  let #(after, outcome) = mcp.call(state, "harness_client_mcp_config", args)
+  after |> should.equal(state)
+  outcome |> should.equal(Error("current_task_required"))
+}
+
+pub fn reviewed_workspace_root_changes_only_source_root_test() {
+  a.source_root(grant()) |> should.equal(Ok(dev.root))
+  a.source_root(a.Grant(..grant(), workspace_root: "apps/cepaf_gleam"))
+  |> should.be_error
+}
+
+pub fn workspace_root_requires_registered_canonical_jj_identity_test() {
+  let root = "/repo/.uos-workspaces/candidate"
+  let listing = "candidate: .uos-workspaces/candidate abc123 (empty)\n"
+  a.workspace_identity_matches(
+    ".uos-workspaces/candidate",
+    root,
+    listing,
+    root <> "\n",
+  )
+  |> should.be_true
+  a.workspace_identity_matches(
+    ".uos-workspaces/candidate",
+    root,
+    "candidate: .uos-workspaces/elsewhere abc123\n",
+    root,
+  )
+  |> should.be_false
+  a.workspace_identity_matches(
+    ".uos-workspaces/candidate",
+    root,
+    listing,
+    "/repo/apps/cepaf_gleam\n",
+  )
+  |> should.be_false
+  a.workspace_identity_matches(
+    ".uos-workspaces/candidate/nested",
+    root,
+    listing,
+    root,
+  )
+  |> should.be_false
 }
 
 // C4: tools/ecology_process.ml bounds every effect's time, output and process
@@ -245,6 +330,8 @@ pub fn guard_manifest_covers_authorized_writes_while_identity_stays_narrow_test(
       ["tools/absent-a.gleam"],
       ["m"],
       "var/harness/x-current-risk.json",
+      [],
+      [],
     )
   let assert Ok(identity) = ops.capture(scope)
   let assert Ok(guard) = ops.guard_capture(scope)
@@ -650,10 +737,16 @@ pub fn executed_receipt_digest_covers_the_bytes_it_retains_test() {
   // empty output: a measured zero, not an absence
   assert_retained_bytes_are_verifiable("", "full")
   // long ASCII: the grapheme tail bound drops a prefix
-  assert_retained_bytes_are_verifiable(string.repeat("x", 20_000), "tail_truncated")
+  assert_retained_bytes_are_verifiable(
+    string.repeat("x", 20_000),
+    "tail_truncated",
+  )
   // Unicode: 8192 three-byte graphemes exceed the 16384-byte bound, so the
   // production fallback retains a sentinel that is NOT output bytes at all
-  assert_retained_bytes_are_verifiable(string.repeat("\u{d55c}", 9000), "unavailable")
+  assert_retained_bytes_are_verifiable(
+    string.repeat("\u{d55c}", 9000),
+    "unavailable",
+  )
 }
 
 // --- Typed planning intents (PLANNING_MCP) --------------------------------
@@ -852,13 +945,7 @@ pub fn planning_readback_must_match_the_requested_identity_test() {
     task_raw,
   )
   |> should.equal(Ok(Nil))
-  planning.readback_matches(
-    "T01",
-    "uos/wrong/parent",
-    "T01",
-    "T",
-    task_raw,
-  )
+  planning.readback_matches("T01", "uos/wrong/parent", "T01", "T", task_raw)
   |> should.equal(Error("readback_parent_mismatch"))
   // Title carries spaces, and the JSON record keeps them intact.
   planning.readback_matches(
@@ -887,10 +974,16 @@ pub fn planning_submit_refuses_unknown_and_pending_before_dispatch_test() {
       "var/harness/20261027-1013-planning-current-risk.json",
     )
   // An unknown intent is refused by prevalidation, with no dispatch at all.
-  ops.submit_planning_outcome(execution, value.Object([#("intent", value.Text("RunSql"))]))
+  ops.submit_planning_outcome(
+    execution,
+    value.Object([#("intent", value.Text("RunSql"))]),
+  )
   |> should.equal(Error("unknown_intent"))
   // A missing logical id is refused before dispatch.
-  ops.submit_planning_outcome(execution, value.Object([#("intent", value.Text("CreatePlan"))]))
+  ops.submit_planning_outcome(
+    execution,
+    value.Object([#("intent", value.Text("CreatePlan"))]),
+  )
   |> should.equal(Error("logical_id_required"))
   // An unknown payload key is refused before dispatch.
   ops.submit_planning_outcome(
@@ -937,7 +1030,10 @@ fn ok_plan_readback(id: String, title: String) -> String {
   <> "\"}\nsa-plan-pipeline {\"command\":\"--plan-show\"}"
 }
 
-fn stub_backend(dispatch: Result(String, String), readback: Result(String, String)) {
+fn stub_backend(
+  dispatch: Result(String, String),
+  readback: Result(String, String),
+) {
   planning.Backend(
     dispatch: fn(_argv) { dispatch },
     readback: fn(_argv) { readback },
@@ -994,7 +1090,14 @@ pub fn planning_saved_record_is_validated_whole_test() {
   let payload =
     planning.canonical_payload("CreatePlan", "L-9", "t", "T", "ti", "", "")
   let good =
-    planning.ledger_record(key, binding, "CreatePlan", payload, planning.Applied, "d")
+    planning.ledger_record(
+      key,
+      binding,
+      "CreatePlan",
+      payload,
+      planning.Applied,
+      "d",
+    )
     |> json.to_string
   planning.validate_saved(good, key, binding, payload)
   |> should.equal(Ok(Nil))
@@ -1028,7 +1131,6 @@ pub fn planning_uncertain_outcome_is_never_a_refusal_test() {
   |> should.equal("Applied")
 }
 
-
 pub fn planning_readback_failure_yields_uncertain_not_applied_test() {
   // A dispatch that succeeds with a readback that disagrees must not be
   // reported as success. The identity check is what makes it evidence.
@@ -1050,17 +1152,18 @@ pub fn planning_readback_failure_yields_uncertain_not_applied_test() {
   |> should.equal(Ok(Nil))
 }
 
-
 pub fn planning_payload_bounds_hold_at_the_byte_edge_test() {
   planning.payload_within_bound(string.repeat("a", planning.max_payload_bytes))
   |> should.equal(Ok(Nil))
-  planning.payload_within_bound(
-    string.repeat("a", planning.max_payload_bytes + 1),
-  )
+  planning.payload_within_bound(string.repeat(
+    "a",
+    planning.max_payload_bytes + 1,
+  ))
   |> should.equal(Error("payload_bound_exceeded"))
-  planning.payload_within_bound(
-    string.repeat("界", planning.max_payload_bytes / 3 + 1),
-  )
+  planning.payload_within_bound(string.repeat(
+    "界",
+    planning.max_payload_bytes / 3 + 1,
+  ))
   |> should.equal(Error("payload_bound_exceeded"))
   planning.evidence_path_allowed("docs/journal/x.md") |> should.equal(Ok(Nil))
   planning.evidence_path_allowed("apps/x.gleam")
@@ -1080,7 +1183,14 @@ fn laws_binding() {
 }
 
 fn applied_result(binding, key, payload) {
-  planning.ledger_record(key, binding, "CreatePlan", payload, planning.Applied, "d")
+  planning.ledger_record(
+    key,
+    binding,
+    "CreatePlan",
+    payload,
+    planning.Applied,
+    "d",
+  )
   |> json.to_string
 }
 
@@ -1099,18 +1209,16 @@ fn uncertain_result(binding, key, payload) {
 pub fn planning_prepare_reaches_target_name_and_size_guards_test() {
   let approved = "uos/development/planning-proof/20261027-1013"
   let base = fn(extra) {
-    value.Object(
-      list.append(
-        [
-          #("intent", value.Text("CreateTask")),
-          #("logical_id", value.Text("L-1")),
-          #("target_plan", value.Text(approved)),
-          #("task_id", value.Text("t01")),
-          #("title", value.Text("a title")),
-        ],
-        extra,
-      ),
-    )
+    value.Object(list.append(
+      [
+        #("intent", value.Text("CreateTask")),
+        #("logical_id", value.Text("L-1")),
+        #("target_plan", value.Text(approved)),
+        #("task_id", value.Text("t01")),
+        #("title", value.Text("a title")),
+      ],
+      extra,
+    ))
   }
   // POSITIVE: the guards are reached and pass, and the native name is derived
   // rather than overloading the caller's task id.
@@ -1129,7 +1237,8 @@ pub fn planning_prepare_reaches_target_name_and_size_guards_test() {
   planning.normalize_name("T01") |> should.equal(Error("native_name_invalid"))
   planning.task_name("T01") |> should.equal(Ok("planning/t01"))
   planning.normalize_name("a/B") |> should.equal(Ok("a/b"))
-  planning.normalize_name("a/-bad") |> should.equal(Error("native_name_invalid"))
+  planning.normalize_name("a/-bad")
+  |> should.equal(Error("native_name_invalid"))
   // Target guard reached, with the same payload otherwise valid.
   planning.prepare(base([]), ["uos/other/allowed"], [])
   |> should.equal(Error("planning_target_refused"))
@@ -1185,8 +1294,10 @@ pub fn planning_ledger_trace_applied_replay_next_and_conflict_test() {
   let b = laws_binding()
   let k1 = planning.logical_key(b.plan, b.task, "L-1")
   let k2 = planning.logical_key(b.plan, b.task, "L-2")
-  let p1 = planning.canonical_payload("CreatePlan", "L-1", "t", "t01", "ti", "", "")
-  let p2 = planning.canonical_payload("CreatePlan", "L-2", "t", "t02", "ti", "", "")
+  let p1 =
+    planning.canonical_payload("CreatePlan", "L-1", "t", "t01", "ti", "", "")
+  let p2 =
+    planning.canonical_payload("CreatePlan", "L-2", "t", "t02", "ti", "", "")
   let rp = planning.ledger_path(k1, "result")
   let ip = planning.ledger_path(k1, "intent")
   // 1. First intent, nothing recorded: dispatch.
@@ -1203,11 +1314,26 @@ pub fn planning_ledger_trace_applied_replay_next_and_conflict_test() {
   planning.decide_ledger(Some(saved), None, k1, b, p2, rp, ip)
   |> should.equal(Error("payload_conflict"))
   // 5. A recorded uncertainty is re-surfaced, not replayed as success.
-  planning.decide_ledger(Some(uncertain_result(b, k1, p1)), None, k1, b, p1, rp, ip)
+  planning.decide_ledger(
+    Some(uncertain_result(b, k1, p1)),
+    None,
+    k1,
+    b,
+    p1,
+    rp,
+    ip,
+  )
   |> should.equal(Error("uncertain:recorded_Uncertain;ledger:" <> rp))
   // 6. A pending reservation with the same payload is never redispatched.
   let pending =
-    planning.ledger_record(k1, b, "CreatePlan", p1, planning.Uncertain("reserved"), "r")
+    planning.ledger_record(
+      k1,
+      b,
+      "CreatePlan",
+      p1,
+      planning.Uncertain("reserved"),
+      "r",
+    )
     |> json.to_string
   planning.decide_ledger(None, Some(pending), k1, b, p1, rp, ip)
   |> should.equal(Error("uncertain:pending_not_redispatched;ledger:" <> ip))
@@ -1224,25 +1350,47 @@ pub fn planning_andon_trace_applied_applied_uncertain_blocks_next_test() {
   let b = laws_binding()
   let k1 = planning.logical_key(b.plan, b.task, "L-1")
   let k2 = planning.logical_key(b.plan, b.task, "L-2")
-  let p1 = planning.canonical_payload("CreatePlan", "L-1", "t", "t01", "ti", "", "")
-  let p2 = planning.canonical_payload("CreatePlan", "L-2", "t", "t02", "ti", "", "")
+  let p1 =
+    planning.canonical_payload("CreatePlan", "L-1", "t", "t01", "ti", "", "")
+  let p2 =
+    planning.canonical_payload("CreatePlan", "L-2", "t", "t02", "ti", "", "")
   // No pointer yet: open.
   planning.decide_andon(None, None, b.plan, b.task)
   |> should.equal(Ok(Nil))
   // First Applied: pointer at k1 with a settled Applied result: still open, so
   // a success never latches the line shut.
   let ptr1 = planning.pointer_record(b.plan, b.task, k1)
-  planning.decide_andon(Some(ptr1), Some(applied_result(b, k1, p1)), b.plan, b.task)
+  planning.decide_andon(
+    Some(ptr1),
+    Some(applied_result(b, k1, p1)),
+    b.plan,
+    b.task,
+  )
   |> should.equal(Ok(Nil))
   // Second Applied at a different key: still open.
   let ptr2 = planning.pointer_record(b.plan, b.task, k2)
-  planning.decide_andon(Some(ptr2), Some(applied_result(b, k2, p2)), b.plan, b.task)
+  planning.decide_andon(
+    Some(ptr2),
+    Some(applied_result(b, k2, p2)),
+    b.plan,
+    b.task,
+  )
   |> should.equal(Ok(Nil))
   // Third is Uncertain: the line holds for the WHOLE parent task.
-  planning.decide_andon(Some(ptr2), Some(uncertain_result(b, k2, p2)), b.plan, b.task)
+  planning.decide_andon(
+    Some(ptr2),
+    Some(uncertain_result(b, k2, p2)),
+    b.plan,
+    b.task,
+  )
   |> should.equal(Error("planning_andon_held;Uncertain:" <> k2))
   // Fourth, a different logical id, is blocked by that same hold.
-  planning.decide_andon(Some(ptr2), Some(uncertain_result(b, k2, p2)), b.plan, b.task)
+  planning.decide_andon(
+    Some(ptr2),
+    Some(uncertain_result(b, k2, p2)),
+    b.plan,
+    b.task,
+  )
   |> should.equal(Error("planning_andon_held;Uncertain:" <> k2))
   // A reservation with no settled result holds, covering a crash after
   // reservation.
