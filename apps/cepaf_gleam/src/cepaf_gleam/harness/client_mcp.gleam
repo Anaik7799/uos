@@ -296,7 +296,7 @@ fn lookup_entry(
           }
         None -> Error("agy_private_profile_missing")
       }
-    profiles.Gemini | profiles.Pi ->
+    profiles.Gemini | profiles.Claude | profiles.Pi ->
       case
         client_config.observe(
           client,
@@ -312,7 +312,7 @@ fn lookup_entry(
           Error("client_entry_conflict_manual_review")
         Error(_) -> Error("client_metadata_lookup_failed_redacted")
       }
-    profiles.Codex | profiles.Claude ->
+    profiles.Codex ->
       lookup_native_cli(client, owned_name, command, timeout)
   }
 }
@@ -337,6 +337,7 @@ fn lookup_native_cli(
         && {
           string.contains(folded, "not found")
           || string.contains(folded, "not configured")
+          || string.contains(folded, "no mcp server named")
         }
       case missing {
         True -> Ok(None)
@@ -373,7 +374,8 @@ fn exact_entry(
     profiles.Codex ->
       codex_entry_matches(output, name, command, expected_args, expected_env)
     profiles.Claude ->
-      claude_entry_matches(output, name, command, expected_args, expected_env)
+      output == "UOS_TYPED_METADATA_EXACT"
+      || claude_entry_matches(output, name, command, expected_args, expected_env)
     profiles.Agy | profiles.Gemini | profiles.Pi ->
       output == "UOS_TYPED_METADATA_EXACT"
   }
@@ -397,7 +399,11 @@ pub fn claude_entry_matches(
             list.all(fields, fn(field) {
               list.contains(["name", "command", "args", "env", "type"], field.0)
             })
-          let name_ok = value.get(record, "name") == Ok(value.Text(name))
+          let name_ok = case value.get(record, "name") {
+            Error(_) -> True
+            Ok(value.Text(found_name)) -> found_name == name
+            _ -> False
+          }
           let command_ok =
             value.get(record, "command") == Ok(value.Text(command))
           let args_ok = case value.get(record, "args") {
@@ -431,7 +437,7 @@ pub fn claude_entry_matches(
   }
 }
 
-fn codex_entry_matches(
+pub fn codex_entry_matches(
   output: String,
   name: String,
   command: String,
@@ -441,23 +447,46 @@ fn codex_entry_matches(
   case json.parse(output, value.decoder()) {
     Ok(record) -> {
       let name_ok = value.get(record, "name") == Ok(value.Text(name))
-      let command_ok = value.get(record, "command") == Ok(value.Text(command))
-      let args_ok = case value.get(record, "args") {
-        Ok(value.Array(found)) -> string_array_equals(found, expected_args)
+      let enabled_ok = case value.get(record, "enabled") {
+        Error(_) -> True
+        Ok(value.Boolean(True)) -> True
         _ -> False
       }
-      let env_ok = case value.get(record, "env") {
-        Ok(found) ->
-          list.all(expected_env, fn(pair) {
-            case string.split(pair, "=") {
-              [key, expected] ->
-                value.get(found, key) == Ok(value.Text(expected))
-              _ -> False
-            }
-          })
-        _ -> False
+      let target = case value.get(record, "transport") {
+        Ok(value.Object(_) as transport) ->
+          case value.get(transport, "type") {
+            Error(_) | Ok(value.Text("stdio")) -> Ok(transport)
+            _ -> Error(Nil)
+          }
+        Error(_) -> Ok(record)
+        _ -> Error(Nil)
       }
-      name_ok && command_ok && args_ok && env_ok
+      case target {
+        Error(_) -> False
+        Ok(spec) -> {
+          let command_ok =
+            value.get(spec, "command") == Ok(value.Text(command))
+          let args_ok = case value.get(spec, "args") {
+            Ok(value.Array(found)) -> string_array_equals(found, expected_args)
+            _ -> False
+          }
+          let env_ok = case value.get(spec, "env") {
+            Ok(value.Object(found)) ->
+              list.length(found) == list.length(expected_env)
+              && list.all(expected_env, fn(pair) {
+                case string.split(pair, "=") {
+                  [key, expected] ->
+                    list.any(found, fn(entry) {
+                      entry.0 == key && entry.1 == value.Text(expected)
+                    })
+                  _ -> False
+                }
+              })
+            _ -> False
+          }
+          name_ok && enabled_ok && command_ok && args_ok && env_ok
+        }
+      }
     }
     Error(_) -> False
   }
@@ -562,7 +591,8 @@ pub fn prepare_args(
       "add",
       "--scope",
       "user",
-      ..list.append(env_args(env), [owned_name, "--", command, ..server_args])
+      owned_name,
+      ..list.append(env_args(env), ["--", command, ..server_args])
     ]
     profiles.Pi -> [
       "mcp",

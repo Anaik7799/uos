@@ -1,0 +1,26 @@
+{
+  "schema": "uos.harness-peer-review.v1",
+  "review_id": "20261029-0835-mcp-completion-grant-v6-review",
+  "observed_at": "2026-10-29T08:53:04Z",
+  "reviewer": {
+    "session": "claude-opus5-reviewer-20261029-0730",
+    "worker": "claude-opus5-reviewer-20261029-0730",
+    "agent_type": "claude",
+    "model_id": "claude-opus-5"
+  },
+  "implementer": {
+    "session": "pi-agy-gemini4-argon-20261029-0730",
+    "worker": "pi-agy-gemini4-argon-20261029-0730"
+  },
+  "review_task": {
+    "plan": "uos/development-harness/mcp-completion-e2e-v6/20261029-0835",
+    "task": "REVIEW_GRANT",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261029-0835-mcp-e2e-v6-grant-proposal.json",
+    "sha256": "5f9fc0cd0c1def43d4ffe25f7ad9dde6b3ebede450bcb32bd4ac0c5d0a54c094",
+    "grant_id": "20261029-0835-mcp-completion-e2e-v6"
+  },
+  "verdict": "APPROVED"
+}

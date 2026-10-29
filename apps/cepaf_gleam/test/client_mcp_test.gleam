@@ -87,3 +87,35 @@ pub fn agy_mcp_add_places_delimiter_before_command_and_flag_like_args_test() {
     ..profile.args
   ])
 }
+
+pub fn codex_nested_transport_json_and_claude_name_before_env_test() {
+  let name = "uos-gleam-dev-fixture"
+  let command = "/fixture/erl"
+  let args = ["-noinput", "-noshell"]
+  let env = ["UOS_HARNESS_SESSION=session-fixture", "UOS_HARNESS_GRANT_SHA256=abc"]
+  let codex_json =
+    "{\"name\":\"uos-gleam-dev-fixture\",\"enabled\":true,\"disabled_reason\":null,\"transport\":{\"type\":\"stdio\",\"command\":\"/fixture/erl\",\"args\":[\"-noinput\",\"-noshell\"],\"env\":{\"UOS_HARNESS_SESSION\":\"session-fixture\",\"UOS_HARNESS_GRANT_SHA256\":\"abc\"},\"env_vars\":[],\"cwd\":null}}"
+  client_mcp.codex_entry_matches(codex_json, name, command, args, env)
+  |> should.be_true()
+
+  let claude_profile = profiles.profile_at(profiles.Claude, "/candidate")
+  client_mcp.prepare_args(
+    profiles.Claude,
+    "uos-gleam-dev-test",
+    claude_profile.command,
+    claude_profile.args,
+    ["UOS_HARNESS_TASK=SOURCE_FIX"],
+  )
+  |> should.equal([
+    "mcp",
+    "add",
+    "--scope",
+    "user",
+    "uos-gleam-dev-test",
+    "--env",
+    "UOS_HARNESS_TASK=SOURCE_FIX",
+    "--",
+    claude_profile.command,
+    ..claude_profile.args
+  ])
+}

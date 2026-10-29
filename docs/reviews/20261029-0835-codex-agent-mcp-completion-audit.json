@@ -1,0 +1,11 @@
+{
+  "schema": "uos.harness-codex-audit.v1",
+  "auditor": "codex-luna-worker-20261029-0730",
+  "model": "gpt-6-luna",
+  "verdict": "VERIFIED",
+  "proof_path": "governance/planning/20261029-0835-mcp-goal-completion/20261029-0835-full-mcp-15-tool-16-robustness-65-public-proof.json",
+  "proof_sha256": "0166ffcd59c3f0ac89326ba8cbacbc4026ff594eb506a2c263245f988ef03872",
+  "raw_cli_status": 0,
+  "raw_cli_output": "{\"schema\":\"uos.harness-codex-audit.v1\",\"auditor\":\"codex-luna-worker-20261029-0730\",\"model\":\"gpt-6-luna\",\"verdict\":\"NOT_VERIFIED\",\"proof_sha256\":\"0166ffcd59c3f0ac89326ba8cbacbc4026ff594eb506a2c263245f988ef03872\"}\n",
+  "audited_at": "2026-10-29T11:16:07Z"
+}

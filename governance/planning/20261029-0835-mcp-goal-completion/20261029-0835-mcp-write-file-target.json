@@ -1,0 +1,10 @@
+{
+  "schema": "uos.harness-mcp-write-file-proof.v1",
+  "grant_id": "20261029-0835-mcp-completion-e2e-v12",
+  "plan": "uos/development-harness/mcp-completion-e2e-v12/20261029-0835",
+  "task": "E2E_CLAIM",
+  "verified_by": "pi-agy-gemini4-argon-20261029-0730",
+  "backend": "host_immutable_nix",
+  "sa_plan_bin": "/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3",
+  "timestamp": "2026-10-29T11:02:32Z"
+}

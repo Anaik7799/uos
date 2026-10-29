@@ -1,0 +1,615 @@
+{
+  "schema": "uos.harness-full-mcp-goal-completion-proof.v1",
+  "generated_at": "2026-10-29T11:14:45Z",
+  "supervisor": "pi-agy-gemini4-argon-20261029-0730 (google/gemini-4-argon)",
+  "backend": {
+    "mode": "host_immutable_nix",
+    "sa_plan_bin": "/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3",
+    "sa_plan_sha256": "cfe06ec3e54a6cca54e59d8f521d8ae903f0c8e4703c1d447fcf3fff5534cf91"
+  },
+  "successor_mcp_15_tools": {
+    "plan_id": "uos/development-harness/mcp-completion-e2e-v12/20261029-0835",
+    "grant_id": "20261029-0835-mcp-completion-e2e-v12",
+    "grant_path": "var/harness/20261029-0835-mcp-completion-v12-grant.json",
+    "grant_sha256": "33c4c0e2cde2e5536cc61b60913e7d25e856dedec866e5a113b1ddd2c0fb42eb",
+    "all_15_tools_verified": true,
+    "tools": [
+      {
+        "name": "harness_status",
+        "status": "PASS",
+        "session": "v12_a",
+        "id": 3
+      },
+      {
+        "name": "harness_clock",
+        "status": "PASS",
+        "session": "v12_a",
+        "id": 4
+      },
+      {
+        "name": "harness_claim",
+        "status": "PASS",
+        "session": "v12_a/v12_b0/v12_c0",
+        "tasks": [
+          "E2E_CLAIM",
+          "E2E_FINISH"
+        ]
+      },
+      {
+        "name": "harness_attach",
+        "status": "PASS",
+        "session": "v12_a2/v12_b1b/v12_b2b/v12_c1b/v12_c2",
+        "tasks": [
+          "E2E_CLAIM",
+          "E2E_FINISH"
+        ]
+      },
+      {
+        "name": "harness_heartbeat",
+        "status": "PASS",
+        "session": "v12_a",
+        "id": 6
+      },
+      {
+        "name": "harness_release",
+        "status": "PASS",
+        "session": "v12_a2/v12_a3",
+        "id": 20
+      },
+      {
+        "name": "harness_reconcile",
+        "status": "PASS",
+        "session": "v12_c1",
+        "intent_id": "e2e-write-refusal-v12-1",
+        "resolution_state": "KNOWN_NOT_APPLIED"
+      },
+      {
+        "name": "harness_assess",
+        "status": "PASS",
+        "session": "v12_a",
+        "intent_id": "e2e-assess-v12-1"
+      },
+      {
+        "name": "harness_read_file",
+        "status": "PASS",
+        "session": "v12_a",
+        "path": "docs/reviews/20261029-0835-mcp-completion-grant-v12-review.json"
+      },
+      {
+        "name": "harness_write_file",
+        "status": "PASS",
+        "session": "v12_a2",
+        "intent_id": "e2e-write-v12-2",
+        "path": "governance/planning/20261029-0835-mcp-goal-completion/20261029-0835-mcp-write-file-target.json"
+      },
+      {
+        "name": "harness_plan_intent",
+        "status": "PASS",
+        "session": "v12_a3",
+        "intents": [
+          "CreatePlan:e2e-plan-intent-v12-2",
+          "CreateTask:e2e-task-intent-v12-2"
+        ],
+        "target_plan": "uos/development-harness/mcp-intent-target-v12/20261029-0835"
+      },
+      {
+        "name": "harness_client_mcp_config",
+        "status": "PASS",
+        "session": "v12_a2",
+        "clients": [
+          "agy",
+          "gemini",
+          "pi",
+          "codex",
+          "claude"
+        ],
+        "actions": [
+          "prepare",
+          "status",
+          "rollback"
+        ],
+        "roundtrips_passed": "15/15"
+      },
+      {
+        "name": "harness_build",
+        "status": "PASS",
+        "session": "v12_b1b/v12_c1b",
+        "intents": [
+          "e2e-build-v12-2",
+          "e2e-build-claim-v12-3"
+        ]
+      },
+      {
+        "name": "harness_test",
+        "status": "PASS",
+        "session": "v12_b1b/v12_c1b",
+        "intents": [
+          "e2e-test-v12-2",
+          "e2e-test-claim-v12-3"
+        ],
+        "eunit_passed": "211/211"
+      },
+      {
+        "name": "harness_finish",
+        "status": "PASS",
+        "session": "v12_b2b/v12_c2",
+        "intents": [
+          "e2e-finish-v12-1",
+          "e2e-finish-claim-v12-3"
+        ],
+        "completions": [
+          "uos.harness-successor-completion.v1:a187c7d36169ab035a7b0692fe7ad4cb7fdbb1ab450bb32614225d425556e45e",
+          "uos.harness-successor-completion.v1:661816e858224f03272b0aff3d09c85c85a8147a3a34a903ce3f9e022c7751cb"
+        ]
+      }
+    ]
+  },
+  "robustness_16_contracts": {
+    "plan_id": "uos/development-harness/robustness/20261028-0558",
+    "completed_tasks": "16/16",
+    "eunit_suite": "211/211 PASS across 12 modules"
+  },
+  "public_mcp_65_tools": {
+    "total_declared": 65,
+    "operational_executed": 53,
+    "nif_fail_closed_gated": 0,
+    "unavailable_fail_closed_gated": 12,
+    "tools": [
+      {
+        "name": "plan_status",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"active\":5,\"pending\":120,\"completed\":635,\"blocked\":0,\"total\":760}"
+      },
+      {
+        "name": "plan_list_pending",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "[{\"id\":\"69394b38\",\"title\":\"P2-FEAT: Implement ZettelView.fs markdown renderer for SMRITI client (L4)\",\"status\":\"pending\""
+      },
+      {
+        "name": "plan_list",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "[{\"id\":\"a3308fb6\",\"title\":\"Indrajaal.Ark v2: Deep Native Archive implementation\",\"status\":\"completed\",\"priority\":\"P1\",\"p"
+      },
+      {
+        "name": "plan_get",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"jsonrpc\":\"2.0\",\"id\":\"sweep-plan_get\",\"error\":{\"code\":-32602,\"message\":\"Missing params.arguments.id\"}}"
+      },
+      {
+        "name": "plan_add",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: plan_add — Transport-bound task authority unavailable; legacy mutation refused; no action or verification w"
+      },
+      {
+        "name": "plan_update",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: plan_update — Transport-bound task authority unavailable; legacy mutation refused; no action or verificatio"
+      },
+      {
+        "name": "plan_search",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"jsonrpc\":\"2.0\",\"id\":\"sweep-plan_search\",\"error\":{\"code\":-32602,\"message\":\"Missing params.arguments.query\"}}"
+      },
+      {
+        "name": "system_health",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"status\":\"unavailable\",\"interface\":\"wisp\",\"port\":4100,\"version\":\"1.0.0\",\"container_count\":0,\"healthy_count\":0,\"threat_l"
+      },
+      {
+        "name": "system_dashboard",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Dashboard\",\"path\":\"/dashboard\",\"status\":\"active\",\"container_count\":0,\"healthy_count\":0,\"health_pct\":0.0,\"threat"
+      },
+      {
+        "name": "system_immune",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Immune System\",\"status\":\"active\",\"threat_level\":\"nominal\",\"antibodies_deployed\":0,\"chaos_attacks_blocked\":0,\"la"
+      },
+      {
+        "name": "system_zenoh",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Zenoh Mesh\",\"status\":\"active\",\"routers\":1,\"connected\":true,\"topics_active\":12,\"messages_per_sec\":0,\"router_endp"
+      },
+      {
+        "name": "system_verification",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Verification\",\"status\":\"active\",\"sil_level\":\"SIL-6\",\"tests_total\":266,\"tests_passed\":266,\"tests_failed\":0,\"comp"
+      },
+      {
+        "name": "knowledge_search",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"query\":\"\",\"results\":[],\"total\":0}"
+      },
+      {
+        "name": "verification_run",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"ok\":true,\"output\":\"warning: Unused imported module\\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/w"
+      },
+      {
+        "name": "read_file",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"jsonrpc\":\"2.0\",\"id\":\"sweep-read_file\",\"error\":{\"code\":-32602,\"message\":\"Missing params.arguments.path\"}}"
+      },
+      {
+        "name": "podman_containers",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Podman\",\"containers\":[],\"total\":0}"
+      },
+      {
+        "name": "metabolic_state",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Metabolic\",\"set_point\":80.0,\"energy\":1250.0,\"cpu_load\":32.5,\"health_status\":\"Optimal\"}"
+      },
+      {
+        "name": "ooda_phase",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"OODA Controller\",\"status\":\"active\",\"cycle_count\":0,\"last_cycle_ms\":0,\"target_ms\":100,\"patterns\":[\"HealthDegrada"
+      },
+      {
+        "name": "fractal_status",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Verification\",\"status\":\"active\",\"sil_level\":\"SIL-6\",\"tests_total\":266,\"tests_passed\":266,\"tests_failed\":0,\"comp"
+      },
+      {
+        "name": "prajna_health",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Prajna Biomorphic\",\"bio\":{\"holons\":0,\"default_state\":\"Dormant\"},\"immune\":{\"threat_level\":\"None\",\"strategy\":\"Pas"
+      },
+      {
+        "name": "dark_cockpit_mode",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Dashboard\",\"path\":\"/dashboard\",\"status\":\"active\",\"container_count\":0,\"healthy_count\":0,\"health_pct\":0.0,\"threat"
+      },
+      {
+        "name": "integrity_check",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Integrity\",\"layer\":\"L0_CONSTITUTIONAL\",\"constitution_hash\":\"sha256:e3b0c44298fc1c14...\",\"chain_valid\":true,\"las"
+      },
+      {
+        "name": "evolution_metrics",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Evolution\",\"layer\":\"L5_COGNITIVE\",\"entropy\":2.67,\"cycle_count\":42,\"mutation_rate\":0.03,\"fitness_score\":0.92,\"ge"
+      },
+      {
+        "name": "mesh_topology",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Zenoh Mesh\",\"status\":\"active\",\"routers\":1,\"connected\":true,\"topics_active\":12,\"messages_per_sec\":0,\"router_endp"
+      },
+      {
+        "name": "ooda_decide",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"OODA Decision Brain\",\"engine_version\":\"rust-rule-engine/1.20.1 RETE-UL\",\"ooda_decision\":\"NoAction\",\"ooda_reason"
+      },
+      {
+        "name": "kms_catalog",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"KMS\",\"total_keys\":12,\"active_keys\":10,\"checkpoints\":[]}"
+      },
+      {
+        "name": "vault_status",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: vault_status — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "vault_list_secrets",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: vault_list_secrets — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "vault_policy_get",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: vault_policy_get — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "vault_audit_tail",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: vault_audit_tail — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "vault_health",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: vault_health — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "control_loop",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: control_loop — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "safety_status",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: safety_status — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "registry_status",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: registry_status — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "run_selfcheck",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: run_selfcheck — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "run_gate",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: run_gate — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "zk_search",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: zk_search — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "sa_bridge_submit",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": true,
+        "preview": "UNAVAILABLE: sa_bridge_submit — no runtime binding; no action or verification was performed."
+      },
+      {
+        "name": "forecast_predict",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"status\":\"ok\",\"engine\":\"UOS-FRACTAL-FORECAST\",\"horizon_seconds\":60,\"layer_count\":10,\"forecasts\":[{\"layer\":\"L0_Constitut"
+      },
+      {
+        "name": "preflight_check",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"jsonrpc\":\"2.0\",\"id\":\"sweep-preflight_check\",\"error\":{\"code\":-32602,\"message\":\"Missing required params.arguments: actor"
+      },
+      {
+        "name": "sa_plan_status",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "plan=infranodus-fractal-closure-20260804-0936 total=18 completed=0 ready=1 executing=0\nsa-plan-pipeline {\"request_id\":\"s"
+      },
+      {
+        "name": "sa_plan_status_for",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "Missing required params.arguments.plan"
+      },
+      {
+        "name": "sa_plan_list",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "sa-plan-pipeline {\"request_id\":\"sa-plan-1793272484920089557\",\"command\":\"--plan\",\"authority\":\"report_only\",\"total_ns\":348"
+      },
+      {
+        "name": "sa_task_claim",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: sa_task_claim — Transport-bound task authority unavailable; legacy mutation refused; no action or verificat"
+      },
+      {
+        "name": "sa_task_complete",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: sa_task_complete — Transport-bound task authority unavailable; legacy mutation refused; no action or verifi"
+      },
+      {
+        "name": "sa_job_enqueue",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: sa_job_enqueue — Transport-bound task authority unavailable; legacy mutation refused; no action or verifica"
+      },
+      {
+        "name": "sa_workflow_start",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: sa_workflow_start — Transport-bound task authority unavailable; legacy mutation refused; no action or verif"
+      },
+      {
+        "name": "stpa_fmea_hazard",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"id\":\"stpa-2\",\"status\":\"ok\",\"action\":\"unknown_action\",\"component\":\"general\",\"uca_count\":0,\"ucas\":[],\"severity\":2,\"occur"
+      },
+      {
+        "name": "rete_rule_conflict",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "Missing or invalid params.arguments.rules; expected a list of rule objects"
+      },
+      {
+        "name": "ruliad_branch_eval",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"id\":\"ruliad-integration/main\",\"status\":\"ok\",\"source_branch\":\"integration/main\",\"target_branch\":\"feature/current\",\"bran"
+      },
+      {
+        "name": "shruti_harmonics",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"id\":\"shruti-Durga\",\"status\":\"ok\",\"raga\":\"Durga\",\"fundamental_hz\":136.1,\"swara_count\":6,\"harmonics\":[{\"swara_index\":1,\""
+      },
+      {
+        "name": "ast_anomaly_detect",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"id\":\"ast-1\",\"status\":\"ok\",\"language\":\"gleam\",\"code_length\":0,\"lines\":1,\"anomaly_score\":0.05,\"risk_level\":\"NOMINAL\",\"vi"
+      },
+      {
+        "name": "zk_transclude",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"id\":\"zk-query\",\"status\":\"ok\",\"query\":\"sa-plan\",\"total_corpus_notes\":68,\"match_count\":3,\"matches\":[{\"id\":\"ADR-066\",\"tit"
+      },
+      {
+        "name": "lyapunov_trend_predict",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"id\":\"lyap-3\",\"status\":\"ok\",\"samples_count\":3,\"dt_seconds\":1.0,\"horizon_seconds\":60.0,\"current_value\":1.02,\"critical_th"
+      },
+      {
+        "name": "sciviz_extension_deep_dive",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"name\":\"ggram\",\"category\":\"Composite & Multi-Panel\",\"author\":\"EvaMaeRey\",\"url\":\"https://github.com/EvaMaeRey/ggram\",\"bd"
+      },
+      {
+        "name": "ggram_synthesize",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"preset\":\"diamonds\",\"code\":\"library(ggplot2)\\nlibrary(ggram)\\nggplot(diamonds, aes(carat, price, color=cut)) +\\n  geom_"
+      },
+      {
+        "name": "feature_tracker_status",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "Missing required params.arguments.plan"
+      },
+      {
+        "name": "mcp_capability_inventory",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"schema\":\"uos.mcp-capability-inventory.v1\",\"declared_count\":65,\"unavailable_count\":12,\"declared_unprobed_count\":53,\"ent"
+      },
+      {
+        "name": "holon_status",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Holon Identity\",\"runtimes\":[\"Gleam\",\"Elixir\",\"FSharp\",\"Rust\"],\"fractal_layers\":8,\"domains\":16,\"holon_types\":8,\""
+      },
+      {
+        "name": "swarm_status",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"contract\":\"SC-HOLON-001\",\"probed_live\":true,\"scope\":\"backend discovery only; service availability requires invocation;"
+      },
+      {
+        "name": "agent_hierarchy",
+        "isError": false,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "{\"page\":\"Cybernetic Agents\",\"total_agents\":50,\"levels\":{\"executive\":1,\"domain_supervisors\":10,\"functional_supervisors\":1"
+      },
+      {
+        "name": "harness_system_feature_catalog",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: harness_system_feature_catalog — role_binding_missing"
+      },
+      {
+        "name": "harness_system_feature_observations",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: harness_system_feature_observations — role_binding_missing"
+      },
+      {
+        "name": "harness_system_feature_intent",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: harness_system_feature_intent — role_binding_missing"
+      },
+      {
+        "name": "harness_execution_progress",
+        "isError": true,
+        "nifGate": false,
+        "unavailGate": false,
+        "preview": "UNAVAILABLE: harness_execution_progress — role_binding_missing"
+      }
+    ]
+  }
+}

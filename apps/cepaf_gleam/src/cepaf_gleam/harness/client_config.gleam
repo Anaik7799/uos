@@ -132,8 +132,9 @@ fn config_path(client: profiles.Client) -> Result(String, String) {
   case client {
     profiles.Agy -> Ok("/home/an/.gemini/config/mcp_config.json")
     profiles.Gemini -> Ok("/home/an/.gemini/settings.json")
+    profiles.Claude -> Ok("/home/an/.claude.json")
     profiles.Pi -> Ok("/home/an/.pi/agent/mcp.json")
-    profiles.Codex | profiles.Claude ->
+    profiles.Codex ->
       Error("native_cli_metadata_reader_required")
   }
 }
@@ -143,14 +144,14 @@ fn server_map(
   parsed: value.Value,
 ) -> Result(value.Value, String) {
   case client {
-    profiles.Agy | profiles.Gemini | profiles.Pi -> {
+    profiles.Agy | profiles.Gemini | profiles.Claude | profiles.Pi -> {
       use servers <- result.try(value.get(parsed, "mcpServers"))
       case servers {
         value.Object(_) -> Ok(servers)
         _ -> Error("client_config_schema_mismatch")
       }
     }
-    profiles.Codex | profiles.Claude ->
+    profiles.Codex ->
       Error("native_cli_metadata_reader_required")
   }
 }

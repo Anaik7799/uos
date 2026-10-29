@@ -1,0 +1,11 @@
+{
+  "schema": "uos.harness-formal-evidence.v1",
+  "verdict": "VERIFIED",
+  "plan": "uos/development-harness/mcp-completion-e2e-v12/20261029-0835",
+  "task": "E2E_CLAIM",
+  "attempt": 3,
+  "candidate_sha256": "01a84ea9ef7a5db66d06f82e600b7eb06aebfd82e6d50bb6e12ce615cae4ea74",
+  "build_receipt_sha256": "e502addd763fba6af28a1748aefc94420250795114ad522fb650f7934dd7fd32",
+  "test_receipt_sha256": "94cac1ac0487d43880b527f449cc218f84b931c90575cb09f4da49e45b6b60d9",
+  "verified_at": "2026-10-29T11:11:57Z"
+}

@@ -84,7 +84,9 @@ pub fn existing_utf8_file_is_read_without_crashing_transport_test() {
     tool_call(
       "file-existing",
       "read_file",
-      json.object([#("path", json.string("gleam.toml"))]),
+      json.object([
+        #("path", json.string("/home/an/NAS-setup/uos/apps/cepaf_gleam/gleam.toml")),
+      ]),
     )
   response |> string.contains("cepaf_gleam") |> should.be_true
   response |> string.contains("Invalid UTF-8") |> should.be_false
