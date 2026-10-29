@@ -141,6 +141,8 @@ flowchart TD
 
 ## 4. Root Cause Analysis (Engine 1: ACH Disconfirmation Matrix)
 
+Analysis of Competing Hypotheses (ACH) disconfirmation matrix evaluating H1, H2, and H3 against observed workspace, test, and transport evidence:
+
 | Hypothesis | Evidence 1: 141 Registered Workspaces | Evidence 2: `harness_native_backend_test` Initial Sibling Spawn Error | Evidence 3: 0/4 Native Clients Accepted | Disconfirmation Score | Verdict |
 |---|---|---|---|---|---|
 | **H1: Missing runtime implementations across workspaces** | Contradicted: only 8 post-`main` non-empty heads exist, and `c587648a493b` contains all 44 sources / 28 controls | Contradicted: all 10 test modules pass 161/161 once `toolchains` is visible | Partially consistent for 12 unavailable public tools | 2 (Contradicted) | **Rejected** |
@@ -159,6 +161,8 @@ flowchart TD
 ---
 
 ## 6. Patterns & Anti-Patterns Discovered (Engine 4: Popperian Falsification)
+
+Devil's Advocate and Red Team Popperian falsification checks applied to the merged candidate:
 
 - **Pattern (Sibling Workspace Toolchain Resolution)**: `ecology_capability_ffi:uos_root()` locates the repository root by walking up to `.jj/`. In a standalone JJ sibling workspace (`.uos-workspaces/<name>`), `.jj/` exists inside the sibling directory, where untracked `toolchains/` is absent unless linked or resolved via `.jj/repo` pointer. Advancing `main` in the canonical root `/home/an/NAS-setup/uos` (where `toolchains/` resides) eliminates this gap for root executions.
 - **Anti-Pattern Avoided**: Never equate a 161/161 EUnit component pass or `main` bookmark advance with full 4-client runtime acceptance (`0/4` clients and `0/260` public cells remain `UNRUN` for end-to-end client acceptance until Waves 2–5 execute).
