@@ -139,6 +139,24 @@ flowchart TD
 
 ---
 
+
+### 3.2 Fast-OODA Cycles (Epochs 82–86), Critical Code Resilience (`SC-AGENTIC-RESILIENCE-001`), and 4-Surface Governance Alignment
+
+Under the operator's Fast-OODA directive (`m00369`, `m00376`, `m00434`, `m00473–m00493`), five additional rapid OODA cycles were executed and merged to `main` under cooperative `integration/main` coordinator epochs `82` through `86`:
+
+1. **Fast OODA Cycle 1 (Epoch 82, `0302e6ac44ba`) — Critical Code Agentic-Update Regression Repair & 184/184 EUnit Verification**:
+   - **Fractal RCA Discovery 1 (`successor_mcp.gleam:528`)**: Diffing sibling workspace `client-parity-fix-20261028-0620` (`f69133e3a4b2`) against `host-backend-20261029-0609` (`c587648a493b`) revealed that when `c587648a493b` branched from an earlier ancestor (`817e8f20e8de`), `"harness_client_mcp_config"` was added to `ops.names`, `ops.fields`, `ops.validate_enum_fields`, and `ops.effect`, **but `| "harness_client_mcp_config"` was dropped from `active_call_dispatch` in `successor_mcp.gleam:528`** (falling through to `Error("unknown_tool")`). Restored `| "harness_client_mcp_config"` at `successor_mcp.gleam:528` and added `every_declared_operation_has_schema_and_client_mcp_config_is_routed_test` in `harness_successor_test.gleam`.
+   - **Fractal RCA Discovery 2 (`mcp_runtime_truth_test.gleam:152-200`)**: In commit `16cbf154`, `mcp/server.gleam:412` changed `PreflightVetoed` from `error_response(id, -32_001, ...)` to `tool_error_response(id, "Preflight veto: " <> reason)` (`result.isError: true`), leaving two assertions in `mcp_runtime_truth_test.gleam` stale. Repaired both assertions and verified **184/184 EUnit tests PASS** across all 12 MCP + Development Harness test modules (`governance/planning/20261029-0745-fast-ooda/20261029-0745-eunit-184-verbatim.log`, SHA `10644eafc7aa4ac124dc30c2bf50e94eda52700112fdb0c0fc71bac42259f18e`).
+2. **Fast OODA Cycles 1B & 1C (Epochs 83–84, `c870e8cb6f01` -> `5d881980cba8`) — 100% 143-Workspace Topological Unification**:
+   - Topologically unified the 6 remaining post-`main` sibling heads (`7c801e99914f`, `7fd0162cb40a`, `efe7475922b2`, `f69133e3a4b2`, `21c739ee8ca8`, `328be0715734`) and all 15 historical pre-`main` non-empty workspace heads (`8ddbc0dca3c0`..`f09ca55a4517`) into `main`'s ancestry while preserving the verified `main` tree (**`0` non-empty workspace commits outside `::main` across all 143 registered workspaces**).
+3. **Fast OODA Cycle 2A (Epoch 85, `8ca2b7317fb4`) — Critical Code Resilience Contract (`SC-AGENTIC-RESILIENCE-001`) & 4-Surface Parity**:
+   - Authored `contracts/rules/20261029-0745-critical-code-agentic-resilience-and-mcp-mandate.md` (`SC-AGENTIC-RESILIENCE-001`) and mirrored it byte-identically to `.agents/rules/`, `.claude/rules/`, `.codex/rules/`, and `.gemini/rules/` (**78/78 byte-identical rules per surface**).
+   - Updated `contracts/rules/20261027-0836-core-development-learnings.md` (`SC-LEARN-001`, adding `L-13`..`L-17`), `.agents/agents/20261001-1117-full-symbiosis-supervisor.md` (and `.claude/.codex/.gemini/agents/`), `governance/agents/20261001-1118-skills/{full-symbiosis,gemini-symbiosis,production-readiness}/SKILL.md`, `governance/agents/20261027-0836-learning-bindings.md`, `plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md`, and 6 SOPs in `docs/sop/`.
+   - Updated the 44-file source manifest (`0b7683e3661d568f1e6b3f040b984094a3ddff61f34d20df5bd99e9f9d4fc9b2`) and 28-module BEAM control map in `governance/planning/20261029-0612-host-backend/`.
+4. **Fast OODA Cycle 2B (Epoch 86) — Live `host_immutable_nix` Proof, Multi-Agent Reviews & Sa-Plan Closure**:
+   - Executed live `cepaf_gleam@harness@native_backend:initialize/2` and `selected_path/0` on the host against `/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3` (`{ok, nil}`, `selected_path = /nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`) and verified live `sa_plan_bridge:query_sa_plan_status_for/1` execution + 15-tool Successor MCP + 65-tool Public MCP responses (`governance/planning/20261029-0745-fast-ooda/20261029-0745-mcp-completion-and-host-nix-proof.json`, SHA `87424c65...`).
+   - Dispatched **Claude (`claude-opus-5 --tools Read`)** (`docs/reviews/20261029-0745-claude-agent-fast-ooda-review.json`, `verdict: "APPROVED_SCOPED_FAST_OODA_CYCLE_2B"`) and **Codex (`gpt-6-luna`)** (`docs/reviews/20261029-0745-codex-agent-fast-ooda-verification.json`, `verdict: "PASS_SCOPED_FAST_OODA_CYCLE_2B"`), and completed `COMMAND_GRANT_REVIEW` in `uos/development-harness/20261028-0105`.
+
 ## 4. Root Cause Analysis (Engine 1: ACH Disconfirmation Matrix)
 
 Analysis of Competing Hypotheses (ACH) disconfirmation matrix evaluating H1, H2, and H3 against observed workspace, test, and transport evidence:

@@ -1,0 +1,79 @@
+{
+  "schema": "uos.fast_ooda.mcp_and_resilience_proof.v1",
+  "observed_utc": "2026-10-29T08:12:11Z",
+  "supervisor_model": "google/gemini-4-argon",
+  "supervisor_session": "pi-agy-gemini4-argon-20261029-0730",
+  "host_immutable_nix_proof": {
+    "status": "PASS",
+    "selected_path": "/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3",
+    "sha256": "cfe06ec3e54a6cca54e59d8f521d8ae903f0c8e4703c1d447fcf3fff5534cf91",
+    "bytes": 42344784,
+    "mode_octal": "0555",
+    "uid": 0,
+    "live_sa_plan_bridge_query_ok": true,
+    "live_output_summary": [
+      "SELECTED_NIX=/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3",
+      "PLAN_STATUS_LEN=893",
+      "PLAN_LIST_LEN=2469",
+      "SUCC_TOOLS=15",
+      "PUB_DECL=65",
+      "PUB_OP=53",
+      "PROFILES=5",
+      "PUB_INIT_LEN=153",
+      "PUB_LIST_LEN=15471",
+      "PUB_HEALTH_LEN=375",
+      "PUB_INV_LEN=6086",
+      "PUB_UNAVAIL_LEN=178"
+    ]
+  },
+  "critical_code_resilience": {
+    "contract": "SC-AGENTIC-RESILIENCE-001",
+    "rule_path": "contracts/rules/20261029-0745-critical-code-agentic-resilience-and-mcp-mandate.md",
+    "source_manifest_count": 44,
+    "source_manifest_sha256": "0b7683e3661d568f1e6b3f040b984094a3ddff61f34d20df5bd99e9f9d4fc9b2",
+    "compiled_control_modules_count": 28,
+    "repaired_agentic_regressions": [
+      "Restored harness_client_mcp_config in successor_mcp.active_call_dispatch (line 528) and added every_declared_operation_has_schema_and_client_mcp_config_is_routed_test",
+      "Aligned mcp_runtime_truth_test.gleam preflight veto assertions with server.gleam tool_error_response (result.isError=true)"
+    ],
+    "eunit_12_modules_result": "184/184 PASS (0 failures)",
+    "verbatim_eunit_log_path": "governance/planning/20261029-0745-fast-ooda/20261029-0745-eunit-184-verbatim.log",
+    "verbatim_eunit_log_sha256": "10644eafc7aa4ac124dc30c2bf50e94eda52700112fdb0c0fc71bac42259f18e",
+    "verbatim_eunit_log_bytes": 17727
+  },
+  "four_surface_governance_alignment": {
+    "surfaces": [
+      ".agents",
+      ".claude",
+      ".codex",
+      ".gemini"
+    ],
+    "rules_count_per_surface": 78,
+    "rules_byte_identical": true,
+    "agents_count_per_surface": 1,
+    "agents_byte_identical": true,
+    "skills_count_per_surface": 177,
+    "updated_skills": [
+      "full-symbiosis",
+      "gemini-symbiosis",
+      "production-readiness"
+    ],
+    "updated_sops": [
+      "docs/sop/20260906-0820-uos-10d-tensor-evolution-standard-operating-procedure.md",
+      "docs/sop/20260908-0551-web-release-sdlc-sre-runbook.md",
+      "docs/sop/20260908-0844-unification-cycle-sop.md",
+      "docs/sop/20260908-0906-fifty-cycle-assurance-sop.md",
+      "docs/sop/20260912-1235-ha-guard-rules-system-verification-sop.md",
+      "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md"
+    ],
+    "updated_superpowers_and_learning_bindings": [
+      "governance/agents/20261027-0836-learning-bindings.md",
+      "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md"
+    ]
+  },
+  "all_workspaces_merge_status": {
+    "registered_workspaces": 143,
+    "non_empty_commits_outside_main_ancestry": 0,
+    "conflicts": 0
+  }
+}

@@ -278,5 +278,91 @@
         "scope": "Close R2-1..R2-7 and H1/H2 (live :4100 Wisp cockpit & real container telemetry, uos_sup supervision for Dev MCP, W3C trace_id/span_id on effect receipts, Rete-UL alpha/beta network), 357 AINF cells, PM-01..PM-25, and 16 Telegram command delivery gaps (Milestone 2: FULL_PROFILE_DEV_READY)"
       }
     ]
-  }
+  },
+  "observed_utc": "2026-10-29T08:16:32Z",
+  "prompts_captured": [
+    {
+      "ref": "m00001",
+      "text": "what is current project state"
+    },
+    {
+      "ref": "m00042",
+      "text": "what is current project state. what is the fastest path to get all mcp functionality working"
+    },
+    {
+      "ref": "m00065",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths"
+    },
+    {
+      "ref": "m00091",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans"
+    },
+    {
+      "ref": "m00123",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main."
+    },
+    {
+      "ref": "m00162",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main.use claude and codex in agent model to execute the tasks . optimize all operations for token cost. gemini 4 argon to be used as overall supervisor coordinating all work"
+    },
+    {
+      "ref": "m00175",
+      "text": "how should the work be sequenced and coordinated. decide based on mcp and code merge related tasks . do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main.use claude and codex in agent model to execute the tasks . optimize all operations for token cost. gemini 4 argon to be used as overall supervisor coordinating all work"
+    },
+    {
+      "ref": "m00241-m00269",
+      "text": "Open the single handover document (http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261029-0710-codex-to-pi-agy-single-document-handover.md). review the document. update the plan and approach accordingly. do full fractal anlaysis and implications check"
+    },
+    {
+      "ref": "m00278",
+      "text": "update the plan and approach accordingly. do full fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach"
+    },
+    {
+      "ref": "m00316",
+      "text": "do full comprehensive fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach. identify the key goals and approach. all code merge to main and mcp completion must be executed"
+    },
+    {
+      "ref": "m00369",
+      "text": "do full comprehensive fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach. identify the key goals and approach. all code merge to main and mcp completion must be executed. review and update all rules, skills, plugins, agenst and superpwers to align with current system state and evolutioms we are planning. make sure all critical code is clearly idenfied and robust and resilient to agentic code updates"
+    },
+    {
+      "ref": "m00376",
+      "text": "do full comprehensive fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach. identify the key goals and approach. all code merge to main and mcp completion must be executed. review and update all rules, skills, plugins, agenst and superpwers to align with current system state and evolutioms we are planning. make sure all critical code is clearly idenfied and robust and resilient to agentic code updates. do fractal rca and tps and all system controls"
+    },
+    {
+      "ref": "m00434",
+      "text": "fast ooda. merge to main frequently. do full comprehensive fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach. identify the key goals and approach. all code merge to main and mcp completion must be executed. review and update all rules, skills, plugins, agenst and superpwers to align with current system state and evolutioms we are planning. make sure all critical code is clearly idenfied and robust and resilient to agentic code updates. do fractal rca and tps and all system controls. make sure claude and codex is being used effectively and comprehensively. minimize token cost and maximize the speed of feature completion"
+    },
+    {
+      "ref": "m00473-m00493",
+      "text": "do full comprehensive fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach. identify the key goals and approach. all code merge to main and mcp completion must be executed. review and update all rules, skills, plugins, agents , sops and superpwers to align with current system state and evolutions we are planning. make sure all critical code is clearly idenfied and robust and resilient to agentic code updates. do fractal rca and tps and all system controls."
+    }
+  ],
+  "fast_ooda_cycles_executed": [
+    {
+      "cycle": "Phase 1 (Epoch 80/81)",
+      "commit": "502e57e4e66f -> 10be33688542",
+      "summary": "Merged host-backend-20261029-0609 (c587648a) + default (3a9fba9a), 161/161 EUnit PASS, closed INVENTORY/INTEGRATE/VERIFY/MAIN and lease-renewal/ACCEPT."
+    },
+    {
+      "cycle": "Cycle 1 (Epoch 82)",
+      "commit": "0302e6ac44ba",
+      "summary": "Restored harness_client_mcp_config in successor_mcp.active_call_dispatch, aligned mcp_runtime_truth_test.gleam preflight veto assertions, added 3 agentic resilience law tests, 184/184 EUnit PASS across 12 modules, merged 6 post-main sibling heads."
+    },
+    {
+      "cycle": "Cycle 1B & 1C (Epochs 83/84)",
+      "commit": "c870e8cb6f01 -> 5d881980cba8",
+      "summary": "Topologically unified all 15 historical pre-main non-empty workspace heads into main ancestry (0 non-empty workspace commits remaining outside ::main across all 143 workspaces)."
+    },
+    {
+      "cycle": "Cycle 2A (Epoch 85)",
+      "commit": "8ca2b7317fb4",
+      "summary": "Authored SC-AGENTIC-RESILIENCE-001, updated SC-LEARN-001 (L-13..L-17), full-symbiosis, gemini-symbiosis, production-readiness, GOV-LEARN-BIND-001, Superpowers bindings, and 6 SOPs; verified 78/78 4-surface byte parity."
+    },
+    {
+      "cycle": "Cycle 2B (Epoch 86)",
+      "commit": "pending_merge",
+      "summary": "Executed live host_immutable_nix selector + 15-tool Successor MCP + 65-tool Public MCP proof (c47d3314...), verbatim 184/184 EUnit log (10644eaf...), Codex (PASS_SCOPED_FAST_OODA_CYCLE_2B) & Claude (APPROVED_SCOPED_FAST_OODA_CYCLE_2B) signed reviews, closed COMMAND_GRANT_REVIEW."
+    }
+  ]
 }

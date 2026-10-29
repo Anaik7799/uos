@@ -1,0 +1,11 @@
+{
+  "schema": "uos.fast_ooda.codex_audit.v1",
+  "agent": "codex-gpt-6-luna",
+  "role": "fast_ooda_executor_and_verifier",
+  "supervisor": "gemini-4-argon",
+  "eunit_184_of_184_verified": true,
+  "sc_agentic_resilience_rule_verified": true,
+  "verdict": "PASS_SCOPED_FAST_OODA_CYCLE_2B",
+  "elapsed_ms": 10819,
+  "observed_utc": "2026-10-29T08:15:13Z"
+}

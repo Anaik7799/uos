@@ -92,3 +92,5 @@ Governance/JJ: CHK-17-SOV, CHK-18-JJ.
 These are review obligations; no global passing state is asserted.
 
 </details>
+
+- **2026-10-29 Fast-OODA, Critical Code Resilience & Multi-Agent MCP Alignment (`SC-AGENTIC-RESILIENCE-001`)**: Supervised by `gemini-4-argon` (`pi-agy`) with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) execution/review lanes; enforces 5-layer defense-in-depth over the 28 BEAM control modules (`admission.control_modules`), 44 harness source files, `tools/ecology_process.ml`, and immutable host Nix CLI (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), 3-scope lease renewal (`--task-renew`), 15-tool successor harness dispatch completeness, and 184/184 EUnit verification before each serialized `integration/main` merge.
