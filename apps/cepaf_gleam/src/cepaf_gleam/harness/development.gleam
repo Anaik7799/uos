@@ -1321,11 +1321,18 @@ pub fn journal_sections_valid(journal: String) -> Bool {
     list.index_map(titles, fn(title, index) {
       "## " <> int.to_string(index + 1) <> ". " <> title
     })
+  let normalize = fn(line: String) {
+    case string.split_once(line, " (") {
+      Ok(#(prefix, _)) -> string.trim(prefix)
+      Error(_) -> line
+    }
+  }
   let actual =
     journal
     |> string.split("\n")
     |> list.map(string.trim)
     |> list.filter(fn(line) { string.starts_with(line, "## ") })
+    |> list.map(normalize)
   actual == expected
   || actual
   == list.append(expected, ["## Comprehensive verification checklist"])

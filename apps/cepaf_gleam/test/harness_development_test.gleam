@@ -370,3 +370,23 @@ pub fn mcp_client_config_is_not_readable_or_writable_as_project_file_test() {
   dev.readable("/home/an/.claude.json") |> should.be_false
   dev.readable("/home/an/.pi/agent/mcp.json") |> should.be_false
 }
+
+pub fn journal_sections_valid_accepts_annotated_engine_headings_test() {
+  let annotated =
+    "## 1. Scope & Trigger (Engine 5: Formal Lean 4)\n"
+    <> "## 2. Pre-State Assessment (Engine 7: Kalman)\n"
+    <> "## 3. Execution Detail (Engine 6: Rete-UL)\n"
+    <> "## 4. Root Cause Analysis (Engine 1: ACH)\n"
+    <> "## 5. Fix Taxonomy (Engine 6: Poka-Yoke)\n"
+    <> "## 6. Patterns & Anti-Patterns Discovered (Engine 4: Popperian)\n"
+    <> "## 7. Verification Matrix (Engine 2: NATO Admiralty)\n"
+    <> "## 8. Files Modified (Engine 6: Jujutsu)\n"
+    <> "## 9. Architectural Observations (Engine 5: Sheaf)\n"
+    <> "## 10. Remaining Gaps (Engine 4: Residual)\n"
+    <> "## 11. Metrics Summary (Engine 3: Bayesian)\n"
+    <> "## 12. STAMP & Constitutional Alignment (Engine 6: STPA)\n"
+    <> "## 13. Conclusion (Engine 7: Brier)\n"
+    <> "## Comprehensive verification checklist\n"
+  dev.journal_sections_valid(annotated) |> should.be_true
+}
+

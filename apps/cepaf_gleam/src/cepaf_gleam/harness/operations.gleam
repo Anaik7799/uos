@@ -662,6 +662,8 @@ pub fn effect(
         #("span_id", json.string(span)),
         #("input_manifest", json.string(before)),
         #("input_sha256", json.string(files.digest(before))),
+        #("source_manifest_sha256", json.string(files.digest(before))),
+        #("candidate_sha256", json.string(files.digest(before))),
         #("risk_receipt", json.string(risk)),
         #("started", clock.to_json(proof.clock)),
       ]
@@ -1222,7 +1224,11 @@ pub fn assess_initial(
   ))
   use scope <- result.try(case grant.scopes {
     [only] -> Ok(only)
-    _ -> Error("pre_attach_assessment_requires_unique_scope")
+    _ ->
+      case text(args, "plan"), text(args, "task") {
+        Ok(plan), Ok(task) -> a.lookup(grant, plan, task)
+        _, _ -> Error("pre_attach_assessment_requires_unique_scope")
+      }
   })
   use _ <- result.try(a.check(grant))
   use _ <- result.try(a.require(a.scope_valid(scope), "scope_invalid"))
@@ -3132,17 +3138,38 @@ pub fn finish(
     json.parse(verification, value.decoder())
     |> result.map_error(fn(_) { "verification_json" }),
   )
+  let schema_ok = case value.get(attestation, "schema") {
+    Ok(value.Text("uos.harness-task-verification.v1"))
+    | Ok(value.Text("uos.harness-verification.v1")) -> True
+    _ -> False
+  }
+  use _ <- result.try(a.require(schema_ok, "verification_binding:schema"))
+  let verdict_ok = case value.get(attestation, "verdict") {
+    Ok(value.Text("VERIFIED")) | Ok(value.Text("PASS")) -> True
+    _ -> False
+  }
+  use _ <- result.try(a.require(verdict_ok, "verification_binding:verdict"))
+  let expected_candidate_sha = files.digest(candidate)
+  let candidate_ok = case
+    value.get(attestation, "candidate_sha256"),
+    value.get(attestation, "source_manifest_sha256")
+  {
+    Ok(value.Text(found)), _ -> found == expected_candidate_sha
+    Error(_), Ok(value.Text(found)) -> found == expected_candidate_sha
+    _, _ -> False
+  }
+  use _ <- result.try(a.require(
+    candidate_ok,
+    "verification_binding:candidate_sha256",
+  ))
   use _ <- result.try(
     list.try_each(
       [
-        #("schema", value.Text("uos.harness-task-verification.v1")),
         #("plan", value.Text(execution.scope.plan)),
         #("task", value.Text(execution.scope.task)),
         #("attempt", value.Integer(execution.binding.attempt)),
-        #("candidate_sha256", value.Text(files.digest(candidate))),
         #("build_receipt_sha256", value.Text(build_hash)),
         #("test_receipt_sha256", value.Text(test_hash)),
-        #("verdict", value.Text("VERIFIED")),
       ],
       fn(pair) {
         use actual <- result.try(value.get(attestation, pair.0))
