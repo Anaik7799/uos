@@ -76,6 +76,9 @@ Reconcile an unknown outcome before any fresh intent or grant, using an oracle s
 
 Build the completion packet from flat top-level fields and run the journal and diagram linters before finish. Treat soft cost or size targets as targets, not gates; reuse existing tasks and evidence; claim no global cost or reliability optimum. Report provider identity and quota truthfully, and never assert an unobserved client success.
 
+
+- **2026-10-29 Fast-OODA & Critical Code Resilience Update (`SC-AGENTIC-RESILIENCE-001`)**: Three-scope lease renewal (`sa_plan_bridge.renew_task` / `--task-renew`) is active; the successor development harness exposes **15 scoped tools** (`ops.names`, including `harness_client_mcp_config` and `harness_plan_intent`), pins **28 BEAM control modules** + `tools/ecology_process.ml` across **44 source files**, supports `host_immutable_nix` (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), and enforces 184/184 EUnit tests across 12 MCP + harness test modules under `gemini-4-argon` supervision with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) agent lanes.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

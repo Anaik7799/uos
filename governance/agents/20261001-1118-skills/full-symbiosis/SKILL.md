@@ -27,6 +27,9 @@ Factual API reference drawn from refusals and receipts observed on 2026-10-27, p
 
 - `harness_assess` validates every assessment record path against the grant (`assessment_paths_allowed`, `operations.gleam:627`, called at `:678`). A full-portfolio assessment references `governance/planning/20261027-0634-hive-development-readiness-plan.json`, which exists but is absent from this grant's read paths, so such a call would be rejected. This is an **unprobed scope and configuration gap** inferred from source for `PLANNING_MCP`, not an observed failed run; do not bypass it. Where a normal assessment mutation is impossible within an approved scope, report the gap.
 
+
+- **2026-10-29 Fast-OODA & Critical Code Resilience Update (`SC-AGENTIC-RESILIENCE-001`)**: Three-scope lease renewal (`sa_plan_bridge.renew_task` / `--task-renew`) is active; the successor development harness exposes **15 scoped tools** (`ops.names`, including `harness_client_mcp_config` and `harness_plan_intent`), pins **28 BEAM control modules** + `tools/ecology_process.ml` across **44 source files**, supports `host_immutable_nix` (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), and enforces 184/184 EUnit tests across 12 MCP + harness test modules under `gemini-4-argon` supervision with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) agent lanes.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

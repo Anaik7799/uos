@@ -11,6 +11,9 @@ Inspect the candidate's actual gates and classify each command's effects before 
 
 Follow [root policy](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md), [operations manual](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261001-1117-uos-agent-symbiosis-operations.md) and [harness contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md). The user’s existing scope/authorization and higher-priority instructions govern. This skill grants no effect authority or runtime admission. Use standalone JJ, exact Sa-plan tasks and independent candidate verification. No new EV identifier.
 
+
+- **2026-10-29 Fast-OODA & Critical Code Resilience Update (`SC-AGENTIC-RESILIENCE-001`)**: Three-scope lease renewal (`sa_plan_bridge.renew_task` / `--task-renew`) is active; the successor development harness exposes **15 scoped tools** (`ops.names`, including `harness_client_mcp_config` and `harness_plan_intent`), pins **28 BEAM control modules** + `tools/ecology_process.ml` across **44 source files**, supports `host_immutable_nix` (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), and enforces 184/184 EUnit tests across 12 MCP + harness test modules under `gemini-4-argon` supervision with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) agent lanes.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

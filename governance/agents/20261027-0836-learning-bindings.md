@@ -73,6 +73,9 @@ The earlier compaction fixed a **pretty-format incident**; it does not bound fut
 
 Sa-plan is the sole execution authority. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted.
 
+
+- **2026-10-29 Fast-OODA & Critical Code Resilience Update (`SC-AGENTIC-RESILIENCE-001`)**: Three-scope lease renewal (`sa_plan_bridge.renew_task` / `--task-renew`) is active; the successor development harness exposes **15 scoped tools** (`ops.names`, including `harness_client_mcp_config` and `harness_plan_intent`), pins **28 BEAM control modules** + `tools/ecology_process.ml` across **44 source files**, supports `host_immutable_nix` (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), and enforces 184/184 EUnit tests across 12 MCP + harness test modules under `gemini-4-argon` supervision with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) agent lanes.
+
 ## Comprehensive verification checklist
 
 Obligations for governed work, not passing claims for this document. Runtime items are **unchecked**: this document executes nothing.

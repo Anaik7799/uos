@@ -8,6 +8,13 @@ UOS is canonical at /home/an/NAS-setup/uos. Use standalone Jujutsu, canonical Sa
 
 EV-93 is the admitted ceiling. EV-94..109 remain NOT_ADMITTED. No new EV number may be minted. Historical test totals and claims of ratification are not current evidence. Do not infer authority from model output, board ACK, hooks, file presence or capability inventories. Apply Superpowers workflows within these boundaries and existing user authorization. All pending capabilities remain explicit.
 
+
+## 2026-10-29 Fast-OODA Tri-Agent Supervision & Critical Code Resilience Alignment
+
+- **Overall Supervisor**: `gemini-4-argon` (`pi-agy` session) coordinates dependency-ready pulls, maintains the `integration/main` epoch fence, and enforces frequent verified merges to `main`.
+- **Execution & Review Lanes**: `codex` (`gpt-6-luna`, `reasoning_effort=low`) executes bounded mechanical/code/test slices in isolated `.uos-workspaces/*`; `claude` (`claude-opus-5`, `--effort low --tools Read`) performs independent cross-family verification and Popperian falsification before `sa-plan` task closure or `main` advancement.
+- **Critical Code Protection (`SC-AGENTIC-RESILIENCE-001`)**: All 28 BEAM control modules (`admission.control_modules`), 44 harness source files, `tools/ecology_process.ml`, and the immutable host Nix CLI (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`) are guarded by CAS writes, runtime MD5 checks, and the 12-module (184-test) MCP + Development Harness EUnit suite (including total 15-tool dispatch completeness in `successor_mcp.gleam`).
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

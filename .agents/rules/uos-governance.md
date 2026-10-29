@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 # UOS Monorepo Governance Rule
 
 ## Mandates

@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 # Codex and AGY artifact index (SC-PEER-ARTIFACTS-001)
 
 #fractal-l0 #fractal-l6 #fractal-l9 #zk-adr #zero-muda

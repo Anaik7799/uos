@@ -1,14 +1,10 @@
----
-trigger: always_on
----
-
 # Determinate Nix & devenv Toolchain Mandate
 
 - **Contract ID**: `SC-NIX-DEVENV-001`
 - **Companion Contract**: `SC-TOOLCHAIN-INPROJECT-001`
 - **Domain**: Toolchain Provisioning, Reproducibility & BEAM Version Authority
 - **Authority**: Operator Directive (2026-09-08) / UOS Canonical Policy
-- **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/files/.agents/rules/DETERMINATE_NIX_RULE](http://nas-1.tail55d152.ts.net:4100/files/.claude/rules/DETERMINATE_NIX_RULE)
+- **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/files/.claude/rules/DETERMINATE_NIX_RULE](http://nas-1.tail55d152.ts.net:4100/files/.claude/rules/DETERMINATE_NIX_RULE)
 - **Status**: ACTIVE & ENFORCED
 
 #fractal-l0 #fractal-l4 #fractal-l7 #zero-muda #km-triad #stamp-stpa #toolchain

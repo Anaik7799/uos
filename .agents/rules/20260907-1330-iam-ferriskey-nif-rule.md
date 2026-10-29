@@ -2,9 +2,8 @@
 #fractal-l0 #fractal-l1 #fractal-l3 #fractal-l7 #zero-muda #km-triad #rocha-semiotics #cybernetics #stamp-stpa #iam
 
 - **Contract IDs**: `SC-FERRISKEY-NIF-001..010`, `SC-GCP-IAM-001..020`, `AOR-IAM-NIF-001..008` (inherited from C3I; UOS adaptation below)
-- **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/20260907-1330-iam-ferriskey-nif-rule.md](http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/20260907-1330-iam-ferriskey-nif-rule.md)
+- **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md](http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md)
 - **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
-- **Canonical copy**: `.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md` (this file is the `.agents` mirror per the full-symbiosis rule; keep both identical in substance).
 - **Source of this mirror**: `/home/an/dev/ver/c3i/.claude/rules/iam-ferriskey-nif.md` (VM-1 C3I evidence, read-only). UOS path substitutions: `lib/cepaf_gleam/native/ferriskey_nif/` becomes `native/nifs/rust/ferriskey_nif/`; `lib/cepaf_gleam/` becomes `apps/cepaf_gleam/`. The built cdylib is a host-provisioned artifact at `apps/cepaf_gleam/priv/ferriskey_nif.so`, pinned by `apps/cepaf_gleam/priv/ferriskey_nif.sha256`, never committed.
 - **UOS status (2026-09-07)**: NIF crate sources imported into `native/nifs/rust/ferriskey_nif/` under explicit operator permission, manifest-verified against `governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json`; artifact built and pinned; build recipe in `native/nifs/rust/README.md`; Codex R5 sovereign security review required before any admission claim (IAM, tokens, JWKS, GCP STS, SCIM). Mirrors: `.claude/rules`, `.gemini/rules`, `.agents/rules`, `.codex/rules` (full-symbiosis rule parity).
 
@@ -155,4 +154,4 @@ Every IAM capability MUST be visible in the Lustre `/iam` page, the Wisp REST su
 Mirrored at `.gemini/rules`, `.agents/rules`, `.codex/rules` with the same filename per the full-symbiosis rule.
 
 ---
-Navigation: [ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/zk) · [Hermes Wiki Corpus Index](http://nas-1.tail55d152.ts.net:4100/wiki) · [Review Tome](http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/20260907-1330-iam-ferriskey-nif-rule.md)
+Navigation: [ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/zk) · [Hermes Wiki Corpus Index](http://nas-1.tail55d152.ts.net:4100/wiki) · [Review Tome](http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md)

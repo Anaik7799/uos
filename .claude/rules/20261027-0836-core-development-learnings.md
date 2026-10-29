@@ -86,6 +86,17 @@ One **unprobed scope gap**, recorded for `PLANNING_MCP` and not worked around: `
 
 Sa-plan remains the sole execution authority. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV number minted.
 
+
+## 2026-10-29 — Fast-OODA Reconciliation: Lease Renewal, 15-Tool Successor Harness, Immutable Nix Backend, and Agentic Code Resilience (L-13..L-17)
+
+Observed at `2026-10-29T07:45:00Z` under `SC-AGENTIC-RESILIENCE-001`. Prior `2026-10-27` observations `L-01`..`L-12` remain historical receipts; the following items record the current candidate truth on `main`:
+
+- **L-13 (Supersedes L-06 release-and-reclaim workaround)** — Three-scope lease renewal is implemented in `apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam` (`renew_task` / `--task-renew`) and wired into `harness_heartbeat`, renewing the Sa-plan task lease, coordinator task lease, and coordinator workspace lease together (verified by 8/8 live MCP renewal proof `var/harness/20261028-2041-mcp-own-task-renewal-proof.json` and completed `uos/development-harness/lease-renewal/20261028-1317` `ACCEPT`).
+- **L-14 (Supersedes L-10 13-tool count)** — The task-scoped successor development harness (`successor_mcp.gleam`, `operations.gleam`) advertises **15 scoped tools**: `harness_plan_intent`, `harness_status`, `harness_clock`, `harness_heartbeat`, `harness_claim`, `harness_attach`, `harness_release`, `harness_read_file`, `harness_client_mcp_config`, `harness_write_file`, `harness_build`, `harness_test`, `harness_assess`, `harness_finish`, and `harness_reconcile`. Total dispatch completeness is enforced by `every_declared_operation_has_schema_and_client_mcp_config_is_routed_test`.
+- **L-15 (Immutable Host Nix CLI Backend)** — `native_backend.gleam` and `harness_native_backend_ffi.erl` validate `candidate_binding.native_backend` (`mode: "host_immutable_nix"`, `store_path: "/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3"`, 42,344,784 B, SHA-256 `cfe06ec3e54a6cca54e59d8f521d8ae903f0c8e4703c1d447fcf3fff5534cf91`, `0555` root-owned, `/nix` and `/nix/store` ancestor checks) with an atomic node-local CAS registry (`Absent -> Pending -> Ready | Failed`) that poisons on failure and forbids silent fallback.
+- **L-16 (28 Compiled Control Modules & 44 Source Files)** — `admission.control_modules` pins **28 compiled BEAM modules** plus `control_dependencies = ["tools/ecology_process.ml"]` across **44 source files** (`harness_pre_attach_assessment_test`, `harness_successor_test`).
+- **L-17 (Tri-Agent Fast-OODA & Token-Optimized Execution)** — Overall supervision runs on `gemini-4-argon` (`pi-agy`), mechanical/merge/test execution on `codex` (`gpt-6-luna`, `reasoning_effort=low`), and independent adversarial review on `claude` (`claude-opus-5`, `--effort low --tools Read`), merging verified isolated sibling workspaces frequently to `main` under serialized `integration/main` coordinator epochs.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations for work governed by this contract, not blanket passing claims for it. This is a documentation package: runtime items are **unchecked** because this document executes nothing.
