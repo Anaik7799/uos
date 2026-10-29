@@ -1,6 +1,6 @@
 {
   "schema": "uos.harness-poodavr-dashboard-tracker.v1",
-  "updated_at": "2026-10-29T11:16:41Z",
+  "updated_at": "2026-10-29T11:32:00Z",
   "supervisor": "pi-agy-gemini4-argon-20261029-0730 (google/gemini-4-argon)",
   "workers": [
     "codex-luna-worker-20261029-0730 (gpt-6-luna)",
@@ -19,20 +19,27 @@
     "client_mcp_config_roundtrips": "5/5 clients x 3 actions = 15/15 PASS (agy, gemini, pi, codex, claude)",
     "robustness_contracts": "16/16 PASS & completed in sa-plan (uos/development-harness/robustness/20261028-0558)",
     "public_mcp_tools_sweep": "65/65 PASS (53 operational executed + 12 deterministic fail-closed unavailable)",
-    "eunit_suite": "211/211 PASS across all 12 MCP + Development Harness test modules",
+    "eunit_suite": "186/186 canonical harness verification EUnit tests PASS (212/212 with extended modules) — 0 failures",
     "sa_plan_plans_completed": {
-      "uos/development-harness/mcp-completion-e2e-v12/20261029-0835": "3/3 completed (REVIEW_GRANT, E2E_CLAIM, E2E_FINISH)",
-      "uos/development-harness/mcp-intent-target-v12/20261029-0835": "1/1 completed (SUB_T1)",
-      "uos/development-harness/robustness/20261028-0558": "16/16 completed",
       "uos/development-harness/20261028-0105": "13/13 completed",
+      "uos/development-harness/robustness/20261028-0558": "16/16 completed",
+      "uos/development-harness/lease-renewal/20261028-1317": "2/2 completed",
       "uos/development-harness/check-failure-recovery/20261028-2242": "2/2 completed",
       "uos/development-harness/main-integration/20261029-0655": "4/4 completed",
-      "uos/development-harness/lease-renewal/20261028-1317": "2/2 completed"
+      "uos/development-harness/mcp-completion-e2e-v12/20261029-0835": "3/3 completed",
+      "uos/development-harness/mcp-intent-target-v12/20261029-0835": "1/1 completed"
     },
     "constitutional_holds_preserved": {
       "ev_ceiling": "EV-93 (EV-94..EV-109 NOT_ADMITTED)",
       "source4_test_2219": "HELD byte-for-byte (intent SHA 300c8428..., result SHA 97039bed...)"
-    }
+    },
+    "ak47_zero_muda_hardening": {
+      "journal_sections_valid": "Strips optional inline '(Engine ...)' parenthetical suffixes so SC-JOURNAL-v3 and harness_finish never conflict (development.gleam:1312-1339)",
+      "effect_and_finish_aliases": "Emits and accepts both candidate_sha256 and source_manifest_sha256, uos.harness-task-verification.v1 and uos.harness-verification.v1, VERIFIED and PASS while keeping all 64-hex SHA-256 checks strictly fail-closed (operations.gleam:665-670,3127-3168)",
+      "multi_scope_assess_initial": "Resolves (plan, task) via a.lookup(grant, plan, task) on multi-scope grants (operations.gleam:1224-1231)",
+      "rule_parity_surfaces": "78/78 files byte-identical across contracts/rules, .agents/rules, .claude/rules, .codex/rules, and .gemini/rules"
+    },
+    "coordinator_epochs_merged": "Epochs 80..89 merged to main (0 non-empty workspace commits outside ::main)"
   },
   "key_proof_artifacts": {
     "unified_proof_bundle": {
