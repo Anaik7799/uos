@@ -52,6 +52,7 @@ enabled_tools = [
   "harness_status", "harness_clock", "harness_heartbeat",
   "harness_claim", "harness_attach", "harness_release",
   "harness_read_file", "harness_write_file",
+  "harness_plan_intent", "harness_client_mcp_config",
   "harness_build", "harness_test", "harness_assess",
   "harness_finish", "harness_reconcile",
 ]

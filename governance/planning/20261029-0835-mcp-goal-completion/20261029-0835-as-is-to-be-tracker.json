@@ -1,6 +1,6 @@
 {
   "schema": "uos.harness-poodavr-dashboard-tracker.v1",
-  "updated_at": "2026-10-29T11:32:00Z",
+  "updated_at": "2026-10-29T11:39:00Z",
   "supervisor": "pi-agy-gemini4-argon-20261029-0730 (google/gemini-4-argon)",
   "workers": [
     "codex-luna-worker-20261029-0730 (gpt-6-luna)",
@@ -27,7 +27,8 @@
       "uos/development-harness/check-failure-recovery/20261028-2242": "2/2 completed",
       "uos/development-harness/main-integration/20261029-0655": "4/4 completed",
       "uos/development-harness/mcp-completion-e2e-v12/20261029-0835": "3/3 completed",
-      "uos/development-harness/mcp-intent-target-v12/20261029-0835": "1/1 completed"
+      "uos/development-harness/mcp-intent-target-v12/20261029-0835": "1/1 completed",
+      "uos/development-harness/mcp-live-v13/20261029-1135": "6/6 completed"
     },
     "constitutional_holds_preserved": {
       "ev_ceiling": "EV-93 (EV-94..EV-109 NOT_ADMITTED)",
@@ -39,7 +40,8 @@
       "multi_scope_assess_initial": "Resolves (plan, task) via a.lookup(grant, plan, task) on multi-scope grants (operations.gleam:1224-1231)",
       "rule_parity_surfaces": "78/78 files byte-identical across contracts/rules, .agents/rules, .claude/rules, .codex/rules, and .gemini/rules"
     },
-    "coordinator_epochs_merged": "Epochs 80..89 merged to main (0 non-empty workspace commits outside ::main)"
+    "coordinator_epochs_merged": "Epochs 80..90 merged to main (0 non-empty workspace commits outside ::main)",
+    "codex_and_pi_mcp_registration": "Synchronized ~/.pi/agent/mcp.json (v13 grant 5905f22e...) and .codex/config.toml (all 15 successor tools)"
   },
   "key_proof_artifacts": {
     "unified_proof_bundle": {
