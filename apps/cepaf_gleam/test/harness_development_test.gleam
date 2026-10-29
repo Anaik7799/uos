@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/admission
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
@@ -6,6 +7,7 @@ import cepaf_gleam/harness/value
 import gleam/bit_array
 import gleam/crypto
 import gleam/json
+import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
@@ -31,6 +33,36 @@ pub fn clock_reference_and_fresh_receipt_are_independent_test() {
 
 pub fn loaded_control_identity_is_observed_from_otp_test() {
   dev.control_id() |> string.length |> should.equal(32)
+}
+
+pub fn client_control_ids_are_required_and_revision_bound_test() {
+  let ids = admission.control_ids()
+  let parsed = json.parse(json.to_string(ids), value.decoder())
+  case parsed {
+    Ok(value.Object(entries)) -> {
+      let omitted =
+        value.Object(
+          list.filter(entries, fn(entry) {
+            entry.0 != "cepaf_gleam@harness@client_mcp"
+          }),
+        )
+      admission.control_ids_match(omitted, ids) |> should.be_false
+      let changed =
+        value.Object(
+          list.map(entries, fn(entry) {
+            case entry.0 {
+              "cepaf_gleam@harness@client_mcp" -> #(
+                "cepaf_gleam@harness@client_mcp",
+                value.Text("changed"),
+              )
+              _ -> entry
+            }
+          }),
+        )
+      admission.control_ids_match(changed, ids) |> should.be_false
+    }
+    _ -> should.fail()
+  }
 }
 
 pub fn frame_deadline_is_absolute_and_supports_signed_monotonic_instants_test() {
@@ -65,6 +97,8 @@ pub fn replay_preserves_failure_and_rejects_corrupt_or_unbound_receipts_test() {
     ])
     |> json.to_string
   dev.replay_receipt(success, "other", "harness_test", "digest")
+  |> should.equal(Error("saved_receipt_binding_mismatch"))
+  dev.replay_receipt(success, "one", "harness_test", "altered-signature")
   |> should.equal(Error("saved_receipt_binding_mismatch"))
   dev.replay_receipt(success, "one", "harness_test", "digest") |> should.be_ok
 }
@@ -101,6 +135,29 @@ pub fn traversal_and_absolute_paths_fail_test() {
   files.relative_path("a/../b") |> should.be_error
   files.relative_path("a//b") |> should.be_error
   files.relative_path("a\u{0}") |> should.be_error
+}
+
+pub fn source_workspace_root_is_confined_to_a_real_direct_workspace_test() {
+  fixture(fn(root) {
+    let assert Ok(_) = simplifile.create_directory(root <> "/.uos-workspaces")
+    let assert Ok(_) =
+      simplifile.create_directory(root <> "/.uos-workspaces/candidate")
+    files.workspace_root(root, ".uos-workspaces/candidate")
+    |> should.equal(Ok(root <> "/.uos-workspaces/candidate"))
+    let assert Error(_) = files.workspace_root(root, "apps/cepaf_gleam")
+    let assert Error(_) =
+      files.workspace_root(root, ".uos-workspaces/candidate/nested")
+    let assert Error(_) =
+      files.workspace_root(root, ".uos-workspaces/../escape")
+    let assert Ok(_) = simplifile.create_directory(root <> "/outside")
+    let assert Ok(_) =
+      simplifile.create_symlink(
+        root <> "/outside",
+        root <> "/.uos-workspaces/alias",
+      )
+    let assert Error(_) = files.workspace_root(root, ".uos-workspaces/alias")
+    Nil
+  })
 }
 
 pub fn symlink_and_parent_aliases_fail_without_reading_target_test() {
@@ -241,4 +298,62 @@ pub fn generic_json_preserves_nested_types_test() {
   let assert Ok(again) =
     json.parse(json.to_string(value.encode(parsed)), value.decoder())
   again |> should.equal(parsed)
+}
+
+
+pub fn bounded_profile_refuses_noncanonical_executable_and_profile_test() {
+  dev.bounded_profile(
+    "/bin/true",
+    [],
+    "/tmp/not-an-agy-private-profile",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_refuses_non_private_profile_root_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/tmp/uos-harness-client-profiles/agy/fixture-grant",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_refuses_wrong_profile_root_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/run/user/1000/not-uos-harness-client-profiles/agy/fixture-grant",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_refuses_traversal_profile_root_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/run/user/1000/uos-harness-client-profiles/agy/../fixture-grant",
+    1000,
+  )
+  |> should.equal(Error("agy_profile_isolation_refused"))
+}
+
+pub fn bounded_profile_rejects_timeout_outside_bounds_test() {
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/tmp/not-an-agy-private-profile",
+    0,
+  )
+  |> should.equal(Error("invalid_profile_bound"))
+  dev.bounded_profile(
+    "/home/an/.local/bin/agy",
+    [],
+    "/tmp/not-an-agy-private-profile",
+    60001,
+  )
+  |> should.equal(Error("invalid_profile_bound"))
 }

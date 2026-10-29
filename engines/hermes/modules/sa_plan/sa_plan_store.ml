@@ -2446,6 +2446,49 @@ let claim_task store ~plan_id ~task_id ~worker ~now_ns ~lease_ns =
                 | Some claim -> Ok claim
                 | None -> Error "specific Sa-plan task claim disappeared"))))
 
+let renew_task_observed store ~plan_id ~task_id ~worker ~expected_attempt ~observe_now ~lease_ns =
+  let open Result.Let_syntax in
+  let%bind () =
+    if Int64.(lease_ns <= 0L) then Error "lease duration must be positive"
+    else if Int64.(lease_ns > 3_600_000_000_000L) then
+      Error "lease duration exceeds one hour"
+    else Ok ()
+  in
+  transaction store (fun () ->
+    let now_ns = observe_now () in
+    let%bind () = validate_completion ~worker ~expected_attempt ~now_ns in
+    let%bind proposed_until_ns = lease_deadline ~worker ~now_ns ~lease_ns in
+    with_stmt store.db
+      {|UPDATE sa_plan_task
+        SET lease_until_ns = CASE WHEN lease_until_ns > ? THEN lease_until_ns ELSE ? END
+        WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing'
+          AND worker = ? AND attempt = ? AND lease_until_ns > ?|}
+      (fun stmt ->
+        let%bind () = bind_values_result "bind Sa-plan task renewal" stmt
+          [ INT proposed_until_ns; INT proposed_until_ns; TEXT plan_id;
+            TEXT task_id; TEXT task_id; TEXT worker;
+            INT (Int64.of_int expected_attempt); INT now_ns ] in
+        let%bind () = step_done "renew Sa-plan task lease" stmt in
+        if Sqlite3.changes store.db <> 1 then
+          Error "Sa-plan renewal rejected: current unexpired claim attempt required"
+        else
+          with_stmt store.db
+            {|SELECT lease_until_ns FROM sa_plan_task
+              WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing'
+                AND worker = ? AND attempt = ?|}
+            (fun read_stmt ->
+              let%bind () = bind_values_result "read renewed Sa-plan task lease" read_stmt
+                [ TEXT plan_id; TEXT task_id; TEXT task_id; TEXT worker;
+                  INT (Int64.of_int expected_attempt) ] in
+              match Sqlite3.step read_stmt with
+              | Sqlite3.Rc.ROW -> Ok (Sqlite3.column_int64 read_stmt 0)
+              | Sqlite3.Rc.DONE -> Error "renewed Sa-plan task disappeared"
+              | rc -> rc_error "read renewed Sa-plan task lease" rc)))
+
+let renew_task store ~plan_id ~task_id ~worker ~expected_attempt ~now_ns ~lease_ns =
+  renew_task_observed store ~plan_id ~task_id ~worker ~expected_attempt
+    ~observe_now:(fun () -> now_ns) ~lease_ns
+
 let release_task store ~plan_id ~task_id ~worker ~expected_attempt ~now_ns =
   let open Result.Let_syntax in
   let%bind () = validate_completion ~worker ~expected_attempt ~now_ns in

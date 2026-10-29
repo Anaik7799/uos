@@ -166,6 +166,122 @@ let view _store id =
       Sqlite3.column_text statement 0, Sqlite3.column statement 1,
       Sqlite3.column_int statement 2, Sqlite3.column statement 3, Sqlite3.column statement 4)
 
+
+(* Renewal reference cases use exact arithmetic and independent state views. *)
+let () =
+  with_fixture (fun _ store ->
+    setup store; create store "renew";
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"renew"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:100L) in
+    let renewed = ok (Store.renew_task store ~plan_id:"fence" ~task_id:"renew"
+      ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:150L ~lease_ns:200L) in
+    check "RENEW-EXTENDS-SAME-ATTEMPT" (Int64.equal renewed 350L);
+    let before = view store "renew" in
+    let kept = ok (Store.renew_task store ~plan_id:"fence" ~task_id:"renew"
+      ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:151L ~lease_ns:1L) in
+    check "RENEW-NEVER-SHORTENS" (Int64.equal kept 350L && Poly.equal before (view store "renew"));
+    List.iter ["other",claim.attempt; "owner",claim.attempt + 1; "",claim.attempt; "owner",0]
+      ~f:(fun (worker,expected_attempt) ->
+        let before = view store "renew" in
+        check "RENEW-OWNER-ATTEMPT-REFUSAL-PRESERVES-STATE"
+          (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"renew"
+            ~worker ~expected_attempt ~now_ns:160L ~lease_ns:10L)
+           && Poly.equal before (view store "renew")));
+    List.iter [0L; -1L; 3_600_000_000_001L]
+      ~f:(fun lease_ns ->
+        let before = view store "renew" in
+        check "RENEW-DURATION-BOUNDS-PRESERVE-STATE"
+          (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"renew"
+            ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:160L ~lease_ns)
+           && Poly.equal before (view store "renew")));
+    check "RENEW-NEGATIVE-TIME"
+      (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"renew"
+        ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:(-1L) ~lease_ns:1L));
+    let full = ok (Store.renew_task store ~plan_id:"fence" ~task_id:"renew"
+      ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:160L ~lease_ns:3_600_000_000_000L) in
+    check "RENEW-ONE-HOUR-INCLUSIVE" (Int64.equal full 3_600_000_000_160L));
+  with_fixture (fun _ store ->
+    setup store; create store "expiry";
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"expiry"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:10L) in
+    let before = view store "expiry" in
+    check "RENEW-STRICT-EXPIRY-BOUNDARY"
+      (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"expiry"
+        ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:110L ~lease_ns:100L)
+       && Poly.equal before (view store "expiry"));
+    let reclaimed = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"expiry"
+      ~worker:"new-owner" ~now_ns:110L ~lease_ns:10L) in
+    let before = view store "expiry" in
+    check "RENEW-RECLAIMED-OLD-ATTEMPT"
+      (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"expiry"
+        ~worker:"owner" ~expected_attempt:claim.attempt ~now_ns:111L ~lease_ns:100L)
+       && Poly.equal before (view store "expiry"));
+    ok (Store.complete_task store ~plan_id:"fence" ~task_id:"expiry" ~worker:"new-owner"
+      ~expected_attempt:reclaimed.attempt ~result:"done" ~now_ns:112L);
+    let before = view store "expiry" in
+    check "RENEW-TERMINAL-REJECTED"
+      (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"expiry"
+        ~worker:"new-owner" ~expected_attempt:reclaimed.attempt ~now_ns:113L ~lease_ns:100L)
+       && Poly.equal before (view store "expiry")));
+  with_fixture (fun _ store ->
+    setup store; create store "overflow";
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"overflow"
+      ~worker:"owner" ~now_ns:Int64.(max_value - 10L) ~lease_ns:10L) in
+    let before = view store "overflow" in
+    check "RENEW-DEADLINE-OVERFLOW"
+      (Result.is_error (Store.renew_task store ~plan_id:"fence" ~task_id:"overflow"
+        ~worker:"owner" ~expected_attempt:claim.attempt
+        ~now_ns:Int64.(max_value - 1L) ~lease_ns:2L)
+       && Poly.equal before (view store "overflow")));
+  with_fixture (fun path store ->
+    setup store; create store "renew-race";
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"renew-race"
+      ~worker:"old" ~now_ns:100L ~lease_ns:10L) in
+    let peer = ok (Store.open_db path) in
+    Exn.protect ~finally:(fun () -> Store.close peer) ~f:(fun () ->
+      let a = Domain.spawn (fun () -> Store.renew_task store ~plan_id:"fence" ~task_id:"renew-race"
+        ~worker:"old" ~expected_attempt:claim.attempt ~now_ns:109L ~lease_ns:100L) in
+      let b = Domain.spawn (fun () -> Store.claim_task peer ~plan_id:"fence" ~task_id:"renew-race"
+        ~worker:"new" ~now_ns:110L ~lease_ns:100L) in
+      let renewed = Domain.join a and reclaimed = Domain.join b in
+      check "RENEW-VS-RECLAIM-TWO-CONNECTION-ONE-WINNER"
+        Bool.(Result.is_ok renewed <> Result.is_ok reclaimed);
+      check "RENEW-VS-RECLAIM-FINAL-IDENTITY"
+        (match renewed, reclaimed, view store "renew-race" with
+         | Ok deadline, Error _, ("executing", Sqlite3.Data.TEXT "old", attempt, Sqlite3.Data.INT actual, _) ->
+             attempt = claim.attempt && Int64.equal deadline actual && Int64.equal actual 209L
+         | Error _, Ok next, ("executing", Sqlite3.Data.TEXT "new", attempt, Sqlite3.Data.INT actual, _) ->
+             attempt = next.attempt && next.attempt = claim.attempt + 1
+             && Int64.equal actual next.lease_until_ns
+         | _ -> false)));
+  with_fixture (fun path store ->
+    setup store; create store "renew-clock";
+    let claim = ok (Store.claim_task store ~plan_id:"fence" ~task_id:"renew-clock"
+      ~worker:"owner" ~now_ns:100L ~lease_ns:10L) in
+    let before = view store "renew-clock" in
+    let lock = Sqlite3.db_open path in
+    Exn.protect ~finally:(fun () ->
+      ignore(Sqlite3.exec lock "ROLLBACK" : Sqlite3.Rc.t);
+      ignore(Sqlite3.db_close lock : bool)) ~f:(fun () ->
+      require "RENEW-CLOCK-CONTENTION-LOCK"
+        (Poly.equal (Sqlite3.exec lock "BEGIN IMMEDIATE") Sqlite3.Rc.OK);
+      let started = Atomic.make false and observed = Atomic.make false and now = Atomic.make 109L in
+      let worker = Domain.spawn (fun () ->
+        Atomic.set started true;
+        Store.renew_task_observed store ~plan_id:"fence" ~task_id:"renew-clock"
+          ~worker:"owner" ~expected_attempt:claim.attempt ~lease_ns:100L
+          ~observe_now:(fun () -> Atomic.set observed true; Atomic.get now)) in
+      while not (Atomic.get started) do Lifetime_unix.sleepf 0.001 done;
+      Lifetime_unix.sleepf 0.05;
+      let premature = Atomic.get observed in
+      Atomic.set now 110L;
+      require "RENEW-CLOCK-CONTENTION-UNLOCK"
+        (Poly.equal (Sqlite3.exec lock "COMMIT") Sqlite3.Rc.OK);
+      let result = Domain.join worker in
+      check "RENEW-CLOCK-SAMPLED-AFTER-LOCK" (not premature && Atomic.get observed);
+      check "RENEW-CANNOT-REVIVE-EXPIRED-DURING-LOCK"
+        (Result.is_error result && Poly.equal before (view store "renew-clock"))))
+
 let run_action store id = function
   | Oracle.Claim (worker, now_ns, lease_ns) ->
       Result.is_ok (Store.claim_task store ~plan_id:"fence" ~task_id:id ~worker ~now_ns ~lease_ns)
@@ -843,6 +959,14 @@ let run_cancellation_child_bounded ~timeout_seconds ~program ~arguments ~databas
     let fd_out=Lifetime_unix.openfile stdout_path [O_WRONLY;O_TRUNC] 0 in
     let fd_err=Lifetime_unix.openfile stderr_path [O_WRONLY;O_TRUNC] 0 in
     let exe=if Filename.is_relative program then Filename.concat (Filename.dirname Stdlib.Sys.executable_name) program else program in
+    let rec set_unicode_stdio = function
+      | "-eval"::code::rest ->
+          "-eval"::("ok=io:setopts(standard_io,[{encoding,unicode}]),"^code)::rest
+      | head::rest -> head::set_unicode_stdio rest
+      | [] -> [] in
+    let arguments=match Filename.basename exe with
+      | "erl" -> set_unicode_stdio arguments
+      | _ -> arguments in
     let env=Lifetime_unix.environment () |> Array.to_list
       |> List.filter ~f:(fun s -> not (String.is_prefix s ~prefix:"UOS_SA_PLAN_DB="))
       |> fun xs -> Array.of_list (("UOS_SA_PLAN_DB="^database)::xs) in

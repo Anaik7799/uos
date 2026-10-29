@@ -8,6 +8,8 @@
 ////   - Single-Instance vs Multi-Instance Actor & Agent Ecosystem
 ////   - 10 Fractal Layers (L0..L9) x 5 Fractal Surfaces
 
+import cepaf_gleam/harness/native_backend as native_backend
+import gleam/result
 import gleam/bit_array
 import gleam/int
 import gleam/json
@@ -946,13 +948,15 @@ fn run_bounded(
   timeout_ms: Int,
 ) -> Result(#(Int, BitArray), String)
 
-/// Resolves the absolute or relative path to the tools/sa-plan binary.
+/// Legacy canonical locator, retained for existing metadata callers.
+/// Execution always uses the node-owned validated selection in run_sa_plan_cli.
 pub fn resolve_sa_plan_binary() -> String {
   "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe"
 }
 
 /// Executes tools/sa-plan with the specified argument list and returns standard output.
 pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
+  use selected_binary <- result.try(native_backend.selected_path())
   // Literal argv only. Pin the authority store even if the parent environment
   // supplies another UOS_SA_PLAN_DB. Missing binaries never trigger a build.
   case
@@ -968,7 +972,7 @@ pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
           "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/env",
           [
             "UOS_SA_PLAN_DB=/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
-            resolve_sa_plan_binary(),
+            selected_binary,
             ..args
           ],
           10_000,
@@ -1007,6 +1011,41 @@ pub fn claim_sa_task(
   task_id: String,
 ) -> Result(String, String) {
   run_sa_plan_cli(["task", "claim", worker, plan, "30000000000", task_id])
+}
+
+/// Exact original ownership/attempt and bounded duration are passed as literal argv.
+pub fn renewal_arguments(
+  plan: String,
+  task_id: String,
+  worker: String,
+  attempt: Int,
+  lease_ns: Int,
+) -> Result(List(String), String) {
+  case
+    attempt > 0 && lease_ns > 0 && lease_ns <= 3_600_000_000_000
+    && list.all([plan, task_id, worker], fn(value) {
+      !string.is_empty(string.trim(value)) && !string.contains(value, "\u{0}")
+    })
+  {
+    True -> Ok([
+      "task", "renew", plan, task_id, worker,
+      int.to_string(attempt), int.to_string(lease_ns),
+    ])
+    False -> Error("Renewal requires a positive attempt, bounded lease, and non-empty fields")
+  }
+}
+
+pub fn renew_sa_task(
+  plan: String,
+  task_id: String,
+  worker: String,
+  attempt: Int,
+  lease_ns: Int,
+) -> Result(String, String) {
+  case renewal_arguments(plan, task_id, worker, attempt, lease_ns) {
+    Ok(args) -> run_sa_plan_cli(args)
+    Error(reason) -> Error(reason)
+  }
 }
 
 /// Completes a task in sa-plan with execution receipt.

@@ -13,13 +13,35 @@ import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/protocol.{type ToolDefinition, ToolDefinition}
 import cepaf_gleam/planning/execution_observer
 import gleam/bit_array
+import gleam/dynamic
 import gleam/dynamic/decode
+import gleam/erlang/atom
 import gleam/erlang/process
 import gleam/io
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
+
+@external(erlang, "io", "setopts")
+fn set_stdio_options(
+  device: atom.Atom,
+  options: List(#(atom.Atom, atom.Atom)),
+) -> dynamic.Dynamic
+
+/// Set the JSON-RPC output device to UTF-8 before emitting any protocol bytes.
+/// `io:setopts/2` returns raw Erlang `ok | {error, reason}`; inspect the raw
+/// value rather than relying on a guessed Result representation.
+pub fn configure_stdout_utf8() -> Result(Nil, String) {
+  let response = set_stdio_options(atom.create("standard_io"), [#(
+    atom.create("encoding"),
+    atom.create("unicode"),
+  )])
+  case response == atom.to_dynamic(atom.create("ok")) {
+    True -> Ok(Nil)
+    False -> Error("stdout_unicode_setup_failed")
+  }
+}
 
 pub type State {
   State(initialized: Bool, closed: Bool)
@@ -172,12 +194,18 @@ fn next_byte(input: Input, started: Option(Int)) -> ByteResult {
 }
 
 pub fn main() {
-  case dev.load_binding(), start_reader() {
-    Ok(binding), Ok(input) -> loop(binding, initial, input, [], 0, None)
-    _, _ ->
-      io.println_error(
-        "harness: trusted development binding or stdin unavailable",
-      )
+  case configure_stdout_utf8() {
+    Error(reason) -> {
+      io.println_error("harness: " <> reason)
+      halt(1)
+    }
+    Ok(Nil) ->
+      case dev.load_binding(), start_reader() {
+        Ok(binding), Ok(input) -> loop(binding, initial, input, [], 0, None)
+        _, _ -> io.println_error(
+          "harness: trusted development binding or stdin unavailable",
+        )
+      }
   }
 }
 
@@ -586,11 +614,17 @@ pub fn serve(
   context: state,
   handler: fn(state, String) -> #(state, Option(String), Bool),
 ) {
-  case start_reader() {
-    Ok(input) -> serve_loop(context, handler, input, [], 0, None)
+  case configure_stdout_utf8() {
     Error(reason) -> {
       io.println_error("harness: " <> reason)
       halt(1)
+    }
+    Ok(Nil) -> case start_reader() {
+      Ok(input) -> serve_loop(context, handler, input, [], 0, None)
+      Error(reason) -> {
+        io.println_error("harness: " <> reason)
+        halt(1)
+      }
     }
   }
 }

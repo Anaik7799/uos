@@ -74,7 +74,7 @@ let usage () =
 Usage: sa-plan [--format text|json] <noun> <verb> [arguments]
 
   plan      create | show | register | status | list | tree | watch
-  task      create | show | list | rename | claim | complete | select
+  task      create | show | list | rename | claim | renew | complete | select
   job|oban enqueue | claim | complete | list | cancel-once | cancellation-result
   workflow|temporal start | activity | complete | fail | history
   work      path | materialize
@@ -87,7 +87,7 @@ work/plans/zigvm/documentation/sa-plan-unified-manual/manual.md|}
 
 let contextual_help = function
   | "plan" -> print_endline "plan create ID NAME TITLE | show ID_OR_NAME | rename ID_OR_NAME NEW_NAME | register | status | list | tree | watch [SECONDS]"
-  | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER ATTEMPT | complete PLAN TASK WORKER ATTEMPT RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE"
+  | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER ATTEMPT | renew PLAN TASK WORKER ATTEMPT LEASE_NS | complete PLAN TASK WORKER ATTEMPT RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE"
   | "job" | "oban" -> print_endline "job|oban enqueue ID NAME QUEUE WORKER ARGS [MAX_ATTEMPTS] | claim QUEUE WORKER [LEASE_NS] | complete ID_OR_NAME WORKER ATTEMPT OK|ERROR RESULT | list [QUEUE] | cancel-once | cancellation-result (bounded JSON stdin, JSON response)"
   | "workflow" | "temporal" -> print_endline "workflow|temporal start ID NAME KIND INPUT | activity WORKFLOW ACTIVITY NAME KEY RESULT | complete WORKFLOW RESULT | fail WORKFLOW ERROR | history WORKFLOW"
   | "work" -> print_endline "work path KIND NAME | materialize KIND ID NAME TITLE CONTENT_FILE"
@@ -320,6 +320,16 @@ let dispatch store format argv cancellation_input =
            ~worker:argv.(4) ~expected_attempt:(Int.of_string argv.(5)) ~now_ns:(now_ns ()));
       emit format [ "released", "true"; "plan_id", argv.(2); "task", argv.(3);
                     "attempt", argv.(5) ]
+  | "--task-renew" ->
+      let lease_until_ns =
+        or_fail
+          (Store.renew_task_observed store ~plan_id:argv.(2) ~task_id:argv.(3)
+             ~worker:argv.(4) ~expected_attempt:(Int.of_string argv.(5))
+             ~observe_now:now_ns ~lease_ns:(Int64.of_string argv.(6)))
+      in
+      emit format [ "renewed", "true"; "plan_id", argv.(2); "task", argv.(3);
+                    "worker", argv.(4); "attempt", argv.(5);
+                    "lease_until_ns", int64 lease_until_ns ]
   | "--complete" ->
       or_fail
         (Store.complete_task store ~plan_id:argv.(2) ~task_id:argv.(3)

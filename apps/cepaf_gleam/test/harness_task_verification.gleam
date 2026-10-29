@@ -40,7 +40,7 @@ pub fn main() {
         eunit(list.map(modules, atom.create), [Verbose]) |> atom.to_string
       io.println("successor verification: " <> outcome)
       case outcome {
-        "ok" -> Nil
+        "ok" -> halt(0)
         _ -> halt(1)
       }
     }

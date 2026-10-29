@@ -17,7 +17,7 @@ let help_request argv =
       match argv.(1) with
       | "plan" | "task" | "job" | "oban" | "workflow" | "temporal"
       | "work" | "docs" | "ui" | "agent" as noun -> Some noun
-      | "--claim" | "--complete" | "--task-release" -> Some "task"
+      | "--claim" | "--complete" | "--task-release" | "--task-renew" -> Some "task"
       | _ -> None in
     let program = if Array.length argv = 0 then "sa-plan" else argv.(0) in
     Some (Array.of_list ([program; "--help"] @ Option.to_list context))
@@ -49,6 +49,7 @@ let normalize argv =
     | "task", Some "rename" -> rewrite argv "--task-rename" 3
     | "task", Some "claim" -> rewrite argv "--claim" 3
     | "task", Some "release" -> rewrite argv "--task-release" 3
+    | "task", Some "renew" -> rewrite argv "--task-renew" 3
     | "task", Some "complete" -> rewrite argv "--complete" 3
     | "task", Some "select" -> rewrite argv "--task-select" 3
     | "activity", Some "put" -> rewrite argv "--activity" 3
@@ -114,6 +115,7 @@ let required_arguments = function
   | "--task-rename" -> Some 3
   | "--claim" -> Some 1
   | "--task-release" -> Some 4
+  | "--task-renew" -> Some 5
   | "--complete" -> Some 5
   | "--task-select" -> Some 11
   | "--activity" -> Some 3
@@ -154,7 +156,7 @@ let validate argv =
         else
           let attempt_index =
             match argv.(1) with
-            | "--task-release" | "--complete" -> Some 5
+            | "--task-release" | "--complete" | "--task-renew" -> Some 5
             | "--job-complete" -> Some 4
             | _ -> None
           in
@@ -162,11 +164,21 @@ let validate argv =
           | None -> Ok ()
           | Some index ->
               if supplied <> required then
-                Error "fenced completion/release requires exact arguments including original ATTEMPT"
+                Error "fenced task operation requires exact arguments including original ATTEMPT"
               else
                 let text = argv.(index) in
                 let decimal = String.length text > 0
                   && String.for_all (fun c -> c >= '0' && c <= '9') text in
                 match int_of_string_opt text with
-                | Some attempt when decimal && attempt > 0 -> Ok ()
+                | Some attempt when decimal && attempt > 0 ->
+                    if argv.(1) <> "--task-renew" then Ok ()
+                    else
+                      let duration = argv.(6) in
+                      let duration_decimal = String.length duration > 0
+                        && String.for_all (fun c -> c >= '0' && c <= '9') duration in
+                      (match Int64.of_string_opt duration with
+                       | Some lease_ns when duration_decimal
+                           && Int64.compare lease_ns 0L > 0
+                           && Int64.compare lease_ns 3_600_000_000_000L <= 0 -> Ok ()
+                       | _ -> Error "LEASE_NS must be a positive decimal duration no greater than one hour")
                 | _ -> Error "ATTEMPT must be the positive decimal attempt from the original claim"

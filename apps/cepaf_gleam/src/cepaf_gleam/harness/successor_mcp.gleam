@@ -2,6 +2,7 @@
 //// All task mutations use canonical Sa-plan through admission/operations.
 
 import cepaf_gleam/harness/admission as a
+import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/mcp
@@ -35,6 +36,10 @@ pub fn initial(grant: a.Grant) -> State {
   State(grant, False, False, None, False)
 }
 
+pub fn assessment_guard_required(name: String) -> Bool {
+  name != "harness_read_file" && name != "harness_reconcile"
+}
+
 pub fn tool_definitions() -> List(ToolDefinition) {
   list.map(ops.names, fn(name) {
     ToolDefinition(
@@ -48,10 +53,17 @@ pub fn tool_definitions() -> List(ToolDefinition) {
 pub fn main() {
   case a.load() {
     Ok(grant) ->
-      mcp.serve(initial(grant), fn(state, line) {
-        let #(next, reply) = handle(state, line)
-        #(next, reply, next.closed)
-      })
+      case native_backend.initialize(grant.path, grant.digest) {
+        Ok(_) ->
+          mcp.serve(initial(grant), fn(state, line) {
+            let #(next, reply) = handle(state, line)
+            #(next, reply, next.closed)
+          })
+        Error(reason) -> {
+          io.println_error("development backend refused: " <> reason)
+          halt(1)
+        }
+      }
     Error(reason) -> {
       io.println_error("successor grant refused: " <> reason)
       halt(1)
@@ -271,7 +283,11 @@ fn dispatch(
     "harness_plan_intent" -> {
       let outcome = case state.unresolved, state.execution {
         True, _ -> Error("unresolved_operation_stop_line")
-        False, Some(execution) -> planning.submit(execution, args)
+        False, Some(execution) -> case ops.assessment_pending(execution.scope) {
+          Error(reason) -> Error("assessment_guard_unavailable:" <> reason)
+          Ok(True) -> Error("assessment_prepared_stop_line")
+          Ok(False) -> planning.submit(execution, args)
+        }
         False, None -> Error("current_task_required")
       }
       let unresolved = case outcome {
@@ -290,16 +306,42 @@ fn dispatch(
     "harness_reconcile" -> {
       let outcome = {
         use intent <- result.try(ops.text(args, "intent_id"))
-        case state.execution {
-          Some(execution) -> ops.reconcile(execution, intent)
-          None -> ops.recover(state.grant, intent)
+        case state.unresolved, state.execution {
+          True, Some(execution) -> {
+            use pending <- result.try(
+              ops.reconciliation_intent_is_pending(execution, intent),
+            )
+            use _ <- result.try(a.require(
+              pending,
+              "reconciliation_intent_mismatch",
+            ))
+            ops.reconcile(execution, intent)
+          }
+          True, None -> Error("reconciliation_context_missing")
+          False, Some(execution) -> {
+            use pending <- result.try(
+              ops.reconciliation_intent_is_pending(execution, intent),
+            )
+            use _ <- result.try(a.require(
+              pending,
+              "reconciliation_intent_mismatch",
+            ))
+            ops.reconcile(execution, intent)
+          }
+          False, None -> ops.recover(state.grant, intent)
         }
       }
       case outcome {
-        Ok(receipt) -> #(
-          State(..state, execution: None, unresolved: False),
-          Ok(receipt),
-        )
+        Ok(receipt) -> case state.unresolved {
+          False -> #(state, Ok(receipt))
+          True -> {
+            let next_state = case planning_resolution_receipt(receipt) {
+              True -> State(..state, unresolved: False)
+              False -> State(..state, execution: None, unresolved: False)
+            }
+            #(next_state, Ok(receipt))
+          }
+        }
         Error(e) -> #(
           State(..state, unresolved: state.unresolved || a.outcome_unknown(e)),
           Error(e),
@@ -312,7 +354,7 @@ fn dispatch(
         case state.execution {
           None -> Ok(heartbeat)
           Some(e) -> {
-            use proof <- result.try(a.fence(e, 0))
+            use before <- result.try(a.fence(e, 0))
             use raw <- result.try(
               a.coordinate([
                 "renew",
@@ -321,22 +363,25 @@ fn dispatch(
                 int_string(e.binding.epoch),
                 "3600",
                 "successor-renew-"
-                  <> int_string(proof.clock.sample.observed.utc_us),
+                  <> int_string(before.clock.sample.observed.utc_us),
               ]),
             )
+            use sa_plan_renewal <- result.try(sa.renew_sa_task(
+              e.binding.plan, e.binding.task, e.binding.worker, e.binding.attempt,
+              3_600_000_000_000,
+            ))
+            use after_fence <- result.try(a.fence(e, 0))
             Ok(
               json.object([
                 #("heartbeat", heartbeat),
                 #("coordinator_renewal", json.string(raw)),
                 #(
                   "sa_plan_lease_until_ns",
-                  json.string(int_string(proof.lease_until_ns)),
+                  json.string(int_string(after_fence.lease_until_ns)),
                 ),
                 #(
                   "sa_plan_renewal",
-                  json.string(
-                    "NOT_IMPLEMENTED_RELEASE_AND_RECLAIM_BEFORE_EXPIRY",
-                  ),
+                  json.string(sa_plan_renewal),
                 ),
               ]),
             )
@@ -358,6 +403,8 @@ fn dispatch(
             use task <- result.try(ops.text(args, "task"))
             use intent <- result.try(ops.text(args, "intent_id"))
             use scope <- result.try(a.lookup(state.grant, plan, task))
+            use pending <- result.try(ops.assessment_pending(scope))
+            use _ <- result.try(a.require(!pending, "assessment_prepared_stop_line"))
             case name {
               "harness_claim" -> a.claim(state.grant, scope, intent)
               _ -> a.attach(state.grant, scope, intent)
@@ -379,6 +426,12 @@ fn dispatch(
         }
       }
     }
+    "harness_assess" ->
+      case state.unresolved, state.execution {
+        True, _ -> #(state, Error("unresolved_operation_stop_line"))
+        False, None -> #(state, ops.assess_initial(state.grant, args))
+        False, Some(execution) -> active_call(state, execution, name, args)
+      }
     _ ->
       case state.execution {
         None -> #(state, Error("current_task_required"))
@@ -387,10 +440,44 @@ fn dispatch(
   }
 }
 
+/// A planning resolution settles the old logical operation while the claimed
+/// task remains active for a fresh, distinct planning intent. Other recovery
+/// receipts retain the historical terminal behavior and clear the execution.
+pub fn planning_resolution_receipt(receipt: json.Json) -> Bool {
+  case json.parse(json.to_string(receipt), value.decoder()) {
+    Ok(parsed) ->
+      value.get(parsed, "kind") == Ok(value.Text("planning_resolution"))
+    _ -> False
+  }
+}
+
 @external(erlang, "erlang", "integer_to_binary")
 fn int_string(n: Int) -> String
 
 fn active_call(
+  state: State,
+  execution: a.Execution,
+  name: String,
+  args: value.Value,
+) -> #(State, Result(json.Json, String)) {
+  case state.unresolved, name {
+    True, "harness_finish" ->
+      #(state, Error("unresolved_operation_stop_line"))
+    _, _ -> case assessment_guard_required(name) {
+      False -> active_call_dispatch(state, execution, name, args)
+      True -> case ops.assessment_pending(execution.scope) {
+        Error(reason) -> #(
+          state,
+          Error("assessment_guard_unavailable:" <> reason),
+        )
+        Ok(True) -> #(state, Error("assessment_prepared_stop_line"))
+        Ok(False) -> active_call_dispatch(state, execution, name, args)
+      }
+    }
+  }
+}
+
+fn active_call_dispatch(
   state: State,
   execution: a.Execution,
   name: String,

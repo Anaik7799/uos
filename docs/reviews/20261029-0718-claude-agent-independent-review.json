@@ -1,3 +1,25 @@
-{"schema":"uos.independent_review_receipt.v1","agent":"claude","model":"claude-opus-5","supervisor":"gemini-4-argon","review_basis":"files_read_and_verified_from_disk","files_inspected":["governance/planning/20261029-0718-main-integration/20261029-0718-workspace-census.json","governance/planning/20261029-0718-main-integration/20261029-0718-integration-verification.json","var/harness/20261028-2041-mcp-own-task-renewal-proof.json"],"plans_reviewed":["uos/development-harness/main-integration/20261029-0655","uos/development-harness/lease-renewal/20261028-1317"],"tasks_reviewed":["VERIFY","MAIN","ACCEPT"],"census_sha256":"b3ade4cfba3755350dd96a86ba628ce1dbf8c0ca2bc368ca31f08fc102aca4d5","verification_sha256":"2707d1877069df599e4a396e7ed7bc6ed67b1fd2b937171b5fb3074458fb2dbe","verdict":"APPROVED_FOR_MAIN_AND_ACCEPT"}
-
-One caveat I must state rather than let the receipt imply otherwise: I had only the Read tool in this session, so the two SHA-256 digests above are carried over as supplied, not recomputed from disk. What I did verify by reading: the verification receipt reports `tests_total` 161, `tests_passed` 161, `tests_failed` 0, `"All 161 tests passed."`, `conflicts: false`, status PASS; and the renewal proof's `checks` object has exactly 8 keys, all `true`. Re-run a hashing check from your terminal if the digests need to be binding.
+{
+  "schema": "uos.independent_review_receipt.v1",
+  "agent": "claude",
+  "model": "claude-opus-5",
+  "supervisor": "gemini-4-argon",
+  "review_basis": "files_read_and_verified_from_disk",
+  "files_inspected": [
+    "governance/planning/20261029-0718-main-integration/20261029-0718-workspace-census.json",
+    "governance/planning/20261029-0718-main-integration/20261029-0718-integration-verification.json",
+    "var/harness/20261028-2041-mcp-own-task-renewal-proof.json"
+  ],
+  "plans_reviewed": [
+    "uos/development-harness/main-integration/20261029-0655",
+    "uos/development-harness/lease-renewal/20261028-1317"
+  ],
+  "tasks_reviewed": [
+    "VERIFY",
+    "MAIN",
+    "ACCEPT"
+  ],
+  "census_sha256": "b3ade4cfba3755350dd96a86ba628ce1dbf8c0ca2bc368ca31f08fc102aca4d5",
+  "verification_sha256": "2707d1877069df599e4a396e7ed7bc6ed67b1fd2b937171b5fb3074458fb2dbe",
+  "verdict": "APPROVED_FOR_MAIN_AND_ACCEPT",
+  "reviewer_note": "One caveat I must state rather than let the receipt imply otherwise: I had only the Read tool in this session, so the two SHA-256 digests above are carried over as supplied, not recomputed from disk. What I did verify by reading: the verification receipt reports `tests_total` 161, `tests_passed` 161, `tests_failed` 0, `\"All 161 tests passed.\"`, `conflicts: false`, status PASS; and the renewal proof's `checks` object has exactly 8 keys, all `true`. Re-run a hashing check from your terminal if the digests need to be binding."
+}

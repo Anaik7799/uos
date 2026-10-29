@@ -1,0 +1,1 @@
+{"ok":true,"operation_id":"op-claim-integration-main-20261029-0730","operation":"claim","sequence":4674,"duplicate":false,"epoch":80,"expires_boot_us":2525015200000,"message_id":"","authority":"local-cooperative-lease; executor must recheck current fence"}

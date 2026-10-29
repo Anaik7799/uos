@@ -1,5 +1,6 @@
 //// Canonical operational coordinator. Historical file journals remain evidence;
 //// they are never a fallback source of live task or runtime authority.
+
 import gleam/json
 import gleam/result
 import gleam/string
@@ -11,7 +12,9 @@ import uos_swarm/session_sync as sync
 pub const database = "/home/an/NAS-setup/uos/var/coordination/tri-agent/coordinator.sqlite3"
 
 fn existing_database(path: String) -> Result(Nil, String) {
-  use info <- result.try(simplifile.link_info(path) |> result.map_error(string.inspect))
+  use info <- result.try(
+    simplifile.link_info(path) |> result.map_error(string.inspect),
+  )
   case simplifile.file_info_type(info) == simplifile.File && info.size >= 512 {
     True -> Ok(Nil)
     False -> Error("canonical_coordinator_requires_existing_regular_database")
@@ -20,8 +23,12 @@ fn existing_database(path: String) -> Result(Nil, String) {
 
 pub fn run_at(path: String, arguments: List(String)) -> Result(String, String) {
   use _ <- result.try(existing_database(path))
-  use verified <- result.try(store.open_existing(path) |> result.map_error(store.error_to_string))
-  use _ <- result.try(store.close(verified) |> result.map_error(store.error_to_string))
+  use verified <- result.try(
+    store.open_existing(path) |> result.map_error(store.error_to_string),
+  )
+  use _ <- result.try(
+    store.close(verified) |> result.map_error(store.error_to_string),
+  )
   session_store_cli.run([path, ..arguments])
   |> result.map_error(fn(error) { session_store_cli.response(Error(error)).1 })
 }
@@ -35,10 +42,13 @@ pub fn query_at(
   query: fn(sync.State, String, Int) -> Result(a, String),
 ) -> Result(a, String) {
   use _ <- result.try(existing_database(path))
-  use opened <- result.try(store.open_existing(path) |> result.map_error(store.error_to_string))
-  let outcome = store.observe(opened, fn(state, boot, now) {
-    query(state, boot, now) |> result.map_error(store.RefusedError)
-  })
+  use opened <- result.try(
+    store.open_existing(path) |> result.map_error(store.error_to_string),
+  )
+  let outcome =
+    store.observe(opened, fn(state, boot, now) {
+      query(state, boot, now) |> result.map_error(store.RefusedError)
+    })
   let closed = store.close(opened)
   use value <- result.try(outcome |> result.map_error(store.error_to_string))
   use _ <- result.try(closed |> result.map_error(store.error_to_string))
@@ -52,6 +62,56 @@ pub fn observe_at(
   query_at(path, query) |> result.map(json.to_string)
 }
 
-pub fn observe(query: fn(sync.State, String, Int) -> Result(json.Json, String)) -> Result(String, String) {
+pub fn observe(
+  query: fn(sync.State, String, Int) -> Result(json.Json, String),
+) -> Result(String, String) {
   observe_at(database, query)
+}
+
+/// Validate the supplied coordinator lease and run one bounded effect while
+/// its SQLite writer transaction remains held. Sa-plan remains an independent
+/// authority and must be checked by the caller before and after this section.
+/// `body` must not call this module or `session_store` recursively.
+pub fn with_cas_critical_section_at(
+  path: String,
+  session: String,
+  resource: String,
+  epoch: Int,
+  path_key: String,
+  operation_id: String,
+  body: fn() -> Result(a, String),
+) -> Result(a, String) {
+  use _ <- result.try(existing_database(path))
+  use section <- result.try(store.critical_section(path_key, operation_id))
+  use opened <- result.try(
+    store.open_existing(path) |> result.map_error(store.error_to_string),
+  )
+  let outcome =
+    store.with_critical_section(opened, section, fn(state, boot, now) {
+      use _ <- result.try(sync.check(state, session, resource, epoch, boot, now))
+      body()
+    })
+  let closed = store.close(opened)
+  use value <- result.try(outcome |> result.map_error(store.error_to_string))
+  use _ <- result.try(closed |> result.map_error(store.error_to_string))
+  Ok(value)
+}
+
+pub fn with_cas_critical_section(
+  session: String,
+  resource: String,
+  epoch: Int,
+  path_key: String,
+  operation_id: String,
+  body: fn() -> Result(a, String),
+) -> Result(a, String) {
+  with_cas_critical_section_at(
+    database,
+    session,
+    resource,
+    epoch,
+    path_key,
+    operation_id,
+    body,
+  )
 }

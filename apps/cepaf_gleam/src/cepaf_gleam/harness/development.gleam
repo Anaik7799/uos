@@ -135,6 +135,14 @@ fn run_bounded_env(
   env: List(#(String, String)),
 ) -> Result(#(Int, BitArray), String)
 
+@external(erlang, "ecology_capability_ffi", "run_bounded_profile")
+fn run_bounded_profile(
+  path: String,
+  args: List(String),
+  timeout_ms: Int,
+  profile_root: String,
+) -> Result(#(Int, BitArray), String)
+
 /// `bounded` with extra environment pairs for the child, for binding a tool to
 /// one database path. At most eight pairs; values never carry credentials.
 pub fn bounded_env(
@@ -144,6 +152,29 @@ pub fn bounded_env(
   timeout: Int,
 ) -> Result(String, String) {
   case run_bounded_env(path, args, timeout, env) {
+    Ok(#(0, bytes)) ->
+      bit_array.to_string(bytes)
+      |> result.map_error(fn(_) { "backend_output_invalid_utf8" })
+    Ok(#(code, bytes)) -> {
+      let diagnostic = case bit_array.to_string(bytes) {
+        Ok(output) -> backend_diagnostic(output)
+        Error(_) -> "diagnostic_invalid_utf8"
+      }
+      Error("backend_exit:" <> int.to_string(code) <> "\n" <> diagnostic)
+    }
+    Error(e) -> Error(e)
+  }
+}
+
+/// Runs only the fixed AGY CLI in its private per-grant HOME and cwd. The
+/// Erlang boundary verifies the runtime path, owner, mode and absent registries.
+pub fn bounded_profile(
+  path: String,
+  args: List(String),
+  profile_root: String,
+  timeout: Int,
+) -> Result(String, String) {
+  case run_bounded_profile(path, args, timeout, profile_root) {
     Ok(#(0, bytes)) ->
       bit_array.to_string(bytes)
       |> result.map_error(fn(_) { "backend_output_invalid_utf8" })
@@ -1157,7 +1188,7 @@ fn effect(
           })
           use dispatch <- result.try(fence(binding))
           use timeout <- result.try(dispatch_budget(dispatch, 60_000))
-          let outcome = perform(name, arguments, timeout)
+          let outcome = perform(name, arguments, timeout, binding)
           let source_after = case source_check {
             True -> capture_sources()
             False -> Ok([])
@@ -1753,24 +1784,35 @@ fn perform(
   name: String,
   arguments: value.Value,
   timeout_ms: Int,
+  binding: Binding,
 ) -> Result(String, String) {
   case name {
     "harness_write_file" -> {
       use path <- result.try(field(arguments, "path"))
       use content <- result.try(field(arguments, "content"))
       use expected <- result.try(field(arguments, "expected_sha256"))
+      use intent <- result.try(field(arguments, "intent_id"))
       case source_allowed(path) || document_allowed(path) {
         False -> Error("write_scope_denied")
         True -> {
-          use _ <- result.try(case expected {
-            "ABSENT" -> files.create(root, path, content)
-            _ -> files.replace(root, path, expected, content)
-          })
-          use observed <- result.try(files.read(root, path))
-          case observed == content {
-            True -> Ok(files.digest(observed))
-            False -> Error("write_readback_mismatch")
-          }
+          session_authority.with_cas_critical_section(
+            binding.session,
+            task_resource(binding),
+            binding.epoch,
+            path,
+            intent,
+            fn() {
+              use _ <- result.try(case expected {
+                "ABSENT" -> files.create(root, path, content)
+                _ -> files.replace(root, path, expected, content)
+              })
+              use observed <- result.try(files.read(root, path))
+              case observed == content {
+                True -> Ok(files.digest(observed))
+                False -> Error("write_readback_mismatch")
+              }
+            },
+          )
         }
       }
     }

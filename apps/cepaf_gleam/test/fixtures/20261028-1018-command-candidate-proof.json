@@ -1,0 +1,1 @@
+{"schema":"uos.command-accept-candidate-proof.v1","candidate_commit":"872a477d2117b81ac95c3b8478557092a5104d01","task_attempt":3,"grant_sha256":"f056748a9ea3990d2e80b5f34448dc63e9ae7389cfcf8d46258cb7b83a59de39","purpose":"candidate-root write/read isolation proof"}

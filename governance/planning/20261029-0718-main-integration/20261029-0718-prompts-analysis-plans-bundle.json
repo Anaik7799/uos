@@ -154,5 +154,129 @@
       "risk": 0.05,
       "status": "163 Lean 4 theorems + Gospel/Z3 + two-key runtime/formal receipts"
     }
+  },
+  "updated_at_utc": "2026-10-29T07:37:56Z",
+  "user_prompts_verbatim": [
+    {
+      "ref": "m00001",
+      "text": "what is current project state"
+    },
+    {
+      "ref": "m00042",
+      "text": "what is current project state. what is the fastest path to get all mcp functionality working"
+    },
+    {
+      "ref": "m00065",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths"
+    },
+    {
+      "ref": "m00091",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans"
+    },
+    {
+      "ref": "m00123",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main."
+    },
+    {
+      "ref": "m00162",
+      "text": "do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main.use claude and codex in agent model to execute the tasks . optimize all operations for token cost. gemini 4 argon to be used as overall supervisor coordinating all work"
+    },
+    {
+      "ref": "m00175",
+      "text": "how should the work be sequenced and coordinated. decide based on mcp and code merge related tasks . do one more comprehensive pass evaluate all potential fractal aspects and paths. save all promptas, analysis and plans. also merge all workspaces and worktrees to main.use claude and codex in agent model to execute the tasks . optimize all operations for token cost. gemini 4 argon to be used as overall supervisor coordinating all work"
+    },
+    {
+      "ref": "m00241-m00244",
+      "text": "Open the single handover document (http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261029-0710-codex-to-pi-agy-single-document-handover.md). It includes all continuation information, state exports, workspace references, receipts, blockers, and Pi/AGY instructions. Read-back verified; 10/10 journal checks passed."
+    },
+    {
+      "ref": "m00261",
+      "text": "also review Open the single handover document"
+    },
+    {
+      "ref": "m00265-m00269",
+      "text": "It includes all continuation information, state exports, workspace references,receipts, blockers, and Pi/AGY instructions. Open the single handover document (http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261029-0710-codex-to-pi-agy-single-document-handover.md). It includes all continuation information, state exports, workspace references,receipts, blockers, and Pi/AGY instructions. update the plan and approach accordingly. do full fractal anlaysis and implications check"
+    },
+    {
+      "ref": "m00273",
+      "text": "update the plan and approach accordingly. do full fractal anlaysis and implications check. create the most deatiled execution plan and approach."
+    },
+    {
+      "ref": "m00277",
+      "text": "update the plan and approach accordingly. do full fractal anlaysis and implications check. create the most deatiled execution plan and approach."
+    },
+    {
+      "ref": "m00278",
+      "text": "update the plan and approach accordingly. do full fractal anlaysis and implications check. create the most deatiled execution plan and approach. journal the plan and approach"
+    }
+  ],
+  "handover_document_review": {
+    "document_path": "docs/journal/20261029-0710-codex-to-pi-agy-single-document-handover.md",
+    "tailscale_url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261029-0710-codex-to-pi-agy-single-document-handover.md",
+    "key_constraints_honored": [
+      "Established own Pi/AGY session (pi-agy-gemini4-argon-20261029-0730) in coordinator.sqlite3; did not reuse Codex session IDs or old grants",
+      "Refreshed canonical risk portfolio (var/harness/20261029-0718-pi-agy-main-integration-refreshed-risk.json) with exact schema",
+      "Preserved original failed SourceFX receipt (SHA 300c8428... / 97039bed...) byte-for-byte in HELD state",
+      "Preserved verify_guardian.exe (FAIL 1/31) and FerrisKey SHA mismatch without force-pass or silent re-pin",
+      "Left 7 older background successor_mcp processes untouched while executing isolated main integration",
+      "Completed INVENTORY, INTEGRATE, VERIFY, MAIN in uos/development-harness/main-integration/20261029-0655 and ACCEPT in uos/development-harness/lease-renewal/20261028-1317"
+    ],
+    "detailed_execution_waves": [
+      {
+        "wave": "Wave 1 (EXECUTED & COMPLETED)",
+        "scope": "All-Workspace Census, Conflict-Free Merge, 161/161 EUnit Verification, Main Bookmark Advance & Lease-Renewal Acceptance",
+        "sa_plan_tasks": [
+          "uos/development-harness/main-integration/20261029-0655: INVENTORY (attempt 2, completed)",
+          "uos/development-harness/main-integration/20261029-0655: INTEGRATE (attempt 1, completed)",
+          "uos/development-harness/main-integration/20261029-0655: VERIFY (attempt 1, completed)",
+          "uos/development-harness/main-integration/20261029-0655: MAIN (attempt 1, completed)",
+          "uos/development-harness/lease-renewal/20261028-1317: ACCEPT (attempt 2, completed)"
+        ],
+        "roles": {
+          "supervisor": "gemini-4-argon (pi-agy-gemini4-argon-20261029-0730)",
+          "worker": "codex exec gpt-6-luna (codex-luna-worker-20261029-0730)",
+          "reviewer": "claude -p claude-opus-5 (claude-opus5-reviewer-20261029-0730)"
+        }
+      },
+      {
+        "wave": "Wave 2 (NEXT IMMEDIATE P0 — Host-Positive Native CLI & Contained Check-Worker Recovery)",
+        "scope": "Mint reviewed grant bound to unified main commit (44 sources / 28 controls), prove host-positive immutable Nix CLI (/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3) selection & startup, and integrate isolated check supervisor with trusted exec/status/sync/EOF/teardown + terminal failure receipts so failed checks never poison future checks",
+        "sa_plan_tasks": [
+          "uos/development-harness/check-failure-recovery/20261028-2242: IMPLEMENT (attempt 3) -> ACCEPT (attempt 1)",
+          "uos/development-harness/client-source/20261028-1514: SOURCE_FIX (attempt 5) -> ACCEPT_SOURCE (attempt 1)"
+        ],
+        "lanes": {
+          "lane_a_codex_luna": "Wire check-worker containment & terminal failure receipt in isolated JJ workspace; run EUnit suite",
+          "lane_b_claude_opus": "Independent review of grant envelope, containment receipt, and post-task/source/control guards; verify original SourceFX remains HELD"
+        }
+      },
+      {
+        "wave": "Wave 3 (Four-Client Native Harness Parity & 15 Successor Dev Tools)",
+        "scope": "Prepare and verify all 4 native clients (AGY/Gemini, Codex, Claude, Pi) via client_mcp.gleam (status/prepare/rollback) with noncanonical/noecho PTY framing and 10 task-scoped env vars; run live tool-turn lifecycle across all 15 successor dev tools (harness_plan_intent, status, clock, heartbeat, claim, attach, release, read_file, client_mcp_config, write_file, build, test, assess, finish, reconcile)",
+        "sa_plan_tasks": [
+          "uos/development-harness/20261028-0105: CLIENT_PARITY",
+          "uos/development-harness/20261028-0105: COMMAND_GRANT_REVIEW -> COMMAND_ACCEPT"
+        ]
+      },
+      {
+        "wave": "Wave 4 (Concurrent Multi-Agent Isolation, Fairness & 16 Robustness Cases)",
+        "scope": "Execute fixed-candidate multi-agent concurrency, CAS conflict refusal, lease expiry/renewal, disconnect/crash/restart, and 16 robustness subplan tasks across simultaneous AGY/Codex/Claude/Pi sessions",
+        "sa_plan_tasks": [
+          "uos/development-harness/20261028-0105: CONCURRENCY",
+          "Robustness 16-task subplan (intake, transport, identity, replay, crash recovery)"
+        ]
+      },
+      {
+        "wave": "Wave 5 (Public 65 + Legacy Private 17 MCP Full Matrix — 89 Unique Names / 388 Route-Client Cells)",
+        "scope": "Wire the 12 unavailable public tools (control_loop, safety_status, run_selfcheck, registry_status, run_gate, zk_search, sa_bridge_submit, vault_status, vault_list_secrets, vault_policy_get, vault_audit_tail, vault_health) in apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam & tools.gleam to real supervised Hermes/BEAM backends, migrate legacy plan_* mutators to canonical Sa-plan with transport-bound task authority, and execute the 260 public + 128 private route-client positive/negative/recovery cells",
+        "sa_plan_tasks": [
+          "uos/development-harness/20261028-0105: TRACKER -> FULL_ACCEPT (Milestone 1: CORE_DEV_READY)"
+        ]
+      },
+      {
+        "wave": "Wave 6 (Full Profile Closure: 52 Harness Features, 21 Infra Services × 17 Aspects, 25 PM Obligations, 136 Telegram Targets)",
+        "scope": "Close R2-1..R2-7 and H1/H2 (live :4100 Wisp cockpit & real container telemetry, uos_sup supervision for Dev MCP, W3C trace_id/span_id on effect receipts, Rete-UL alpha/beta network), 357 AINF cells, PM-01..PM-25, and 16 Telegram command delivery gaps (Milestone 2: FULL_PROFILE_DEV_READY)"
+      }
+    ]
   }
 }
