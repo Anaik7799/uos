@@ -2,6 +2,7 @@
 //// All task mutations use canonical Sa-plan through admission/operations.
 
 import cepaf_gleam/harness/admission as a
+import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/mcp
@@ -52,10 +53,17 @@ pub fn tool_definitions() -> List(ToolDefinition) {
 pub fn main() {
   case a.load() {
     Ok(grant) ->
-      mcp.serve(initial(grant), fn(state, line) {
-        let #(next, reply) = handle(state, line)
-        #(next, reply, next.closed)
-      })
+      case native_backend.initialize(grant.path, grant.digest) {
+        Ok(_) ->
+          mcp.serve(initial(grant), fn(state, line) {
+            let #(next, reply) = handle(state, line)
+            #(next, reply, next.closed)
+          })
+        Error(reason) -> {
+          io.println_error("development backend refused: " <> reason)
+          halt(1)
+        }
+      }
     Error(reason) -> {
       io.println_error("successor grant refused: " <> reason)
       halt(1)

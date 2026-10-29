@@ -74,9 +74,15 @@ fn seed_document(plan: String, task: String, path: String, sha256: String) -> va
 
 
 pub fn ecology_ffi_control_id_is_required_and_revision_bound_test() {
-  admission.control_modules |> list.length |> should.equal(26)
+  admission.control_modules |> list.length |> should.equal(28)
   admission.control_modules
   |> list.contains("ecology_capability_ffi")
+  |> should.be_true
+  admission.control_modules
+  |> list.contains("cepaf_gleam@harness@native_backend")
+  |> should.be_true
+  admission.control_modules
+  |> list.contains("harness_native_backend_ffi")
   |> should.be_true
   let actual = admission.control_ids()
   let recorded = case json.parse(json.to_string(actual), value.decoder()) {

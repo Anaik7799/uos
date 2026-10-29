@@ -8,6 +8,8 @@
 ////   - Single-Instance vs Multi-Instance Actor & Agent Ecosystem
 ////   - 10 Fractal Layers (L0..L9) x 5 Fractal Surfaces
 
+import cepaf_gleam/harness/native_backend as native_backend
+import gleam/result
 import gleam/bit_array
 import gleam/int
 import gleam/json
@@ -946,13 +948,15 @@ fn run_bounded(
   timeout_ms: Int,
 ) -> Result(#(Int, BitArray), String)
 
-/// Resolves the absolute or relative path to the tools/sa-plan binary.
+/// Legacy canonical locator, retained for existing metadata callers.
+/// Execution always uses the node-owned validated selection in run_sa_plan_cli.
 pub fn resolve_sa_plan_binary() -> String {
   "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe"
 }
 
 /// Executes tools/sa-plan with the specified argument list and returns standard output.
 pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
+  use selected_binary <- result.try(native_backend.selected_path())
   // Literal argv only. Pin the authority store even if the parent environment
   // supplies another UOS_SA_PLAN_DB. Missing binaries never trigger a build.
   case
@@ -968,7 +972,7 @@ pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
           "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/env",
           [
             "UOS_SA_PLAN_DB=/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
-            resolve_sa_plan_binary(),
+            selected_binary,
             ..args
           ],
           10_000,

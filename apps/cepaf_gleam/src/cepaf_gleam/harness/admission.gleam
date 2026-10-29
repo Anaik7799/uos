@@ -77,6 +77,7 @@ pub const control_modules = [
   "cepaf_gleam@harness@planning_intents", "cepaf_gleam@harness@client_mcp",
   "cepaf_gleam@harness@client_profiles", "cepaf_gleam@harness@client_config",
   "client_config_io",
+  "cepaf_gleam@harness@native_backend", "harness_native_backend_ffi",
 ]
 
 // C4: the guardian at tools/ecology_process.ml bounds every effect's time,
