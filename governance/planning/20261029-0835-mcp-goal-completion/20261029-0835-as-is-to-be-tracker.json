@@ -19,7 +19,7 @@
     "client_mcp_config_roundtrips": "5/5 clients x 3 actions = 15/15 PASS (agy, gemini, pi, codex, claude)",
     "robustness_contracts": "16/16 PASS & completed in sa-plan (uos/development-harness/robustness/20261028-0558)",
     "public_mcp_tools_sweep": "65/65 PASS (53 operational executed + 12 deterministic fail-closed unavailable)",
-    "eunit_suite": "186/186 canonical harness verification EUnit tests PASS (212/212 with extended modules) — 0 failures",
+    "eunit_suite": "186/186 canonical harness verification EUnit tests PASS (212/212 with extended modules) \u2014 0 failures",
     "sa_plan_plans_completed": {
       "uos/development-harness/20261028-0105": "13/13 completed",
       "uos/development-harness/robustness/20261028-0558": "16/16 completed",
@@ -56,5 +56,21 @@
       "path": "docs/reviews/20261029-0835-codex-agent-mcp-completion-audit.json",
       "sha256": "0d1ec6d851e66f877e470656c52cde6cc415562c50a316ade42ea6281afa8ba0"
     }
+  },
+  "updated_utc": "2026-10-29T11:42:00Z",
+  "sa_plan_plans_summary": {
+    "mcp_harness_merge_plans_total": 65,
+    "mcp_harness_merge_plans_completed": 64,
+    "mcp_harness_merge_plans_constitutionally_held": 1,
+    "held_plan": "uos/development-harness/client-source/20261028-1514 (INV-HANDOVER-05 historical failed SourceFX receipt 20261028-2143-source-integration@source4-test-2219)",
+    "uos_development_harness_20261028_0105": "13/13 completed",
+    "uos_development_harness_robustness_20261028_0558": "16/16 completed",
+    "uos_development_harness_main_integration_20261029_0655": "4/4 completed",
+    "uos_development_harness_mcp_completion_e2e_v12_20261029_0835": "3/3 completed",
+    "uos_development_harness_mcp_live_v13_20261029_1135": "6/6 completed",
+    "uos_system_mcp_features_20260919_1642": "21/21 completed",
+    "uos_harness_features_20260909": "52/52 completed",
+    "uos_full_merge_20261025_0638": "9/9 completed",
+    "uos_codex_mainline_merge_20260908_1925": "9/9 completed"
   }
 }
