@@ -525,7 +525,7 @@ fn active_call_dispatch(
           Error(e),
         )
       }
-    "harness_write_file" | "harness_build" | "harness_test" ->
+    "harness_write_file" | "harness_build" | "harness_test" | "harness_client_mcp_config" ->
       case state.unresolved {
         True -> #(state, Error("unresolved_operation_stop_line"))
         False -> {

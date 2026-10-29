@@ -147,19 +147,9 @@ pub fn mutating_tool_excessive_risk_is_preflight_vetoed_test() {
         #("actor", json.string("AutonomousAgent")),
       ]),
     )
-  let code_decoder = {
-    use code <- decode.subfield(["error", "code"], decode.int)
-    decode.success(code)
-  }
-  let message_decoder = {
-    use msg <- decode.subfield(["error", "message"], decode.string)
-    decode.success(msg)
-  }
-
-  json.parse(response, code_decoder) |> should.equal(Ok(-32_001))
-  let assert Ok(msg) = json.parse(response, message_decoder)
-  msg |> string.contains("Preflight veto:") |> should.be_true
-  msg |> string.contains("Excessive predicted risk") |> should.be_true
+  response |> is_tool_error |> should.equal(Ok(True))
+  response |> string.contains("Preflight veto:") |> should.be_true
+  response |> string.contains("Excessive predicted risk") |> should.be_true
 }
 
 pub fn mutating_tool_negative_seu_is_preflight_vetoed_test() {
@@ -175,19 +165,9 @@ pub fn mutating_tool_negative_seu_is_preflight_vetoed_test() {
         #("cost", json.float(100.0)),
       ]),
     )
-  let code_decoder = {
-    use code <- decode.subfield(["error", "code"], decode.int)
-    decode.success(code)
-  }
-  let message_decoder = {
-    use msg <- decode.subfield(["error", "message"], decode.string)
-    decode.success(msg)
-  }
-
-  json.parse(response, code_decoder) |> should.equal(Ok(-32_001))
-  let assert Ok(msg) = json.parse(response, message_decoder)
-  msg |> string.contains("Preflight veto:") |> should.be_true
-  msg |> string.contains("Subjective Expected Utility") |> should.be_true
+  response |> is_tool_error |> should.equal(Ok(True))
+  response |> string.contains("Preflight veto:") |> should.be_true
+  response |> string.contains("Subjective Expected Utility") |> should.be_true
 }
 
 pub fn fractal_jidoka_andon_halt_on_bypass_attempt_test() {

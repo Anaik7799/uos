@@ -357,3 +357,16 @@ pub fn bounded_profile_rejects_timeout_outside_bounds_test() {
   )
   |> should.equal(Error("invalid_profile_bound"))
 }
+
+pub fn mcp_client_config_is_not_readable_or_writable_as_project_file_test() {
+  dev.readable("/home/an/.gemini/antigravity/mcp_config.json")
+  |> should.be_false
+  dev.readable(".gemini/antigravity/mcp_config.json") |> should.be_false
+  dev.source_allowed(".gemini/antigravity/mcp_config.json")
+  |> should.be_false
+  dev.document_allowed(".gemini/antigravity/mcp_config.json")
+  |> should.be_false
+  dev.readable("/home/an/.codex/config.toml") |> should.be_false
+  dev.readable("/home/an/.claude.json") |> should.be_false
+  dev.readable("/home/an/.pi/agent/mcp.json") |> should.be_false
+}

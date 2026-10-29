@@ -1,3 +1,4 @@
+import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/admission as a
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
@@ -1885,4 +1886,67 @@ pub fn active_mutations_require_prepared_assessment_guard_test() {
   mcp.assessment_guard_required("harness_release") |> should.be_true
   mcp.assessment_guard_required("harness_client_mcp_config") |> should.be_true
   mcp.assessment_guard_required("harness_read_file") |> should.be_false
+}
+
+pub fn every_declared_operation_has_schema_and_client_mcp_config_is_routed_test() {
+  let defs = mcp.tool_definitions()
+  list.length(defs) |> should.equal(15)
+  list.length(ops.names) |> should.equal(15)
+  list.contains(ops.names, "harness_client_mcp_config") |> should.be_true
+  list.contains(ops.names, "harness_plan_intent") |> should.be_true
+  // Verify that calling harness_client_mcp_config with an active execution reaches the prepared assessment guard / active_call_dispatch rather than falling through to unknown_tool
+  let exec =
+    a.Execution(
+      grant(),
+      scope(),
+      laws_binding(),
+      scope().portfolio,
+    )
+  let active_state =
+    mcp.State(
+      grant: grant(),
+      initialized: True,
+      closed: False,
+      execution: Some(exec),
+      unresolved: False,
+    )
+  let req =
+    "{\"jsonrpc\":\"2.0\",\"id\":99,\"method\":\"tools/call\",\"params\":{\"name\":\"harness_client_mcp_config\",\"arguments\":{\"intent_id\":\"cfg-1\",\"client\":\"codex\",\"action\":\"status\"}}}"
+  let #(_next_state, reply_opt) = mcp.handle(active_state, req)
+  let assert Some(reply) = reply_opt
+  string.contains(reply, "unknown_tool") |> should.be_false
+}
+
+pub fn critical_control_modules_and_dependencies_are_complete_and_pinned_test() {
+  list.length(a.control_modules) |> should.equal(28)
+  a.control_dependencies |> should.equal(["tools/ecology_process.ml"])
+  let ids_json = json.to_string(a.control_ids())
+  let assert Ok(value.Object(entries)) = json.parse(ids_json, value.decoder())
+  list.length(entries) |> should.equal(28)
+}
+
+pub fn host_immutable_nix_backend_live_store_path_and_selection_law_test() {
+  let store_path =
+    "/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3"
+  native_backend.path_valid(store_path) |> should.be_true
+  let doc =
+    value.Object([
+      #("role", value.Text("development")),
+      #(
+        "candidate_binding",
+        value.Object([
+          #(
+            "native_backend",
+            value.Object([
+              #("mode", value.Text("host_immutable_nix")),
+              #("store_path", value.Text(store_path)),
+              #("sha256", value.Text(native_backend.expected_sha256)),
+              #("bytes", value.Integer(native_backend.expected_bytes)),
+            ]),
+          ),
+        ]),
+      ),
+    ])
+  native_backend.choose(doc)
+  |> should.equal(Ok(native_backend.HostImmutableNix(store_path)))
 }
