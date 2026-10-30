@@ -38,7 +38,7 @@ C01 connected the real OTP gateway owner to the OTP app, HTTP web wrapper, stdio
 
 ### C02 — Protocol, facilities, authentication and adversarial closure
 
-Exact negotiation maps `2024-11-05` to `Legacy20241105`; `2025-03-26`, `2025-06-18`, `2025-11-25` and `2026-07-28` map to `Modern20260728`. Initialize echoes the requested supported revision, HTTP header/body revisions must match exactly, and absent protocol versions preserve the canonical modern default.
+Exact negotiation maps `2024-11-05` to `Legacy20241105`; `2026-07-28` and its implemented compatibility aliases map to `Modern20260728`. Initialize echoes the requested supported revision, HTTP header/body revisions must match exactly, and absent protocol versions preserve the canonical modern default.
 
 The wired method surface is: `initialize`, `notifications/initialized`, `notifications/cancelled`, `ping`, `tools/list`, `tools/call`, `discovery/list`, `resources/list`, `resources/templates/list`, `resources/read`, `resources/subscribe`, `resources/unsubscribe`, `prompts/list`, `prompts/get`, `logging/setLevel`, `completion/complete`, `tasks/create`, `tasks/get`, `tasks/result`, `tasks/cancel`. The task extension requires an explicitly negotiated tasks capability and persisted canonical Sa-plan ownership; cancellation acknowledgement remains distinct from a stopped effect. Subscription IDs are principal-prefixed and stores are bounded. Notifications remain silent.
 

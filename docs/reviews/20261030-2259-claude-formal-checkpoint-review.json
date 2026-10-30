@@ -1,0 +1,338 @@
+{
+  "schema": "uos.independent-checkpoint-review.v1",
+  "review": {
+    "reviewer": "claude-fable-5.1-max",
+    "audit_target_commit_id": "680e3421006c1851e675c1b131c2bf3966f93b89",
+    "verdict": "PASS",
+    "checkpoint_tag_push_approved": true,
+    "checked_surfaces": [
+      "var/harness/20261030-2215-formal-checkpoint/stage-a-handoff.json (read; receipt/journal sha256 inside it re-verified against on-disk bytes)",
+      "formal/lean/McpSymbiosis101FormalImpact.lean (read in full; sha256 a16d51b0... matches receipt; 24 theorems counted; 0 sorry/admit/axiom; lean-impact.json exit 0 with empty log e3b0c442...)",
+      "formal/quint/mcp_symbiosis_101_cutover.qnt (read in full; sha256 bc2eb4f7... matches; step/call credential sharing analysed)",
+      "formal/z3/20261030-2215-mcp-symbiosis-impact.smt2 (read in full; sha256 21d43d7c... matches; z3-impact.log shows sat + witness, unsat, unsat; independent oracle 36 witnesses reproduced by hand as 4x3x3)",
+      "docs/reviews/20261030-2215-formal-math-system-verification-receipt.json (lines 1-2070 and 2690-2770, 3980-4037 read; all command ids enumerated; sha256 85afe79f... matches handoff)",
+      "var/harness/20261030-2215-formal-checkpoint/M1-integrity.json, M2-calculation.json, M3-calculation.json, M4-calculation.json (all arithmetic recomputed)",
+      "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md (13 sections in order; ASCII/Mermaid edge sets identical; sha256 7a98dbbe... matches handoff; journal-check-final exit 0)",
+      "var/harness/20261030-2215-formal-checkpoint/{lean-scan.json,lean-impact.json,lean-impact.log,z3-impact.log,z3-independent-oracle.json,mutant-hmac.log,mutant-owner.log,mutant-owner.lean,quint-invNegativeControlNoAllFourAgentsComplete.log,quint-invForgedHmacNeverMutatesLedger.log,quint-unit-controls.log,journal-check-final.json,capsule-post-docs.json,final-scope-secret-scan.json}",
+      "var/releases/ecology/current-mcp-release (points at 20261030-1811-79c8aa73...; capsule verify receipts exit 0, 3457 inputs, 0 differences)",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/wire.gleam:105-126 (public args decoded as decode.dict(decode.string, decode.string) at line 116)",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam:218-300, 300-380, 520-550, 840-900, 2985-3095 (zenoh_subscriber_enabled conditions; production idle 30_000; public_routes 65/21/15/101; handle_zenoh_with_secret dispatches route \"public\" only; zenoh_raw_with_secret maps every Error to None, i.e. no reply)",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam:1-200 (HMAC-SHA256 envelope signature; check_signature failure returns ToolError before any dispatch)",
+      "apps/cepaf_gleam/src/mcp_stdio_ffi.erl:305-475 (3-slot atomics; window = max(1000, Idle*2) = 60s; alive requires registered owner pid alive; one persistent_term put per worker lifetime; gen_tcp:recv idle timeout closes socket and clears connected)",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/registry.gleam:1-100, 140-210 and mcp/tools.gleam:10-65 (public route specs = all 65 catalog definitions; 12 unavailable_tools enumerated; 65 name: entries counted)",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/{admission,planning_intents,development,operations,successor_mcp}.gleam (Uncertain latch and reconcile located)",
+      "sha256sum of the six audited artifacts; secret pattern greps over the checkpoint directory and receipt (only a WWW-Authenticate challenge string and placeholder docs matched)"
+    ],
+    "blocking_findings": [],
+    "non_blocking_observations": [
+      "N-01 (narrative accuracy, highest priority to correct): the Lean header (lines 5-6), journal section 5 ('not twelve unavailable tools') and receipt model_to_implementation_limits[3] all say the twelve non-operational public specs are 'protocol facilities'. Pinned source contradicts this: registry.gleam:77 builds the public plane from tools.get_tool_definitions() (65 definitions, counted), and tools.gleam:18-22 declares exactly 12 unavailable_tools (control_loop, safety_status, run_selfcheck, registry_status, run_gate, zk_search, sa_bridge_submit, vault_status, vault_list_secrets, vault_policy_get, vault_audit_tail, vault_health). M1-integrity.json's own public partition enumerates precisely those twelve. The protocol methods (initialize, ping, tools/list, resources/*, prompts/*, tasks/*, logging/setLevel, completion/complete) are 17 and are not counted in the 101. The Lean identifier publicGatedUnavailable is therefore the accurate name and the 'facilities' gloss is the error; it was inherited from AK-47 rule MCP-01/MCP-06 wording. The arithmetic 53+12=65, the live tools/list count of 53, all pins and all admission states are unaffected. Recommend correcting the three Stage A sentences (and the rule text under its own task) so the checkpoint does not propagate the wrong characterization.",
+      "N-02: atomics_freshness_equivalence is a definitional tautology (tupleFreshness and atomicsFreshness both alias freshness, proof rfl). It has zero refutation power and must not be cited as evidence that the atomics refactor refines the tuple semantics. Source does implement three atomics slots with window = Idle*2 (mcp_stdio_ffi.erl:327-367); that correspondence is by inspection, not by this theorem.",
+      "N-03: several of the 24 theorems restate definitions rather than test them: no_per_chunk_global_gc_trigger (constant 0), pt_writes_* (ptWritesAtomicsDesign is the constant 1), application_not_admitted, provenance_ceiling, sandboxed_worker_non_escalation (identity function), traceability_13d_conservation (transition never touches coordinates), pairwise_disjoint (tagged-pair identity, disclosed in journal section 9). They are honest as model statements under the file's 'no extraction' header, but the load-bearing theorems are authorization_iff, forged_hmac_silent_drop_non_interference, zenoh_public_route_only, sse_idle_deadline_fail_closed, dead_owner_fail_closed, stdio_excludes_zenoh_subscriber, public_decoder_iff_all_strings, string_value_iff, only_reconcile_resolves_uncertain and ev_admission_bounded; each of those was cross-checked against source and found faithful (public-only dispatch at runtime_gateway.gleam:3031, silent drop via result.unwrap(None) at :3091, enabled predicate at :234-239, owner-alive check at mcp_stdio_ffi.erl:350-353, string-only decoder at wire.gleam:116).",
+      "N-04: Quint step passes the same nondeterministic boolean for bearer and hmac (call(a,t,b,b)). No coverage is lost: authenticated consults only the transport-relevant credential (bearer is ignored when t=zenoh, hmac when t=http) and forgedMutation depends only on hmac, so t=zenoh with b=false exercises the forged path in random runs (confirmed in the positive-invariant trace log), and forgedHmacControl exercises (bearer=true, hmac=false) explicitly. No invariant verdict would change with independent booleans. The connected/tick/reconnect/lastChunk state is referenced by no invariant, so the 30s deadline is verified only in Lean. The five positive invariants hold largely by construction of the call action; their sensitivity is established by the HMAC mutant (genuine QNT508 expect failure) and the negative control (genuine 10-step all-four-agents violation trace), not by invariant strength.",
+      "N-05: Z3 Block 3 asserts alpha = 48/49 but the contraction constraint uses the literal 1/49; consistent with nextV = (1-alpha)V, alpha is documentary only. Blocks 1-3 behave as claimed (sat with authorized/executeEffect witness, then unsat, unsat); Block 2's seven disjuncts are each contradictory under the define-funs; Block 3 reduces to 101=101 and V>=0.",
+      "N-06: M1-M4 arithmetic recomputed and found sound: successes 16,733 and failures 115 sum from the ten groups; Beta(16734,116) mean 0.99311573; decay weights (e.g. 0.99942402 at 502.7s) and decayed alpha/beta 16724.37/115.93 reproduce; the one-sided 95% lower bound 0.9920354 agrees with a Wilson-Hilferty Gamma approximation (about 0.992032); quantile controls and Brier scores 0.64 and 0.0025 are correct; M2 deltas and contraction rates 48/49 and 1 are correct; M4 means, second moments, rho (0.00445, 0.03439) and Pollaczek-Khinchine waits reproduce. All four files label assumptions (exchangeability, Poisson arrivals, cost-model only, not runtime Lyapunov) and assign no admission threshold.",
+      "N-07: the audit prompt located the Uncertain Andon latch in admission.gleam; that file contains no Uncertain/reconcile logic. The latch is planning_intents.gleam:1572-1584 (planning_andon_held unless a bound resolution sidecar) and development.gleam:1173 (effect_outcome_unknown_reconcile_without_retry), with reconcile at operations.gleam:3609; the Lean attemptDispatch/reconcileIntent model corresponds to these.",
+      "N-08: jj revision identity was not independently re-observed by this session (the jj command required approval). It is corroborated by the final-scope-secret-scan receipt's embedded jj status (@ = uxswwyvm 680e3421 with no description; parent pmxqwosn 981a668e main*) and by exact sha256 agreement of all five artifacts and the journal. Because @ carries no description, a Stage C jj describe will mint a new commit id for change uxswwyvm; the recovery tag must bind to the final commit, and tree equality with 680e3421 should be verified before pushing.",
+      "N-09: journal ticks CHK-09-MATH for completion of the operator-defined M1-M4 calculations; the contract's H>=2.50 bits, CCM, D_EA and ITQS gates were not measured in this stage and the tick should not be read as those thresholds passing.",
+      "N-10: the machine receipt's storage section carries the raw NVMe serial literal; the journal narrative is redacted as INV-JRN-07 requires, and the literal also appears verbatim in canonical rule files, so this is not a secret leak. Secret scan: 13 credential patterns, 0 matches; secret_values_recorded false on all transports; only a WWW-Authenticate challenge string surfaced in logs.",
+      "N-11: cosmetic: the Quint header comment is missing spaces ('is30s', 'is60s'); M4 warm HTTP samples come from V01 (mean 4.45ms) while V02 recorded lower samples (0.94-3.42ms); M4 labels its source correctly."
+    ],
+    "summary": "PASS. No mathematical error, no vacuous-by-cheating proof, no capsule or pin drift, no secret leak and no false admission claim was found in @ 680e3421. All six artifact digests match the receipt and handoff byte for byte; the active capsule 20261030-1811-79c8aa73... remains current with 3457/3457 source inputs and 11/11 client pins unchanged; Lean (24 theorems, 0 forbidden tokens, exit 0), Quint (5 invariants held at 200 samples/15 steps, negative control genuinely violated, 4 deterministic controls passed), Z3 (sat/unsat/unsat with a 36-witness independent oracle) and both mutants (genuine prover rejections) behave as recorded; M1-M4 arithmetic reproduces. The 115 full-suite failures, checklist/doctor HOLD, wire.gleam:116 string-only boundary, application_admitted=false, system_admission NOT_ADMITTED, EV ceiling 93 and nine OPEN findings are candidly recorded and no document claims admission, so tagging and pushing this revision as an immutable recovery checkpoint is approved. One narrative inaccuracy should be corrected rather than propagated: the twelve non-operational public specs are declared tools with no runtime binding (tools.unavailable_tools), exactly as the Lean identifier publicGatedUnavailable says, not protocol facilities as the Lean header, journal section 5 and receipt limits claim. Stage C must also re-bind the tag to the final described commit id for change uxswwyvm and verify tree equality with 680e3421 before pushing."
+  },
+  "verbatim_review_output": "{\n  \"reviewer\": \"claude-fable-5.1-max\",\n  \"audit_target_commit_id\": \"680e3421006c1851e675c1b131c2bf3966f93b89\",\n  \"verdict\": \"PASS\",\n  \"checkpoint_tag_push_approved\": true,\n  \"checked_surfaces\": [\n    \"var/harness/20261030-2215-formal-checkpoint/stage-a-handoff.json (read; receipt/journal sha256 inside it re-verified against on-disk bytes)\",\n    \"formal/lean/McpSymbiosis101FormalImpact.lean (read in full; sha256 a16d51b0... matches receipt; 24 theorems counted; 0 sorry/admit/axiom; lean-impact.json exit 0 with empty log e3b0c442...)\",\n    \"formal/quint/mcp_symbiosis_101_cutover.qnt (read in full; sha256 bc2eb4f7... matches; step/call credential sharing analysed)\",\n    \"formal/z3/20261030-2215-mcp-symbiosis-impact.smt2 (read in full; sha256 21d43d7c... matches; z3-impact.log shows sat + witness, unsat, unsat; independent oracle 36 witnesses reproduced by hand as 4x3x3)\",\n    \"docs/reviews/20261030-2215-formal-math-system-verification-receipt.json (lines 1-2070 and 2690-2770, 3980-4037 read; all command ids enumerated; sha256 85afe79f... matches handoff)\",\n    \"var/harness/20261030-2215-formal-checkpoint/M1-integrity.json, M2-calculation.json, M3-calculation.json, M4-calculation.json (all arithmetic recomputed)\",\n    \"docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md (13 sections in order; ASCII/Mermaid edge sets identical; sha256 7a98dbbe... matches handoff; journal-check-final exit 0)\",\n    \"var/harness/20261030-2215-formal-checkpoint/{lean-scan.json,lean-impact.json,lean-impact.log,z3-impact.log,z3-independent-oracle.json,mutant-hmac.log,mutant-owner.log,mutant-owner.lean,quint-invNegativeControlNoAllFourAgentsComplete.log,quint-invForgedHmacNeverMutatesLedger.log,quint-unit-controls.log,journal-check-final.json,capsule-post-docs.json,final-scope-secret-scan.json}\",\n    \"var/releases/ecology/current-mcp-release (points at 20261030-1811-79c8aa73...; capsule verify receipts exit 0, 3457 inputs, 0 differences)\",\n    \"apps/cepaf_gleam/src/cepaf_gleam/mcp/wire.gleam:105-126 (public args decoded as decode.dict(decode.string, decode.string) at line 116)\",\n    \"apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam:218-300, 300-380, 520-550, 840-900, 2985-3095 (zenoh_subscriber_enabled conditions; production idle 30_000; public_routes 65/21/15/101; handle_zenoh_with_secret dispatches route \\\"public\\\" only; zenoh_raw_with_secret maps every Error to None, i.e. no reply)\",\n    \"apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam:1-200 (HMAC-SHA256 envelope signature; check_signature failure returns ToolError before any dispatch)\",\n    \"apps/cepaf_gleam/src/mcp_stdio_ffi.erl:305-475 (3-slot atomics; window = max(1000, Idle*2) = 60s; alive requires registered owner pid alive; one persistent_term put per worker lifetime; gen_tcp:recv idle timeout closes socket and clears connected)\",\n    \"apps/cepaf_gleam/src/cepaf_gleam/mcp/registry.gleam:1-100, 140-210 and mcp/tools.gleam:10-65 (public route specs = all 65 catalog definitions; 12 unavailable_tools enumerated; 65 name: entries counted)\",\n    \"apps/cepaf_gleam/src/cepaf_gleam/harness/{admission,planning_intents,development,operations,successor_mcp}.gleam (Uncertain latch and reconcile located)\",\n    \"sha256sum of the six audited artifacts; secret pattern greps over the checkpoint directory and receipt (only a WWW-Authenticate challenge string and placeholder docs matched)\"\n  ],\n  \"blocking_findings\": [],\n  \"non_blocking_observations\": [\n    \"N-01 (narrative accuracy, highest priority to correct): the Lean header (lines 5-6), journal section 5 ('not twelve unavailable tools') and receipt model_to_implementation_limits[3] all say the twelve non-operational public specs are 'protocol facilities'. Pinned source contradicts this: registry.gleam:77 builds the public plane from tools.get_tool_definitions() (65 definitions, counted), and tools.gleam:18-22 declares exactly 12 unavailable_tools (control_loop, safety_status, run_selfcheck, registry_status, run_gate, zk_search, sa_bridge_submit, vault_status, vault_list_secrets, vault_policy_get, vault_audit_tail, vault_health). M1-integrity.json's own public partition enumerates precisely those twelve. The protocol methods (initialize, ping, tools/list, resources/*, prompts/*, tasks/*, logging/setLevel, completion/complete) are 17 and are not counted in the 101. The Lean identifier publicGatedUnavailable is therefore the accurate name and the 'facilities' gloss is the error; it was inherited from AK-47 rule MCP-01/MCP-06 wording. The arithmetic 53+12=65, the live tools/list count of 53, all pins and all admission states are unaffected. Recommend correcting the three Stage A sentences (and the rule text under its own task) so the checkpoint does not propagate the wrong characterization.\",\n    \"N-02: atomics_freshness_equivalence is a definitional tautology (tupleFreshness and atomicsFreshness both alias freshness, proof rfl). It has zero refutation power and must not be cited as evidence that the atomics refactor refines the tuple semantics. Source does implement three atomics slots with window = Idle*2 (mcp_stdio_ffi.erl:327-367); that correspondence is by inspection, not by this theorem.\",\n    \"N-03: several of the 24 theorems restate definitions rather than test them: no_per_chunk_global_gc_trigger (constant 0), pt_writes_* (ptWritesAtomicsDesign is the constant 1), application_not_admitted, provenance_ceiling, sandboxed_worker_non_escalation (identity function), traceability_13d_conservation (transition never touches coordinates), pairwise_disjoint (tagged-pair identity, disclosed in journal section 9). They are honest as model statements under the file's 'no extraction' header, but the load-bearing theorems are authorization_iff, forged_hmac_silent_drop_non_interference, zenoh_public_route_only, sse_idle_deadline_fail_closed, dead_owner_fail_closed, stdio_excludes_zenoh_subscriber, public_decoder_iff_all_strings, string_value_iff, only_reconcile_resolves_uncertain and ev_admission_bounded; each of those was cross-checked against source and found faithful (public-only dispatch at runtime_gateway.gleam:3031, silent drop via result.unwrap(None) at :3091, enabled predicate at :234-239, owner-alive check at mcp_stdio_ffi.erl:350-353, string-only decoder at wire.gleam:116).\",\n    \"N-04: Quint step passes the same nondeterministic boolean for bearer and hmac (call(a,t,b,b)). No coverage is lost: authenticated consults only the transport-relevant credential (bearer is ignored when t=zenoh, hmac when t=http) and forgedMutation depends only on hmac, so t=zenoh with b=false exercises the forged path in random runs (confirmed in the positive-invariant trace log), and forgedHmacControl exercises (bearer=true, hmac=false) explicitly. No invariant verdict would change with independent booleans. The connected/tick/reconnect/lastChunk state is referenced by no invariant, so the 30s deadline is verified only in Lean. The five positive invariants hold largely by construction of the call action; their sensitivity is established by the HMAC mutant (genuine QNT508 expect failure) and the negative control (genuine 10-step all-four-agents violation trace), not by invariant strength.\",\n    \"N-05: Z3 Block 3 asserts alpha = 48/49 but the contraction constraint uses the literal 1/49; consistent with nextV = (1-alpha)V, alpha is documentary only. Blocks 1-3 behave as claimed (sat with authorized/executeEffect witness, then unsat, unsat); Block 2's seven disjuncts are each contradictory under the define-funs; Block 3 reduces to 101=101 and V>=0.\",\n    \"N-06: M1-M4 arithmetic recomputed and found sound: successes 16,733 and failures 115 sum from the ten groups; Beta(16734,116) mean 0.99311573; decay weights (e.g. 0.99942402 at 502.7s) and decayed alpha/beta 16724.37/115.93 reproduce; the one-sided 95% lower bound 0.9920354 agrees with a Wilson-Hilferty Gamma approximation (about 0.992032); quantile controls and Brier scores 0.64 and 0.0025 are correct; M2 deltas and contraction rates 48/49 and 1 are correct; M4 means, second moments, rho (0.00445, 0.03439) and Pollaczek-Khinchine waits reproduce. All four files label assumptions (exchangeability, Poisson arrivals, cost-model only, not runtime Lyapunov) and assign no admission threshold.\",\n    \"N-07: the audit prompt located the Uncertain Andon latch in admission.gleam; that file contains no Uncertain/reconcile logic. The latch is planning_intents.gleam:1572-1584 (planning_andon_held unless a bound resolution sidecar) and development.gleam:1173 (effect_outcome_unknown_reconcile_without_retry), with reconcile at operations.gleam:3609; the Lean attemptDispatch/reconcileIntent model corresponds to these.\",\n    \"N-08: jj revision identity was not independently re-observed by this session (the jj command required approval). It is corroborated by the final-scope-secret-scan receipt's embedded jj status (@ = uxswwyvm 680e3421 with no description; parent pmxqwosn 981a668e main*) and by exact sha256 agreement of all five artifacts and the journal. Because @ carries no description, a Stage C jj describe will mint a new commit id for change uxswwyvm; the recovery tag must bind to the final commit, and tree equality with 680e3421 should be verified before pushing.\",\n    \"N-09: journal ticks CHK-09-MATH for completion of the operator-defined M1-M4 calculations; the contract's H>=2.50 bits, CCM, D_EA and ITQS gates were not measured in this stage and the tick should not be read as those thresholds passing.\",\n    \"N-10: the machine receipt's storage section carries the raw NVMe serial literal; the journal narrative is redacted as INV-JRN-07 requires, and the literal also appears verbatim in canonical rule files, so this is not a secret leak. Secret scan: 13 credential patterns, 0 matches; secret_values_recorded false on all transports; only a WWW-Authenticate challenge string surfaced in logs.\",\n    \"N-11: cosmetic: the Quint header comment is missing spaces ('is30s', 'is60s'); M4 warm HTTP samples come from V01 (mean 4.45ms) while V02 recorded lower samples (0.94-3.42ms); M4 labels its source correctly.\"\n  ],\n  \"summary\": \"PASS. No mathematical error, no vacuous-by-cheating proof, no capsule or pin drift, no secret leak and no false admission claim was found in @ 680e3421. All six artifact digests match the receipt and handoff byte for byte; the active capsule 20261030-1811-79c8aa73... remains current with 3457/3457 source inputs and 11/11 client pins unchanged; Lean (24 theorems, 0 forbidden tokens, exit 0), Quint (5 invariants held at 200 samples/15 steps, negative control genuinely violated, 4 deterministic controls passed), Z3 (sat/unsat/unsat with a 36-witness independent oracle) and both mutants (genuine prover rejections) behave as recorded; M1-M4 arithmetic reproduces. The 115 full-suite failures, checklist/doctor HOLD, wire.gleam:116 string-only boundary, application_admitted=false, system_admission NOT_ADMITTED, EV ceiling 93 and nine OPEN findings are candidly recorded and no document claims admission, so tagging and pushing this revision as an immutable recovery checkpoint is approved. One narrative inaccuracy should be corrected rather than propagated: the twelve non-operational public specs are declared tools with no runtime binding (tools.unavailable_tools), exactly as the Lean identifier publicGatedUnavailable says, not protocol facilities as the Lean header, journal section 5 and receipt limits claim. Stage C must also re-bind the tag to the final described commit id for change uxswwyvm and verify tree equality with 680e3421 before pushing.\"\n}\n",
+  "source": {
+    "path": "/home/an/.gemini/antigravity-cli/brain/e5e879c0-4e8b-4df7-8fcf-d789d1a8d97b/scratch/stage_b_claude_checkpoint_audit_result.txt",
+    "sha256": "447c831ac3a1a4bfefdcce51946c67286e28d83326b0f5bbcf95e2270a226d93",
+    "authority": "Completed independent review supplied by operator; no fabricated provider signature"
+  },
+  "post_review_disposition": {
+    "observed_at": "2026-10-30T22:08:19.304Z",
+    "status": "REQUESTED_PRECISION_REFINEMENTS_VERIFIED",
+    "N_01": {
+      "status": "CORRECTED",
+      "description": "Public65 comprises53 operational and12 declared gated/unavailable tool definitions; protocol methods counted separately. Updated Lean header, journal, receipt limit and five in-scope rule copies."
+    },
+    "N_02": {
+      "status": "STRENGTHENED_AND_CHECKED",
+      "description": "Distinct TupleState and Fin3 integer-slot representation; encode/decode freshness equivalence proved by Boolean case analysis. Normalized model, not literal ERTS slot layout or concurrent linearizability proof.",
+      "lean_exit": 0,
+      "encoding_mutant_exit": 1
+    },
+    "N_11": {
+      "status": "CORRECTED",
+      "description": "Quint header spaces and journal prose spacing corrected; paired diagram retained."
+    },
+    "unchanged_capsule_source_inputs": 3457,
+    "unchanged_client_pins": 11,
+    "host_config_edits": 0,
+    "pre_stage_c_claude_global_change": {
+      "path": "/home/an/.claude.json",
+      "mtime": "2026-10-30T21:47:16.090Z",
+      "before_stage_c": true,
+      "UOS_pins_unchanged": true
+    },
+    "fast_verification": [
+      {
+        "id": "lean-final",
+        "command": [
+          "/home/an/NAS-setup/uos/tools/lean",
+          "formal/lean/McpSymbiosis101FormalImpact.lean"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.319Z",
+        "elapsed_ms": 830,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/lean-final.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "quint-typecheck-final",
+        "command": [
+          "/home/an/NAS-setup/uos/tools/quint",
+          "typecheck",
+          "formal/quint/mcp_symbiosis_101_cutover.qnt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.322Z",
+        "elapsed_ms": 603,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/quint-typecheck-final.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "quint-default-tests",
+        "command": [
+          "tools/quint",
+          "test",
+          "--main=mcp_symbiosis_101_cutover",
+          "formal/quint/mcp_symbiosis_101_cutover.qnt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:04:54.490Z",
+        "elapsed_ms": 429,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/quint-default-tests.log",
+        "log_sha256": "281b24984d835232649c3de23c02ec5ad0304bdca0525f71e410e0a67caa6023"
+      },
+      {
+        "id": "quint-controls",
+        "command": [
+          "tools/quint",
+          "test",
+          "--main=mcp_symbiosis_101_cutover",
+          "--match=^(allFourReachable|forgedHmacControl|uncertainControl|pinControl)$",
+          "formal/quint/mcp_symbiosis_101_cutover.qnt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:04:54.999Z",
+        "elapsed_ms": 546,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/quint-controls.log",
+        "log_sha256": "28cd2b2cf9768fe3a05d80cfabfd47d68a7ae97ebd319dcdba1e3d1cfb1be69a"
+      },
+      {
+        "id": "z3",
+        "command": [
+          "tools/z3",
+          "-smt2",
+          "formal/z3/20261030-2215-mcp-symbiosis-impact.smt2"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:04:55.614Z",
+        "elapsed_ms": 27,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/z3.log",
+        "log_sha256": "3c24782cbaec0bc7070bf2101a263dde83ef9effce856a98031ec27b707df444"
+      },
+      {
+        "id": "journal-final",
+        "command": [
+          "bash",
+          "tools/journal-check",
+          "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.323Z",
+        "elapsed_ms": 20,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/journal-final.log",
+        "log_sha256": "f8c27400159802407457ac8a48e081eff721129d136ce34be7768425bbdb6b27"
+      },
+      {
+        "id": "diagram-final",
+        "command": [
+          "bash",
+          "tools/diagram-check",
+          "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.326Z",
+        "elapsed_ms": 19,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/diagram-final.log",
+        "log_sha256": "84583334943e1a3d501ac739ac350b1f9b9eab0551b29b96577c900e733faa4e"
+      },
+      {
+        "id": "km-final",
+        "command": [
+          "bash",
+          "tools/km-gate",
+          "--gate"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.329Z",
+        "elapsed_ms": 1039,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/km-final.log",
+        "log_sha256": "1e78c9a8b67cea69717c10fa70a21a69cd9299214940884b605ea3ed9f224648"
+      },
+      {
+        "id": "capsule-before-publication",
+        "command": [
+          "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+          "unix.cma",
+          "str.cma",
+          "tools/ecology_release.ml",
+          "verify",
+          "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.332Z",
+        "elapsed_ms": 1678,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/capsule-before-publication.log",
+        "log_sha256": "92d0f5c7622740ad906ce0fd713a32821c3855e40b69268259af264d6c283f1f"
+      },
+      {
+        "id": "preflight-before-close",
+        "command": [
+          "bash",
+          "tools/preflight",
+          "--receipt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:08:16.612Z",
+        "elapsed_ms": 2555,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/preflight-before-close.log",
+        "log_sha256": "e0f0641d8ada4a61685c47271e1c2b3c79af545377e47dfc77f0b9db7408db7e"
+      }
+    ],
+    "final_sha256_digests": [
+      {
+        "path": ".agents/agents/20261001-1117-full-symbiosis-supervisor.md",
+        "sha256": "d9e254d96574a01723cd96c0e74426599ddb80211c3dc75a41d044385a289f20"
+      },
+      {
+        "path": ".agents/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "sha256": "64a16d8613174b6e007db2e0d180c34c5ad7d8d46b81bbfc488cc4440ccfd13a"
+      },
+      {
+        "path": ".claude/agents/20261001-1117-full-symbiosis-supervisor.md",
+        "sha256": "d9e254d96574a01723cd96c0e74426599ddb80211c3dc75a41d044385a289f20"
+      },
+      {
+        "path": ".claude/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "sha256": "64a16d8613174b6e007db2e0d180c34c5ad7d8d46b81bbfc488cc4440ccfd13a"
+      },
+      {
+        "path": ".codex/agents/20261001-1117-full-symbiosis-supervisor.md",
+        "sha256": "d9e254d96574a01723cd96c0e74426599ddb80211c3dc75a41d044385a289f20"
+      },
+      {
+        "path": ".codex/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "sha256": "64a16d8613174b6e007db2e0d180c34c5ad7d8d46b81bbfc488cc4440ccfd13a"
+      },
+      {
+        "path": ".gemini/agents/20261001-1117-full-symbiosis-supervisor.md",
+        "sha256": "d9e254d96574a01723cd96c0e74426599ddb80211c3dc75a41d044385a289f20"
+      },
+      {
+        "path": ".gemini/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "sha256": "64a16d8613174b6e007db2e0d180c34c5ad7d8d46b81bbfc488cc4440ccfd13a"
+      },
+      {
+        "path": "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "sha256": "64a16d8613174b6e007db2e0d180c34c5ad7d8d46b81bbfc488cc4440ccfd13a"
+      },
+      {
+        "path": "docs/design/20260907-1113-uos-agentic-infrastructure-reuse-and-placement.md",
+        "sha256": "1a54b7fdc4a9f8a4e454df1b3f0252a7bbd9f30138e8d5886525bb19a066035b"
+      },
+      {
+        "path": "docs/journal/20261030-1512-mcp-full-service-cutover-journal.md",
+        "sha256": "97550f30e4f02081024b239f24294908af3d3c4a4bab57d90a4b94ec7191d82b"
+      },
+      {
+        "path": "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md",
+        "sha256": "0ad296461358a27f89d0e924ba4e995ab86da75e5cc6aa78d254cdcfd828b8de"
+      },
+      {
+        "path": "docs/reviews/20261030-2215-formal-math-system-verification-receipt.json",
+        "sha256": "87d8d2318031e987ca4526726ded2b399947612604b049a8f7283b5244ed45ca"
+      },
+      {
+        "path": "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md",
+        "sha256": "78504c186aadcea275fe683a04a27b2a767a283e53e699b552e50c1474a2deae"
+      },
+      {
+        "path": "formal/lean/McpSymbiosis101FormalImpact.lean",
+        "sha256": "b8d6b7ef20e251c8d5ed066c6bf302e341cce708ff3bfafaa322d5e15286560f"
+      },
+      {
+        "path": "formal/quint/mcp_symbiosis_101_cutover.qnt",
+        "sha256": "6152210acf20ff9ef7ace533ecb4317999ff71af49e1590d6754b9d7fb06e42b"
+      },
+      {
+        "path": "formal/z3/20261030-2215-mcp-symbiosis-impact.smt2",
+        "sha256": "21d43d7ce29c7fcabc347fe6ae81cbf4c5834fdb6c563d211f378ef1c90f932b"
+      },
+      {
+        "path": "governance/agents/20261001-1118-skills/ak47-multi-agent-mcp-symbiosis/SKILL.md",
+        "sha256": "4fe3a80dc90b944d4bdf17a29fe6f5ddea57fa7f28ead84283567e7c174e0461"
+      },
+      {
+        "path": "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md",
+        "sha256": "0ff98d50f81ca5f36fc0e08bf51f29d4d0d43e63ddfd3ce478745381e331f84b"
+      },
+      {
+        "path": "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md",
+        "sha256": "b6b17ac9958c46f83db1375656edd05342c2d08fd6ebca298533f7e29dcc9460"
+      },
+      {
+        "path": "governance/agents/20261001-1118-skills/production-readiness/SKILL.md",
+        "sha256": "1f8691e389b57885c4a1dd1aa378bab3899ca105ebd2edf121c5f67a978b1b8f"
+      }
+    ],
+    "self_digest_scope": "Review file self-hash excluded to avoid a circular hash; final commit/tag and external publication receipt bind the complete tree",
+    "audit_target_commit_id": "680e3421006c1851e675c1b131c2bf3966f93b89",
+    "operator_authorized_post_review_changes": true,
+    "application_admitted": false,
+    "system_admission": "NOT_ADMITTED",
+    "global_system_verification": "HOLD",
+    "admitted_ev_ceiling": 93,
+    "known_full_suite_failures": 115,
+    "checkpoint_tag_push_approved": true,
+    "secret_values_recorded": false
+  }
+}

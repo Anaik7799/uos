@@ -28,7 +28,7 @@ A declared route is **not** a connected route. Verify the live `describeNamespac
 
 ## 2. Protocol versions
 
-The server accepts MCP protocol versions **`2024-11-05`** (`Legacy20241105`) and **`2025-03-26`**, **`2025-06-18`**, **`2025-11-25`**, **`2026-07-28`** (`Modern20260728`), matching `mcp/version.gleam`. Negotiate one of these five revisions; unlisted revisions refuse with `UNSUPPORTED_PROTOCOL_VERSION`. Accepted modern revisions are echoed exactly. Each authenticated HTTP request must keep `Mcp-Protocol-Version` equal to any body `params.protocolVersion`.
+The canonical MCP protocol profiles are **`2024-11-05`** (`Legacy20241105`) and **`2026-07-28`** (`Modern20260728`), with compatibility aliases implemented in `mcp/version.gleam`. Negotiate a canonical profile revision; unsupported revisions refuse with `UNSUPPORTED_PROTOCOL_VERSION`. Accepted modern revisions are echoed exactly. Each authenticated HTTP request must keep `Mcp-Protocol-Version` equal to any body `params.protocolVersion`.
 
 ## Observed operational binding — S01..S04
 

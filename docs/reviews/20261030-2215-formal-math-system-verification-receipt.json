@@ -1,0 +1,4232 @@
+{
+  "schema": "uos.formal-math-system-verification.v1",
+  "stage": "A",
+  "status": "CHECKPOINT_REVIEW_PASS_GLOBAL_SYSTEM_HOLD",
+  "observed_at": "2026-10-30T21:41:49.348Z",
+  "operator_checkpoint_label": "20261030-2215; operator-requested filenames, not asserted observed UTC",
+  "plan_id": "20261030-2215-formal-math-verify-and-github-checkpoint",
+  "canonical_tasks": [
+    {
+      "id": "V01",
+      "state": "completed",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": null
+    },
+    {
+      "id": "V02",
+      "state": "completed",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": null
+    },
+    {
+      "id": "V03",
+      "state": "executing",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": 1793399552657664000
+    },
+    {
+      "id": "V04",
+      "state": "available",
+      "worker": null,
+      "attempt": 0,
+      "lease_until_ns": null
+    }
+  ],
+  "task_completion_semantics": "V01 analysis and V02 sweep are completed execution records, not passing readiness verdicts; V03 executing audit draft; V04 reserved",
+  "main_revision": "981a668e839566aa2f784a371a602c55db1ebcb2",
+  "comparison_range": "main@origin..main",
+  "comparison_summary": {
+    "path": "var/harness/20261030-2215-formal-checkpoint/impact-range.log",
+    "sha256": "124d0d0d1d8d105bb968f588d4a7d819fbb0368d39c3755e659b968286ecc402",
+    "changed_paths": 341
+  },
+  "working_copy_is_child_of_main": true,
+  "main_advanced": false,
+  "tag_created": false,
+  "origin_pushed": false,
+  "application_source_modified": false,
+  "artifacts": [
+    {
+      "path": "formal/lean/McpSymbiosis101FormalImpact.lean",
+      "sha256": "b8d6b7ef20e251c8d5ed066c6bf302e341cce708ff3bfafaa322d5e15286560f"
+    },
+    {
+      "path": "formal/quint/mcp_symbiosis_101_cutover.qnt",
+      "sha256": "6152210acf20ff9ef7ace533ecb4317999ff71af49e1590d6754b9d7fb06e42b"
+    },
+    {
+      "path": "formal/z3/20261030-2215-mcp-symbiosis-impact.smt2",
+      "sha256": "21d43d7ce29c7fcabc347fe6ae81cbf4c5834fdb6c563d211f378ef1c90f932b"
+    }
+  ],
+  "provers": [
+    {
+      "name": "lean",
+      "wrapper": "tools/lean",
+      "wrapper_sha256": "fa27fcff9814241a6a0093dc13f529781f2620ab4d7152f73c73447999600c6e",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "actual": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "actual_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550"
+    },
+    {
+      "name": "quint",
+      "wrapper": "tools/quint",
+      "wrapper_sha256": "26891097c110489bc67cb880512097eadd6047d366c4dea01fef4543b0f29daa",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+      "actual": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/bin/quint",
+      "actual_sha256": "190d69b28bd6ca6bd2f965e745b596b4b6b3ba7cb80e0b9e27ab36d8fe13f6f0"
+    },
+    {
+      "name": "z3",
+      "wrapper": "tools/z3",
+      "wrapper_sha256": "29641081f1d7ba9a168b8bd0e0b31bfff5cd281e53db7ffac79bb7a0ac67fae8",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/z3",
+      "actual": "/nix/store/xv5zrxcpp6qj1lkbq1kxj5xfv017v39n-z3-4.16.0/bin/z3",
+      "actual_sha256": "49162af210ee76b3e115e58b687c52f974d32124ce99dd8f42f2696af4a17b41"
+    }
+  ],
+  "versions_receipt": {
+    "id": "versions",
+    "command": [
+      "bash",
+      "-c",
+      "tools/lean --version; tools/quint --version; tools/z3 --version; erl -noshell -eval 'io:format(\"OTP ~s ERTS ~s~n\",[erlang:system_info(otp_release),erlang:system_info(version)]),halt().'"
+    ],
+    "cwd": "/home/an/NAS-setup/uos",
+    "observed_at": "2026-10-30T21:16:41.983Z",
+    "elapsed_ms": 397,
+    "exit_code": 0,
+    "signal": null,
+    "timed_out": false,
+    "log": "var/harness/20261030-2215-formal-checkpoint/versions.log",
+    "log_sha256": "705696899721a9fa2f003c9784970efd47acd741da82008c002787d72c64ac87"
+  },
+  "lean": [
+    {
+      "path": "formal/lean/McpSymbiosis101FormalImpact.lean",
+      "sha256": "b8d6b7ef20e251c8d5ed066c6bf302e341cce708ff3bfafaa322d5e15286560f",
+      "forbidden_proof_tokens": [],
+      "theorems": [
+        "public_route_sum",
+        "all_route_sum",
+        "pairwise_disjoint",
+        "authorization_iff",
+        "stdio_excludes_zenoh_subscriber",
+        "cross_process_mutex_exclusivity",
+        "forged_hmac_silent_drop_non_interference",
+        "zenoh_public_route_only",
+        "sse_idle_deadline_fail_closed",
+        "dead_owner_fail_closed",
+        "atomics_freshness_equivalence",
+        "pt_writes_nonincrease",
+        "pt_writes_strict_reduction",
+        "no_per_chunk_global_gc_trigger",
+        "uncertain_andon_latch",
+        "committed_receipt_idempotent",
+        "only_reconcile_resolves_uncertain",
+        "string_value_iff",
+        "public_decoder_iff_all_strings",
+        "provenance_ceiling",
+        "ev_admission_bounded",
+        "application_not_admitted",
+        "sandboxed_worker_non_escalation",
+        "traceability_13d_conservation"
+      ]
+    },
+    {
+      "path": "formal/lean/Traceability.lean",
+      "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c",
+      "forbidden_proof_tokens": [],
+      "theorems": [
+        "indicator_zero_for_unverified",
+        "transition_preserves_wf",
+        "sandboxed_no_escalation"
+      ]
+    },
+    {
+      "path": "formal/lean/TwoLattice_STM.lean",
+      "sha256": "bc0a280b22516a5b0b3cd57c3572f10db484564f74bd74fc8cf97be7ce64b9ef",
+      "forbidden_proof_tokens": [],
+      "theorems": [
+        "acquireLease_wf",
+        "lease_mutex",
+        "commit_strictly_monotonic",
+        "commitTx_wf",
+        "two_lattice_telemetry_non_interference",
+        "two_lattice_partition_non_interference",
+        "reader_snapshot_valid",
+        "expired_lease_cannot_commit"
+      ]
+    },
+    {
+      "path": "formal/lean/DevelopmentCoreGate.lean",
+      "sha256": "ecdc8f01fdf0de7262ad8a48b7ed9299603ecb4246d23d413df2b0fdfc2392a4",
+      "forbidden_proof_tokens": [],
+      "theorems": [
+        "normal_requires_healthy_core",
+        "failing_core_blocks_normal",
+        "pause_blocks_normal",
+        "stale_authority_blocks_normal",
+        "stale_evidence_blocks_normal",
+        "unloaded_policy_blocks_normal",
+        "unbounded_isolation_blocks_normal",
+        "unverified_rollback_blocks_normal",
+        "recovery_requires_repair_scope",
+        "pause_blocks_recovery",
+        "normal_step_starts_with_healthy_baseline",
+        "candidate_edit_preserves_baseline_identity",
+        "candidate_edit_preserves_baseline_health",
+        "promotion_requires_green_candidate",
+        "promotion_requires_independent_review",
+        "failed_baseline_requires_repair_promotion",
+        "frozen_core_is_dependency_closed",
+        "frozen_core_excludes_deferred_tasks",
+        "existing_hive_workflow_is_in_core",
+        "missing_planning_capability_is_in_core",
+        "closed_sets_contain_needed",
+        "core_nodes_are_needed",
+        "core_is_least_closed_required_set",
+        "stale_owner_is_refused",
+        "stale_attempt_is_refused",
+        "stale_epoch_is_refused",
+        "wrong_boot_is_refused",
+        "full_effect_horizon_is_fenced",
+        "wrong_host_is_refused",
+        "duplicate_logical_id_cannot_prepare",
+        "unknown_outcome_cannot_redispatch",
+        "completed_outcome_cannot_redispatch",
+        "reservation_preserves_logical_identity",
+        "reserved_record_cannot_redispatch",
+        "undetermined_observation_preserves_stop",
+        "confirmed_effect_remains_nonrepeatable",
+        "unknown_leaf_cannot_pass",
+        "failed_leaf_cannot_pass",
+        "healthy_join_requires_healthy_children",
+        "accepted_holon_has_only_healthy_required_descendants",
+        "subset_cannot_cost_more",
+        "child_cannot_escalate_authority",
+        "arbitrary_depth_growth_cannot_escalate",
+        "grant_budget_limits_horizon",
+        "grant_budget_requires_strict_deadline",
+        "replay_requires_matching_signature",
+        "failed_or_unverified_receipt_cannot_replay"
+      ]
+    },
+    {
+      "path": "formal/lean/IntentSafety.lean",
+      "sha256": "e38bac4849c96c2a742486e02fd4df2e16c71d62340f13ce2c7b20bb52203035",
+      "forbidden_proof_tokens": [],
+      "theorems": [
+        "storage_serial_lock_invariant"
+      ]
+    },
+    {
+      "path": "formal/lean/Lyapunov_Stability.lean",
+      "sha256": "3f63aba3c49402c49c97a330706d728ed9d12dd1922df2e36edff1dc70ba2a4a",
+      "forbidden_proof_tokens": [],
+      "theorems": [
+        "divergent_state_triggers_minimal_concurrency"
+      ]
+    }
+  ],
+  "quint": {
+    "positive_invariants": [
+      "invAtMostOneZenohSubscriber",
+      "invForgedHmacNeverMutatesLedger",
+      "invUncertainNeverBlindlyReplayed",
+      "invPinMismatchRefused",
+      "invEvCeiling93Preserved"
+    ],
+    "max_steps": 15,
+    "max_samples": 200,
+    "seed": 20261030,
+    "negative_control": {
+      "invariant": "invNegativeControlNoAllFourAgentsComplete",
+      "expected_exit_nonzero": true,
+      "observed_exit": 1,
+      "violation": true
+    },
+    "deterministic_controls": 4,
+    "existing_models": [
+      "parity_frontier.reqClosed",
+      "intent_invariants.invStorageLockPreserved",
+      "intent_invariants.invDisjointResolution"
+    ],
+    "scope": "Bounded simulation of a hand-authored transition model; not exhaustive temporal or extracted implementation verification"
+  },
+  "z3": {
+    "expected_sequence": [
+      "sat",
+      "unsat",
+      "unsat"
+    ],
+    "actual_sequence": [
+      "sat",
+      "unsat",
+      "unsat"
+    ],
+    "independent_oracle": {
+      "status": "PASS",
+      "boolean_assignments": 1024,
+      "authorized_effect_witnesses": 36,
+      "safety_counterexamples": 0,
+      "arithmetic_samples": 50050,
+      "route_sum": 101,
+      "scope": "Independent finite evaluator cross-check; not a proof for unbounded code behavior"
+    },
+    "scope": "QF_LIRA transition safety and conditional affine contraction; cryptography is represented by verified/not-verified booleans"
+  },
+  "mutant_controls": {
+    "hmac": {
+      "id": "mutant-hmac",
+      "command": [
+        "tools/quint",
+        "test",
+        "--main=mcp_symbiosis_101_cutover",
+        "--match=forgedHmacControl",
+        "var/harness/20261030-2215-formal-checkpoint/mutant-hmac.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:45.508Z",
+      "elapsed_ms": 541,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/mutant-hmac.log",
+      "log_sha256": "0ed18f4a0094080cdb001604929e6b17732daf17f50f6cd627e83248153ef832"
+    },
+    "dead_owner": {
+      "id": "mutant-owner",
+      "command": [
+        "tools/lean",
+        "var/harness/20261030-2215-formal-checkpoint/mutant-owner.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:46.145Z",
+      "elapsed_ms": 804,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/mutant-owner.log",
+      "log_sha256": "e59d18d1451beb3842a725992dfe7f9381cebddb1fae65eeeb693400d0443a65"
+    },
+    "expected_nonzero": true
+  },
+  "mathematical_gates": {
+    "M1": {
+      "observed_at": "2026-10-30T21:38:28.362Z",
+      "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2",
+      "payload_sha256": "a1e7125f39055bc9321027138935843bc4c77a483f9457c6ecd77ec9557cd1d3",
+      "configs": [
+        {
+          "path": "/home/an/.gemini/config/mcp_config.json",
+          "sha256": "46afa19df8cabc14f37667035927f74a399961ff2f7c89173bd05aa66856a572",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/.gemini/antigravity-cli/mcp_config.json",
+          "sha256": "e04c4a6377d1bc43e5f2db8aad5e69145cbe8e0262a9f0eae42602ffd286804c",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/.gemini/settings.json",
+          "sha256": "6aa0368c3c10ef95393ed299f604155087667cfa9767c282d248d70c783ea111",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.gemini/settings.json",
+          "sha256": "59c2c5b09c182febb29d3952324ab7f617b4bbff0796be57d44efcf1d15a2666",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.codex/config.toml",
+          "sha256": "29117e10b56f2cbaef5b2eeb7b1da6f0c59e9c4a85cac64845466c2b68d41a6e",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/.codex/config.toml",
+          "sha256": "4ae6d23cb04b252176d64a7aeeb16a64b1a531598d1d3bc52dbfceef11025b4a",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.mcp.json",
+          "sha256": "62b2579215c2d041e77888b0389e626b58de5c11d6996cda67f4442052104490",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/.claude.json",
+          "sha256": "5d08df5e28901579a2e8d6c3d985819e9d0c74deb05d109153d04379f3f26e83",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/.pi/agent/mcp.json",
+          "sha256": "39f343c4edff380d04725880efd339f4ebf19b9c072def3a7e0a66fc74153776",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/.pi/agent/mcp-adapter.json",
+          "sha256": "c75691c837fdbd5c45a3c8f255fb6c83249271aaa2936d63813143447f0f89eb",
+          "pins_match": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.pi/mcp.json",
+          "sha256": "a37057781eb0bd785130adf76c66359ee627d40f9025b01338068bc3e148b2db",
+          "pins_match": true
+        }
+      ],
+      "count": 11,
+      "partitions": {
+        "public": [
+          {
+            "route": "public",
+            "tool": "plan_status"
+          },
+          {
+            "route": "public",
+            "tool": "plan_list_pending"
+          },
+          {
+            "route": "public",
+            "tool": "plan_list"
+          },
+          {
+            "route": "public",
+            "tool": "plan_get"
+          },
+          {
+            "route": "public",
+            "tool": "plan_add"
+          },
+          {
+            "route": "public",
+            "tool": "plan_update"
+          },
+          {
+            "route": "public",
+            "tool": "plan_search"
+          },
+          {
+            "route": "public",
+            "tool": "system_health"
+          },
+          {
+            "route": "public",
+            "tool": "system_dashboard"
+          },
+          {
+            "route": "public",
+            "tool": "system_immune"
+          },
+          {
+            "route": "public",
+            "tool": "system_zenoh"
+          },
+          {
+            "route": "public",
+            "tool": "system_verification"
+          },
+          {
+            "route": "public",
+            "tool": "knowledge_search"
+          },
+          {
+            "route": "public",
+            "tool": "verification_run"
+          },
+          {
+            "route": "public",
+            "tool": "read_file"
+          },
+          {
+            "route": "public",
+            "tool": "podman_containers"
+          },
+          {
+            "route": "public",
+            "tool": "metabolic_state"
+          },
+          {
+            "route": "public",
+            "tool": "ooda_phase"
+          },
+          {
+            "route": "public",
+            "tool": "fractal_status"
+          },
+          {
+            "route": "public",
+            "tool": "prajna_health"
+          },
+          {
+            "route": "public",
+            "tool": "dark_cockpit_mode"
+          },
+          {
+            "route": "public",
+            "tool": "integrity_check"
+          },
+          {
+            "route": "public",
+            "tool": "evolution_metrics"
+          },
+          {
+            "route": "public",
+            "tool": "mesh_topology"
+          },
+          {
+            "route": "public",
+            "tool": "ooda_decide"
+          },
+          {
+            "route": "public",
+            "tool": "kms_catalog"
+          },
+          {
+            "route": "public",
+            "tool": "vault_status"
+          },
+          {
+            "route": "public",
+            "tool": "vault_list_secrets"
+          },
+          {
+            "route": "public",
+            "tool": "vault_policy_get"
+          },
+          {
+            "route": "public",
+            "tool": "vault_audit_tail"
+          },
+          {
+            "route": "public",
+            "tool": "vault_health"
+          },
+          {
+            "route": "public",
+            "tool": "control_loop"
+          },
+          {
+            "route": "public",
+            "tool": "safety_status"
+          },
+          {
+            "route": "public",
+            "tool": "registry_status"
+          },
+          {
+            "route": "public",
+            "tool": "run_selfcheck"
+          },
+          {
+            "route": "public",
+            "tool": "run_gate"
+          },
+          {
+            "route": "public",
+            "tool": "zk_search"
+          },
+          {
+            "route": "public",
+            "tool": "sa_bridge_submit"
+          },
+          {
+            "route": "public",
+            "tool": "forecast_predict"
+          },
+          {
+            "route": "public",
+            "tool": "preflight_check"
+          },
+          {
+            "route": "public",
+            "tool": "sa_plan_status"
+          },
+          {
+            "route": "public",
+            "tool": "sa_plan_status_for"
+          },
+          {
+            "route": "public",
+            "tool": "sa_plan_list"
+          },
+          {
+            "route": "public",
+            "tool": "sa_task_claim"
+          },
+          {
+            "route": "public",
+            "tool": "sa_task_complete"
+          },
+          {
+            "route": "public",
+            "tool": "sa_job_enqueue"
+          },
+          {
+            "route": "public",
+            "tool": "sa_workflow_start"
+          },
+          {
+            "route": "public",
+            "tool": "stpa_fmea_hazard"
+          },
+          {
+            "route": "public",
+            "tool": "rete_rule_conflict"
+          },
+          {
+            "route": "public",
+            "tool": "ruliad_branch_eval"
+          },
+          {
+            "route": "public",
+            "tool": "shruti_harmonics"
+          },
+          {
+            "route": "public",
+            "tool": "ast_anomaly_detect"
+          },
+          {
+            "route": "public",
+            "tool": "zk_transclude"
+          },
+          {
+            "route": "public",
+            "tool": "lyapunov_trend_predict"
+          },
+          {
+            "route": "public",
+            "tool": "sciviz_extension_deep_dive"
+          },
+          {
+            "route": "public",
+            "tool": "ggram_synthesize"
+          },
+          {
+            "route": "public",
+            "tool": "feature_tracker_status"
+          },
+          {
+            "route": "public",
+            "tool": "mcp_capability_inventory"
+          },
+          {
+            "route": "public",
+            "tool": "holon_status"
+          },
+          {
+            "route": "public",
+            "tool": "swarm_status"
+          },
+          {
+            "route": "public",
+            "tool": "agent_hierarchy"
+          },
+          {
+            "route": "public",
+            "tool": "harness_system_feature_catalog"
+          },
+          {
+            "route": "public",
+            "tool": "harness_system_feature_observations"
+          },
+          {
+            "route": "public",
+            "tool": "harness_system_feature_intent"
+          },
+          {
+            "route": "public",
+            "tool": "harness_execution_progress"
+          }
+        ],
+        "development": [
+          {
+            "route": "development",
+            "tool": "harness_execution_progress"
+          },
+          {
+            "route": "development",
+            "tool": "harness_system_feature_catalog"
+          },
+          {
+            "route": "development",
+            "tool": "harness_system_feature_observations"
+          },
+          {
+            "route": "development",
+            "tool": "harness_system_feature_intent"
+          },
+          {
+            "route": "development",
+            "tool": "harness_heartbeat"
+          },
+          {
+            "route": "development",
+            "tool": "harness_status"
+          },
+          {
+            "route": "development",
+            "tool": "harness_clock"
+          },
+          {
+            "route": "development",
+            "tool": "harness_read_file"
+          },
+          {
+            "route": "development",
+            "tool": "harness_write_file"
+          },
+          {
+            "route": "development",
+            "tool": "harness_build"
+          },
+          {
+            "route": "development",
+            "tool": "harness_test"
+          },
+          {
+            "route": "development",
+            "tool": "harness_risk_refresh"
+          },
+          {
+            "route": "development",
+            "tool": "harness_risk_check"
+          },
+          {
+            "route": "development",
+            "tool": "harness_finish"
+          },
+          {
+            "route": "development",
+            "tool": "harness_peers"
+          },
+          {
+            "route": "development",
+            "tool": "harness_peer_read"
+          },
+          {
+            "route": "development",
+            "tool": "harness_peer_review"
+          },
+          {
+            "route": "development",
+            "tool": "harness_peer_note"
+          },
+          {
+            "route": "development",
+            "tool": "harness_feature_initialize"
+          },
+          {
+            "route": "development",
+            "tool": "harness_feature_sync"
+          },
+          {
+            "route": "development",
+            "tool": "harness_feature_status"
+          }
+        ],
+        "successor": [
+          {
+            "route": "successor",
+            "tool": "harness_plan_intent"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_status"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_clock"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_heartbeat"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_claim"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_attach"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_release"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_read_file"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_client_mcp_config"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_write_file"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_build"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_test"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_assess"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_finish"
+          },
+          {
+            "route": "successor",
+            "tool": "harness_reconcile"
+          }
+        ]
+      },
+      "partition_counts": {
+        "public": 65,
+        "development": 21,
+        "successor": 15
+      },
+      "route_identity": "(plane,name); names alone may overlap",
+      "pairwise_intersections": {
+        "public_development": [],
+        "public_successor": [],
+        "development_successor": []
+      },
+      "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+      "control_modules": 28,
+      "control_md5s": {
+        "cepaf_gleam@harness@admission": "5104acfe5e71793ef069548e007832ed",
+        "cepaf_gleam@harness@client_config": "0c2e263939b361001053c689e81274f8",
+        "cepaf_gleam@harness@client_mcp": "e7aa56a5fcb03b4787f6dcba421cf499",
+        "cepaf_gleam@harness@client_profiles": "dcdd0d8a3946724d16cbb9d975aa5b7a",
+        "cepaf_gleam@harness@clock": "97a94ee9e10fd52b144d97fdaaac4ac1",
+        "cepaf_gleam@harness@development": "ff02fa524b34555f33321f6f8a4160e2",
+        "cepaf_gleam@harness@files": "9016b5ef3c680dd039beb5365b460735",
+        "cepaf_gleam@harness@mcp": "c806834378744986964f8c21b354c27d",
+        "cepaf_gleam@harness@native_backend": "c7cce8b648dd94941da211bfb4fa9839",
+        "cepaf_gleam@harness@operations": "e1c851464b2bfbff39f1f4264ff1c6fc",
+        "cepaf_gleam@harness@planning_intents": "7f824764fe4205f6bda0c623609b7e66",
+        "cepaf_gleam@harness@successor_mcp": "774fb4baf76dfa8bbb9112906276235d",
+        "cepaf_gleam@harness@value": "a0b2c57ba385f4d02a7ff07f11b959a6",
+        "cepaf_gleam@planning@sa_plan_bridge": "2f5f95d37e2300f19b63acb98fcb2289",
+        "client_config_io": "7fa8444686d4eadbd6570fe55f9a042c",
+        "ecology_capability_ffi": "46e123aa3e8444abcdafba45c2715173",
+        "esqlite3": "559df945b9931ff4d5dfb312c46b240e",
+        "esqlite3_nif": "5b3ef93e642fff3efc7e69f45de83cbf",
+        "harness_native_backend_ffi": "32a7a136f88a231812ef5d843f711586",
+        "session_store_cli": "7b758634d57f2af3cbc61022d7a05567",
+        "session_store_ffi": "640bb2d1f550cc52743f13ec5efec3b4",
+        "session_sync_ffi": "84df5c4ac97f59dfd224b70cd9b21701",
+        "uos_swarm@board": "a703e22b5da3afd1894e818a4f085e0b",
+        "uos_swarm@coord": "2ce7f6544e5041b1c4ad73486b066cb0",
+        "uos_swarm@session_authority": "dd6c192ad92e73059ca3a2a5631b2e2d",
+        "uos_swarm@session_store": "eeaf8f6939252ca62ed7a9db4bf85a72",
+        "uos_swarm@session_sync": "3fae88ea61b0f4195507411d34aedf46",
+        "uos_swarm_ffi": "c10aa59407df5842db9d2d0bdf100f50"
+      },
+      "differences": [],
+      "admission_md5": "c53ed6bf66cba56cfc0d6e850875a774",
+      "source_input_count": 3457,
+      "source_input_differences": []
+    },
+    "M2": {
+      "V_definition": "Square of historically open F1..F7 review finding count; not physical runtime energy",
+      "trajectory": [
+        49,
+        1,
+        0
+      ],
+      "delta": [
+        -48,
+        -1
+      ],
+      "local_alpha": [
+        "48/49",
+        "1"
+      ],
+      "uniform_alpha": "48/49",
+      "contractive_bounds": [
+        "1 <= (1-48/49)*49",
+        "0 <= (1-48/49)*1"
+      ],
+      "gc_complexity": {
+        "old": "Theta(N*K) potential literal-area scan work for K changing persistent terms and N processes",
+        "new": "Theta(N) startup publication + Theta(K) atomic writes",
+        "hot_path_persistent_term_writes": 0,
+        "assumptions": [
+          "Cost model, not measured heap/GC latency",
+          "One initialization persistent write per registered worker lifetime; restarts add startup work"
+        ]
+      },
+      "source_freshness_window_ms": 60000,
+      "socket_idle_deadline_ms": 30000,
+      "not_a_runtime_stability_theorem": true
+    },
+    "M3": {
+      "status": "COMPUTED_NON_GREEN_EVIDENCE_SCORE",
+      "as_of": "2026-10-30T21:31:23.495Z",
+      "cases": [
+        {
+          "id": "test-cepaf_gleam",
+          "successes": 14139,
+          "failures": 115,
+          "observed_at": "2026-10-30T21:23:00.780Z"
+        },
+        {
+          "id": "test-indrajaal_gleam_web",
+          "successes": 43,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:23:00.784Z"
+        },
+        {
+          "id": "test-uos_swarm",
+          "successes": 702,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:23:00.786Z"
+        },
+        {
+          "id": "test-uos_tui",
+          "successes": 198,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:23:00.787Z"
+        },
+        {
+          "id": "zigvm-tests",
+          "successes": 1121,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:23:21.797Z"
+        },
+        {
+          "id": "storage-tests",
+          "successes": 4,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:24:13.625Z"
+        },
+        {
+          "id": "hermes-rete",
+          "successes": 1,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:16:52.760Z"
+        },
+        {
+          "id": "hermes-parity",
+          "successes": 146,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:16:52.761Z"
+        },
+        {
+          "id": "quint-unit-controls",
+          "successes": 4,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:21:32.489Z"
+        },
+        {
+          "id": "risk-selftest-isolated-cache",
+          "successes": 375,
+          "failures": 0,
+          "observed_at": "2026-10-30T21:24:32.943Z"
+        }
+      ],
+      "successes": 16733,
+      "failures": 115,
+      "prior": {
+        "alpha": 1,
+        "beta": 1
+      },
+      "undecayed_exact_posterior": {
+        "family": "Beta",
+        "alpha": 16734,
+        "beta": 116,
+        "mean": 0.9931157270029674
+      },
+      "power_prior_decay": {
+        "half_life_seconds": 604800,
+        "exact_alpha_expression": "1 + sum(success_i * 2^(-age_i/604800))",
+        "exact_beta_expression": "1 + sum(failure_i * 2^(-age_i/604800))",
+        "alpha": 16724.366618404474,
+        "beta": 115.93376184006713,
+        "mean": 0.9931156951347453,
+        "one_sided_95pct_credible_lower": 0.9920354462746561,
+        "cdf_at_lower": 0.050000000000001384,
+        "weighted_observations": [
+          {
+            "id": "test-cepaf_gleam",
+            "successes": 14139,
+            "failures": 115,
+            "observed_at": "2026-10-30T21:23:00.780Z",
+            "age_seconds": 502.715,
+            "weight": 0.9994240160005837
+          },
+          {
+            "id": "test-indrajaal_gleam_web",
+            "successes": 43,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:23:00.784Z",
+            "age_seconds": 502.711,
+            "weight": 0.99942402058225
+          },
+          {
+            "id": "test-uos_swarm",
+            "successes": 702,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:23:00.786Z",
+            "age_seconds": 502.709,
+            "weight": 0.9994240228730832
+          },
+          {
+            "id": "test-uos_tui",
+            "successes": 198,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:23:00.787Z",
+            "age_seconds": 502.708,
+            "weight": 0.9994240240184997
+          },
+          {
+            "id": "zigvm-tests",
+            "successes": 1121,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:23:21.797Z",
+            "age_seconds": 481.698,
+            "weight": 0.9994480895104723
+          },
+          {
+            "id": "storage-tests",
+            "successes": 4,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:24:13.625Z",
+            "age_seconds": 429.87,
+            "weight": 0.9995074573533469
+          },
+          {
+            "id": "hermes-rete",
+            "successes": 1,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:16:52.760Z",
+            "age_seconds": 870.735,
+            "weight": 0.9990025686812041
+          },
+          {
+            "id": "hermes-parity",
+            "successes": 146,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:16:52.761Z",
+            "age_seconds": 870.734,
+            "weight": 0.9990025698261377
+          },
+          {
+            "id": "quint-unit-controls",
+            "successes": 4,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:21:32.489Z",
+            "age_seconds": 591.006,
+            "weight": 0.9993228911430007
+          },
+          {
+            "id": "risk-selftest-isolated-cache",
+            "successes": 375,
+            "failures": 0,
+            "observed_at": "2026-10-30T21:24:32.943Z",
+            "age_seconds": 410.552,
+            "weight": 0.9995295866029141
+          }
+        ]
+      },
+      "quantile_controls": [
+        "Beta(1,1): q0.05=0.05",
+        "Beta(2,1): q0.05=sqrt(0.05)"
+      ],
+      "excluded_duplicate_subsets": [
+        "526-case46-suite diagnostic EUnit subset of fullcepaf",
+        "65 focused wiring subset",
+        "Initial465-case41-suite diagnostic subset",
+        "Expected negative controls and initial proof authoring errors are checker sensitivity, not product failures"
+      ],
+      "limitations": [
+        "Exchangeable Bernoulli likelihood is a bookkeeping assumption, not established field reliability",
+        "Failures remain blockers even with a high aggregate mean",
+        "Dependent tests and repeated implementation paths violate a calibrated independent-trials interpretation",
+        "Power-prior fractional counts are generalized Bayes evidence weights; no deployment or admission threshold assigned"
+      ],
+      "brier_forecasts": [
+        {
+          "id": "prior-transports",
+          "made_at": "2026-10-30T21:16:27Z",
+          "probability": 0.85,
+          "horizon_seconds": 3600,
+          "final_score": null,
+          "status": "PENDING_HORIZON; point probes succeeded but full future availability not observed"
+        },
+        {
+          "id": "journal-first-pass",
+          "probability": 0.8,
+          "horizon_seconds": 1800,
+          "event": "First checker invocation of new StageA journal exits0",
+          "outcome": 0,
+          "brier_score": 0.64,
+          "observation_receipt": "var/harness/20261030-2215-formal-checkpoint/journal-check-first-rejected.json",
+          "observed_at": "2026-10-30T21:37:01.345Z",
+          "made_at": "2026-10-30T21:31:23.496Z"
+        },
+        {
+          "id": "source-parity-final",
+          "probability": 0.95,
+          "horizon_seconds": 1800,
+          "event": "Final capsule verify exits0 and all3457source inputs match baseline after documentation",
+          "outcome": 1,
+          "brier_score": 0.0025000000000000044,
+          "observed_at": "2026-10-30T21:38:26.865Z",
+          "observation_receipt": "var/harness/20261030-2215-formal-checkpoint/capsule-post-docs.json",
+          "source_receipt": "var/harness/20261030-2215-formal-checkpoint/M1-integrity.json",
+          "made_at": "2026-10-30T21:31:23.496Z"
+        }
+      ]
+    },
+    "M4": {
+      "status": "OBSERVED_WITH_CONDITIONAL_QUEUE_MODEL",
+      "observed_at": "2026-10-30T21:22:45.257Z",
+      "cold_stdio_attach": {
+        "n": 3,
+        "samples_ms": [
+          1754.915197,
+          1713.54669,
+          1769.5872109999996
+        ],
+        "mean_ms": 1746.0163659999998,
+        "second_moment_ms2": 3049136.1682687537,
+        "min_ms": 1713.54669,
+        "max_ms": 1769.5872109999996
+      },
+      "warm_stdio_calls": {
+        "n": 6,
+        "samples_ms": [
+          1.2808910000001106,
+          107.86877400000003,
+          1.732861999999841,
+          94.77813600000036,
+          4.568698999999469,
+          92.61624800000027
+        ],
+        "mean_ms": 50.47426833333335,
+        "second_moment_ms2": 4870.308894085454,
+        "min_ms": 1.2808910000001106,
+        "max_ms": 107.86877400000003
+      },
+      "warm_http_ping": {
+        "n": 12,
+        "samples_ms": [
+          5.301578000000006,
+          5.304092999999995,
+          5.475726000000009,
+          4.562497000000008,
+          5.964675999999997,
+          5.045805999999999,
+          3.139458999999988,
+          4.642357000000004,
+          3.8701839999999947,
+          3.550061000000028,
+          2.5935010000000034,
+          3.890563000000043
+        ],
+        "mean_ms": 4.445041750000006,
+        "second_moment_ms2": 20.744105869925637,
+        "min_ms": 2.5935010000000034,
+        "max_ms": 5.964675999999997
+      },
+      "warm_zenoh_ping": {
+        "n": 8,
+        "samples_ms": [
+          34.41695400000003,
+          33.15598100000011,
+          34.3109750000001,
+          37.02054399999997,
+          35.06050600000003,
+          33.75470799999994,
+          34.29560599999991,
+          33.113149999999905
+        ],
+        "mean_ms": 34.391053,
+        "second_moment_ms2": 1184.1122711485093,
+        "min_ms": 33.113149999999905,
+        "max_ms": 37.02054399999997
+      },
+      "queue_model": {
+        "kind": "M/G/1 scenario; end-to-end RTT is an upper-bound proxy, not measured server service time",
+        "lambda_per_second": 1,
+        "actual_production_lambda": "UNMEASURED",
+        "poisson_arrival_assumption": "UNVERIFIED",
+        "independent_service_assumption": "UNVERIFIED",
+        "scenarios": [
+          {
+            "transport": "http",
+            "rho_at_assumed_lambda": 0.004445041750000006,
+            "pk_wait_seconds": 0.000010418362993435294,
+            "stability_condition": "lambda * E[S] < 1, conditional on M/G/1 assumptions"
+          },
+          {
+            "transport": "zenoh",
+            "rho_at_assumed_lambda": 0.034391053,
+            "pk_wait_seconds": 0.0006131427607559798,
+            "stability_condition": "lambda * E[S] < 1, conditional on M/G/1 assumptions"
+          }
+        ]
+      },
+      "residuals": {
+        "public_numeric_args": {
+          "error_code": -32600,
+          "result": "PUBLIC_STRING_ONLY_BOUNDARY_OBSERVED",
+          "effect_executed": false
+        },
+        "requested_origin_4100": 403,
+        "accepted_origin": "https://nas-1.tail55d152.ts.net:4101",
+        "source_wire_line": 116,
+        "queued": "Wave P0/P1b numeric boundary; P2 health semantics; P3 attach latency",
+        "no_fixed_1_74s_claim": true
+      }
+    }
+  },
+  "application_tests": [
+    {
+      "id": "test-cepaf_gleam",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      "observed_at": "2026-10-30T21:23:00.780Z",
+      "elapsed_ms": 391779,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-cepaf_gleam.log",
+      "log_sha256": "243563070091f6220f498b13704a64acef63d550f27026a0e81f983f1cd0d0d1",
+      "app": "cepaf_gleam",
+      "passed": 14139,
+      "failed": 115
+    },
+    {
+      "id": "test-indrajaal_gleam_web",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/indrajaal_gleam_web",
+      "observed_at": "2026-10-30T21:23:00.784Z",
+      "elapsed_ms": 5651,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-indrajaal_gleam_web.log",
+      "log_sha256": "8191e89afee7c7e4f89d92457b8603a849d58886cac3904e149119f65e6ab923",
+      "app": "indrajaal_gleam_web",
+      "passed": 43,
+      "failed": 0
+    },
+    {
+      "id": "test-uos_swarm",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/uos_swarm",
+      "observed_at": "2026-10-30T21:23:00.786Z",
+      "elapsed_ms": 19344,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-uos_swarm.log",
+      "log_sha256": "39e785ae6c554761912819c307d7c861084bedd48d4b2d7d2d3c99e344c36e71",
+      "app": "uos_swarm",
+      "passed": 702,
+      "failed": 0
+    },
+    {
+      "id": "test-uos_tui",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/uos_tui",
+      "observed_at": "2026-10-30T21:23:00.787Z",
+      "elapsed_ms": 1004,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-uos_tui.log",
+      "log_sha256": "85f2c2933e7ef0e5c7eb07930dd52017433ab6b91e05eab8554e81d62dbd8b65",
+      "app": "uos_tui",
+      "passed": 198,
+      "failed": 0
+    }
+  ],
+  "diagnostic_eunit": {
+    "suites": 46,
+    "passed": 526,
+    "failed": 0,
+    "focused_subset": 65,
+    "log": "var/harness/20261030-2215-formal-checkpoint/eunit-46.log",
+    "not_added_to_full_suite_count": true
+  },
+  "hermes": {
+    "rete_passed": 1,
+    "parity_passed": 146,
+    "logs": [
+      "var/harness/20261030-2215-formal-checkpoint/hermes-rete.log",
+      "var/harness/20261030-2215-formal-checkpoint/hermes-parity.log"
+    ],
+    "binary_identities": [
+      {
+        "path": "engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe",
+        "sha256": "3919d9a10b563c32895b3e604fcab216518650a5618bfbc78df01f50377ba928",
+        "freshly_rebuilt": false
+      },
+      {
+        "path": "engines/hermes/_build/default/modules/hermes_harness/test_parity_algebra.exe",
+        "sha256": "0f8e5aec0f6c26e138728e77de3474e6f121c09af8cffb952369f3a911fe66a2",
+        "freshly_rebuilt": false
+      }
+    ]
+  },
+  "kernel": {
+    "zigvm_passed": 1121,
+    "exit_code": 0,
+    "log": "var/harness/20261030-2215-formal-checkpoint/zigvm-tests.log",
+    "diagnostic_note": "Expected/diagnostic unsupported BEAM-op messages appear in successful kernel log; no full OTP29 VM parity claim"
+  },
+  "storage": {
+    "tests": 4,
+    "failed": 0,
+    "hard_denied_serial": "25503L801736",
+    "log": "var/harness/20261030-2215-formal-checkpoint/storage-tests.log",
+    "zero_live_storage_mutations": true
+  },
+  "capsule": {
+    "status": "PASS",
+    "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2",
+    "payload_sha256": "a1e7125f39055bc9321027138935843bc4c77a483f9457c6ecd77ec9557cd1d3",
+    "application_admitted": false,
+    "source_manifest_sha256": "06d4bf3abe388ecade5ac4e32ba7df4e6c9c007eeaaf02d608e3aab3c7c26338",
+    "source_input_count": 3457,
+    "source_input_differences": [],
+    "build_artifact_restoration": {
+      "observed_at": "2026-10-30T21:26:03.850Z",
+      "restored": [
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam.app"
+      ],
+      "source_edits": [],
+      "reason": "Gleam dependency app metadata changed during authorized tests; restored exact pre-test manifest bytes"
+    },
+    "no_restage": true
+  },
+  "governance_gates": {
+    "preflight-uos": {
+      "id": "preflight-uos",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "preflight",
+        "--receipt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.117Z",
+      "elapsed_ms": 193,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/preflight-uos.log",
+      "log_sha256": "4c32085a28701f1cb04bb1640b0828c5e71f1b53e96f4451a1d31548e058666b",
+      "semantic_status": "NOT_EXECUTED_USAGE_ONLY"
+    },
+    "preflight-canonical": {
+      "id": "preflight-canonical",
+      "command": [
+        "bash",
+        "tools/preflight",
+        "--receipt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:47.055Z",
+      "elapsed_ms": 2500,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/preflight-canonical.log",
+      "log_sha256": "e0f0641d8ada4a61685c47271e1c2b3c79af545377e47dfc77f0b9db7408db7e",
+      "semantic_status": "PASS"
+    },
+    "timestamp": {
+      "id": "timestamp",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "timestamp-check"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.312Z",
+      "elapsed_ms": 174,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/timestamp.log",
+      "log_sha256": "3da447c6678ed472d50be7904976c5fddff642dc78af239b3e357a9105697873",
+      "semantic_status": "PASS"
+    },
+    "checklist": {
+      "id": "checklist",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "checklist"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.487Z",
+      "elapsed_ms": 161,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/checklist.log",
+      "log_sha256": "c9ce3d02775431d5f0b8db800e59cc7105ef5579fa3c1b860f7b3a3be244d0fe",
+      "semantic_status": "HOLD"
+    },
+    "doctor": {
+      "id": "doctor",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "doctor"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.648Z",
+      "elapsed_ms": 212,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/doctor.log",
+      "log_sha256": "5a3bb28685f87bd069ad1155409c5360ae925c81cf56b1b64cd9d4581c4f2808",
+      "semantic_status": "HOLD"
+    },
+    "km-gate": {
+      "id": "km-gate",
+      "command": [
+        "bash",
+        "tools/km-gate",
+        "--gate"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.860Z",
+      "elapsed_ms": 843,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/km-gate.log",
+      "log_sha256": "3e6d9eddd4ed12383ff3996a44c26effcffba4f8083dc2038cd41bab945f6635",
+      "semantic_status": "PASS"
+    },
+    "risk-selftest": {
+      "id": "risk-selftest",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "-I",
+        "tools",
+        "tools/unification_cycles.ml",
+        "risk-check",
+        "--selftest"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:07.703Z",
+      "elapsed_ms": 655,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/risk-selftest.log",
+      "log_sha256": "4864d0adda929c03fa9b4cfd692df35475d9f1302cd4a286142d7ae4c24051f4",
+      "semantic_status": "HOLD"
+    },
+    "risk-selftest-isolated-cache": {
+      "id": "risk-selftest-isolated-cache",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "-I",
+        "tools",
+        "tools/unification_cycles.ml",
+        "risk-check",
+        "--selftest"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:24:32.943Z",
+      "elapsed_ms": 2744,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/risk-selftest-isolated-cache.log",
+      "log_sha256": "3a109f78bd73d382a44781898986adb22862344cb75e9955855a93c0e2d46961",
+      "semantic_status": "PASS"
+    },
+    "capsule-final": {
+      "id": "capsule-final",
+      "command": [
+        "toolchains/opam-ocaml/bin/ocaml",
+        "tools/ecology_release.ml",
+        "verify",
+        "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:30:34.727Z",
+      "elapsed_ms": 1512,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/capsule-final.log",
+      "log_sha256": "ad5611b752c708a4a31c4208899d26c31d29e8fca4cb14856b7edc8743bd218b",
+      "semantic_status": "PASS"
+    }
+  },
+  "zero_muda": {
+    "files_checked": 68,
+    "forbidden_dependency_hits": [],
+    "status": "PASS"
+  },
+  "runtime": {
+    "services_and_health": {
+      "services": [
+        {
+          "unit": "c3i-gleam-server.service",
+          "pid": 2676131,
+          "active": "active",
+          "sub_state": "running",
+          "restarts": 0
+        },
+        {
+          "unit": "uos-cognitive-worker.service",
+          "pid": 2676129,
+          "active": "active",
+          "sub_state": "running",
+          "restarts": 0
+        },
+        {
+          "unit": "uos-clock-guard@primary.service",
+          "pid": 2676384,
+          "active": "active",
+          "sub_state": "running",
+          "restarts": 0
+        },
+        {
+          "unit": "uos-clock-guard@backup.service",
+          "pid": 2676473,
+          "active": "active",
+          "sub_state": "running",
+          "restarts": 0
+        },
+        {
+          "unit": "uos-ecology@20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2.service",
+          "pid": 2677003,
+          "active": "active",
+          "sub_state": "running",
+          "restarts": 0
+        },
+        {
+          "unit": "uos-telegram-bridge.service",
+          "pid": 429614,
+          "active": "active",
+          "sub_state": "running",
+          "restarts": 0
+        }
+      ],
+      "status": "PASS",
+      "source_edits": [],
+      "provenance": {
+        "admitted_ev_ceiling": 93,
+        "application_admitted": false
+      },
+      "health": [
+        {
+          "url": "http://nas-1.tail55d152.ts.net:4100/health",
+          "status": 200,
+          "body": {
+            "status": "unavailable",
+            "interface": "wisp",
+            "port": 4100,
+            "version": "1.0.0",
+            "container_count": 0,
+            "healthy_count": 0,
+            "threat_level": "nominal",
+            "ooda_phase": "observe",
+            "dark_cockpit_mode": "normal",
+            "zenoh_connected": true,
+            "quorum_healthy": false,
+            "last_updated_ms": 1793395597004
+          }
+        },
+        {
+          "url": "http://100.87.7.78:4110/health",
+          "status": 200,
+          "body": {
+            "status": "running",
+            "cycle": 11356,
+            "application_admitted": false,
+            "scope": "shared ecology actor and observed OTP identity"
+          }
+        }
+      ]
+    },
+    "transports": {
+      "stdio": {
+        "status": "PASS",
+        "observed_at": "2026-10-30T21:23:28.974Z",
+        "transport": "stdio",
+        "uses_current_release_pointer": true,
+        "dev_fallback_unset": true,
+        "samples": [
+          {
+            "cold_attach_ms": 1829.701108,
+            "cold_total_ms": 1957.626519,
+            "requests": [
+              {
+                "method": "initialize",
+                "elapsed_ms": 1825.242637
+              },
+              {
+                "method": "tools/list",
+                "elapsed_ms": 3.5550399999999627
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 2.352145999999948
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 120.7837599999998
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 0.20816199999990204,
+                "error_code": -32600
+              }
+            ],
+            "tool_count": 53,
+            "health": {
+              "tool": "system_health",
+              "backend": "beam_otp29_live",
+              "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+              "observed_at_ms": 1793395404943,
+              "max_age_ms": 30000,
+              "age_ms": 0,
+              "freshness": "fresh",
+              "preview_bounds": "observed_only_no_effect_authority",
+              "preview_only": true,
+              "read_only": true,
+              "effect_authority": false,
+              "arg_count": 0,
+              "metrics": {
+                "gateway_alive": "true",
+                "observation_scope": "gateway_ping; container names are configured inventory",
+                "public_routes": "65",
+                "system_health.status": "healthy",
+                "total_routes": "101"
+              },
+              "status": "healthy",
+              "checks_passed": 1
+            },
+            "canonical_plan": {
+              "plan_id": "20261030-2215-formal-math-verify-and-github-checkpoint",
+              "total_tasks": 4,
+              "completed_tasks": 1,
+              "executing_tasks": 1,
+              "available_tasks": 2,
+              "canonical_authority": "sa_plan"
+            },
+            "numeric_arguments": {
+              "error_code": -32600,
+              "result": "PUBLIC_STRING_ONLY_BOUNDARY_OBSERVED",
+              "effect_executed": false
+            }
+          },
+          {
+            "cold_attach_ms": 1876.6258329999998,
+            "cold_total_ms": 1990.7458410000002,
+            "requests": [
+              {
+                "method": "initialize",
+                "elapsed_ms": 1874.929961
+              },
+              {
+                "method": "tools/list",
+                "elapsed_ms": 3.091138000000228
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 2.4397319999998217
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 107.37111700000014
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 0.35220299999991767,
+                "error_code": -32600
+              }
+            ],
+            "tool_count": 53,
+            "health": {
+              "tool": "system_health",
+              "backend": "beam_otp29_live",
+              "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+              "observed_at_ms": 1793395406954,
+              "max_age_ms": 30000,
+              "age_ms": 0,
+              "freshness": "fresh",
+              "preview_bounds": "observed_only_no_effect_authority",
+              "preview_only": true,
+              "read_only": true,
+              "effect_authority": false,
+              "arg_count": 0,
+              "metrics": {
+                "gateway_alive": "true",
+                "observation_scope": "gateway_ping; container names are configured inventory",
+                "public_routes": "65",
+                "system_health.status": "healthy",
+                "total_routes": "101"
+              },
+              "status": "healthy",
+              "checks_passed": 1
+            },
+            "canonical_plan": {
+              "plan_id": "20261030-2215-formal-math-verify-and-github-checkpoint",
+              "total_tasks": 4,
+              "completed_tasks": 1,
+              "executing_tasks": 1,
+              "available_tasks": 2,
+              "canonical_authority": "sa_plan"
+            },
+            "numeric_arguments": {
+              "error_code": -32600,
+              "result": "PUBLIC_STRING_ONLY_BOUNDARY_OBSERVED",
+              "effect_executed": false
+            }
+          },
+          {
+            "cold_attach_ms": 1797.070764,
+            "cold_total_ms": 1896.094572,
+            "requests": [
+              {
+                "method": "initialize",
+                "elapsed_ms": 1795.0900470000001
+              },
+              {
+                "method": "tools/list",
+                "elapsed_ms": 2.7262909999999465
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 2.106053999999858
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 93.3282479999998
+              },
+              {
+                "method": "tools/call",
+                "elapsed_ms": 0.461699000000408,
+                "error_code": -32600
+              }
+            ],
+            "tool_count": 53,
+            "health": {
+              "tool": "system_health",
+              "backend": "beam_otp29_live",
+              "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+              "observed_at_ms": 1793395408871,
+              "max_age_ms": 30000,
+              "age_ms": 0,
+              "freshness": "fresh",
+              "preview_bounds": "observed_only_no_effect_authority",
+              "preview_only": true,
+              "read_only": true,
+              "effect_authority": false,
+              "arg_count": 0,
+              "metrics": {
+                "gateway_alive": "true",
+                "observation_scope": "gateway_ping; container names are configured inventory",
+                "public_routes": "65",
+                "system_health.status": "healthy",
+                "total_routes": "101"
+              },
+              "status": "healthy",
+              "checks_passed": 1
+            },
+            "canonical_plan": {
+              "plan_id": "20261030-2215-formal-math-verify-and-github-checkpoint",
+              "total_tasks": 4,
+              "completed_tasks": 1,
+              "executing_tasks": 1,
+              "available_tasks": 2,
+              "canonical_authority": "sa_plan"
+            },
+            "numeric_arguments": {
+              "error_code": -32600,
+              "result": "PUBLIC_STRING_ONLY_BOUNDARY_OBSERVED",
+              "effect_executed": false
+            }
+          }
+        ],
+        "secret_values_recorded": false
+      },
+      "http": {
+        "status": "PASS",
+        "transport": "streamable_http",
+        "observed_at": "2026-10-30T21:23:29.311Z",
+        "endpoint": "http://nas-1.tail55d152.ts.net:4100/mcp",
+        "round_trips": [
+          {
+            "id": 1,
+            "method": "initialize",
+            "status": 200,
+            "ok": true,
+            "elapsed_ms": 65.446272,
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          },
+          {
+            "id": 2,
+            "method": "tools/list",
+            "status": 200,
+            "ok": true,
+            "elapsed_ms": 8.00864199999998,
+            "tool_count": 53,
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          },
+          {
+            "id": 3,
+            "method": "tools/call",
+            "tool": "mcp_capability_inventory",
+            "status": 200,
+            "ok": true,
+            "elapsed_ms": 6.266654000000017,
+            "inventory": {
+              "total_mcp_routes": 101,
+              "public_routes": 65,
+              "development_private_routes": 21,
+              "successor_private_routes": 15,
+              "admitted_ev_ceiling": 93
+            },
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          },
+          {
+            "id": 4,
+            "method": "tools/call",
+            "tool": "sa_plan_status_for",
+            "status": 200,
+            "ok": true,
+            "elapsed_ms": 127.07949899999997,
+            "canonical_plan": {
+              "plan_id": "20261030-2215-formal-math-verify-and-github-checkpoint",
+              "total_tasks": 4,
+              "completed_tasks": 1,
+              "executing_tasks": 1,
+              "available_tasks": 2,
+              "canonical_authority": "sa_plan"
+            },
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          }
+        ],
+        "warm_ping_samples_ms": [
+          3.415337999999963,
+          2.2369709999999827,
+          2.594932999999969,
+          1.750094000000047,
+          2.2300469999999564,
+          1.7482500000000414,
+          1.933148000000017,
+          1.336415000000045,
+          1.117623999999978,
+          1.0266020000000253,
+          0.9462010000000305,
+          0.9382059999999797
+        ],
+        "requested_origin_4100_status": 403,
+        "operational_approved_origin": "https://nas-1.tail55d152.ts.net:4101",
+        "bad_token_status": 401,
+        "www_authenticate_challenge": "Bearer resource_metadata=\"https://nas-1.tail55d152.ts.net:4101/.well-known/oauth-protected-resource\"",
+        "secret_values_printed": false
+      },
+      "zenoh": {
+        "status": "PASS",
+        "transport": "zenoh_router_pubsub",
+        "observed_at": "2026-10-30T21:23:31.461Z",
+        "router_rest_endpoint": "http://nas-1.tail55d152.ts.net:8080/",
+        "response_sse_subscription": "http://nas-1.tail55d152.ts.net:8080/indrajaal/mcp/response/codex/formalA$*",
+        "event_subscription_status": 200,
+        "positive_round_trips": [
+          {
+            "topic": "indrajaal/mcp/request/codex/formalA_tools",
+            "reply_topic": "indrajaal/mcp/response/codex/formalA_tools",
+            "publish_status": 200,
+            "response_received": true,
+            "elapsed_ms": 37.24904400000001,
+            "tool_count": 53,
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          },
+          {
+            "topic": "indrajaal/mcp/request/codex/formalA_plan",
+            "reply_topic": "indrajaal/mcp/response/codex/formalA_plan",
+            "publish_status": 200,
+            "response_received": true,
+            "elapsed_ms": 122.59491900000003,
+            "canonical_plan": {
+              "plan_id": "20261030-2215-formal-math-verify-and-github-checkpoint",
+              "total_tasks": 4,
+              "completed_tasks": 1,
+              "executing_tasks": 1,
+              "available_tasks": 2,
+              "canonical_authority": "sa_plan"
+            },
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          }
+        ],
+        "warm_ping_samples_ms": [
+          33.578755999999885,
+          32.069615999999996,
+          31.02877700000022,
+          32.73890600000004,
+          32.767359999999826,
+          35.309643999999935,
+          32.41241200000013,
+          34.19289200000003
+        ],
+        "bad_hmac": {
+          "publish_status": 200,
+          "response_count": 0,
+          "result": "OBSERVED_SILENT_DROP_WITH_POSITIVE_BRACKET",
+          "observation_window_ms": 1848,
+          "valid_controls_before": [
+            "tools/list",
+            "sa_plan_status_for"
+          ],
+          "valid_ping_after": {
+            "topic": "indrajaal/mcp/request/codex/formalA_ping",
+            "reply_topic": "indrajaal/mcp/response/codex/formalA_ping",
+            "publish_status": 200,
+            "response_received": true,
+            "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+          }
+        },
+        "subscriber": {
+          "unit": "c3i-gleam-server.service",
+          "pid": 2676131,
+          "exclusive_mutex": "127.0.0.1:41199",
+          "same_live_c3i_pid": true
+        },
+        "parse_errors": 0,
+        "no_delete_requests": true,
+        "secret_values_recorded": false
+      }
+    },
+    "four_agent_config_pins": [
+      {
+        "path": "/home/an/.gemini/config/mcp_config.json",
+        "sha256": "46afa19df8cabc14f37667035927f74a399961ff2f7c89173bd05aa66856a572",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/.gemini/antigravity-cli/mcp_config.json",
+        "sha256": "e04c4a6377d1bc43e5f2db8aad5e69145cbe8e0262a9f0eae42602ffd286804c",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/.gemini/settings.json",
+        "sha256": "6aa0368c3c10ef95393ed299f604155087667cfa9767c282d248d70c783ea111",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/.gemini/settings.json",
+        "sha256": "59c2c5b09c182febb29d3952324ab7f617b4bbff0796be57d44efcf1d15a2666",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/.codex/config.toml",
+        "sha256": "29117e10b56f2cbaef5b2eeb7b1da6f0c59e9c4a85cac64845466c2b68d41a6e",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/.codex/config.toml",
+        "sha256": "4ae6d23cb04b252176d64a7aeeb16a64b1a531598d1d3bc52dbfceef11025b4a",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/.mcp.json",
+        "sha256": "62b2579215c2d041e77888b0389e626b58de5c11d6996cda67f4442052104490",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/.claude.json",
+        "sha256": "5d08df5e28901579a2e8d6c3d985819e9d0c74deb05d109153d04379f3f26e83",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/.pi/agent/mcp.json",
+        "sha256": "39f343c4edff380d04725880efd339f4ebf19b9c072def3a7e0a66fc74153776",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/.pi/agent/mcp-adapter.json",
+        "sha256": "c75691c837fdbd5c45a3c8f255fb6c83249271aaa2936d63813143447f0f89eb",
+        "pins_match": true
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/.pi/mcp.json",
+        "sha256": "a37057781eb0bd785130adf76c66359ee627d40f9025b01338068bc3e148b2db",
+        "pins_match": true
+      }
+    ],
+    "native_cli_execution": "Fresh11-file pin parity in V02; actual four-agent native execution remains prior S04 evidence, not rerun by this stage"
+  },
+  "mechanical_gates": {
+    "journal": {
+      "status": "PASS",
+      "checks": 10,
+      "receipt": "var/harness/20261030-2215-formal-checkpoint/journal-check-final.json",
+      "first_invocation_failed": true,
+      "first_failure_retained": "var/harness/20261030-2215-formal-checkpoint/journal-check-first-rejected.json"
+    },
+    "diagram": {
+      "status": "PASS",
+      "verified": 4,
+      "receipt": "var/harness/20261030-2215-formal-checkpoint/diagram-check-final.json"
+    },
+    "km": {
+      "status": "PASS",
+      "receipt": "var/harness/20261030-2215-formal-checkpoint/km-gate-final.json"
+    },
+    "docs_truth": {
+      "status": "PASS",
+      "passed": 3,
+      "receipt": "var/harness/20261030-2215-formal-checkpoint/docs-truth-final.json",
+      "not_a_static_version_linter": true
+    },
+    "full_gleam_test": "FAIL; original full run14139passed115failures retained; no duplicate rerun after prose-only changes",
+    "capsule_post_docs": {
+      "status": "PASS",
+      "receipt": "var/harness/20261030-2215-formal-checkpoint/capsule-post-docs.json"
+    }
+  },
+  "provenance": {
+    "admitted_ev_ceiling": 93,
+    "not_admitted_range": "EV-94..EV-109",
+    "application_admitted": false,
+    "system_admission": "NOT_ADMITTED",
+    "new_ev_numbers_minted": false
+  },
+  "model_to_implementation_limits": [
+    "Hand-authored Lean/Quint/SMT models are abstractions, not compiler extraction or implementation refinement proofs",
+    "Cryptographic primitives and kernel mutex exclusivity are assumptions cross-checked with reviewed source and live controls",
+    "30s receive idle deadline differs from60s atomics health window; concurrent slot snapshot linearizability is not proved",
+    "Public65=53 operational tools+12 declared gated/unavailable tool definitions from tools.unavailable_tools; JSON-RPC protocol methods are separate from the101 tool routes",
+    "13D conservation applies to modeled transition fields only"
+  ],
+  "remaining_findings": [
+    {
+      "id": "A-01",
+      "status": "OPEN",
+      "priority": "P1",
+      "finding": "Full cepaf suite has115failures",
+      "details": {
+        "count": 115,
+        "by_module": {
+          "telegram_service_e2e_test": 99,
+          "telegram_service_slice1_test": 1,
+          "telegram_verify_executor_test": 6,
+          "telegram_verify_run_test": 1,
+          "telegram_verify_service_test": 2
+        },
+        "failures": [
+          {
+            "test": "telegram_service_e2e_test.e2e_full_conversation_lifecycle_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_unauthorized_user_rejection_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_delivery_failure_bad_request_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_delivery_ambiguous_socket_drop_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_recovery_cgroup_and_writer_hold_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_automatic_dispatch_cycle_actor_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_catalog_help_and_tasks_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_catalog_start_and_plan_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_catalog_cockpit_and_tasks_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.unrelated_cleanup_receipt_should_not_admit_writer_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.large_saplan_result_is_chunked_and_delivered_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_supervised_six_second_poll_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_callback_ack_replay_and_denial_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_finite_automatic_loop_dispatches_without_manual_ticks_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_managed_start_identity_authority_single_use_and_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_managed_preflight_hold_preserves_start_permit_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_managed_renewal_and_runtime_release_suspension_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_managed_renewal_and_changed_task_suspension_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_managed_renewal_never_extends_parent_task_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_active_managed_start_dispatch_and_clean_release_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_stale_shutdown_cannot_release_successor_runtime_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_managed_successor_recovers_predecessor_that_never_started_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_managed_successor_recovers_terminated_active_predecessor_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_runtime_entry_validates_before_start_runs_and_releases_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_runtime_entry_recovers_runs_and_releases_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_task_detail_and_missing_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_task_invalid_and_real_plan_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_conversation_history_and_agy_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_conversation_daily_limit_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_conversation_failure_has_no_memory_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_conversation_authority_loss_blocks_model_post_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_conversation_empty_agy_does_not_poison_writer_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_memory_history_reads_persisted_exchange_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_memory_status_does_not_charge_model_budget_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_memory_clear_commits_before_confirmation_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_memory_invalid_clear_preserves_exchange_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_memory_commands_work_with_model_disabled_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_tool_alias_and_task_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_tool_help_and_missing_task_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_tool_scope_override_and_mutation_refused_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_status_and_system_health_tool_dispatch_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_status_parameters_refused_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_health_and_status_operational_status_dispatch_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_health_parameters_refused_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_kernel_version_alias_and_tool_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_kernel_eval_and_override_refused_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_coordination_peers_and_board_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_coordination_tool_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_knowledge_wiki_and_zk_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_knowledge_tool_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_unified_search_task_and_document_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_search_tool_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_matrix_versions_and_tool_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_matrix_scope_refused_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_managed_successor_preserves_expired_signed_action_and_allows_withdrawal_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_fmea_current_source_and_tool_refresh_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_fmea_stale_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_fmea_invalid_source_and_absent_task_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_fmea_missing_source_is_not_zero_risk_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_fmea_unconfigured_source_is_explicit_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_fmea_absent_task_does_not_cross_scope_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_ecology_and_tool_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_ecology_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_rete_command_and_tool_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_rete_scope_and_missing_facts_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_storage_and_nvme_alias_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_storage_tool_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_checklist_and_aspect_records_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_verification_changed_source_refuses_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_verification_stale_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_verification_foreign_candidate_refuses_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_verification_missing_source_refuses_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_checklist_full_record_chunks_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_ha_observation_dispatch_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_ha_scope_override_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_finops_budget_aliases_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_finops_tool_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_finops_missing_ledger_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_finops_changed_executable_refuses_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_oversized_unicode_grapheme_delivery_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_zenoh_listing_and_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_zenoh_foreign_chat_grant_refused_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_zenoh_missing_configuration_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_zenoh_read_and_tool_alias_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_impact_command_and_tool_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_impact_unknown_and_changed_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_impact_missing_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_impact_foreign_candidate_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_impact_unconfigured_and_scope_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_socratic_dialogue_and_alias_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_socratic_budget_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_socratic_model_failure_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_socratic_empty_does_not_spend_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_socratic_unconfigured_and_scope_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.-e2e_exec_brief_command_and_tool_test_/0-anonymous-0-",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_exec_brief_scope_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_captioned_photo_answers_typed_media_reply_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_captioned_media_never_reaches_specialised_arms_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_e2e_test.e2e_captioned_photo_with_bound_transport_is_stored_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_service_slice1_test.lifecycle_live_ownership_positive_and_refusal_test",
+            "code": "let assert Ok(True) = lifecycle.start_test_slice(slice_name)",
+            "value": "Error(\"lifecycle_command_transport_failed: guardian_refusal\")"
+          },
+          {
+            "test": "telegram_verify_executor_test.all_gates_pass_yields_verified_evidence_test",
+            "code": "let assert Ok(out) = run(root, l)",
+            "value": "Error(\"gate_build:guardian_artifact_unavailable\")"
+          },
+          {
+            "test": "telegram_verify_executor_test.failing_gate_keeps_partial_output_and_fails_test",
+            "code": "let assert Ok(out) = run(root, l)",
+            "value": "Error(\"gate_build:guardian_artifact_unavailable\")"
+          },
+          {
+            "test": "telegram_verify_executor_test.hanging_gate_is_killed_with_partial_output_preserved_test",
+            "code": "let assert Ok(out) = run(root, l)",
+            "value": "Error(\"gate_build:guardian_artifact_unavailable\")"
+          },
+          {
+            "test": "telegram_verify_executor_test.signalled_gate_is_an_error_with_output_test",
+            "code": "let assert Ok(out) = run(root, l)",
+            "value": "Error(\"gate_build:guardian_artifact_unavailable\")"
+          },
+          {
+            "test": "telegram_verify_executor_test.evidence_is_never_overwritten_test",
+            "code": "let assert Ok(_) = run(root, l)",
+            "value": "Error(\"gate_build:guardian_artifact_unavailable\")"
+          },
+          {
+            "test": "telegram_verify_service_test.signed_verify_packet_executes_once_and_replays_as_duplicate_test",
+            "code": "let assert Ok(#(_, reply)) = run_verify(f, packet_name)",
+            "value": "Error(ServiceError(ServiceState(ServiceConfiguration(LocalConfiguration(\"/home/an/NAS-setup/uos/tools/validation/telegram_store_transport_guardian.exe\", \"06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab\", \"/home/an/NAS-setup/uos/tools/validation/telegram_store_recovery_worker.exe\", \"f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e\", \"/tmp/uos_tg_verify_service_ok_178732884/telegram.sqlite3\"), TelegramHttpConfiguration(\"http://nas-1.tail55d152.ts.net:1\", \"TEST_ONLY\", 10000, 65536), 333444, [#(100, 200)], \"verify-plan\", \"controller\", \"controller\", \"runtime:telegra"
+          },
+          {
+            "test": "telegram_verify_service_test.replay_after_the_approval_expired_still_answers_duplicate_test",
+            "code": "let assert Ok(#(_, reply)) = run_verify(f, packet_name)",
+            "value": "Error(ServiceError(ServiceState(ServiceConfiguration(LocalConfiguration(\"/home/an/NAS-setup/uos/tools/validation/telegram_store_transport_guardian.exe\", \"06a278afd304bb4752522bd632004eb35ecff8a1b65459a3607a70b24e67f0ab\", \"/home/an/NAS-setup/uos/tools/validation/telegram_store_recovery_worker.exe\", \"f4f249eaa6ff2c9f4b1bf8c6587426f283ec1754892e847568b5dd1712a55b1e\", \"/tmp/uos_tg_verify_service_expiry_868685094/telegram.sqlite3\"), TelegramHttpConfiguration(\"http://nas-1.tail55d152.ts.net:1\", \"TEST_ONLY\", 10000, 65536), 333444, [#(100, 200)], \"verify-plan\", \"controller\", \"controller\", \"runtime:tel"
+          }
+        ],
+        "regression_attribution": "UNDETERMINED; no pre-change full-suite control at main@origin; isolated MCP subset passes",
+        "repair_boundary": "Application source remains pinned; no test/checker weakening",
+        "all_failure_names": [
+          "telegram_service_e2e_test.e2e_full_conversation_lifecycle_test",
+          "telegram_service_e2e_test.e2e_unauthorized_user_rejection_test",
+          "telegram_service_e2e_test.e2e_delivery_failure_bad_request_test",
+          "telegram_service_e2e_test.e2e_delivery_ambiguous_socket_drop_test",
+          "telegram_service_e2e_test.e2e_recovery_cgroup_and_writer_hold_test",
+          "telegram_service_e2e_test.e2e_automatic_dispatch_cycle_actor_test",
+          "telegram_service_e2e_test.e2e_catalog_help_and_tasks_dispatch_test",
+          "telegram_service_e2e_test.e2e_catalog_start_and_plan_dispatch_test",
+          "telegram_service_e2e_test.e2e_catalog_cockpit_and_tasks_dispatch_test",
+          "telegram_service_e2e_test.unrelated_cleanup_receipt_should_not_admit_writer_test",
+          "telegram_service_e2e_test.large_saplan_result_is_chunked_and_delivered_test",
+          "telegram_service_e2e_test.-e2e_supervised_six_second_poll_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_callback_ack_replay_and_denial_test",
+          "telegram_service_e2e_test.e2e_finite_automatic_loop_dispatches_without_manual_ticks_test",
+          "telegram_service_e2e_test.e2e_managed_start_identity_authority_single_use_and_dispatch_test",
+          "telegram_service_e2e_test.e2e_managed_preflight_hold_preserves_start_permit_test",
+          "telegram_service_e2e_test.-e2e_managed_renewal_and_runtime_release_suspension_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.-e2e_managed_renewal_and_changed_task_suspension_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.-e2e_managed_renewal_never_extends_parent_task_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_active_managed_start_dispatch_and_clean_release_test",
+          "telegram_service_e2e_test.e2e_stale_shutdown_cannot_release_successor_runtime_test",
+          "telegram_service_e2e_test.-e2e_managed_successor_recovers_predecessor_that_never_started_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.-e2e_managed_successor_recovers_terminated_active_predecessor_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_runtime_entry_validates_before_start_runs_and_releases_test",
+          "telegram_service_e2e_test.-e2e_runtime_entry_recovers_runs_and_releases_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_task_detail_and_missing_dispatch_test",
+          "telegram_service_e2e_test.e2e_task_invalid_and_real_plan_dispatch_test",
+          "telegram_service_e2e_test.e2e_conversation_history_and_agy_dispatch_test",
+          "telegram_service_e2e_test.e2e_conversation_daily_limit_test",
+          "telegram_service_e2e_test.e2e_conversation_failure_has_no_memory_test",
+          "telegram_service_e2e_test.e2e_conversation_authority_loss_blocks_model_post_test",
+          "telegram_service_e2e_test.e2e_conversation_empty_agy_does_not_poison_writer_test",
+          "telegram_service_e2e_test.e2e_memory_history_reads_persisted_exchange_test",
+          "telegram_service_e2e_test.e2e_memory_status_does_not_charge_model_budget_test",
+          "telegram_service_e2e_test.e2e_memory_clear_commits_before_confirmation_test",
+          "telegram_service_e2e_test.e2e_memory_invalid_clear_preserves_exchange_test",
+          "telegram_service_e2e_test.e2e_memory_commands_work_with_model_disabled_test",
+          "telegram_service_e2e_test.e2e_tool_alias_and_task_dispatch_test",
+          "telegram_service_e2e_test.e2e_tool_help_and_missing_task_test",
+          "telegram_service_e2e_test.e2e_tool_scope_override_and_mutation_refused_test",
+          "telegram_service_e2e_test.-e2e_status_and_system_health_tool_dispatch_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_status_parameters_refused_test",
+          "telegram_service_e2e_test.-e2e_health_and_status_operational_status_dispatch_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_health_parameters_refused_test",
+          "telegram_service_e2e_test.e2e_kernel_version_alias_and_tool_test",
+          "telegram_service_e2e_test.e2e_kernel_eval_and_override_refused_test",
+          "telegram_service_e2e_test.e2e_coordination_peers_and_board_test",
+          "telegram_service_e2e_test.e2e_coordination_tool_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_knowledge_wiki_and_zk_test",
+          "telegram_service_e2e_test.e2e_knowledge_tool_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_unified_search_task_and_document_test",
+          "telegram_service_e2e_test.e2e_search_tool_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_matrix_versions_and_tool_test",
+          "telegram_service_e2e_test.e2e_matrix_scope_refused_test",
+          "telegram_service_e2e_test.-e2e_managed_successor_preserves_expired_signed_action_and_allows_withdrawal_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_fmea_current_source_and_tool_refresh_test",
+          "telegram_service_e2e_test.e2e_fmea_stale_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_fmea_invalid_source_and_absent_task_test",
+          "telegram_service_e2e_test.e2e_fmea_missing_source_is_not_zero_risk_test",
+          "telegram_service_e2e_test.e2e_fmea_unconfigured_source_is_explicit_test",
+          "telegram_service_e2e_test.e2e_fmea_absent_task_does_not_cross_scope_test",
+          "telegram_service_e2e_test.e2e_ecology_and_tool_dispatch_test",
+          "telegram_service_e2e_test.e2e_ecology_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_rete_command_and_tool_test",
+          "telegram_service_e2e_test.e2e_rete_scope_and_missing_facts_test",
+          "telegram_service_e2e_test.e2e_storage_and_nvme_alias_test",
+          "telegram_service_e2e_test.e2e_storage_tool_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_checklist_and_aspect_records_test",
+          "telegram_service_e2e_test.e2e_verification_changed_source_refuses_test",
+          "telegram_service_e2e_test.e2e_verification_stale_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_verification_foreign_candidate_refuses_test",
+          "telegram_service_e2e_test.e2e_verification_missing_source_refuses_test",
+          "telegram_service_e2e_test.e2e_checklist_full_record_chunks_test",
+          "telegram_service_e2e_test.e2e_ha_observation_dispatch_test",
+          "telegram_service_e2e_test.e2e_ha_scope_override_refusal_test",
+          "telegram_service_e2e_test.e2e_finops_budget_aliases_test",
+          "telegram_service_e2e_test.e2e_finops_tool_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_finops_missing_ledger_test",
+          "telegram_service_e2e_test.e2e_finops_changed_executable_refuses_test",
+          "telegram_service_e2e_test.-e2e_oversized_unicode_grapheme_delivery_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_zenoh_listing_and_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_zenoh_foreign_chat_grant_refused_test",
+          "telegram_service_e2e_test.e2e_zenoh_missing_configuration_test",
+          "telegram_service_e2e_test.e2e_zenoh_read_and_tool_alias_test",
+          "telegram_service_e2e_test.e2e_impact_command_and_tool_test",
+          "telegram_service_e2e_test.e2e_impact_unknown_and_changed_test",
+          "telegram_service_e2e_test.e2e_impact_missing_test",
+          "telegram_service_e2e_test.e2e_impact_foreign_candidate_test",
+          "telegram_service_e2e_test.e2e_impact_unconfigured_and_scope_test",
+          "telegram_service_e2e_test.e2e_socratic_dialogue_and_alias_test",
+          "telegram_service_e2e_test.e2e_socratic_budget_test",
+          "telegram_service_e2e_test.e2e_socratic_model_failure_test",
+          "telegram_service_e2e_test.e2e_socratic_empty_does_not_spend_test",
+          "telegram_service_e2e_test.e2e_socratic_unconfigured_and_scope_test",
+          "telegram_service_e2e_test.-e2e_exec_brief_command_and_tool_test_/0-anonymous-0-",
+          "telegram_service_e2e_test.e2e_exec_brief_scope_refusal_test",
+          "telegram_service_e2e_test.e2e_captioned_photo_answers_typed_media_reply_test",
+          "telegram_service_e2e_test.e2e_captioned_media_never_reaches_specialised_arms_test",
+          "telegram_service_e2e_test.e2e_captioned_photo_with_bound_transport_is_stored_test",
+          "telegram_service_slice1_test.lifecycle_live_ownership_positive_and_refusal_test",
+          "telegram_verify_executor_test.all_gates_pass_yields_verified_evidence_test",
+          "telegram_verify_executor_test.failing_gate_keeps_partial_output_and_fails_test",
+          "telegram_verify_executor_test.hanging_gate_is_killed_with_partial_output_preserved_test",
+          "telegram_verify_executor_test.signalled_gate_is_an_error_with_output_test",
+          "telegram_verify_executor_test.wrong_guardian_pin_is_refused_test",
+          "telegram_verify_executor_test.evidence_is_never_overwritten_test",
+          "telegram_verify_run_test.real_executor_rechecks_and_runs_the_pinned_guardian_test",
+          "telegram_verify_service_test.signed_verify_packet_executes_once_and_replays_as_duplicate_test",
+          "telegram_verify_service_test.replay_after_the_approval_expired_still_answers_duplicate_test"
+        ],
+        "summary_failures": 115,
+        "parsed_named_failures": 109,
+        "unparsed_failure_records": 6
+      },
+      "attribution": "Unknown regression attribution; no source edits or baseline full-suite comparison; many named failures are Telegram guardian/refusal paths",
+      "repair_scope": "Future authorized pinned-source repair and capsule refresh required"
+    },
+    {
+      "id": "A-02",
+      "status": "OPEN",
+      "priority": "P1",
+      "finding": "Checklist and doctor remain HOLD; inventory is not two-key runtime admission"
+    },
+    {
+      "id": "A-03",
+      "status": "OPEN",
+      "priority": "P2",
+      "finding": "Default unification risk wrapper rejects ignored Dune symlink; isolated-cache run375checks passed and cache restored"
+    },
+    {
+      "id": "A-04",
+      "status": "OPEN",
+      "priority": "P1",
+      "finding": "Public numeric JSON arguments refused with -32600",
+      "queued_wave": "P0/P1b"
+    },
+    {
+      "id": "A-05",
+      "status": "OPEN",
+      "priority": "P2",
+      "finding": "Cockpit health200 contains quorum_healthy=false and unavailable; NIF/container fallback not independently causally established by this stage",
+      "queued_wave": "P2"
+    },
+    {
+      "id": "A-06",
+      "status": "OPEN",
+      "priority": "P3",
+      "finding": "Cold stdio attach mean measured1.746s in V01; no zero-cost attachment claim",
+      "queued_wave": "P3"
+    },
+    {
+      "id": "A-07",
+      "status": "OPEN",
+      "priority": "P2",
+      "finding": "Requested HTTPS Origin4100 refused403; configured approved HTTPS Origin4101 succeeds"
+    },
+    {
+      "id": "A-08",
+      "status": "OPEN",
+      "priority": "P2",
+      "finding": "Historical raw security-review JSON retains original compatibility-alias observations; current Markdown uses canonical modern and legacy profiles only",
+      "preserved_archives": [
+        "docs/reviews/20261030-1145-codex-t23-final-dev-acceptance.json",
+        "docs/reviews/20261030-1145-claude-t23-final-dev-acceptance.json",
+        "docs/reviews/20261030-1155-t20-inproject-formal-gate-probe.json",
+        "docs/reviews/20261030-1202-claude-t23-final-dev-acceptance-r2.json"
+      ]
+    },
+    {
+      "id": "A-09",
+      "status": "CLOSED",
+      "priority": "P1",
+      "finding": "Independent Claude Fable checkpoint audit PASS; operator separately authorizes Stage C",
+      "review_receipt_path": "docs/reviews/20261030-2259-claude-formal-checkpoint-review.json"
+    }
+  ],
+  "rulings": [
+    {
+      "id": "R01",
+      "finding": "M3 requires V02 tests but V02 depends on V01",
+      "resolution": "V01 computes a provisional151-case posterior; finalize the combined update after V02",
+      "cost_if_wrong": "Reliability score may omit cases until finalization; no readiness authority assigned"
+    },
+    {
+      "id": "R02",
+      "finding": "Runtime socket idle deadline30s and freshness predicate60s are distinct",
+      "resolution": "Prove the ideal30s deadline separately and pointwise tuple/atomics equivalence for arbitrary window; document scheduling and snapshot limits",
+      "cost_if_wrong": "Abstract proof is not a runtime timing guarantee"
+    },
+    {
+      "id": "R03",
+      "finding": "Public12 non-operational-tool specs are protocol facilities",
+      "resolution": "Preserve requested historical Lean identifier but classify live65=53tools+12facilities",
+      "cost_if_wrong": "No facility-unavailability claim made",
+      "superseded_by": "N-01 independent review correction",
+      "corrected_resolution": "The12 definitions are declared gated/unavailable tools, not protocol facilities; protocol methods are separate"
+    },
+    {
+      "id": "R04",
+      "finding": "Requested HTTPS Origin4100 refuses403",
+      "resolution": "Probe and record refusal, then use configured approved HTTPS Origin4101 for positive bearer guard",
+      "cost_if_wrong": "No guarantee for unauthorized Origin4100; source remains pinned"
+    },
+    {
+      "id": "R05",
+      "finding": "uos-cli preflight accepts unknown command by printing usage and exiting0",
+      "resolution": "Record it as NOT_EXECUTED and run canonical bash tools/preflight --receipt",
+      "cost_if_wrong": "Exit0 alone does not attest preflight behavior"
+    },
+    {
+      "id": "R06",
+      "finding": "Risk selftest source inventory includes ignored Dune build symlinks",
+      "resolution": "Temporarily relocate ignored cache, run isolated selftest375checks, restore identical cache",
+      "cost_if_wrong": "Default un-isolated wrapper still rejects cache; no source checker weakened"
+    },
+    {
+      "id": "R07",
+      "finding": "Authorized web test regenerated one source-manifest build .app entry",
+      "resolution": "Restore exact pre-test backup bytes; final manifest parity must be zero",
+      "cost_if_wrong": "Build metadata drift would invalidate source parity if restoration omitted"
+    },
+    {
+      "id": "R08",
+      "finding": "Initial stdio invalid-request frame has null id",
+      "resolution": "Single outstanding malformed-request probe correlates null-id error to pending negative control",
+      "cost_if_wrong": "General concurrent RPC correlation not claimed"
+    },
+    {
+      "id": "R09",
+      "finding": "Governance checklist and doctor intentionally report HOLD",
+      "resolution": "Preserve raw failures and distinguish completion of sweep from system acceptance",
+      "cost_if_wrong": "No overall green/readiness claim; audit and Stage C remain gated"
+    },
+    {
+      "id": "R10",
+      "finding": "Full cepaf14139/115 is non-green and capsule source repairs are prohibited",
+      "resolution": "Complete the requested execution/reporting sweep with explicit failures, leave audit draftHOLD and publication unexecuted",
+      "cost_if_wrong": "Completion records must never be used as all-green acceptance; repair/audit remains separate"
+    },
+    {
+      "id": "R11",
+      "finding": "Literal alias removal conflicts with byte-preserving raw historical review evidence",
+      "resolution": "Normalize current Markdown profiles, preserve four raw review JSON files and expose the unmet literal constraint as an open finding",
+      "cost_if_wrong": "The requested repository-wide literal absence is not achieved; independent audit must decide disposition"
+    }
+  ],
+  "commands": [
+    {
+      "id": "V01-http",
+      "command": [
+        "node",
+        "/tmp/stage-a-http.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:21:59.881Z",
+      "elapsed_ms": 308,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V01-http.log",
+      "log_sha256": "c6a697f24f9f8d24575ee686aa17aeaa6f0daf3892d3e0b45209451a9529821a",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V01-http.json"
+    },
+    {
+      "id": "V01-stdio-debug",
+      "command": [
+        "node",
+        "/tmp/stage-a-stdio.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:21:18.095Z",
+      "elapsed_ms": 30084,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V01-stdio-debug.log",
+      "log_sha256": "e8b9b22cf6f7c5dbedf518d480e4da475f0d01721e8fbbf8c6af494dc225f2b7",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V01-stdio-debug.json"
+    },
+    {
+      "id": "V01-stdio",
+      "command": [
+        "node",
+        "/tmp/stage-a-stdio.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:21:41.480Z",
+      "elapsed_ms": 5615,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V01-stdio.log",
+      "log_sha256": "c99cebe42370ae7b6c7ad05e7c570b460d20e62ba0b562a1b5c2e52867a24428",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V01-stdio.json"
+    },
+    {
+      "id": "V01-zenoh",
+      "command": [
+        "node",
+        "/tmp/stage-a-zenoh.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:22:00.308Z",
+      "elapsed_ms": 2109,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V01-zenoh.log",
+      "log_sha256": "1df76633d27ed814993f0a7da78837ced8528dce503de34c197e32058d13f180",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V01-zenoh.json"
+    },
+    {
+      "id": "V02-http",
+      "command": [
+        "/usr/bin/node",
+        "/tmp/stage-a-http.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:28.984Z",
+      "elapsed_ms": 334,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V02-http.log",
+      "log_sha256": "71327b012ae736b589e5e143ad3960b3749eb429b44f38f979bc5b700dec9a82",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V02-http.json"
+    },
+    {
+      "id": "V02-stdio",
+      "command": [
+        "/usr/bin/node",
+        "/tmp/stage-a-stdio.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:23.021Z",
+      "elapsed_ms": 5961,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V02-stdio.log",
+      "log_sha256": "538881d930f584947bfa0ccea96cb262befecbd046d895397a06898427c01c2d",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V02-stdio.json"
+    },
+    {
+      "id": "V02-zenoh",
+      "command": [
+        "/usr/bin/node",
+        "/tmp/stage-a-zenoh.js"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:29.318Z",
+      "elapsed_ms": 2153,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/V02-zenoh.log",
+      "log_sha256": "d87647d9626376dcd59c3983ead41ccf5566dcfca319b3eadaa94f3ad8ff8655",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/V02-zenoh.json"
+    },
+    {
+      "id": "capsule-final",
+      "command": [
+        "toolchains/opam-ocaml/bin/ocaml",
+        "tools/ecology_release.ml",
+        "verify",
+        "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:30:34.727Z",
+      "elapsed_ms": 1512,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/capsule-final.log",
+      "log_sha256": "ad5611b752c708a4a31c4208899d26c31d29e8fca4cb14856b7edc8743bd218b",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/capsule-final.json"
+    },
+    {
+      "id": "capsule-initial",
+      "command": [
+        "toolchains/opam-ocaml/bin/ocaml",
+        "tools/ecology_release.ml",
+        "verify",
+        "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:20:36.802Z",
+      "elapsed_ms": 1469,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/capsule-initial.log",
+      "log_sha256": "ad5611b752c708a4a31c4208899d26c31d29e8fca4cb14856b7edc8743bd218b",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/capsule-initial.json"
+    },
+    {
+      "id": "capsule-post-docs",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "tools/ecology_release.ml",
+        "verify",
+        "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:38:26.865Z",
+      "elapsed_ms": 1506,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/capsule-post-docs.log",
+      "log_sha256": "ad5611b752c708a4a31c4208899d26c31d29e8fca4cb14856b7edc8743bd218b",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/capsule-post-docs.json"
+    },
+    {
+      "id": "checklist",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "checklist"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.487Z",
+      "elapsed_ms": 161,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/checklist.log",
+      "log_sha256": "c9ce3d02775431d5f0b8db800e59cc7105ef5579fa3c1b860f7b3a3be244d0fe",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/checklist.json"
+    },
+    {
+      "id": "diagram-check-final",
+      "command": [
+        "bash",
+        "tools/diagram-check",
+        "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md",
+        "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "governance/agents/20261001-1118-skills/ak47-multi-agent-mcp-symbiosis/SKILL.md",
+        "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:40:47.104Z",
+      "elapsed_ms": 24,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/diagram-check-final.log",
+      "log_sha256": "c2bc12dd84f686809ce6b174eb97e9ffe02943eaec7b05d04bb992d88caf522c",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/diagram-check-final.json"
+    },
+    {
+      "id": "diagram-check",
+      "command": [
+        "bash",
+        "tools/diagram-check",
+        "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md",
+        "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "governance/agents/20261001-1118-skills/ak47-multi-agent-mcp-symbiosis/SKILL.md",
+        "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:37:43.354Z",
+      "elapsed_ms": 21,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/diagram-check.log",
+      "log_sha256": "c2bc12dd84f686809ce6b174eb97e9ffe02943eaec7b05d04bb992d88caf522c",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/diagram-check.json"
+    },
+    {
+      "id": "docs-truth-final",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl",
+        "+S",
+        "2:2",
+        "-noshell",
+        "-pa",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/argv/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/certifi/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/directories/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/envoy/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/esqlite/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/exception/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/filepath/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_crypto/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_erlang/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_http/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_json/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_otp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_regexp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/glisten/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gramps/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hackney/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/houdini/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hpack/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/idna/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/logging/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/lustre/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/marceau/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mimerl/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mist/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/parse_trans/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/platform/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/quic/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/simplifile/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/ssl_verify_fun/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_swarm/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_tui/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/wisp/ebin",
+        "-eval",
+        "case eunit:test(mcp_docs_truth_test,[verbose]) of ok -> halt(0); _ -> halt(1) end."
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      "observed_at": "2026-10-30T21:38:26.698Z",
+      "elapsed_ms": 166,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/docs-truth-final.log",
+      "log_sha256": "dd27a4e066b87d5662264869a9de3de122dc276fc6382091a6f9086f07928158",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/docs-truth-final.json"
+    },
+    {
+      "id": "doctor",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "doctor"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.648Z",
+      "elapsed_ms": 212,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/doctor.log",
+      "log_sha256": "5a3bb28685f87bd069ad1155409c5360ae925c81cf56b1b64cd9d4581c4f2808",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/doctor.json"
+    },
+    {
+      "id": "eunit-41-initial",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl",
+        "+S",
+        "4:4",
+        "+A",
+        "4",
+        "-noshell",
+        "-pa",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/argv/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/certifi/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/directories/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/envoy/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/esqlite/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/exception/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/filepath/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_crypto/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_erlang/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_http/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_json/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_otp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_regexp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/glisten/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gramps/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hackney/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/houdini/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hpack/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/idna/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/logging/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/lustre/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/marceau/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mimerl/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mist/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/parse_trans/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/platform/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/quic/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/simplifile/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/ssl_verify_fun/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_swarm/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_tui/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/wisp/ebin",
+        "-eval",
+        "case eunit:test(['harness_authority_test','harness_cas_critical_section_test','harness_development_test','harness_native_backend_test','harness_pre_attach_assessment_test','harness_sa_plan_boundary_test','harness_stdio_pipe_test','harness_successor_test','harness_telegram_test','harness_tracking_test','mcp_admission_test','mcp_analysis_test','mcp_assurance_test','mcp_authz_wiring_test','mcp_catalog_truth_test','mcp_client_matrix_test','mcp_control_test','mcp_docs_truth_test','mcp_feature_acceptance_test','mcp_final_acceptance_test','mcp_http_auth_test','mcp_inference_models_test','mcp_knowledge_test','mcp_live_cutover_wiring_test','mcp_observation_test','mcp_planning_read_test','mcp_planning_write_test','mcp_protocol_conformance_test','mcp_registry_test','mcp_release_rehearsal_test','mcp_route_census_test','mcp_route_parity_test','mcp_runtime_truth_test','mcp_server_facilities_test','mcp_transport_test','mcp_vault_metadata_test','mcp_verification_execution_test','mcp_worker_recovery_test','mcp_workspace_disposition_test','otp_app_release_test','otp_release_test'],[verbose]) of ok -> halt(0); _ -> halt(1) end."
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      "observed_at": "2026-10-30T21:27:37.714Z",
+      "elapsed_ms": 20736,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/eunit-41-initial.log",
+      "log_sha256": "51cbd3cab1f84f2482e91a21ed9140d0a8db87ffd14edf08748af55d80c8b3b5",
+      "initial_label": "eunit-46",
+      "selection_disposition": "Initial regex selected41suites; replaced by complete46suite diagnostic run",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/eunit-41-initial.json"
+    },
+    {
+      "id": "eunit-46",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl",
+        "+S",
+        "4:4",
+        "+A",
+        "4",
+        "-noshell",
+        "-pa",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/argv/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/certifi/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/directories/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/envoy/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/esqlite/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/exception/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/filepath/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_crypto/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_erlang/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_http/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_json/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_otp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_regexp/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/glisten/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gramps/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hackney/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/houdini/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/hpack/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/idna/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/logging/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/lustre/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/marceau/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mimerl/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/mist/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/parse_trans/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/platform/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/quic/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/simplifile/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/ssl_verify_fun/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_swarm/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/uos_tui/ebin",
+        "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/wisp/ebin",
+        "-eval",
+        "case eunit:test(['browser_harness_test','c3i_nif_mcp_test','client_mcp_test','dart_mcp_tools_wiring_test','harness_authority_test','harness_cas_critical_section_test','harness_development_test','harness_native_backend_test','harness_pre_attach_assessment_test','harness_sa_plan_boundary_test','harness_stdio_pipe_test','harness_successor_test','harness_telegram_test','harness_tracking_test','mcp_admission_test','mcp_analysis_test','mcp_assurance_test','mcp_authz_wiring_test','mcp_catalog_truth_test','mcp_client_matrix_test','mcp_control_test','mcp_docs_truth_test','mcp_feature_acceptance_test','mcp_final_acceptance_test','mcp_http_auth_test','mcp_inference_models_test','mcp_knowledge_test','mcp_live_cutover_wiring_test','mcp_observation_test','mcp_planning_read_test','mcp_planning_write_test','mcp_protocol_conformance_test','mcp_registry_test','mcp_release_rehearsal_test','mcp_route_census_test','mcp_route_parity_test','mcp_runtime_truth_test','mcp_server_facilities_test','mcp_transport_test','mcp_vault_metadata_test','mcp_verification_execution_test','mcp_worker_recovery_test','mcp_workspace_disposition_test','otp_app_release_test','otp_release_test','system_feature_census_test'],[verbose]) of ok -> halt(0); _ -> halt(1) end."
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      "observed_at": "2026-10-30T21:29:11.034Z",
+      "elapsed_ms": 22076,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/eunit-46.log",
+      "log_sha256": "9b19ec9ac7e75e60da90de3e91b1897640f640ece70ad78ac4b49a08e3cfaa47",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/eunit-46.json"
+    },
+    {
+      "id": "hermes-parity",
+      "command": [
+        "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/hermes_harness/test_parity_algebra.exe"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.761Z",
+      "elapsed_ms": 13,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/hermes-parity.log",
+      "log_sha256": "5141ca13e5e14cb5863a6b3854ff001743c89030c115c2eb4d906f5ca4be77a2",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/hermes-parity.json"
+    },
+    {
+      "id": "hermes-rete",
+      "command": [
+        "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.760Z",
+      "elapsed_ms": 4,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/hermes-rete.log",
+      "log_sha256": "ca9bf5a6407e0a83c92bb6c7dc5127332e56bce0b0173b0511a4909174a63a98",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/hermes-rete.json"
+    },
+    {
+      "id": "impact-range",
+      "command": [
+        "toolchains/nix-profile/bin/jj",
+        "diff",
+        "--from",
+        "main@origin",
+        "--to",
+        "main",
+        "--summary"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:22:16.793Z",
+      "elapsed_ms": 67,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/impact-range.log",
+      "log_sha256": "124d0d0d1d8d105bb968f588d4a7d819fbb0368d39c3755e659b968286ecc402",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/impact-range.json"
+    },
+    {
+      "id": "journal-check-final",
+      "command": [
+        "bash",
+        "tools/journal-check",
+        "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:40:47.017Z",
+      "elapsed_ms": 16,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/journal-check-final.log",
+      "log_sha256": "f8c27400159802407457ac8a48e081eff721129d136ce34be7768425bbdb6b27",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/journal-check-final.json"
+    },
+    {
+      "id": "journal-check",
+      "command": [
+        "bash",
+        "tools/journal-check",
+        "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:37:01.345Z",
+      "elapsed_ms": 19,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/journal-check.log",
+      "log_sha256": "9d8bf017458f16f306bb5d6ef3c7341c9f15aef8712532e177b2a7466ce3855a",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/journal-check-first-rejected.json"
+    },
+    {
+      "id": "journal-check",
+      "command": [
+        "bash",
+        "tools/journal-check",
+        "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:37:43.260Z",
+      "elapsed_ms": 19,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/journal-check.log",
+      "log_sha256": "f8c27400159802407457ac8a48e081eff721129d136ce34be7768425bbdb6b27",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/journal-check.json"
+    },
+    {
+      "id": "km-gate-final",
+      "command": [
+        "bash",
+        "tools/km-gate",
+        "--gate"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:37:43.462Z",
+      "elapsed_ms": 871,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/km-gate-final.log",
+      "log_sha256": "037aadaf9ba2c89854c88105018df0570787c77083e7bde27bb25e83122ba9a4",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/km-gate-final.json"
+    },
+    {
+      "id": "km-gate",
+      "command": [
+        "bash",
+        "tools/km-gate",
+        "--gate"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.860Z",
+      "elapsed_ms": 843,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/km-gate.log",
+      "log_sha256": "3e6d9eddd4ed12383ff3996a44c26effcffba4f8083dc2038cd41bab945f6635",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/km-gate.json"
+    },
+    {
+      "id": "lean-DevelopmentCoreGate",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/lean",
+        "formal/lean/DevelopmentCoreGate.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.756Z",
+      "elapsed_ms": 934,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/lean-DevelopmentCoreGate.log",
+      "log_sha256": "483d8470a7dc0d8f4a1f4a88ad011528b08352ffabcc3704fd26a8dccc1624ef",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/lean-DevelopmentCoreGate.json"
+    },
+    {
+      "id": "lean-IntentSafety",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/lean",
+        "formal/lean/IntentSafety.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.757Z",
+      "elapsed_ms": 818,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/lean-IntentSafety.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/lean-IntentSafety.json"
+    },
+    {
+      "id": "lean-Lyapunov_Stability",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/lean",
+        "formal/lean/Lyapunov_Stability.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.758Z",
+      "elapsed_ms": 393,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/lean-Lyapunov_Stability.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/lean-Lyapunov_Stability.json"
+    },
+    {
+      "id": "lean-Traceability",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/lean",
+        "formal/lean/Traceability.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.751Z",
+      "elapsed_ms": 682,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/lean-Traceability.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/lean-Traceability.json"
+    },
+    {
+      "id": "lean-TwoLattice_STM",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/lean",
+        "formal/lean/TwoLattice_STM.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:52.755Z",
+      "elapsed_ms": 558,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/lean-TwoLattice_STM.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/lean-TwoLattice_STM.json"
+    },
+    {
+      "id": "lean-impact",
+      "command": [
+        "tools/lean",
+        "formal/lean/McpSymbiosis101FormalImpact.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:17:40.329Z",
+      "elapsed_ms": 485,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/lean-impact.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/lean-impact.json"
+    },
+    {
+      "id": "mutant-hmac",
+      "command": [
+        "tools/quint",
+        "test",
+        "--main=mcp_symbiosis_101_cutover",
+        "--match=forgedHmacControl",
+        "var/harness/20261030-2215-formal-checkpoint/mutant-hmac.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:45.508Z",
+      "elapsed_ms": 541,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/mutant-hmac.log",
+      "log_sha256": "0ed18f4a0094080cdb001604929e6b17732daf17f50f6cd627e83248153ef832",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/mutant-hmac.json"
+    },
+    {
+      "id": "mutant-owner",
+      "command": [
+        "tools/lean",
+        "var/harness/20261030-2215-formal-checkpoint/mutant-owner.lean"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:46.145Z",
+      "elapsed_ms": 804,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/mutant-owner.log",
+      "log_sha256": "e59d18d1451beb3842a725992dfe7f9381cebddb1fae65eeeb693400d0443a65",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/mutant-owner.json"
+    },
+    {
+      "id": "preflight-canonical",
+      "command": [
+        "bash",
+        "tools/preflight",
+        "--receipt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:47.055Z",
+      "elapsed_ms": 2500,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/preflight-canonical.log",
+      "log_sha256": "e0f0641d8ada4a61685c47271e1c2b3c79af545377e47dfc77f0b9db7408db7e",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/preflight-canonical.json"
+    },
+    {
+      "id": "preflight-uos",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "preflight",
+        "--receipt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.117Z",
+      "elapsed_ms": 193,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/preflight-uos.log",
+      "log_sha256": "4c32085a28701f1cb04bb1640b0828c5e71f1b53e96f4451a1d31548e058666b",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/preflight-uos.json"
+    },
+    {
+      "id": "quint-existing-invDisjointResolution",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invDisjointResolution",
+        "formal/quint/intent_invariants.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:54.983Z",
+      "elapsed_ms": 386,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-existing-invDisjointResolution.log",
+      "log_sha256": "d31d8edfc1e5a4329fb145d6dab2e3cd5367c87e7cb01ecbe89e32a67269dfa6",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-existing-invDisjointResolution.json"
+    },
+    {
+      "id": "quint-existing-invStorageLockPreserved",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invStorageLockPreserved",
+        "formal/quint/intent_invariants.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:54.629Z",
+      "elapsed_ms": 353,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-existing-invStorageLockPreserved.log",
+      "log_sha256": "8ffd6b2d1010071fe03f15f8da86aaa0cf34b2e57e8d1e7269c27dff921f0455",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-existing-invStorageLockPreserved.json"
+    },
+    {
+      "id": "quint-existing-notConverged",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=notConverged",
+        "formal/quint/parity_frontier.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:53.959Z",
+      "elapsed_ms": 340,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-existing-notConverged.log",
+      "log_sha256": "096e2e4a1f29f576896a31ca99bf1ea92d09fdb5b0c496c49edf8af2d59a68ee",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-existing-notConverged.json"
+    },
+    {
+      "id": "quint-existing-reqClosed",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=reqClosed",
+        "formal/quint/parity_frontier.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:53.587Z",
+      "elapsed_ms": 371,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-existing-reqClosed.log",
+      "log_sha256": "3ee08bf9d5ac444032dea907e384188c585647dba858dd168108508dc15070da",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-existing-reqClosed.json"
+    },
+    {
+      "id": "quint-impact-typecheck",
+      "command": [
+        "tools/quint",
+        "typecheck",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:44.382Z",
+      "elapsed_ms": 451,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-impact-typecheck.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-impact-typecheck.json"
+    },
+    {
+      "id": "quint-invAtMostOneZenohSubscriber",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invAtMostOneZenohSubscriber",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:49.827Z",
+      "elapsed_ms": 474,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-invAtMostOneZenohSubscriber.log",
+      "log_sha256": "5d86a99a65aec4f90685bf712605c5a22bc718b5b7e13fb9dc5e9e2979bec134",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-invAtMostOneZenohSubscriber.json"
+    },
+    {
+      "id": "quint-invEvCeiling93Preserved",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invEvCeiling93Preserved",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:51.767Z",
+      "elapsed_ms": 481,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-invEvCeiling93Preserved.log",
+      "log_sha256": "056160289fc1a1eb2ad881970f5657e24b726e39106cfe5270d8d56d65048126",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-invEvCeiling93Preserved.json"
+    },
+    {
+      "id": "quint-invForgedHmacNeverMutatesLedger",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invForgedHmacNeverMutatesLedger",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:50.303Z",
+      "elapsed_ms": 490,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-invForgedHmacNeverMutatesLedger.log",
+      "log_sha256": "4f53072501db8e7e7e8753dbaaa7d9b70e1aeac2eac46af3b3f8b957aafce962",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-invForgedHmacNeverMutatesLedger.json"
+    },
+    {
+      "id": "quint-invNegativeControlNoAllFourAgentsComplete",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invNegativeControlNoAllFourAgentsComplete",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:52.248Z",
+      "elapsed_ms": 477,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-invNegativeControlNoAllFourAgentsComplete.log",
+      "log_sha256": "8c75814b5d0466de4d7cae3562857afc88dfbd74fa79388674a4c3a5277675b4",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-invNegativeControlNoAllFourAgentsComplete.json"
+    },
+    {
+      "id": "quint-invPinMismatchRefused",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invPinMismatchRefused",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:51.304Z",
+      "elapsed_ms": 463,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-invPinMismatchRefused.log",
+      "log_sha256": "51de6c24a1b9cf5e497f8c7a7c56ecc09454087bbfad4f7bf24c5f3762d80567",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-invPinMismatchRefused.json"
+    },
+    {
+      "id": "quint-invUncertainNeverBlindlyReplayed",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "run",
+        "--max-steps=15",
+        "--max-samples=200",
+        "--seed=20261030",
+        "--invariant=invUncertainNeverBlindlyReplayed",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:50.794Z",
+      "elapsed_ms": 510,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-invUncertainNeverBlindlyReplayed.log",
+      "log_sha256": "54870432afb4d590025c3c572991164f35dcec2b2380acfa586d6b9dd89e3e90",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-invUncertainNeverBlindlyReplayed.json"
+    },
+    {
+      "id": "quint-type-intent_invariants",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "typecheck",
+        "formal/quint/intent_invariants.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:54.300Z",
+      "elapsed_ms": 329,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-type-intent_invariants.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-type-intent_invariants.json"
+    },
+    {
+      "id": "quint-type-parity_frontier",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/quint",
+        "typecheck",
+        "formal/quint/parity_frontier.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:18:53.239Z",
+      "elapsed_ms": 348,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-type-parity_frontier.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-type-parity_frontier.json"
+    },
+    {
+      "id": "quint-unit-controls",
+      "command": [
+        "tools/quint",
+        "test",
+        "--match=^(allFourReachable|forgedHmacControl|uncertainControl|pinControl)$",
+        "formal/quint/mcp_symbiosis_101_cutover.qnt"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:21:32.489Z",
+      "elapsed_ms": 530,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/quint-unit-controls.log",
+      "log_sha256": "2f3e367d9503c87e70558cc7496a4d081d0c11c3c5c3242bc664c8bd2cc4e4c1",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/quint-unit-controls.json"
+    },
+    {
+      "id": "risk-selftest-isolated-cache",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "-I",
+        "tools",
+        "tools/unification_cycles.ml",
+        "risk-check",
+        "--selftest"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:24:32.943Z",
+      "elapsed_ms": 2744,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/risk-selftest-isolated-cache.log",
+      "log_sha256": "3a109f78bd73d382a44781898986adb22862344cb75e9955855a93c0e2d46961",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/risk-selftest-isolated-cache.json"
+    },
+    {
+      "id": "risk-selftest",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "-I",
+        "tools",
+        "tools/unification_cycles.ml",
+        "risk-check",
+        "--selftest"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:07.703Z",
+      "elapsed_ms": 655,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/risk-selftest.log",
+      "log_sha256": "4864d0adda929c03fa9b4cfd692df35475d9f1302cd4a286142d7ae4c24051f4",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/risk-selftest.json"
+    },
+    {
+      "id": "storage-tests",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/cargo/bin/cargo",
+        "test",
+        "--offline",
+        "spec::tests"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/ops/kubernetes/nas-k8s-lab",
+      "observed_at": "2026-10-30T21:24:13.625Z",
+      "elapsed_ms": 29354,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/storage-tests.log",
+      "log_sha256": "802bbd3f74326b9de0cca13add2caa249821f64128047b6459a0d787b40f658b",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/storage-tests.json"
+    },
+    {
+      "id": "test-cepaf_gleam",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      "observed_at": "2026-10-30T21:23:00.780Z",
+      "elapsed_ms": 391779,
+      "exit_code": 1,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-cepaf_gleam.log",
+      "log_sha256": "243563070091f6220f498b13704a64acef63d550f27026a0e81f983f1cd0d0d1",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/test-cepaf_gleam.json"
+    },
+    {
+      "id": "test-indrajaal_gleam_web",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/indrajaal_gleam_web",
+      "observed_at": "2026-10-30T21:23:00.784Z",
+      "elapsed_ms": 5651,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-indrajaal_gleam_web.log",
+      "log_sha256": "8191e89afee7c7e4f89d92457b8603a849d58886cac3904e149119f65e6ab923",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/test-indrajaal_gleam_web.json"
+    },
+    {
+      "id": "test-uos_swarm",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/uos_swarm",
+      "observed_at": "2026-10-30T21:23:00.786Z",
+      "elapsed_ms": 19344,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-uos_swarm.log",
+      "log_sha256": "39e785ae6c554761912819c307d7c861084bedd48d4b2d7d2d3c99e344c36e71",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/test-uos_swarm.json"
+    },
+    {
+      "id": "test-uos_tui",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/uos_tui",
+      "observed_at": "2026-10-30T21:23:00.787Z",
+      "elapsed_ms": 1004,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/test-uos_tui.log",
+      "log_sha256": "85f2c2933e7ef0e5c7eb07930dd52017433ab6b91e05eab8554e81d62dbd8b65",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/test-uos_tui.json"
+    },
+    {
+      "id": "timestamp",
+      "command": [
+        "/home/an/NAS-setup/uos/tools/uos-cli",
+        "timestamp-check"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:23:06.312Z",
+      "elapsed_ms": 174,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/timestamp.log",
+      "log_sha256": "3da447c6678ed472d50be7904976c5fddff642dc78af239b3e357a9105697873",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/timestamp.json"
+    },
+    {
+      "id": "versions",
+      "command": [
+        "bash",
+        "-c",
+        "tools/lean --version; tools/quint --version; tools/z3 --version; erl -noshell -eval 'io:format(\"OTP ~s ERTS ~s~n\",[erlang:system_info(otp_release),erlang:system_info(version)]),halt().'"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:16:41.983Z",
+      "elapsed_ms": 397,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/versions.log",
+      "log_sha256": "705696899721a9fa2f003c9784970efd47acd741da82008c002787d72c64ac87",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/versions.json"
+    },
+    {
+      "id": "z3-impact",
+      "command": [
+        "tools/z3",
+        "-smt2",
+        "formal/z3/20261030-2215-mcp-symbiosis-impact.smt2"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "observed_at": "2026-10-30T21:26:03.578Z",
+      "elapsed_ms": 34,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/z3-impact.log",
+      "log_sha256": "3c24782cbaec0bc7070bf2101a263dde83ef9effce856a98031ec27b707df444",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/z3-impact.json"
+    },
+    {
+      "id": "zigvm-tests",
+      "command": [
+        "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/zig",
+        "build",
+        "test",
+        "--summary",
+        "all"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/engines/zigvm",
+      "observed_at": "2026-10-30T21:23:21.797Z",
+      "elapsed_ms": 15636,
+      "exit_code": 0,
+      "signal": null,
+      "timed_out": false,
+      "log": "var/harness/20261030-2215-formal-checkpoint/zigvm-tests.log",
+      "log_sha256": "291fe606e8d1e822093792c2af8c4431c99a09d6853b1bfc329202baab7bb79a",
+      "record_path": "var/harness/20261030-2215-formal-checkpoint/zigvm-tests.json"
+    }
+  ],
+  "journal_path": "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md",
+  "secret_values_recorded": false,
+  "audit_handoff_ready": true,
+  "independent_audit": {
+    "status": "PASS",
+    "reviewer": "claude-fable-5.1-max",
+    "model": "Claude Fable 5.1",
+    "effort": "max",
+    "audit_target_commit_id": "680e3421006c1851e675c1b131c2bf3966f93b89",
+    "checkpoint_tag_push_approved": true,
+    "blocking_findings": [],
+    "review_receipt_path": "docs/reviews/20261030-2259-claude-formal-checkpoint-review.json",
+    "scope": "Original Stage A snapshot; operator-authorized post-review N01/N02/N11 refinements mechanically reverified separately",
+    "application_admitted": false,
+    "system_admission": "NOT_ADMITTED",
+    "V03_remains_executing": false,
+    "task_closure": "V03 closure follows final active fence; current canonical state lives in Sa-plan"
+  },
+  "risk_final_receipt_path": "var/harness/20261030-2215-formal-checkpoint/V03-active-final.json",
+  "documentation_projection": {
+    "changes_receipt": "var/harness/20261030-2215-formal-checkpoint/doc-profile-changes.json",
+    "raw_archives_preserved": true,
+    "canonical_profiles": [
+      "2026-07-28",
+      "2024-11-05"
+    ],
+    "mirror_check_receipt": "var/harness/20261030-2215-formal-checkpoint/final-scope-secret-scan.json"
+  },
+  "source_test_counts_are_current": true,
+  "final_handoff_seal_path": "var/harness/20261030-2215-formal-checkpoint/stage-a-handoff.json",
+  "final_preflight_command_receipt_path": "var/harness/20261030-2215-formal-checkpoint/preflight-final.json",
+  "post_review_polish": {
+    "findings": [
+      "N-01",
+      "N-02",
+      "N-11"
+    ],
+    "review_receipt_path": "docs/reviews/20261030-2259-claude-formal-checkpoint-review.json",
+    "application_sources_untouched": true,
+    "semantics": "The twelve public non-operational specs are unavailable tool definitions; distinct normalized tuple and integer-slot freshness representations agree after encoding",
+    "fast_gates": [
+      {
+        "id": "lean-final",
+        "command": [
+          "/home/an/NAS-setup/uos/tools/lean",
+          "formal/lean/McpSymbiosis101FormalImpact.lean"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.319Z",
+        "elapsed_ms": 830,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/lean-final.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "quint-typecheck-final",
+        "command": [
+          "/home/an/NAS-setup/uos/tools/quint",
+          "typecheck",
+          "formal/quint/mcp_symbiosis_101_cutover.qnt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.322Z",
+        "elapsed_ms": 603,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/quint-typecheck-final.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "quint-default-tests",
+        "command": [
+          "tools/quint",
+          "test",
+          "--main=mcp_symbiosis_101_cutover",
+          "formal/quint/mcp_symbiosis_101_cutover.qnt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:04:54.490Z",
+        "elapsed_ms": 429,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/quint-default-tests.log",
+        "log_sha256": "281b24984d835232649c3de23c02ec5ad0304bdca0525f71e410e0a67caa6023"
+      },
+      {
+        "id": "quint-controls",
+        "command": [
+          "tools/quint",
+          "test",
+          "--main=mcp_symbiosis_101_cutover",
+          "--match=^(allFourReachable|forgedHmacControl|uncertainControl|pinControl)$",
+          "formal/quint/mcp_symbiosis_101_cutover.qnt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:04:54.999Z",
+        "elapsed_ms": 546,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/quint-controls.log",
+        "log_sha256": "28cd2b2cf9768fe3a05d80cfabfd47d68a7ae97ebd319dcdba1e3d1cfb1be69a"
+      },
+      {
+        "id": "z3",
+        "command": [
+          "tools/z3",
+          "-smt2",
+          "formal/z3/20261030-2215-mcp-symbiosis-impact.smt2"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:04:55.614Z",
+        "elapsed_ms": 27,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/z3.log",
+        "log_sha256": "3c24782cbaec0bc7070bf2101a263dde83ef9effce856a98031ec27b707df444"
+      },
+      {
+        "id": "journal-final",
+        "command": [
+          "bash",
+          "tools/journal-check",
+          "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.323Z",
+        "elapsed_ms": 20,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/journal-final.log",
+        "log_sha256": "f8c27400159802407457ac8a48e081eff721129d136ce34be7768425bbdb6b27"
+      },
+      {
+        "id": "diagram-final",
+        "command": [
+          "bash",
+          "tools/diagram-check",
+          "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.326Z",
+        "elapsed_ms": 19,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/diagram-final.log",
+        "log_sha256": "84583334943e1a3d501ac739ac350b1f9b9eab0551b29b96577c900e733faa4e"
+      },
+      {
+        "id": "km-final",
+        "command": [
+          "bash",
+          "tools/km-gate",
+          "--gate"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.329Z",
+        "elapsed_ms": 1039,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/km-final.log",
+        "log_sha256": "1e78c9a8b67cea69717c10fa70a21a69cd9299214940884b605ea3ed9f224648"
+      },
+      {
+        "id": "capsule-before-publication",
+        "command": [
+          "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+          "unix.cma",
+          "str.cma",
+          "tools/ecology_release.ml",
+          "verify",
+          "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:06:02.332Z",
+        "elapsed_ms": 1678,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/capsule-before-publication.log",
+        "log_sha256": "92d0f5c7622740ad906ce0fd713a32821c3855e40b69268259af264d6c283f1f"
+      },
+      {
+        "id": "preflight-before-close",
+        "command": [
+          "bash",
+          "tools/preflight",
+          "--receipt"
+        ],
+        "cwd": "/home/an/NAS-setup/uos",
+        "observed_at": "2026-10-30T22:08:16.612Z",
+        "elapsed_ms": 2555,
+        "exit_code": 0,
+        "signal": null,
+        "timed_out": false,
+        "log": "var/harness/20261030-2215-formal-checkpoint/stage-c/preflight-before-close.log",
+        "log_sha256": "e0f0641d8ada4a61685c47271e1c2b3c79af545377e47dfc77f0b9db7408db7e"
+      }
+    ],
+    "quint_default_selected_cases": 0,
+    "quint_explicit_selected_cases": 4,
+    "encoding_mutant_rejected": true,
+    "invariants_receipt": "var/harness/20261030-2215-formal-checkpoint/stage-c/invariants.json"
+  },
+  "application_admitted": false,
+  "system_admission": "NOT_ADMITTED",
+  "record_phase": "StageA observations with StageC pre-publication precision corrections; final publication outcome is separately recorded",
+  "publication_outcome_receipt": "var/harness/20261030-2215-formal-checkpoint/stage-c-github-push-outcome.json"
+}
