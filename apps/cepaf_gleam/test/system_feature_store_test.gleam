@@ -184,7 +184,7 @@ pub fn both_harness_servers_persist_without_collapsing_tool_names_test_() -> #(
         |> list.map(fn(entry) { entry.feature })
       })
     let assert Ok([catalog]) = census.shards(fixture.digest(), declarations)
-    features.declarations(catalog) |> list.length |> should.equal(34)
+    features.declarations(catalog) |> list.length |> should.equal(36)
     store.publish(runtime, catalog)
     |> should.equal(Ok(features.fingerprint(catalog)))
     store.load(runtime, features.fingerprint(catalog))

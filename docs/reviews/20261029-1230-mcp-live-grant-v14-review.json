@@ -1,0 +1,19 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "grant_proposal": {
+    "path": "var/harness/20261029-1230-mcp-live-v14-grant-proposal.json",
+    "sha256": "213dfc19e688686c666915a7f1e3a68e2235878cd069b93c0d4a4be9c96fe3a8",
+    "grant_id": "20261029-1230-mcp-live-v14",
+    "target_session": "pi-agy-gemini4-argon-20261029-0730",
+    "target_worker": "pi-agy-gemini4-argon-20261029-0730"
+  },
+  "reviewer": {
+    "plan_id": "uos/development-harness/mcp-live-v14/20261029-1230",
+    "task_id": "REVIEW_GRANT_V14",
+    "worker": "claude-opus5-reviewer-20261029-0730",
+    "session_id": "claude-opus5-reviewer-20261029-0730",
+    "attempt": 1
+  },
+  "observed_at": "2026-10-29T08:58:22Z"
+}

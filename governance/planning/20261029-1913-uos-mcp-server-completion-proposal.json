@@ -1,0 +1,1937 @@
+{
+  "schema": "uos.mcp-completion-plan-proposal.v1",
+  "artifact_kind": "reviewable_proposal_not_execution_ledger",
+  "generated_at_utc": "2026-10-29T19:33:13Z",
+  "timestamp_receipt": {
+    "source": "Observed date -u and chronyc -c tracking",
+    "stratum": 3,
+    "leap": "Normal",
+    "system_offset_seconds": 0.00004444
+  },
+  "plan_id_proposed": "uos/mcp-server-completion/20261029-1913",
+  "registration_state": "PROPOSED_NOT_REGISTERED",
+  "execution_authority": "Sa-plan only; this proposal supplies no claim, grant or effect authority.",
+  "registration_prerequisite": "An already admitted maintenance task/planning operation or independently reviewed explicit bounded bootstrap; T00 cannot admit its own authority.",
+  "risk_assessment_state": "PROPOSAL_NOT_A_VALIDATED_PORTFOLIO; materialize source-bound assessments before claims.",
+  "document_path": "docs/plans/20261029-1913-uos-mcp-server-completion-plan.md",
+  "baseline": {
+    "main_change": "xuqyvwoq",
+    "main_commit": "12bf3ee508829755ae2f527b5a5dcb88e351adc2",
+    "public_declared": 65,
+    "unavailable": 12,
+    "declared_unprobed": 53,
+    "core_tests": {
+      "passed": 186,
+      "failed": 0
+    },
+    "expanded_tests": {
+      "passed": 190,
+      "failed": 4
+    },
+    "registered_workspaces": 143,
+    "nonempty_workspace_ancestry_heads_outside_main": 0,
+    "visible_nonempty_heads_outside_main": 45,
+    "globally_admitted_ev_ceiling": 93
+  },
+  "clients": [
+    "agy",
+    "gemini",
+    "codex",
+    "claude",
+    "pi"
+  ],
+  "protocols": {
+    "legacy_required": [
+      "2024-11-05"
+    ],
+    "other_legacy": "Only explicitly captured and tested versions.",
+    "modern_required": "2026-07-28",
+    "modern_task_extension": "Pin exact negotiated official extension schema in T01; no second scheduler.",
+    "compatibility_rule": "Legacy handshake and modern stateless request profiles stay distinct; client metadata never authenticates a principal."
+  },
+  "transports": {
+    "required": [
+      "stdio",
+      "admitted_authenticated_zenoh",
+      "protected_tailnet_streamable_http"
+    ],
+    "remote_origin": "Approved HTTPS Tailscale FQDN, selected under runtime authority; not current HTTP documentation origin."
+  },
+  "public_groups": [
+    {
+      "id": "planning_read",
+      "owner": "T05",
+      "tools": [
+        "plan_status",
+        "plan_list_pending",
+        "plan_list",
+        "plan_get",
+        "plan_search",
+        "sa_plan_status",
+        "sa_plan_status_for",
+        "sa_plan_list",
+        "feature_tracker_status"
+      ]
+    },
+    {
+      "id": "planning_write",
+      "owner": "T06",
+      "tools": [
+        "plan_add",
+        "plan_update",
+        "sa_task_claim",
+        "sa_task_complete",
+        "sa_job_enqueue",
+        "sa_workflow_start",
+        "sa_bridge_submit"
+      ]
+    },
+    {
+      "id": "observability",
+      "owner": "T07",
+      "tools": [
+        "system_health",
+        "system_dashboard",
+        "system_immune",
+        "system_zenoh",
+        "system_verification",
+        "podman_containers",
+        "metabolic_state",
+        "ooda_phase",
+        "fractal_status",
+        "prajna_health",
+        "dark_cockpit_mode",
+        "integrity_check",
+        "evolution_metrics",
+        "mesh_topology",
+        "ooda_decide",
+        "kms_catalog",
+        "holon_status",
+        "swarm_status",
+        "agent_hierarchy"
+      ]
+    },
+    {
+      "id": "control_safety_registry",
+      "owner": "T08",
+      "tools": [
+        "control_loop",
+        "safety_status",
+        "registry_status"
+      ]
+    },
+    {
+      "id": "verification",
+      "owner": "T09",
+      "tools": [
+        "verification_run",
+        "run_selfcheck",
+        "run_gate",
+        "preflight_check"
+      ]
+    },
+    {
+      "id": "knowledge_files",
+      "owner": "T10",
+      "tools": [
+        "knowledge_search",
+        "read_file",
+        "zk_search",
+        "zk_transclude"
+      ]
+    },
+    {
+      "id": "vault_metadata",
+      "owner": "T11",
+      "tools": [
+        "vault_status",
+        "vault_list_secrets",
+        "vault_policy_get",
+        "vault_audit_tail",
+        "vault_health"
+      ]
+    },
+    {
+      "id": "analysis_inference_sciviz",
+      "owner": "T12",
+      "tools": [
+        "forecast_predict",
+        "stpa_fmea_hazard",
+        "rete_rule_conflict",
+        "ruliad_branch_eval",
+        "shruti_harmonics",
+        "ast_anomaly_detect",
+        "lyapunov_trend_predict",
+        "sciviz_extension_deep_dive",
+        "ggram_synthesize"
+      ]
+    },
+    {
+      "id": "feature_evidence",
+      "owner": "T13",
+      "tools": [
+        "mcp_capability_inventory",
+        "harness_system_feature_catalog",
+        "harness_system_feature_observations",
+        "harness_system_feature_intent",
+        "harness_execution_progress"
+      ]
+    }
+  ],
+  "public_tools": [
+    {
+      "route": "public",
+      "name": "plan_status",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "plan_list_pending",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "plan_list",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "plan_get",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "plan_search",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_plan_status",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_plan_status_for",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_plan_list",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "feature_tracker_status",
+      "owner_task": "T05",
+      "group": "planning_read",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "plan_add",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "plan_update",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_task_claim",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_task_complete",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_job_enqueue",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_workflow_start",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sa_bridge_submit",
+      "owner_task": "T06",
+      "group": "planning_write",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "system_health",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "system_dashboard",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "system_immune",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "system_zenoh",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "system_verification",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "podman_containers",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "metabolic_state",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "ooda_phase",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "fractal_status",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "prajna_health",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "dark_cockpit_mode",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "integrity_check",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "evolution_metrics",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "mesh_topology",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "ooda_decide",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "kms_catalog",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "holon_status",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "swarm_status",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "agent_hierarchy",
+      "owner_task": "T07",
+      "group": "observability",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "control_loop",
+      "owner_task": "T08",
+      "group": "control_safety_registry",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "safety_status",
+      "owner_task": "T08",
+      "group": "control_safety_registry",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "registry_status",
+      "owner_task": "T08",
+      "group": "control_safety_registry",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "verification_run",
+      "owner_task": "T09",
+      "group": "verification",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "run_selfcheck",
+      "owner_task": "T09",
+      "group": "verification",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "run_gate",
+      "owner_task": "T09",
+      "group": "verification",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "preflight_check",
+      "owner_task": "T09",
+      "group": "verification",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "knowledge_search",
+      "owner_task": "T10",
+      "group": "knowledge_files",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "read_file",
+      "owner_task": "T10",
+      "group": "knowledge_files",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "zk_search",
+      "owner_task": "T10",
+      "group": "knowledge_files",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "zk_transclude",
+      "owner_task": "T10",
+      "group": "knowledge_files",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "vault_status",
+      "owner_task": "T11",
+      "group": "vault_metadata",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "vault_list_secrets",
+      "owner_task": "T11",
+      "group": "vault_metadata",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "vault_policy_get",
+      "owner_task": "T11",
+      "group": "vault_metadata",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "vault_audit_tail",
+      "owner_task": "T11",
+      "group": "vault_metadata",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "vault_health",
+      "owner_task": "T11",
+      "group": "vault_metadata",
+      "baseline_catalog_state": "unavailable",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "forecast_predict",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "stpa_fmea_hazard",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "rete_rule_conflict",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "ruliad_branch_eval",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "shruti_harmonics",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "ast_anomaly_detect",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "lyapunov_trend_predict",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "sciviz_extension_deep_dive",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "ggram_synthesize",
+      "owner_task": "T12",
+      "group": "analysis_inference_sciviz",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "mcp_capability_inventory",
+      "owner_task": "T13",
+      "group": "feature_evidence",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "harness_system_feature_catalog",
+      "owner_task": "T13",
+      "group": "feature_evidence",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "harness_system_feature_observations",
+      "owner_task": "T13",
+      "group": "feature_evidence",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "harness_system_feature_intent",
+      "owner_task": "T13",
+      "group": "feature_evidence",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    },
+    {
+      "route": "public",
+      "name": "harness_execution_progress",
+      "owner_task": "T13",
+      "group": "feature_evidence",
+      "baseline_catalog_state": "declared_unprobed",
+      "acceptance_state": "UNRUN_FOR_NEW_CANDIDATE",
+      "acceptance_evidence": null
+    }
+  ],
+  "private_routes": {
+    "successor": {
+      "expected_count": 15,
+      "owner_task": "T14",
+      "names": [
+        "harness_plan_intent",
+        "harness_status",
+        "harness_clock",
+        "harness_heartbeat",
+        "harness_claim",
+        "harness_attach",
+        "harness_release",
+        "harness_read_file",
+        "harness_client_mcp_config",
+        "harness_write_file",
+        "harness_build",
+        "harness_test",
+        "harness_assess",
+        "harness_finish",
+        "harness_reconcile"
+      ]
+    },
+    "legacy": {
+      "claimed_count": 17,
+      "freeze_actual_names_and_schemas_in": "T01",
+      "owner_task": "T14"
+    },
+    "public_uncatalogued_aliases_to_reconcile": [
+      "planning_query",
+      "todo_status"
+    ]
+  },
+  "server_facilities": {
+    "required": [
+      "scoped_resources_list_read_templates",
+      "prompts_list_get",
+      "versioned_subscriptions",
+      "progress",
+      "cancellation",
+      "negotiated_durable_task_extension",
+      "modern_server_discover",
+      "legacy_initialize_compatibility"
+    ],
+    "not_newly_added": [
+      "deprecated_sampling",
+      "deprecated_roots"
+    ],
+    "excluded_unless_existing_requirement": [
+      "optional_mcp_apps_extension",
+      "optional_skills_extension"
+    ]
+  },
+  "proposed_limits": {
+    "frame_bytes": 1048576,
+    "json_depth": 32,
+    "argument_bytes": 262144,
+    "retained_output_bytes": 1048576,
+    "page_default": 100,
+    "page_max": 500,
+    "gateway_workers": 16,
+    "gateway_pending": 128,
+    "active_mutations_per_principal": 4,
+    "local_read_deadline_ms": 3000,
+    "bounded_check_ms": 60000,
+    "teardown_ms": 10000,
+    "rule": "Existing stricter limits prevail until explicitly reviewed change. Freeze compatible values at T01."
+  },
+  "acceptance_scenarios": {
+    "all_tools": [
+      "valid_input_actual_backend",
+      "invalid_missing_extra_arguments",
+      "denied_scope",
+      "backend_absent_or_degraded",
+      "stale_future_or_wrong_candidate_evidence",
+      "response_schema_and_output_bounds"
+    ],
+    "effectful_tools_add": [
+      "duplicate_replay",
+      "changed_payload_conflict",
+      "wrong_attempt_epoch_lease",
+      "crash_before_effect",
+      "crash_after_effect",
+      "disconnect",
+      "reconciliation"
+    ]
+  },
+  "acceptance_denominators": {
+    "public_tool_client_pairs": 325,
+    "private_route_client_pairs_if_census_17_15": 160,
+    "total_pairs_if_census_unchanged": 485,
+    "qualification": "Pairs, not test totals; multiply by actual required version/transport/scenario tuples; recalculate at T01; no silent denominator reduction."
+  },
+  "readiness": {
+    "CORE_DEV_READY": "All frozen public/private intended positive tool behavior plus no unresolved authority/recovery/privacy defects.",
+    "MCP_FULL_DEV_READY": "CORE plus five-client/protocol/server facilities/transports/assurance/integrated-source evidence.",
+    "operational_acceptance": "Separate explicit release/state authority, canary and tested rollback; not system admission."
+  },
+  "risk_profiles": {
+    "authority": {
+      "severity": 5,
+      "occurrence": null,
+      "occurrence_interval": [
+        1,
+        5
+      ],
+      "detection_difficulty": 1,
+      "rpn_interval": [
+        5,
+        25
+      ],
+      "constraint": "Trusted principal plus fresh effect-time task/attempt/lease/epoch/source fencing."
+    },
+    "evidence": {
+      "severity": 5,
+      "occurrence": 5,
+      "occurrence_basis": "Reproduced completion/reporting defect; not a population probability.",
+      "detection_difficulty": 2,
+      "rpn": 50,
+      "constraint": "Raw verdict/exit/hash/candidate consistency; declaration and task closure never imply acceptance."
+    },
+    "recovery": {
+      "severity": 5,
+      "occurrence": null,
+      "occurrence_interval": [
+        1,
+        5
+      ],
+      "detection_difficulty": 2,
+      "rpn_interval": [
+        10,
+        50
+      ],
+      "constraint": "Durable intent, isolated bounded workers and reconciliation before retry."
+    },
+    "truth": {
+      "severity": 4,
+      "occurrence": null,
+      "occurrence_interval": [
+        1,
+        5
+      ],
+      "detection_difficulty": 2,
+      "rpn_interval": [
+        8,
+        40
+      ],
+      "constraint": "Actual fresh backend provenance or explicit UNKNOWN/UNAVAILABLE."
+    },
+    "privacy": {
+      "severity": 5,
+      "occurrence": null,
+      "occurrence_interval": [
+        1,
+        5
+      ],
+      "detection_difficulty": 2,
+      "rpn_interval": [
+        10,
+        50
+      ],
+      "constraint": "Per-principal/tenant scope, redaction, cache separation and isolated fixtures."
+    },
+    "protocol": {
+      "severity": 4,
+      "occurrence": null,
+      "occurrence_interval": [
+        1,
+        5
+      ],
+      "detection_difficulty": 2,
+      "rpn_interval": [
+        8,
+        40
+      ],
+      "constraint": "Versioned conformance and logical effect IDs distinct from request IDs."
+    }
+  },
+  "uca_types": [
+    "required_action_not_provided",
+    "unsafe_action_provided",
+    "wrong_timing_or_order",
+    "stopped_too_soon_or_applied_too_long"
+  ],
+  "risk_factor_policy": {
+    "factors": [
+      "criticality",
+      "stpa_exposure",
+      "fmea_band_with_severity_floor",
+      "dependency",
+      "impact"
+    ],
+    "anchors": "Repository SC-RISK-PRIORITY-001",
+    "values": "Materialize fresh candidate-bound values/intervals before selection; unknown is not zero.",
+    "preflight": "risk --preflight PORTFOLIO TASK",
+    "active": "risk --active-check PORTFOLIO TASK WORKER ATTEMPT"
+  },
+  "proposed_effort": {
+    "unit": "serial_engineer_days_not_calendar_or_token_budget",
+    "foundations": [
+      8,
+      15
+    ],
+    "tool_families": [
+      18,
+      35
+    ],
+    "protocol_transports": [
+      12,
+      25
+    ],
+    "acceptance_integration_docs": [
+      12,
+      22
+    ],
+    "release": [
+      2,
+      5
+    ],
+    "total": [
+      52,
+      102
+    ],
+    "reestimate_at": [
+      "T01",
+      "first_actual_backend_acceptance"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "T00",
+      "title": "Admit fresh execution scope and restore verified tooling",
+      "dependencies": [],
+      "safety_class": "P1",
+      "risk_profile": "authority",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "tools/preflight",
+        "tools/lib/uos-toolchain.sh",
+        "tools/validation/verify_guardian.exe",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam"
+      ],
+      "files_create": [],
+      "proposed_interface": "Canonical registration readback, fresh reviewed grant, task/attempt/lease and toolchain receipt.",
+      "tests": [
+        "registration_readback_preserves_exact_dag",
+        "conflicting_import_refused",
+        "unexplained_binary_cannot_be_admitted"
+      ],
+      "implementation": "Use an already admitted maintenance path or explicitly reviewed bounded bootstrap; T00 cannot grant its own authority. Establish executable provenance and repair output packaging without deleting or tracking an unexplained binary. Preserve failed preflight evidence.",
+      "verification_recipe": "bash tools/preflight; risk --preflight PORTFOLIO TASK; verify persisted task IDs/edges and grant/source digests.",
+      "acceptance": "Fresh toolchain PASS and admitted canonical task scope; the earlier verification exception grants no implementation/release waiver.",
+      "public_tools": []
+    },
+    {
+      "id": "T01",
+      "title": "Freeze route, source, protocol and client census",
+      "dependencies": [
+        "T00"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "evidence",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+        "apps/cepaf_gleam/test/system_feature_interfaces_test.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/test/mcp_route_census_test.gleam"
+      ],
+      "proposed_interface": "RouteCatalog(route,name,schema_digest,effects,backend,clients,profiles,source_manifest).",
+      "tests": [
+        "all_65_public_tools_have_one_owner_test",
+        "private_name_overlap_retains_route_schema_test",
+        "changed_schema_requires_migration_test"
+      ],
+      "implementation": "Freeze all public/private routes, aliases, versions, actual client CLI versions and source identities. Reproduce four interface failures, then reconcile intended schemas and tests together; do not merely replace hashes.",
+      "verification_recipe": "eunit:test([mcp_route_census_test,system_feature_interfaces_test],[verbose]).",
+      "acceptance": "No missing/duplicate route owner; all four baseline failures resolved meaningfully; pinned source/spec/client census.",
+      "public_tools": []
+    },
+    {
+      "id": "T02",
+      "title": "Implement shared typed registry and evidence verdicts",
+      "dependencies": [
+        "T01"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "evidence",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_census.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/types.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/registry.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/schema.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/evidence.gleam",
+        "apps/cepaf_gleam/test/mcp_registry_test.gleam"
+      ],
+      "proposed_interface": "lookup(route:String,name:String)->Result(ToolSpec,ToolError); validate(schema:Json,args:Value)->Result(Value,ToolError); Outcome=Complete(value,evidence)|Refused(error)|Uncertain(receipt).",
+      "tests": [
+        "listed_tool_has_dispatch_schema_and_owner_test",
+        "backend_error_cannot_decode_as_success_test",
+        "recursive_local_ref_is_bounded_test"
+      ],
+      "implementation": "Generate listing, dispatch and evidence projections from one typed registry. Bound schema depth/size/local references, reject remote references, and distinguish declaration, implementation, observation, formal verification and admission.",
+      "verification_recipe": "eunit:test([mcp_registry_test,system_feature_interfaces_test],[verbose]).",
+      "acceptance": "Listing/dispatch/coverage equality; old route contracts remain explicitly versioned; no nested JSON-RPC error reported as success.",
+      "public_tools": []
+    },
+    {
+      "id": "T03",
+      "title": "Bind trusted principals and effect-time admission",
+      "dependencies": [
+        "T02"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "authority",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/authz.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_authority.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/principal.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/admission.gleam",
+        "apps/cepaf_gleam/test/mcp_admission_test.gleam"
+      ],
+      "proposed_interface": "Opaque Principal from admitted transport; admit(context:RequestContext,spec:ToolSpec,args:Value)->Result(ValidatedCall,ToolError), with opaque ValidatedCall.",
+      "tests": [
+        "payload_actor_cannot_change_principal_test",
+        "completed_task_is_not_reusable_authority_test",
+        "revoked_grant_refused_at_effect_time_test"
+      ],
+      "implementation": "Bind identity to trusted launcher/HTTP authentication/Zenoh ingress. Read permissions do not reuse completed task authority. Verify source, host, boot, worker, attempt, clock, lease and epoch again immediately before each effect; AuditOnly never authorizes mutations.",
+      "verification_recipe": "eunit:test([mcp_admission_test,harness_authority_test,harness_sa_plan_boundary_test],[verbose]).",
+      "acceptance": "All wrong-identity/expired/revoked/store-unavailable cases invoke no backend; independently reviewed admission boundary.",
+      "public_tools": []
+    },
+    {
+      "id": "T04",
+      "title": "Supervise bounded workers and durable effect recovery",
+      "dependencies": [
+        "T03"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "recovery",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/dispatch.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/worker.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/receipts.gleam",
+        "apps/cepaf_gleam/test/mcp_worker_recovery_test.gleam"
+      ],
+      "proposed_interface": "execute(call:ValidatedCall)->Outcome; receipt key binds stable logical effect ID, task attempt, candidate, input/output hashes, trace and backend.",
+      "tests": [
+        "gateway_is_actual_root_child_test",
+        "crash_after_effect_before_reply_is_uncertain_test",
+        "same_id_conflicting_payload_refused_test",
+        "poisoned_worker_is_replaced_test"
+      ],
+      "implementation": "Start actual gateway/worker children rather than listing their names in uos_root_spec. Bound queue/worker/deadline/output/process-tree lifetime. Persist prepared/result transitions; reconcile unknown outcomes before retry; no generic exactly-once external-effect promise.",
+      "verification_recipe": "eunit:test([mcp_worker_recovery_test,harness_cas_critical_section_test,harness_stdio_pipe_test,harness_native_backend_test],[verbose]).",
+      "acceptance": "Observed parent/child ancestry, sibling isolation, queue refusal and descendant cleanup; durable replay/reconciliation laws.",
+      "public_tools": []
+    },
+    {
+      "id": "T05",
+      "title": "Move every planning read to canonical Sa-plan",
+      "dependencies": [
+        "T02",
+        "T03"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "authority",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/planning_read.gleam",
+        "apps/cepaf_gleam/test/mcp_planning_read_test.gleam"
+      ],
+      "proposed_interface": "planning_read.call(context:RequestContext,name:String,args:Value)->Outcome.",
+      "tests": [
+        "legacy_and_sa_plan_reads_return_same_canonical_rows_test",
+        "unknown_plan_is_not_global_completion_test",
+        "unavailable_store_is_tool_error_test"
+      ],
+      "implementation": "Route every planning read to canonical Sa-plan rather than legacy Smriti/NIF authority. Preserve old argument compatibility with explicit ID mappings; add bounded pagination/search and truthful empty/not-found distinctions.",
+      "verification_recipe": "eunit:test([mcp_planning_read_test],[verbose]); admitted read-only canonical status spot checks.",
+      "acceptance": "All nine planning reads agree with canonical fixture/readback; explicit DB selection and bounded output.",
+      "public_tools": [
+        "plan_status",
+        "plan_list_pending",
+        "plan_list",
+        "plan_get",
+        "plan_search",
+        "sa_plan_status",
+        "sa_plan_status_for",
+        "sa_plan_list",
+        "feature_tracker_status"
+      ]
+    },
+    {
+      "id": "T06",
+      "title": "Enable fenced planning mutations and bridge intents",
+      "dependencies": [
+        "T04",
+        "T05"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "authority",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intents.gleam",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+        "engines/hermes/modules/sa_plan/test/sa_plan_main.ml"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/planning_write.gleam",
+        "apps/cepaf_gleam/test/mcp_planning_write_test.gleam"
+      ],
+      "proposed_interface": "planning_write.call(call:ValidatedCall)->Outcome; closed create/update/claim/complete/job/workflow/bridge intent algebra.",
+      "tests": [
+        "legacy_update_cannot_skip_transition_test",
+        "bridge_duplicate_does_not_double_submit_test",
+        "sixteen_claimants_have_one_owner_test",
+        "stale_attempt_cannot_complete_test"
+      ],
+      "implementation": "Implement all seven mutation/bridge tools through canonical transitions and transactionally audited amendments where needed. Payload task IDs select objects but never supply authenticated worker identity. No raw SQL task mutation or arbitrary shell arguments.",
+      "verification_recipe": "eunit:test([mcp_planning_write_test,harness_sa_plan_boundary_test],[verbose]); relevant pinned Hermes Sa-plan lease/CLI tests.",
+      "acceptance": "Positive canonical readback plus denied, expired, conflict, crash and reconciliation outcomes; remove legacy refusal only after review.",
+      "public_tools": [
+        "plan_add",
+        "plan_update",
+        "sa_task_claim",
+        "sa_task_complete",
+        "sa_job_enqueue",
+        "sa_workflow_start",
+        "sa_bridge_submit"
+      ]
+    },
+    {
+      "id": "T07",
+      "title": "Replace system projections with observed service adapters",
+      "dependencies": [
+        "T02",
+        "T03",
+        "T04"
+      ],
+      "safety_class": "P2",
+      "risk_profile": "truth",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/restoration_observer.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/system_observation.gleam",
+        "apps/cepaf_gleam/test/mcp_observation_test.gleam"
+      ],
+      "proposed_interface": "observe(context:RequestContext,name:String,args:Value)->Outcome with candidate/time/backend/freshness provenance.",
+      "tests": [
+        "missing_backend_is_unknown_not_healthy_test",
+        "zero_containers_requires_successful_probe_test",
+        "stale_sample_cannot_pass_health_test"
+      ],
+      "implementation": "Replace fixed health/count/energy/fitness/page-state values with real bounded Podman/Zenoh/OTP observations or explicit unavailability. Keep ooda_* names as compatibility aliases for POODAVR. ooda_decide is a preview and dark_cockpit_mode remains read-only unless separately versioned.",
+      "verification_recipe": "eunit:test([mcp_observation_test],[verbose]); real approved Tailnet service canaries and MCP/Wisp parity.",
+      "acceptance": "All 19 observation tools have observed backend evidence; outage/stale/empty states are honest; no cached effect authority.",
+      "public_tools": [
+        "system_health",
+        "system_dashboard",
+        "system_immune",
+        "system_zenoh",
+        "system_verification",
+        "podman_containers",
+        "metabolic_state",
+        "ooda_phase",
+        "fractal_status",
+        "prajna_health",
+        "dark_cockpit_mode",
+        "integrity_check",
+        "evolution_metrics",
+        "mesh_topology",
+        "ooda_decide",
+        "kms_catalog",
+        "holon_status",
+        "swarm_status",
+        "agent_hierarchy"
+      ]
+    },
+    {
+      "id": "T08",
+      "title": "Implement control, safety and registry backends",
+      "dependencies": [
+        "T04",
+        "T07"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "authority",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/control.gleam",
+        "apps/cepaf_gleam/test/mcp_control_test.gleam"
+      ],
+      "proposed_interface": "control.call(call:ValidatedCall)->Outcome; closed ControlIntent with explicit preview/execute distinction.",
+      "tests": [
+        "registry_declaration_is_not_runtime_health_test",
+        "control_preview_has_no_effect_test",
+        "execute_rechecks_constraints_and_attempt_test"
+      ],
+      "implementation": "Implement real control_loop, safety_status and registry_status. Observe actual controllers/constraints/registry instances. Treat executing control_loop actions as mutations despite current classification omissions; reject arbitrary actions and wrong ordering.",
+      "verification_recipe": "eunit:test([mcp_control_test],[verbose]); contained reversible controller canary.",
+      "acceptance": "Actual read state and one admitted reversible control action, tested reversal and all identity/freshness refusals.",
+      "public_tools": [
+        "control_loop",
+        "safety_status",
+        "registry_status"
+      ]
+    },
+    {
+      "id": "T09",
+      "title": "Implement bounded verification, self-check and gate tools",
+      "dependencies": [
+        "T04"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "recovery",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/unified_verification_supervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/vfs_selfcheck.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/verification.gleam",
+        "apps/cepaf_gleam/test/mcp_verification_execution_test.gleam"
+      ],
+      "proposed_interface": "verification.call(call:ValidatedCall)->Outcome; CheckId is an allowlist, not a command string.",
+      "tests": [
+        "nonzero_exit_never_returns_verified_test",
+        "missing_prover_is_unrun_test",
+        "failed_check_does_not_poison_next_worker_test",
+        "output_and_exit_agree_test"
+      ],
+      "implementation": "Implement verification_run, run_selfcheck, run_gate and preflight_check using bounded workers and actual exits. Separate policy assessment from executing checks; map long work to Sa-plan activities, not blocking calls.",
+      "verification_recipe": "eunit:test([mcp_verification_execution_test],[verbose]); positive/failing fixture checks and bounded solver satisfiable controls.",
+      "acceptance": "Exact check/source identities, exits, bounded logs, timeout cleanup and invocation-specific formal outcomes.",
+      "public_tools": [
+        "verification_run",
+        "run_selfcheck",
+        "run_gate",
+        "preflight_check"
+      ]
+    },
+    {
+      "id": "T10",
+      "title": "Implement scoped knowledge, ZK and file access",
+      "dependencies": [
+        "T02",
+        "T03",
+        "T04"
+      ],
+      "safety_class": "P2",
+      "risk_profile": "privacy",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/telegram_knowledge_reader.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/knowledge.gleam",
+        "apps/cepaf_gleam/test/mcp_knowledge_test.gleam"
+      ],
+      "proposed_interface": "knowledge.call(context:RequestContext,name:String,args:Value)->Outcome.",
+      "tests": [
+        "traversal_symlink_hardlink_and_credential_paths_refused_test",
+        "transclusion_cycles_are_bounded_test",
+        "cross_principal_scope_cannot_expand_test"
+      ],
+      "implementation": "Implement knowledge_search, read_file, zk_search and zk_transclude using bounded canonical indexes and approved corpus roots. Keep external sources read-only; preserve quarantine markings and index provenance; no implicit ingestion.",
+      "verification_recipe": "eunit:test([mcp_knowledge_test],[verbose]); real disposable wiki/ZK corpus readback.",
+      "acceptance": "Positive query/read/transclusion evidence, Unicode/size/depth bounds and missing/corrupt index errors.",
+      "public_tools": [
+        "knowledge_search",
+        "read_file",
+        "zk_search",
+        "zk_transclude"
+      ]
+    },
+    {
+      "id": "T11",
+      "title": "Complete supervised Vault backend and metadata tools",
+      "dependencies": [
+        "T04"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "privacy",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_audit_reconcile.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/vault_metadata.gleam",
+        "apps/cepaf_gleam/test/mcp_vault_metadata_test.gleam"
+      ],
+      "proposed_interface": "vault_metadata.call(context:RequestContext,name:String,args:Value)->Outcome; admitted supervised handle registry.",
+      "tests": [
+        "unwired_vault_is_not_reported_sealed_or_healthy_test",
+        "cross_tenant_metadata_refused_test",
+        "audit_and_error_redaction_canaries_test"
+      ],
+      "implementation": "Reproduce unwired init/unseal and constant status before completing or selecting a verified backend. Blocking crypto/storage stays in supervised services, never new blocking NIFs. Implement five scoped metadata tools without adding raw secret-read/write tools.",
+      "verification_recipe": "eunit:test([mcp_vault_metadata_test],[verbose]); actual disposable vault sealed/unsealed/outage/restart/audit-corruption checks.",
+      "acceptance": "Verified service invocation and lifecycle; no constant Sealed/empty-list substitute; names/policy metadata authorized and redacted.",
+      "public_tools": [
+        "vault_status",
+        "vault_list_secrets",
+        "vault_policy_get",
+        "vault_audit_tail",
+        "vault_health"
+      ]
+    },
+    {
+      "id": "T12",
+      "title": "Verify analysis, isolated inference and SciViz adapters",
+      "dependencies": [
+        "T04",
+        "T10"
+      ],
+      "safety_class": "P2",
+      "risk_profile": "truth",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/sciviz/extension_deep_dive.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/sciviz/transpiler.gleam",
+        "engines/hermes/modules/hermes_harness/hermes_rete.ml"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+        "apps/cepaf_gleam/test/mcp_analysis_test.gleam"
+      ],
+      "proposed_interface": "analysis.call(call:ValidatedCall)->Outcome using closed model/kernel selections.",
+      "tests": [
+        "model_absence_is_not_synthetic_prediction_test",
+        "inference_cannot_authorize_control_test",
+        "generated_plot_code_is_not_executed_test"
+      ],
+      "implementation": "Complete nine analysis/inference/SciViz tools. Separate measured observations, deterministic results and estimates. Use supervised MAX/Mojo and bounded Hermes. Label the existing naive matcher honestly; do not claim Rete-UL alpha/beta mechanics without a separately verified upgrade.",
+      "verification_recipe": "eunit:test([mcp_analysis_test],[verbose]); reference vectors, approved model canary and outage/restart tests.",
+      "acceptance": "Real backend/model identity, usage and bounds, independent deterministic oracles, no paid routing/package fetch by tool handlers.",
+      "public_tools": [
+        "forecast_predict",
+        "stpa_fmea_hazard",
+        "rete_rule_conflict",
+        "ruliad_branch_eval",
+        "shruti_harmonics",
+        "ast_anomaly_detect",
+        "lyapunov_trend_predict",
+        "sciviz_extension_deep_dive",
+        "ggram_synthesize"
+      ]
+    },
+    {
+      "id": "T13",
+      "title": "Implement feature inventory, observations and intent access",
+      "dependencies": [
+        "T02",
+        "T05",
+        "T06"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "evidence",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_features.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_census.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam",
+        "apps/cepaf_gleam/test/mcp_feature_acceptance_test.gleam"
+      ],
+      "proposed_interface": "features.call(context:RequestContext,name:String,args:Value)->Outcome; CapabilityRecord has separate declaration/implementation/execution/formal/admission fields.",
+      "tests": [
+        "completed_task_without_receipt_is_not_complete_test",
+        "wrong_candidate_receipt_is_stale_test",
+        "wrapper_raw_verdict_conflict_rejected_test"
+      ],
+      "implementation": "Implement the four task-bound feature tools and inventory. Replace completed t1-tracker as reusable read authority with current scoped read admission. Generate coverage from registry plus validated evidence; supersede contradictory reviews without changing originals.",
+      "verification_recipe": "eunit:test([mcp_feature_acceptance_test,system_feature_interfaces_test],[verbose]); persisted readback and stale/future/hash tests.",
+      "acceptance": "Truthful catalog/progress/intents and explicit unknown/unavailable evidence; no inherited all-green flags.",
+      "public_tools": [
+        "mcp_capability_inventory",
+        "harness_system_feature_catalog",
+        "harness_system_feature_observations",
+        "harness_system_feature_intent",
+        "harness_execution_progress"
+      ]
+    },
+    {
+      "id": "T14",
+      "title": "Converge public and private development harness execution",
+      "dependencies": [
+        "T04",
+        "T06",
+        "T09",
+        "T13"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "authority",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/planning_intents.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/test/mcp_route_parity_test.gleam"
+      ],
+      "proposed_interface": "Public/private adapters use shared execution core while preserving each captured route schema.",
+      "tests": [
+        "same_name_different_route_does_not_expand_grant_test",
+        "legacy_finish_cannot_bypass_completion_evidence_test",
+        "all_fifteen_successor_tools_same_candidate_test"
+      ],
+      "implementation": "Converge shared admission/worker/receipt behavior only; retain edge compatibility serializers. Execute actual claim/attach/assess/read/write/build/test/finish/reconcile flows under new tasks. Preserve historical SourceFX hold byte for byte.",
+      "verification_recipe": "Original 12-module EUnit suite, repaired interface suite, route parity and actual end-to-end fixtures.",
+      "acceptance": "Current-candidate evidence for 15 successor and frozen legacy-private route set; no reused historical test counts.",
+      "public_tools": []
+    },
+    {
+      "id": "T15",
+      "title": "Implement legacy and modern MCP protocol compatibility",
+      "dependencies": [
+        "T02",
+        "T03"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "protocol",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/version.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/wire.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/profiles/legacy.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/profiles/modern.gleam",
+        "apps/cepaf_gleam/test/mcp_protocol_conformance_test.gleam"
+      ],
+      "proposed_interface": "decode(profile,raw)->Result(NormalizedRequest,ProtocolError); encode(profile,outcome)->Json.",
+      "tests": [
+        "legacy_initialize_and_modern_discovery_do_not_mix_test",
+        "notification_is_silent_test",
+        "unsupported_version_refused_test",
+        "retry_id_change_keeps_logical_effect_test"
+      ],
+      "implementation": "Preserve 2024-11-05 handshake compatibility and separately implement 2026-07-28 per-request metadata/discovery/result/cache/error semantics. Add other versions only after explicit tests. Client metadata is not authentication.",
+      "verification_recipe": "eunit:test([mcp_protocol_conformance_test,mcp_runtime_truth_test],[verbose]); pinned official-schema fixtures and independent wire comparison.",
+      "acceptance": "Protocol-specific ID/error/lifecycle behavior; no silently enabled unsupported capability or version downgrade.",
+      "public_tools": []
+    },
+    {
+      "id": "T16",
+      "title": "Implement supervised stdio and authenticated Zenoh ingress",
+      "dependencies": [
+        "T04",
+        "T14",
+        "T15"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "protocol",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam",
+        "apps/cepaf_gleam/src/mcp_stdio_ffi.erl",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/stdio.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam",
+        "apps/cepaf_gleam/test/mcp_transport_test.gleam"
+      ],
+      "proposed_interface": "Trusted transport adapters deliver normalized requests plus Principal to shared dispatch.",
+      "tests": [
+        "split_frame_and_slow_frame_are_bounded_test",
+        "malformed_zenoh_topic_has_no_unknown_fallback_test",
+        "foreign_reply_destination_refused_test",
+        "stdout_contains_only_jsonrpc_test"
+      ],
+      "implementation": "Implement supervised stdio/Zenoh transport parity, strict topic grammar, authenticated sender/correlation and subscription-capability checks. Eliminate unknown/unknown fallback; REST-only subscription absence remains visible.",
+      "verification_recipe": "eunit:test([mcp_transport_test,harness_stdio_pipe_test],[verbose]); real isolated child and admitted Zenoh canaries.",
+      "acceptance": "Observed process ancestry, EOF/deadline/size/depth/Unicode/NUL bounds, router loss/reconnect and bounded teardown.",
+      "public_tools": []
+    },
+    {
+      "id": "T17",
+      "title": "Add resources, prompts, subscriptions and durable task extension",
+      "dependencies": [
+        "T06",
+        "T10",
+        "T13",
+        "T15",
+        "T16"
+      ],
+      "safety_class": "P2",
+      "risk_profile": "protocol",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/system_feature_store.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/resources.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/prompts.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/subscriptions.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/task_extension.gleam",
+        "apps/cepaf_gleam/test/mcp_server_facilities_test.gleam"
+      ],
+      "proposed_interface": "resources/list/read/templates, prompts/list/get, version-specific subscriptions and negotiated task handles mapped to canonical Sa-plan.",
+      "tests": [
+        "private_resource_cache_never_crosses_principal_test",
+        "prompt_cannot_authorize_effect_test",
+        "durable_handle_persisted_before_reply_test",
+        "cancel_ack_is_not_effect_stopped_test"
+      ],
+      "implementation": "Add scoped UOS resources/prompts, bounded pagination/templates, modern subscriptions and task extension. Long work remains canonical Sa-plan-owned. Map input-required retry, tasks/get/update/cancel and progress with explicit state/identity/expiry rules; legacy task support is separate.",
+      "verification_recipe": "eunit:test([mcp_server_facilities_test],[verbose]); real canonical-backed fixture operation, reconnect, cancellation race and notification backpressure.",
+      "acceptance": "No alternate task scheduler; correct version negotiation, URI/cache isolation and durable ownership; unsupported facilities unadvertised.",
+      "public_tools": []
+    },
+    {
+      "id": "T18",
+      "title": "Add protected Tailnet Streamable HTTP transport",
+      "dependencies": [
+        "T03",
+        "T15",
+        "T16",
+        "T17"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "privacy",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/web/server.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/http.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/http_auth.gleam",
+        "apps/cepaf_gleam/test/mcp_http_auth_test.gleam"
+      ],
+      "proposed_interface": "Proposed /mcp on an approved HTTPS Tailscale FQDN; transport authentication feeds Principal, not effect authority.",
+      "tests": [
+        "invalid_origin_issuer_audience_scope_refused_test",
+        "header_body_mismatch_refused_test",
+        "token_not_forwarded_as_backend_credential_test"
+      ],
+      "implementation": "Implement Streamable HTTP, protected-resource metadata and reviewed authorization-server integration; exact per-version streaming/session behavior. Existing HTTP docs origin is not a token endpoint. Require separate runtime ownership for canary service changes.",
+      "verification_recipe": "eunit:test([mcp_http_auth_test],[verbose]); isolated HTTPS/proxy disconnect/restart/duplicate-operation canaries.",
+      "acceptance": "Actual approved origin, authenticated streaming/JSON parity, secret-safe errors, and canonical per-effect admission.",
+      "public_tools": []
+    },
+    {
+      "id": "T19",
+      "title": "Execute five-client full route acceptance matrix",
+      "dependencies": [
+        "T05",
+        "T06",
+        "T07",
+        "T08",
+        "T09",
+        "T10",
+        "T11",
+        "T12",
+        "T13",
+        "T14",
+        "T16",
+        "T17",
+        "T18"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "evidence",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/client_profiles.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/client_mcp.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/client_config.gleam"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/test/mcp_client_matrix_test.gleam"
+      ],
+      "proposed_interface": "AcceptanceKey(candidate,route,tool_or_method,client,version,transport,scenario) -> bounded raw evidence reference.",
+      "tests": [
+        "every_required_matrix_cell_has_actual_client_turn_test",
+        "config_rollback_preserves_unrelated_private_entries_test",
+        "cross_client_handoff_retains_authority_test"
+      ],
+      "implementation": "Execute every frozen required tool/route/profile pair through actual agy/gemini/codex/claude/pi native clients. Direct BEAM calls or config readback alone do not count as client execution. Pin versions and handle unsupported versions explicitly.",
+      "verification_recipe": "Bounded native-client probes plus eunit:test([mcp_client_matrix_test],[verbose]); complete valid/invalid/denied/outage/stale/replay/conflict/recovery matrix.",
+      "acceptance": "Zero unexplained failed/unknown/unrun cells in target; no silent denominator reduction; actual cross-client task handoff and concurrent ownership tests.",
+      "public_tools": []
+    },
+    {
+      "id": "T20",
+      "title": "Run formal, fuzz, fault, performance and isolation gates",
+      "dependencies": [
+        "T19"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "recovery",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "formal/lean/TwoLattice_STM.lean",
+        "formal/lean/Traceability.lean",
+        "engines/hermes/modules/hermes_harness/test_hermes_rete.ml"
+      ],
+      "files_create": [
+        "apps/cepaf_gleam/test/mcp_assurance_test.gleam"
+      ],
+      "proposed_interface": "Candidate-bound invariant, fault, fuzz, mutation, load and independent reference evidence bundle.",
+      "tests": [
+        "deny_dominates_composition_test",
+        "observer_cannot_change_authority_test",
+        "killed_worker_leaves_no_unowned_descendants_test",
+        "overload_refuses_within_budget_test"
+      ],
+      "implementation": "Apply bounded Lean/Gospel/Quint/reference checks for authority and replay invariants; fuzz wire/schema/URI/trace surfaces; inject crashes/store/router/clock/output failures on disposable fixtures. Missing tools or unsupported proofs fail closed.",
+      "verification_recipe": "Pinned formal invocations and relevant nine modalities; 10000 local fixture requests at concurrency 16; proposed warm-read p95 <=250ms plus all resource caps.",
+      "acceptance": "Measured targets, independent controls, killed critical mutants and all actual applicable formal/runtime results; no global completion percentage from suite size.",
+      "public_tools": []
+    },
+    {
+      "id": "T21",
+      "title": "Reconcile all workspace content and build integration candidate",
+      "dependencies": [
+        "T20"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "evidence",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [],
+      "files_create": [],
+      "proposed_interface": "Immutable integrated candidate plus per-head/workspace dirty/content disposition and rollback locator.",
+      "tests": [
+        "ancestry_without_content_disposition_is_not_integrated_test",
+        "combined_candidate_invalidates_parent_only_receipts_test"
+      ],
+      "implementation": "Census all registered workspaces and visible heads, including 45 residual heads; inspect unsnapshotted work with owners. Classify incorporated/superseded/held/eligible by content/behavior, preserve originals, integrate reviewed eligible content in an isolated JJ workspace.",
+      "verification_recipe": "Reexecute complete affected suites and route/client acceptance on combined candidate; exact source hashes and actual ingress probes.",
+      "acceptance": "Independent candidate review, conflict rationale, tested rollback locator and effect-time integration/main coordinator fence before main advancement.",
+      "public_tools": []
+    },
+    {
+      "id": "T22",
+      "title": "Publish truthful documentation and generated client guidance",
+      "dependencies": [
+        "T21"
+      ],
+      "safety_class": "P2",
+      "risk_profile": "truth",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "contracts/rules",
+        "governance/agents",
+        "docs/wiki",
+        "docs/zk",
+        ".agents/rules",
+        ".claude/rules",
+        ".codex/rules",
+        ".gemini/rules"
+      ],
+      "files_create": [],
+      "proposed_interface": "Evidence-derived docs/dashboard/client guides and superseding correction records; no rewrites of originals.",
+      "tests": [
+        "refusal_is_not_operational_in_docs_test",
+        "completed_task_alone_cannot_turn_dashboard_green_test",
+        "raw_review_cannot_be_overridden_test"
+      ],
+      "implementation": "Document supported names/schemas/versions/roles/bounds/errors/recovery; generate current truthful projections, 13-section journals, checklist/navigation and KM cross-links. Rebind evidence after generated source/config drift.",
+      "verification_recipe": "Journal/schema/link/diagram topology/four-surface parity checks, live Tailnet delivery and KM transclusion/index readback.",
+      "acceptance": "Published current instructions with exact candidate evidence; historical failures retained and post-generation affected tests rerun.",
+      "public_tools": []
+    },
+    {
+      "id": "T23",
+      "title": "Obtain independent final development acceptance",
+      "dependencies": [
+        "T22"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "evidence",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [],
+      "files_create": [],
+      "proposed_interface": "Separate CORE_DEV_READY and MCP_FULL_DEV_READY decisions, each bound to final candidate and independent review.",
+      "tests": [
+        "missing_positive_cell_blocks_development_acceptance_test",
+        "formal_or_runtime_missing_cannot_be_admitted_test"
+      ],
+      "implementation": "Independent verifier checks raw exits/hashes/verdicts, reruns selected discriminating rows and reviews every required matrix cell and all 17 aspect rows. CORE requires real existing tool routes; FULL additionally requires clients, protocol/server facilities, transports and full assurance.",
+      "verification_recipe": "Verify exact final source/artifact/grant/backend identities, complete matrix, applicability explanations, rollback and canonical task result consistency.",
+      "acceptance": "No unresolved authority/recovery/data-disclosure defect; all target positives genuinely work. Task closure alone or expected refusal cannot qualify.",
+      "public_tools": []
+    },
+    {
+      "id": "T24",
+      "title": "Perform separately authorized staged release and rollback rehearsal",
+      "dependencies": [
+        "T23"
+      ],
+      "safety_class": "P1",
+      "risk_profile": "recovery",
+      "registration": "PROPOSED_NOT_REGISTERED",
+      "execution_state": null,
+      "claim": null,
+      "verification": null,
+      "files_modify_or_inspect": [
+        "ops/systemd",
+        "ops/web"
+      ],
+      "files_create": [],
+      "proposed_interface": "Immutable release artifact, separately fenced runtime owner, reversible cutover and operational acceptance; system admission remains separate.",
+      "tests": [
+        "rollback_restores_compatible_tasks_and_receipts_test",
+        "old_runtime_cannot_resume_after_lease_loss_test"
+      ],
+      "implementation": "Require explicit release/state authority and realized Nix dependencies or approved Tailnet fetch path. Rehearse fixture migration/rollback, then deploy a limited separately authorized canary; this task is not auto-authorized by the planning request.",
+      "verification_recipe": "Proposed 30-minute canary with agreed error/latency targets; zero unauthorized effects, unexplained evidence mismatch or restart-budget exhaustion; actual rollback rehearsal.",
+      "acceptance": "Independent operational acceptance; failed gates trigger tested rollback, not forced completion or implied sovereign admission.",
+      "public_tools": []
+    }
+  ],
+  "sources": [
+    {
+      "title": "UOS verification summary",
+      "locator": "docs/journal/20261029-1851-mcp-feature-and-merge-verification-summary.md"
+    },
+    {
+      "title": "MCP current specification",
+      "locator": "https://modelcontextprotocol.io/specification/2026-07-28"
+    },
+    {
+      "title": "MCP version changes",
+      "locator": "https://modelcontextprotocol.io/specification/2026-07-28/changelog"
+    },
+    {
+      "title": "MCP transports",
+      "locator": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports"
+    },
+    {
+      "title": "HTTP authorization",
+      "locator": "https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization"
+    },
+    {
+      "title": "MCP resources",
+      "locator": "https://modelcontextprotocol.io/specification/2026-07-28/server/resources"
+    },
+    {
+      "title": "Official Tasks extension",
+      "locator": "https://modelcontextprotocol.io/extensions/tasks/overview"
+    }
+  ],
+  "validation": {
+    "canonical_import": "NOT_ATTEMPTED",
+    "implementation": "NOT_STARTED",
+    "runtime_tests": "NOT_RUN_FOR_PROPOSED_IMPLEMENTATION",
+    "independent_review": "NOT_PERFORMED",
+    "release": "NOT_AUTHORIZED_BY_PLANNING_REQUEST"
+  }
+}

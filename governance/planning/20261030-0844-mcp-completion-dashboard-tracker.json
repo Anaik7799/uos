@@ -1,0 +1,103 @@
+{
+  "schema": "uos.harness-poodavr-dashboard-tracker.v2",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "plan_name": "uos/mcp-server-completion/20261029-1913",
+  "updated_at_utc": "2026-10-30T08:22:30Z",
+  "supervisor": {
+    "agent": "agy-argon-sup-20261030-0844",
+    "role": "SUPERVISOR_ONLY (POODAVR Orchestrator, Sa-Plan & Coordinator Lease Gatekeeper, Main Integrator)",
+    "coordinator_sequence": 4788
+  },
+  "agent_fleet_routing": {
+    "pi_deepseek_chat": {
+      "cli": "/usr/local/bin/pi --provider openrouter --model deepseek/deepseek-chat",
+      "role": "Fast/cheap slice implementer & unit-test author (adapters, transports, facilities, doc/mirror sweeps)",
+      "measured_smoke_latency_s": 1.8,
+      "cost_tier": "ULTRA_LOW (~$0.001/slice)"
+    },
+    "pi_deepseek_r1": {
+      "cli": "/usr/local/bin/pi --provider openrouter --model deepseek/deepseek-r1",
+      "role": "Fractal reasoning advisor & AK-47 design reviewer",
+      "cost_tier": "LOW"
+    },
+    "codex": {
+      "cli": "/usr/local/bin/codex exec",
+      "version": "0.164.0",
+      "role": "P1 authority/protocol/HTTP implementer, deterministic EUnit batch verifier, workspace merge auditor",
+      "cost_tier": "MEDIUM (batch multi-module tasks to amortize 25.7k base repo prompt)"
+    },
+    "claude": {
+      "cli": "/home/an/.local/bin/claude -p",
+      "version": "2.1.312",
+      "role": "Independent Popperian security/authority/STPA reviewer & 4-surface governance auditor",
+      "cost_tier": "HIGH_VALUE_BOUNDED (read-only targeted review packets)"
+    }
+  },
+  "as_is_baseline_at_handover": {
+    "main_commit": "12bf3ee508829755ae2f527b5a5dcb88e351adc2",
+    "sa_plan_tasks_completed": "2/25 (T00, T01)",
+    "public_mcp_tools": "65 declared (53 unprobed/projected, 12 explicit fail-closed unavailable, 4 task-bound feature tools failing without env)",
+    "private_mcp_routes": "15 successor + 21 development declarations (4 baseline failures in system_feature_interfaces_test)",
+    "protocol_and_transports": "Legacy 2024-11-05 stdio/basic Zenoh only; Modern 2026-07-28, resources/prompts/subscriptions/tasks extension, and Streamable HTTP unimplemented",
+    "process_bottleneck_rca": "High token burn when frontier agents re-read entire trees or run full 400-module gleam test cold; sibling workspaces missing toolchains symlink; strict ceremony blocking non-critical edits"
+  },
+  "to_be_target_state": {
+    "sa_plan_tasks_completed": "25/25 (T00..T24 completed in canonical var/sa-plan/uos.sqlite3; T24 rehearsed on contained fixture without unauthorized live cutover)",
+    "public_mcp_tools": "65/65 backed by real typed adapters across 9 families with honest UNAVAILABLE/UNKNOWN fail-closed semantics on empty/unwired calls",
+    "private_mcp_routes": "15 successor + 21 development tools converged on shared typed registry/admission/worker/receipt core with 0 baseline test failures",
+    "protocol_and_transports": "Legacy 2024-11-05 + Modern 2026-07-28 profiles, supervised stdio + signed Zenoh + protected Tailnet Streamable HTTP, scoped resources/prompts/subscriptions/task_extension",
+    "five_client_acceptance": "5/5 clients (agy, gemini, codex, claude, pi) verified across route matrix + 10,000-request concurrency-16 assurance gate",
+    "governance_and_main": "All verified waves merged frequently to main under coordinator epoch leases; rules, skills, plugins, agents, SOPs, and Superpowers aligned across all 4 surfaces (.agents, .claude, .codex, .gemini)"
+  },
+  "waves_and_progress": {
+    "completed_tasks_count": 6,
+    "total_tasks_count": 25,
+    "completion_ratio": "6/25 (T00..T05 completed; Wave 1 tri-agent review in flight for Merge #1 to main)",
+    "waves": [
+      {
+        "wave": "Wave 1 (Foundations T00..T05 + Merge #1 to main)",
+        "tasks": ["T00", "T01", "T02", "T03", "T04", "T05"],
+        "status": "CODE_AND_TESTS_GREEN_REVIEW_IN_FLIGHT",
+        "agents": ["pi-session-20261030-0754", "pi-deepseek-r1", "claude", "codex"],
+        "eunit_status": "67/67 targeted + 160/160 core harness EUnit PASS"
+      },
+      {
+        "wave": "Wave 2 (6 Parallel Disjoint Adapters & Protocol Core + Merge #2 to main)",
+        "tasks": ["T06", "T07", "T09", "T10", "T11", "T15"],
+        "status": "READY_NEXT",
+        "agents": ["codex (T06, T11)", "pi-deepseek-chat (T07, T09, T10, T15)", "claude (Wave 2 security review)"]
+      },
+      {
+        "wave": "Wave 3 (Unlocked Adapters T08, T12, T13 + Serial server.gleam Wiring + Merge #3 to main)",
+        "tasks": ["T08", "T12", "T13"],
+        "status": "QUEUED_ON_WAVE_2",
+        "agents": ["pi-deepseek-chat (T08, T12, T13)", "codex (server.gleam serial integration & EUnit)", "claude (authority review)"]
+      },
+      {
+        "wave": "Wave 4 (Private Route Convergence, Transports, Facilities & Streamable HTTP + Merge #4 to main)",
+        "tasks": ["T14", "T16", "T17", "T18"],
+        "status": "QUEUED_ON_WAVE_3",
+        "agents": ["pi-deepseek-chat (T14, T16, T17)", "codex (T18 HTTP auth & transport integration)", "claude (HTTP/Zenoh auth review)"]
+      },
+      {
+        "wave": "Wave 5 (5-Client Matrix, Assurance Gates, Workspace Disposition, 4-Surface Governance Sync, Final Acceptance & Rehearsal + Merge #5 to main)",
+        "tasks": ["T19", "T20", "T21", "T22", "T23", "T24"],
+        "status": "QUEUED_ON_WAVE_4",
+        "agents": ["pi-deepseek-chat (T19, T20, T22)", "codex (T21, T24 & full EUnit)", "claude (T23 independent final acceptance)"]
+      }
+    ]
+  },
+  "critical_code_guards": {
+    "contract": "SC-AGENTIC-RESILIENCE-001",
+    "admitted_ev_ceiling": 93,
+    "held_plan_preserved": "uos/development-harness/client-source/20261028-1514 (SourceFX source4-test-2219 HELD)",
+    "pinned_census_files_untouched": [
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam"
+    ]
+  }
+}

@@ -27,11 +27,11 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
-            "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1",
+            "3cb354dbee40fb96899c2478bee40c5689648ccc8370d5bdc352f1b8b6db31ad",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
-            "6d327a3c4d2b0570e9305adef3154643e84c95a319e83d348554121766bf41c5",
+            "b7953ac8d339e4301cc2d2cf3185e459fc7d92a71c842670d484182e813cb1ec",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",
@@ -60,23 +60,23 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
-            "103b2ba0dacac5cfe461194559d2c7d7a0b08941902694a26bf1e9300b246d46",
+            "24dee34d3592bf21902ceb373c20e2a4289bf8e5114877234eaac72a6d57fae4",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
-            "a295a873146aa18827fc37b6b810589a18c3bcc231a35240c39a69241ffb40b8",
+            "5ba157f3b24de965226547ec21075b6a7c8ff661bc20b05ad24fdc2e0a39b4fb",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
-            "f17c4f66adefc761995a07080551a9539473f9fc0d83e8d492451fa9f36c46a1",
+            "3cb354dbee40fb96899c2478bee40c5689648ccc8370d5bdc352f1b8b6db31ad",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
             "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405",
           ),
         ],
-        13,
-        "db91328be2943f511092ca52e4c198216c53ce58cc7522a7789018e1ab882184",
+        15,
+        "5e0bc106f9b038d5a6f44b1c7c586e1fcf48e85eca15f8ce1842156e095ccfd5",
       )
     _ -> panic as "not a harness source"
   }
@@ -193,7 +193,7 @@ pub fn harness_census_keeps_both_servers_and_all_34_declarations_test() {
   |> should.equal(list.sort(successor_names, string.compare))
   let entries = list.append(first, second)
   list.length(list.unique(list.map(entries, fn(entry) { entry.feature.id })))
-  |> should.equal(34)
+  |> should.equal(36)
   list.each(entries, fn(entry) {
     let feature = entry.feature
     feature.declared_stage
@@ -233,8 +233,9 @@ pub const development_names = [
 ]
 
 pub const successor_names = [
-  "harness_status", "harness_clock", "harness_heartbeat", "harness_claim",
-  "harness_attach", "harness_release", "harness_read_file", "harness_write_file",
+  "harness_plan_intent", "harness_status", "harness_clock",
+  "harness_heartbeat", "harness_claim", "harness_attach", "harness_release",
+  "harness_read_file", "harness_client_mcp_config", "harness_write_file",
   "harness_build", "harness_test", "harness_assess", "harness_finish",
   "harness_reconcile",
 ]
@@ -332,7 +333,7 @@ pub fn successor_listing_is_exact_pre_refactor_wire_and_unchanged_state_test() {
   let assert Some(body) = reply
   files.digest(body)
   |> should.equal(
-    "2bd0b6b5e292783bd30e719c243bd823eb494942bf500c260c5186314f3d3ca6",
+    "5e66178fdcd780f7d1b03ae37b4d5c6b227949b48f2cae910a394584e20afefd",
   )
   wire(successor.tool_definitions()) |> should.equal(body)
   list.map(successor.tool_definitions(), fn(tool) { tool.name })

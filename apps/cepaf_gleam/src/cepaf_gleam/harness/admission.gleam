@@ -726,6 +726,37 @@ pub fn check(grant: Grant) -> Result(clock.Observation, String) {
   Ok(now)
 }
 
+pub fn load_with(path: String, expected: String) -> Result(Grant, String) {
+  use body <- result.try(files.read(dev.root, path))
+  use _ <- result.try(require(
+    digest_valid(expected) && files.digest(body) == expected,
+    "launcher_grant_digest",
+  ))
+  use grant <- result.try(decode_grant(path, body))
+  use _ <- result.try(check(grant))
+  Ok(grant)
+}
+
+fn load_active_pointer(primary_error: String) -> Result(Grant, String) {
+  let pointer_decoder = {
+    use path <- decode.field("path", decode.string)
+    use expected <- decode.field("sha256", decode.string)
+    decode.success(#(path, expected))
+  }
+  case files.read(dev.root, "var/harness/active-live-grant.json") {
+    Error(_) -> Error(primary_error)
+    Ok(raw) ->
+      case json.parse(raw, pointer_decoder) {
+        Error(_) -> Error(primary_error)
+        Ok(#(path, expected)) ->
+          case load_with(path, expected) {
+            Ok(grant) -> Ok(grant)
+            Error(_) -> Error(primary_error)
+          }
+      }
+  }
+}
+
 pub fn load() -> Result(Grant, String) {
   use path <- result.try(
     get_env("UOS_HARNESS_GRANT_PATH")
@@ -735,14 +766,10 @@ pub fn load() -> Result(Grant, String) {
     get_env("UOS_HARNESS_GRANT_SHA256")
     |> result.map_error(fn(_) { "grant_digest_missing" }),
   )
-  use body <- result.try(files.read(dev.root, path))
-  use _ <- result.try(require(
-    digest_valid(expected) && files.digest(body) == expected,
-    "launcher_grant_digest",
-  ))
-  use grant <- result.try(decode_grant(path, body))
-  use _ <- result.try(check(grant))
-  Ok(grant)
+  case load_with(path, expected) {
+    Ok(grant) -> Ok(grant)
+    Error(primary_error) -> load_active_pointer(primary_error)
+  }
 }
 
 pub fn lookup(

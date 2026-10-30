@@ -189,7 +189,7 @@ pub fn actual(source: census.Source) -> census.Snapshot {
 pub fn all_ten_actual_sources_conserve_775_records_test() {
   let snapshots = list.map(sources, actual)
   let total = snapshots |> list.flat_map(census.entries) |> list.length
-  total |> should.equal(775)
+  total |> should.equal(777)
   list.each(snapshots, fn(snapshot) {
     let catalogs = census.catalogs(snapshot)
     list.all(catalogs, fn(catalog) {

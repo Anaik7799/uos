@@ -3,7 +3,7 @@
   "verdict": "APPROVE_DEV_TEST_SCOPE",
   "grant_proposal": {
     "path": "var/harness/20261029-1135-mcp-live-v13-grant-proposal.json",
-    "sha256": "831feb54257fcd1136f5a58d82fdae8fa9755c509407f63150b7f5e80224e084",
+    "sha256": "d0e5ca5a0550e22b4a514bf36ab54d30e20f8b886e2ed1ba9499911a21169890",
     "grant_id": "20261029-1135-mcp-live-v13",
     "target_session": "pi-agy-gemini4-argon-20261029-0730",
     "target_worker": "pi-agy-gemini4-argon-20261029-0730"

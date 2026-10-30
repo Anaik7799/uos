@@ -1,0 +1,35 @@
+{
+  "schema": "uos.agent-review.v1",
+  "agent": "codex-verification-auditor",
+  "wave": "wave1-t00-t05",
+  "verdict": "HOLD",
+  "workspace": "/home/an/NAS-setup/uos",
+  "eunit_modules_requested": 17,
+  "build": {"target": "erlang", "exit_code": 0, "warnings_present": true},
+  "eunit": {
+    "exit_code": 1,
+    "passed": 113,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": true,
+    "reason": "test module not found: harness_successor_mcp_test",
+    "complete_17_module_gate": false,
+    "subsequent_modules_not_executed": ["harness_mcp_test", "client_config_test"]
+  },
+  "admission_gleam_md5": "c53ed6bf66cba56cfc0d6e850875a774",
+  "admission_gleam_md5_matches": true,
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/receipts.gleam": "455bb5aeeed63adbd8f268239c29e60aac67295a202f9c7f6873d88ce9f8a656",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/worker.gleam": "da96f33a61b44914997f24b20627792847b8d8e25570553b7ff7f3f94306ac4f",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/admission.gleam": "942cd6886e691dd3163256d79ddc6679b3818910561b68663081b3b7c43683c6"
+  },
+  "findings": [
+    {"id": "W1-V2-01", "severity": "blocking", "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/worker.gleam", "detail": "run_isolated_with_receipts calls action() after every successful record_intent, including identical committed replay. record_intent returns the unchanged ledger for matching existing entries without checking receipt state. Idempotent replay without action re-execution is not enforced."},
+    {"id": "W1-V2-02", "severity": "blocking", "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/receipts.gleam", "detail": "EffectUncertain is stored but does not block matching replay in worker. No reconcile_uncertain definition or call exists in the inspected MCP source tree. Uncertain replay is not refused pending reconciliation."},
+    {"id": "W1-V2-03", "severity": "blocking", "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/admission.gleam", "detail": "Admission checks grant.workspace_root == context.workspace_root but does not check principal.workspace_root == context.workspace_root, at admission or effect time."},
+    {"id": "W1-V2-04", "severity": "blocking", "detail": "Requested full EUnit gate did not complete: missing harness_successor_mcp_test caused cancellation and exit code 1."}
+  ],
+  "constraints": {"gleam_source_or_test_files_edited": false, "git_commands_run": false},
+  "advisories": ["Session toolchain preflight reported one untracked tools/validation/verify_guardian.exe; this advisory was not independently rerun."],
+  "scope_note": "Audit receipt only; no main integration or production admission performed. APPROVED_FOR_MAIN criteria were not met."
+}
