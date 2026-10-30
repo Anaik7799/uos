@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+UOS_ROOT="/home/an/NAS-setup/uos"
+OCAML_BIN="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml"
+PINNED_RELEASE_FILE="${UOS_ROOT}/var/releases/ecology/current-mcp-release"
+
+case "${1:-}" in
+  --version)
+    echo "uos-mcp-stdio 1.0.0 (OTP 29 unified 101-route Gleam MCP gateway)"
+    exit 0
+    ;;
+  --help)
+    cat <<'EOF'
+Usage: tools/uos-mcp-stdio
+
+Runs the unified Gleam MCP stdio gateway on Erlang/OTP 29.
+
+Environment variables:
+  UOS_MCP_ROUTE
+  UOS_MCP_WORKSPACE_ROOT
+  UOS_MCP_ACTOR_ID
+  UOS_MCP_CLIENT_NAME
+  UOS_MCP_SESSION_ID
+  UOS_MCP_PROTOCOL_VERSION
+  UOS_MCP_WIRE_MODE
+  UOS_COCKPIT_RELEASE
+  UOS_MCP_EXPECTED_PAYLOAD_SHA256
+  UOS_MCP_ALLOW_DEV_BUILD
+EOF
+    exit 0
+    ;;
+esac
+
+PINNED_ERL="/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl"
+FALLBACK_ERL="/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl"
+if [ -x "${PINNED_ERL}" ]; then
+  ERL_BIN="${PINNED_ERL}"
+else
+  ERL_BIN="${FALLBACK_ERL}"
+fi
+
+if [ ! -x "${ERL_BIN}" ]; then
+  echo "uos-mcp-stdio: Erlang runtime not found: ${ERL_BIN}" >&2
+  exit 1
+fi
+
+export UOS_MCP_WORKSPACE_ROOT="${UOS_MCP_WORKSPACE_ROOT:-${UOS_ROOT}}"
+export ERL_CRASH_DUMP=/dev/null
+export ERL_CRASH_DUMP_SECONDS=0
+
+if [ ! -d "${UOS_MCP_WORKSPACE_ROOT}" ]; then
+  echo "uos-mcp-stdio: workspace root is not a directory: ${UOS_MCP_WORKSPACE_ROOT}" >&2
+  exit 1
+fi
+
+CAPSULE=""
+if [ -n "${UOS_COCKPIT_RELEASE:-}" ]; then
+  CAPSULE="${UOS_COCKPIT_RELEASE}"
+elif [ -f "${PINNED_RELEASE_FILE}" ]; then
+  CAPSULE="$(head -n 1 "${PINNED_RELEASE_FILE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+fi
+
+if [ -n "${CAPSULE}" ]; then
+  RUNTIME_BEAM="${CAPSULE}/apps/cepaf_gleam/ebin/cepaf_gleam@mcp@runtime_gateway.beam"
+  if [ ! -f "${RUNTIME_BEAM}" ]; then
+    echo "uos-mcp-stdio: runtime gateway beam missing in capsule: ${RUNTIME_BEAM}" >&2
+    exit 1
+  fi
+
+  VERIFY_OUT=""
+  if ! VERIFY_OUT="$("${OCAML_BIN}" "${UOS_ROOT}/tools/ecology_release.ml" verify "${CAPSULE}" 2>&1)"; then
+    echo "${VERIFY_OUT}" >&2
+    exit 1
+  fi
+
+  if ! printf '%s' "${VERIFY_OUT}" | grep -Fq '"status": "PASS"'; then
+    echo "${VERIFY_OUT}" >&2
+    exit 1
+  fi
+
+  if [ -n "${UOS_MCP_EXPECTED_PAYLOAD_SHA256:-}" ]; then
+    ACTUAL_PAYLOAD_SHA="$(printf '%s\n' "${VERIFY_OUT}" | sed -n 's/^[[:space:]]*"payload_sha256":[[:space:]]*"\([0-9a-fA-F]\{64\}\)"[[:space:]]*,\{0,1\}[[:space:]]*$/\1/p' | head -n 1)"
+    if [ -z "${ACTUAL_PAYLOAD_SHA}" ] || [ "${ACTUAL_PAYLOAD_SHA}" != "${UOS_MCP_EXPECTED_PAYLOAD_SHA256}" ]; then
+      echo "uos-mcp-stdio: payload digest mismatch (expected ${UOS_MCP_EXPECTED_PAYLOAD_SHA256})" >&2
+      echo "${VERIFY_OUT}" >&2
+      exit 1
+    fi
+  fi
+
+  UOS_MCP_EBIN_GLOB="${CAPSULE}/apps/*/ebin"
+else
+  if [ "${UOS_MCP_ALLOW_DEV_BUILD:-0}" != "1" ]; then
+    echo "uos-mcp-stdio: refused unverified mutable build tree (set UOS_COCKPIT_RELEASE or var/releases/ecology/current-mcp-release; set UOS_MCP_ALLOW_DEV_BUILD=1 only for local development)" >&2
+    exit 1
+  fi
+  UOS_MCP_EBIN_GLOB="${UOS_ROOT}/apps/cepaf_gleam/build/dev/erlang/*/ebin"
+fi
+
+export UOS_MCP_EBIN_GLOB
+
+exec "${ERL_BIN}" +S 2:2 +A 2 -noshell -eval 'io:setopts([{encoding, utf8}]), case file:set_cwd(os:getenv("UOS_MCP_WORKSPACE_ROOT")) of ok -> code:add_paths(filelib:wildcard(os:getenv("UOS_MCP_EBIN_GLOB"))), '\''cepaf_gleam@mcp@runtime_gateway'\'':stdio_main(), halt(0); {error, Reason} -> io:format(standard_error, "uos-mcp-stdio: set_cwd failed: ~p~n", [Reason]), halt(1) end.'

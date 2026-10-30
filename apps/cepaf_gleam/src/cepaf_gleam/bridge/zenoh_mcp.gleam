@@ -7,13 +7,12 @@
 // 2. Dispatches requests to MCP tool handlers.
 // 3. Publishes responses back to Zenoh.
 
-import cepaf_gleam/mcp/server
+import cepaf_gleam/mcp/runtime_gateway
 import cepaf_gleam/zenoh/client as zenoh
 import gleam/erlang/process.{type Subject}
 import gleam/option.{None, Some}
 import gleam/otp/actor
 import gleam/result
-import gleam/string
 
 // ---------------------------------------------------------------------------
 // Types
@@ -32,8 +31,6 @@ pub type Message {
 // ---------------------------------------------------------------------------
 
 const request_prefix = "indrajaal/mcp/request/"
-
-const response_prefix = "indrajaal/mcp/response/"
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -87,21 +84,9 @@ fn process_request(
   topic: String,
   payload: String,
 ) -> Result(Nil, String) {
-  // Extract client_id and request_id from topic if possible
-  // Topic format: indrajaal/mcp/request/{client_id}/{request_id}
-  let parts = string.split(topic, "/")
-  let #(client_id, request_id) = case parts {
-    [_, _, _, c, r] -> #(c, r)
-    _ -> #("unknown", "unknown")
-  }
-
-  // Dispatch to MCP server logic
-  // mcp/server.process_line returns Option(String) as JSON-RPC response
-  case server.handle_request_raw(payload) {
-    Some(response_json) -> {
-      let resp_topic = response_prefix <> client_id <> "/" <> request_id
+  case runtime_gateway.handle_zenoh_raw(topic, payload) {
+    Some(#(resp_topic, response_json)) ->
       zenoh.put(state.session, resp_topic, response_json)
-    }
     None -> Ok(Nil)
   }
 }

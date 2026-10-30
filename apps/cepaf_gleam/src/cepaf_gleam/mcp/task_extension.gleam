@@ -14,6 +14,8 @@ import gleam/int
 import gleam/result
 import gleam/string
 
+pub const max_task_handles = 1024
+
 pub type SaTaskState {
   PendingTask
   RunningTask
@@ -70,6 +72,14 @@ pub type TaskExtensionStore {
 
 pub fn empty_store() -> TaskExtensionStore {
   TaskExtensionStore(dict.new())
+}
+
+pub fn size(store: TaskExtensionStore) -> Int {
+  dict.size(store.records)
+}
+
+pub fn has_handle(store: TaskExtensionStore, handle_id: String) -> Bool {
+  dict.has_key(store.records, handle_id)
 }
 
 pub fn register(

@@ -4,10 +4,10 @@
 import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/http_auth as auth
 import cepaf_gleam/mcp/principal.{type Principal}
-import cepaf_gleam/mcp/types.{
-  type Outcome, type ProtocolProfile, Legacy20241105, Modern20260728,
-}
+import cepaf_gleam/mcp/types.{type Outcome, type ProtocolProfile}
+import cepaf_gleam/mcp/version
 import cepaf_gleam/mcp/wire
+import gleam/bit_array
 import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
@@ -28,6 +28,8 @@ pub type HttpResponse {
 }
 
 pub const max_body_bytes = 1_048_576
+
+pub const max_json_depth = 32
 
 pub const metadata_path = "/.well-known/oauth-protected-resource"
 
@@ -51,17 +53,49 @@ pub fn handle(
 ) -> HttpResponse {
   case request.method, request.path {
     "GET", "/.well-known/oauth-protected-resource" ->
-      HttpResponse(
-        200,
-        [#("Content-Type", "application/json"), #("Cache-Control", "no-store")],
-        auth.protected_resource_metadata(resource_url, auth_servers, [
-          config.required_scope,
-        ]),
+      with_cors(
+        HttpResponse(
+          200,
+          [
+            #("Content-Type", "application/json"),
+            #("Cache-Control", "no-store"),
+          ],
+          auth.protected_resource_metadata(resource_url, auth_servers, [
+            config.required_scope,
+          ]),
+        ),
+        config,
+        request.headers,
       )
-    "POST", "/mcp" -> post(request, config, profile, now_ms, dispatch)
+    "POST", "/mcp" ->
+      with_cors(
+        post(request, config, profile, now_ms, resource_url, dispatch),
+        config,
+        request.headers,
+      )
     _, "/mcp" | _, "/.well-known/oauth-protected-resource" ->
       response(405, "METHOD_NOT_ALLOWED")
     _, _ -> response(404, "NOT_FOUND")
+  }
+}
+
+fn with_cors(
+  resp: HttpResponse,
+  config: auth.AuthConfig,
+  req_headers: List(#(String, String)),
+) -> HttpResponse {
+  case auth.header(req_headers, "origin") {
+    Ok(origin) ->
+      case auth.approved_origin(config, origin) {
+        True ->
+          HttpResponse(..resp, headers: [
+            #("Access-Control-Allow-Origin", origin),
+            #("Access-Control-Allow-Methods", "GET, POST, OPTIONS"),
+            ..resp.headers
+          ])
+        False -> resp
+      }
+    Error(_) -> resp
   }
 }
 
@@ -70,6 +104,7 @@ fn post(
   config: auth.AuthConfig,
   profile: ProtocolProfile,
   now_ms: Int,
+  resource_url: String,
   dispatch: fn(Principal, List(#(String, String)), wire.NormalizedMessage) ->
     Outcome,
 ) -> HttpResponse {
@@ -83,10 +118,15 @@ fn post(
             _ -> 401
           }
           let reply = response(status, error.code)
+          let metadata_uri =
+            origin_base(resource_url)
+            |> result.or(origin_base(config.expected_issuer))
+            |> result.unwrap("")
+            |> string.append(metadata_path)
           HttpResponse(..reply, headers: [
             #(
               "WWW-Authenticate",
-              "Bearer resource_metadata=\"" <> metadata_path <> "\"",
+              "Bearer resource_metadata=\"" <> metadata_uri <> "\"",
             ),
             ..reply.headers
           ])
@@ -133,6 +173,19 @@ fn post(
   }
 }
 
+fn origin_base(url: String) -> Result(String, Nil) {
+  let parsed = case url {
+    "https://" <> rest -> Ok(#("https://", rest))
+    "http://" <> rest -> Ok(#("http://", rest))
+    _ -> Error(Nil)
+  }
+  use #(scheme, rest) <- result.try(parsed)
+  case string.split(rest, "/") {
+    [authority, ..] if authority != "" -> Ok(scheme <> authority)
+    _ -> Error(Nil)
+  }
+}
+
 fn validate_envelope(request: HttpRequest) -> Result(Bool, HttpResponse) {
   use _ <- result.try(case string.byte_size(request.body) <= max_body_bytes {
     True -> Ok(Nil)
@@ -157,8 +210,63 @@ fn validate_envelope(request: HttpRequest) -> Result(Bool, HttpResponse) {
   let json_ok = accepts(accept, "application/json")
   let sse_ok = accepts(accept, "text/event-stream")
   case json_ok || sse_ok {
-    True -> Ok(sse_ok && !json_ok)
+    True ->
+      case has_forbidden_nul(request.body) {
+        True -> Error(response(400, "HTTP_NUL_BYTE_FORBIDDEN"))
+        False ->
+          case
+            json_depth_bytes(
+              bit_array.from_string(request.body),
+              False,
+              False,
+              0,
+              0,
+            )
+            > max_json_depth
+          {
+            True -> Error(response(400, "HTTP_JSON_DEPTH_EXCEEDED"))
+            False -> Ok(sse_ok && !json_ok)
+          }
+      }
     False -> Error(response(406, "HTTP_ACCEPT_REQUIRED"))
+  }
+}
+
+fn has_forbidden_nul(text: String) -> Bool {
+  string.contains(text, "\u{0000}")
+  || string.contains(text, "\\u0000")
+  || string.contains(text, "\\U0000")
+}
+
+// Scan bytes directly: no per-byte list cells, and string braces do not nest.
+fn json_depth_bytes(
+  bytes: BitArray,
+  in_string: Bool,
+  escaped: Bool,
+  depth: Int,
+  maximum: Int,
+) -> Int {
+  case bytes, in_string, escaped {
+    <<>>, _, _ -> maximum
+    <<_, rest:bytes>>, True, True ->
+      json_depth_bytes(rest, True, False, depth, maximum)
+    <<0x5c, rest:bytes>>, True, False ->
+      json_depth_bytes(rest, True, True, depth, maximum)
+    <<0x22, rest:bytes>>, _, _ ->
+      json_depth_bytes(rest, !in_string, False, depth, maximum)
+    <<0x7b, rest:bytes>>, False, _ | <<0x5b, rest:bytes>>, False, _ -> {
+      let next = depth + 1
+      let maximum = case next > maximum {
+        True -> next
+        False -> maximum
+      }
+      json_depth_bytes(rest, False, False, next, maximum)
+    }
+    <<0x7d, rest:bytes>>, False, _ | <<0x5d, rest:bytes>>, False, _ ->
+      json_depth_bytes(rest, False, False, depth - 1, maximum)
+    <<_, rest:bytes>>, _, _ ->
+      json_depth_bytes(rest, in_string, False, depth, maximum)
+    _, _, _ -> maximum
   }
 }
 
@@ -184,28 +292,32 @@ fn normalize(
   profile: ProtocolProfile,
   p: Principal,
 ) -> Result(wire.NormalizedMessage, HttpResponse) {
-  let version = case profile {
-    Legacy20241105 -> "2024-11-05"
-    Modern20260728 -> "2026-07-28"
-  }
-  use _ <- result.try(
-    case
-      auth.header(request.headers, "mcp-protocol-version") == Ok(version)
-      && auth.header(request.headers, "mcp-session-id")
-      == Ok(principal.session_id(p))
-    {
-      True -> Ok(Nil)
-      False -> Error(response(400, "HEADER_BODY_MISMATCH"))
-    },
-  )
+  let header_version = auth.header(request.headers, "mcp-protocol-version")
+  use ver <- result.try(case header_version {
+    Ok(ver) ->
+      case
+        version.matches_profile(profile, ver)
+        && auth.header(request.headers, "mcp-session-id")
+        == Ok(principal.session_id(p))
+      {
+        True -> Ok(ver)
+        False -> Error(response(400, "HEADER_BODY_MISMATCH"))
+      }
+    Error(_) -> Error(response(400, "HEADER_BODY_MISMATCH"))
+  })
   use body <- result.try(
     json.parse(request.body, value.decoder())
     |> result.map_error(fn(_) { response(400, "MALFORMED_JSONRPC") }),
   )
   use _ <- result.try(
+    case field_matches(body, ["params", "protocolVersion"], ver) {
+      True -> Ok(Nil)
+      False -> Error(response(400, "HEADER_BODY_MISMATCH"))
+    },
+  )
+  use _ <- result.try(
     case
-      field_matches(body, ["params", "protocolVersion"], version)
-      && field_matches(
+      field_matches(
         body,
         ["params", "_meta", "session_id"],
         principal.session_id(p),

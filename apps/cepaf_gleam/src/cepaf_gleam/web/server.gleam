@@ -27,19 +27,22 @@
 // सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज — Surrender all duties, take refuge (Gita 18.66)
 
 import cepaf_gleam/c3i/nif as c3i_nif
-import cepaf_gleam/config/mesh_source
 import cepaf_gleam/config/mesh_config
+import cepaf_gleam/config/mesh_source
 import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/ha/guard_grid
+import cepaf_gleam/mcp/http_auth as mcp_http_auth
+import cepaf_gleam/mcp/runtime_gateway
 import cepaf_gleam/otp_app
 import cepaf_gleam/planning/safety_kernel
-import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_api
+import cepaf_gleam/telegram/mini_control
 import cepaf_gleam/telegram/mini_telemetry
 import cepaf_gleam/ui/wisp/router
 import cepaf_gleam/ui/wisp/secret_api as vault_secret_api
 import cepaf_gleam/web/homeostasis_http
 import cepaf_gleam/web/mini_http
+import gleam/bit_array
 import gleam/bytes_tree
 import gleam/erlang/process
 import gleam/http
@@ -1421,12 +1424,163 @@ fn ws_426_response() -> response.Response(mist.ResponseData) {
   |> response.set_header("x-dns-prefetch-control", "off")
 }
 
+fn set_pass_137_headers(
+  resp: response.Response(mist.ResponseData),
+) -> response.Response(mist.ResponseData) {
+  resp
+  |> response.set_header("x-frame-options", "DENY")
+  |> response.set_header("x-content-type-options", "nosniff")
+  |> response.set_header("referrer-policy", "strict-origin-when-cross-origin")
+  |> response.set_header(
+    "content-security-policy",
+    "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
+  )
+  |> response.set_header("cross-origin-opener-policy", "same-origin")
+  |> response.set_header("cross-origin-resource-policy", "same-site")
+  |> response.set_header("x-dns-prefetch-control", "off")
+  |> response.set_header("origin-agent-cluster", "?1")
+  |> response.set_header("x-robots-tag", "noindex, nofollow")
+  |> response.set_header("vary", "Origin, Accept-Encoding")
+}
+
+fn has_header_case_insensitive(
+  headers: List(#(String, String)),
+  key: String,
+) -> Bool {
+  let normalized = string.lowercase(key)
+  list.any(headers, fn(header) { string.lowercase(header.0) == normalized })
+}
+
+pub fn apply_gateway_response(
+  req_headers: List(#(String, String)),
+  status: Int,
+  headers: List(#(String, String)),
+  body: String,
+) -> response.Response(mist.ResponseData) {
+  let base =
+    response.new(status)
+    |> response.set_body(mist.Bytes(bytes_tree.from_string(body)))
+  let with_headers =
+    list.fold(headers, base, fn(acc, header) {
+      response.set_header(acc, header.0, header.1)
+    })
+    |> set_pass_137_headers
+
+  case has_header_case_insensitive(headers, "access-control-allow-origin") {
+    True -> with_headers
+    False -> {
+      let origin_headers =
+        list.filter(req_headers, fn(header) {
+          string.lowercase(header.0) == "origin"
+        })
+
+      case origin_headers {
+        [#(_, origin)] ->
+          case
+            mcp_http_auth.approved_origin(
+              runtime_gateway.http_auth_config(),
+              origin,
+            )
+          {
+            True ->
+              with_headers
+              |> response.set_header("access-control-allow-origin", origin)
+              |> response.set_header(
+                "access-control-allow-methods",
+                "GET, POST, OPTIONS",
+              )
+            False -> with_headers
+          }
+        _ -> with_headers
+      }
+    }
+  }
+}
+
+fn mcp_method_to_string(method: http.Method) -> String {
+  method
+  |> http.method_to_string()
+  |> string.uppercase()
+}
+
+fn handle_mcp_streamable_http(
+  req: request.Request(mist.Connection),
+) -> response.Response(mist.ResponseData) {
+  let method = mcp_method_to_string(req.method)
+
+  case req.path, req.method {
+    "/.well-known/oauth-protected-resource", http.Get -> {
+      let #(status, headers, body) =
+        runtime_gateway.handle_http_request("GET", req.path, req.headers, "")
+      apply_gateway_response(req.headers, status, headers, body)
+    }
+    "/.well-known/oauth-protected-resource", http.Head -> {
+      let #(status, headers, _) =
+        runtime_gateway.handle_http_request("GET", req.path, req.headers, "")
+      apply_gateway_response(req.headers, status, headers, "")
+    }
+    "/mcp", http.Post ->
+      case mist.read_body(req, 1_048_576) {
+        Error(mist.ExcessBody) ->
+          apply_gateway_response(
+            req.headers,
+            413,
+            [#("content-type", "application/json; charset=utf-8")],
+            "{\"error\":\"HTTP_BODY_TOO_LARGE\"}",
+          )
+        Error(mist.MalformedBody) ->
+          apply_gateway_response(
+            req.headers,
+            400,
+            [#("content-type", "application/json; charset=utf-8")],
+            "{\"error\":\"MALFORMED_HTTP_BODY\"}",
+          )
+        Ok(read_req) ->
+          case bit_array.to_string(read_req.body) {
+            Error(_) ->
+              apply_gateway_response(
+                req.headers,
+                400,
+                [#("content-type", "application/json; charset=utf-8")],
+                "{\"error\":\"INVALID_UTF8_BODY\"}",
+              )
+            Ok(body_str) -> {
+              let #(status, headers, body) =
+                runtime_gateway.handle_http_request(
+                  method,
+                  req.path,
+                  read_req.headers,
+                  body_str,
+                )
+              apply_gateway_response(req.headers, status, headers, body)
+            }
+          }
+      }
+    _, _ ->
+      apply_gateway_response(
+        req.headers,
+        404,
+        [#("content-type", "application/json; charset=utf-8")],
+        "{\"error\":\"not_found\"}",
+      )
+  }
+}
+
 fn handle_normal_http_inner(
   req: request.Request(mist.Connection),
 ) -> response.Response(mist.ResponseData) {
-  case req.path == mini_api.data_path || mini_control.owns(req.path) {
-    True -> mini_http.handle(req)
-    False -> handle_non_mini_http_inner(req)
+  case req.path == "/.well-known/oauth-protected-resource", req.method {
+    True, http.Get -> handle_mcp_streamable_http(req)
+    True, http.Head -> handle_mcp_streamable_http(req)
+    _, _ ->
+      case req.path == "/mcp", req.method {
+        True, http.Post -> handle_mcp_streamable_http(req)
+        _, _ ->
+          case req.path == mini_api.data_path || mini_control.owns(req.path) {
+            True -> mini_http.handle(req)
+            False -> handle_non_mini_http_inner(req)
+          }
+      }
   }
 }
 

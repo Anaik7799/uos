@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "uos-gleam": {
+  "command": "/home/an/NAS-setup/uos/tools/uos-mcp-stdio",
+  "args": [],
+  "env": {
+    "ERL_CRASH_DUMP_SECONDS": "0",
+    "UOS_MCP_WORKSPACE_ROOT": "/home/an/NAS-setup/uos",
+    "UOS_MCP_ROUTE": "public",
+    "UOS_MCP_CLIENT_NAME": "claude-code",
+    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230"
+  }
+}
+  }
+}

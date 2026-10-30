@@ -2,11 +2,11 @@
   "schema": "uos.harness-poodavr-dashboard-tracker.v2",
   "plan_id": "20261029-1913-mcp-server-completion",
   "plan_name": "uos/mcp-server-completion/20261029-1913",
-  "updated_at_utc": "2026-10-30T12:05:00Z",
+  "updated_at_utc": "2026-10-30T15:16:25Z",
   "supervisor": {
     "agent": "agy-argon-sup-20261030-0844",
     "role": "SUPERVISOR_ONLY (POODAVR Orchestrator, Sa-Plan & Coordinator Lease Gatekeeper, Main Integrator)",
-    "coordinator_sequence": 4788
+    "coordinator_sequence": 4848
   },
   "agent_fleet_routing": {
     "pi_deepseek_chat": {
@@ -45,10 +45,11 @@
   "to_be_target_state": {
     "sa_plan_tasks_completed": "25/25 (T00..T24 completed in canonical var/sa-plan/uos.sqlite3; T24 rehearsed on contained fixture without unauthorized live cutover)",
     "public_mcp_tools": "65/65 backed by real typed adapters across 9 families with honest UNAVAILABLE/UNKNOWN fail-closed semantics on empty/unwired calls",
-    "private_mcp_routes": "15 successor + 21 development tools converged on shared typed registry/admission/worker/receipt core with 0 baseline test failures",
-    "protocol_and_transports": "Legacy 2024-11-05 + Modern 2026-07-28 profiles, supervised stdio + signed Zenoh + protected Tailnet Streamable HTTP, scoped resources/prompts/subscriptions/task_extension",
+    "private_mcp_routes": "Observed registry:21 development +15 successor; operator29+7 taxonomy preserved under as_is_vs_to_be.discrepancies.",
+    "protocol_and_transports": "Legacy2024-11-05 and modern2025-03-26/2025-06-18/2025-11-25/2026-07-28; supervised stdio, HMAC-signed indrajaal/mcp request/response topics and protected Streamable HTTP.",
     "five_client_acceptance": "5/5 clients (agy, gemini, codex, claude, pi) verified across route matrix + 10,000-request concurrency-16 assurance gate",
-    "governance_and_main": "All verified waves merged frequently to main under coordinator epoch leases; rules, skills, plugins, agents, SOPs, and Superpowers aligned across all 4 surfaces (.agents, .claude, .codex, .gemini)"
+    "governance_and_main": "All verified waves merged frequently to main under coordinator epoch leases; rules, skills, plugins, agents, SOPs, and Superpowers aligned across all 4 surfaces (.agents, .claude, .codex, .gemini)",
+    "live_service_cutover": "Complete for the six scoped UOS units; all four native agent bindings pinned to verified OTP29 capsule; system admission NOT_ADMITTED."
   },
   "waves_and_progress": {
     "completed_tasks_count": 25,
@@ -168,7 +169,7 @@
     "executing_tasks": [],
     "remaining_queued": 0,
     "total": 25,
-    "percent_complete": 100.0
+    "percent_complete": 100
   },
   "critical_code_guards": {
     "contract": "SC-AGENTIC-RESILIENCE-001",
@@ -233,5 +234,449 @@
     "codex_r4_review": "docs/reviews/20261030-1249-codex-t23-final-dev-acceptance-r4.json (PASS, 0 critical findings)",
     "t24_rehearsal_receipt": "docs/reviews/20261030-1259-t24-staged-release-and-rollback-rehearsal-receipt.json",
     "fractal_system_prompt": "docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md"
+  },
+  "coordinator_sequence": 4848,
+  "system_admission": "NOT_ADMITTED",
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "status": "LIVE_CUTOVER_COMPLETE_WITH_DOCUMENTED_EVIDENCE_GAPS",
+  "as_is_vs_to_be": {
+    "as_is": {
+      "operator_reported": "Unified 101-route library (65 public + 29 development + 7 successor), T00..T24 25/25, while services still used the legacy 46-tool protocol/bridge, a 1000ms blocking receive, unsigned Zenoh and fragmented agent configs. Operator narrative names the old capsule as OTP28.",
+      "old_capsule": "20261026-2128-4add92f66a2f4be8425e7a0692a5dd8b8cdbaebbe78beadc59e9cab32d83a4d9",
+      "retained_old_capsule_metadata_otp": 29,
+      "core_digest": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+      "route_count_correction": "Loaded registry and gateway report 65 public + 21 development + 15 successor = 101; 29+7 is the operator-reported taxonomy, not the observed registry split."
+    },
+    "to_be": {
+      "status": "LIVE_CUTOVER_COMPLETE_WITH_DOCUMENTED_EVIDENCE_GAPS",
+      "capsule": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+      "runtime": "OTP29 / ERTS17.0.5",
+      "routes": {
+        "total": 101,
+        "public": 65,
+        "development": 21,
+        "successor": 15
+      },
+      "public_tools_advertised": 53,
+      "operator_conceptual_public_partition": "53 tools + 12 server/resource/prompt/task/logging/completion facilities",
+      "entrypoints": [
+        "otp_app.gleam",
+        "web/server.gleam /mcp and /.well-known/oauth-protected-resource",
+        "bridge/zenoh_mcp.gleam",
+        "tools/uos-mcp-stdio"
+      ],
+      "gateway": "cepaf_gleam/mcp/runtime_gateway.gleam",
+      "protocol_versions": [
+        "2024-11-05",
+        "2025-03-26",
+        "2025-06-18",
+        "2025-11-25",
+        "2026-07-28"
+      ],
+      "agent_bindings": 4,
+      "scoped_units_active": 12,
+      "scoped_units_total": 12,
+      "health_caveat": "12/12 active is process liveness; cockpit /health body remains unavailable with quorum_healthy=false."
+    },
+    "discrepancies": [
+      {
+        "subject": "Old capsule OTP",
+        "operator_report": 28,
+        "observed": 29,
+        "evidence": "Retained old release-manifest.json otp.identity.otp_release"
+      },
+      {
+        "subject": "Private route partition",
+        "operator_report": {
+          "development": 29,
+          "successor": 7
+        },
+        "observed": {
+          "development": 21,
+          "successor": 15
+        },
+        "evidence": "Loaded capsule registry all_specs() counts and runtime_gateway health constants"
+      },
+      {
+        "subject": "Zenoh request namespace",
+        "operator_report": "uos/mcp/v1/**",
+        "observed": "indrajaal/mcp/request/{client}/{request}",
+        "evidence": "bridge/zenoh_mcp.gleam and mcp/transports/zenoh.gleam"
+      },
+      {
+        "subject": "Cockpit semantic health",
+        "http_status": 200,
+        "observed_body_status": "unavailable",
+        "quorum_healthy": false,
+        "evidence": "var/harness/20261030-1427-c04-cutover/20261030-1501-documentation-observation.json"
+      },
+      {
+        "subject": "Independent review and broad suite aggregate",
+        "operator_report": "Claude 15/15 remediated/re-verified PASS, C02-F1..C02-F16, remaining_findings []; 315/315 across37 suites",
+        "local_primary_receipt_located": false,
+        "disposition": "Preserved as attributed operator report; not presented as a freshly reproduced independent review."
+      }
+    ]
+  },
+  "wave_6_full_service_cutover": {
+    "status": "LIVE_CUTOVER_COMPLETE_DOCUMENTATION_GATES_PASS",
+    "sa_plan": {
+      "plan_id": "20261030-1245-mcp-full-service-cutover",
+      "tasks": [
+        {
+          "id": "C01",
+          "title": "Wire OTP supervised runtime_gateway actor and live HTTP, stdio, Zenoh, and Codex client entrypoints",
+          "state": "completed",
+          "worker": "agy-argon-sup-20261030-0844",
+          "attempt": 1
+        },
+        {
+          "id": "C02",
+          "title": "Build cepaf_gleam + indrajaal_gleam_web, pass EUnit + live wiring tests, and run Claude/Codex cutover verification",
+          "state": "completed",
+          "worker": "agy-argon-sup-20261030-0844",
+          "attempt": 1
+        },
+        {
+          "id": "C03",
+          "title": "Stage immutable OTP 29 release capsule via ecology_release.ml and cut over all live user systemd services",
+          "state": "completed",
+          "worker": "agy-argon-sup-20261030-0844",
+          "attempt": 1
+        },
+        {
+          "id": "C04",
+          "title": "Execute live post-cutover runtime probes, merge to main under coordinator epoch fencing, and publish SC-JOURNAL-v3 cutover journal + tracker",
+          "state": "executing",
+          "worker": "agy-argon-sup-20261030-0844",
+          "attempt": 1
+        }
+      ],
+      "task_completion_not_inferred": true
+    },
+    "capsule": {
+      "path": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+      "candidate_sha256": "9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+      "payload_sha256": "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230",
+      "runtime_source_revision": "435efaa2741afbd9f7bee0d11efc3cfd9d386fcb",
+      "otp_release": 29,
+      "erts_version": "17.0.5",
+      "source_manifest_inputs_verified": 3457,
+      "core_candidate_digest": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+    },
+    "routes": {
+      "observed": {
+        "public": 65,
+        "development": 21,
+        "successor": 15,
+        "total": 101
+      },
+      "advertised_public_tools": 53,
+      "operator_reported_partition": {
+        "public": 65,
+        "development": 29,
+        "successor": 7,
+        "total": 101
+      }
+    },
+    "cutover_services": [
+      {
+        "unit": "c3i-gleam-server.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 2369048,
+        "restarts": 0
+      },
+      {
+        "unit": "uos-cognitive-worker.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 2369086,
+        "restarts": 0
+      },
+      {
+        "unit": "uos-clock-guard@primary.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 2369339,
+        "restarts": 0
+      },
+      {
+        "unit": "uos-clock-guard@backup.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 2369377,
+        "restarts": 0
+      },
+      {
+        "unit": "uos-ecology@20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 2370613,
+        "restarts": 0
+      },
+      {
+        "unit": "uos-telegram-bridge.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 429614,
+        "restarts": 0
+      }
+    ],
+    "mesh_service_observation": [
+      {
+        "unit": "c3i-docs-server.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 9971,
+        "restarts": 0
+      },
+      {
+        "unit": "c3i-pi-runtime.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 9023,
+        "restarts": 0
+      },
+      {
+        "unit": "c3i-sutra.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 9031,
+        "restarts": 0
+      },
+      {
+        "unit": "c3i-symbiosis-monitor.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 9035,
+        "restarts": 0
+      },
+      {
+        "unit": "c3i-tls-proxy.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 9056,
+        "restarts": 0
+      },
+      {
+        "unit": "c3i-zenoh-router-1.service",
+        "state": "active",
+        "substate": "running",
+        "main_pid": 9954,
+        "restarts": 0
+      }
+    ],
+    "process_liveness": "12/12 scoped units active",
+    "endpoint_observations": [
+      {
+        "url": "http://nas-1.tail55d152.ts.net:4100/health",
+        "http_status": 200,
+        "body": {
+          "status": "unavailable",
+          "interface": "wisp",
+          "port": 4100,
+          "version": "1.0.0",
+          "container_count": 0,
+          "healthy_count": 0,
+          "threat_level": "nominal",
+          "ooda_phase": "observe",
+          "dark_cockpit_mode": "normal",
+          "zenoh_connected": true,
+          "quorum_healthy": false,
+          "last_updated_ms": 1793372853402
+        }
+      },
+      {
+        "url": "http://nas-1.tail55d152.ts.net:4100/.well-known/oauth-protected-resource",
+        "http_status": 200,
+        "body": {
+          "resource": "https://nas-1.tail55d152.ts.net:4101/mcp",
+          "authorization_servers": [
+            "https://nas-1.tail55d152.ts.net:4101"
+          ],
+          "scopes_supported": [
+            "mcp:operational"
+          ],
+          "bearer_methods_supported": [
+            "header"
+          ]
+        }
+      },
+      {
+        "url": "http://100.87.7.78:4110/health",
+        "http_status": 200,
+        "body": {
+          "status": "running",
+          "cycle": 988,
+          "application_admitted": false,
+          "scope": "shared ecology actor and observed OTP identity"
+        }
+      }
+    ],
+    "semantic_health": "Cockpit HTTP200 reports unavailable and quorum_healthy=false; not system health admission.",
+    "unified_agent_bindings": [
+      {
+        "agent": "Codex",
+        "configuration": [
+          ".codex/config.toml"
+        ],
+        "targets": [
+          "uos_gleam",
+          "uos_development"
+        ],
+        "launcher": "tools/uos-mcp-stdio",
+        "capsule": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+        "payload_sha256": "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230"
+      },
+      {
+        "agent": "Claude",
+        "configuration": [
+          ".mcp.json",
+          "~/.claude.json"
+        ],
+        "targets": [
+          "uos-gleam"
+        ],
+        "launcher": "tools/uos-mcp-stdio",
+        "capsule": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+        "payload_sha256": "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230"
+      },
+      {
+        "agent": "Pi",
+        "configuration": [
+          "~/.pi/agent/mcp.json"
+        ],
+        "targets": [
+          "uos-harness",
+          "uos-harness-dev"
+        ],
+        "launcher": "tools/uos-mcp-stdio",
+        "capsule": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+        "payload_sha256": "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230",
+        "pi_development_note": "uos-harness-dev uses pinned OTP29 erl and capsule apps/*/ebin; its grant environment is preserved."
+      },
+      {
+        "agent": "AGY/Gemini",
+        "configuration": [
+          "~/.gemini/config/mcp_config.json"
+        ],
+        "targets": [
+          "uos-gleam"
+        ],
+        "launcher": "tools/uos-mcp-stdio",
+        "capsule": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885",
+        "payload_sha256": "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230"
+      }
+    ],
+    "claude_c02_security_review": {
+      "status": "PASS",
+      "finding_count": 15,
+      "label_range": "C02-F1..C02-F16",
+      "remaining_findings": [],
+      "local_primary_receipt_located": false,
+      "evidence_basis": "Operator final publication instruction; local primary review artifact unlocated",
+      "aggregate_finding_label_count_not_reconciled": true
+    },
+    "regression": {
+      "operator_reported_eunit": {
+        "passed": 315,
+        "failed": 0,
+        "suites": 37,
+        "local_primary_receipt_located": false
+      },
+      "retained_focused_eunit": {
+        "passed": 32,
+        "failed": 0
+      },
+      "retained_web": {
+        "passed": 43,
+        "failed": 0
+      }
+    },
+    "c04_jidoka_fix": {
+      "root_cause": "Capsule root confinement rejected canonical workspace cwd for sqlite3 and preflight.",
+      "adapter": "mcp_stdio_ffi:run_workspace_bounded_cd/4",
+      "guardian": "Capsule-pinned checksum-verified OCaml tools/ecology_process.ml; bounded deadline/output/process cleanup",
+      "query_order": "FROM sa_plan_task first; legacy FROM tasks fallback",
+      "compiler_warnings": 0,
+      "explicit_success_flag": "isError:false",
+      "restage_and_recutover": "PASS",
+      "protected_ecology_capability_ffi_unchanged": true
+    },
+    "journal_path": "docs/journal/20261030-1512-mcp-full-service-cutover-journal.md",
+    "journal_contract": "SC-JOURNAL-v3",
+    "cutover_receipt": "var/harness/20261030-1427-c04-cutover/cutover-outcome.json",
+    "fresh_observation": "var/harness/20261030-1427-c04-cutover/20261030-1501-documentation-observation.json",
+    "documentation_discrepancies": [
+      {
+        "subject": "Old capsule OTP",
+        "operator_report": 28,
+        "observed": 29,
+        "evidence": "Retained old release-manifest.json otp.identity.otp_release"
+      },
+      {
+        "subject": "Private route partition",
+        "operator_report": {
+          "development": 29,
+          "successor": 7
+        },
+        "observed": {
+          "development": 21,
+          "successor": 15
+        },
+        "evidence": "Loaded capsule registry all_specs() counts and runtime_gateway health constants"
+      },
+      {
+        "subject": "Zenoh request namespace",
+        "operator_report": "uos/mcp/v1/**",
+        "observed": "indrajaal/mcp/request/{client}/{request}",
+        "evidence": "bridge/zenoh_mcp.gleam and mcp/transports/zenoh.gleam"
+      },
+      {
+        "subject": "Cockpit semantic health",
+        "http_status": 200,
+        "observed_body_status": "unavailable",
+        "quorum_healthy": false,
+        "evidence": "var/harness/20261030-1427-c04-cutover/20261030-1501-documentation-observation.json"
+      },
+      {
+        "subject": "Independent review and broad suite aggregate",
+        "operator_report": "Claude 15/15 remediated/re-verified PASS, C02-F1..C02-F16, remaining_findings []; 315/315 across37 suites",
+        "local_primary_receipt_located": false,
+        "disposition": "Preserved as attributed operator report; not presented as a freshly reproduced independent review."
+      }
+    ],
+    "backups": "Original .pre-20261030-cutover and refresh backups retained; root MCP refresh backup moved into var/harness; all old capsules preserved.",
+    "system_admission": "NOT_ADMITTED",
+    "application_admitted": false,
+    "admitted_ev_ceiling": 93,
+    "not_admitted_ev_range": "EV-94..EV-109",
+    "new_ev_numbers_minted": false,
+    "mechanical_gates": {
+      "journal_check": "PASS 10/10 (first run)",
+      "diagram_check": "PASS 12 matching directed edges",
+      "json": "PASS",
+      "km_gate": "PASS",
+      "preflight": "PASS 31 checks",
+      "protected_md5_ok": true,
+      "observed_at_utc": "2026-10-30T15:16:25Z",
+      "publication": {
+        "raw_journal_http_status": 200,
+        "rendered_journal_http_status": 200,
+        "tracker_http_status": 200
+      },
+      "evidence_summary": "var/harness/20261030-1427-c04-cutover/documentation-gates.json"
+    },
+    "km_observation": {
+      "status": "PASS",
+      "authority": "REPORT_ONLY",
+      "admitted_ev_ceiling": 93,
+      "adr_total": 137,
+      "layer_entropy_bits": 3.2980706279534964,
+      "quarantined_total": 16,
+      "cycle_chain": "CHAIN_INTACT"
+    }
   }
 }

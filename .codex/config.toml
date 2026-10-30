@@ -3,14 +3,8 @@
 # Canonical Sa-plan status and capability inventory were exercised via initialized
 # stdio MCP under uos/stabilization/20260930-0311. Neither admits task effects.
 [mcp_servers.uos_gleam]
-command = "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl"
-args = [
-  "+S", "2:2",
-  "+A", "2",
-  "-noshell",
-  "-eval",
-  "ok = file:set_cwd(\"/home/an/NAS-setup/uos\"), code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), cepaf_gleam@mcp@server:main(), halt(0).",
-]
+command = "/home/an/NAS-setup/uos/tools/uos-mcp-stdio"
+args = []
 startup_timeout_sec = 20
 tool_timeout_sec = 30
 enabled_tools = [
@@ -19,7 +13,12 @@ enabled_tools = [
 ]
 
 [mcp_servers.uos_gleam.env]
+UOS_MCP_EXPECTED_PAYLOAD_SHA256 = "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230"
+UOS_COCKPIT_RELEASE = "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885"
 ERL_CRASH_DUMP_SECONDS = "0"
+UOS_MCP_WORKSPACE_ROOT = "/home/an/NAS-setup/uos"
+UOS_MCP_ROUTE = "public"
+UOS_MCP_CLIENT_NAME = "codex-cli"
 
 [mcp_servers.uos_gleam.tools.knowledge_search]
 approval_mode = "approve"
@@ -37,14 +36,8 @@ approval_mode = "approve"
 # Grant values are inherited from the launcher environment, never checked in.
 [mcp_servers.uos_development]
 enabled = false
-command = "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl"
-args = [
-  "+S", "2:2",
-  "+A", "2",
-  "-noshell",
-  "-eval",
-  "ok = file:set_cwd(\"/home/an/NAS-setup/uos\"), code:add_paths(filelib:wildcard(\"/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/*/ebin\")), cepaf_gleam@harness@successor_mcp:main(), halt(0).",
-]
+command = "/home/an/NAS-setup/uos/tools/uos-mcp-stdio"
+args = []
 env_vars = ["UOS_HARNESS_GRANT_PATH", "UOS_HARNESS_GRANT_SHA256"]
 startup_timeout_sec = 30
 tool_timeout_sec = 300
@@ -58,4 +51,9 @@ enabled_tools = [
 ]
 
 [mcp_servers.uos_development.env]
+UOS_MCP_EXPECTED_PAYLOAD_SHA256 = "3ec0ac409c1cb34e6b4fbce48df2e2c35241327d9a9cdf9b1d795eaa18c01230"
+UOS_COCKPIT_RELEASE = "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1423-9919a413d911dc5fe7cae5c7098f0edb3ae6adaf891170a1bc166da802eab885"
 ERL_CRASH_DUMP_SECONDS = "0"
+UOS_MCP_WORKSPACE_ROOT = "/home/an/NAS-setup/uos"
+UOS_MCP_ROUTE = "successor"
+UOS_MCP_CLIENT_NAME = "codex-cli"

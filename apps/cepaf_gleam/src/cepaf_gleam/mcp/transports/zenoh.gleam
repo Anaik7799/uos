@@ -21,6 +21,10 @@ const request_prefix = "indrajaal/mcp/request/"
 
 const response_prefix = "indrajaal/mcp/response/"
 
+pub const max_payload_bytes = 1_048_576
+
+pub const max_json_depth = 32
+
 pub type SignedZenohEnvelope {
   SignedZenohEnvelope(
     topic: String,
@@ -108,6 +112,46 @@ pub fn handle_envelope(
   use _ <- result.try(check_client_name(envelope.client_name))
   use _ <- result.try(check_secret(shared_secret))
   use _ <- result.try(check_signature(shared_secret, envelope))
+  use _ <- result.try(
+    case string.byte_size(envelope.payload) <= max_payload_bytes {
+      True -> Ok(Nil)
+      False ->
+        Error(ToolError(
+          "ZENOH_PAYLOAD_TOO_LARGE",
+          "Payload exceeds byte limit",
+          NonRetryable,
+        ))
+    },
+  )
+  use _ <- result.try(case has_forbidden_nul(envelope.payload) {
+    True ->
+      Error(ToolError(
+        "ZENOH_NUL_BYTE_FORBIDDEN",
+        "Payload contains forbidden NUL",
+        NonRetryable,
+      ))
+    False -> Ok(Nil)
+  })
+  use _ <- result.try(
+    case
+      json_depth_bytes(
+        bit_array.from_string(envelope.payload),
+        False,
+        False,
+        0,
+        0,
+      )
+      <= max_json_depth
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(ToolError(
+          "ZENOH_JSON_DEPTH_EXCEEDED",
+          "Payload exceeds JSON depth limit",
+          NonRetryable,
+        ))
+    },
+  )
 
   let principal =
     principal.from_signed_zenoh_envelope(
@@ -126,6 +170,44 @@ pub fn handle_envelope(
         }),
       )
     }
+  }
+}
+
+fn has_forbidden_nul(text: String) -> Bool {
+  string.contains(text, "\u{0000}")
+  || string.contains(text, "\\u0000")
+  || string.contains(text, "\\U0000")
+}
+
+// Scan bytes directly: no per-byte list cells, and string braces do not nest.
+fn json_depth_bytes(
+  bytes: BitArray,
+  in_string: Bool,
+  escaped: Bool,
+  depth: Int,
+  maximum: Int,
+) -> Int {
+  case bytes, in_string, escaped {
+    <<>>, _, _ -> maximum
+    <<_, rest:bytes>>, True, True ->
+      json_depth_bytes(rest, True, False, depth, maximum)
+    <<0x5c, rest:bytes>>, True, False ->
+      json_depth_bytes(rest, True, True, depth, maximum)
+    <<0x22, rest:bytes>>, _, _ ->
+      json_depth_bytes(rest, !in_string, False, depth, maximum)
+    <<0x7b, rest:bytes>>, False, _ | <<0x5b, rest:bytes>>, False, _ -> {
+      let next = depth + 1
+      let maximum = case next > maximum {
+        True -> next
+        False -> maximum
+      }
+      json_depth_bytes(rest, False, False, next, maximum)
+    }
+    <<0x7d, rest:bytes>>, False, _ | <<0x5d, rest:bytes>>, False, _ ->
+      json_depth_bytes(rest, False, False, depth - 1, maximum)
+    <<_, rest:bytes>>, _, _ ->
+      json_depth_bytes(rest, in_string, False, depth, maximum)
+    _, _, _ -> maximum
   }
 }
 

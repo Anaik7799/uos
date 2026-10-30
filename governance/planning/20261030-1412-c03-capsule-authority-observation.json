@@ -1,0 +1,36 @@
+{
+  "schema": "uos.release.observation.v1",
+  "observed_at": "2026-10-30T14:18:12Z",
+  "capsule": "20261030-1413-3c3509d135d35796a5a56120b970fd1fe8365e3fab66a258fdc060d615892e16",
+  "payload_sha256": "6d072f5daf73ecbf61e8c058fa5b811ba9ed1ad0d9504d410856bb78f28b188a",
+  "capsule_verify": "PASS observed via tools/ecology_release.ml verify",
+  "application_admitted": false,
+  "authority": "Explicit operator release authorization; canonical C03 executing worker agy-argon-sup-20261030-0844 attempt1",
+  "runtime_leases": [
+    {
+      "resource": "runtime:c3i-gleam-server",
+      "holder": "agy-argon-sup-20261030-0844",
+      "epoch": 4,
+      "expires_boot_us": 2635279320000
+    },
+    {
+      "resource": "runtime:uos-clock-guard",
+      "holder": "agy-argon-sup-20261030-0844",
+      "epoch": 1,
+      "expires_boot_us": 2635281450000
+    },
+    {
+      "resource": "runtime:uos-cognitive-worker",
+      "holder": "agy-argon-sup-20261030-0844",
+      "epoch": 1,
+      "expires_boot_us": 2635280070000
+    },
+    {
+      "resource": "runtime:uos-ecology",
+      "holder": "agy-argon-sup-20261030-0844",
+      "epoch": 1,
+      "expires_boot_us": 2635280730000
+    }
+  ],
+  "scope": "Observation only, not an authority grant; final effect-time checks remain required."
+}

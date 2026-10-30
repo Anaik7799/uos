@@ -144,6 +144,23 @@ pub fn authenticate(
   ))
 }
 
+/// Require an additional scope from the same fully verified bearer token.
+pub fn token_has_scope(
+  config: AuthConfig,
+  headers: List(#(String, String)),
+  scope: String,
+  now_ms: Int,
+) -> Bool {
+  case header(headers, "authorization") {
+    Error(_) -> False
+    Ok(authorization) ->
+      case verify_token(config, authorization, now_ms) {
+        Ok(claims) -> scope != "" && list.contains(claims.scopes, scope)
+        Error(_) -> False
+      }
+  }
+}
+
 /// Trusted issuer helper; not an OAuth issuance endpoint. Never expose the
 /// signing secret or this function through a tool dispatcher.
 pub fn sign_token(claims: TokenClaims, signing_secret: String) -> String {

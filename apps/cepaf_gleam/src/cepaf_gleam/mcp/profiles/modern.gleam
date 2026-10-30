@@ -1,4 +1,4 @@
-//// T15 Modern 2026-07-28 profile: initialize handshake, discovery metadata,
+//// T15 Modern 2025/2026 revisions: initialize handshake, discovery metadata,
 //// structured result/error envelopes, and cache/capability separation.
 //// Legacy-only unversioned mix-ins are refused with PROFILE_METHOD_MISMATCH.
 
@@ -31,22 +31,35 @@ pub fn initialize(
   use profile <- result.try(version.negotiate(requested_version))
   case profile {
     Modern20260728 ->
-      Ok(json.to_string(json.object([
-        #("protocolVersion", json.string(protocol_version)),
-        #("capabilities", json.object([
-          #("tools", json.object([#("listChanged", json.bool(True))])),
-          #("discovery", json.object([])),
-          #("tasks", json.object([])),
-        ])),
-        #("serverInfo", json.object([
-          #("name", json.string("uos-cepaf-mcp")),
-          #("version", json.string("1.0.0")),
-        ])),
-        #("clientInfo", json.object([
-          #("name", json.string(client_name)),
-          #("version", json.string(client_version)),
-        ])),
-      ])))
+      Ok(
+        json.to_string(
+          json.object([
+            #("protocolVersion", json.string(requested_version)),
+            #(
+              "capabilities",
+              json.object([
+                #("tools", json.object([#("listChanged", json.bool(True))])),
+                #("discovery", json.object([])),
+                #("tasks", json.object([])),
+              ]),
+            ),
+            #(
+              "serverInfo",
+              json.object([
+                #("name", json.string("uos-cepaf-mcp")),
+                #("version", json.string("1.0.0")),
+              ]),
+            ),
+            #(
+              "clientInfo",
+              json.object([
+                #("name", json.string(client_name)),
+                #("version", json.string(client_version)),
+              ]),
+            ),
+          ]),
+        ),
+      )
     Legacy20241105 -> Error(profile_mismatch("initialize"))
   }
 }
@@ -59,48 +72,72 @@ pub fn cache_policy(method: String) -> CachePolicy {
 }
 
 pub fn discovery_metadata() -> String {
-  json.to_string(json.object([
-    #("discovery", json.object([
-      #("protocolVersion", json.string(protocol_version)),
+  json.to_string(
+    json.object([
       #(
-        "capabilities",
-        json.preprocessed_array([json.string("tools"), json.string("tasks")]),
+        "discovery",
+        json.object([
+          #("protocolVersion", json.string(protocol_version)),
+          #(
+            "capabilities",
+            json.preprocessed_array([json.string("tools"), json.string("tasks")]),
+          ),
+          #(
+            "cache",
+            json.object([
+              #(
+                "discovery",
+                json.string(
+                  cache_policy_to_string(cache_policy("discovery/list")),
+                ),
+              ),
+              #(
+                "tools",
+                json.string(cache_policy_to_string(cache_policy("tools/list"))),
+              ),
+            ]),
+          ),
+        ]),
       ),
-      #("cache", json.object([
-        #(
-          "discovery",
-          json.string(cache_policy_to_string(cache_policy("discovery/list"))),
-        ),
-        #(
-          "tools",
-          json.string(cache_policy_to_string(cache_policy("tools/list"))),
-        ),
-      ])),
-    ])),
-  ]))
+    ]),
+  )
 }
 
 pub fn encode_result(id_json: json.Json, payload: json.Json) -> String {
-  json.to_string(json.object([
-    #("jsonrpc", json.string("2.0")),
-    #("id", id_json),
-    #("result", json.object([
-      #("status", json.string("ok")),
-      #("data", payload),
-    ])),
-  ]))
+  json.to_string(
+    json.object([
+      #("jsonrpc", json.string("2.0")),
+      #("id", id_json),
+      #(
+        "result",
+        json.object([
+          #("status", json.string("ok")),
+          #("data", payload),
+        ]),
+      ),
+    ]),
+  )
 }
 
-pub fn encode_error(id_json: json.Json, code: String, message: String) -> String {
-  json.to_string(json.object([
-    #("jsonrpc", json.string("2.0")),
-    #("id", id_json),
-    #("error", json.object([
-      #("code", json.string(code)),
-      #("message", json.string(message)),
-      #("data", json.object([#("structured", json.bool(True))])),
-    ])),
-  ]))
+pub fn encode_error(
+  id_json: json.Json,
+  code: String,
+  message: String,
+) -> String {
+  json.to_string(
+    json.object([
+      #("jsonrpc", json.string("2.0")),
+      #("id", id_json),
+      #(
+        "error",
+        json.object([
+          #("code", json.string(code)),
+          #("message", json.string(message)),
+          #("data", json.object([#("structured", json.bool(True))])),
+        ]),
+      ),
+    ]),
+  )
 }
 
 pub fn dispatch(

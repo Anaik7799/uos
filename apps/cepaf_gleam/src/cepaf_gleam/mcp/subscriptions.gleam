@@ -15,6 +15,8 @@ import gleam/result
 
 pub const max_pending_notifications = 128
 
+pub const max_subscriptions = 1024
+
 pub type SubscriptionKind {
   ResourceSubscription(uri: String)
   TaskSubscription(task_id: String)
@@ -56,6 +58,17 @@ pub fn subscribe(
         NonRetryable,
       ))
     False -> {
+      use _ <- result.try(
+        case dict.size(store.subscriptions) >= max_subscriptions {
+          True ->
+            Error(ToolError(
+              "SUBSCRIPTION_CAPACITY_EXCEEDED",
+              "Subscription store capacity exceeded",
+              Retryable,
+            ))
+          False -> Ok(Nil)
+        },
+      )
       let subscription =
         Subscription(
           subscription_id: subscription_id,

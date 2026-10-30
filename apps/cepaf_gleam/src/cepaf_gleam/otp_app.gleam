@@ -66,6 +66,7 @@ import cepaf_gleam/ha/immune_learning
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/ha/sentinel
 import cepaf_gleam/ha/zenoh_federation
+import cepaf_gleam/mcp/runtime_gateway
 import cepaf_gleam/prajna/bio
 import cepaf_gleam/prajna/circuit_breaker
 import cepaf_gleam/prajna/immune_system as prajna_immune
@@ -137,6 +138,12 @@ pub fn start() -> AppState {
 
   // 1. Initialise ETS shared-state bus (idempotent; safe to call multiple times).
   let _ = beam_cache.init()
+  let mcp_ok = runtime_gateway.ensure_started()
+  let _ = case mcp_ok {
+    True -> beam_cache.set_config("mcp:unified_gateway", "running")
+    False -> beam_cache.set_config("mcp:unified_gateway", "degraded")
+  }
+  io.println("[C3I] Unified 101-route MCP OTP gateway initialised")
   io.println("[C3I] ETS cache initialised")
 
   // 2. Freshness actor — first check cycle runs inside init/0.
