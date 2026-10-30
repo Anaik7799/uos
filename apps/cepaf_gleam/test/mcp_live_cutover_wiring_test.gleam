@@ -1,10 +1,19 @@
 //// Track A: live gateway transport and immutable candidate regression tests.
 
+import cepaf_gleam/harness/admission as harness_admission
+import cepaf_gleam/harness/development as dev
+import cepaf_gleam/harness/successor_mcp
+import cepaf_gleam/harness/value
+import cepaf_gleam/mcp/adapters/features
 import cepaf_gleam/mcp/adapters/planning_read
+import cepaf_gleam/mcp/admission
 import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/http_auth
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/profiles/modern
+import cepaf_gleam/mcp/receipts
+import cepaf_gleam/mcp/registry
+import cepaf_gleam/mcp/route_convergence
 import cepaf_gleam/mcp/runtime_gateway as gateway
 import cepaf_gleam/mcp/server
 import cepaf_gleam/mcp/subscriptions
@@ -22,7 +31,11 @@ import gleam/erlang/process
 import gleam/int
 import gleam/json
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{type Option, None, Some}
+import gleam/otp/actor
+import gleam/otp/static_supervisor as otp_supervisor
+import gleam/otp/supervision
+import gleam/result
 import gleam/string
 import gleeunit/should
 import simplifile
@@ -92,6 +105,1570 @@ const root = "/home/an/NAS-setup/uos"
 const now = 100_000
 
 const origin = "https://nas-1.tail55d152.ts.net:4101"
+
+fn reviewed_scope(task: String) -> harness_admission.Scope {
+  harness_admission.Scope(
+    "private-plan",
+    task,
+    [],
+    [],
+    [],
+    [],
+    "fixture-risk.json",
+    [],
+    [],
+  )
+}
+
+fn task_row(
+  state: String,
+  worker: Option(String),
+  deadline: Option(Int),
+) -> dev.TaskRecord {
+  dev.TaskRecord(state, worker, 7, deadline, 0, None, None)
+}
+
+pub fn observed_preattach_fences_never_invent_executing_authority_test() {
+  let state = fixture()
+  let p = test_principal("private-worker", "observed-preattach")
+  let grant = successor_fixture().grant
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  list.each(
+    [
+      #(task_row("available", None, None), "TASK_FENCE_NOT_EXECUTING"),
+      #(
+        task_row(
+          "completed",
+          Some("private-worker"),
+          Some(9_000_000_000_000_000),
+        ),
+        "TASK_FENCE_NOT_EXECUTING",
+      ),
+      #(
+        task_row("unknown", Some("private-worker"), Some(9_000_000_000_000_000)),
+        "TASK_FENCE_NOT_EXECUTING",
+      ),
+      #(
+        task_row("executing", Some("foreign"), Some(9_000_000_000_000_000)),
+        "PRINCIPAL_WORKER_MISMATCH",
+      ),
+      #(
+        task_row("executing", None, Some(9_000_000_000_000_000)),
+        "PRINCIPAL_WORKER_MISMATCH",
+      ),
+      #(
+        task_row(
+          "executing",
+          Some("private-worker"),
+          Some({ now - 1 } * 1_000_000),
+        ),
+        "TASK_LEASE_EXPIRED",
+      ),
+      #(
+        task_row("executing", Some("private-worker"), None),
+        "TASK_LEASE_EXPIRED",
+      ),
+      #(
+        task_row("executing", Some("private-worker"), Some(0)),
+        "TASK_LEASE_EXPIRED",
+      ),
+      #(
+        task_row("executing", Some("private-worker"), Some(-1)),
+        "TASK_LEASE_EXPIRED",
+      ),
+    ],
+    fn(case_) {
+      let #(ticket, fence) =
+        gateway.project_observed_preattach_fence(
+          grant,
+          "private-plan",
+          "private-task",
+          case_.0,
+          now,
+          root,
+        )
+      ticket.expires_at_ms |> should.equal(grant.expires_us / 1000)
+      fence.worker_id |> should.equal(option.unwrap(case_.0.worker, ""))
+      fence.attempt |> should.equal(7)
+      fence.grant |> should.equal(Some(ticket))
+      let #(outcome, _) =
+        gateway.dispatch_private_with_resolver(
+          state,
+          p,
+          "successor",
+          raw,
+          msg,
+          now,
+          fn(_, route, tool, _, _) {
+            Ok(
+              gateway.PrivateBinding(
+                Some(route_convergence.RouteGrant(route, [tool], ticket)),
+                Some(fence),
+                fn() {
+                  panic as "Unobserved/foreign/expired task must never execute"
+                },
+              ),
+            )
+          },
+        )
+      refusal(outcome, case_.1)
+    },
+  )
+  let row =
+    task_row(
+      "executing",
+      Some("private-worker"),
+      Some({ now + 5000 } * 1_000_000),
+    )
+  let #(ticket, fence) =
+    gateway.project_observed_preattach_fence(
+      grant,
+      "private-plan",
+      "private-task",
+      row,
+      now,
+      root,
+    )
+  ticket.expires_at_ms |> should.equal(grant.expires_us / 1000)
+  fence.lease_until_ms |> should.equal(now + 5000)
+  let #(outcome, _) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      p,
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, _) {
+        Ok(
+          gateway.PrivateBinding(
+            Some(route_convergence.RouteGrant(route, [tool], ticket)),
+            Some(fence),
+            fn() { #(Ok("{}"), None) },
+          ),
+        )
+      },
+    )
+  completed(outcome) |> should.equal("{}")
+  let expired_grant = harness_admission.Grant(..grant, expires_us: now * 1000)
+  let #(expired_ticket, expired_fence) =
+    gateway.project_observed_preattach_fence(
+      expired_grant,
+      "private-plan",
+      "private-task",
+      row,
+      now,
+      root,
+    )
+  let #(outcome, _) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      p,
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, _) {
+        Ok(
+          gateway.PrivateBinding(
+            Some(route_convergence.RouteGrant(route, [tool], expired_ticket)),
+            Some(expired_fence),
+            fn() { panic as "Grant expiry must be checked independently" },
+          ),
+        )
+      },
+    )
+  refusal(outcome, "ROUTE_GRANT_EXPIRED")
+}
+
+pub fn preattach_selection_requires_explicit_task_for_task_acting_tools_test() {
+  let grant =
+    harness_admission.Grant(..successor_fixture().grant, scopes: [
+      reviewed_scope("first"),
+      reviewed_scope("live"),
+    ])
+  list.each(["harness_claim", "harness_attach", "harness_assess"], fn(tool) {
+    list.each(
+      [
+        value.Object([]),
+        value.Object([#("plan", value.Text("private-plan"))]),
+        value.Object([
+          #("plan", value.Text("private-plan")),
+          #("task", value.Boolean(False)),
+        ]),
+      ],
+      fn(args) {
+        gateway.observe_preattach_scope(grant, tool, args, now, fn(_) {
+          panic as "Explicit scope must precede any task read"
+        })
+        |> should.equal(Error("explicit_plan_and_task_required"))
+      },
+    )
+    let args =
+      value.Object([
+        #("plan", value.Text("private-plan")),
+        #("task", value.Text("live")),
+      ])
+    let row =
+      task_row(
+        "executing",
+        Some(grant.worker),
+        Some({ now + 5000 } * 1_000_000),
+      )
+    gateway.observe_preattach_scope(grant, tool, args, now, fn(scope) {
+      scope.task |> should.equal("live")
+      Ok(row)
+    })
+    |> should.equal(Ok(Some(#(reviewed_scope("live"), row))))
+    gateway.observe_preattach_scope(
+      grant,
+      tool,
+      value.Object([
+        #("plan", value.Text("private-plan")),
+        #("task", value.Text("foreign")),
+      ]),
+      now,
+      fn(_) { panic as "Scope lookup must precede task read" },
+    )
+    |> should.equal(Error("task_not_in_reviewed_grant"))
+  })
+}
+
+pub fn preattach_general_tools_scan_owned_live_scope_and_preserve_nonexecuting_fallback_test() {
+  let grant =
+    harness_admission.Grant(..successor_fixture().grant, scopes: [
+      reviewed_scope("first"),
+      reviewed_scope("foreign"),
+      reviewed_scope("expired"),
+      reviewed_scope("live"),
+    ])
+  let available = task_row("available", None, None)
+  let live =
+    task_row("executing", Some(grant.worker), Some({ now + 5000 } * 1_000_000))
+  list.each(
+    [
+      "harness_status",
+      "harness_clock",
+      "harness_heartbeat",
+      "harness_reconcile",
+    ],
+    fn(tool) {
+      gateway.observe_preattach_scope(
+        grant,
+        tool,
+        value.Object([]),
+        now,
+        fn(scope) {
+          case scope.task {
+            "first" -> Ok(available)
+            "foreign" -> Ok(dev.TaskRecord(..live, worker: Some("foreign")))
+            "expired" ->
+              Ok(
+                dev.TaskRecord(
+                  ..live,
+                  lease_until_ns: Some({ now - 1 } * 1_000_000),
+                ),
+              )
+            _ -> Ok(live)
+          }
+        },
+      )
+      |> should.equal(Ok(Some(#(reviewed_scope("live"), live))))
+      gateway.observe_preattach_scope(grant, tool, value.Object([]), now, fn(_) {
+        Ok(available)
+      })
+      |> should.equal(Ok(Some(#(reviewed_scope("first"), available))))
+      gateway.observe_preattach_scope(grant, tool, value.Object([]), now, fn(_) {
+        Error("unavailable")
+      })
+      |> should.equal(Ok(None))
+      gateway.observe_preattach_scope(
+        grant,
+        tool,
+        value.Object([
+          #("plan", value.Text("private-plan")),
+          #("task", value.Text("first")),
+        ]),
+        now,
+        fn(scope) {
+          scope.task |> should.equal("first")
+          Ok(available)
+        },
+      )
+      |> should.equal(Ok(Some(#(reviewed_scope("first"), available))))
+    },
+  )
+}
+
+fn dropped_commit_actor(
+  state: gateway.GatewayState,
+  reply_to_snapshot: Bool,
+) -> process.Subject(gateway.Message) {
+  let ready = process.new_subject()
+  let _ =
+    process.spawn_unlinked(fn() {
+      let inbox = process.new_subject()
+      process.send(ready, inbox)
+      let assert Ok(gateway.Snapshot(p, reply)) = process.receive(inbox, 2000)
+      case reply_to_snapshot {
+        False -> Nil
+        True -> {
+          process.send(reply, gateway.private_snapshot(state, p))
+          let assert Ok(gateway.CommitPrivate(_, _)) =
+            process.receive(inbox, 2000)
+          Nil
+        }
+      }
+    })
+  let assert Ok(inbox) = process.receive(ready, 1000)
+  inbox
+}
+
+pub fn private_commit_timeouts_return_exact_uncertain_receipt_after_effect_test() {
+  let p = test_principal("private-worker", "timeout-receipt")
+  let state = fixture()
+  list.each([[], [#("intent_id", "explicit-stable")]], fn(fields) {
+    let #(raw, msg) = private_request("harness_status", json.object([]))
+    let msg = wire.NormalizedMessage(..msg, args: fields)
+    let completed_resolver = fn(_, route, tool, _, _) {
+      Ok(
+        private_binding(route, tool, "private-worker", fn() {
+          #(Ok("{}"), None)
+        }),
+      )
+    }
+    let #(completed_call, committed_state) =
+      gateway.dispatch_private_with_resolver(
+        state,
+        p,
+        "successor",
+        raw,
+        msg,
+        now,
+        completed_resolver,
+      )
+    completed(completed_call) |> should.equal("{}")
+    let assert [canonical_intent_id] =
+      dict.keys(committed_state.pool.ledger.entries)
+    let ran = process.new_subject()
+    let outcome =
+      gateway.dispatch_private_actor_with_timeouts(
+        dropped_commit_actor(state, True),
+        p,
+        "successor",
+        raw,
+        msg,
+        fn(_, route, tool, _, _) {
+          Ok(
+            private_binding(route, tool, "private-worker", fn() {
+              process.send(ran, True)
+              #(Ok("{}"), None)
+            }),
+          )
+        },
+        1000,
+        10,
+      )
+    process.receive(ran, 0) |> should.equal(Ok(True))
+    let assert types.Uncertain(receipt) = outcome
+    receipt.intent_id |> should.equal(canonical_intent_id)
+    receipt.route |> should.equal("successor")
+    receipt.tool |> should.equal("harness_status")
+    receipt.candidate |> should.equal(state.pool.ledger.candidate)
+    receipt.reason
+    |> should.equal(
+      "Private commit timed out after effect execution; reconcile required",
+    )
+    let encoded =
+      gateway.standard_response(wire.IntId(71), "tools/call", outcome)
+    list.each(
+      [
+        #("intent_id", receipt.intent_id),
+        #("route", "successor"),
+        #("tool", "harness_status"),
+        #("candidate", receipt.candidate),
+        #("retryability", "reconcile_first"),
+      ],
+      fn(field) {
+        json.parse(
+          encoded,
+          decode.at(["error", "data", field.0], decode.string),
+        )
+        |> should.equal(Ok(field.1))
+      },
+    )
+    let replay =
+      gateway.dispatch_private_actor_with_timeouts(
+        dropped_commit_actor(committed_state, True),
+        p,
+        "successor",
+        raw,
+        msg,
+        fn(_, route, tool, _, _) {
+          Ok(
+            private_binding(route, tool, "private-worker", fn() {
+              panic as "Replay must not execute"
+            }),
+          )
+        },
+        1000,
+        10,
+      )
+    refusal(replay, "GATEWAY_TIMEOUT")
+  })
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  let before_effect =
+    gateway.dispatch_private_actor_with_timeouts(
+      dropped_commit_actor(state, False),
+      p,
+      "successor",
+      raw,
+      msg,
+      fn(_, _, _, _, _) { panic as "No resolver before snapshot reply" },
+      10,
+      10,
+    )
+  refusal(before_effect, "GATEWAY_TIMEOUT")
+}
+
+pub fn successor_identity_keys_and_record_owners_are_principal_bound_test() {
+  let p = test_principal("private-worker", "shared-session")
+  let state = successor_fixture()
+  let record = gateway.successor_session_record(p, state)
+  gateway.successor_session_for_principal(p, Some(record), state.grant)
+  |> should.equal(Ok(state))
+  let principals = [
+    p,
+    test_principal("other-worker", "shared-session"),
+    test_principal("private-worker", "other-session"),
+    principal.from_http_auth_middleware(
+      "private-worker",
+      types.ClientProfile("codex"),
+      root,
+      "shared-session",
+    ),
+    principal.from_signed_zenoh_envelope(
+      "private-worker",
+      types.ClientProfile("codex"),
+      root,
+      "shared-session",
+    ),
+    principal.from_launcher_env(
+      "private-worker",
+      types.ClientProfile("pi"),
+      root,
+      "shared-session",
+    ),
+  ]
+  let keys = list.map(principals, gateway.successor_session_key)
+  list.length(list.unique(keys)) |> should.equal(6)
+  list.each(list.drop(principals, 1), fn(foreign) {
+    let assert Error(err) =
+      gateway.successor_session_for_principal(
+        foreign,
+        Some(record),
+        state.grant,
+      )
+    err.code |> should.equal("CROSS_PRINCIPAL_SUCCESSOR_SESSION_FORBIDDEN")
+  })
+  let assert Error(err) =
+    gateway.successor_session_for_principal(
+      p,
+      Some(record),
+      harness_admission.Grant(..state.grant, digest: string.repeat("f", 64)),
+    )
+  err.code |> should.equal("SUCCESSOR_SESSION_GRANT_CHANGED")
+  let confusing_a =
+    principal.from_launcher_env(
+      "a:stdio",
+      types.ClientProfile("b"),
+      root,
+      "c:λ",
+    )
+  let confusing_b =
+    principal.from_launcher_env(
+      "a",
+      types.ClientProfile("stdio:b"),
+      root,
+      "c:λ",
+    )
+  {
+    gateway.successor_session_key(confusing_a)
+    == gateway.successor_session_key(confusing_b)
+  }
+  |> should.be_false
+  let first_default = gateway.default_stdio_session_id()
+  string.starts_with(first_default, "stdio:") |> should.be_true
+  { first_default == gateway.default_stdio_session_id() } |> should.be_false
+}
+
+pub fn successor_store_isolates_same_session_across_transport_and_client_test() {
+  let principals = [
+    test_principal("private-worker", "same-session"),
+    principal.from_http_auth_middleware(
+      "private-worker",
+      types.ClientProfile("codex"),
+      root,
+      "same-session",
+    ),
+    principal.from_signed_zenoh_envelope(
+      "private-worker",
+      types.ClientProfile("codex"),
+      root,
+      "same-session",
+    ),
+    principal.from_launcher_env(
+      "private-worker",
+      types.ClientProfile("pi"),
+      root,
+      "same-session",
+    ),
+    test_principal("private-worker", "other-session"),
+  ]
+  let #(state, _) =
+    list.fold(principals, #(fixture(), 0), fn(acc, p) {
+      let #(state, n) = acc
+      // Separate logical requests avoid canonical effect replay, whose owner
+      // deliberately remains stable across transport reconnects.
+      let #(raw, msg) =
+        private_request(
+          "harness_status",
+          json.object([#("request", json.int(n))]),
+        )
+      let #(outcome, next) =
+        gateway.dispatch_private_with_resolver(
+          state,
+          p,
+          "successor",
+          raw,
+          msg,
+          now,
+          fn(_, route, tool, _, current) {
+            current |> should.equal(None)
+            Ok(
+              private_binding(route, tool, "private-worker", fn() {
+                #(
+                  Ok("{}"),
+                  Some(
+                    successor_mcp.State(
+                      ..successor_fixture(),
+                      initialized: True,
+                    ),
+                  ),
+                )
+              }),
+            )
+          },
+        )
+      completed(outcome) |> should.equal("{}")
+      #(next, n + 1)
+    })
+  dict.size(state.successor_sessions) |> should.equal(5)
+  list.each(principals, fn(p) {
+    let assert Ok(record) =
+      dict.get(state.successor_sessions, gateway.successor_session_key(p))
+    let assert Ok(saved) =
+      gateway.successor_session_for_principal(
+        p,
+        Some(record),
+        successor_fixture().grant,
+      )
+    saved.initialized |> should.be_true
+  })
+}
+
+pub fn private_pure_tool_precheck_precedes_resolver_and_all_admission_observations_test() {
+  let state = fixture()
+  let p = test_principal("private-worker", "cheap-precheck")
+  list.each(
+    [
+      #("successor", "unknown", [], "UNKNOWN_ROUTE_OR_TOOL"),
+      #("development", "system_health", [], "UNKNOWN_ROUTE_OR_TOOL"),
+      #(
+        "development",
+        "harness_status",
+        [#("_client_schema_digest", "wrong")],
+        "SCHEMA_MIGRATION_REQUIRED",
+      ),
+      #(
+        "successor",
+        "harness_status",
+        [#("_client_schema_digest", "wrong")],
+        "SCHEMA_MIGRATION_REQUIRED",
+      ),
+    ],
+    fn(attempt) {
+      let #(raw, msg) = private_request(attempt.1, json.object([]))
+      let msg = wire.NormalizedMessage(..msg, args: attempt.2)
+      let #(outcome, _) =
+        gateway.dispatch_private_with_resolver(
+          state,
+          p,
+          attempt.0,
+          raw,
+          msg,
+          now,
+          fn(_, _, _, _, _) { panic as "Precheck must precede resolver" },
+        )
+      refusal(outcome, attempt.3)
+    },
+  )
+}
+
+pub fn successor_sibling_workspace_rebind_preserves_principal_labels_and_rejects_foreign_roots_test() {
+  let sibling = root <> "/.uos-workspaces/fable-w4"
+  let initial = fixture()
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  let principals = [
+    test_principal("private-worker", "sibling-stdio"),
+    principal.from_http_auth_middleware(
+      "private-worker",
+      types.ClientProfile("codex"),
+      root,
+      "sibling-http",
+    ),
+    principal.from_signed_zenoh_envelope(
+      "private-worker",
+      types.ClientProfile("codex"),
+      root,
+      "sibling-zenoh",
+    ),
+    principal.from_launcher_env(
+      "private-worker",
+      types.ClientProfile("codex"),
+      sibling,
+      "sibling-direct",
+    ),
+  ]
+  list.each(principals, fn(p) {
+    let p =
+      principal.apply_untrusted_payload_labels(
+        p,
+        Some("audit-actor"),
+        Some("audit-client"),
+        Some("audit-header"),
+      )
+    let resolver = fn(_, route, tool, _, _) {
+      let ticket =
+        admission.GrantTicket(..private_ticket(), workspace_root: sibling)
+      let fence =
+        admission.TaskFence(
+          "private-plan",
+          "private-task",
+          "private-worker",
+          1,
+          admission.TaskExecuting,
+          ticket.expires_at_ms,
+          Some(ticket),
+        )
+      Ok(
+        gateway.PrivateBinding(
+          Some(route_convergence.RouteGrant(route, [tool], ticket)),
+          Some(fence),
+          fn() { #(Ok("{}"), Some(successor_fixture())) },
+        ),
+      )
+    }
+    let #(outcome, state) =
+      gateway.dispatch_private_with_resolver(
+        initial,
+        p,
+        "successor",
+        raw,
+        msg,
+        now,
+        resolver,
+      )
+    completed(outcome) |> should.equal("{}")
+    let assert Ok(saved) =
+      dict.get(state.successor_sessions, gateway.successor_session_key(p))
+    saved.owner_actor |> should.equal(principal.actor_id(p))
+    saved.owner_client |> should.equal(principal.client_profile(p).name)
+    saved.owner_transport |> should.equal(principal.transport(p))
+    saved.owner_session |> should.equal(principal.session_id(p))
+    let Ok(binding) =
+      resolver(p, "successor", "harness_status", value.Object([]), None)
+    let context =
+      gateway.private_route_context(root, p, "successor", binding, now)
+    principal.workspace_root(context.principal) |> should.equal(sibling)
+    principal.untrusted_actor_label(context.principal)
+    |> should.equal(Some("audit-actor"))
+    principal.untrusted_client_label(context.principal)
+    |> should.equal(Some("audit-client"))
+    principal.untrusted_header_actor(context.principal)
+    |> should.equal(Some("audit-header"))
+    // Canonical ledger owner hash includes the effective sibling root, proving
+    // that the actual admitted principal was rebound, not just the ticket.
+    let assert [id] = dict.keys(state.pool.ledger.entries)
+    let owner =
+      receipts.hash_payload("harness_status", [
+        #("actor", "private-worker"),
+        #("workspace", sibling),
+        #("plan_id", "private-plan"),
+        #("task_id", "private-task"),
+        #("attempt", "1"),
+        #("grant_id", private_ticket().grant_id),
+      ])
+    string.starts_with(id, "successor:harness_status:" <> owner <> ":")
+    |> should.be_true
+  })
+  list.each(
+    [
+      #("/foreign", sibling, "PRINCIPAL_WORKSPACE_MISMATCH"),
+      #(root, "/foreign", "ROUTE_GRANT_WORKSPACE_MISMATCH"),
+    ],
+    fn(attempt) {
+      let p =
+        principal.from_launcher_env(
+          "private-worker",
+          types.ClientProfile("codex"),
+          attempt.0,
+          "foreign-root",
+        )
+      let #(outcome, _) =
+        gateway.dispatch_private_with_resolver(
+          initial,
+          p,
+          "successor",
+          raw,
+          msg,
+          now,
+          fn(_, route, tool, _, _) {
+            let ticket =
+              admission.GrantTicket(
+                ..private_ticket(),
+                workspace_root: attempt.1,
+              )
+            Ok(
+              gateway.PrivateBinding(
+                Some(route_convergence.RouteGrant(route, [tool], ticket)),
+                Some(admission.TaskFence(
+                  "private-plan",
+                  "private-task",
+                  "private-worker",
+                  1,
+                  admission.TaskExecuting,
+                  ticket.expires_at_ms,
+                  Some(ticket),
+                )),
+                fn() { panic as "Foreign root must not execute" },
+              ),
+            )
+          },
+        )
+      refusal(outcome, attempt.2)
+    },
+  )
+}
+
+pub fn gateway_owner_never_waits_for_unresponsive_supervised_gateway_test() {
+  let ready = process.new_subject()
+  let stalled_pid =
+    process.spawn_unlinked(fn() {
+      let inbox = process.new_subject()
+      process.send(ready, inbox)
+      let assert Ok(_) = process.receive(inbox, 2000)
+      process.sleep_forever()
+    })
+  let assert Ok(stalled_subject) = process.receive(ready, 1000)
+  let fake =
+    supervisor.SupervisedGateway(
+      "nonreplying-child",
+      stalled_pid,
+      stalled_subject,
+    )
+  gateway.supervised_gateway_pids_alive(fake) |> should.be_true
+  let state = gateway.GatewayState(..fixture(), supervised_gateway: fake)
+  let assert Ok(owner) = gateway.start_state_owner(state)
+  process.unlink(owner.pid)
+  let ping = process.new_subject()
+  let output = process.new_subject()
+  process.send(owner.data, gateway.Ping(ping))
+  let #(raw, _) = private_request("system_health", json.object([]))
+  let assert Ok(msg) = wire.decode_request(types.Modern20260728, raw)
+  process.send(
+    owner.data,
+    gateway.Dispatch(
+      test_principal("burst-worker", "nonblocking"),
+      types.Modern20260728,
+      "public",
+      raw,
+      msg,
+      now,
+      None,
+      None,
+      None,
+      None,
+      output,
+    ),
+  )
+  process.receive(ping, 200) |> should.equal(Ok(True))
+  let assert Ok(result) = process.receive(output, 200)
+  completed(result) |> string.contains("healthy") |> should.be_true
+  process.kill(owner.pid)
+  process.kill(stalled_pid)
+}
+
+pub fn concurrent_public_observation_burst_and_ping_do_not_starve_owner_test() {
+  gateway.ensure_started() |> should.be_true
+  let replies = process.new_subject()
+  let start = fixture_time()
+  int.range(0, 24, Nil, fn(_, n) {
+    let _ =
+      process.spawn_unlinked(fn() {
+        let #(raw, _) = private_request("system_health", json.object([]))
+        let assert Some(reply) =
+          gateway.handle_standard_mcp_line(
+            "burst-worker",
+            "codex",
+            root,
+            "burst-" <> int.to_string(n),
+            "public",
+            raw,
+            now,
+          )
+        process.send(replies, #(
+          gateway.is_running(),
+          string.contains(reply, "\"isError\":false"),
+        ))
+      })
+    Nil
+  })
+  int.range(0, 24, Nil, fn(_, _) {
+    process.receive(replies, 1500) |> should.equal(Ok(#(True, True)))
+  })
+  { fixture_time() - start < 1_500_000_000 } |> should.be_true
+}
+
+pub fn private_route_bridge_admits_before_running_backend_test() {
+  let state = fixture()
+  let p = test_principal("private-worker", "private-session")
+  let raw =
+    "{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"harness_execution_progress\",\"arguments\":{}}}"
+  let assert Ok(msg) = wire.decode_request(types.Modern20260728, raw)
+  let #(outcome, _) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      p,
+      "development",
+      raw,
+      msg,
+      now,
+      fn(_, _, _, _, _) {
+        Ok(
+          gateway.PrivateBinding(None, None, fn() {
+            panic as "An ungranted backend must never run"
+          }),
+        )
+      },
+    )
+  refusal(outcome, "ROUTE_GRANT_REQUIRED")
+}
+
+fn private_request(
+  tool: String,
+  args: json.Json,
+) -> #(String, wire.NormalizedMessage) {
+  let raw =
+    json.object([
+      #("id", json.int(71)),
+      #("method", json.string("tools/call")),
+      #(
+        "params",
+        json.object([#("name", json.string(tool)), #("arguments", args)]),
+      ),
+    ])
+    |> json.to_string
+  // The structural argument seam is intentionally independent of wire's
+  // string-only argument projection, which cannot represent typed JSON.
+  #(raw, wire.NormalizedMessage(wire.IntId(71), "tools/call", [], ""))
+}
+
+fn private_ticket() -> admission.GrantTicket {
+  admission.GrantTicket(
+    "private-reviewed-fixture",
+    types.TaskScopedMutation,
+    False,
+    9_999_999_999_999,
+    root,
+  )
+}
+
+fn private_binding(
+  route: String,
+  tool: String,
+  worker: String,
+  execute: fn() -> #(Result(String, String), Option(successor_mcp.State)),
+) -> gateway.PrivateBinding {
+  let ticket = private_ticket()
+  gateway.PrivateBinding(
+    Some(route_convergence.RouteGrant(route, [tool], ticket)),
+    Some(admission.TaskFence(
+      "private-plan",
+      "private-task",
+      worker,
+      1,
+      admission.TaskExecuting,
+      ticket.expires_at_ms,
+      Some(ticket),
+    )),
+    execute,
+  )
+}
+
+fn successor_fixture() -> successor_mcp.State {
+  successor_mcp.initial(harness_admission.Grant(
+    "private-reviewed-fixture",
+    "fixture/grant.json",
+    string.repeat("a", 64),
+    "fixture-launcher",
+    "private-worker",
+    "fixture-host",
+    "fixture-boot",
+    9_999_999_999_999_000,
+    [],
+    "",
+    "fixture/review.json",
+    string.repeat("b", 64),
+  ))
+}
+
+pub fn private_live_ungranted_routes_and_all_route_tool_lists_test() {
+  list.each(
+    [
+      #("development", "harness_execution_progress"),
+      #("successor", "harness_status"),
+      #("successor", "harness_write_file"),
+    ],
+    fn(pair) {
+      let #(raw, _) = private_request(pair.1, json.object([]))
+      let assert Some(reply) =
+        gateway.handle_standard_mcp_line(
+          "ungranted-S01",
+          "codex",
+          root,
+          "ungranted-S01",
+          pair.0,
+          raw,
+          now,
+        )
+      string.contains(reply, "ROUTE_GRANT_REQUIRED") |> should.be_true
+    },
+  )
+  let state = fixture()
+  list.each(
+    [#("public", 53), #("development", 21), #("successor", 15)],
+    fn(pair) {
+      let raw = "{\"id\":1,\"method\":\"tools/list\"}"
+      let assert Ok(msg) = wire.decode_request(types.Modern20260728, raw)
+      let #(outcome, _) =
+        gateway.dispatch_normalized(
+          state,
+          test_principal("private-worker", "lists"),
+          types.Modern20260728,
+          pair.0,
+          raw,
+          msg,
+          now,
+        )
+      let assert Ok(tools) =
+        json.parse(
+          completed(outcome),
+          decode.at(["tools"], decode.list(decode.dynamic)),
+        )
+      list.length(tools) |> should.equal(pair.1)
+      let assert Some(live) =
+        gateway.handle_standard_mcp_line(
+          "private-worker",
+          "codex",
+          root,
+          "S01-live-lists",
+          pair.0,
+          raw,
+          now,
+        )
+      let assert Ok(live_tools) =
+        json.parse(
+          live,
+          decode.at(["result", "tools"], decode.list(decode.dynamic)),
+        )
+      list.length(live_tools) |> should.equal(pair.1)
+    },
+  )
+  list.length(registry.all_specs()) |> should.equal(101)
+  list.each(
+    [#("public", 65), #("development", 21), #("successor", 15)],
+    fn(pair) {
+      registry.all_specs()
+      |> list.filter(fn(s) { s.route == pair.0 })
+      |> list.length
+      |> should.equal(pair.1)
+    },
+  )
+}
+
+pub fn private_development_executes_with_candidate_evidence_and_lossless_arguments_test() {
+  let p = test_principal("private-worker", "dev-authenticated")
+  let #(raw, msg) =
+    private_request(
+      "harness_execution_progress",
+      json.object([
+        #(
+          "typed",
+          json.object([
+            #("flag", json.bool(True)),
+            #("count", json.int(17)),
+            #("items", json.array([json.null(), json.float(2.5)], fn(x) { x })),
+          ]),
+        ),
+      ]),
+    )
+  let assert Ok(expected) =
+    json.parse(raw, decode.at(["params", "arguments"], value.decoder()))
+  let #(outcome, state) =
+    gateway.dispatch_private_with_resolver(
+      fixture(),
+      p,
+      "development",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, args, current) {
+        args |> should.equal(expected)
+        current |> should.equal(None)
+        Ok(
+          private_binding(route, tool, "private-worker", fn() {
+            #(Ok(json.to_string(value.encode(args))), None)
+          }),
+        )
+      },
+    )
+  let assert types.Complete(body, evidence) = outcome
+  json.parse(body, value.decoder()) |> should.equal(Ok(expected))
+  evidence.candidate
+  |> should.equal(
+    "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+  )
+  evidence.route |> should.equal("development")
+  evidence.admission_state |> should.equal("not_admitted")
+  dict.size(state.pool.ledger.entries) |> should.equal(1)
+}
+
+pub fn private_successor_threads_session_state_and_refuses_escalation_test() {
+  let p = test_principal("private-worker", "successor-threaded")
+  let resolver = fn(
+    _,
+    route,
+    tool,
+    _,
+    current: Option(gateway.SuccessorSessionRecord),
+  ) {
+    let previous = case current {
+      None -> successor_fixture()
+      Some(s) -> s.state
+    }
+    Ok(
+      private_binding(route, tool, "private-worker", fn() {
+        #(
+          Ok(json.to_string(json.bool(previous.initialized))),
+          Some(successor_mcp.State(..previous, initialized: True)),
+        )
+      }),
+    )
+  }
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  let #(first, state) =
+    gateway.dispatch_private_with_resolver(
+      fixture(),
+      p,
+      "successor",
+      raw,
+      msg,
+      now,
+      resolver,
+    )
+  completed(first) |> should.equal("false")
+  let #(raw2, msg2) = private_request("harness_clock", json.object([]))
+  let #(second, state) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      p,
+      "successor",
+      raw2,
+      msg2,
+      now,
+      resolver,
+    )
+  completed(second) |> should.equal("true")
+  dict.size(state.successor_sessions) |> should.equal(1)
+  let #(other, _) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      test_principal("private-worker", "successor-other"),
+      "successor",
+      raw,
+      msg,
+      now,
+      resolver,
+    )
+  completed(other) |> should.equal("false")
+  list.each(
+    [
+      #("development", "private-worker", "CROSS_ROUTE_GRANT_FORBIDDEN"),
+      #("successor", "foreign-worker", "PRINCIPAL_WORKER_MISMATCH"),
+    ],
+    fn(attempt) {
+      let #(refused, _) =
+        gateway.dispatch_private_with_resolver(
+          state,
+          p,
+          "successor",
+          raw,
+          msg,
+          now,
+          fn(_, _, tool, _, _) {
+            Ok(
+              private_binding(attempt.0, tool, attempt.1, fn() {
+                panic as "Escalation must not invoke a backend"
+              }),
+            )
+          },
+        )
+      refusal(refused, attempt.2)
+    },
+  )
+}
+
+pub fn private_successor_capacity_bounds_new_sessions_and_allows_existing_test() {
+  let full =
+    int.range(1, gateway.max_successor_sessions + 1, dict.new(), fn(store, n) {
+      let p = test_principal("private-worker", "session-" <> int.to_string(n))
+      dict.insert(
+        store,
+        gateway.successor_session_key(p),
+        gateway.successor_session_record(p, successor_fixture()),
+      )
+    })
+  let state = gateway.GatewayState(..fixture(), successor_sessions: full)
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  let #(outcome, unchanged) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      test_principal("private-worker", "session-new"),
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, _) {
+        Ok(
+          private_binding(route, tool, "private-worker", fn() {
+            panic as "Capacity refusal must precede execution"
+          }),
+        )
+      },
+    )
+  refusal(outcome, "SUCCESSOR_SESSION_CAPACITY_EXCEEDED")
+  dict.size(unchanged.successor_sessions) |> should.equal(1024)
+  let #(outcome, updated) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      test_principal("private-worker", "session-1"),
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, current) {
+        Ok(
+          private_binding(route, tool, "private-worker", fn() {
+            #(Ok("{}"), option.map(current, fn(r) { r.state }))
+          }),
+        )
+      },
+    )
+  completed(outcome) |> should.equal("{}")
+  dict.size(updated.successor_sessions) |> should.equal(1024)
+}
+
+pub fn private_finish_candidate_and_missing_fence_checks_precede_effect_test() {
+  let p = test_principal("private-worker", "finish-precondition")
+  let #(raw, msg) = private_request("harness_finish", json.object([]))
+  list.each(["development", "successor"], fn(route) {
+    let #(outcome, _) =
+      gateway.dispatch_private_with_resolver(
+        fixture(),
+        p,
+        route,
+        raw,
+        msg,
+        now,
+        fn(_, route, tool, _, _) {
+          Ok(
+            private_binding(route, tool, "private-worker", fn() {
+              panic as "Finish without passing receipt must never run"
+            }),
+          )
+        },
+      )
+    refusal(outcome, "COMPLETION_EVIDENCE_REQUIRED")
+  })
+  let initial = fixture()
+  let stale =
+    gateway.GatewayState(
+      ..initial,
+      backends: server.ServerBackends(
+        ..initial.backends,
+        features: features.FeatureEvidenceStore(
+          ..initial.backends.features,
+          active_candidate: "stale",
+        ),
+      ),
+    )
+  let #(outcome, _) =
+    gateway.dispatch_private_with_resolver(
+      stale,
+      p,
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, _, _, _, _) { panic as "Candidate mismatch must precede resolver" },
+    )
+  refusal(outcome, "CANDIDATE_EVIDENCE_MISMATCH")
+  let #(raw, msg) = private_request("harness_write_file", json.object([]))
+  let #(outcome, _) =
+    gateway.dispatch_private_with_resolver(
+      initial,
+      p,
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, _) {
+        let binding =
+          private_binding(route, tool, "private-worker", fn() {
+            panic as "Attach required"
+          })
+        Ok(gateway.PrivateBinding(..binding, task_fence: None))
+      },
+    )
+  refusal(outcome, "MISSING_TASK_FENCE")
+}
+
+pub fn private_receipt_replay_and_typed_conflict_never_repeat_effect_test() {
+  let p = test_principal("private-worker", "private-receipt")
+  let #(raw, msg) =
+    private_request(
+      "harness_execution_progress",
+      json.object([#("nested", json.int(1))]),
+    )
+  let msg = wire.NormalizedMessage(..msg, args: [#("intent_id", "stable")])
+  let #(first, state) =
+    gateway.dispatch_private_with_resolver(
+      fixture(),
+      p,
+      "development",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, _) {
+        Ok(
+          private_binding(route, tool, "private-worker", fn() {
+            #(Ok("{}"), None)
+          }),
+        )
+      },
+    )
+  let not_called = fn(_, route, tool, _, _) {
+    Ok(
+      private_binding(route, tool, "private-worker", fn() {
+        panic as "Committed or conflicting intent must not repeat effect"
+      }),
+    )
+  }
+  let #(replayed, _) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      p,
+      "development",
+      raw,
+      msg,
+      now,
+      not_called,
+    )
+  replayed |> should.equal(first)
+  let #(changed, _) =
+    private_request(
+      "harness_execution_progress",
+      json.object([#("nested", json.int(2))]),
+    )
+  let #(conflict, _) =
+    gateway.dispatch_private_with_resolver(
+      state,
+      p,
+      "development",
+      changed,
+      msg,
+      now,
+      not_called,
+    )
+  refusal(conflict, "IDEMPOTENCY_CONFLICT")
+}
+
+pub fn private_arguments_omission_fallback_and_explicit_invalid_rejection_test() {
+  let msg =
+    wire.NormalizedMessage(
+      wire.IntId(1),
+      "tools/call",
+      [#("path", "file.txt")],
+      "",
+    )
+  gateway.private_arguments("{\"params\":{}}", msg)
+  |> should.equal(Ok(value.Object([#("path", value.Text("file.txt"))])))
+  list.each(["null", "[]", "false", "17"], fn(invalid) {
+    gateway.private_arguments(
+      "{\"params\":{\"arguments\":" <> invalid <> "}}",
+      msg,
+    )
+    |> should.be_error
+  })
+}
+
+pub fn private_session_rechecks_grant_identity_and_preserves_error_state_test() {
+  let state = successor_fixture()
+  gateway.successor_session(Some(state), state.grant) |> should.equal(Ok(state))
+  list.each(
+    [
+      harness_admission.Grant(..state.grant, id: "other"),
+      harness_admission.Grant(..state.grant, digest: string.repeat("c", 64)),
+    ],
+    fn(changed) {
+      gateway.successor_session(Some(state), changed)
+      |> should.equal(Error("successor_session_grant_changed"))
+    },
+  )
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  let #(outcome, next) =
+    gateway.dispatch_private_with_resolver(
+      fixture(),
+      test_principal("private-worker", "unresolved-state"),
+      "successor",
+      raw,
+      msg,
+      now,
+      fn(_, route, tool, _, _) {
+        Ok(
+          private_binding(route, tool, "private-worker", fn() {
+            #(
+              Error("uncertain:backend_commit"),
+              Some(successor_mcp.State(..state, unresolved: True)),
+            )
+          }),
+        )
+      },
+    )
+  refusal(outcome, "WORKER_ISOLATED_FAILURE")
+  let assert Ok(saved) =
+    dict.get(
+      next.successor_sessions,
+      gateway.successor_session_key(test_principal(
+        "private-worker",
+        "unresolved-state",
+      )),
+    )
+  saved.state.unresolved |> should.be_true
+}
+
+pub fn private_typed_live_ingress_retains_original_security_checks_test() {
+  let #(raw, _) =
+    private_request(
+      "harness_status",
+      json.object([
+        #(
+          "nested",
+          json.object([#("flag", json.bool(True)), #("number", json.int(3))]),
+        ),
+      ]),
+    )
+  let assert Some(reply) =
+    gateway.handle_standard_mcp_line(
+      "ungranted-typed",
+      "codex",
+      root,
+      "ungranted-typed",
+      "successor",
+      raw,
+      now,
+    )
+  string.contains(reply, "ROUTE_GRANT_REQUIRED") |> should.be_true
+  let assert Ok(frames) =
+    gateway.process_stdio_input(
+      "ungranted-typed",
+      "codex",
+      root,
+      "ungranted-typed",
+      "successor",
+      types.Modern20260728,
+      [string.slice(raw, 0, 20), string.drop_start(raw, 20) <> "\n"],
+      now,
+    )
+  list.length(frames) |> should.equal(1)
+  let assert Ok(frame) = list.first(frames)
+  string.contains(frame, "ROUTE_GRANT_REQUIRED") |> should.be_true
+  let hs = [
+    #("uos-mcp-route", "successor"),
+    ..authenticated_headers_with_scopes(["mcp:operational", "mcp:successor"])
+  ]
+  let #(status, _, reply) =
+    gateway.handle_http_with_config("POST", "/mcp", hs, raw, config(), now)
+  status |> should.equal(200)
+  string.contains(reply, "ROUTE_GRANT_REQUIRED") |> should.be_true
+  let #(status, _, _) =
+    gateway.handle_http_with_config(
+      "POST",
+      "/mcp",
+      [#("uos-mcp-route", "successor"), ..headers()],
+      raw,
+      config(),
+      now,
+    )
+  status |> should.equal(401)
+  let #(status, _, reply) =
+    gateway.handle_http_with_config(
+      "POST",
+      "/mcp",
+      [#("uos-mcp-route", "successor"), ..authenticated_headers()],
+      raw,
+      config(),
+      now,
+    )
+  status |> should.equal(200)
+  string.contains(reply, "HTTP_ROUTE_SCOPE_FORBIDDEN") |> should.be_true
+  list.each(
+    [
+      json.object([
+        #("actor", json.string("foreign")),
+        #("nested", json.bool(True)),
+      ]),
+      json.object([
+        #("nested", json.object([#("Authorization", json.string("fixture"))])),
+      ]),
+      json.object([
+        #(
+          "nested",
+          json.array([json.string(config().signing_secret)], fn(x) { x }),
+        ),
+      ]),
+    ],
+    fn(args) {
+      let #(unsafe, _) = private_request("harness_status", args)
+      let #(status, _, _) =
+        gateway.handle_http_with_config(
+          "POST",
+          "/mcp",
+          hs,
+          unsafe,
+          config(),
+          now,
+        )
+      status |> should.equal(403)
+    },
+  )
+  let deep =
+    "{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"harness_status\",\"arguments\":{\"nested\":"
+    <> string.repeat("[", 40)
+    <> "0"
+    <> string.repeat("]", 40)
+    <> "}}}"
+  let #(status, _, reply) =
+    gateway.handle_http_with_config("POST", "/mcp", hs, deep, config(), now)
+  status |> should.equal(400)
+  string.contains(reply, "HTTP_JSON_DEPTH_EXCEEDED") |> should.be_true
+}
+
+pub fn private_blocking_backend_does_not_block_public_actor_and_serializes_successor_test() {
+  let started = process.new_subject()
+  let results = process.new_subject()
+  let p = test_principal("private-worker", "actor-private-serialization")
+  let #(raw, msg) = private_request("harness_status", json.object([]))
+  let _ =
+    process.spawn_unlinked(fn() {
+      let release = process.new_subject()
+      let outcome =
+        gateway.dispatch_private_live_with_resolver(
+          p,
+          "successor",
+          raw,
+          msg,
+          fn(_, route, tool, _, _) {
+            Ok(
+              private_binding(route, tool, "private-worker", fn() {
+                process.send(started, release)
+                let assert Ok(True) = process.receive(release, 5000)
+                #(
+                  Ok("{}"),
+                  Some(
+                    successor_mcp.State(
+                      ..successor_fixture(),
+                      initialized: True,
+                    ),
+                  ),
+                )
+              }),
+            )
+          },
+        )
+      process.send(results, outcome)
+    })
+  let assert Ok(release) = process.receive(started, 2000)
+  let second_started = process.new_subject()
+  let _ =
+    process.spawn_unlinked(fn() {
+      let #(raw, msg) = private_request("harness_clock", json.object([]))
+      let outcome =
+        gateway.dispatch_private_live_with_resolver(
+          p,
+          "successor",
+          raw,
+          msg,
+          fn(_, route, tool, _, current) {
+            let assert Some(previous) = current
+            previous.state.initialized |> should.be_true
+            process.send(second_started, True)
+            Ok(
+              private_binding(route, tool, "private-worker", fn() {
+                #(Ok("{}"), option.map(current, fn(r) { r.state }))
+              }),
+            )
+          },
+        )
+      process.send(results, outcome)
+    })
+  process.receive(second_started, 50) |> should.equal(Error(Nil))
+  let public = process.new_subject()
+  let _ =
+    process.spawn_unlinked(fn() {
+      process.send(
+        public,
+        gateway.handle_standard_mcp_line(
+          "public-S01",
+          "codex",
+          root,
+          "public-S01",
+          "public",
+          "{\"id\":12,\"method\":\"tools/list\"}",
+          now,
+        ),
+      )
+    })
+  let assert Ok(Some(reply)) = process.receive(public, 1000)
+  string.contains(reply, "\"tools\":") |> should.be_true
+  process.send(release, True)
+  let assert Ok(first) = process.receive(results, 5000)
+  completed(first) |> should.equal("{}")
+  process.receive(second_started, 5000) |> should.equal(Ok(True))
+  let assert Ok(second) = process.receive(results, 5000)
+  completed(second) |> should.equal("{}")
+}
 
 pub fn modern_revision_initialize_and_http_followup_test() {
   version.matches_profile(types.Legacy20241105, "2024-11-05") |> should.be_true
@@ -1452,4 +3029,365 @@ pub fn http_oauth_metadata_and_401_emit_cors_and_absolute_resource_metadata_test
     "https://nas-1.tail55d152.ts.net:4101/.well-known/oauth-protected-resource",
   )
   |> should.be_true
+}
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_sse_loopback_fixture")
+fn sse_loopback_fixture(
+  valid: String,
+  forged: String,
+  ping: String,
+  start: fn(Int) -> Result(process.Pid, String),
+) -> Result(#(String, String), String)
+
+fn sse_sample(topic: String, payload: json.Json) -> String {
+  "data: "
+  <> json.to_string(
+    json.object([
+      #("key", json.string(topic)),
+      #("value", payload),
+      #("encoding", json.string("application/json")),
+    ]),
+  )
+  <> "\r\n\r\n"
+}
+
+pub fn zenoh_sse_decodes_object_string_multiline_and_alias_samples_test() {
+  let topic = "indrajaal/mcp/request/codex/loop1"
+  let envelope = signed_envelope("sse-test-secret") |> encode_envelope
+  let assert Ok(object) = json.parse(envelope, value.decoder())
+  let assert Some(#(actual_topic, raw)) =
+    gateway.decode_zenoh_sse_event(sse_sample(topic, value.encode(object)))
+  actual_topic |> should.equal(topic)
+  json.parse(raw, value.decoder()) |> should.equal(Ok(object))
+  gateway.decode_zenoh_sse_event(sse_sample(topic, json.string(envelope)))
+  |> should.equal(Some(#(topic, envelope)))
+  gateway.decode_zenoh_sse_event(
+    ":keepalive\r\ndata: {\"key_expr\": \""
+    <> topic
+    <> "\",\r\ndata: \"payload\": {\"nested\": [1, true, null]}}\r\n",
+  )
+  |> fn(result) {
+    let assert Some(#(key, payload)) = result
+    key |> should.equal(topic)
+    json.parse(payload, value.decoder())
+    |> should.equal(json.parse("{\"nested\":[1,true,null]}", value.decoder()))
+  }
+}
+
+pub fn zenoh_sse_rejects_heartbeats_bad_json_and_unsafe_topics_test() {
+  list.each(
+    ["", ":keepalive\n\n", "event: heartbeat", "data: {bad}"],
+    fn(block) { gateway.decode_zenoh_sse_event(block) |> should.equal(None) },
+  )
+  list.each(
+    [
+      "indrajaal/mcp/response/codex/loop1", "c3i/a2a/request/codex/loop1",
+      "indrajaal/mcp/request//loop1", "indrajaal/mcp/request/codex/..",
+      "indrajaal/mcp/request/codex/loop1/extra",
+      "indrajaal/mcp/request/codex/x?url=evil",
+      "indrajaal/mcp/request/codex/%2e%2e",
+    ],
+    fn(topic) {
+      gateway.decode_zenoh_sse_event(sse_sample(topic, json.object([])))
+      |> should.equal(None)
+    },
+  )
+  gateway.decode_zenoh_sse_event(
+    "data: {\"key\":\"indrajaal/mcp/request/codex/x\",\"value\":42}",
+  )
+  |> should.equal(None)
+  gateway.decode_zenoh_sse_event(string.repeat("x", 1_048_577))
+  |> should.equal(None)
+  gateway.decode_zenoh_sse_event(
+    "data: " <> string.repeat("[", 40) <> "0" <> string.repeat("]", 40),
+  )
+  |> should.equal(None)
+}
+
+pub fn zenoh_sse_endpoint_guard_refuses_untrusted_hosts_before_connect_test() {
+  list.each(
+    ["evil.example", "localhost", "127.0.0.2", "nas-1.tail55d152.ts.net/evil"],
+    fn(host) {
+      gateway.start_zenoh_sse_subscriber_for_test(host, 8080, "secret")
+      |> should.equal(Error("invalid_zenoh_subscriber_endpoint_or_secret"))
+    },
+  )
+  list.each([0, -1, 65_536], fn(port) {
+    gateway.start_zenoh_sse_subscriber_for_test("127.0.0.1", port, "secret")
+    |> should.equal(Error("invalid_zenoh_subscriber_endpoint_or_secret"))
+  })
+  gateway.start_zenoh_sse_subscriber_for_test("127.0.0.1", 8080, "")
+  |> should.equal(Error("invalid_zenoh_subscriber_endpoint_or_secret"))
+}
+
+fn sse_signed_request(
+  id: String,
+  payload: String,
+  secret: String,
+) -> zenoh.SignedZenohEnvelope {
+  let base =
+    zenoh.SignedZenohEnvelope(
+      ..signed_envelope(secret),
+      topic: "indrajaal/mcp/request/codex/" <> id,
+      reply_topic: "indrajaal/mcp/response/codex/" <> id,
+      payload: payload,
+    )
+  zenoh.SignedZenohEnvelope(
+    ..base,
+    signature: zenoh.compute_signature(
+      secret,
+      base.topic,
+      base.reply_topic,
+      base.sender_actor,
+      base.client_name,
+      base.workspace_root,
+      base.session_id,
+      base.payload,
+    ),
+  )
+}
+
+pub fn zenoh_sse_loopback_chunked_hmac_overflow_reconnect_and_put_test() {
+  let secret = "loopback-sse-test-secret"
+  let valid =
+    sse_signed_request(
+      "loop1",
+      "{\"jsonrpc\":\"2.0\",\"id\":31,\"method\":\"tools/list\"}",
+      secret,
+    )
+  let forged = zenoh.SignedZenohEnvelope(..valid, signature: "forged")
+  let ping =
+    sse_signed_request(
+      "loop2",
+      "{\"jsonrpc\":\"2.0\",\"id\":32,\"method\":\"ping\"}",
+      secret,
+    )
+  let to_sample = fn(envelope: zenoh.SignedZenohEnvelope) {
+    let assert Ok(object) =
+      json.parse(encode_envelope(envelope), value.decoder())
+    sse_sample(envelope.topic, value.encode(object))
+  }
+  let output =
+    sse_loopback_fixture(
+      to_sample(valid),
+      to_sample(forged),
+      to_sample(ping),
+      fn(port) {
+        gateway.start_zenoh_sse_subscriber_for_test("127.0.0.1", port, secret)
+      },
+    )
+  let assert Ok(#(tools, pong)) = output
+  let decoder =
+    decode.map(decode.at(["tools"], decode.list(decode.dynamic)), list.length)
+  let assert Ok(tool_payload) =
+    json.parse(tools, decode.at(["result", "value"], decode.string))
+  json.parse(tool_payload, decoder) |> should.equal(Ok(53))
+  json.parse(pong, decode.at(["id"], decode.int)) |> should.equal(Ok(32))
+  string.contains(pong, "\"error\"") |> should.be_false
+}
+
+// Same OneForOne strategy/worker wrapper as production. The SSE child may die
+// during a connect/reconnect without replacing the GatewayState owner.
+pub fn zenoh_sse_one_for_one_restart_preserves_gateway_owner_test() {
+  let owner_started = process.new_subject()
+  let subscriber_started = process.new_subject()
+  let gateway_state = fixture()
+  let owner_child =
+    supervision.worker(fn() {
+      let started = gateway.start_state_owner(gateway_state)
+      case started {
+        Ok(owner) -> process.send(owner_started, owner)
+        Error(_) -> Nil
+      }
+      started
+    })
+  let sse_child =
+    supervision.worker(fn() {
+      gateway.start_zenoh_sse_subscriber_for_test(
+        "127.0.0.1",
+        1,
+        "isolation-test-secret",
+      )
+      |> result.map(fn(pid) {
+        process.send(subscriber_started, pid)
+        actor.Started(pid, Nil)
+      })
+      |> result.map_error(actor.InitFailed)
+    })
+  let assert Ok(sup) =
+    otp_supervisor.new(otp_supervisor.OneForOne)
+    |> otp_supervisor.add(owner_child)
+    |> otp_supervisor.add(sse_child)
+    |> otp_supervisor.start
+  process.unlink(sup.pid)
+  let assert Ok(owner) = process.receive(owner_started, 500)
+  let assert Ok(first) = process.receive(subscriber_started, 500)
+  process.kill(first)
+  let assert Ok(second) = process.receive(subscriber_started, 500)
+  let reply = process.new_subject()
+  process.send(owner.data, gateway.Ping(reply))
+  let alive = process.receive(reply, 200)
+  let replaced = process.receive(owner_started, 20)
+  process.kill(sup.pid)
+  list.each([sup.pid, owner.pid, second], fn(pid) {
+    let monitor = process.monitor(pid)
+    process.new_selector()
+    |> process.select_specific_monitor(monitor, fn(_) { Nil })
+    |> process.selector_receive(1000)
+    |> should.equal(Ok(Nil))
+  })
+  alive |> should.equal(Ok(True))
+  replaced |> should.equal(Error(Nil))
+  { first != second } |> should.be_true
+}
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_sse_registered_health_fixture")
+fn registered_sse_health_fixture(
+  start: fn(Int, Int) -> Result(process.Pid, String),
+) -> Result(Nil, String)
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_sse_registered_isolation_fixture")
+fn registered_sse_isolation_fixture(
+  start_supervisor: fn(Int, Int) -> Result(process.Pid, String),
+  start: fn(Int, Bool, Int) -> Result(process.Pid, String),
+  boot: fn() -> Bool,
+) -> Result(Nil, String)
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_sse_stdio_guard_fixture")
+fn stdio_sse_guard_fixture(
+  enabled: fn() -> Bool,
+  main: fn() -> Nil,
+) -> Result(Nil, String)
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_test_environment")
+fn zenoh_test_environment(f: fn() -> a) -> a
+
+pub fn registered_sse_idle_timeout_health_and_recovery_test() {
+  registered_sse_health_fixture(fn(port, lock) {
+    gateway.start_zenoh_sse_subscriber_with_options(
+      "127.0.0.1",
+      port,
+      "registered-fixture-secret",
+      True,
+      lock,
+      150,
+    )
+  })
+  |> should.equal(Ok(Nil))
+}
+
+pub fn registered_sse_mutex_cross_beam_restart_storm_and_gateway_isolation_test() {
+  registered_sse_isolation_fixture(
+    fn(port, lock) {
+      gateway.start_zenoh_supervisor_with_options_for_test(
+        "127.0.0.1",
+        port,
+        "registered-fixture-secret",
+        True,
+        lock,
+        150,
+      )
+    },
+    fn(port, register, lock) {
+      gateway.start_zenoh_sse_subscriber_with_options(
+        "127.0.0.1",
+        port,
+        "registered-fixture-secret",
+        register,
+        lock,
+        150,
+      )
+    },
+    gateway.ensure_started,
+  )
+  |> should.equal(Ok(Nil))
+}
+
+pub fn stdio_inherited_subscriber_settings_never_enable_sse_test() {
+  stdio_sse_guard_fixture(gateway.zenoh_subscriber_enabled, gateway.stdio_main)
+  |> should.equal(Ok(Nil))
+}
+
+pub fn raw_zenoh_topic_bound_is_identical_to_sse_precondition_test() {
+  zenoh_test_environment(fn() {
+    let secret = "raw-topic-test-secret"
+    let valid =
+      sse_signed_request(
+        "valid",
+        "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"ping\"}",
+        secret,
+      )
+    let assert Some(_) =
+      gateway.handle_zenoh_raw(valid.topic, encode_envelope(valid))
+    list.each(
+      [
+        "indrajaal/mcp/request/codex/" <> string.repeat("x", 513),
+        "indrajaal/mcp/request/codex/*",
+        "indrajaal/mcp/request/codex/..",
+        "indrajaal/mcp/request/codex/id/extra",
+      ],
+      fn(topic) {
+        let reply = string.replace(topic, "/request/", "/response/")
+        let envelope =
+          zenoh.SignedZenohEnvelope(
+            ..valid,
+            topic: topic,
+            reply_topic: reply,
+            signature: zenoh.compute_signature(
+              secret,
+              topic,
+              reply,
+              valid.sender_actor,
+              valid.client_name,
+              valid.workspace_root,
+              valid.session_id,
+              valid.payload,
+            ),
+          )
+        gateway.handle_zenoh_raw(topic, encode_envelope(envelope))
+        |> should.equal(None)
+      },
+    )
+  })
+}
+
+pub fn zenoh_freshness_health_fields_keep_stable_types_test() {
+  let health = gateway.gateway_health_json()
+  json.parse(health, decode.at(["zenoh_subscriber_enabled"], decode.bool))
+  |> should.be_ok
+  json.parse(health, decode.at(["zenoh_subscriber_alive"], decode.bool))
+  |> should.be_ok
+  json.parse(health, decode.at(["zenoh_subscriber_state"], decode.string))
+  |> should.be_ok
+  json.parse(
+    health,
+    decode.at(["zenoh_subscriber_last_activity_age_ms"], decode.int),
+  )
+  |> should.be_ok
+}
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_sse_handshake_fixture")
+fn sse_handshake_fixture() -> Result(Nil, String)
+
+pub fn sse_init_crash_dead_ready_timeout_leave_untrapping_caller_mailbox_clean_test() {
+  sse_handshake_fixture() |> should.equal(Ok(Nil))
+}
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_sse_atomics_fixture")
+fn sse_atomics_fixture(
+  start: fn(Int) -> Result(process.Pid, String),
+) -> Result(Nil, String)
+
+pub fn registered_sse_atomically_refreshes_without_persistent_term_churn_test() {
+  sse_atomics_fixture(fn(port) {
+    gateway.start_zenoh_sse_subscriber_with_options(
+      "127.0.0.1",
+      port,
+      "atomics-fixture-secret",
+      True,
+      0,
+      150,
+    )
+  })
+  |> should.equal(Ok(Nil))
 }

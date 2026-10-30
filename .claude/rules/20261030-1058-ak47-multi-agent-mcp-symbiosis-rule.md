@@ -6,7 +6,7 @@
 - **Tailscale FQDN**: [http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md)
 - **Companion guide**: [http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md)
 - **ZK decision record**: [http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md)
-- **Status**: ACTIVE reference guidance. Grants no effect authority and no admission. Client adoption is **UNRUN**.
+- **Status**: ACTIVE rule with evidence-bound operational observations; the rule itself grants no effect authority or admission. Four-client capsule/configuration adoption is observed under operator release authority.
 
 #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #zk-adr #zero-muda #tailscale-web
 
@@ -16,7 +16,11 @@ Transclusions: `[[wiki:20261030-1058-unified-101-route-mcp-client-guide]]` · `[
 
 ## 0. What kind of document this is
 
-This is a **specification rule**, not a runtime observation, a model proof, or an admission. It states how the supervisor persona, the fast disjoint-slice workers, the integration workers, the independent falsifiers and the unified Gleam/OTP MCP server are intended to compose. Every byte cap, route count or version string below is a **declared** property of the specification; none of it is verified by this file executing anything. `Refused` is not `Operational`, a completed task is not `DEV_READY`, `DEV_READY` is not `SYSTEM_ADMITTED`, and no claim of a live cutover is made here.
+This is a **specification rule**, not a runtime observation, a model proof, or an admission. It states how the supervisor persona, the fast disjoint-slice workers, the integration workers, the independent falsifiers and the unified Gleam/OTP MCP server are intended to compose. Every byte cap, route count or version string below is a **declared** property of the specification; none of it is verified by this file executing anything. `Refused` is not `Operational`, a completed task is not `DEV_READY`, `DEV_READY` is not `SYSTEM_ADMITTED`, and the dated operational note below records an observed cutover without converting this specification into effect or admission authority.
+
+## Observed operational binding — S01..S04
+
+Observed under operator SC-HARNESS-MCP-001 Clause 9 development bootstrap and separate ReleaseAuthority, Sa-plan `20261030-1634-mcp-full-symbiosis-closure`: immutable OTP 29 / ERTS 17.0.5 capsule `20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2` is selected by `var/releases/ecology/current-mcp-release` and verified by `tools/uos-mcp-stdio`. All 101 gateway routes are wired (65 public, including 53 operational tools + 12 server/resource/prompt/task/logging/completion facilities; 21 development; 15 successor). Private execution remains real-grant/task/fence gated; wiring does not grant authority or make unavailable backends available. Four native client bindings (AGY/Gemini, Claude, Codex, Pi) have 11-file capsule/payload-pin parity. Live authenticated stdio, Streamable HTTP `:4100/mcp`, and OTP-supervised Zenoh `indrajaal/mcp/request/**` round-trips passed, including HTTP 401 and forged-HMAC silent-drop checks with a valid ping bracket. See the [cutover receipt](http://nas-1.tail55d152.ts.net:4100/files/var/harness/20261030-s03-symbiosis-cutover/s03-outcome.json) and [native CLI proof ledger](http://nas-1.tail55d152.ts.net:4100/files/var/harness/20261030-s03-symbiosis-cutover/s04-4agent-cli-proofs.json). `application_admitted = false`, `SYSTEM_ADMITTED = false`, `system_admission = "NOT_ADMITTED"`, `admitted_ev_ceiling = 93`; EV-94..EV-109 remain NOT_ADMITTED and no EV number is minted. Cockpit HTTP200 does not imply semantic quorum health (observed `quorum_healthy=false`).
 
 ## 1. AK-47 Design Principle
 
@@ -48,13 +52,13 @@ This is a **specification rule**, not a runtime observation, a model proof, or a
 
 `MCP-02`. The 9 domain adapters partition the public surface by functional domain; the development and successor sets are separately scoped and separately gated. A declared route is not a connected route: verify the live `describeNamespace` / heartbeat list before relying on any route.
 
-`MCP-03` — **Transports.** All routes are reachable over **stdio**, **Zenoh with an HMAC fence**, and **Streamable HTTP with a Bearer / Origin / session fence**. A transport fence that is printed but not gated is decoration; the HMAC, Origin, Bearer and session checks are steel.
+`MCP-03` — **Transports.** Three ingress transports converge on the gateway: **stdio**, **Zenoh with a request-envelope HMAC fence**, and **Streamable HTTP with a Bearer / Origin / session fence**. The observed Zenoh handler dispatches public routes; private development/successor calls require supported route-bearing ingress plus real reviewed grants and observed task fences. Public transport probes do not establish private effect authority. A transport fence that is printed but not gated is decoration; the HMAC, Origin, Bearer and session checks are steel.
 
-`MCP-04` — **Protocol versions.** The server accepts MCP protocol versions **`2024-11-05`** (`Legacy20241105`) and **`2026-07-28`** (`Modern20260728`), matching `mcp/version.gleam` and `transports/http.gleam`. A client must negotiate one of these two; an unlisted version is refused with `UNSUPPORTED_PROTOCOL_VERSION` rather than silently downgraded.
+`MCP-04` — **Protocol versions.** The server accepts **`2024-11-05`** (`Legacy20241105`) and **`2025-03-26`**, **`2025-06-18`**, **`2025-11-25`**, **`2026-07-28`** (`Modern20260728`), matching `mcp/version.gleam`. A client negotiates one of these five exact revisions; an unlisted revision refuses with `UNSUPPORTED_PROTOCOL_VERSION`. Accepted modern revisions are echoed exactly and follow-up HTTP body/header revisions must agree.
 
 `MCP-05`. Every route carries a role, a grant scope, and bounds (byte caps, timeout, rate). The bounds are part of the receiver. A caller that exceeds a bound is refused **before** dispatch; use each field's actual type and precision.
 
-`MCP-06` — **Catalog reconciliation note (`tools.gleam`).** The public catalog declares **65** public tools: **53** are listed directly in the default legacy unauthenticated `tools/list` (`tools.operational_tool_definitions()` = 65 declared minus 12 unavailable), and **12** gated domain tools (`control_loop`, `safety_status`, `run_selfcheck`, `registry_status`, `run_gate`, `zk_search`, `sa_bridge_submit`, `vault_status`, `vault_list_secrets`, `vault_policy_get`, `vault_audit_tail`, `vault_health`) fail closed with `UNAVAILABLE` on unauthenticated/unconfigured legacy calls and execute only through authenticated typed adapters in `server.execute_route_authenticated`. `65 declared − 12 unavailable = 53 advertised`, matching the T19 receipt's `tools_listed_count: 53`; `tools/list` and `tools/call` must tell the same story.
+`MCP-06` — **Legacy catalog distinction.** The pinned `mcp/tools.gleam` catalog declares65 tools and advertises53 operational names after12 unavailable entries. That legacy categorization is distinct from the unified registry public65 specs (53 operational tools +12 facilities). Live `tools/list` advertises53; all101 registry routes are wired, while missing backend/grant/fence conditions continue to refuse honestly. Counts alone do not establish individual effect admission.
 
 ## 4. Truthful Epistemic Projection
 
@@ -120,7 +124,7 @@ The supervisor fans out to a fast clearance worker, an integration worker and an
 
 ## 6. Limits of this contract
 
-Reference guidance only. It installs nothing, enforces nothing and proves nothing about the running system. The route count, the -99.2% token-overhead measurement and the transport fences are **declared** properties; reasoning about them is not an observation of them. No plugin, hook or client is shown to have adopted this contract, so adoption is **UNRUN**. Sa-plan remains the sole execution authority.
+The rule text installs nothing and grants no admission. The operational note distinguishes observed capsule/configuration/transport evidence from declared worker-cost measurements and from system admission. Sa-plan remains the sole execution authority.
 
 ## Comprehensive verification checklist
 
@@ -147,14 +151,14 @@ Checks below are obligations for work governed by this contract, not blanket pas
 
 - [ ] **CHK-08-C1C8** — All applicable C1–C8 surfaces UNRUN.
 - [ ] **CHK-09-MATH** — Four declared mathematical gates UNRUN.
-- [ ] **CHK-10-9MOD** — Unit, system, TDD, BDD, performance, scalability, property, fuzz and chaos checks UNRUN.
+- [x] **CHK-10-9MOD** — Applicable source, transport, bounds, mutation and native-CLI observations recorded in S03/S04 receipts; no all-modalities claim.
 - [ ] **CHK-11-REGR** — Applicable regressions and bounded observation UNRUN.
 
 </details>
 
 <details><summary>Domain 4 — Cross-language control and observability</summary>
 
-- [ ] **CHK-12-GLEAM** — Actual OTP control/supervision behavior UNRUN.
+- [x] **CHK-12-GLEAM** — Actual OTP29 supervision and native MCP behavior observed under operator authority; private effects remain separately gated.
 - [ ] **CHK-13-HERMES** — Bounded analysis and authoritative evidence UNRUN.
 - [ ] **CHK-14-ZIGVM** — Deterministic execution and descriptor-relative VFS UNRUN.
 - [ ] **CHK-15-MAX** — Isolated inference UNRUN.
@@ -164,8 +168,8 @@ Checks below are obligations for work governed by this contract, not blanket pas
 
 <details><summary>Domain 5 — Sovereign governance and standalone Jujutsu</summary>
 
-- [ ] **CHK-17-SOV** — Candidate-bound independent review and authorized admission NOT_ADMITTED.
-- [ ] **CHK-18-JJ** — Standalone JJ, source ownership and exact candidate identity UNRUN.
+- [x] **CHK-17-SOV** — Independent Claude source reviews PASS and operator ReleaseAuthority recorded; global/application admission remains NOT_ADMITTED.
+- [x] **CHK-18-JJ** — Standalone JJ identities and scoped source preservation observed; final S04 completion and main integration remain supervisor-owned.
 
 </details>
 

@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+  "uos-gleam": {
+  "command": "/home/an/NAS-setup/uos/tools/uos-mcp-stdio",
+  "args": [],
+  "cwd": "/home/an/NAS-setup/uos",
+  "env": {
+    "ERL_CRASH_DUMP_SECONDS": "0",
+    "UOS_MCP_WORKSPACE_ROOT": "/home/an/NAS-setup/uos",
+    "UOS_MCP_ROUTE": "public",
+    "UOS_MCP_CLIENT_NAME": "agy-gemini",
+    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2",
+    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "a1e7125f39055bc9321027138935843bc4c77a483f9457c6ecd77ec9557cd1d3"
+  }
+}}}

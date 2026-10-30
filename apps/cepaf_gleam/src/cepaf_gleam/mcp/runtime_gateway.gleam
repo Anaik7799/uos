@@ -1,8 +1,13 @@
 //// Track A live MCP ingress. The OTP owner serializes every transport's state.
 //// Transport identity never supplies task/grant authority. EV ceiling stays 93.
 
+import cepaf_gleam/harness/admission as harness_admission
+import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/mcp as launcher
+import cepaf_gleam/harness/native_backend
+import cepaf_gleam/harness/operations as ops
+import cepaf_gleam/harness/successor_mcp
 import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/adapters/analysis
 import cepaf_gleam/mcp/adapters/control
@@ -19,8 +24,10 @@ import cepaf_gleam/mcp/http_auth
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/profiles/modern
 import cepaf_gleam/mcp/prompts
+import cepaf_gleam/mcp/receipts
 import cepaf_gleam/mcp/registry
 import cepaf_gleam/mcp/resources
+import cepaf_gleam/mcp/route_convergence
 import cepaf_gleam/mcp/server
 import cepaf_gleam/mcp/subscriptions
 import cepaf_gleam/mcp/supervisor
@@ -31,9 +38,11 @@ import cepaf_gleam/mcp/transports/zenoh as zenoh_transport
 import cepaf_gleam/mcp/types
 import cepaf_gleam/mcp/version
 import cepaf_gleam/mcp/wire
+import gleam/bit_array
 import gleam/dict
 import gleam/dynamic/decode
 import gleam/erlang/atom
+import gleam/erlang/charlist
 import gleam/erlang/process
 import gleam/int
 import gleam/io
@@ -53,6 +62,62 @@ const completion_plan = "20261029-1913-mcp-server-completion"
 
 const default_issuer = "https://nas-1.tail55d152.ts.net:4101"
 
+pub const max_successor_sessions = 1024
+
+pub type SuccessorSessionRecord {
+  SuccessorSessionRecord(
+    owner_actor: String,
+    owner_client: String,
+    owner_transport: types.TransportKind,
+    owner_session: String,
+    state: successor_mcp.State,
+  )
+}
+
+/// Trusted code seam, never populated from request authority fields. Resolution
+/// observes real harness admission; execution is delayed until canonical gates.
+pub type PrivateBinding {
+  PrivateBinding(
+    route_grant: Option(route_convergence.RouteGrant),
+    task_fence: Option(admission.TaskFence),
+    execute: fn() -> #(Result(String, String), Option(successor_mcp.State)),
+  )
+}
+
+pub type PrivateResolver =
+  fn(
+    principal.Principal,
+    String,
+    String,
+    value.Value,
+    Option(SuccessorSessionRecord),
+  ) -> Result(PrivateBinding, types.ToolError)
+
+pub opaque type PreparedPrivateCall {
+  PreparedPrivateCall(
+    context: admission.AdmissionContext,
+    route_grant: Option(route_convergence.RouteGrant),
+    route: String,
+    tool: String,
+    args: dict.Dict(String, String),
+    output: Result(String, String),
+    next_successor: Option(successor_mcp.State),
+    intent_id: String,
+    candidate: String,
+    effect_executed: Bool,
+  )
+}
+
+pub opaque type PrivateSnapshot {
+  PrivateSnapshot(
+    pool: supervisor.WorkerPool,
+    features: features.FeatureEvidenceStore,
+    workspace_root: String,
+    successor: Option(SuccessorSessionRecord),
+    successor_count: Int,
+  )
+}
+
 pub type GatewayState {
   GatewayState(
     pool: supervisor.WorkerPool,
@@ -63,12 +128,18 @@ pub type GatewayState {
     subscriptions: subscriptions.SubscriptionStore,
     tasks: task_extension.TaskExtensionStore,
     negotiated_task_sessions: dict.Dict(String, Bool),
+    successor_sessions: dict.Dict(String, SuccessorSessionRecord),
     supervised_gateway: supervisor.SupervisedGateway,
   )
 }
 
-type Message {
+/// Trusted in-VM actor protocol. Neither snapshots nor prepared calls can be
+/// constructed from transport payloads; their public types remain opaque.
+pub type Message {
   Ping(process.Subject(Bool))
+  Snapshot(principal.Principal, process.Subject(PrivateSnapshot))
+  ObservationTarget(process.Subject(supervisor.SupervisedGateway))
+  CommitPrivate(PreparedPrivateCall, process.Subject(types.Outcome))
   Dispatch(
     principal.Principal,
     types.ProtocolProfile,
@@ -79,6 +150,7 @@ type Message {
     Option(#(String, Option(knowledge.CorpusEntry))),
     Option(planning_read.PlanningReadStore),
     Option(#(verification.CheckId, verification.CheckRunnerResult)),
+    Option(Bool),
     process.Subject(types.Outcome),
   )
 }
@@ -94,6 +166,9 @@ fn get_env(key: String) -> Result(String, Nil)
 
 @external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
 fn system_time_nanos() -> Int
+
+@external(erlang, "os", "getpid")
+fn os_pid() -> charlist.Charlist
 
 @external(erlang, "erlang", "monotonic_time")
 fn monotonic_time(unit: atom.Atom) -> Int
@@ -124,11 +199,168 @@ fn read_line() -> StdioLine
 @external(erlang, "mcp_stdio_ffi", "with_gateway_boot_lock")
 fn with_gateway_boot_lock(f: fn() -> Bool) -> Bool
 
+@external(erlang, "mcp_stdio_ffi", "with_private_route_lock")
+fn with_private_route_lock(f: fn() -> a) -> a
+
 @external(erlang, "mcp_stdio_ffi", "register_or_stop_supervisor")
 fn register_or_stop_supervisor(pid: process.Pid) -> Bool
 
 @external(erlang, "mcp_stdio_ffi", "loaded_mcp_beams_digest")
 fn loaded_mcp_beams_digest() -> String
+
+@external(erlang, "mcp_stdio_ffi", "start_zenoh_sse_subscriber")
+fn start_sse_worker(
+  host: String,
+  port: Int,
+  secret: String,
+  register: Bool,
+  lock_port: Int,
+  idle_timeout_ms: Int,
+  handler: fn(String) -> Option(#(String, String)),
+) -> Result(process.Pid, String)
+
+@external(erlang, "mcp_stdio_ffi", "stop_zenoh_sse_subscriber")
+pub fn stop_zenoh_sse_subscriber(pid: process.Pid) -> Bool
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_subscriber_alive")
+pub fn zenoh_subscriber_alive() -> Bool
+
+@external(erlang, "mcp_stdio_ffi", "mark_stdio_gateway")
+fn mark_stdio_gateway() -> Nil
+
+@external(erlang, "mcp_stdio_ffi", "stdio_gateway")
+fn stdio_gateway() -> Bool
+
+pub fn zenoh_subscriber_enabled() -> Bool {
+  env("UOS_MCP_ZENOH_SUBSCRIBER", "0") == "1"
+  && env("UOS_MCP_ZENOH_SHARED_SECRET", "") != ""
+  && env("UOS_MCP_CLIENT_NAME", "") == ""
+  && !stdio_gateway()
+}
+
+/// Trusted entrypoint; the FFI independently permits only the pinned router or
+/// IPv4 loopback. Production never takes host/port from environment or payload.
+pub fn start_zenoh_sse_subscriber_for_test(
+  host: String,
+  port: Int,
+  shared_secret: String,
+) -> Result(process.Pid, String) {
+  start_zenoh_sse_subscriber_with_options(
+    host,
+    port,
+    shared_secret,
+    False,
+    0,
+    5000,
+  )
+}
+
+/// Trusted code only: the independent FFI endpoint guard and OS mutex also
+/// apply to this seam. Transport payloads never supply these options.
+pub fn start_zenoh_sse_subscriber_with_options(
+  host: String,
+  port: Int,
+  shared_secret: String,
+  register: Bool,
+  lock_port: Int,
+  idle_timeout_ms: Int,
+) -> Result(process.Pid, String) {
+  start_sse_worker(
+    host,
+    port,
+    shared_secret,
+    register,
+    lock_port,
+    idle_timeout_ms,
+    fn(block) {
+      case decode_zenoh_sse_event(block) {
+        None -> None
+        Some(#(topic, payload)) ->
+          zenoh_raw_with_secret(topic, payload, shared_secret)
+      }
+    },
+  )
+}
+
+@external(erlang, "mcp_stdio_ffi", "with_zenoh_boot_lock")
+fn with_zenoh_boot_lock(f: fn() -> Bool) -> Bool
+
+@external(erlang, "mcp_stdio_ffi", "register_or_keep_zenoh_supervisor")
+fn register_or_keep_zenoh_supervisor(pid: process.Pid) -> Bool
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_supervisor_running")
+fn zenoh_supervisor_running() -> Bool
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_subscriber_state")
+pub fn zenoh_subscriber_state() -> String
+
+@external(erlang, "mcp_stdio_ffi", "zenoh_subscriber_last_activity_age_ms")
+pub fn zenoh_subscriber_last_activity_age_ms() -> Int
+
+@external(erlang, "mcp_stdio_ffi", "isolate_zenoh_supervisor_start")
+fn isolate_zenoh_supervisor_start(
+  start: fn() -> Result(process.Pid, String),
+) -> Result(process.Pid, String)
+
+/// This supervisor has no link to the gateway owner or its supervisor. The
+/// same constructor exercises registered/OS-locked workers in loopback tests.
+pub fn start_zenoh_supervisor_with_options_for_test(
+  host: String,
+  port: Int,
+  secret: String,
+  register: Bool,
+  lock_port: Int,
+  idle_timeout_ms: Int,
+) -> Result(process.Pid, String) {
+  isolate_zenoh_supervisor_start(fn() {
+    otp_supervisor.new(otp_supervisor.OneForOne)
+    |> otp_supervisor.restart_tolerance(intensity: 5, period: 60)
+    |> otp_supervisor.add(
+      supervision.worker(fn() {
+        start_zenoh_sse_subscriber_with_options(
+          host,
+          port,
+          secret,
+          register,
+          lock_port,
+          idle_timeout_ms,
+        )
+        |> result.map(fn(pid) { actor.Started(pid, Nil) })
+        |> result.map_error(actor.InitFailed)
+      }),
+    )
+    |> otp_supervisor.start
+    |> result.map(fn(started) {
+      process.unlink(started.pid)
+      started.pid
+    })
+    |> result.map_error(fn(_) { "zenoh_supervisor_start_failed" })
+  })
+}
+
+fn start_production_zenoh_subscriber() -> Bool {
+  with_zenoh_boot_lock(fn() {
+    case zenoh_supervisor_running() {
+      True -> True
+      False ->
+        case
+          start_zenoh_supervisor_with_options_for_test(
+            "nas-1.tail55d152.ts.net",
+            8080,
+            env("UOS_MCP_ZENOH_SHARED_SECRET", ""),
+            True,
+            41_199,
+            30_000,
+          )
+        {
+          Ok(pid) -> register_or_keep_zenoh_supervisor(pid)
+          // An in-node or cross-process owner is expected contention, never a
+          // gateway boot failure. Later ingress may retry the independent child.
+          Error(_) -> False
+        }
+    }
+  })
+}
 
 fn gateway_key() -> atom.Atom {
   // Constant atom only; client input can never grow the atom table.
@@ -161,11 +393,15 @@ fn subject_alive(subject: process.Subject(a)) -> Bool {
   }
 }
 
+pub fn supervised_gateway_pids_alive(
+  gateway: supervisor.SupervisedGateway,
+) -> Bool {
+  process.is_alive(gateway.supervisor_pid)
+  && subject_alive(gateway.gateway_subject)
+}
+
 fn gateway_alive(gateway: supervisor.SupervisedGateway) -> Bool {
-  case
-    process.is_alive(gateway.supervisor_pid)
-    && subject_alive(gateway.gateway_subject)
-  {
+  case supervised_gateway_pids_alive(gateway) {
     False -> False
     True -> {
       let reply = process.new_subject()
@@ -191,64 +427,88 @@ pub fn is_running() -> Bool {
 }
 
 pub fn ensure_started() -> Bool {
-  with_gateway_boot_lock(fn() {
-    case is_running() {
-      True -> True
-      False -> {
-        let root = workspace_root()
-        let cand = candidate_id.from_root(root)
-        case candidate_id.is_sha256_digest(cand) {
-          False -> False
-          True -> {
-            // The state owner is a real supervisor child, with its subject
-            // refreshed in persistent_term on every OTP restart.
-            let child =
-              supervision.worker(fn() {
-                case
-                  supervisor.start_supervised_gateway(),
-                  supervisor.start_worker_pool_for_candidate(
-                    size: 4,
-                    candidate: cand,
-                  )
-                {
-                  Ok(gateway), Ok(pool) -> {
-                    let state = new_state(root, cand, pool, gateway)
-                    case
-                      actor.new(state)
-                      |> actor.on_message(handle_message)
-                      |> actor.start
-                    {
-                      Ok(started) -> {
-                        store_subject(gateway_key(), Some(started.data))
-                        Ok(started)
+  ensure_started_with_zenoh(zenoh_subscriber_enabled())
+}
+
+/// False is mandatory for ephemeral stdio entrypoints; subscriber failures are
+/// never propagated into the independent gateway state-owner supervisor.
+fn ensure_started_with_zenoh(enable_zenoh: Bool) -> Bool {
+  ensure_started_with_subscriber_for_test(fn() {
+    case enable_zenoh {
+      True -> start_production_zenoh_subscriber()
+      False -> False
+    }
+  })
+}
+
+/// Trusted injection seam for fresh-VM boot under real subscriber contention.
+/// Production and tests share the same state-owner boot-before-subscriber order.
+pub fn ensure_started_with_subscriber_for_test(
+  start_subscriber: fn() -> Bool,
+) -> Bool {
+  let running =
+    with_gateway_boot_lock(fn() {
+      case is_running() {
+        True -> True
+        False -> {
+          let root = workspace_root()
+          let cand = candidate_id.from_root(root)
+          case candidate_id.is_sha256_digest(cand) {
+            False -> False
+            True -> {
+              // The state owner is a real supervisor child, with its subject
+              // refreshed in persistent_term on every OTP restart.
+              let child =
+                supervision.worker(fn() {
+                  case
+                    supervisor.start_supervised_gateway(),
+                    supervisor.start_worker_pool_for_candidate(
+                      size: 4,
+                      candidate: cand,
+                    )
+                  {
+                    Ok(gateway), Ok(pool) -> {
+                      let state = new_state(root, cand, pool, gateway)
+                      case start_state_owner(state) {
+                        Ok(started) -> {
+                          store_subject(gateway_key(), Some(started.data))
+                          Ok(started)
+                        }
+                        Error(error) -> Error(error)
                       }
-                      Error(error) -> Error(error)
                     }
+                    Error(error), _ -> Error(error)
+                    _, Error(reason) -> Error(actor.InitFailed(reason))
                   }
-                  Error(error), _ -> Error(error)
-                  _, Error(reason) -> Error(actor.InitFailed(reason))
+                })
+              case
+                otp_supervisor.new(otp_supervisor.OneForOne)
+                |> otp_supervisor.restart_tolerance(intensity: 5, period: 60)
+                |> otp_supervisor.add(child)
+                |> otp_supervisor.start
+              {
+                Ok(started) -> {
+                  process.unlink(started.pid)
+                  case register_or_stop_supervisor(started.pid) {
+                    True -> is_running()
+                    False -> is_running()
+                  }
                 }
-              })
-            case
-              otp_supervisor.new(otp_supervisor.OneForOne)
-              |> otp_supervisor.restart_tolerance(intensity: 5, period: 60)
-              |> otp_supervisor.add(child)
-              |> otp_supervisor.start
-            {
-              Ok(started) -> {
-                process.unlink(started.pid)
-                case register_or_stop_supervisor(started.pid) {
-                  True -> is_running()
-                  False -> is_running()
-                }
+                Error(_) -> False
               }
-              Error(_) -> False
             }
           }
         }
       }
+    })
+  case running {
+    True -> {
+      let _ = start_subscriber()
+      Nil
     }
-  })
+    False -> Nil
+  }
+  running
 }
 
 pub fn gateway_health_json() -> String {
@@ -268,6 +528,19 @@ fn health_json(running: Bool, candidate: String) -> json.Json {
     #("child_id", json.string("mcp_unified_gateway")),
     #("candidate", json.string(candidate)),
     #("loaded_beam_sha256", json.string(loaded_mcp_beams_digest())),
+    #("zenoh_subscriber_enabled", json.bool(zenoh_subscriber_enabled())),
+    #("zenoh_subscriber_alive", json.bool(zenoh_subscriber_alive())),
+    #(
+      "zenoh_subscriber_state",
+      json.string(case zenoh_subscriber_enabled() {
+        False -> "disabled"
+        True -> zenoh_subscriber_state()
+      }),
+    ),
+    #(
+      "zenoh_subscriber_last_activity_age_ms",
+      json.int(zenoh_subscriber_last_activity_age_ms()),
+    ),
     #("public_routes", json.int(65)),
     #("development_routes", json.int(21)),
     #("successor_routes", json.int(15)),
@@ -319,7 +592,12 @@ pub fn new_state(
     server.ServerBackends(
       planning_read: load_planning(root, completion_plan),
       planning_write: planning_write.new_store(),
-      observation: observation(cand, now_ms(), gateway),
+      observation: observation(
+        cand,
+        now_ms(),
+        supervised_gateway_pids_alive(gateway),
+        "gateway_pid_liveness",
+      ),
       control: control.ControlBackend(cand, 0, False, dict.new()),
       verification_runner: fn(_) {
         verification.ProverMissing(
@@ -388,6 +666,7 @@ pub fn new_state(
     ],
     subscriptions.empty_store(),
     task_extension.empty_store(),
+    dict.new(),
     dict.new(),
     gateway,
   )
@@ -580,9 +859,9 @@ fn load_planning(
 fn observation(
   cand: String,
   now: Int,
-  gateway: supervisor.SupervisedGateway,
+  alive: Bool,
+  scope: String,
 ) -> system_observation.ObservationBackend {
-  let alive = gateway_alive(gateway)
   system_observation.ObservedSnapshot(
     cand,
     "beam_otp29_live",
@@ -600,7 +879,7 @@ fn observation(
       }),
       #(
         "observation_scope",
-        "gateway_ping; container names are configured inventory",
+        scope <> "; container names are configured inventory",
       ),
       #("public_routes", "65"),
       #("total_routes", "101"),
@@ -613,8 +892,24 @@ fn handle_message(
   message: Message,
 ) -> actor.Next(GatewayState, Message) {
   case message {
+    Snapshot(p, reply) -> {
+      process.send(reply, private_snapshot(state, p))
+      actor.continue(state)
+    }
+    ObservationTarget(reply) -> {
+      process.send(reply, state.supervised_gateway)
+      actor.continue(state)
+    }
+    CommitPrivate(prepared, reply) -> {
+      let #(outcome, next) = commit_private(state, prepared)
+      process.send(reply, outcome)
+      actor.continue(next)
+    }
     Ping(reply) -> {
-      process.send(reply, gateway_alive(state.supervised_gateway))
+      process.send(
+        reply,
+        supervised_gateway_pids_alive(state.supervised_gateway),
+      )
       actor.continue(state)
     }
     Dispatch(
@@ -627,6 +922,7 @@ fn handle_message(
       prefetched_doc,
       prefetched_plan,
       prefetched_check,
+      prefetched_gateway_alive,
       reply,
     ) -> {
       let backends =
@@ -650,11 +946,27 @@ fn handle_message(
         )
       let state = GatewayState(..state, backends: backends)
       let #(outcome, next) =
-        dispatch_normalized(state, p, profile, route, raw, msg, now)
+        dispatch_non_private(
+          state,
+          p,
+          profile,
+          route,
+          raw,
+          msg,
+          now,
+          prefetched_gateway_alive,
+        )
       process.send(reply, outcome)
       actor.continue(next)
     }
   }
+}
+
+/// Start an isolated owner with the same non-blocking handler as production.
+pub fn start_state_owner(
+  state: GatewayState,
+) -> Result(actor.Started(process.Subject(Message)), actor.StartError) {
+  actor.new(state) |> actor.on_message(handle_message) |> actor.start
 }
 
 fn dispatch_actor(
@@ -667,84 +979,1071 @@ fn dispatch_actor(
 ) -> types.Outcome {
   case ensure_started(), stored_subject(gateway_key(), None) {
     True, Some(subject) -> {
-      let #(prefetched_doc, prefetched_plan, prefetched_check) = case
-        msg.method
-      {
-        "tools/call" -> {
-          let #(tool, args) = tool_arguments(raw, msg)
-          let root = workspace_root()
-          let prefetched_doc = case tool {
-            "read_file" -> {
-              let path = argument(args, "path", "")
-              Some(#(path, read_corpus_entry(root, path)))
-            }
-            _ -> None
-          }
-          let prefetched_plan = case registry.lookup(route, tool) {
-            Ok(spec) if spec.family == "planning_read" ->
-              Some(load_planning(
-                root,
-                argument(args, "plan_id", completion_plan),
-              ))
-            _ -> None
-          }
-          let prefetched_check = case verification.is_verification_tool(tool) {
-            True -> {
-              let check_raw =
-                argument(args, "check_id", case tool {
-                  "preflight_check" -> "preflight_toolchain"
-                  _ -> ""
-                })
-              case verification.parse_check_id(check_raw) {
-                Ok(check_id) ->
-                  Some(#(check_id, run_verification_check(root, check_id)))
-                Error(_) -> None
-              }
-            }
-            False -> None
-          }
-          #(prefetched_doc, prefetched_plan, prefetched_check)
-        }
-        "tasks/create" -> {
-          let args = dict.from_list(msg.args)
-          let plan_id =
-            raw_string(raw, ["params", "planId"], argument(args, "plan_id", ""))
-          let prefetched_plan = case profile {
-            types.Modern20260728 ->
-              Some(load_planning(workspace_root(), plan_id))
-            types.Legacy20241105 -> None
-          }
-          #(None, prefetched_plan, None)
-        }
-        _ -> #(None, None, None)
-      }
-      let reply = process.new_subject()
-      process.send(
-        subject,
-        Dispatch(
-          p,
-          profile,
-          route,
-          raw,
-          msg,
-          now,
-          prefetched_doc,
-          prefetched_plan,
-          prefetched_check,
-          reply,
-        ),
-      )
-      case process.receive(reply, 15_000) {
-        Ok(outcome) -> outcome
-        Error(Nil) ->
-          types.Refused(types.ToolError(
-            "GATEWAY_TIMEOUT",
-            "MCP gateway call timed out",
-            types.Retryable,
-          ))
+      case msg.method == "tools/call" && is_private_route(route) {
+        True ->
+          with_private_route_lock(fn() {
+            dispatch_private_actor(
+              subject,
+              p,
+              route,
+              raw,
+              msg,
+              live_private_binding,
+            )
+          })
+        False ->
+          dispatch_public_actor(subject, p, profile, route, raw, msg, now)
       }
     }
     _, _ -> refuse("GATEWAY_UNAVAILABLE", "OTP gateway could not start")
+  }
+}
+
+fn dispatch_public_actor(
+  subject: process.Subject(Message),
+  p: principal.Principal,
+  profile: types.ProtocolProfile,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  now: Int,
+) -> types.Outcome {
+  let prefetched_gateway_alive = case msg.method {
+    "tools/call" -> {
+      let #(tool, _) = tool_arguments(raw, msg)
+      case
+        route == "public" && system_observation.is_known_observation_tool(tool)
+      {
+        True -> Some(prefetch_gateway_alive(subject))
+        False -> None
+      }
+    }
+    _ -> None
+  }
+  let #(prefetched_doc, prefetched_plan, prefetched_check) = case msg.method {
+    "tools/call" -> {
+      let #(tool, args) = tool_arguments(raw, msg)
+      let root = workspace_root()
+      let prefetched_doc = case tool {
+        "read_file" -> {
+          let path = argument(args, "path", "")
+          Some(#(path, read_corpus_entry(root, path)))
+        }
+        _ -> None
+      }
+      let prefetched_plan = case registry.lookup(route, tool) {
+        Ok(spec) if spec.family == "planning_read" ->
+          Some(load_planning(root, argument(args, "plan_id", completion_plan)))
+        _ -> None
+      }
+      let prefetched_check = case verification.is_verification_tool(tool) {
+        True -> {
+          let check_raw =
+            argument(args, "check_id", case tool {
+              "preflight_check" -> "preflight_toolchain"
+              _ -> ""
+            })
+          case verification.parse_check_id(check_raw) {
+            Ok(check_id) ->
+              Some(#(check_id, run_verification_check(root, check_id)))
+            Error(_) -> None
+          }
+        }
+        False -> None
+      }
+      #(prefetched_doc, prefetched_plan, prefetched_check)
+    }
+    "tasks/create" -> {
+      let args = dict.from_list(msg.args)
+      let plan_id =
+        raw_string(raw, ["params", "planId"], argument(args, "plan_id", ""))
+      let prefetched_plan = case profile {
+        types.Modern20260728 -> Some(load_planning(workspace_root(), plan_id))
+        types.Legacy20241105 -> None
+      }
+      #(None, prefetched_plan, None)
+    }
+    _ -> #(None, None, None)
+  }
+  let reply = process.new_subject()
+  process.send(
+    subject,
+    Dispatch(
+      p,
+      profile,
+      route,
+      raw,
+      msg,
+      now,
+      prefetched_doc,
+      prefetched_plan,
+      prefetched_check,
+      prefetched_gateway_alive,
+      reply,
+    ),
+  )
+  case process.receive(reply, 15_000) {
+    Ok(outcome) -> outcome
+    Error(Nil) ->
+      types.Refused(types.ToolError(
+        "GATEWAY_TIMEOUT",
+        "MCP gateway call timed out",
+        types.Retryable,
+      ))
+  }
+}
+
+// Both waits are in the ingress caller. The actor only sends a target handle.
+fn prefetch_gateway_alive(subject: process.Subject(Message)) -> Bool {
+  let reply = process.new_subject()
+  process.send(subject, ObservationTarget(reply))
+  case process.receive(reply, 1000) {
+    Ok(gateway) -> gateway_alive(gateway)
+    Error(_) -> False
+  }
+}
+
+fn is_private_route(route: String) -> Bool {
+  route == "development" || route == "successor"
+}
+
+fn private_error(code: String, reason: String) -> types.ToolError {
+  types.ToolError(code, reason, types.NonRetryable)
+}
+
+fn dispatch_private_actor(
+  subject: process.Subject(Message),
+  p: principal.Principal,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  resolver: PrivateResolver,
+) -> types.Outcome {
+  dispatch_private_actor_with_timeouts(
+    subject,
+    p,
+    route,
+    raw,
+    msg,
+    resolver,
+    1000,
+    15_000,
+  )
+}
+
+/// Injectable actor transport for deterministic timeout/reconciliation tests.
+/// Production uses the same protocol with 1s snapshot / 15s commit budgets.
+pub fn dispatch_private_actor_with_timeouts(
+  subject: process.Subject(Message),
+  p: principal.Principal,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  resolver: PrivateResolver,
+  snapshot_timeout_ms: Int,
+  commit_timeout_ms: Int,
+) -> types.Outcome {
+  let reply = process.new_subject()
+  process.send(subject, Snapshot(p, reply))
+  case process.receive(reply, snapshot_timeout_ms) {
+    Error(_) -> refuse("GATEWAY_TIMEOUT", "Private snapshot timed out")
+    Ok(snapshot) ->
+      // Admission may observe subprocesses. This is the ingress caller, never
+      // the state actor. Refresh UTC after waiting for the private lock.
+      case prepare_private(snapshot, p, route, raw, msg, now_ms(), resolver) {
+        Error(outcome) -> outcome
+        Ok(prepared) ->
+          commit_prepared_private(subject, prepared, commit_timeout_ms)
+      }
+  }
+}
+
+fn commit_prepared_private(
+  subject: process.Subject(Message),
+  prepared: PreparedPrivateCall,
+  timeout_ms: Int,
+) -> types.Outcome {
+  let reply = process.new_subject()
+  process.send(subject, CommitPrivate(prepared, reply))
+  case process.receive(reply, timeout_ms) {
+    Ok(outcome) -> outcome
+    Error(_) ->
+      case prepared.effect_executed {
+        False ->
+          refuse(
+            "GATEWAY_TIMEOUT",
+            "Private replay commit timed out before any effect",
+          )
+        True ->
+          types.Uncertain(types.UncertainReceipt(
+            intent_id: prepared.intent_id,
+            route: prepared.route,
+            tool: prepared.tool,
+            reason: "Private commit timed out after effect execution; reconcile required",
+            candidate: prepared.candidate,
+          ))
+      }
+  }
+}
+
+/// Trusted-code integration seam. Uses the production private lock, snapshot
+/// and actor commit protocol; the resolver cannot be supplied over a transport.
+pub fn dispatch_private_live_with_resolver(
+  p: principal.Principal,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  resolver: PrivateResolver,
+) -> types.Outcome {
+  case ensure_started(), stored_subject(gateway_key(), None) {
+    True, Some(subject) ->
+      with_private_route_lock(fn() {
+        dispatch_private_actor(subject, p, route, raw, msg, resolver)
+      })
+    _, _ -> refuse("GATEWAY_UNAVAILABLE", "OTP gateway could not start")
+  }
+}
+
+/// Lossless arguments are separate from the string-only canonical MCP binding
+/// fields. An explicitly invalid arguments value never falls back to msg.args.
+pub fn private_arguments(
+  raw: String,
+  msg: wire.NormalizedMessage,
+) -> Result(value.Value, types.ToolError) {
+  use document <- result.try(
+    json.parse(raw, value.decoder())
+    |> result.map_error(fn(_) {
+      private_error("INVALID_PRIVATE_ARGUMENTS", "Invalid request JSON")
+    }),
+  )
+  let fallback =
+    value.Object(list.map(msg.args, fn(pair) { #(pair.0, value.Text(pair.1)) }))
+  case value.get(document, "params") {
+    Error(_) -> Ok(fallback)
+    Ok(params) ->
+      case value.get(params, "arguments") {
+        Error(_) -> Ok(fallback)
+        Ok(value.Object(_) as args) -> Ok(args)
+        Ok(_) ->
+          Error(private_error(
+            "INVALID_PRIVATE_ARGUMENTS",
+            "arguments must be an object",
+          ))
+      }
+  }
+}
+
+// The frozen wire normalizer accepts only string argument bindings. Project
+// those bindings for it, after ingress has validated the ORIGINAL frame. The
+// original typed object remains the only source of backend arguments and is
+// included in the receipt hash. No identity/meta/version field is rewritten.
+fn private_wire_projection(raw: String) -> Option(String) {
+  use document <- option.then(
+    json.parse(raw, value.decoder()) |> option.from_result,
+  )
+  use _ <- option.then(case value.get(document, "method") {
+    Ok(value.Text("tools/call")) -> Some(Nil)
+    _ -> None
+  })
+  use params <- option.then(value.get(document, "params") |> option.from_result)
+  case value.get(params, "arguments") {
+    Ok(value.Object(fields)) -> {
+      let strings =
+        list.filter(fields, fn(pair) {
+          case pair.1 {
+            value.Text(_) -> True
+            _ -> False
+          }
+        })
+      case list.length(strings) == list.length(fields) {
+        True -> None
+        False ->
+          Some(
+            document
+            |> value.set(
+              "params",
+              value.set(params, "arguments", value.Object(strings)),
+            )
+            |> value.encode
+            |> json.to_string,
+          )
+      }
+    }
+    _ -> None
+  }
+}
+
+/// Injectable trusted resolver shared by fixtures and production. Both paths
+/// run the very same pre-admission, receipt/finish gate, and canonical commit.
+pub fn dispatch_private_with_resolver(
+  state: GatewayState,
+  p: principal.Principal,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  now: Int,
+  resolver: PrivateResolver,
+) -> #(types.Outcome, GatewayState) {
+  case
+    prepare_private(
+      private_snapshot(state, p),
+      p,
+      route,
+      raw,
+      msg,
+      now,
+      resolver,
+    )
+  {
+    Error(outcome) -> #(outcome, state)
+    Ok(prepared) -> commit_private(state, prepared)
+  }
+}
+
+pub fn private_snapshot(
+  state: GatewayState,
+  p: principal.Principal,
+) -> PrivateSnapshot {
+  PrivateSnapshot(
+    state.pool,
+    state.backends.features,
+    state.backends.knowledge.workspace_root,
+    dict.get(state.successor_sessions, successor_session_key(p))
+      |> option.from_result,
+    dict.size(state.successor_sessions),
+  )
+}
+
+fn prepare_private(
+  snapshot: PrivateSnapshot,
+  p: principal.Principal,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  now: Int,
+  resolver: PrivateResolver,
+) -> Result(PreparedPrivateCall, types.Outcome) {
+  use _ <- result.try(
+    case is_private_route(route) && msg.method == "tools/call" {
+      True -> Ok(Nil)
+      False -> Error(refuse("UNSUPPORTED_ROUTE", "Private tools/call required"))
+    },
+  )
+  use _ <- result.try(
+    case
+      candidate_id.is_valid(snapshot.pool.ledger.candidate)
+      && snapshot.pool.ledger.candidate == snapshot.features.active_candidate
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(refuse(
+          "CANDIDATE_EVIDENCE_MISMATCH",
+          "Private snapshot candidate mismatch",
+        ))
+    },
+  )
+  let #(tool, string_args) = tool_arguments(raw, msg)
+  use _ <- result.try(
+    private_tool_precheck(route, tool, string_args)
+    |> result.map_error(types.Refused),
+  )
+  use raw_args <- result.try(
+    private_arguments(raw, msg) |> result.map_error(types.Refused),
+  )
+  let current = snapshot.successor
+  use binding <- result.try(
+    resolver(p, route, tool, raw_args, current)
+    |> result.map_error(types.Refused),
+  )
+  // Preserve every typed/nested argument in the receipt payload hash too. This
+  // prevents equal string projections from aliasing different typed requests.
+  let args =
+    dict.insert(
+      string_args,
+      "_private_arguments_json",
+      json.to_string(value.encode(raw_args)),
+    )
+  let args = case tool, binding.task_fence, dict.has_key(args, "task_id") {
+    "harness_finish", Some(fence), False ->
+      dict.insert(args, "task_id", fence.task_id)
+    _, _, _ -> args
+  }
+  let context =
+    private_route_context(snapshot.workspace_root, p, route, binding, now)
+  // A foreign authenticated principal must not be hidden by the route ticket
+  // workspace check, which otherwise precedes principal admission canonically.
+  use _ <- result.try(
+    case principal.workspace_root(context.principal) == context.workspace_root {
+      True -> Ok(Nil)
+      False ->
+        Error(refuse(
+          "PRINCIPAL_WORKSPACE_MISMATCH",
+          "Principal workspace root does not match active workspace",
+        ))
+    },
+  )
+  use validated_call <- result.try(
+    route_convergence.admit_converged(
+      context,
+      binding.route_grant,
+      route,
+      tool,
+      args,
+    )
+    |> result.map_error(types.Refused),
+  )
+  use _ <- result.try(
+    case
+      route == "successor"
+      && current == None
+      && snapshot.successor_count >= max_successor_sessions
+    {
+      True ->
+        Error(
+          types.Refused(types.ToolError(
+            "SUCCESSOR_SESSION_CAPACITY_EXCEEDED",
+            "Successor session store capacity exceeded",
+            types.Retryable,
+          )),
+        )
+      False -> Ok(Nil)
+    },
+  )
+  // Dry-run the immutable canonical pipeline with a non-effecting sentinel.
+  // It checks finish evidence AND receipt replay/conflict/uncertainty before
+  // the real backend runs. Discard this probe ledger; only the actor commits.
+  let #(probe, _) =
+    route_convergence.execute_converged(
+      snapshot.pool,
+      context,
+      binding.route_grant,
+      snapshot.features,
+      route,
+      tool,
+      args,
+      fn(_, _) { Error("private_execution_pending") },
+    )
+  let base =
+    PreparedPrivateCall(
+      context,
+      binding.route_grant,
+      route,
+      tool,
+      args,
+      Error("private_receipt_replay"),
+      None,
+      private_ledger_intent_id(validated_call),
+      snapshot.pool.ledger.candidate,
+      False,
+    )
+  case probe {
+    types.Refused(types.ToolError(
+      "WORKER_ISOLATED_FAILURE",
+      "private_execution_pending",
+      _,
+    )) -> {
+      let #(output, next) = binding.execute()
+      Ok(
+        PreparedPrivateCall(
+          ..base,
+          output: output,
+          next_successor: next,
+          effect_executed: True,
+        ),
+      )
+    }
+    types.Complete(_, _) -> Ok(base)
+    outcome -> Error(outcome)
+  }
+}
+
+/// Mirrors the immutable dispatcher's framed payload/owner identity exactly.
+pub fn private_ledger_intent_id(call: admission.ValidatedCall) -> String {
+  let payload_hash =
+    receipts.hash_payload(call.spec.name, dict.to_list(call.arguments))
+  let owner_hash =
+    receipts.hash_payload(call.spec.name, [
+      #("actor", principal.actor_id(call.principal)),
+      #("workspace", principal.workspace_root(call.principal)),
+      #("plan_id", option.unwrap(call.plan_id, "")),
+      #("task_id", option.unwrap(call.task_id, "")),
+      #("attempt", int.to_string(option.unwrap(call.attempt, 0))),
+      #("grant_id", option.unwrap(call.grant_id, "")),
+    ])
+  let logical_id = case dict.get(call.arguments, "intent_id") {
+    Ok(id) if id != "" -> id
+    _ -> payload_hash
+  }
+  call.spec.route
+  <> ":"
+  <> call.spec.name
+  <> ":"
+  <> owner_hash
+  <> ":"
+  <> logical_id
+}
+
+/// Resolve only reviewed direct sibling roots. Foreign principal roots remain
+/// untouched, so the canonical principal/workspace check still refuses them.
+pub fn private_route_context(
+  gateway_root: String,
+  p: principal.Principal,
+  route: String,
+  binding: PrivateBinding,
+  now: Int,
+) -> admission.AdmissionContext {
+  let ticket_root = case route, binding.route_grant {
+    "successor", Some(rg) -> rg.ticket.workspace_root
+    _, _ -> gateway_root
+  }
+  let authorized =
+    ticket_root == gateway_root
+    || string.starts_with(ticket_root, gateway_root <> "/.uos-workspaces/")
+  let principal_root = principal.workspace_root(p)
+  case
+    authorized
+    && { principal_root == gateway_root || principal_root == ticket_root }
+  {
+    True ->
+      admission.AdmissionContext(
+        rebind_workspace(p, ticket_root),
+        admission.EnforcedMode,
+        now,
+        ticket_root,
+        binding.task_fence,
+      )
+    False ->
+      admission.AdmissionContext(
+        p,
+        admission.EnforcedMode,
+        now,
+        gateway_root,
+        binding.task_fence,
+      )
+  }
+}
+
+fn rebind_workspace(
+  p: principal.Principal,
+  root: String,
+) -> principal.Principal {
+  let rebound = case principal.transport(p) {
+    types.Stdio ->
+      principal.from_launcher_env(
+        principal.actor_id(p),
+        principal.client_profile(p),
+        root,
+        principal.session_id(p),
+      )
+    types.HttpStreamable ->
+      principal.from_http_auth_middleware(
+        principal.actor_id(p),
+        principal.client_profile(p),
+        root,
+        principal.session_id(p),
+      )
+    types.Zenoh ->
+      principal.from_signed_zenoh_envelope(
+        principal.actor_id(p),
+        principal.client_profile(p),
+        root,
+        principal.session_id(p),
+      )
+  }
+  principal.apply_untrusted_payload_labels(
+    rebound,
+    principal.untrusted_actor_label(p),
+    principal.untrusted_client_label(p),
+    principal.untrusted_header_actor(p),
+  )
+}
+
+/// Cheap in-memory rejection precedes every admission observation/subprocess.
+pub fn private_tool_precheck(
+  route: String,
+  tool: String,
+  string_args: dict.Dict(String, String),
+) -> Result(types.ToolSpec, types.ToolError) {
+  use spec <- result.try(registry.lookup(route, tool))
+  use _ <- result.try(registry.verify_schema_digest(spec, spec.input_schema))
+  use _ <- result.try(route_convergence.verify_client_schema_pin(
+    spec,
+    dict.get(string_args, "_client_schema_digest") |> option.from_result,
+  ))
+  let declared = case route {
+    "development" ->
+      list.any(launcher.tool_definitions(), fn(t) { t.name == tool })
+    "successor" -> list.contains(ops.names, tool)
+    _ -> False
+  }
+  case declared {
+    True -> Ok(spec)
+    False ->
+      Error(private_error(
+        "TOOL_NOT_IN_ROUTE_GRANT",
+        "Tool is absent from the route's backend list",
+      ))
+  }
+}
+
+fn string_bindings(args: value.Value) -> dict.Dict(String, String) {
+  case args {
+    value.Object(fields) ->
+      fields
+      |> list.filter_map(fn(pair) {
+        case pair.1 {
+          value.Text(text) -> Ok(#(pair.0, text))
+          _ -> Error(Nil)
+        }
+      })
+      |> dict.from_list
+    _ -> dict.new()
+  }
+}
+
+fn commit_private(
+  state: GatewayState,
+  prepared: PreparedPrivateCall,
+) -> #(types.Outcome, GatewayState) {
+  let #(outcome, pool, backends) =
+    server.execute_route_authenticated(
+      prepared.context,
+      prepared.route_grant,
+      state.pool,
+      state.backends,
+      prepared.route,
+      prepared.tool,
+      prepared.args,
+      fn(_, _) { prepared.output },
+    )
+  // Successor errors may latch unresolved-operation state. Persist those too;
+  // the private lock covers snapshot, execution and this state commit.
+  let sessions = case prepared.next_successor {
+    Some(next) ->
+      dict.insert(
+        state.successor_sessions,
+        successor_session_key(prepared.context.principal),
+        successor_session_record(prepared.context.principal, next),
+      )
+    None -> state.successor_sessions
+  }
+  #(
+    outcome,
+    GatewayState(
+      ..state,
+      pool: pool,
+      backends: backends,
+      successor_sessions: sessions,
+    ),
+  )
+}
+
+fn ungranted_private() -> PrivateBinding {
+  PrivateBinding(None, None, fn() { #(Error("route_grant_required"), None) })
+}
+
+fn live_private_binding(
+  p: principal.Principal,
+  route: String,
+  tool: String,
+  args: value.Value,
+  current: Option(SuccessorSessionRecord),
+) -> Result(PrivateBinding, types.ToolError) {
+  use _ <- result.try(private_tool_precheck(route, tool, string_bindings(args)))
+  case route {
+    "development" ->
+      case dev.load_binding() {
+        Error(_) -> Ok(ungranted_private())
+        Ok(binding) ->
+          case binding.worker == principal.actor_id(p) {
+            False ->
+              Error(private_error(
+                "PRINCIPAL_WORKER_MISMATCH",
+                "Development binding worker differs from principal",
+              ))
+            True ->
+              case dev.fence(binding) {
+                Error(_) -> Ok(ungranted_private())
+                Ok(proof) -> {
+                  // Coordinator expiry is boot_us, already checked by dev.fence.
+                  // Only the UTC Sa-plan deadline can be projected into MCP UTC ms.
+                  let until = proof.lease_until_ns / 1_000_000
+                  let ticket =
+                    admission.GrantTicket(
+                      "dev:"
+                        <> binding.session
+                        <> ":"
+                        <> binding.plan
+                        <> ":"
+                        <> binding.task
+                        <> ":"
+                        <> int.to_string(binding.epoch),
+                      types.TaskScopedMutation,
+                      False,
+                      until,
+                      dev.root,
+                    )
+                  Ok(
+                    PrivateBinding(
+                      Some(route_convergence.RouteGrant(
+                        "development",
+                        list.map(launcher.tool_definitions(), fn(t) { t.name }),
+                        ticket,
+                      )),
+                      Some(admission.TaskFence(
+                        binding.plan,
+                        binding.task,
+                        binding.worker,
+                        binding.attempt,
+                        admission.TaskExecuting,
+                        until,
+                        Some(ticket),
+                      )),
+                      fn() {
+                        #(
+                          launcher.call_task_bound(tool, args)
+                            |> result.map(json.to_string),
+                          None,
+                        )
+                      },
+                    ),
+                  )
+                }
+              }
+          }
+      }
+    "successor" ->
+      case harness_admission.load() {
+        Error(_) -> Ok(ungranted_private())
+        Ok(grant) ->
+          case grant.worker == principal.actor_id(p) {
+            False ->
+              Error(private_error(
+                "PRINCIPAL_WORKER_MISMATCH",
+                "Successor grant worker differs from principal",
+              ))
+            True -> {
+              use successor <- result.try(successor_session_for_principal(
+                p,
+                current,
+                grant,
+              ))
+              let checked = {
+                use _ <- result.try(native_backend.initialize(
+                  grant.path,
+                  grant.digest,
+                ))
+                use _ <- result.try(harness_admission.check(grant))
+                successor_binding(grant, successor, tool, args)
+              }
+              checked
+              |> result.map_error(fn(reason) {
+                private_error("ROUTE_GRANT_REQUIRED", reason)
+              })
+            }
+          }
+      }
+    _ -> Error(private_error("UNSUPPORTED_ROUTE", route))
+  }
+}
+
+fn successor_binding(
+  grant: harness_admission.Grant,
+  state: successor_mcp.State,
+  tool: String,
+  args: value.Value,
+) -> Result(PrivateBinding, String) {
+  use root <- result.try(harness_admission.source_root(grant))
+  let ticket = successor_ticket(grant, root)
+  use fence <- result.try(case state.execution {
+    Some(execution) -> {
+      use proof <- result.try(harness_admission.fence(execution, 0))
+      Ok(
+        Some(admission.TaskFence(
+          execution.binding.plan,
+          execution.binding.task,
+          execution.binding.worker,
+          execution.binding.attempt,
+          admission.TaskExecuting,
+          int.min(grant.expires_us / 1000, proof.lease_until_ns / 1_000_000),
+          Some(ticket),
+        )),
+      )
+    }
+    None ->
+      case preattach_tool(tool) {
+        False -> Ok(None)
+        True -> {
+          let observed_now = now_ms()
+          use observed <- result.try(
+            observe_preattach_scope(grant, tool, args, observed_now, fn(scope) {
+              // This binding is only a read selector, never an execution permit.
+              dev.read_task(dev.Binding(
+                "development",
+                scope.plan,
+                scope.task,
+                grant.worker,
+                0,
+                grant.session,
+                0,
+              ))
+            }),
+          )
+          Ok(
+            option.map(observed, fn(selected) {
+              project_observed_preattach_fence(
+                grant,
+                selected.0.plan,
+                selected.0.task,
+                selected.1,
+                observed_now,
+                root,
+              ).1
+            }),
+          )
+        }
+      }
+  })
+  Ok(
+    PrivateBinding(
+      Some(route_convergence.RouteGrant("successor", ops.names, ticket)),
+      fence,
+      fn() {
+        let #(next, output) = successor_mcp.call(state, tool, args)
+        #(result.map(output, json.to_string), Some(next))
+      },
+    ),
+  )
+}
+
+fn preattach_tool(tool: String) -> Bool {
+  list.contains(
+    [
+      "harness_status",
+      "harness_clock",
+      "harness_heartbeat",
+      "harness_claim",
+      "harness_attach",
+      "harness_reconcile",
+      "harness_assess",
+    ],
+    tool,
+  )
+}
+
+fn successor_ticket(
+  grant: harness_admission.Grant,
+  root: String,
+) -> admission.GrantTicket {
+  admission.GrantTicket(
+    grant.id,
+    types.TaskScopedMutation,
+    False,
+    grant.expires_us / 1000,
+    root,
+  )
+}
+
+/// A projection of observed facts, not an admission decision. UTC task expiry
+/// stays separate from the reviewed grant window; canonical admission compares
+/// both to now_ms. The clock argument is retained for the explicit seam.
+pub fn project_observed_preattach_fence(
+  grant: harness_admission.Grant,
+  plan: String,
+  task: String,
+  row: dev.TaskRecord,
+  _now_ms: Int,
+  ticket_root: String,
+) -> #(admission.GrantTicket, admission.TaskFence) {
+  let ticket = successor_ticket(grant, ticket_root)
+  let state = case row.state {
+    "executing" -> admission.TaskExecuting
+    "completed" -> admission.TaskCompleted
+    _ -> admission.TaskAvailable
+  }
+  let lease_until = case row.lease_until_ns {
+    Some(deadline) if deadline > 0 ->
+      int.min(grant.expires_us / 1000, deadline / 1_000_000)
+    _ -> 0
+  }
+  #(
+    ticket,
+    admission.TaskFence(
+      plan,
+      task,
+      option.unwrap(row.worker, ""),
+      row.attempt,
+      state,
+      lease_until,
+      Some(ticket),
+    ),
+  )
+}
+
+/// Task-acting bootstrap calls must name their exact reviewed scope. General
+/// bootstrap observations prefer a real owned live task, then retain the first
+/// scope's real non-executing record (or no fence if it cannot be observed).
+pub fn observe_preattach_scope(
+  grant: harness_admission.Grant,
+  tool: String,
+  args: value.Value,
+  now: Int,
+  read_task: fn(harness_admission.Scope) -> Result(dev.TaskRecord, String),
+) -> Result(Option(#(harness_admission.Scope, dev.TaskRecord)), String) {
+  let owner = grant.worker
+  use _ <- result.try(harness_admission.require(
+    preattach_tool(tool),
+    "not_a_preattach_tool",
+  ))
+  case value.get(args, "plan"), value.get(args, "task") {
+    Ok(value.Text(plan)), Ok(value.Text(task)) -> {
+      use scope <- result.try(harness_admission.lookup(grant, plan, task))
+      use row <- result.try(read_task(scope))
+      Ok(Some(#(scope, row)))
+    }
+    Error(_), Error(_) ->
+      case
+        list.contains(
+          ["harness_claim", "harness_attach", "harness_assess"],
+          tool,
+        )
+      {
+        True -> Error("explicit_plan_and_task_required")
+        False ->
+          case grant.scopes {
+            [] -> Error("grant_scope_missing")
+            [first, ..rest] -> {
+              let first_row = read_task(first) |> option.from_result
+              case first_row {
+                Some(row)
+                  if row.state == "executing" && row.worker == Some(owner)
+                ->
+                  case observed_live_lease(row, now) {
+                    True -> Ok(Some(#(first, row)))
+                    False ->
+                      Ok(option.or(
+                        scan_preattach_scopes(
+                          rest,
+                          grant.worker,
+                          now,
+                          read_task,
+                        ),
+                        option.map(first_row, fn(row) { #(first, row) }),
+                      ))
+                  }
+                _ ->
+                  Ok(option.or(
+                    scan_preattach_scopes(rest, grant.worker, now, read_task),
+                    option.map(first_row, fn(row) { #(first, row) }),
+                  ))
+              }
+            }
+          }
+      }
+    _, _ -> Error("explicit_plan_and_task_required")
+  }
+}
+
+fn observed_live_lease(row: dev.TaskRecord, now: Int) -> Bool {
+  case row.lease_until_ns {
+    Some(deadline) -> deadline > now * 1_000_000
+    None -> False
+  }
+}
+
+fn scan_preattach_scopes(
+  scopes: List(harness_admission.Scope),
+  worker: String,
+  now: Int,
+  read_task: fn(harness_admission.Scope) -> Result(dev.TaskRecord, String),
+) -> Option(#(harness_admission.Scope, dev.TaskRecord)) {
+  case scopes {
+    [] -> None
+    [scope, ..rest] ->
+      case read_task(scope) {
+        Ok(row) if row.state == "executing" && row.worker == Some(worker) ->
+          case observed_live_lease(row, now) {
+            True -> Some(#(scope, row))
+            False -> scan_preattach_scopes(rest, worker, now, read_task)
+          }
+        _ -> scan_preattach_scopes(rest, worker, now, read_task)
+      }
+  }
+}
+
+pub fn successor_session_record(
+  p: principal.Principal,
+  state: successor_mcp.State,
+) -> SuccessorSessionRecord {
+  SuccessorSessionRecord(
+    principal.actor_id(p),
+    principal.client_profile(p).name,
+    principal.transport(p),
+    principal.session_id(p),
+    state,
+  )
+}
+
+/// UTF-8 byte length framing keeps separators in any identity field harmless.
+pub fn successor_session_key(p: principal.Principal) -> String {
+  let transport = case principal.transport(p) {
+    types.Stdio -> "stdio"
+    types.HttpStreamable -> "http"
+    types.Zenoh -> "zenoh"
+  }
+  [
+    principal.actor_id(p),
+    transport,
+    principal.client_profile(p).name,
+    principal.session_id(p),
+  ]
+  |> list.map(fn(field) {
+    int.to_string(string.byte_size(field)) <> ":" <> field
+  })
+  |> string.concat
+}
+
+pub fn successor_session_for_principal(
+  p: principal.Principal,
+  current: Option(SuccessorSessionRecord),
+  grant: harness_admission.Grant,
+) -> Result(successor_mcp.State, types.ToolError) {
+  use state <- result.try(case current {
+    None -> Ok(None)
+    Some(record) ->
+      case
+        record.owner_actor == principal.actor_id(p)
+        && record.owner_client == principal.client_profile(p).name
+        && record.owner_transport == principal.transport(p)
+        && record.owner_session == principal.session_id(p)
+      {
+        False ->
+          Error(private_error(
+            "CROSS_PRINCIPAL_SUCCESSOR_SESSION_FORBIDDEN",
+            "Recorded successor owner differs from the observed principal",
+          ))
+        True -> Ok(Some(record.state))
+      }
+  })
+  successor_session(state, grant)
+  |> result.map_error(fn(reason) {
+    private_error("SUCCESSOR_SESSION_GRANT_CHANGED", reason)
+  })
+}
+
+/// Session continuity is tied to the freshly verified launcher grant, not to
+/// transport-supplied session strings alone. Kept pure for adversarial tests.
+pub fn successor_session(
+  current: Option(successor_mcp.State),
+  grant: harness_admission.Grant,
+) -> Result(successor_mcp.State, String) {
+  case current {
+    None -> Ok(successor_mcp.initial(grant))
+    Some(state) ->
+      case state.grant.id == grant.id && state.grant.digest == grant.digest {
+        True -> Ok(state)
+        False -> Error("successor_session_grant_changed")
+      }
   }
 }
 
@@ -960,8 +2259,40 @@ pub fn dispatch_normalized(
   msg: wire.NormalizedMessage,
   now: Int,
 ) -> #(types.Outcome, GatewayState) {
+  case msg.method == "tools/call" && is_private_route(route) {
+    True ->
+      dispatch_private_with_resolver(
+        state,
+        p,
+        route,
+        raw,
+        msg,
+        now,
+        live_private_binding,
+      )
+    False -> dispatch_non_private(state, p, profile, route, raw, msg, now, None)
+  }
+}
+
+fn dispatch_non_private(
+  state: GatewayState,
+  p: principal.Principal,
+  profile: types.ProtocolProfile,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  now: Int,
+  prefetched_gateway_alive: Option(Bool),
+) -> #(types.Outcome, GatewayState) {
   let args = dict.from_list(msg.args)
   case msg.method {
+    "tools/call" if route == "development" || route == "successor" -> #(
+      refuse(
+        "PRIVATE_PREPARATION_REQUIRED",
+        "Private execution belongs to the ingress caller",
+      ),
+      state,
+    )
     "initialize" -> {
       let requested =
         raw_string(
@@ -1097,10 +2428,17 @@ pub fn dispatch_normalized(
           observation: observation(
             state.pool.ledger.candidate,
             now,
-            state.supervised_gateway,
+            option.unwrap(
+              prefetched_gateway_alive,
+              supervised_gateway_pids_alive(state.supervised_gateway),
+            ),
+            case prefetched_gateway_alive {
+              Some(_) -> "gateway_ping"
+              None -> "gateway_pid_liveness"
+            },
           ),
         )
-      // Caller fence/grant strings are bindings, not evidence of a live lease
+      // This arm is public-only. Caller fence/grant strings are bindings, not evidence of a live lease
       // or authority. No mutation grant is fabricated by the transport layer.
       let fence = case
         list.any(["plan_id", "task_id", "attempt", "grant_id"], fn(key) {
@@ -1131,7 +2469,7 @@ pub fn dispatch_normalized(
           route,
           tool,
           args,
-          fn(_, _) { Error("Private live backend not bound") },
+          fn(_, _) { Error("Private calls require caller-side admission") },
         )
       #(outcome, GatewayState(..state, pool: pool, backends: updated))
     }
@@ -1610,6 +2948,34 @@ pub fn handle_http_with_config(
     |> result.unwrap(
       http_auth.header(headers, "x-uos-mcp-route") |> result.unwrap("public"),
     )
+  let handler = fn(p, _clean, msg) {
+    case route {
+      "public" -> dispatch_actor(p, profile, route, body, msg, now_ms)
+      "development" ->
+        case
+          http_auth.token_has_scope(config, headers, "mcp:development", now_ms)
+        {
+          True -> dispatch_actor(p, profile, route, body, msg, now_ms)
+          False ->
+            refuse(
+              "HTTP_ROUTE_SCOPE_FORBIDDEN",
+              "Token lacks mcp:development scope",
+            )
+        }
+      "successor" ->
+        case
+          http_auth.token_has_scope(config, headers, "mcp:successor", now_ms)
+        {
+          True -> dispatch_actor(p, profile, route, body, msg, now_ms)
+          False ->
+            refuse(
+              "HTTP_ROUTE_SCOPE_FORBIDDEN",
+              "Token lacks mcp:successor scope",
+            )
+        }
+      _ -> refuse("UNSUPPORTED_ROUTE", route)
+    }
+  }
   let response =
     http.handle(
       http.HttpRequest(method, path, headers, body),
@@ -1618,45 +2984,33 @@ pub fn handle_http_with_config(
       now_ms,
       config.expected_audience,
       [config.expected_issuer],
-      fn(p, _clean, msg) {
-        case route {
-          "public" -> dispatch_actor(p, profile, route, body, msg, now_ms)
-          "development" ->
-            case
-              http_auth.token_has_scope(
-                config,
-                headers,
-                "mcp:development",
-                now_ms,
-              )
-            {
-              True -> dispatch_actor(p, profile, route, body, msg, now_ms)
-              False ->
-                refuse(
-                  "HTTP_ROUTE_SCOPE_FORBIDDEN",
-                  "Token lacks mcp:development scope",
-                )
-            }
-          "successor" ->
-            case
-              http_auth.token_has_scope(
-                config,
-                headers,
-                "mcp:successor",
-                now_ms,
-              )
-            {
-              True -> dispatch_actor(p, profile, route, body, msg, now_ms)
-              False ->
-                refuse(
-                  "HTTP_ROUTE_SCOPE_FORBIDDEN",
-                  "Token lacks mcp:successor scope",
-                )
-            }
-          _ -> refuse("UNSUPPORTED_ROUTE", route)
-        }
-      },
+      handler,
     )
+  // Only retry the string-only normalization failure, after the original
+  // request passed HTTP auth, credentials, identity, byte and depth checks.
+  let response = case
+    method == "POST"
+    && path == "/mcp"
+    && is_private_route(route)
+    && response.status == 400
+    && response.body == "{\"error\":\"MALFORMED_JSONRPC\"}"
+  {
+    False -> response
+    True ->
+      case private_wire_projection(body) {
+        None -> response
+        Some(projected) ->
+          http.handle(
+            http.HttpRequest(method, path, headers, projected),
+            config,
+            profile,
+            now_ms,
+            config.expected_audience,
+            [config.expected_issuer],
+            handler,
+          )
+      }
+  }
   #(response.status, response.headers, response.body)
 }
 
@@ -1706,25 +3060,39 @@ pub fn handle_zenoh_raw(
   topic: String,
   payload: String,
 ) -> Option(#(String, String)) {
-  case string.byte_size(payload) <= 1_048_576, string.split(topic, "/") {
-    True, ["indrajaal", "mcp", "request", client_id, _] ->
-      case json.parse(payload, envelope_decoder(topic)) {
-        Ok(envelope) if envelope.topic == topic ->
-          handle_zenoh_with_secret(
-            env("UOS_MCP_ZENOH_SHARED_SECRET", ""),
-            client_id,
-            profile_for(raw_string(
-              envelope.payload,
-              ["params", "protocolVersion"],
-              "2026-07-28",
-            )),
-            envelope,
-            now_ms(),
-          )
-          |> result.unwrap(None)
+  zenoh_raw_with_secret(topic, payload, env("UOS_MCP_ZENOH_SHARED_SECRET", ""))
+}
+
+fn zenoh_raw_with_secret(
+  topic: String,
+  payload: String,
+  secret: String,
+) -> Option(#(String, String)) {
+  case
+    string.byte_size(payload) <= 1_048_576 && safe_zenoh_request_topic(topic)
+  {
+    False -> None
+    True ->
+      case string.split(topic, "/") {
+        ["indrajaal", "mcp", "request", client_id, _] ->
+          case json.parse(payload, envelope_decoder(topic)) {
+            Ok(envelope) if envelope.topic == topic ->
+              handle_zenoh_with_secret(
+                secret,
+                client_id,
+                profile_for(raw_string(
+                  envelope.payload,
+                  ["params", "protocolVersion"],
+                  "2026-07-28",
+                )),
+                envelope,
+                now_ms(),
+              )
+              |> result.unwrap(None)
+            _ -> None
+          }
         _ -> None
       }
-    _, _ -> None
   }
 }
 
@@ -1790,6 +3158,31 @@ fn ingest_parts(
           _ -> "\n"
         }
       let raw = session.buffer <> part
+      let projection = case is_private_route(route), rest {
+        True, [_, ..] -> private_wire_projection(raw)
+        _, _ -> None
+      }
+      // Framing and security always inspect the original bytes first. A
+      // complete typed private frame is then decoded through a string-only
+      // projection; partial frames retain their original buffer/deadline.
+      let validated = case projection {
+        None -> Ok(session)
+        Some(_) ->
+          stdio.ingest_chunk(
+            session: session,
+            chunk: chunk,
+            now_ms: now,
+            handler: fn(_, _) {
+              refuse("VALIDATION_ONLY", "Original frame checks")
+            },
+          )
+          |> result.map(fn(pair) { pair.0 })
+      }
+      use session <- result.try(validated)
+      let chunk = case projection {
+        None -> chunk
+        Some(projected) -> projected <> "\n"
+      }
       use #(next, _) <- result.try(
         stdio.ingest_chunk(
           session: session,
@@ -1812,6 +3205,7 @@ fn validate_standard_line(
   profile: types.ProtocolProfile,
   p: principal.Principal,
   now: Int,
+  route: String,
 ) -> Result(wire.NormalizedMessage, types.ToolError) {
   use session <- result.try(stdio.new_session(
     actor_id: principal.actor_id(p),
@@ -1856,7 +3250,11 @@ fn validate_standard_line(
         types.NonRetryable,
       ))
   })
-  wire.decode_request(profile, raw)
+  let projected = case is_private_route(route) {
+    True -> option.unwrap(private_wire_projection(raw), raw)
+    False -> raw
+  }
+  wire.decode_request(profile, projected)
   |> result.map_error(fn(error) {
     types.ToolError(error.code, error.reason, types.NonRetryable)
   })
@@ -1870,7 +3268,7 @@ fn request_id_json(id: wire.WireId) -> json.Json {
   }
 }
 
-fn standard_response(
+pub fn standard_response(
   id: wire.WireId,
   method: String,
   outcome: types.Outcome,
@@ -1943,6 +3341,16 @@ fn standard_response(
       json.object([
         #("code", json.int(-32_603)),
         #("message", json.string("UNCERTAIN: " <> receipt.reason)),
+        #(
+          "data",
+          json.object([
+            #("intent_id", json.string(receipt.intent_id)),
+            #("route", json.string(receipt.route)),
+            #("tool", json.string(receipt.tool)),
+            #("candidate", json.string(receipt.candidate)),
+            #("retryability", json.string("reconcile_first")),
+          ]),
+        ),
       ]),
     )
   }
@@ -1998,7 +3406,7 @@ fn handle_standard_with_profile(
       workspace_root: workspace_root,
       session_id: session_id,
     )
-  case validate_standard_line(raw_line, profile, p, now_ms) {
+  case validate_standard_line(raw_line, profile, p, now_ms, route) {
     Error(error) ->
       Some(standard_response(wire.NoIdNotification, "", types.Refused(error)))
     Ok(msg) -> {
@@ -2019,13 +3427,14 @@ pub fn stdio_main() -> Nil {
 }
 
 fn stdio_run() -> Nil {
+  mark_stdio_gateway()
   let actor_id = env("UOS_MCP_ACTOR_ID", env("USER", "local-stdio-operator"))
   let client = env("UOS_MCP_CLIENT_NAME", "uos-stdio-client")
   let root = workspace_root()
-  let session_id = env("UOS_MCP_SESSION_ID", "stdio-session-1")
+  let session_id = env("UOS_MCP_SESSION_ID", default_stdio_session_id())
   let route = env("UOS_MCP_ROUTE", "public")
   let profile = profile_for(env("UOS_MCP_PROTOCOL_VERSION", "2026-07-28"))
-  let _ = ensure_started()
+  let _ = ensure_started_with_zenoh(False)
   case env("UOS_MCP_WIRE_MODE", "standard_mcp") {
     "canonical" ->
       case
@@ -2043,6 +3452,13 @@ fn stdio_run() -> Nil {
       }
     _ -> standard_loop(actor_id, client, root, session_id, route, profile)
   }
+}
+
+pub fn default_stdio_session_id() -> String {
+  "stdio:"
+  <> charlist.to_string(os_pid())
+  <> ":"
+  <> int.to_string(system_time_nanos())
 }
 
 fn standard_loop(
@@ -2108,5 +3524,114 @@ fn canonical_loop(session: stdio.StdioSession, route: String) -> Nil {
         Error(error) -> io.println_error(error.code)
       }
     ReadError(reason) -> io.println_error(reason)
+  }
+}
+
+/// Decode only complete, bounded SSE events. Transport framing and HMAC
+/// verification remain independent gates; no sample can select a network host.
+pub fn decode_zenoh_sse_event(block: String) -> Option(#(String, String)) {
+  case string.byte_size(block) <= 1_048_576 {
+    False -> None
+    True -> {
+      let lines =
+        block
+        |> string.replace("\r\n", "\n")
+        |> string.replace("\r", "\n")
+        |> string.split("\n")
+      let data =
+        list.filter_map(lines, fn(line) {
+          case string.starts_with(line, "data:") {
+            False -> Error(Nil)
+            True -> {
+              let text = string.drop_start(line, 5)
+              Ok(case string.starts_with(text, " ") {
+                True -> string.drop_start(text, 1)
+                False -> text
+              })
+            }
+          }
+        })
+        |> string.join("\n")
+      // Bound recursive JSON decoding before entering the lossless decoder.
+      case sse_json_depth_ok(bit_array.from_string(data), False, False, 0) {
+        False -> None
+        True ->
+          case json.parse(data, value.decoder()) {
+            Error(_) -> None
+            Ok(sample) -> {
+              let key = case value.get(sample, "key") {
+                Ok(v) -> Ok(v)
+                Error(_) -> value.get(sample, "key_expr")
+              }
+              let payload = case value.get(sample, "value") {
+                Ok(v) -> Ok(v)
+                Error(_) -> value.get(sample, "payload")
+              }
+              case key, payload {
+                Ok(value.Text(topic)), Ok(v) ->
+                  case safe_zenoh_request_topic(topic) {
+                    False -> None
+                    True ->
+                      case v {
+                        value.Text(text) -> Some(#(topic, text))
+                        value.Object(_) ->
+                          Some(#(topic, json.to_string(value.encode(v))))
+                        _ -> None
+                      }
+                  }
+                _, _ -> None
+              }
+            }
+          }
+      }
+    }
+  }
+}
+
+fn safe_zenoh_request_topic(topic: String) -> Bool {
+  string.byte_size(topic) <= 512
+  && case string.split(topic, "/") {
+    ["indrajaal", "mcp", "request", client, request] ->
+      safe_zenoh_segment(client) && safe_zenoh_segment(request)
+    _ -> False
+  }
+}
+
+fn safe_zenoh_segment(segment: String) -> Bool {
+  segment != ""
+  && segment != "."
+  && segment != ".."
+  && list.all(string.to_graphemes(segment), fn(c) {
+    string.contains(
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-",
+      c,
+    )
+  })
+}
+
+fn sse_json_depth_ok(
+  bytes: BitArray,
+  quoted: Bool,
+  escaped: Bool,
+  depth: Int,
+) -> Bool {
+  case depth > 36 {
+    True -> False
+    False ->
+      case bytes, quoted, escaped {
+        <<>>, _, _ -> True
+        <<_, rest:bytes>>, True, True ->
+          sse_json_depth_ok(rest, True, False, depth)
+        <<0x5c, rest:bytes>>, True, False ->
+          sse_json_depth_ok(rest, True, True, depth)
+        <<0x22, rest:bytes>>, _, _ ->
+          sse_json_depth_ok(rest, !quoted, False, depth)
+        <<0x7b, rest:bytes>>, False, _ | <<0x5b, rest:bytes>>, False, _ ->
+          sse_json_depth_ok(rest, False, False, depth + 1)
+        <<0x7d, rest:bytes>>, False, _ | <<0x5d, rest:bytes>>, False, _ ->
+          sse_json_depth_ok(rest, False, False, depth - 1)
+        <<_, rest:bytes>>, _, _ -> sse_json_depth_ok(rest, quoted, False, depth)
+        _, _, _ -> False
+      }
   }
 }
