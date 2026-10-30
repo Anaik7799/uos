@@ -1,0 +1,181 @@
+```json
+{
+  "reviewer": "claude",
+  "wave": "wave-4-convergence-transports-facilities",
+  "tasks": ["T14", "T16", "T17"],
+  "verdict": "REMEDIATE",
+  "critical_defects": [
+    {
+      "id": "C1",
+      "task": "T17",
+      "module": "apps/cepaf_gleam/src/cepaf_gleam/mcp/subscriptions.gleam:158",
+      "claim_falsified": "profile/principal-isolated subscriptions",
+      "defect": "pending_notifications/2 is public and performs no authorization at all: it reads store.notifications by subscription_id with no profile, principal, actor or workspace check, bypassing authorize_subscription entirely.",
+      "falsifier": "principal_a subscribes 'sub-1'; push_notification(store,'sub-1',secret); any caller (principal_b, or no principal) calls subscriptions.pending_notifications(store,'sub-1') and receives principal_a's queued payloads. mcp_server_facilities_test.gleam itself calls this function with no principal, so the isolation test cannot detect the hole.",
+      "required_fix": "Gate queue reads behind read_subscription (profile + actor + workspace) and make the raw accessor private."
+    },
+    {
+      "id": "C2",
+      "task": "T17",
+      "module": "apps/cepaf_gleam/src/cepaf_gleam/mcp/subscriptions.gleam:44",
+      "claim_falsified": "a subscription is bound to the transport-bound principal at creation time",
+      "defect": "subscribe/5 does a blind dict.insert on a caller-chosen subscription_id with no collision check, and leaves store.notifications (keyed by subscription_id alone) untouched. A second principal can overwrite an existing subscription's owner binding and inherit the victim's pending queue.",
+      "falsifier": "subscribe(store, Modern, principal_a, \"sub-1\", ...); push 3 notifications; subscribe(store, Modern, principal_b, \"sub-1\", ...) -> the record's actor_id/workspace_root are now actor-b, read_subscription as principal_b returns Ok, and pending_notifications(\"sub-1\") still holds actor-a's payloads. No test exercises duplicate-id subscribe.",
+      "required_fix": "Refuse an already-registered subscription_id (or namespace the key by actor+workspace+profile) and drop/segregate the notification queue on rebinding."
+    },
+    {
+      "id": "C3",
+      "task": "T17",
+      "module": "apps/cepaf_gleam/src/cepaf_gleam/mcp/task_extension.gleam:159,186",
+      "claim_falsified": "durable task handles are principal-owner-bound",
+      "defect": "request_cancel/2 and confirm_worker_stopped/3 accept no Principal and perform no owner check; ownership is verified only once, at issue_durable_handle. handle_id is fully deterministic and guessable (plan_id:task_id:attempt), so cross-principal cancellation of a running task — a control actuation — is unauthenticated.",
+      "falsifier": "register(store,\"plan-1:task-1:1\", record owned by actor-a, RunningTask); any caller with no principal context calls request_cancel(store,\"plan-1:task-1:1\") -> Ok(CancelReceipt, CancelRequested). The acceptance test calls request_cancel with no principal and asserts Ok, so it encodes the defect as expected behaviour.",
+      "required_fix": "Thread Principal (and the task fence/attempt) through cancel and stop-confirm, refusing with CROSS_PRINCIPAL_TASK_HANDLE_FORBIDDEN on mismatch."
+    },
+    {
+      "id": "C4",
+      "task": "T17",
+      "module": "apps/cepaf_gleam/src/cepaf_gleam/mcp/task_extension.gleam:186",
+      "claim_falsified": "cancel ACK != effect stopped (the stop claim is evidence-backed)",
+      "defect": "confirm_worker_stopped mints effect_stopped: True and lifecycle CancelledStopped from ANY non-empty string. The only check is string.trim(digest) != \"\": the digest is never recomputed, never matched against a recorded worker stop receipt, never bound to the handle, attempt or candidate. The 'explicit worker stop receipt' is a self-asserted label, so the module can emit a false safety admission (loss L-1) that an operator will read as 'the effect has stopped'.",
+      "falsifier": "confirm_worker_stopped(after_cancel, \"plan-1:task-1:1\", \"x\") -> Ok(StopConfirmation(effect_stopped: True)). The test passes the literal \"stop-receipt-sha256\" and asserts True; no negative case covers an unverifiable or foreign digest.",
+      "required_fix": "Require a stop receipt looked up from the worker/receipt store and verified by digest recomputation over handle+attempt+candidate; otherwise return Uncertain, not effect_stopped: True."
+    },
+    {
+      "id": "C5",
+      "task": "T16",
+      "module": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam:53,97",
+      "claim_falsified": "signed envelope (every authenticated field is covered by the signature)",
+      "defect": "compute_signature covers topic, reply_topic, sender_actor, workspace_root, session_id and payload — but NOT client_name. client_name is nevertheless fed into ClientProfile(...) inside from_signed_zenoh_envelope, becoming the authoritative client_profile of the Principal, and it is never cross-checked against the topic's client_id either. One authenticated identity field of a 'signed envelope' is therefore attacker-mutable in flight, and client profile participates in downstream T17 profile/principal partitioning.",
+      "falsifier": "Take the valid envelope from foreign_reply_destination_refused_test and resend it as SignedZenohEnvelope(..valid, client_name: \"other-profile\") with the SAME signature: handle_envelope still returns Ok and the Principal now carries ClientProfile(\"other-profile\"). No test tampers client_name.",
+      "required_fix": "Include client_name in the signed field set and assert client_name == topic client_id (or derive it from the topic and drop the envelope field)."
+    },
+    {
+      "id": "C6",
+      "task": "T14",
+      "module": "apps/cepaf_gleam/src/cepaf_gleam/mcp/route_convergence.gleam (whole module)",
+      "claim_falsified": "one converged execution path; route-scoped grant non-expansion and completion-evidence enforcement on legacy finish",
+      "defect": "route_convergence is imported by NO module under src/ (verified: only the three Wave-4 test modules reference it, stdio.gleam, zenoh.gleam, resources.gleam, prompts.gleam, subscriptions.gleam and task_extension.gleam likewise). The live server, mcp/server.gleam, still dispatches through registry.lookup + admission.admit directly and contains no occurrence of route_grant, RouteGrant, harness_finish or valid_active_receipt. The second, ungoverned path therefore still exists, and none of the nine modules is reachable from the OTP supervision tree or the Wisp router.",
+      "falsifier": "grep -rln 'route_convergence|mcp/subscriptions|mcp/resources|mcp/prompts|task_extension|transports/stdio|transports/zenoh' src test -> three test files, zero src files; grep 'route_grant|harness_finish' src/cepaf_gleam/mcp/server.gleam -> no match.",
+      "required_fix": "Either route server.gleam's tool dispatch through admit_converged/execute_converged and wire the facilities/transport modules into the supervised server, or restate T14/T16/T17 as module-level (library) behaviour that is explicitly NOT runtime enforcement on any live ingress."
+    }
+  ],
+  "medium_findings": [
+    {
+      "id": "M1",
+      "task": "T14",
+      "module": "route_convergence.gleam:46 / registry.gleam:57",
+      "finding": "The schema-migration guard in admit_converged is tautological: registry.verify_schema_digest(spec, spec.input_schema) hashes the very field from which spec.schema_digest was computed in public_spec/development_spec/successor_spec. SCHEMA_MIGRATION_REQUIRED is unreachable on this path, and mcp_route_parity_test asserts the same tautology (should.be_ok), so the test has no falsifier."
+    },
+    {
+      "id": "M2",
+      "task": "T14",
+      "module": "route_convergence.gleam:52 / admission.gleam:69",
+      "finding": "Caller args are never validated against spec.input_schema anywhere in the converged path. The parity test admits and executes harness_finish and harness_write_file with dict.new() and asserts Complete for all 15 successor tools, proving that required-argument and type validation are absent, not merely untested."
+    },
+    {
+      "id": "M3",
+      "task": "T14",
+      "module": "route_convergence.gleam:128",
+      "finding": "Completion-evidence enforcement is keyed on the literal string tool_name == \"harness_finish\". Any other completion-shaped path escapes it, including the public route's sa_task_complete (classified Mutating) and any future renamed finish tool. The guard is name-based where it should be effect/family-based."
+    },
+    {
+      "id": "M4",
+      "task": "T14",
+      "module": "route_convergence.gleam:164",
+      "finding": "completion_evidence_ok resolves the receipt solely from args[\"task_id\"], a caller-supplied key. It is not bound to the finish call's own build_intent_id/test_intent_id, not compared with context.task_fence.task_id, and receipt.feature_or_task_id is never checked against the dict key. A finish can cite one task's passing receipt while naming unrelated build/test intents."
+    },
+    {
+      "id": "M5",
+      "task": "T14",
+      "module": "route_convergence.gleam:198",
+      "finding": "run_converged OVERWRITES evidence.candidate with store.active_candidate instead of verifying the dispatched EvidenceRecord already carried it. A record produced against a different candidate is silently relabelled as active-candidate evidence. The test asserts the post-rewrite value (evidence.candidate == candidate), so it can never detect a mismatch."
+    },
+    {
+      "id": "M6",
+      "task": "T16",
+      "module": "transports/stdio.gleam:93,151",
+      "finding": "The frame deadline is evaluated only on arrival of the NEXT chunk (check_deadline reads session.buffer/frame_started_at_ms at ingest entry). A peer that opens a partial frame and then sends nothing is never timed out: there is no timer, reaper or supervised deadline process. The slow-frame bound depends on the attacker continuing to send."
+    },
+    {
+      "id": "M7",
+      "task": "T16",
+      "module": "transports/stdio.gleam:100",
+      "finding": "combined = session.buffer <> chunk and string.split(combined, \"\\n\") execute BEFORE any size check, and the chunk itself is unbounded. max_frame_bytes limits what is accepted, not what is allocated and scanned; a single multi-hundred-MB chunk is fully materialised and split before STDIO_FRAME_TOO_LARGE is returned."
+    },
+    {
+      "id": "M8",
+      "task": "T16",
+      "module": "transports/stdio.gleam:139",
+      "finding": "check_nul tests only for a raw 0x00 byte in the chunk. A JSON-escaped NUL (\\u0000) passes the transport unchanged, is decoded by wire.decode_request into a string value, and can reach tool arguments — contradicting the module docstring (\"NUL bytes never cross the boundary\") and duplicating, rather than enforcing, the Hermes code -2 trap. mcp_transport_test covers only the literal-byte case."
+    },
+    {
+      "id": "M9",
+      "task": "T16",
+      "module": "transports/zenoh.gleam:53,155",
+      "finding": "Authentication uses a secret-prefix hash, files.digest = SHA-256(secret|topic|reply|actor|workspace|session|payload), not an HMAC: a Merkle-Damgard length-extension-shaped construction. Separators are unescaped '|', so field boundaries are not uniquely bound — any signed field containing '|' admits an alternative field split with the same tag (identity/workspace confusion). The tag is also compared with a non-constant-time string ==."
+    },
+    {
+      "id": "M10",
+      "task": "T16",
+      "module": "transports/zenoh.gleam:79",
+      "finding": "No replay or freshness binding: the envelope carries no nonce, timestamp, epoch or sequence, and there is no seen-request_id ledger. request_id is caller-chosen and unverified beyond the token grammar, so a captured envelope is accepted indefinitely and re-invokes the handler, including for Mutating tools. No replay test exists."
+    },
+    {
+      "id": "M11",
+      "task": "T17",
+      "module": "prompts.gleam:46",
+      "finding": "get_prompt does not apply the deprecated_prompts filter that list_prompts applies. 'sampling' and 'roots' are unadvertised but still fully reachable by exact name — unadvertised is not unreachable. The acceptance test checks only that they are absent from list_prompts."
+    },
+    {
+      "id": "M12",
+      "task": "T17",
+      "module": "prompts.gleam:78,103",
+      "finding": "The authority guard is a four-entry key denylist (grant_id, authorize_effect, bypass_sa_plan, execute_effect): near-variants and arbitrary extra keys pass, and argument VALUES are never inspected. render_body then substitutes values unescaped, folding over required_args in order, so a value containing {{later_key}} is expanded on a subsequent pass (order-dependent double expansion / placeholder smuggling into advisory text)."
+    },
+    {
+      "id": "M13",
+      "task": "T17",
+      "module": "resources.gleam:104,212",
+      "finding": "The resource cache has no TTL, generation or invalidation, and its key omits transport and session_id. read_resource returns the cached entry in preference to the registry entry, so updated or revoked content is served stale to that principal indefinitely, and two principals sharing actor_id + workspace_root across different transports share one entry."
+    },
+    {
+      "id": "M14",
+      "task": "T17",
+      "module": "subscriptions.gleam:132",
+      "finding": "On backpressure the 129th notification is refused (Retryable) and simply not stored; no gap marker or drop counter is persisted on the subscription. A subscriber cannot distinguish 'no events' from 'events were dropped', which is a silent-staleness channel rather than an explicit one."
+    },
+    {
+      "id": "M15",
+      "task": "T17",
+      "module": "resources.gleam:63,80",
+      "finding": "Credential protection is a substring scan of the URI only (.env, .ssh, .sqlite3, .key, .pem). It is simultaneously over-broad (any URI containing those substrings is refused) and under-broad: ResourceEntry.content is caller-supplied and never scanned, and the URI check says nothing about what the entry actually holds."
+    },
+    {
+      "id": "M16",
+      "task": "T14,T16,T17",
+      "module": "evidence state of this review",
+      "finding": "This review is STATIC ONLY. The three test modules were not executed here (the session's toolchain preflight reports FAIL on tracked/tools-tree, and the gleam build/test invocation was not permitted in this non-interactive sandbox). Every 'verified invariant' below is code-reading evidence at the current working-tree revision, not a fresh test receipt; treat the suites as UNRUN for admission purposes."
+    }
+  ],
+  "verified_invariants": [
+    "T14 cross-route non-expansion: verify_route_grant compares rg.allowed_route against spec.route before the allowed_tools membership test, so a development grant naming harness_finish refuses the successor harness_finish with CROSS_ROUTE_GRANT_FORBIDDEN (NonRetryable), and symmetrically; overlapping names never widen a grant.",
+    "T14 mandatory scoping: requires_route_grant returns True for every development and successor tool and for every Mutating or ControlActuation spec, so a missing grant is refused with ROUTE_GRANT_REQUIRED rather than defaulting open.",
+    "T14 route namespacing: registry.route_specs partitions public/development/successor (65/21/15 specs, 101 total) with per-route ToolSpec construction, and the development vs successor harness_finish schema digests differ, so the two same-named tools are distinct objects.",
+    "T14 finish fail-closed set (on the converged path): a missing task_id, an absent receipt, a receipt bound to a non-active candidate, a non-zero exit_code, and a wrapper/raw verdict conflict each yield COMPLETION_EVIDENCE_REQUIRED before any handler runs.",
+    "T14 unknown route or tool: registry.lookup returns UNKNOWN_ROUTE_OR_TOOL for an unregistered name and an unrecognised route resolves to an empty spec list — no permissive fallback route.",
+    "T16 stdio framing bounds: split frames reassemble across chunks; check_frame_size is applied to both completed lines and the retained partial (1 MiB); check_depth enforces depth 32 with a string-literal- and backslash-escape-aware scanner; a literal NUL chunk is refused; a non-empty trailing buffer at EOF is refused as STDIO_TRUNCATED_FRAME_AT_EOF rather than discarded; a closed session refuses further chunks.",
+    "T16 stdout purity: a frame reaches stdout_frames only after is_valid_jsonrpc_frame re-parses it as a JSON object carrying \"jsonrpc\":\"2.0\" (the encoder is not trusted); wire rejects, refusals and uncertain outcomes are confined to stderr_logs; notifications (no id) emit no frame; a refused call still emits exactly one well-formed JSON-RPC frame.",
+    "T16 Zenoh topic grammar: parse_request_topic accepts exactly the five-segment form indrajaal/mcp/request/{token}/{token} with ASCII [0-9A-Za-z-_] segments, refusing short, long, empty-segment, '..', dot, space and wildcard (*, ?) topics with MALFORMED_ZENOH_TOPIC and no unknown-route fallback branch.",
+    "T16 Zenoh REST refusal: verify_subscription_capability(False) fails closed with ZENOH_SUBSCRIPTIONS_UNSUPPORTED as the first check in handle_envelope, before topic parsing, signature verification or any handler call.",
+    "T16 reply pinning: the reply destination is recomputed as indrajaal/mcp/response/{client_id}/{request_id} from the PARSED topic and compared to envelope.reply_topic; a control topic or another client's response key is refused with FOREIGN_REPLY_DESTINATION_FORBIDDEN, and the emitted pair always targets the pinned key. client_id is also pinned to expected_client_id.",
+    "T17 resource ordering: read_resource validates the uos:// URI, then authorizes workspace and private-owner equality, and only then consults or populates the cache, so a foreign principal cannot observe another principal's cached private entry; the cache key includes (actor_id, workspace_root, uri) and list_resources filters unauthorized entries before paging.",
+    "T17 resource bounds: check_page_limit refuses limit <= 0 and limit > 500 before any cache access; list_templates refuses an empty workspace root.",
+    "T17 prompts are advisory: every RenderedPrompt is constructed with advisory_only: True and effect_authority: False (no branch can set otherwise), required arguments are enforced, and the four named escalation keys are refused with PROMPT_CANNOT_AUTHORIZE_EFFECT before lookup.",
+    "T17 handle issuance: issue_durable_handle requires Modern20260728 AND explicit negotiation, then record.persisted_in_sa_plan, then owner_actor == principal actor, then expires_at_ms > now_ms, each with a distinct NonRetryable code; the handle_id is derived from the Sa-plan plan/task/attempt triple and no parallel scheduler state is kept.",
+    "T17 cancel semantics: request_cancel only transitions RunningTask -> CancelRequested and hard-codes effect_stopped: False; effect_stopped: True is reachable only from CancelRequested via confirm_worker_stopped with a non-empty digest, so the ACK is structurally distinct from a stop claim (subject to C4 on the digest's unverifiability).",
+    "T17 subscription read/unsubscribe isolation: read_subscription (and unsubscribe, which delegates to it) enforces profile equality first, then actor_id AND workspace_root equality, returning SUBSCRIPTION_PROFILE_MISMATCH or CROSS_PRINCIPAL_SUBSCRIPTION_FORBIDDEN; unsubscribe deletes both the record and its queue.",
+    "T17 backpressure bound: push_notification refuses at >= 128 pending with SUBSCRIPTION_BACKPRESSURE_LIMIT marked Retryable, and the test drives exactly 128 accepted pushes plus one refusal."
+  ]
+}
+```

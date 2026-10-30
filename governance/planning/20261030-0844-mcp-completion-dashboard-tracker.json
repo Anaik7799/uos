@@ -2,7 +2,7 @@
   "schema": "uos.harness-poodavr-dashboard-tracker.v2",
   "plan_id": "20261029-1913-mcp-server-completion",
   "plan_name": "uos/mcp-server-completion/20261029-1913",
-  "updated_at_utc": "2026-10-30T09:10:06Z",
+  "updated_at_utc": "2026-10-30T09:33:07Z",
   "supervisor": {
     "agent": "agy-argon-sup-20261030-0844",
     "role": "SUPERVISOR_ONLY (POODAVR Orchestrator, Sa-Plan & Coordinator Lease Gatekeeper, Main Integrator)",
@@ -50,9 +50,9 @@
     "governance_and_main": "All verified waves merged frequently to main under coordinator epoch leases; rules, skills, plugins, agents, SOPs, and Superpowers aligned across all 4 surfaces (.agents, .claude, .codex, .gemini)"
   },
   "waves_and_progress": {
-    "completed_tasks_count": 15,
+    "completed_tasks_count": 19,
     "total_tasks_count": 25,
-    "completion_ratio": "15/25 (60.0% — All 65 public MCP tools implemented across 9 families, wired via server.execute_authenticated, Claude-reviewed, remediated, 115/115 EUnit PASS, merged to main Epoch 95)",
+    "completion_ratio": "19/25 (76.0% — Wave 4 T14/T16/T17/T18 route convergence, stdio/Zenoh/Streamable-HTTP transports, resources/prompts/subscriptions/task_extension completed, Claude-reviewed, remediated, merged to main Epoch 96)",
     "waves": [
       {
         "wave": "Wave 1 (Foundations T00..T05 + Merge #1 to main)",
@@ -112,7 +112,7 @@
           "T17",
           "T18"
         ],
-        "status": "EXECUTING_WAVE_4",
+        "status": "MERGED_TO_MAIN_EPOCH_96",
         "agents": [
           "pi-deepseek-chat (T14, T16, T17)",
           "codex (T18 HTTP auth & transport integration)",
@@ -129,7 +129,7 @@
           "T23",
           "T24"
         ],
-        "status": "QUEUED_ON_WAVE_4",
+        "status": "EXECUTING_WAVE_5_FINAL",
         "agents": [
           "pi-deepseek-chat (T19, T20, T22)",
           "codex (T21, T24 & full EUnit)",
@@ -162,14 +162,14 @@
     "claude_review": "docs/reviews/20261030-0947-claude-wave2-security-review.json (23/24 UPHELD + D-01/R-02/R-03/R-06 remediated)"
   },
   "sa_plan_progress": {
-    "completed": 15,
+    "completed": 19,
     "executing": 1,
     "executing_tasks": [
-      "T14"
+      "T19"
     ],
-    "remaining_queued": 9,
+    "remaining_queued": 5,
     "total": 25,
-    "percent_complete": 60.0
+    "percent_complete": 76.0
   },
   "critical_code_guards": {
     "contract": "SC-AGENTIC-RESILIENCE-001",
@@ -195,5 +195,19 @@
     "public_tools_completed_total": 65,
     "eunit_passed": 115,
     "claude_review": "docs/reviews/20261030-1000-claude-wave3-adapters-review.json (C1..C5 + M1..M15 remediated)"
+  },
+  "wave_4_merge": {
+    "status": "MERGED_TO_MAIN",
+    "epoch": 96,
+    "tasks_completed": [
+      "T14",
+      "T16",
+      "T17",
+      "T18"
+    ],
+    "claude_reviews": [
+      "docs/reviews/20261030-1022-claude-wave4-review.json (C1..C6 remediated)",
+      "docs/reviews/20261030-1026-claude-t18-http-review.json (PASS, 0 critical defects)"
+    ]
   }
 }

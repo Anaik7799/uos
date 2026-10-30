@@ -1,0 +1,178 @@
+I reviewed all three files at source level (plus `wire.gleam`, `value.gleam`, `principal.gleam`, `harness/files.digest` as the dependencies the claims rest on). The eunit run was blocked by sandbox permissions, so this is a source-level falsification review; that limit is recorded below.
+
+```json
+{
+  "reviewer": "claude",
+  "wave": "wave-4-t18-http",
+  "tasks": ["T18"],
+  "verdict": "PASS",
+  "critical_defects": [],
+  "medium_findings": [
+    {
+      "id": "M1",
+      "severity": "medium",
+      "category": "spec-conformance",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/http.gleam",
+      "line": 191,
+      "claim": "Both MCP-Protocol-Version and Mcp-Session-Id are mandatory on every POST /mcp, and the server never emits Mcp-Session-Id in any response.",
+      "failure_scenario": "A spec-conformant Streamable HTTP client cannot complete initialize: per MCP it omits Mcp-Session-Id on initialize (the server assigns it) and may omit MCP-Protocol-Version on the first request. Here auth.header(...) == Ok(version) and == Ok(session_id) both fail on absence, so initialize returns 400 HEADER_BODY_MISMATCH. The session id is only obtainable out-of-band from the token, and no response in handle/post sets an Mcp-Session-Id header.",
+      "security_impact": "none - fails closed; availability/interop only",
+      "suggested_fix": "Emit Mcp-Session-Id on the initialize response and allow absent headers only for method == initialize, while keeping present-but-wrong a refusal."
+    },
+    {
+      "id": "M2",
+      "severity": "medium",
+      "category": "token-lifecycle",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/http_auth.gleam",
+      "line": 242,
+      "claim": "verify_token enforces expires_at_ms > now_ms but places no ceiling on expires_at_ms - issued_at_ms, and there is no jti/revocation check.",
+      "failure_scenario": "A token minted with expires_at_ms = 2^53 is accepted indefinitely by every check in the final case expression. A leaked bearer token cannot be revoked short of rotating signing_secret, which invalidates all tokens at once.",
+      "security_impact": "a disclosed token stays valid for its self-declared lifetime; no containment path short of global secret rotation",
+      "suggested_fix": "Add max_lifetime_ms to AuthConfig and refuse expires_at_ms - issued_at_ms > max_lifetime_ms; add a jti claim plus a denylist hook."
+    },
+    {
+      "id": "M3",
+      "severity": "medium",
+      "category": "key-management",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/http_auth.gleam",
+      "line": 149,
+      "claim": "One symmetric HMAC secret is shared between issuer and resource server, with no key id and no two-key acceptance window.",
+      "failure_scenario": "The resource server holds the minting key, so a read of its config forges arbitrary issuer tokens (sign_token is pub in the same module). Rotation is atomic-break: there is no kid in the payload and verify_token tries exactly one secret, so every live token dies at rotation.",
+      "security_impact": "no issuer/verifier privilege separation; rotation requires a flag-day outage",
+      "suggested_fix": "Add kid to the signed payload and accept a list of #(kid, secret) during an overlap window; longer term move the issuer to an asymmetric key so the resource server holds only a public key."
+    },
+    {
+      "id": "M4",
+      "severity": "medium",
+      "category": "credential-forwarding",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/http.gleam",
+      "line": 99,
+      "claim": "Downstream header forwarding is a denylist (4 credential header names plus substring match on known credentials), not an allowlist.",
+      "failure_scenario": "A client sends X-Api-Key, Authentication, X-Amz-Security-Token or X-Forwarded-Authorization. credential_header does not list them and their values contain neither the bearer token nor signing_secret, so they survive the list.filter and reach the dispatch callback verbatim.",
+      "security_impact": "third-party client secrets and spoofable identity-ish headers cross into the dispatch boundary; a downstream consumer that trusts any such header gains a confusion channel",
+      "suggested_fix": "Invert to an explicit allowlist of headers dispatch actually needs (content-type, accept, mcp-protocol-version, mcp-session-id, traceparent) and drop the rest."
+    },
+    {
+      "id": "M5",
+      "severity": "medium",
+      "category": "detection-limits",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/http.gleam",
+      "line": 290,
+      "claim": "contains_credential is whole-substring matching over the post-JSON-decode value tree, so only verbatim (or \\u-escaped, since comparison is after decode) occurrences are caught.",
+      "failure_scenario": "A body that splits the token across two sibling fields ({\"a\":\"<first half>\",\"b\":\"<second half>\"}), or base64/hex re-encodes it, or inserts it as a JSON number sequence, passes safe_value. Non-string leaves return True unconditionally at the `_ ->` arm.",
+      "security_impact": "exfiltration-to-downstream screening is best-effort, not a proof; the module comment and tests do not state this boundary",
+      "suggested_fix": "State the boundary in the module doc and treat the check as defence-in-depth; the authoritative control must remain that dispatch never trusts body-borne credentials."
+    },
+    {
+      "id": "M6",
+      "severity": "medium",
+      "category": "content-negotiation",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/http.gleam",
+      "line": 165,
+      "claim": "accepts enumerates only four literal zero q-values and does not handle */* or type wildcards.",
+      "failure_scenario": "Accept: application/json;q=0.0000 or q=0e0 is not matched by the [\"q\",\"0\"]|[\"q\",\"0.0\"]|[\"q\",\"0.00\"]|[\"q\",\"0.000\"] arms, so a client that explicitly refused JSON is served JSON. Conversely Accept: */* yields 406 HTTP_ACCEPT_REQUIRED.",
+      "security_impact": "none - correctness and interop",
+      "suggested_fix": "Parse the q parameter as a float and test <= 0.0; optionally honour */* and application/*."
+    },
+    {
+      "id": "M7",
+      "severity": "medium",
+      "category": "http-semantics",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/http_auth.gleam",
+      "line": 206,
+      "claim": "The Bearer scheme is matched case-sensitively with exactly one space.",
+      "failure_scenario": "string.split(authorization, \" \") with the guard [\"Bearer\", token] refuses \"bearer <t>\" and \"Bearer  <t>\", both legal per RFC 9110 (auth-scheme is case-insensitive, 1*SP allowed). Correspondingly transports/http.gleam:284 strips a fixed 7 graphemes, which would mis-slice a multi-space header.",
+      "security_impact": "none - fails closed; interop only",
+      "suggested_fix": "Lowercase-compare the scheme and trim the remainder before use, keeping the empty-token refusal."
+    },
+    {
+      "id": "M8",
+      "severity": "medium",
+      "category": "review-evidence",
+      "file": "apps/cepaf_gleam/test/mcp_http_auth_test.gleam",
+      "line": 1,
+      "claim": "This review is source-level only; the eunit suite was NOT executed in this session.",
+      "failure_scenario": "Compound shell invocation of `erl -noshell -pa build/dev/erlang/*/ebin -eval eunit:test([mcp_http_auth_test])` was refused by the sandbox permission layer. Compiled beams for mcp_http_auth_test and cepaf_gleam@mcp@transports@http exist from a prior build, but no green receipt was produced or verified here. Treat every PASS below as a reading of the code, not as a fresh runtime observation; the test suite's own pass state is UNRUN for this review.",
+      "security_impact": "n/a",
+      "suggested_fix": "Re-run the four-module suite under the operator terminal and bind the receipt to the candidate revision before T18 closure."
+    }
+  ],
+  "verified_invariants": [
+    {
+      "id": "V1",
+      "invariant": "Plain-HTTP docs origin is refused even when it is the configured approved origin.",
+      "evidence": "http_auth.gleam:90 conjoins string.starts_with(origin, \"https://\") with the allowlist membership test, so approved_origins containing \"http://nas-1.tail55d152.ts.net:4100\" still refuses. Falsifier present at mcp_http_auth_test.gleam:266-280, which puts each bad origin INTO approved_origins and still expects Error, and at :75 for the plain-request path; transport returns 403 at :282."
+    },
+    {
+      "id": "V2",
+      "invariant": "Wildcard, null, non-Tailnet, deep-label, userinfo, trailing-path and IP-literal origins are refused.",
+      "evidence": "tailnet_host (http_auth.gleam:107) requires exactly [label, \"tail55d152\", \"ts\", \"net\"], label non-empty, <=63 bytes, no leading/trailing hyphen, charset [a-z0-9-]. \"*\" and \"null\" fail starts_with https://; \"...ts.net.evil.example\" and \"...ts.net@evil.example\" split into 5 labels; \"...ts.net/\" yields final label \"net/\"; \"[::1]\" splits on \":\" into >2 parts hitting the `_ -> False` arm. Port is digit-validated and range-bounded (:82-88)."
+    },
+    {
+      "id": "V3",
+      "invariant": "Origin is mandatory - an absent Origin is a refusal, not a bypass.",
+      "evidence": "authenticate (http_auth.gleam:126) result.try's header(\"origin\") into HTTP_ORIGIN_FORBIDDEN before any token work. Falsified at test:110-115."
+    },
+    {
+      "id": "V4",
+      "invariant": "Duplicate Origin or Authorization headers fail closed rather than first/last-wins.",
+      "evidence": "header/2 (http_auth.gleam:57) matches only the single-element list [#(_, value)]; every other cardinality is Error(Nil). Covered at test:240-249 for origin/authorization and :289-296 for the protocol-version/session-id pair, which yields 400."
+    },
+    {
+      "id": "V5",
+      "invariant": "Token signature is HMAC-SHA256 with domain separation and is length-extension resistant; comparison is constant-time over fixed-size digests.",
+      "evidence": "signature/2 (http_auth.gleam:168) HMACs \"uos-mcp-http-v1:\" <> payload rather than a secret-prefix hash; verify_token (:222) feeds both sides through files.digest (SHA-256 hex, files.gleam:80) before crypto.secure_compare, equalising length so no comparison-length oracle exists. Because the signature covers the hex payload, not re-serialized JSON, there is no canonicalisation malleability. Falsified by test:109 (one appended byte) and test:257-261 (wrong key)."
+    },
+    {
+      "id": "V6",
+      "invariant": "Issuer, audience, non-empty required scope, and both time bounds are all enforced conjunctively, with an empty signing secret and an empty/oversized token refused.",
+      "evidence": "http_auth.gleam:242-258 requires issuer and audience equality, config.required_scope != \"\" AND membership, issued_at_ms <= now_ms < expires_at_ms, issued_at_ms >= 0, expires > issued, and all four identity strings non-empty; :211 refuses signing_secret == \"\" and tokens > 32768 bytes; :207 refuses an empty token. Falsified per-claim at test:92-108 (bad issuer, bad audience, empty scopes, expires == now, issued > now)."
+    },
+    {
+      "id": "V7",
+      "invariant": "Authentication errors are secret-redacted: no token, secret or claim content reaches the client.",
+      "evidence": "refused/1 (http_auth.gleam:71) emits a fixed reason, and transports/http.gleam:34 serialises only the error code plus Cache-Control: no-store. Every auth failure collapses to HTTP_UNAUTHORIZED or HTTP_ORIGIN_FORBIDDEN, so the failure reason is not an oracle. Falsified at test:204-218, which asserts the canary secret is absent from 401 bodies, and test:201/366 for the 403 bodies."
+    },
+    {
+      "id": "V8",
+      "invariant": "Header/body identity mismatch is refused for MCP-Protocol-Version, Mcp-Session-Id, params.protocolVersion, params._meta.session_id, params.arguments.actor and params._meta.actor, with the authoritative values taken from the token-derived Principal and never from the body.",
+      "evidence": "normalize (transports/http.gleam:191-227) compares headers to the profile version and principal.session_id(p), then field_matches against principal.session_id/actor_id. Identity itself is minted only by principal.from_http_auth_middleware from verified claims (principal.gleam:37, opaque type), so a body actor can at most cause a refusal, never an escalation. Falsified at test:131-158 for both header cases and all four body paths."
+    },
+    {
+      "id": "V9",
+      "invariant": "Malformed or wrongly-typed intermediate containers cannot conceal a contradictory identity; present-null is refused while absent is allowed.",
+      "evidence": "field_matches (transports/http.gleam:246) returns True only for a genuinely missing key on an Object, requires value.Text(expected) at the leaf, and returns False for any non-Object encountered mid-path - so params as a string or array, or _meta.session_id as null, all refuse. Falsified at test:150 (\"session_id\":null)."
+    },
+    {
+      "id": "V10",
+      "invariant": "No dual-parse divergence between the identity check and the downstream normalizer.",
+      "evidence": "normalize parses the body with value.decoder (value.gleam:19, decode.dict-based) and wire.decode_request re-parses the same raw string with the same gleam/json + decode.dict stack (wire.gleam:105), so duplicate JSON keys collapse identically in both passes. A {\"_meta\":{...},\"_meta\":{...}} shadowing attack therefore cannot make the checker see one actor and the dispatcher another. Independently, wire's only body-derived channel is params.arguments as a String->String dict, which is exactly the path field_matches guards."
+    },
+    {
+      "id": "V11",
+      "invariant": "Authorization, Cookie, Proxy-Authorization and Set-Cookie never reach the downstream dispatch callback, and neither does any header whose name or value contains the bearer token or signing secret.",
+      "evidence": "transports/http.gleam:98-105 builds credentials = [signing_secret, bearer token, ..all credential-header values] (empties filtered, :287) and filters headers on credential_header(name) OR contains_credential(name) OR contains_credential(value). Falsified inside the dispatch closure at test:177-189 and, for the token-as-header-name and token-as-foreign-header-value aliases, at test:332-354."
+    },
+    {
+      "id": "V12",
+      "invariant": "A credential embedded in the JSON body - verbatim or \\u-escaped - is refused with 403 before dispatch, and is not echoed in the refusal.",
+      "evidence": "safe_value (transports/http.gleam:294) recurses objects (keys and values), arrays and text; normalize gates on it at :228-233 ahead of wire.decode_request, so dispatch is never invoked. Escaped forms are caught because the comparison runs on the post-parse value, not the raw bytes. Falsified at test:192-203 (token, \"Bearer \" <> token, signing secret) and test:356-366 (\\u0041/\\u0042-escaped token), both asserting status 403 and absence of the credential from the response body."
+    },
+    {
+      "id": "V13",
+      "invariant": "Authentication precedes normalization and dispatch; the unauthenticated surface is limited to RFC 9728 metadata, which cannot dispatch.",
+      "evidence": "post (transports/http.gleam:76-95) orders validate_envelope -> authenticate -> normalize -> dispatch, so no body-derived value is acted on before the token verifies. handle (:52-65) exposes only GET /.well-known/oauth-protected-resource without auth, routes everything else to 405/404, and the metadata branch never calls dispatch - asserted by the panic-ing closure at test:124. Auth failures carry WWW-Authenticate with resource_metadata (:86-92, asserted test:284-288)."
+    },
+    {
+      "id": "V14",
+      "invariant": "Request envelope bounds are byte-exact and fail closed.",
+      "evidence": "validate_envelope (transports/http.gleam:137) uses string.byte_size against max_body_bytes = 1048576 -> 413, requires media type application/json -> 415, and requires an acceptable JSON or SSE Accept -> 406. Falsified at the exact boundary (test:320-324: at-limit 200, one byte over 413) and with a multibyte payload (test:237)."
+    },
+    {
+      "id": "V15",
+      "invariant": "The module creates no effect authority: the Principal is opaque and constructed only from verified claims, and dispatch is an injected closure.",
+      "evidence": "principal.gleam:8 declares the type opaque with three named constructors; http_auth.gleam:139 uses from_http_auth_middleware exclusively, stamping transport HttpStreamable and leaving all untrusted_* labels None. transports/http.gleam takes dispatch as a parameter and holds no Sa-plan, lease or filesystem capability, consistent with the file's own header claim."
+    }
+  ]
+}
+```

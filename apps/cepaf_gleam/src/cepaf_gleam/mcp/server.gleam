@@ -29,11 +29,12 @@ import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/receipts
 import cepaf_gleam/mcp/registry
+import cepaf_gleam/mcp/route_convergence.{type RouteGrant}
 import cepaf_gleam/mcp/supervisor.{type WorkerPool, WorkerPool}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/mcp/types.{
-  type Outcome, Complete, ControlActuation, Mutating, NonRetryable,
-  ReconcileFirst, Refused, ToolError, Uncertain,
+  type Outcome, type ToolSpec, Complete, ControlActuation, Mutating,
+  NonRetryable, ReconcileFirst, Refused, ToolError, Uncertain,
 }
 import cepaf_gleam/planning/sa_plan_bridge
 import cepaf_gleam/sciviz/extension_deep_dive
@@ -97,6 +98,73 @@ pub fn execute_authenticated(
               }
           }
       }
+  }
+}
+
+/// Route-converged execution entry point. Public calls are re-admitted through
+/// the public convergence gate before delegating to the authenticated public
+/// dispatcher; development and successor calls execute through the converged
+/// private path; every other route is refused by the convergence gate.
+/// `execute_authenticated` itself remains unchanged and authoritative for the
+/// public route.
+pub fn execute_route_authenticated(
+  context: AdmissionContext,
+  route_grant: Option(RouteGrant),
+  pool: WorkerPool,
+  backends: ServerBackends,
+  route: String,
+  tool_name: String,
+  args: Dict(String, String),
+  private_handler: fn(ToolSpec, Dict(String, String)) -> Result(String, String),
+) -> #(Outcome, WorkerPool, ServerBackends) {
+  case route {
+    "public" ->
+      case
+        route_convergence.admit_converged(
+          context,
+          route_grant,
+          "public",
+          tool_name,
+          args,
+        )
+      {
+        Error(err) -> #(Refused(err), pool, backends)
+        Ok(_) -> execute_authenticated(context, pool, backends, tool_name, args)
+      }
+    "development" | "successor" -> {
+      let #(outcome, next_pool) =
+        route_convergence.execute_converged(
+          pool,
+          context,
+          route_grant,
+          backends.features,
+          route,
+          tool_name,
+          args,
+          private_handler,
+        )
+      #(outcome, next_pool, backends)
+    }
+    _ -> {
+      let error = case
+        route_convergence.admit_converged(
+          context,
+          route_grant,
+          route,
+          tool_name,
+          args,
+        )
+      {
+        Error(err) -> err
+        Ok(_) ->
+          ToolError(
+            "UNSUPPORTED_ROUTE",
+            "Unsupported MCP route: " <> route,
+            NonRetryable,
+          )
+      }
+      #(Refused(error), pool, backends)
+    }
   }
 }
 
