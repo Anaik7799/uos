@@ -87,6 +87,21 @@
       }
     ]
   },
+  "wave_1_merge": {
+    "status": "MERGED_TO_MAIN",
+    "epoch": 93,
+    "main_commit": "fce0200638d37fa7956b7a6d64876de1470beffb",
+    "eunit_passed": 195,
+    "claude_review_remediated": true,
+    "architecture_doc": "docs/design/20261030-0932-ak47-fractal-thinking-as-is-to-be-architecture.md"
+  },
+  "sa_plan_progress": {
+    "completed": 6,
+    "executing": 6,
+    "executing_tasks": ["T06", "T07", "T09", "T10", "T11", "T15"],
+    "remaining_queued": 13,
+    "total": 25
+  },
   "critical_code_guards": {
     "contract": "SC-AGENTIC-RESILIENCE-001",
     "admitted_ev_ceiling": 93,

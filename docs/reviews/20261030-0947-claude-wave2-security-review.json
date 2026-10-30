@@ -1,0 +1,338 @@
+{
+  "schema": "uos.agent-review.v1",
+  "agent": "claude-code-independent-reviewer",
+  "wave": "wave2-t06-t07-t09-t10-t11-t15",
+  "observed_utc": "2026-10-30T08:49:35Z",
+  "review_scope": {
+    "files_read": [
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/planning_write.gleam",
+      "apps/cepaf_gleam/test/mcp_planning_write_test.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/vault_metadata.gleam",
+      "apps/cepaf_gleam/test/mcp_vault_metadata_test.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/system_observation.gleam",
+      "apps/cepaf_gleam/test/mcp_observation_test.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/verification.gleam",
+      "apps/cepaf_gleam/test/mcp_verification_execution_test.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/knowledge.gleam",
+      "apps/cepaf_gleam/test/mcp_knowledge_test.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/version.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/wire.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/profiles/legacy.gleam",
+      "apps/cepaf_gleam/src/cepaf_gleam/mcp/profiles/modern.gleam",
+      "apps/cepaf_gleam/test/mcp_protocol_conformance_test.gleam"
+    ],
+    "method": "static Popperian read-only review; each claimed invariant was attacked by searching for an input that satisfies the guard while violating the asserted property",
+    "not_executed": "no build, no gleam test, no runtime observation was performed in this review; test files were read as specifications, not as evidence of a passing run",
+    "deliberately_unread": [
+      "cepaf_gleam/mcp/admission.gleam",
+      "cepaf_gleam/mcp/principal.gleam",
+      "cepaf_gleam/mcp/evidence.gleam",
+      "cepaf_gleam/mcp/registry.gleam",
+      "cepaf_gleam/mcp/dispatch.gleam",
+      "cepaf_gleam/mcp/server.gleam",
+      "cepaf_gleam/mcp/types.gleam",
+      "cepaf_gleam/harness/files.gleam"
+    ]
+  },
+  "verdict": "HOLD",
+  "checked_invariants": [
+    {
+      "id": "T06-WORKER-IDENTITY",
+      "claim": "the acting worker cannot be taken from the caller payload",
+      "attack": "sa_task_complete with arguments worker=owner under principal intruder; sa_task_claim with worker=forged",
+      "result": "UPHELD",
+      "evidence": "planning_write.gleam:71 binds actor = principal.actor_id(call.principal); arg(call, \"worker\") is never read anywhere in the module; planning_write.gleam:208 refuses PRINCIPAL_WORKER_MISMATCH"
+    },
+    {
+      "id": "T06-STATE-MACHINE-NO-SKIP",
+      "claim": "available -> completed cannot be reached in one step, including via legacy plan_update state=",
+      "attack": "plan_update with state=completed on a TaskAvailable task; plan_update with state=available on a TaskExecuting task",
+      "result": "UPHELD",
+      "evidence": "planning_write.gleam:189-231 only matches (\"executing\", TaskAvailable) and (\"completed\", TaskExecuting); every other pair falls to INVALID_STATE_TRANSITION with the store returned unmodified"
+    },
+    {
+      "id": "T06-SINGLE-OWNER",
+      "claim": "concurrent claimants yield exactly one owner and a monotone attempt",
+      "attack": "16 sequential claims from distinct principals against one seeded task",
+      "result": "UPHELD-UNDER-SERIALIZATION",
+      "evidence": "second claim hits (\"executing\", _) -> TASK_ALREADY_CLAIMED; correctness depends on the documented store-owner serialization contract at planning_write.gleam:1-3, which is outside this module"
+    },
+    {
+      "id": "T06-ATTEMPT-FENCE",
+      "claim": "a stale attempt cannot complete a task",
+      "attack": "sa_task_complete with attempt=0 against task.attempt=1; absent attempt; non-numeric attempt",
+      "result": "UPHELD",
+      "evidence": "planning_write.gleam:205-228 requires int.parse to succeed AND attempt == task.attempt, and additionally rejects a disagreeing admission fence (STALE_ATTEMPT_FENCE); the admission attempt is explicitly not accepted as a substitute"
+    },
+    {
+      "id": "T06-BRIDGE-IDEMPOTENCE",
+      "claim": "a repeated bridge submit does not double-enqueue",
+      "attack": "identical sa_bridge_submit executed twice",
+      "result": "UPHELD",
+      "evidence": "planning_write.gleam:146-147 returns the memoised job_id with the store unchanged; jobs and bridge_submissions both stay at size 1"
+    },
+    {
+      "id": "T07-UNWIRED-VAULT-NOT-HEALTHY",
+      "claim": "an unwired Vault can never report sealed/unsealed or healthy",
+      "attack": "vault_status and vault_health against UnwiredVault",
+      "result": "UPHELD",
+      "evidence": "vault_metadata.gleam:43 returns VAULT_BACKEND_UNWIRED before any status branch; sealed and healthy are read only from the SupervisedVault constructor, never defaulted"
+    },
+    {
+      "id": "T07-TENANT-SCOPE",
+      "claim": "cross-tenant metadata is refused in both directions",
+      "attack": "principal workspace tenant-a requesting tenant_id=tenant-b; a tenant-b handle serving a tenant-a principal; absent tenant_id defaulting",
+      "result": "UPHELD",
+      "evidence": "vault_metadata.gleam:50 requires requested == scope AND tenant == scope AND scope != \"\"; the empty-scope conjunct closes the blank-workspace bypass"
+    },
+    {
+      "id": "T07-REDACTION-REACH",
+      "claim": "secret material is redacted on success payloads and on error reasons",
+      "attack": "canary tokens placed in audit lines, secret names, policy bodies and the unwired reason string",
+      "result": "UPHELD-FOR-LISTED-PATTERNS",
+      "evidence": "redact is whole-field (vault_metadata.gleam:26-35) and is applied to names, audit lines, policies and refusal reasons; it matches only hvs., Bearer , secret_value=, PRIVATE KEY (see residual risk R-01)"
+    },
+    {
+      "id": "T09-MISSING-BACKEND-UNKNOWN",
+      "claim": "a missing backend is reported unknown, never healthy",
+      "attack": "MissingBackend for every observation tool",
+      "result": "UPHELD",
+      "evidence": "system_observation.gleam:68-73 refuses OBSERVATION_BACKEND_UNAVAILABLE with state=unknown and Retryable before any render path"
+    },
+    {
+      "id": "T09-FRESHNESS",
+      "claim": "stale and future-dated samples cannot pass",
+      "attack": "age beyond max_age_ms; observed_at_ms ahead of now_ms",
+      "result": "UPHELD",
+      "evidence": "system_observation.gleam:87-94 rejects both the future case and the over-age case with STALE_OBSERVATION_SAMPLE"
+    },
+    {
+      "id": "T09-ZERO-CONTAINER-PROBE",
+      "claim": "zero containers requires an actual successful probe",
+      "attack": "podman_containers with containers=None versus Some([])",
+      "result": "UPHELD",
+      "evidence": "system_observation.gleam:111-117 refuses CONTAINER_PROBE_MISSING for None; Some([]) yields container_count 0 with probe_completed true"
+    },
+    {
+      "id": "T09-OBSERVED-VERDICTS-ARE-OBSERVED",
+      "claim": "a successful observation reports the subject's actual state",
+      "attack": "construct a fresh, present ObservedSnapshot whose subject is unhealthy and look for any input that makes the payload say so",
+      "result": "FALSIFIED",
+      "evidence": "see blocking defect D-01"
+    },
+    {
+      "id": "T11-CHECKID-ALLOWLIST",
+      "claim": "arbitrary command strings cannot reach a runner",
+      "attack": "check ids carrying ; rm -rf /, $(...), backticks, newlines, leading/trailing whitespace, and casing variants",
+      "result": "UPHELD",
+      "evidence": "verification.gleam:43-59 trims then exact-matches seven literals and otherwise returns DISALLOWED_CHECK_ID; the runner is typed fn(CheckId) -> CheckRunnerResult so no caller-controlled string crosses the boundary (test gap noted as R-06)"
+    },
+    {
+      "id": "T11-NONZERO-EXIT",
+      "claim": "a nonzero exit can never be reported verified",
+      "attack": "CheckExecuted(1, \"all tests passed\", 5) — reassuring stdout with a failing exit",
+      "result": "UPHELD",
+      "evidence": "verification.gleam:114-120 refuses VERIFICATION_CHECK_FAILED on exit_code != 0 before any payload is built; verified:true is unreachable on that path"
+    },
+    {
+      "id": "T11-MISSING-PROVER",
+      "claim": "a missing prover stays formally unrun",
+      "attack": "ProverMissing(\"z3\") on run_gate bounded_z3_control",
+      "result": "UPHELD",
+      "evidence": "verification.gleam:79-84 refuses PROVER_UNRUN_MISSING_TOOL; no EvidenceRecord with formal_state verified is emitted on that path"
+    },
+    {
+      "id": "T11-OUTPUT-EXIT-AGREEMENT",
+      "claim": "exit 0 with failure text in output is never Complete",
+      "attack": "CheckExecuted(0, \"FAIL: toolchain missing\", 7); long output designed to push the failure text past the truncation point",
+      "result": "UPHELD",
+      "evidence": "verification.gleam:122 inspects the full stdout and bound_stdout is applied only afterwards (verification.gleam:130), so truncation cannot hide a disagreement; case sensitivity noted as R-05"
+    },
+    {
+      "id": "T10-PATH-TRAVERSAL",
+      "claim": "traversal, NUL bytes and out-of-root absolute paths are refused",
+      "attack": "../outside.txt, a/../../b, embedded NUL, /etc/shadow",
+      "result": "UPHELD-WITH-PREFIX-CAVEAT",
+      "evidence": "knowledge.gleam:82-92 refuses any .. occurrence, NUL, and absolute paths not prefixed by workspace_root; the prefix test lacks a separator boundary (R-02)"
+    },
+    {
+      "id": "T10-LINK-ESCAPE",
+      "claim": "symlink and hardlink escapes are refused on read and excluded from search",
+      "attack": "read_file and knowledge_search/zk_search against SymlinkEscape and HardlinkEscape entries",
+      "result": "UPHELD",
+      "evidence": "knowledge.gleam:167-173 refuses LINK_ESCAPE_REFUSED; knowledge.gleam:242 drops both kinds from the searchable set, so search cannot leak what read_file refuses"
+    },
+    {
+      "id": "T10-CREDENTIAL-DISCLOSURE",
+      "claim": "credential and live-WAL paths are refused",
+      "attack": "read of .env, and of key material whose filename does not match a listed marker",
+      "result": "UPHELD-FOR-LISTED-MARKERS",
+      "evidence": "knowledge.gleam:94-101 lowercases then substring-matches eight markers; id_ed25519, *.pem, *.key, .netrc and bare *.sqlite3 are not covered (R-03). Primary containment is the explicit corpus dict, so an unlisted path still needs PATH_NOT_IN_CORPUS to be bypassed"
+    },
+    {
+      "id": "T10-CROSS-PRINCIPAL-SCOPE",
+      "claim": "a principal cannot expand into a scope it does not hold, including through transclusion",
+      "attack": "read_file and zk_transclude of a successor-private entry from a public-only principal",
+      "result": "UPHELD",
+      "evidence": "guard_entry requires the scope to be in BOTH corpus.allowed_scopes and principal_scopes (knowledge.gleam:176-177) and is re-applied on every transclusion hop at knowledge.gleam:325"
+    },
+    {
+      "id": "T10-TRANSCLUSION-TERMINATION",
+      "claim": "transclusion cycles and depth overruns terminate fail-closed",
+      "attack": "A->B->A, self-reference A->A, chain deeper than max_transclude_depth, unterminated [[ marker",
+      "result": "UPHELD",
+      "evidence": "knowledge.gleam:318-322 checks depth then the visited path-set before lookup; visited is threaded as [key, ..visited] down each branch; an unclosed [[ returns literally (knowledge.gleam:367) rather than looping. Output size is unbounded (R-04)"
+    },
+    {
+      "id": "T15-NO-SILENT-DOWNGRADE",
+      "claim": "only exact supported versions are accepted",
+      "attack": "negotiate(\"2019-01-01\"); requesting the modern version on the legacy profile and the reverse",
+      "result": "UPHELD",
+      "evidence": "version.gleam:12-23 exact-matches two literals; legacy.gleam:43 and modern.gleam:50 both refuse the other profile's version with PROFILE_METHOD_MISMATCH rather than silently serving it. Absent protocolVersion defaults to the connected profile (R-07)"
+    },
+    {
+      "id": "T15-NO-PROFILE-MIXING",
+      "claim": "profile-exclusive methods cannot cross",
+      "attack": "discovery/list and tasks/create on legacy; initialize_legacy and resources/list_unversioned on modern",
+      "result": "UPHELD",
+      "evidence": "wire.gleam:91-102 rejects the other profile's exclusive method list at decode time, and legacy.gleam:63 / modern.gleam:131 reject unknown methods at dispatch time, giving two independent barriers"
+    },
+    {
+      "id": "T15-SILENT-NOTIFICATIONS",
+      "claim": "a notification never produces a wire response, including on refusal",
+      "attack": "encode_outcome of a Refused outcome with NoIdNotification; a message with no id field and a message with id:null",
+      "result": "UPHELD",
+      "evidence": "wire.gleam:74-75 returns None for NoIdNotification before any encoder runs; both the absent-id and null-id forms decode to NoIdNotification (wire.gleam:106-141). Null-id handling is a spec deviation, not a leak (R-08)"
+    },
+    {
+      "id": "T15-EFFECT-ID-DECOUPLING",
+      "claim": "logical_effect_id does not depend on the JSON-RPC transport id",
+      "attack": "same call retried under transport ids 1 and 99; argument order permuted; explicit idempotency key supplied",
+      "result": "UPHELD",
+      "evidence": "wire.gleam:52-67 digests only route, method/tool and the key-sorted args or the explicit idempotency key; WireId is not referenced in the function, so transport-id change cannot fork the effect identity, and arg reordering is canonicalised"
+    }
+  ],
+  "blocking_defects": [
+    {
+      "id": "D-01",
+      "severity": "BLOCKING",
+      "category": "truthfulness-of-observed-evidence",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/system_observation.gleam",
+      "lines": "166-258, with the payload contract at 105-141",
+      "summary": "tool_fields synthesises health verdicts as compile-time constants that no backend input can contradict, and the surrounding payload labels them as observed.",
+      "detail": "ObservedSnapshot carries candidate, backend_name, two timestamps, an Option(List(String)) of containers, and an opaque metrics dict. No field of it is consulted by tool_fields. system_health therefore always emits status \"healthy\" and checks_passed 1; system_zenoh always emits connected true; prajna_health always \"healthy\"; system_immune always \"active\" with threats_open 0; integrity_check always \"stable\" with drift 0; mesh_topology always peers 1; swarm_status always members 1. These constants are then wrapped by base_fields with freshness \"fresh\" and by an EvidenceRecord whose execution_state is \"observed\" and whose output_sha256 digests the synthesised payload.",
+      "failure_scenario": "The Zenoh router on 7447 is down. The probe wrapper still produces a fresh ObservedSnapshot(backend_name: \"zenoh\", observed_at_ms: now, max_age_ms: 5000, containers: Some([]), metrics: dict with the real error). observe() finds the backend present and the sample fresh, so it renders {\"tool\":\"system_zenoh\",\"connected\":true,\"freshness\":\"fresh\",\"execution_state\":\"observed\"}. A cockpit or agent consuming that payload reads a live healthy transport that is in fact down. The identical construction returns status \"healthy\" from system_health against a failing node.",
+      "popperian_note": "The module header asserts that a missing or stale backend can never be reported as healthy. That narrower claim holds. The broader claim a reader will take from the payload — that the reported state was observed — is unfalsifiable as implemented: there exists no inhabitant of ObservationBackend that makes system_health report anything other than healthy. The test suite reflects this; mcp_observation_test.gleam only ever asserts absence of \"healthy\" on the refused paths, and has no unhealthy-observed case because none can be constructed.",
+      "contrast_within_the_same_module": "podman_containers is the one tool given a real input channel (containers: Option) and is correspondingly the one tool that refuses rather than synthesise, via CONTAINER_PROBE_MISSING. The same discipline is absent from the other eighteen.",
+      "violates": [
+        "Psi-5 truthfulness and telemetry fidelity (SC-CONST-006): unobserved values must not be disclosed as observations",
+        "SC-RELEASE-ASSURANCE-001 clause 7: simulated evidence cannot be reported as live healthy status",
+        "SC-RELEASE-ASSURANCE-001 clause 9 and the evidence-state ladder: a synthesised constant is not execution_state observed"
+      ],
+      "suggested_remedy": "Either (a) give each tool a typed observed input on ObservedSnapshot, in the shape of the containers Option, and refuse with a per-tool PROBE_MISSING code when it is absent, so that unhealthy and unknown are both expressible; or (b) if these payloads are intentionally shape-only scaffolding, stop labelling them as observations: set execution_state to \"unrun\", mark each synthesised field as declared rather than measured, and remove the literal health vocabulary until a real probe feeds it. Remedy (a) is testable by a new case asserting that an unhealthy observed input never renders healthy."
+    }
+  ],
+  "residual_risks": [
+    {
+      "id": "R-00",
+      "severity": "MEDIUM",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/profiles/modern.gleam:121-130 and profiles/legacy.gleam:61-62, 73-83",
+      "risk": "Both profile dispatchers return success-shaped envelopes for tools/call — and modern additionally for tasks/create, tasks/get and tasks/result — without invoking any adapter, admission check or Sa-plan transaction. modern returns status \"ok\" with data echoing the method name; legacy returns isError false with the tool name echoed. legacy tools/list returns a permanently empty tool array.",
+      "why_not_escalated": "Whether these functions are reachable as the server's method router, or are used only as envelope builders after a real dispatch, is decided in mcp/server.gleam and mcp/dispatch.gleam, which this review was scoped not to read. If they are wired as the router, tasks/create returning status ok with no Sa-plan ledgering would be an authority bypass under SC-JIDOKA-001 and should be escalated to BLOCKING; the conformance test asserts nothing about these branches either way.",
+      "discriminating_check": "grep the method router for profiles/modern.dispatch and profiles/legacy.dispatch and confirm that tools/call and tasks/* are intercepted by the admission and adapter path before these branches are reachable; add a test asserting that tools/call through a profile dispatcher cannot return ok without an EvidenceRecord."
+    },
+    {
+      "id": "R-01",
+      "severity": "MEDIUM",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/vault_metadata.gleam:26-35",
+      "risk": "redact is a four-pattern denylist (hvs., Bearer , secret_value=, PRIVATE KEY). Legacy Vault s.* tokens, AWS AKIA keys, basic-auth URLs, JWT eyJ prefixes, password= and token= spellings, and OpenSSH BEGIN OPENSSH PRIVATE KEY pass through verbatim in secret names, audit lines and policy bodies.",
+      "mitigation_in_place": "the adapter is metadata-only and never returns a secret value; redaction is whole-field so a partial match cannot leak a suffix.",
+      "suggested_hardening": "move to an allowlist of emitted shapes, or add the missing high-signal patterns with a canary test per pattern in the existing audit_and_error_redaction_canaries_test loop."
+    },
+    {
+      "id": "R-02",
+      "severity": "MEDIUM",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/knowledge.gleam:89-90",
+      "risk": "The absolute-path guard is a bare string prefix test with no separator boundary. With workspace_root /workspace, the path /workspace-evil/secret.md satisfies starts_with(workspace_root) and passes the guard.",
+      "mitigation_in_place": "content is served only from the explicit corpus entries dict keyed by exact rel_path, so a passing path still has to have been inserted into the corpus; PATH_NOT_IN_CORPUS blocks the rest.",
+      "suggested_hardening": "require starts_with(workspace_root <> \"/\") or exact equality, and add a sibling-prefix test case."
+    },
+    {
+      "id": "R-03",
+      "severity": "MEDIUM",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/knowledge.gleam:41-50",
+      "risk": "credential_markers omits id_ed25519, id_ecdsa, *.pem, *.key, *.p12, .netrc, .npmrc, authorized_keys, known_hosts, .pgpass, token, password, and bare *.sqlite3. Canonical policy bars live DB files as well as WAL and SHM, but only the -wal and -shm suffixes are listed.",
+      "mitigation_in_place": "defence in depth only; the corpus allowlist is the primary control.",
+      "suggested_hardening": "add the missing markers, especially bare .sqlite3 and the non-RSA key names, and assert each in the existing refusal test."
+    },
+    {
+      "id": "R-04",
+      "severity": "LOW",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/knowledge.gleam:290-401",
+      "risk": "corpus.max_bytes is enforced on read_file but not on transclusion output or on search results. A diamond-shaped reference graph within max_transclude_depth expands multiplicatively, and knowledge_search with an empty query matches every in-scope entry and returns full content for each. Both are bounded only by depth and corpus size, not by bytes.",
+      "mitigation_in_place": "scope and link guards still apply to every expanded hop and every search hit, so this is a resource and verbosity concern, not a confidentiality one.",
+      "suggested_hardening": "thread an accumulated byte budget through expand_references_loop and cap search result count and bytes."
+    },
+    {
+      "id": "R-05",
+      "severity": "LOW",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/verification.gleam:162-164",
+      "risk": "output_disagrees matches only the literals FAIL and ERROR:. Lowercase failed, Error without the colon, assertion failed, panic, and non-English or localised failure text do not trip the disagreement guard.",
+      "mitigation_in_place": "exit code is the primary and independent gate; the heuristic is only a second opinion on an already-zero exit.",
+      "suggested_hardening": "case-insensitive match over a slightly wider vocabulary, with the caveat that this guard can never be complete and should not be presented as one."
+    },
+    {
+      "id": "R-06",
+      "severity": "LOW",
+      "file": "apps/cepaf_gleam/test/mcp_verification_execution_test.gleam",
+      "risk": "No test exercises the DISALLOWED_CHECK_ID path. The allowlist is correct by inspection but has no regression guard, so a future contributor widening parse_check_id, or adding a raw-string runner overload, would break the no-injection property silently.",
+      "suggested_hardening": "add a negative test over a list of hostile check ids asserting DISALLOWED_CHECK_ID and NonRetryable for each."
+    },
+    {
+      "id": "R-07",
+      "severity": "LOW",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/profiles/legacy.gleam:54 and profiles/modern.gleam:113",
+      "risk": "An initialize with no protocolVersion param defaults to the connected profile's own version via result.unwrap rather than being refused. The module docs state that only exact supported versions are accepted.",
+      "why_not_escalated": "absence of a version is not an unsupported version, and the default is the profile the transport is already on, so this can never upgrade a client or cross profiles; the legacy default is the lower profile.",
+      "suggested_hardening": "refuse a missing protocolVersion explicitly so the no-silent-negotiation claim is literally true."
+    },
+    {
+      "id": "R-08",
+      "severity": "LOW",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/wire.gleam:106-141, 165-231",
+      "risk": "Three JSON-RPC 2.0 conformance deviations, none of them security relevant: id:null is treated as a notification and silently dropped, whereas the spec treats it as a request with a null id; error.code is encoded as a string rather than the integer the spec requires; and an Uncertain outcome becomes an error on the legacy profile but a result with status uncertain on modern, so the two profiles disagree about the same outcome. Separately, params.arguments is decoded as dict(string,string), so any numeric or boolean argument value fails the whole message as MALFORMED_JSONRPC.",
+      "mitigation_in_place": "every deviation fails closed or stays silent; none of them widens authority or leaks data.",
+      "suggested_hardening": "document the string error codes as a deliberate UOS convention if they are one, and decide explicitly whether legacy clients should see Uncertain as a failure."
+    },
+    {
+      "id": "R-09",
+      "severity": "MEDIUM",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/verification.gleam:185-190",
+      "risk": "formal_state_for maps BoundedZ3Control to verified purely from a zero exit code of the runner. The CheckRunnerResult type carries no satisfiable-control-assertion receipt, no solver version and no query digest, so this module cannot distinguish a real discharged proof from a solver that ran trivially or vacuously.",
+      "relates_to": "canonical policy section 7, which requires bounded solver workers with normalised queries and satisfiable control assertions, and the two-key rule that formal authority is invocation specific.",
+      "suggested_hardening": "extend CheckRunnerResult with an explicit control-assertion outcome and refuse to emit formal_state verified unless that control is present and satisfied."
+    },
+    {
+      "id": "R-10",
+      "severity": "MEDIUM",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/planning_write.gleam:1-3",
+      "risk": "The single-owner guarantee is purely sequential. It depends on an OTP store owner serialising execute and committing the returned state before the next call, which is asserted in a comment and not enforced by any type in this module. Two concurrent callers holding the same snapshot would each see TaskAvailable and each produce a claimed store; whichever commit lands second wins and silently overwrites the first owner.",
+      "mitigation_in_place": "the sixteen-claimant test demonstrates correctness only under the serialised fold it performs itself, which is the assumption rather than evidence for it.",
+      "suggested_hardening": "carry an opaque store epoch in PlanningWriteStore and refuse a commit built from a superseded epoch, so the invariant is enforced by the value rather than by the caller's discipline."
+    },
+    {
+      "id": "R-11",
+      "severity": "LOW",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/vault_metadata.gleam:1-2, and principal usage across T06/T07/T10",
+      "risk": "Tenant and scope identity rest on principal.workspace_root and principal.actor_id, both supplied by from_launcher_env in the tests. The strength of every tenant and scope refusal in this wave is exactly the strength of that launcher-environment binding, which is outside the reviewed files and, per the adapter's own header comment, is a stand-in until the principal contract supplies an authenticated tenant.",
+      "discriminating_check": "review mcp/principal.gleam and the transport that constructs it, and confirm a caller cannot influence workspace_root or actor at connection time."
+    },
+    {
+      "id": "R-12",
+      "severity": "INFORMATIONAL",
+      "risk": "This review is static. No build, test run, gate or runtime observation was performed, and eight collaborating modules were deliberately not read. The upheld verdicts above are claims about these fifteen files at this working-tree state, not evidence that the wave passes its gates; the session preflight is itself reported FAIL on one tracked-tools check. Nothing here constitutes admission, and the EV ceiling remains 93 with EV-94..109 NOT_ADMITTED.",
+      "suggested_followup": "run the five named test modules against the candidate revision and bind the resulting receipt digests before treating any invariant above as verified rather than reviewed."
+    }
+  ],
+  "hold_summary": "One blocking defect, D-01 in system_observation.gleam: eighteen of the nineteen observation tools emit hardcoded health verdicts that no backend input can contradict, inside a payload labelled freshness fresh and execution_state observed. The wave's own narrower invariant — missing or stale backends are never reported healthy — holds, as do all twenty-three other invariants I attacked across T06, T07, T10, T11 and T15, including payload worker spoofing, state-machine skipping, attempt fencing, cross-tenant Vault access, unwired-Vault reporting, CheckId injection, nonzero-exit verdicts, missing provers, path traversal, link escape, cross-scope expansion, transclusion termination, version downgrade, profile mixing, notification silence and transport-id decoupling. Clearing D-01 needs either a typed observed input per tool with a fail-closed PROBE_MISSING refusal, mirroring the podman containers Option, or honest relabelling of these payloads as unrun scaffolding. R-00 should be resolved in the same pass: if the profile dispatchers are the live method router, their unexecuted status ok envelopes for tools/call and tasks/create are a second blocking defect."
+}
