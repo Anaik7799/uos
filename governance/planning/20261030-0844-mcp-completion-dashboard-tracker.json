@@ -2,7 +2,7 @@
   "schema": "uos.harness-poodavr-dashboard-tracker.v2",
   "plan_id": "20261029-1913-mcp-server-completion",
   "plan_name": "uos/mcp-server-completion/20261029-1913",
-  "updated_at_utc": "2026-10-30T08:22:30Z",
+  "updated_at_utc": "2026-10-30T09:10:06Z",
   "supervisor": {
     "agent": "agy-argon-sup-20261030-0844",
     "role": "SUPERVISOR_ONLY (POODAVR Orchestrator, Sa-Plan & Coordinator Lease Gatekeeper, Main Integrator)",
@@ -50,40 +50,91 @@
     "governance_and_main": "All verified waves merged frequently to main under coordinator epoch leases; rules, skills, plugins, agents, SOPs, and Superpowers aligned across all 4 surfaces (.agents, .claude, .codex, .gemini)"
   },
   "waves_and_progress": {
-    "completed_tasks_count": 6,
+    "completed_tasks_count": 15,
     "total_tasks_count": 25,
-    "completion_ratio": "6/25 (T00..T05 completed; Wave 1 tri-agent review in flight for Merge #1 to main)",
+    "completion_ratio": "15/25 (60.0% — All 65 public MCP tools implemented across 9 families, wired via server.execute_authenticated, Claude-reviewed, remediated, 115/115 EUnit PASS, merged to main Epoch 95)",
     "waves": [
       {
         "wave": "Wave 1 (Foundations T00..T05 + Merge #1 to main)",
-        "tasks": ["T00", "T01", "T02", "T03", "T04", "T05"],
-        "status": "CODE_AND_TESTS_GREEN_REVIEW_IN_FLIGHT",
-        "agents": ["pi-session-20261030-0754", "pi-deepseek-r1", "claude", "codex"],
+        "tasks": [
+          "T00",
+          "T01",
+          "T02",
+          "T03",
+          "T04",
+          "T05"
+        ],
+        "status": "MERGED_TO_MAIN_EPOCH_93",
+        "agents": [
+          "pi-session-20261030-0754",
+          "pi-deepseek-r1",
+          "claude",
+          "codex"
+        ],
         "eunit_status": "67/67 targeted + 160/160 core harness EUnit PASS"
       },
       {
         "wave": "Wave 2 (6 Parallel Disjoint Adapters & Protocol Core + Merge #2 to main)",
-        "tasks": ["T06", "T07", "T09", "T10", "T11", "T15"],
-        "status": "READY_NEXT",
-        "agents": ["codex (T06, T11)", "pi-deepseek-chat (T07, T09, T10, T15)", "claude (Wave 2 security review)"]
+        "tasks": [
+          "T06",
+          "T07",
+          "T09",
+          "T10",
+          "T11",
+          "T15"
+        ],
+        "status": "MERGED_TO_MAIN_EPOCH_94",
+        "agents": [
+          "codex (T06, T11)",
+          "pi-deepseek-chat (T07, T09, T10, T15)",
+          "claude (Wave 2 security review)"
+        ]
       },
       {
         "wave": "Wave 3 (Unlocked Adapters T08, T12, T13 + Serial server.gleam Wiring + Merge #3 to main)",
-        "tasks": ["T08", "T12", "T13"],
-        "status": "QUEUED_ON_WAVE_2",
-        "agents": ["pi-deepseek-chat (T08, T12, T13)", "codex (server.gleam serial integration & EUnit)", "claude (authority review)"]
+        "tasks": [
+          "T08",
+          "T12",
+          "T13"
+        ],
+        "status": "MERGED_TO_MAIN_EPOCH_95",
+        "agents": [
+          "pi-deepseek-chat (T08, T12, T13)",
+          "codex (server.gleam serial integration & EUnit)",
+          "claude (authority review)"
+        ]
       },
       {
         "wave": "Wave 4 (Private Route Convergence, Transports, Facilities & Streamable HTTP + Merge #4 to main)",
-        "tasks": ["T14", "T16", "T17", "T18"],
-        "status": "QUEUED_ON_WAVE_3",
-        "agents": ["pi-deepseek-chat (T14, T16, T17)", "codex (T18 HTTP auth & transport integration)", "claude (HTTP/Zenoh auth review)"]
+        "tasks": [
+          "T14",
+          "T16",
+          "T17",
+          "T18"
+        ],
+        "status": "EXECUTING_WAVE_4",
+        "agents": [
+          "pi-deepseek-chat (T14, T16, T17)",
+          "codex (T18 HTTP auth & transport integration)",
+          "claude (HTTP/Zenoh auth review)"
+        ]
       },
       {
         "wave": "Wave 5 (5-Client Matrix, Assurance Gates, Workspace Disposition, 4-Surface Governance Sync, Final Acceptance & Rehearsal + Merge #5 to main)",
-        "tasks": ["T19", "T20", "T21", "T22", "T23", "T24"],
+        "tasks": [
+          "T19",
+          "T20",
+          "T21",
+          "T22",
+          "T23",
+          "T24"
+        ],
         "status": "QUEUED_ON_WAVE_4",
-        "agents": ["pi-deepseek-chat (T19, T20, T22)", "codex (T21, T24 & full EUnit)", "claude (T23 independent final acceptance)"]
+        "agents": [
+          "pi-deepseek-chat (T19, T20, T22)",
+          "codex (T21, T24 & full EUnit)",
+          "claude (T23 independent final acceptance)"
+        ]
       }
     ]
   },
@@ -95,12 +146,30 @@
     "claude_review_remediated": true,
     "architecture_doc": "docs/design/20261030-0932-ak47-fractal-thinking-as-is-to-be-architecture.md"
   },
+  "wave_2_merge": {
+    "status": "MERGED_TO_MAIN",
+    "epoch": 94,
+    "main_commit": "06606d7eb6ba3f1f998462f6e2ff79680886fb2d",
+    "tasks_completed": [
+      "T06",
+      "T07",
+      "T09",
+      "T10",
+      "T11",
+      "T15"
+    ],
+    "eunit_passed": 61,
+    "claude_review": "docs/reviews/20261030-0947-claude-wave2-security-review.json (23/24 UPHELD + D-01/R-02/R-03/R-06 remediated)"
+  },
   "sa_plan_progress": {
-    "completed": 6,
-    "executing": 6,
-    "executing_tasks": ["T06", "T07", "T09", "T10", "T11", "T15"],
-    "remaining_queued": 13,
-    "total": 25
+    "completed": 15,
+    "executing": 1,
+    "executing_tasks": [
+      "T14"
+    ],
+    "remaining_queued": 9,
+    "total": 25,
+    "percent_complete": 60.0
   },
   "critical_code_guards": {
     "contract": "SC-AGENTIC-RESILIENCE-001",
@@ -114,5 +183,17 @@
       "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
       "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam"
     ]
+  },
+  "wave_3_merge": {
+    "status": "MERGED_TO_MAIN",
+    "epoch": 95,
+    "tasks_completed": [
+      "T08",
+      "T12",
+      "T13"
+    ],
+    "public_tools_completed_total": 65,
+    "eunit_passed": 115,
+    "claude_review": "docs/reviews/20261030-1000-claude-wave3-adapters-review.json (C1..C5 + M1..M15 remediated)"
   }
 }

@@ -1,0 +1,232 @@
+```json
+{
+  "reviewer": "claude",
+  "wave": "wave-3-adapters",
+  "tasks": ["T08", "T12", "T13"],
+  "verdict": "REMEDIATE",
+  "critical_defects": [
+    {
+      "id": "C1",
+      "task": "T08",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/control.gleam",
+      "line": 243,
+      "title": "Replayed execute destroys the revert target; the 'reversible step' claim is falsified",
+      "falsifier": "healthy() backend, controller c1 current_stage=\"running\", previous_stage=None, owner-a, attempt 1. Call control_loop mode=execute action=pause TWICE with the identical principal and attempt. Call 1: current=\"pause\", previous=Some(\"running\"). Call 2 passes every recheck unchanged (interlock armed, 0 hazards, constraints satisfied, owner matches, attempt matches) and sets current=\"pause\", previous=Some(\"pause\"). A subsequent revert now returns the controller to \"pause\", and the pre-actuation stage \"running\" is unrecoverable from the backend.",
+      "why_critical": "execute_step has no idempotency or replay fence: the attempt fence is an ownership check, not a once-only effect token, so the same logical effect can be applied N times. ExecuteReversibleStep is advertised as reversible, but reversibility holds only for the first application. This is an STPA UCA-4 (control action applied too long / repeated) with silent loss of the rollback state."
+    },
+    {
+      "id": "C2",
+      "task": "T08",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/control.gleam",
+      "line": 390,
+      "title": "Effect-time recheck ignores runtime_healthy, so actuation succeeds while the adapter itself reports safety_verdict=unsafe",
+      "falsifier": "Backend: interlock_armed=True, stpa_hazards_open=0, controllers={c1: ObservedInstance(runtime_healthy=False, constraints_satisfied=True, owner_worker=\"owner-a\", attempt=1, current_stage=\"running\")}. safety_status returns all_observed_healthy=false and safety_verdict=\"unsafe\". The very same backend accepts control_loop mode=execute action=pause from owner-a attempt 1 and mutates the controller to \"pause\" with mutated=true.",
+      "why_critical": "recheck/5 destructures ObservedInstance and discards runtime_healthy (positional `_` at index 3). The derived safety verdict is therefore not load-bearing at the actuation boundary: the system can self-report unsafe and actuate in the same breath. Either recheck must include the target controller's runtime_healthy and the global all_observed_healthy, or safety_status must stop presenting a verdict it does not enforce."
+    },
+    {
+      "id": "C3",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam",
+      "line": 387,
+      "title": "observation_payload hardcodes verified_for_active_candidate=true for a receipt that observed a non-zero exit",
+      "falsifier": "store.active_candidate=\"cand-A\", completed_task_ids=[] (task not yet completed), receipts={\"T9\": ExecutionReceipt(candidate_commit=\"cand-A\", exit_code=1, raw=None, wrapper=None)}. harness_system_feature_observations(store, \"T9\") takes the `False ->` branch at line 419 (not a completed task), which calls observation_payload without any exit_code gate, emitting {\"exit_code\":1, ..., \"verified_for_active_candidate\":true}.",
+      "why_critical": "valid_active_receipt/2 correctly requires exit_code == 0, but that predicate is only consulted by compute_progress; the observations tool bypasses it on the non-completed-task path and asserts verification over a failed execution. A false 'verified' claim in an evidence tool violates Psi-5 truthfulness and SC-PROVENANCE-001 admission vocabulary (a failing run is UNRUN/FAILED, never verified). The field must be computed from valid_active_receipt, not literal json.bool(True)."
+    },
+    {
+      "id": "C4",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam",
+      "line": 153,
+      "title": "Wrapper/raw verdict conflict guard recognises only two exact uppercase approval literals, so any synonym overrides a raw rejection",
+      "falsifier": "ExecutionReceipt(candidate_commit=\"cand-A\", exit_code=0, raw_review_verdict=Some(\"REJECTED\"), wrapper_verdict=Some(\"PASS\")). wrapper_approved evaluates to False because \"PASS\" is neither \"APPROVED\" nor \"APPROVED_FOR_MAIN\", so wrapper_raw_conflict returns False and harness_system_feature_observations / harness_execution_progress / mcp_capability_inventory all return Complete. The same holds for \"approved\" (lowercase), \"APPROVE\", \"VERIFIED\", \"ACCEPT\", \"OK\", \"APPROVED_WITH_NITS\".",
+      "why_critical": "The stated T13 invariant is 'a summary wrapper may never upgrade a raw review verdict'. The implementation inverts the safe default: it enumerates approvals (open set, case-sensitive) instead of enumerating non-approvals and failing closed on anything unrecognised. The guard is evaded by a one-word change in attacker- or tool-controlled wrapper text. Correct shape: conflict whenever raw is absent or in {HOLD, REJECTED, ...} and wrapper is anything other than a recognised non-approval — i.e. unknown wrapper verdict must be treated as approval-claiming."
+    },
+    {
+      "id": "C5",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/test/mcp_analysis_test.gleam",
+      "line": 110,
+      "title": "rete_rule_conflict acceptance assertion is unreachable: the test feeds comma-separated rules to a semicolon-separated parser",
+      "falsifier": "detect_conflicts/1 splits on \";\" (analysis.gleam:313); the test input is \"door_open:allow,door_open:deny\" with no \";\". scan_rules therefore sees ONE part and runs string.split(part, \":\") which yields three elements [\"door_open\", \"allow,door_open\", \"deny\"]; the `[condition, action]` pattern requires exactly two, so the `_` arm at analysis.gleam:342 returns Error(INVALID_ANALYSIS_INPUT) and execute returns Refused. The test's Complete branch (asserting matcher_kind and conflict_count=1) cannot be reached, and the `_ -> should.fail()` arm fires.",
+      "why_critical": "Either the T12 analysis suite is red (so the 'green tests' evidence for the Rete tool is unsound), or conflict detection has a separator contract that no test exercises and that no tool schema documents. Execution was BLOCKED in this review sandbox (gleam build / erl invocation denied), so this finding is derived from source reading and must be settled by actually running the module's eunit suite before any completion packet cites it as verified. Recommended fix: accept both ';' and ',' as rule separators, and add a negative test pinning the malformed-rule refusal."
+    }
+  ],
+  "medium_findings": [
+    {
+      "id": "M1",
+      "task": "T08",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/control.gleam",
+      "line": 190,
+      "finding": "safety_status reports safety_verdict=\"healthy\" vacuously when there are zero ObservedInstance controllers: list.all over the empty observed list is True, so a registry of DeclaredOnly entries plus an armed interlock yields 'healthy' with observed_count=0. 'No runtime observation' must not render as health; emit a distinct verdict (e.g. \"unobserved\") when observed_count == 0."
+    },
+    {
+      "id": "M2",
+      "task": "T08",
+      "file": "apps/cepaf_gleam/test/mcp_control_test.gleam",
+      "line": 1,
+      "finding": "The closed ControlIntent allowlist has no negative test. No case asserts DISALLOWED_CONTROL_INTENT for an arbitrary action (e.g. mode=execute action=rm-rf, mode=shutdown, mode=execute action=\"\"), and parse_control_intent is never exercised directly. The headline T08 invariant is therefore untested; also untested: UNKNOWN_CONTROLLER and NO_PREVIOUS_STAGE."
+    },
+    {
+      "id": "M3",
+      "task": "T08",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/control.gleam",
+      "line": 81,
+      "finding": "The allowlist check lowercases the action but the stage stored and echoed is string.trim(action) un-normalised, so mode=execute action=\"PaUsE\" stores current_stage=\"PaUsE\". Stage identity then differs by case across records and any downstream equality on current_stage breaks. Store the normalised token."
+    },
+    {
+      "id": "M4",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+      "line": 20,
+      "finding": "InferenceBackend has only two constructors (MaxDaemonOffline / MaxDaemonReady); the required third state MissingInferenceDaemon (never configured / binary absent) is collapsed into MaxDaemonOffline and distinguished only by free-text `reason`. Worse, the refusal is unconditionally Retryable, so a permanently absent daemon is advertised as a transient fault and invites unbounded retry. A missing daemon should be a distinct constructor with NonRetryable."
+    },
+    {
+      "id": "M5",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+      "line": 258,
+      "finding": "reference_forecast echoes the caller-supplied `source` string verbatim into the payload with no allowlist: args source=\"gemma-4-gpu\" produces {\"source\":\"gemma-4-gpu\",\"epistemic_class\":\"deterministic_kernel\"}. A consumer keying on `source` reads model provenance for a two-point finite difference. epistemic_class keeps the record technically honest, which is why this is medium and not critical, but `source` must be a closed enum (max_model | reference_kernel) with anything else refused."
+    },
+    {
+      "id": "M6",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+      "line": 504,
+      "finding": "forbidden_plot_token is case-sensitive (unlike trap_reason, which lowercases). mark=\"<SCRIPT>alert(1)</SCRIPT>\" or y=\"EVAL(1)\" or x=\"FUNCTION(1)\" passes the guard and is echoed into the emitted spec. The blocklist is also only six tokens (no \"javascript:\", \"onerror=\", \"import(\", \"require(\", \"${\", \"\\u0000\"). Lowercase before matching and extend the token set; a declarative-only claim guarded by a six-token case-sensitive substring scan is weaker than advertised."
+    },
+    {
+      "id": "M7",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+      "line": 39,
+      "finding": "sql_markers require a trailing space, so \"union/**/select*from x\", \"select\\tcol\", \"DROP\\nTABLE\" and \"select(1)\" all evade trap_reason. The SQL trap is a whitespace-dependent substring heuristic presented as a trap. Match on word boundaries over whitespace-normalised input, and state in the docstring that this is a heuristic ingress filter, not a parser."
+    },
+    {
+      "id": "M8",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/test/mcp_analysis_test.gleam",
+      "line": 1,
+      "finding": "The NUL-byte and SQL-fragment traps on ast_anomaly_detect — an explicit T12 acceptance item — have NO test in this file. trap_reason, the denied NVMe serial check, and ast_anomaly_detect are never invoked by any test. Add positive refusals for \"\\u{0000}\", a raw SQL fragment, and the denied serial 25503L801736, plus a clean-sample Complete case."
+    },
+    {
+      "id": "M9",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+      "line": 98,
+      "finding": "control_authority_requested matches only the exact lowercase literal \"true\" on exactly two keys, so authorize_control=\"True\"/\"TRUE\"/\"1\"/\"yes\", or keys like grant_control / effect_authority / actuate, are not refused. Impact is limited (the adapter has no effect path at all, so no authority is actually conferred), but the guard is documented as fail-closed and is not: normalise the value and treat any truthy form on any authority-shaped key as a refusal."
+    },
+    {
+      "id": "M10",
+      "task": "T12",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/analysis.gleam",
+      "line": 366,
+      "finding": "Fold seeds are wrong for negative/empty input. ruliad_branch_eval computes branch_max with list.fold(branches, 0, int.max), so branches=\"-5,-3\" reports branch_max=0 — a value absent from the input. shruti_harmonics reports fundamental=0 for an empty frequency list. Use list.reduce and refuse the empty case rather than emitting a fabricated extremum."
+    },
+    {
+      "id": "M11",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam",
+      "line": 417,
+      "finding": "A completed task whose receipt EXISTS, is candidate-bound, and exited non-zero is refused with MISSING_EXECUTION_RECEIPT. The receipt is present; the run failed. Conflating 'no evidence' with 'negative evidence' misdirects remediation and loses the distinction SC-PROVENANCE-001 depends on. Introduce a distinct code (e.g. FAILED_EXECUTION_RECEIPT)."
+    },
+    {
+      "id": "M12",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam",
+      "line": 143,
+      "finding": "check_ceiling compares one scalar (store.admitted_ev_ceiling > 93) while the docstring claims it 'refuses any store that claims admitted evidence above the immutable EV93 ceiling'. CapabilityRecord carries no EV number, so a store declaring ceiling 93 while holding capabilities with admission_state=\"admitted\" sourced from the quarantined EV-94..109 range passes the guard and is counted in admitted_count. Either bind an ev_cycle field per record and check it, or narrow the docstring to what is actually checked."
+    },
+    {
+      "id": "M13",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/test/mcp_feature_acceptance_test.gleam",
+      "line": 127,
+      "finding": "The inventory test hardcodes registry route totals (101/65/21/15). These are declaration counts coupled to a global registry, so any route addition in an unrelated wave reds this acceptance test, and the magic numbers encode no epistemic invariant. Assert the relation instead (public + development + successor == total, admitted_count == 0 when no record is admitted)."
+    },
+    {
+      "id": "M14",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/test/mcp_feature_acceptance_test.gleam",
+      "line": 21,
+      "finding": "Every test receipt is built by base_receipt with exit_code: 0; no test ever constructs a non-zero exit. That single omission is what leaves C3 (false verified_for_active_candidate) and M11 (misclassified refusal) both undetected. Add exit_code=1 cases for the completed and non-completed paths and for compute_progress."
+    },
+    {
+      "id": "M15",
+      "task": "T13",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam",
+      "line": 23,
+      "finding": "execute/3 dispatches harness_system_feature_observations on a task_id that silently defaults to \"\" when both task_id and feature_id are absent, producing UNKNOWN_FEATURE_OR_TASK for id \"\" rather than a missing-argument refusal. Likewise harness_system_feature_intent defaults intent_id to \"\". Distinguish absent argument from unknown id. (Note also that execute/3 in this file is the only entry point not covered by the acceptance test, which calls the inner functions directly.)"
+    }
+  ],
+  "verified_invariants": [
+    {
+      "task": "T08",
+      "invariant": "DeclaredOnly is never conflated with observed runtime health: controller_json emits runtime_state=\"unobserved\", runtime_healthy=false and constraints_satisfied=false for DeclaredOnly, and observed_running_count counts only ObservedInstance entries with runtime_healthy=true. Confirmed in source (control.gleam:143-177) and pinned by registry_declaration_is_not_runtime_health_test (declared_count=2, observed_running_count=1)."
+    },
+    {
+      "task": "T08",
+      "invariant": "control_loop preview is side-effect free: the PreviewStep arm returns the original `backend` value unchanged in both tuple positions (control.gleam:236) and emits mutated=false. Pinned by control_preview_has_no_effect_test asserting `after |> should.equal(backend)`."
+    },
+    {
+      "task": "T08",
+      "invariant": "Every refusal path returns the UNMUTATED backend. Verified structurally for all five refusal arms (DeclaredOnly, interlock disarmed, hazards open, constraints unsatisfied, principal mismatch, stale attempt) in execute_step/revert_step, and asserted for four of them in execute_rechecks_constraints_and_attempt_test."
+    },
+    {
+      "task": "T08",
+      "invariant": "Effect-time rechecks of interlock, open STPA hazard count, per-controller constraints, principal ownership (principal.actor_id == owner_worker) and the attempt fence (call.attempt == Some(attempt)) are all performed inside recheck/5 at actuation time, reading live backend state rather than a cached preview verdict. Each yields a distinct NonRetryable code (SAFETY_CONSTRAINT_VIOLATION / CONTROL_PRINCIPAL_MISMATCH / CONTROL_STALE_ATTEMPT). Note the gap recorded as C2 (runtime_healthy excluded)."
+    },
+    {
+      "task": "T08",
+      "invariant": "The safety verdict is derived, not hardcoded: safe = interlock_armed && stpa_hazards_open == 0 && all_observed_healthy (control.gleam:198-205), and the three inputs are emitted alongside the verdict so a reader can recompute it. Note the vacuous-empty case recorded as M1."
+    },
+    {
+      "task": "T08",
+      "invariant": "parse_control_intent is a closed allowlist over five stages for preview, five stages plus \"revert\" for execute, and {\"last\",\"\"} for revert; every other (mode, action) pair falls to disallowed_control_intent with NonRetryable DISALLOWED_CONTROL_INTENT. Verified by code inspection only — no test exercises it (M2)."
+    },
+    {
+      "task": "T12",
+      "invariant": "An unavailable Max daemon never fabricates a prediction: MaxDaemonOffline refuses with INFERENCE_MODEL_UNAVAILABLE, and a ready daemon lacking the requested series key refuses with INFERENCE_SERIES_MISSING rather than interpolating. There is no code path from the model branch into reference_forecast. Pinned by model_absence_is_not_synthetic_prediction_test."
+    },
+    {
+      "task": "T12",
+      "invariant": "Deterministic kernels are labelled as such: every non-model emit carries epistemic_class=\"deterministic_kernel\", the model path carries \"model_backed\", and the Rete tool self-labels matcher_kind=\"naive_forward_conflict_scan_not_full_rete_ul\" rather than claiming full Rete-UL. Pinned by deterministic_kernels_compute_real_outputs_and_honest_labels_test."
+    },
+    {
+      "task": "T12",
+      "invariant": "Every analysis emission carries advisory_only=true and effect_authority=false (analysis.gleam:108-112), and an explicit authorize_control=true / execute_effect=true request is refused with INFERENCE_CANNOT_AUTHORIZE_CONTROL before tool dispatch. The adapter has no mutation surface at all — execute/3 takes no backend handle it can write. Pinned by inference_cannot_authorize_control_test; value-normalisation gap in M9."
+    },
+    {
+      "task": "T12",
+      "invariant": "Plot specs are declarative data: declarative_plot_spec emits only spec_kind/mark/x/y/layers with declarative_only=true and code_executed=false, never evaluates or shells out, and refuses on a forbidden token with EXECUTABLE_PLOT_CODE_FORBIDDEN. The scan covers ALL argument values, not just plot-named keys. Pinned by generated_plot_code_is_not_executed_test; case-sensitivity gap in M6."
+    },
+    {
+      "task": "T12",
+      "invariant": "Malformed numeric input fails closed rather than defaulting: get_int, parse_int_csv and parse_float_csv all return INVALID_ANALYSIS_INPUT naming the offending token, and no tool substitutes a zero or a default for an unparseable argument."
+    },
+    {
+      "task": "T13",
+      "invariant": "The EV ceiling is an immutable module constant (ev_ceiling = 93) checked before any evidence is reported by all five tools; a store declaring 94 is refused with PROVENANCE_CEILING_VIOLATION. Pinned by capability_inventory_keeps_five_epistemic_states_and_ev93_ceiling_test; scope limit in M12."
+    },
+    {
+      "task": "T13",
+      "invariant": "A completed task with no receipt is never counted complete: compute_progress yields verified_complete_count=0, unverified_missing_receipt_count=1, and harness_system_feature_observations refuses with MISSING_EXECUTION_RECEIPT. Pinned by completed_task_without_receipt_is_not_complete_test."
+    },
+    {
+      "task": "T13",
+      "invariant": "A receipt bound to a non-active candidate is stale and never counts: is_active_candidate_receipt compares candidate_commit to active_candidate, compute_progress reports stale_receipt_count=1 with verified_complete_count=0, and the observations tool refuses with STALE_CANDIDATE_RECEIPT. The payload also carries stale_never_counts_as_complete. Pinned by wrong_candidate_receipt_is_stale_test."
+    },
+    {
+      "task": "T13",
+      "invariant": "The wrapper/raw conflict check is applied per-receipt in the observations tool and store-wide (list.any over all receipts) in progress, inventory, catalog and intent, so one conflicting receipt refuses the aggregate rather than being averaged away. Pinned by wrapper_raw_verdict_conflict_rejected_test for both surfaces. The approval-literal weakness is C4."
+    },
+    {
+      "task": "T13",
+      "invariant": "Five epistemic states stay distinct: CapabilityRecord carries declaration_state, implementation_state, execution_state, formal_state and admission_state separately; capability_inventory counts each independently; every emitted record sets formal_state=\"unrun\" and admission_state=\"not_admitted\"; and payloads assert declared_is_not_admitted. A record with formal_state=\"verified\" still yields admitted_count=0."
+    },
+    {
+      "task": "T08/T13",
+      "invariant": "No adapter self-admits: control routes success through evidence.classify_backend_payload and features through its local complete/3, both of which pin formal_state=\"unrun\" and admission_state=\"not_admitted\" and digest the exact emitted payload bytes (files.digest(payload)) — the digest covers what the record contains, consistent with L-06."
+    }
+  ]
+}
+```

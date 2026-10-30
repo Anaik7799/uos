@@ -1,10 +1,27 @@
 //// Authorization at the MCP tool-call effect boundary (mcp/authz.gleam).
 
 import cepaf_gleam/bridge/pi_tools
+import cepaf_gleam/mcp/adapters/analysis
+import cepaf_gleam/mcp/adapters/control
+import cepaf_gleam/mcp/adapters/features
+import cepaf_gleam/mcp/adapters/knowledge
+import cepaf_gleam/mcp/adapters/planning_read
+import cepaf_gleam/mcp/adapters/planning_write
+import cepaf_gleam/mcp/adapters/system_observation
+import cepaf_gleam/mcp/adapters/vault_metadata
+import cepaf_gleam/mcp/adapters/verification
+import cepaf_gleam/mcp/admission
 import cepaf_gleam/mcp/authz
+import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/server
+import cepaf_gleam/mcp/supervisor
+import cepaf_gleam/mcp/types.{
+  ClientProfile, Complete, Refused, TaskScopedMutation,
+}
 import cepaf_gleam/planning/enforcer
+import gleam/dict
 import gleam/json
+import gleam/list
 import gleam/option.{Some}
 import gleam/string
 import gleeunit/should
@@ -217,4 +234,233 @@ pub fn e2e_readonly_tool_is_not_denied_under_default_configuration_test() {
   response |> string.contains("\"code\":-32003") |> should.be_false
   response |> string.contains("\"code\":-32004") |> should.be_false
   response |> string.contains("\"code\":-32005") |> should.be_false
+}
+
+fn authenticated_context() -> admission.AdmissionContext {
+  admission.AdmissionContext(
+    principal: principal.from_launcher_env(
+      "trusted-worker",
+      ClientProfile("codex"),
+      "/workspace",
+      "session",
+    ),
+    mode: admission.EnforcedMode,
+    now_ms: 1000,
+    workspace_root: "/workspace",
+    task_fence: Some(admission.TaskFence(
+      plan_id: "authority-plan",
+      task_id: "authority-task",
+      worker_id: "trusted-worker",
+      attempt: 1,
+      task_state: admission.TaskExecuting,
+      lease_until_ms: 2000,
+      grant: Some(admission.GrantTicket(
+        "grant",
+        TaskScopedMutation,
+        False,
+        2000,
+        "/workspace",
+      )),
+    )),
+  )
+}
+
+fn authenticated_backends() -> server.ServerBackends {
+  server.ServerBackends(
+    planning_read: planning_read.sample_canonical_store("plan", []),
+    planning_write: planning_write.new_store(),
+    observation: system_observation.ObservedSnapshot(
+      "candidate",
+      "test",
+      1000,
+      100,
+      Some([]),
+      dict.from_list([#("system_health.status", "healthy")]),
+    ),
+    control: control.ControlBackend("candidate", 0, True, dict.new()),
+    verification_runner: fn(_) { verification.CheckExecuted(0, "ok", 1) },
+    knowledge: knowledge.new_corpus(
+      "/workspace",
+      ["public", "private"],
+      4096,
+      4,
+    )
+      |> knowledge.with_entry(knowledge.CorpusEntry(
+        "readme.md",
+        knowledge.RegularFile,
+        "public",
+        "public knowledge",
+      ))
+      |> knowledge.with_entry(knowledge.CorpusEntry(
+        "private.md",
+        knowledge.RegularFile,
+        "private",
+        "private knowledge",
+      )),
+    vault: vault_metadata.SupervisedVault(
+      "/workspace",
+      False,
+      True,
+      [],
+      dict.new(),
+      [],
+    ),
+    analysis: analysis.MaxDaemonOffline("fixture has no daemon"),
+    features: features.FeatureEvidenceStore(
+      "candidate",
+      93,
+      [],
+      [],
+      dict.new(),
+      dict.new(),
+    ),
+  )
+}
+
+pub fn authenticated_dispatch_routes_all_nine_public_families_test() {
+  let context = authenticated_context()
+  let assert Ok(pool) = supervisor.start_worker_pool(1)
+  let backends = authenticated_backends()
+  // Each family must return its adapter's successful typed outcome.
+  list.each(
+    [
+      #("sa_plan_status", dict.new()),
+      #("system_health", dict.new()),
+      #("registry_status", dict.new()),
+      #("verification_run", dict.new()),
+      #("read_file", dict.from_list([#("path", "readme.md")])),
+      #("vault_status", dict.new()),
+      #("lyapunov_trend_predict", dict.from_list([#("series", "3.0,2.0,1.0")])),
+      #("harness_execution_progress", dict.new()),
+    ],
+    fn(entry) {
+      let #(outcome, unchanged_pool, _) =
+        server.execute_authenticated(context, pool, backends, entry.0, entry.1)
+      let assert Complete(_, evidence) = outcome
+      evidence.tool |> should.equal(entry.0)
+      case entry.0 {
+        "registry_status" ->
+          dict.size(unchanged_pool.ledger.entries) |> should.equal(1)
+        _ -> unchanged_pool |> should.equal(pool)
+      }
+    },
+  )
+
+  let add_args =
+    dict.from_list([
+      #("plan_id", "plan"),
+      #("task_id", "target"),
+      #("intent_id", "add-target"),
+    ])
+  let #(added, pool, backends) =
+    server.execute_authenticated(context, pool, backends, "plan_add", add_args)
+  let assert Complete(_, _) = added
+  let #(replayed, replay_pool, replay_backends) =
+    server.execute_authenticated(context, pool, backends, "plan_add", add_args)
+  replayed |> should.equal(added)
+  replay_pool |> should.equal(pool)
+  replay_backends |> should.equal(backends)
+
+  let #(claimed, pool, backends) =
+    server.execute_authenticated(
+      context,
+      pool,
+      backends,
+      "sa_task_claim",
+      dict.from_list([
+        #("plan_id", "plan"),
+        #("task_id", "target"),
+        #("worker", "evil-impersonator"),
+      ]),
+    )
+  let assert Complete(_, _) = claimed
+  let assert Ok(task) =
+    dict.get(backends.planning_write.tasks, #("plan", "target"))
+  task.worker |> should.equal(principal.actor_id(context.principal))
+  task.attempt |> should.equal(1)
+
+  // A distinct intent really reaches the adapter, preserving its refusal code.
+  let #(refusal, _, refused_backends) =
+    server.execute_authenticated(
+      context,
+      pool,
+      backends,
+      "plan_add",
+      dict.insert(add_args, "intent_id", "duplicate-task"),
+    )
+  let assert Refused(err) = refusal
+  err.code |> should.equal("TASK_ALREADY_EXISTS")
+  refused_backends |> should.equal(backends)
+  let #(conflict, _, _) =
+    server.execute_authenticated(
+      context,
+      pool,
+      backends,
+      "plan_add",
+      dict.insert(add_args, "task_id", "different"),
+    )
+  let assert Refused(err) = conflict
+  err.code |> should.equal("IDEMPOTENCY_CONFLICT")
+
+  // No caller argument can supply the principal scope missing from its API.
+  let #(private_read, _, _) =
+    server.execute_authenticated(
+      context,
+      pool,
+      backends,
+      "read_file",
+      dict.from_list([#("path", "private.md"), #("scopes", "private")]),
+    )
+  let assert Refused(err) = private_read
+  err.code |> should.equal("CROSS_PRINCIPAL_SCOPE_FORBIDDEN")
+}
+
+pub fn authenticated_dispatch_refuses_workspace_mismatch_and_ungranted_mutation_test() {
+  let context = authenticated_context()
+  let assert Ok(pool) = supervisor.start_worker_pool(1)
+  let backends = authenticated_backends()
+  let mismatched =
+    admission.AdmissionContext(..context, workspace_root: "/another-workspace")
+  let #(outcome, returned_pool, returned_backends) =
+    server.execute_authenticated(
+      mismatched,
+      pool,
+      backends,
+      "sa_plan_status",
+      dict.new(),
+    )
+  let assert Refused(err) = outcome
+  err.code |> should.equal("PRINCIPAL_WORKSPACE_MISMATCH")
+  returned_pool |> should.equal(pool)
+  returned_backends |> should.equal(backends)
+
+  let assert Some(fence) = context.task_fence
+  let ungranted =
+    admission.AdmissionContext(
+      ..context,
+      task_fence: Some(admission.TaskFence(..fence, grant: option.None)),
+    )
+  let #(outcome, returned_pool, returned_backends) =
+    server.execute_authenticated(
+      ungranted,
+      pool,
+      backends,
+      "plan_add",
+      dict.from_list([#("plan_id", "plan"), #("task_id", "target")]),
+    )
+  let assert Refused(err) = outcome
+  err.code |> should.equal("MISSING_AUTHORITY_GRANT")
+  returned_pool |> should.equal(pool)
+  returned_backends |> should.equal(backends)
+
+  let #(unknown, _, _) =
+    server.execute_authenticated(
+      context,
+      pool,
+      backends,
+      "not-a-tool",
+      dict.new(),
+    )
+  let assert Refused(err) = unknown
+  err.code |> should.equal("UNKNOWN_ROUTE_OR_TOOL")
 }

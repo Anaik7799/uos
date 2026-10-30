@@ -15,6 +15,14 @@ import cepaf_gleam/mcp/types.{
 import gleam/json.{type Json}
 import gleam/list
 
+pub fn all_specs() -> List(ToolSpec) {
+  list.flatten([
+    route_specs("public"),
+    route_specs("development"),
+    route_specs("successor"),
+  ])
+}
+
 pub fn lookup(route: String, name: String) -> Result(ToolSpec, ToolError) {
   let specs = route_specs(route)
   case list.find(specs, fn(s) { s.name == name }) {

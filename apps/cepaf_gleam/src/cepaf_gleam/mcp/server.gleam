@@ -14,9 +14,27 @@ import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/harness/mcp as task_mcp
 import cepaf_gleam/harness/value
+import cepaf_gleam/mcp/adapters/analysis
+import cepaf_gleam/mcp/adapters/control
+import cepaf_gleam/mcp/adapters/features
+import cepaf_gleam/mcp/adapters/knowledge
+import cepaf_gleam/mcp/adapters/planning_read
+import cepaf_gleam/mcp/adapters/planning_write
+import cepaf_gleam/mcp/adapters/system_observation
+import cepaf_gleam/mcp/adapters/vault_metadata
+import cepaf_gleam/mcp/adapters/verification
+import cepaf_gleam/mcp/admission.{type AdmissionContext, type ValidatedCall}
 import cepaf_gleam/mcp/authz
+import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
+import cepaf_gleam/mcp/receipts
+import cepaf_gleam/mcp/registry
+import cepaf_gleam/mcp/supervisor.{type WorkerPool, WorkerPool}
 import cepaf_gleam/mcp/tools
+import cepaf_gleam/mcp/types.{
+  type Outcome, Complete, ControlActuation, Mutating, NonRetryable,
+  ReconcileFirst, Refused, ToolError, Uncertain,
+}
 import cepaf_gleam/planning/sa_plan_bridge
 import cepaf_gleam/sciviz/extension_deep_dive
 import cepaf_gleam/sciviz/transpiler
@@ -25,13 +43,239 @@ import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/router as wisp_router
 import cepaf_gleam/zenoh/client as zenoh_client
 import gleam/bit_array
+import gleam/dict.{type Dict}
 import gleam/dynamic/decode
 import gleam/int
 import gleam/io
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import gleam/string
+
+/// The OTP owner serializes calls and commits the returned pool and backends
+/// together; concurrent callers must not commit stale snapshots.
+pub type ServerBackends {
+  ServerBackends(
+    planning_read: planning_read.PlanningReadStore,
+    planning_write: planning_write.PlanningWriteStore,
+    observation: system_observation.ObservationBackend,
+    control: control.ControlBackend,
+    verification_runner: fn(verification.CheckId) ->
+      verification.CheckRunnerResult,
+    knowledge: knowledge.KnowledgeCorpus,
+    vault: vault_metadata.VaultHandle,
+    analysis: analysis.InferenceBackend,
+    features: features.FeatureEvidenceStore,
+  )
+}
+
+pub fn execute_authenticated(
+  context: AdmissionContext,
+  pool: WorkerPool,
+  backends: ServerBackends,
+  tool_name: String,
+  args: Dict(String, String),
+) -> #(Outcome, WorkerPool, ServerBackends) {
+  case registry.lookup("public", tool_name) {
+    Error(err) -> #(Refused(err), pool, backends)
+    Ok(spec) ->
+      case admission.admit(context, spec, args) {
+        Error(err) -> #(Refused(err), pool, backends)
+        Ok(call) ->
+          case admission.verify_at_effect_time(context, call) {
+            Error(err) -> #(Refused(err), pool, backends)
+            Ok(verified) ->
+              case verified.spec.effect_class {
+                Mutating | ControlActuation ->
+                  execute_receipted(context, pool, backends, verified)
+                _ -> {
+                  let #(outcome, updated) =
+                    dispatch_authenticated(context, pool, backends, verified)
+                  #(outcome, pool, updated)
+                }
+              }
+          }
+      }
+  }
+}
+
+fn execute_receipted(
+  context: AdmissionContext,
+  pool: WorkerPool,
+  backends: ServerBackends,
+  call: ValidatedCall,
+) -> #(Outcome, WorkerPool, ServerBackends) {
+  // Bind replay identity to the authenticated actor/workspace, never payload worker.
+  let payload_hash =
+    receipts.hash_payload(call.spec.name, dict.to_list(call.arguments))
+  let owner_hash =
+    receipts.hash_payload(call.spec.name, [
+      #("actor", principal.actor_id(call.principal)),
+      #("workspace", principal.workspace_root(call.principal)),
+    ])
+  let requested_intent =
+    result.unwrap(dict.get(call.arguments, "intent_id"), "")
+  let logical_id = case requested_intent {
+    "" -> payload_hash
+    _ -> requested_intent
+  }
+  let intent_id =
+    call.spec.route
+    <> ":"
+    <> call.spec.name
+    <> ":"
+    <> owner_hash
+    <> ":"
+    <> logical_id
+  case
+    receipts.record_intent(
+      pool.ledger,
+      intent_id: intent_id,
+      route: call.spec.route,
+      tool: call.spec.name,
+      payload_hash: payload_hash,
+    )
+  {
+    Error(err) -> #(Refused(err), pool, backends)
+    Ok(ledger) -> {
+      let updated_pool = WorkerPool(..pool, ledger: ledger)
+      case receipts.lookup(ledger, intent_id) {
+        Some(receipts.ReceiptEntry(
+          state: receipts.OutcomeCommitted(outcome),
+          ..,
+        )) -> #(outcome, updated_pool, backends)
+        Some(receipts.ReceiptEntry(state: receipts.EffectUncertain(_), ..)) -> #(
+          Refused(ToolError(
+            "UNCERTAIN_RECEIPT_RECONCILE_REQUIRED",
+            "Uncertain effect requires explicit reconciliation",
+            ReconcileFirst,
+          )),
+          updated_pool,
+          backends,
+        )
+        _ -> {
+          let #(outcome, updated) =
+            dispatch_authenticated(context, updated_pool, backends, call)
+          case outcome {
+            Complete(_, _) -> #(
+              outcome,
+              WorkerPool(
+                ..updated_pool,
+                ledger: receipts.mark_complete(
+                  ledger,
+                  intent_id: intent_id,
+                  outcome: outcome,
+                ),
+              ),
+              updated,
+            )
+            Uncertain(receipt) -> {
+              let #(_, uncertain_ledger) =
+                receipts.mark_uncertain(
+                  ledger,
+                  intent_id: intent_id,
+                  reason: receipt.reason,
+                )
+              #(
+                outcome,
+                WorkerPool(..updated_pool, ledger: uncertain_ledger),
+                backends,
+              )
+            }
+            Refused(_) -> #(outcome, updated_pool, backends)
+          }
+        }
+      }
+    }
+  }
+}
+
+fn dispatch_authenticated(
+  context: AdmissionContext,
+  pool: WorkerPool,
+  backends: ServerBackends,
+  call: ValidatedCall,
+) -> #(Outcome, ServerBackends) {
+  let tool_name = call.spec.name
+  case call.spec.family {
+    "planning_read" -> #(
+      planning_read.execute(backends.planning_read, tool_name, call.arguments),
+      backends,
+    )
+    "planning_write" -> {
+      // planning_write derives its worker exclusively from call.principal.
+      let #(outcome, store) =
+        planning_write.execute(backends.planning_write, call)
+      case outcome {
+        Complete(_, _) -> #(
+          outcome,
+          ServerBackends(..backends, planning_write: store),
+        )
+        _ -> #(outcome, backends)
+      }
+    }
+    "observability" | "system_observation" -> #(
+      system_observation.observe(
+        backends.observation,
+        context.now_ms,
+        tool_name,
+        call.arguments,
+      ),
+      backends,
+    )
+    "control_safety_registry" -> {
+      let #(outcome, backend) = control.execute(backends.control, call)
+      case outcome {
+        Complete(_, _) -> #(
+          outcome,
+          ServerBackends(..backends, control: backend),
+        )
+        _ -> #(outcome, backends)
+      }
+    }
+    "verification" | "verification_execution" -> #(
+      verification.execute_verification(
+        tool_name,
+        result.unwrap(dict.get(call.arguments, "check_id"), "gleam_check"),
+        pool.ledger.candidate,
+        backends.verification_runner,
+      ),
+      backends,
+    )
+    // Principal currently has no scopes accessor. Only public corpus entries
+    // are readable until authenticated scope claims exist in that contract.
+    "knowledge_files" -> #(
+      knowledge.execute(
+        backends.knowledge,
+        ["public"],
+        tool_name,
+        call.arguments,
+      ),
+      backends,
+    )
+    "vault_metadata" -> #(
+      vault_metadata.execute(backends.vault, call),
+      backends,
+    )
+    "analysis_inference_sciviz" | "analysis_inference" -> #(
+      analysis.execute(tool_name, call.arguments, backends.analysis),
+      backends,
+    )
+    "feature_evidence" -> #(
+      features.execute(backends.features, tool_name, call.arguments),
+      backends,
+    )
+    _ -> #(
+      Refused(ToolError(
+        "UNSUPPORTED_TOOL_FAMILY",
+        "Unsupported tool family: " <> call.spec.family,
+        NonRetryable,
+      )),
+      backends,
+    )
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Erlang FFI bindings
@@ -679,7 +923,7 @@ fn tool_knowledge_search(id: Option(json.Json), raw_line: String) -> String {
 fn tool_verification_run(id: Option(json.Json)) -> String {
   case
     run_bounded_cd(
-      "/home/an/.nix-profile/bin/gleam",
+      "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
       ["check"],
       "/home/an/NAS-setup/uos/apps/cepaf_gleam",
       60_000,
@@ -691,12 +935,14 @@ fn tool_verification_run(id: Option(json.Json)) -> String {
       let truncated = string.slice(output, 0, 2000)
       tool_content_response(
         id,
-        json.to_string(json.object([
-          #("ok", json.bool(exit_code == 0)),
-          #("output", json.string(truncated)),
-          #("warnings", json.int(warnings)),
-          #("errors", json.int(errors)),
-        ])),
+        json.to_string(
+          json.object([
+            #("ok", json.bool(exit_code == 0)),
+            #("output", json.string(truncated)),
+            #("warnings", json.int(warnings)),
+            #("errors", json.int(errors)),
+          ]),
+        ),
       )
     }
     Error(err) -> tool_error_response(id, err)
@@ -718,9 +964,28 @@ fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
   }
   case json.parse(raw_line, path_decoder) {
     Ok(path) -> {
-      case read_file_as_string(path) {
-        Ok(content) -> tool_content_response(id, content)
-        Error(e) -> tool_error_response(id, "Error reading file: " <> e)
+      case
+        list.any(
+          [
+            "..",
+            "\u{0000}",
+            ".env",
+            ".ssh",
+            "id_rsa",
+            "id_ed25519",
+            ".sqlite3",
+            ".pem",
+            ".key",
+          ],
+          fn(marker) { string.contains(path, marker) },
+        )
+      {
+        True -> tool_error_response(id, "Security violation: forbidden path")
+        False ->
+          case read_file_as_string(path) {
+            Ok(content) -> tool_content_response(id, content)
+            Error(e) -> tool_error_response(id, "Error reading file: " <> e)
+          }
       }
     }
     Error(_) -> error_response(id, -32_602, "Missing params.arguments.path")
@@ -903,10 +1168,7 @@ fn tool_preflight_check(id: Option(json.Json), raw_line: String) -> String {
       ["params", "arguments", "benefit"],
       number_decoder,
     )
-    use cost <- decode.subfield(
-      ["params", "arguments", "cost"],
-      number_decoder,
-    )
+    use cost <- decode.subfield(["params", "arguments", "cost"], number_decoder)
     decode.success(#(actor, action, benefit, cost))
   }
   case json.parse(raw_line, decoder) {
@@ -1690,9 +1952,8 @@ fn tool_error_response(id: Option(json.Json), text: String) -> String {
 // can distinguish a missing binding from an adapter or protocol failure.
 const binding_error_codes = [
   "role_binding_missing", "plan_binding_missing", "task_binding_missing",
-  "worker_binding_missing", "attempt_binding_missing",
-  "session_binding_missing", "epoch_binding_missing",
-  "development_bootstrap_grant_mismatch",
+  "worker_binding_missing", "attempt_binding_missing", "session_binding_missing",
+  "epoch_binding_missing", "development_bootstrap_grant_mismatch",
 ]
 
 fn known_binding_error(reason: String) -> Option(String) {
