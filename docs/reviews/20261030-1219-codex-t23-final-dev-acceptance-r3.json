@@ -1,0 +1,335 @@
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "round": 3,
+  "reviewer": "codex-independent-verifier",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "task_id": "T23",
+  "observed_at": "2026-10-30T11:20:01Z",
+  "candidate_source_digest": "sha256:bfadfa4945b542a6711e3f65a95185b651476d690acf35c3e5b12a358159b0ea",
+  "core_dev_ready": true,
+  "mcp_full_dev_ready": false,
+  "system_admission": "NOT_ADMITTED",
+  "raw_verdict": "HOLD",
+  "critical_findings_count": 1,
+  "critical_findings": [
+    {
+      "id": "T23-C04",
+      "status": "PARTIALLY_CLOSED",
+      "category": "acceptance_evidence",
+      "location": "apps/cepaf_gleam/test/mcp_client_matrix_test.gleam:293",
+      "finding": "Candidate binding and real file roundtrips are repaired, but the 535-cell matrix still does not establish meaningful tool-specific backend execution for every required cell.",
+      "evidence": [
+        "harness_build and harness_test read gleam.toml and check whether an existing server.beam file exists, then emit exit_code 0 without executing a build or test.",
+        "The remaining private-handler fallback checks whether the temporary directory exists, then constructs handled:true and state:running regardless of the requested tool's actual semantics.",
+        "The matrix-wide predicate checks positive framing, candidate equality, client/tool identity and frame-digest length; it does not assert each tool's specific backend result or effect.",
+        "The dedicated meaningful-backend regression independently verifies a real write/read roundtrip and foreign-candidate refusal, but does not discharge the remaining private tools.",
+        "Public planning, observation, control, inference and completion stores remain development fixtures. Their successful responses do not establish execution against corresponding live backends."
+      ],
+      "verified_repairs": [
+        "All 535 positive cells now carry the observed six-source SHA-256 candidate identity.",
+        "Missing candidate extraction has no substitution fallback.",
+        "Real temporary-file write/read effects and content digests are asserted.",
+        "gleam.toml is actually read and hashed.",
+        "An existing BEAM artifact is actually checked for presence.",
+        "client_config.inspect_json is actually invoked.",
+        "Foreign-candidate public and private negative controls pass."
+      ],
+      "required_correction": "Retain fixture protocol coverage, but establish tool-specific execution and assertions for every cell claimed as positive backend acceptance. Build/test success must reference actual candidate-bound command execution and exit results; other private routes must exercise their intended operations rather than a generic directory-presence response."
+    }
+  ],
+  "round2_finding_reverification": [
+    {
+      "id": "T23-C01",
+      "status": "CLOSED",
+      "evidence": "Independent compiled Erlang probe supplied a TaskScopedMutation route ticket and a same-id AuditOnly fence ticket for development:harness_read_file. Admission returned ROUTE_GRANT_SCOPE_INSUFFICIENT. The named regression passed and also rejects a same-id inconsistent ControlMutation fence ticket with ROUTE_GRANT_TICKET_MISMATCH.",
+      "source_confirmation": "Fence scope is validated and route_grant_ticket_equal compares grant_id, scope, revoked, expires_at_ms and workspace_root."
+    },
+    {
+      "id": "T23-C02",
+      "status": "CLOSED",
+      "evidence": "The exact delimiter-collision probe returned false for hash equality. Receipt framing and conflicting-payload, committed-replay and uncertain-reconciliation regressions passed."
+    },
+    {
+      "id": "T23-C03",
+      "status": "CLOSED",
+      "evidence": "Independent compiled Erlang probe executed first-epoch at attempt 1 and second-epoch at attempt 2 using the committed first pool. The second result was second-epoch. Both private-read attempt-bump and cross-principal isolation regressions passed.",
+      "source_confirmation": "ReadOnly and VerificationGate ValidatedCall values preserve plan_id, task_id, attempt and grant_id from an available task fence."
+    },
+    {
+      "id": "T23-C04",
+      "status": "PARTIALLY_CLOSED",
+      "evidence": "Source-derived candidate binding and selected real backend operations are verified. Complete tool-specific backend acceptance remains unestablished; see the critical finding."
+    },
+    {
+      "id": "Claude T23-R2-C01",
+      "status": "CLOSED_FOR_REPORTED_CONSTANT_IDENTITY_DEFECT",
+      "evidence": "candidate_id.current computes a length-framed digest of the six specified MCP source files. Supervisor defaults and the five named adapters use this identity; every matrix cell asserts equality with it.",
+      "limitation": "This identifies six source files, not the complete source tree or loaded BEAM bytes. Source freshness observations do not establish reproducible source-to-BEAM correspondence."
+    },
+    {
+      "id": "Claude T23-R2-C02",
+      "status": "CLOSED",
+      "evidence": "The empty/generic whitelist is removed. Candidate mismatch checks reject invalid identities and inequality with store or ledger candidates. The successful outcome preserves evidence.candidate rather than relabeling it. Empty/generic and foreign-candidate regressions passed."
+    }
+  ],
+  "minor_observations": [
+    {
+      "topic": "Client schema pin",
+      "status": "CLOSED",
+      "evidence": "admit_converged now calls verify_client_schema_pin using _client_schema_digest. The compiled regression rejects stale-digest with SCHEMA_MIGRATION_REQUIRED and accepts the matching digest."
+    },
+    {
+      "topic": "Registry fallback",
+      "status": "CLOSED",
+      "evidence": "The unclassified fallback now uses ControlActuation and unclassified_fail_closed instead of ReadOnly."
+    },
+    {
+      "topic": "Feature tracker totals",
+      "status": "PARTIALLY_CLOSED",
+      "evidence": "Hardcoded historical totals are removed. Counts derive from canonical task rows, with formal and admission counts conservatively zero.",
+      "limitation": "Executing/completed task states remain proxies for implementation/execution; they do not independently establish candidate-bound capability evidence."
+    },
+    {
+      "topic": "Candidate validation",
+      "status": "LIMITATION",
+      "evidence": "candidate_id.is_valid rejects the named empty/generic/sentinel values but accepts other arbitrary strings. current() produces the observed SHA-256 identity; is_valid alone does not enforce sha256:<64-hex> syntax."
+    },
+    {
+      "topic": "Authority scopes and recovery",
+      "status": "PASS",
+      "evidence": "Fresh tests passed for control-mutation scope refusal, deny-dominates composition, observer non-interference, midflight revocation, worker replacement, descendant containment and replay handling."
+    },
+    {
+      "topic": "Zenoh authentication",
+      "status": "PASS_IN_MCP_SCOPE",
+      "evidence": "Empty-secret, malformed-topic and foreign-reply-destination regressions passed. This does not establish live router delivery."
+    },
+    {
+      "topic": "Two public entry points",
+      "status": "UNCHANGED",
+      "evidence": "execute_authenticated remains available separately from execute_route_authenticated. The converged entry point verifies outcome candidates; callers of the lower-level API do not acquire that additional route-convergence guarantee."
+    },
+    {
+      "topic": "Declared versus advertised tools",
+      "status": "UNCHANGED_SAFE_ASYMMETRY",
+      "evidence": "Catalog tests passed. Unavailable tools remain excluded from discovery while typed adapters can refuse them; this is not identical discovery/call availability."
+    },
+    {
+      "topic": "T21 disposition",
+      "status": "PASS_FOR_TYPED_ARTIFACT_VALIDATION",
+      "evidence": "The actual disposition-artifact regression passed, including the preserved hold. Artifact classification does not independently prove content incorporation or a fresh external-workspace census."
+    },
+    {
+      "topic": "Protocol and Origin documentation",
+      "status": "PASS_IN_MCP_SCOPE",
+      "evidence": "Protocol-conformance and documentation-truth suites passed. Live HTTPS serving was not exercised."
+    },
+    {
+      "topic": "Pinned admission file",
+      "status": "PASS",
+      "evidence": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam retains MD5 c53ed6bf66cba56cfc0d6e850875a774. This is distinct from mcp/admission.gleam."
+    },
+    {
+      "topic": "Prior Claude report format",
+      "status": "CONFIRMED",
+      "evidence": "The Round-2 Claude report contains prose before its JSON object. Its findings were read as evidence, not treated as a directly parseable JSON document."
+    },
+    {
+      "topic": "Formal verification",
+      "status": "NOT_REEXECUTED",
+      "evidence": "Round-2 formal observations are historical evidence only in this review. No fresh Lean, Quint, Gospel or Hermes execution is claimed."
+    },
+    {
+      "topic": "Five-client subprocess receipt",
+      "status": "HISTORICAL_RECEIPT_ONLY",
+      "evidence": "The specified T19 receipt records five successful client-labelled subprocess probes and candidate_commit b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae. It does not bind those subprocess observations to the current six-source digest, establish every route, or establish fresh execution of five native client binaries."
+    }
+  ],
+  "runtime_verification": {
+    "working_directory": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+    "command_prefix": "ERL_CRASH_DUMP=/dev/null /home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl +S 4:4 -noshell -pa build/dev/erlang/*/ebin",
+    "requested_eunit": {
+      "modules": [
+        "mcp_route_parity_test",
+        "mcp_client_matrix_test",
+        "mcp_workspace_disposition_test",
+        "mcp_worker_recovery_test",
+        "mcp_admission_test",
+        "mcp_transport_test",
+        "mcp_assurance_test",
+        "mcp_final_acceptance_test",
+        "mcp_docs_truth_test"
+      ],
+      "passed": 48,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "additional_eunit": {
+      "modules": [
+        "mcp_authz_wiring_test",
+        "mcp_route_census_test",
+        "mcp_catalog_truth_test",
+        "mcp_protocol_conformance_test"
+      ],
+      "passed": 31,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "total_tests_passed": 79,
+    "total_tests_failed": 0,
+    "independent_probes": {
+      "same_id_audit_only_private_fence": "ROUTE_GRANT_SCOPE_INSUFFICIENT",
+      "private_read_attempt_1": "first-epoch",
+      "private_read_attempt_2": "second-epoch",
+      "original_receipt_collision_equal": false
+    },
+    "build_freshness": {
+      "status": "OBSERVED_FOR_CHECKED_MODULES",
+      "modules": [
+        "candidate_id",
+        "admission",
+        "route_convergence",
+        "server"
+      ],
+      "evidence": "Checked BEAM modification times were later than their corresponding source modification times.",
+      "limitation": "No repository rebuild was performed and timestamps alone are not a complete compilation attestation."
+    }
+  },
+  "matrix_summary": {
+    "registered_public_routes": 65,
+    "registered_development_routes": 21,
+    "registered_successor_routes": 15,
+    "registered_total_routes": 101,
+    "positive_cells_executed": 535,
+    "stdio_cells": 505,
+    "zenoh_cells": 15,
+    "http_cells": 15,
+    "positive_outcome_bound": true,
+    "six_source_candidate_digest_bound": true,
+    "candidate_relabeling_present": false,
+    "refusal_cells_counted_as_positive": false,
+    "real_file_roundtrip_verified": true,
+    "foreign_candidate_negative_controls_passed": true,
+    "all_tool_specific_backend_effects_verified": false,
+    "five_native_client_binaries_reexecuted": false,
+    "live_http_or_zenoh_network_verified": false
+  },
+  "seventeen_aspects": [
+    {
+      "aspect_id": 1,
+      "name": "Substrate and Hardware Storage Interlock",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Physical storage operations and NVMe interlocks are outside this development audit."
+    },
+    {
+      "aspect_id": 2,
+      "name": "Standalone Jujutsu Discipline",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "No Git or Jujutsu command was executed and no VCS mutation was performed."
+    },
+    {
+      "aspect_id": 3,
+      "name": "Zero-Muda Purity",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "No code or dependency was introduced. Schema-pin dead code is now wired into admission; repository-wide purity is not asserted."
+    },
+    {
+      "aspect_id": 4,
+      "name": "Gleam/OTP Supervision",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Gateway-child, worker replacement and descendant-containment tests passed; production four-domain operation is outside scope."
+    },
+    {
+      "aspect_id": 5,
+      "name": "ZigVM Runtime and VFS",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Live ZigVM and VFS-law verification are outside this MCP audit."
+    },
+    {
+      "aspect_id": 6,
+      "name": "Hermes Evidence and Oracles",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "No fresh Hermes, Gospel or Z3 execution was required or claimed for this bounded remediation audit."
+    },
+    {
+      "aspect_id": 7,
+      "name": "Mathematical Authority",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "No fresh mathematical proof is claimed. Prior formal receipts do not prove every MCP implementation behavior."
+    },
+    {
+      "aspect_id": 8,
+      "name": "Cybernetic Authority Isolation",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Independent scope probe and authority-isolation regressions passed."
+    },
+    {
+      "aspect_id": 9,
+      "name": "MAX/Mojo Inference",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Live inference is outside scope; MaxDaemonReady fixture responses are not observed daemon execution."
+    },
+    {
+      "aspect_id": 10,
+      "name": "Zenoh Backplane",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "In-process envelope and refusal coverage passed; live mesh delivery was not tested."
+    },
+    {
+      "aspect_id": 11,
+      "name": "AG-UI Event Stream",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "SSE rendering and the complete event protocol are outside scope."
+    },
+    {
+      "aspect_id": 12,
+      "name": "A2UI Catalog",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "UI component rendering and accessibility are outside scope."
+    },
+    {
+      "aspect_id": 13,
+      "name": "Five-Client Interface Parity",
+      "status": "HOLD",
+      "applicability": "Candidate-bound protocol cells pass, but complete tool-specific backend acceptance remains unverified."
+    },
+    {
+      "aspect_id": 14,
+      "name": "Tailscale Navigation and Origin",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "No live Tailnet publication or TLS serving is claimed."
+    },
+    {
+      "aspect_id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "status": "HOLD",
+      "applicability": "The remaining applicable backend-evidence finding prevents full development acceptance."
+    },
+    {
+      "aspect_id": 16,
+      "name": "Knowledge Management Triad",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Live Wiki, Zettelkasten and ontology integration are outside scope."
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sa-Plan and Durable Workflows",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Fence scope, attempt isolation and revocation tests passed. Canonical Sa-plan state was not mutated; live workflow execution is not inferred from fixtures."
+    }
+  ],
+  "review_constraints": {
+    "read_only_repository_audit": true,
+    "repository_files_edited": false,
+    "git_commands_run": false,
+    "jj_commands_run": false,
+    "sa_plan_mutated": false,
+    "deployment_performed": false,
+    "report_file_written": false,
+    "permitted_test_write_directory": "/tmp/uos-t23-matrix-workspace",
+    "all_erlang_invocations_used_dev_null_crash_dump": true,
+    "output_delivery": "Raw JSON response for caller-side -o capture.",
+    "admitted_ev_ceiling": 93,
+    "new_ev_number_minted": false
+  }
+}

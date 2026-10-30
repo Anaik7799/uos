@@ -4,6 +4,7 @@
 //// generated plot specs are declarative data only and never execute code.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/types.{
   type Outcome, type ToolError, Complete, EvidenceRecord, NonRetryable, Refused,
   Retryable, ToolError,
@@ -239,7 +240,7 @@ fn model_predict(
     MaxDaemonReady(model_id: model_id, predictions: predictions) ->
       case dict.get(predictions, key) {
         Ok(prediction) ->
-          emit("forecast_predict", "uos-mcp", [
+          emit("forecast_predict", candidate_id.current(), [
             #("source", json.string("max_model")),
             #("model_id", json.string(model_id)),
             #("series_key", json.string(key)),
@@ -275,7 +276,7 @@ fn reference_forecast(args: Dict(String, String), source: String) -> Outcome {
             True -> {
               let first = list.first(values) |> result.unwrap(0.0)
               let last = list.last(values) |> result.unwrap(0.0)
-              emit("forecast_predict", "uos-mcp", [
+              emit("forecast_predict", candidate_id.current(), [
                 #("source", json.string(source)),
                 #("epistemic_class", json.string("deterministic_kernel")),
                 #("drift", json.float(last -. first)),
@@ -294,7 +295,7 @@ fn stpa_fmea_hazard(args: Dict(String, String)) -> Outcome {
     get_int(args, "detection")
   {
     Ok(severity), Ok(occurrence), Ok(detection) ->
-      emit("stpa_fmea_hazard", "uos-mcp", [
+      emit("stpa_fmea_hazard", candidate_id.current(), [
         #("epistemic_class", json.string("deterministic_kernel")),
         #("severity", json.int(severity)),
         #("occurrence", json.int(occurrence)),
@@ -316,7 +317,7 @@ fn rete_rule_conflict(args: Dict(String, String)) -> Outcome {
       case detect_conflicts(raw) {
         Error(error) -> Refused(error)
         Ok(conflicts) ->
-          emit("rete_rule_conflict", "uos-mcp", [
+          emit("rete_rule_conflict", candidate_id.current(), [
             #(
               "matcher_kind",
               json.string("naive_forward_conflict_scan_not_full_rete_ul"),
@@ -385,7 +386,7 @@ fn ruliad_branch_eval(args: Dict(String, String)) -> Outcome {
                 "ruliad_branch_eval requires at least one branch weight",
               ))
             Ok(branch_max) ->
-              emit("ruliad_branch_eval", "uos-mcp", [
+              emit("ruliad_branch_eval", candidate_id.current(), [
                 #("epistemic_class", json.string("deterministic_kernel")),
                 #("branch_count", json.int(list.length(branches))),
                 #("branch_sum", json.int(list.fold(branches, 0, int.add))),
@@ -413,7 +414,7 @@ fn shruti_harmonics(args: Dict(String, String)) -> Outcome {
               ))
             Ok(fundamental) -> {
               let doubled = list.map(frequencies, fn(f) { f * 2 })
-              emit("shruti_harmonics", "uos-mcp", [
+              emit("shruti_harmonics", candidate_id.current(), [
                 #("epistemic_class", json.string("deterministic_kernel")),
                 #("harmonic_count", json.int(list.length(frequencies))),
                 #("fundamental", json.int(fundamental)),
@@ -436,7 +437,7 @@ fn ast_anomaly_detect(args: Dict(String, String)) -> Outcome {
     None ->
       case dict.get(args, "samples") {
         Error(_) ->
-          emit("ast_anomaly_detect", "uos-mcp", [
+          emit("ast_anomaly_detect", candidate_id.current(), [
             #("epistemic_class", json.string("deterministic_kernel")),
             #("sample_count", json.int(0)),
             #("anomalies", json.int(0)),
@@ -445,7 +446,7 @@ fn ast_anomaly_detect(args: Dict(String, String)) -> Outcome {
           case parse_int_csv(samples_raw) {
             Error(error) -> Refused(error)
             Ok(samples) ->
-              emit("ast_anomaly_detect", "uos-mcp", [
+              emit("ast_anomaly_detect", candidate_id.current(), [
                 #("epistemic_class", json.string("deterministic_kernel")),
                 #("sample_count", json.int(list.length(samples))),
                 #("anomalies", json.int(list.count(samples, fn(s) { s < 0 }))),
@@ -502,7 +503,7 @@ fn lyapunov_trend_predict(args: Dict(String, String)) -> Outcome {
             True -> {
               let first = list.first(values) |> result.unwrap(0.0)
               let last = list.last(values) |> result.unwrap(0.0)
-              emit("lyapunov_trend_predict", "uos-mcp", [
+              emit("lyapunov_trend_predict", candidate_id.current(), [
                 #("epistemic_class", json.string("deterministic_kernel")),
                 #("point_count", json.int(list.length(values))),
                 #("drift", json.float(last -. first)),
@@ -525,7 +526,7 @@ fn declarative_plot_spec(
         retryability: NonRetryable,
       ))
     None ->
-      emit(tool_name, "uos-mcp", [
+      emit(tool_name, candidate_id.current(), [
         #("spec_kind", json.string("grammar_of_graphics")),
         #("declarative_only", json.bool(True)),
         #("code_executed", json.bool(False)),

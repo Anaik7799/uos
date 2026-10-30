@@ -3,13 +3,14 @@
 //// reply destination is pinned to the matching response key. REST-only Zenoh
 //// (no subscriptions) is refused because it cannot host an MCP request stream.
 
-import cepaf_gleam/harness/files
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/types.{
   type Outcome, type ProtocolProfile, type ToolError, ClientProfile,
   NonRetryable, ToolError,
 }
 import cepaf_gleam/mcp/wire
+import gleam/bit_array
+import gleam/crypto
 import gleam/int
 import gleam/list
 import gleam/option.{type Option}
@@ -62,7 +63,6 @@ pub fn compute_signature(
   payload payload: String,
 ) -> String {
   [
-    shared_secret,
     topic,
     reply_topic,
     sender_actor,
@@ -75,7 +75,14 @@ pub fn compute_signature(
     int.to_string(string.byte_size(field)) <> ":" <> field <> "|"
   })
   |> string.concat
-  |> files.digest
+  |> fn(framed_fields) {
+    crypto.hmac(
+      bit_array.from_string("uos-mcp-zenoh-v1:" <> framed_fields),
+      crypto.Sha256,
+      bit_array.from_string(shared_secret),
+    )
+  }
+  |> bit_array.base16_encode
 }
 
 /// Validate and dispatch one signed Zenoh envelope. Returns `Ok(Some(#(reply,
@@ -99,6 +106,7 @@ pub fn handle_envelope(
     envelope.reply_topic,
   ))
   use _ <- result.try(check_client_name(envelope.client_name))
+  use _ <- result.try(check_secret(shared_secret))
   use _ <- result.try(check_signature(shared_secret, envelope))
 
   let principal =
@@ -171,6 +179,18 @@ fn check_client_name(client_name: String) -> Result(Nil, ToolError) {
   }
 }
 
+fn check_secret(shared_secret: String) -> Result(Nil, ToolError) {
+  case string.trim(shared_secret) == "" {
+    True ->
+      Error(ToolError(
+        "ZENOH_SECRET_REQUIRED",
+        "Zenoh shared secret must not be empty",
+        NonRetryable,
+      ))
+    False -> Ok(Nil)
+  }
+}
+
 fn check_signature(
   shared_secret: String,
   envelope: SignedZenohEnvelope,
@@ -186,7 +206,12 @@ fn check_signature(
       envelope.session_id,
       envelope.payload,
     )
-  case expected == envelope.signature {
+  case
+    crypto.secure_compare(
+      bit_array.from_string(expected),
+      bit_array.from_string(envelope.signature),
+    )
+  {
     True -> Ok(Nil)
     False ->
       Error(ToolError(

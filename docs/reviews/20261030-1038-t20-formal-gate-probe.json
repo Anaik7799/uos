@@ -1,0 +1,42 @@
+{
+  "schema": "uos.t20-formal-gate-probe.v2",
+  "all_five_formal_and_oracle_gates_verified": true,
+  "checks": [
+    {
+      "artifact": "formal/lean/Traceability.lean",
+      "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c",
+      "contains_sorry": false,
+      "prover_binary": "/home/an/.nix-profile/bin/lean",
+      "exit_code": 0,
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "formal/lean/TwoLattice_STM.lean",
+      "sha256": "bc0a280b22516a5b0b3cd57c3572f10db484564f74bd74fc8cf97be7ce64b9ef",
+      "contains_sorry": false,
+      "prover_binary": "/home/an/.nix-profile/bin/lean",
+      "exit_code": 0,
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "formal/quint/parity_frontier.qnt",
+      "sha256": "d5af3d49506e4ee54ba31ca5ac2d1435925bd512563b17ee32f2106c883564d0",
+      "prover_binary": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+      "subcommand": "typecheck",
+      "exit_code": 0,
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe",
+      "exit_code": 0,
+      "formal_state": "verified",
+      "output_preview": "hermes_rete: ok\nAS-IS test_hermes_rete: 1/1 passed, 0 failed, 0 skipped\nPREDICTIVE test_hermes_rete: 4 dependent(s) at risk if this is wrong: hermes_harness_drift_rules, hermes_harness_posterior_asses"
+    },
+    {
+      "artifact": "engines/hermes/_build/default/modules/hermes_harness/test_parity_algebra.exe",
+      "exit_code": 0,
+      "formal_state": "verified",
+      "output_preview": "parity algebra suite\n  unit         done\n  property     done\n  bdd          done\n  feature      done\n  fuzz         done\n  chaos        done\n  structure    done\n\npassed: 146   failed: 0\nAS-IS test_par"
+    }
+  ]
+}

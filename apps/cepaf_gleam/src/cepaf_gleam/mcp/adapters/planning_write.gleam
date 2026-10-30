@@ -6,6 +6,7 @@ import cepaf_gleam/mcp/admission.{
   type TaskLifecycleState, type ValidatedCall, TaskAvailable, TaskCompleted,
   TaskExecuting,
 }
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/evidence
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/types.{type Outcome, NonRetryable, Refused, ToolError}
@@ -58,7 +59,7 @@ fn success(
       call.spec.route,
       call.spec.name,
       json.to_string(json.object([#("result", json.string(value))])),
-      "uos-mcp",
+      candidate_id.current(),
     ),
     store,
   )

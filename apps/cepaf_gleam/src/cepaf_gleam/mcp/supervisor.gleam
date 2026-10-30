@@ -1,6 +1,7 @@
 //// OTP Supervision for the Unified MCP Gateway (`mcp_unified_gateway`) and
 //// bounded isolated worker pool with automatic poisoned-worker replacement.
 
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/receipts.{type ReceiptLedger}
 import gleam/erlang/process
 import gleam/otp/actor
@@ -82,15 +83,30 @@ pub fn child_id(gateway: SupervisedGateway) -> String {
 }
 
 pub fn start_worker_pool(size size: Int) -> Result(WorkerPool, String) {
+  let cand = candidate_id.current()
+  case candidate_id.is_sha256_digest(cand) {
+    False -> Error("unobserved_or_invalid_source_candidate")
+    True -> start_worker_pool_for_candidate(size: size, candidate: cand)
+  }
+}
+
+pub fn start_worker_pool_for_candidate(
+  size size: Int,
+  candidate candidate: String,
+) -> Result(WorkerPool, String) {
   case size > 0 {
     False -> Error("worker_pool_size_must_be_positive")
     True ->
-      Ok(WorkerPool(
-        size: size,
-        active_generation: 1,
-        poisoned_count: 0,
-        ledger: receipts.new_ledger("uos-mcp-candidate"),
-      ))
+      case candidate_id.is_valid(candidate) {
+        False -> Error("invalid_worker_pool_candidate")
+        True ->
+          Ok(WorkerPool(
+            size: size,
+            active_generation: 1,
+            poisoned_count: 0,
+            ledger: receipts.new_ledger(candidate),
+          ))
+      }
   }
 }
 

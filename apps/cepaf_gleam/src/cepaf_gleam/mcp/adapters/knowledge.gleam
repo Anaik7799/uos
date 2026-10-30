@@ -2,9 +2,10 @@
 //// zk_search, zk_transclude. Enforces strict path, credential, link-escape,
 //// scope, size, and bounded transclusion guards before any content is served.
 
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/evidence
 import cepaf_gleam/mcp/types.{
-  type Outcome, NonRetryable, Refused, type ToolError, ToolError,
+  type Outcome, type ToolError, NonRetryable, Refused, ToolError,
 }
 import gleam/dict.{type Dict}
 import gleam/json
@@ -136,10 +137,7 @@ pub fn execute(
   }
 }
 
-fn guard_path(
-  corpus: KnowledgeCorpus,
-  path: String,
-) -> Result(Nil, ToolError) {
+fn guard_path(corpus: KnowledgeCorpus, path: String) -> Result(Nil, ToolError) {
   case path_security_violation(path, corpus.workspace_root) {
     Some(reason) ->
       Error(ToolError(
@@ -223,7 +221,7 @@ fn read_file(
                     "public",
                     "read_file",
                     entry.content,
-                    "uos-mcp",
+                    candidate_id.current(),
                   )
               }
           }
@@ -268,7 +266,9 @@ fn search(
   let matches =
     corpus.entries
     |> dict.values
-    |> list.filter(fn(entry) { searchable(corpus, principal_scopes, entry, zk_only) })
+    |> list.filter(fn(entry) {
+      searchable(corpus, principal_scopes, entry, zk_only)
+    })
     |> list.filter(fn(entry) {
       string.contains(string.lowercase(entry.content), lowered)
     })
@@ -277,11 +277,18 @@ fn search(
     False -> "knowledge_search"
   }
   let payload =
-    json.to_string(json.object([
-      #("query", json.string(query)),
-      #("results", json.array(matches, encode_entry)),
-    ]))
-  evidence.classify_backend_payload("public", tool_name, payload, "uos-mcp")
+    json.to_string(
+      json.object([
+        #("query", json.string(query)),
+        #("results", json.array(matches, encode_entry)),
+      ]),
+    )
+  evidence.classify_backend_payload(
+    "public",
+    tool_name,
+    payload,
+    candidate_id.current(),
+  )
 }
 
 fn encode_entry(entry: CorpusEntry) -> json.Json {
@@ -316,7 +323,7 @@ fn transclude(
         "public",
         "zk_transclude",
         expanded,
-        "uos-mcp",
+        candidate_id.current(),
       )
   }
 }
@@ -355,14 +362,7 @@ fn expand_references(
   visited: List(String),
   depth: Int,
 ) -> Result(String, ToolError) {
-  expand_references_loop(
-    corpus,
-    principal_scopes,
-    content,
-    visited,
-    depth,
-    "",
-  )
+  expand_references_loop(corpus, principal_scopes, content, visited, depth, "")
 }
 
 fn expand_references_loop(
@@ -395,9 +395,13 @@ fn expand_references_loop(
                 acc <> before <> "[[" <> tag_content <> "]]",
               )
             Ok(ref) -> {
-              use expanded <- result.try(
-                expand_entry(corpus, principal_scopes, ref, visited, depth + 1),
-              )
+              use expanded <- result.try(expand_entry(
+                corpus,
+                principal_scopes,
+                ref,
+                visited,
+                depth + 1,
+              ))
               expand_references_loop(
                 corpus,
                 principal_scopes,

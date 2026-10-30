@@ -1,0 +1,2784 @@
+{
+  "schema": "uos.t21-workspace-and-head-disposition.v1",
+  "active_main_commit": "b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae",
+  "rollback_locator": "b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae (Wave 4 Epoch 96) / 12bf3ee508829755ae2f527b5a5dcb88e351adc2 (pre-session main baseline)",
+  "quarantined_artifacts": [
+    {
+      "original_path": "tools/validation/verify_guardian.exe",
+      "quarantine_path": "var/quarantine/20261030-verify_guardian.exe",
+      "receipt_path": "var/quarantine/20261030-verify_guardian.receipt.json",
+      "sha256": "d1dc2995fe52915e9c2a7b39309f23a8197cfb273d025f3453ebd904b24f50f4"
+    }
+  ],
+  "held_items": [
+    {
+      "plan_id": "uos/development-harness/client-source/20261028-1514",
+      "feature_ref": "SourceFX / source4-test-2219",
+      "workspace": "client-source-editor-20261028-1514",
+      "disposition": "HELD_PRESERVED_BYTE_FOR_BYTE"
+    }
+  ],
+  "registered_workspaces_count": 143,
+  "registered_workspaces": [
+    {
+      "name": "agy-dashboard-20261024",
+      "change_id": "rkkmuwkyqwqpmvntxtpzunsnyvuvosxl",
+      "commit_id": "a026c484658e2b8f6978f0623329d57a057f4eca",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-direct-fix-20261001",
+      "change_id": "qktrklyusxtrvussyozpzuqwsxwsomrt",
+      "commit_id": "14785b6745aecae04a7c7efd044896490b927046",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-direct-tools-20261001",
+      "change_id": "vmwnssxryqtmkmrtvzyuskxpupspmmxk",
+      "commit_id": "c72513b8f2b4971d44ae9fd65002d4152b177f31",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-fractal-dispatch-20261001",
+      "change_id": "otomlknopnmrlnqkknuzxzqmrxnttmzo",
+      "commit_id": "b546f7e8e47533e4595505677ba8493fd62b95eb",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-fractal-doctor-20261001",
+      "change_id": "npkouvsqnmtulomkltvovtvzywpyyyoz",
+      "commit_id": "73bb7d3c90b5483484aecc796cd86650845f9241",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-full-restoration-20260930",
+      "change_id": "yoxyxosqtqvxzztpwxkkztqqqxvsqrsk",
+      "commit_id": "32990422e48293cdf8904e867fb642ad69ecd98c",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-history-helpers-20260930",
+      "change_id": "ztlyrnxnttolnylyuurmypzslxwvxuns",
+      "commit_id": "57493b178cff9b5b8524271e993357479c2a53fd",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-history-receipt-20260930",
+      "change_id": "wvvvqlzvytwvrrozqzouxtmnxsoklwlk",
+      "commit_id": "d5b57d052233504960826f7ff9cc11d154116a76",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-history-reconciliation-20260930",
+      "change_id": "umsrkvltnuoutoxuqnlqllpwkrukmqzn",
+      "commit_id": "e5b8ded56ae6e3e521ea3a8601bccb2d08e6e882",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-history-superset-20260930",
+      "change_id": "mpkovszkkqmxzmvuwzmlxplpktoykyut",
+      "commit_id": "9c41344754f847b48a33be64a46e4d6135fbd02c",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-l3",
+      "change_id": "ouopomnwytlnyypstotvtmrzsrvltmwr",
+      "commit_id": "67d5d57b4a0f7e3be6f042530e39d7bd8a88f9c5",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-prev-28d0d752",
+      "change_id": "svtqqpuvmuvuqwvrppvlwyyxromkmzww",
+      "commit_id": "ee0cc982f1d1544c4776b51fa8042ead17f30599",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-a-20261026",
+      "change_id": "mxuxtmvqqrtsmvqunnnskqkwlksxxvmw",
+      "commit_id": "795ce070f992c296168ba2b8c6063150c8aed1c6",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-e-20261026",
+      "change_id": "vrxynpzvsommwonvxrokulystxtmnuml",
+      "commit_id": "4eadc019f6a06389ea46b00701ff0d53b7e17587",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-f-20261026",
+      "change_id": "wwqptsylrxkvvnuqtzrouorvtkrkuvmv",
+      "commit_id": "c7b58378ee89319e5e8017da37bef4b2547082c1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-f2-20261026",
+      "change_id": "rxysntykuqoukunwwpywnruvtysvsnrk",
+      "commit_id": "7f08ed6f2b4a452d2e0eba531e8dfd0dff8dd5b5",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-g-20261026",
+      "change_id": "xssvmwplxoyuvknstuymmxzvuwtxpvvs",
+      "commit_id": "c95d3bcda830f98b4775755bdbb9a89fead8cf76",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-h-20261026",
+      "change_id": "nnlxrmuzkqokxluozopszuzqyuytupwq",
+      "commit_id": "91c93c86e4e909f8a68b70a00962cfc0e2ea74a5",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-r1-20261026",
+      "change_id": "zrwtzpnlsooztsooqkrqmxokpvnmknul",
+      "commit_id": "bfb2bcad9965c884e429d47dfdebd39571570397",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-v-20261026",
+      "change_id": "vqnnnnvnmxqxvtzvkrtpvutkpmmotuqw",
+      "commit_id": "bc730cb483fbe2321cc7a3fb2d61c4fa609c6e3d",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-v2-20261026",
+      "change_id": "pksttvwywkkmlwumyotxytyrwtnlnowk",
+      "commit_id": "2415b31a1361b9c96dfab6e0ab3a769f93732fff",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-v3-20261026",
+      "change_id": "nyvtsuuonpwzwzzlpuzulwsmxusuwpmx",
+      "commit_id": "0f2c5b5462739f7e0592391d55acd87120ddc768",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-v4-20261026",
+      "change_id": "ysyomwtypnzpsosrkqksmupylsuuwknm",
+      "commit_id": "27502753c0e73fe652a92d04eabaa4ba469dc03d",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-review-v5-20261026",
+      "change_id": "stkxmztywzvnnymylmszwvxpovmooupz",
+      "commit_id": "b92c194e0ed891668e868ab928075a03263093e1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-telegram-admission-20261001",
+      "change_id": "wtrtkwppyqmtslwmurxunnkttwqkyssw",
+      "commit_id": "ba1353c837cda6c108266ed319a7e398c802f7d3",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-telemetry-20261024",
+      "change_id": "vuystwzkvwnpupptnoypxlyuwlmmrtvu",
+      "commit_id": "622edd3792fa1f35383b1638d067633e629b4511",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "agy-wave7e-20261026",
+      "change_id": "skqkmyuzoktkpluxkvuroyrvvwtnqytk",
+      "commit_id": "3eadc54747a6c64f0a147c48b28fa587f5c6648c",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "check-recovery-20261028-2242",
+      "change_id": "rqpmuwnmpxnpkqvtzptlqlrynmwyzvyn",
+      "commit_id": "49b95995b4f0033e0f04bc0d1796a4e81bdbb322",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "client-integration-20261028-2143",
+      "change_id": "ouqknzotxwrxswxrzktrltwzswsmnwsk",
+      "commit_id": "9322a0c782385ba00ca1c518d7aedb7b59fdd0ae",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "client-parity-20261028-0321",
+      "change_id": "uuymwmpyszuxkootqqnrswrktkntloml",
+      "commit_id": "c2157abc6aaf979fb91578a6ef45c12a4d05dc5f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "client-parity-fix-20261028-0620",
+      "change_id": "squnzntwmklwsuwmzvwpvvzrorxnxqym",
+      "commit_id": "f69133e3a4b2327623bde2baad0a344cb4670b65",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "client-source-editor-20261028-1514",
+      "change_id": "vzzskxrnxvrplonpspvyoqplmxqqyzvr",
+      "commit_id": "efe7475922b21db3a277d019f4930c95c49c578a",
+      "disposition": "held_preserved_byte_for_byte",
+      "typed_kind": "Held",
+      "hold_id": "uos/development-harness/client-source/20261028-1514",
+      "hold_reason": "Preserved byte-for-byte per SourceFX source4-test-2219 hold"
+    },
+    {
+      "name": "codex-action-boundaries",
+      "change_id": "ouzqnluzpmuppzkoqmoyvmnwuyuwtomv",
+      "commit_id": "1353e6584342fd7c6fe825a864b2d26ed440cc84",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-action-kpi-integration",
+      "change_id": "usxqyqtqmttzomzyqkolqvzmpxmkvwql",
+      "commit_id": "31207adba558d200dcec854809d6bbfc00b860b9",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-agy-ops-20261024",
+      "change_id": "ptslsmlxnqwnrrzprnuywxuryrxvutuz",
+      "commit_id": "39794f705360a4b8f9c96d79cc03594dc047f8bb",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-ainf-design",
+      "change_id": "nmxzrtywpwpsvlzpkrzxwxrprnookwuq",
+      "commit_id": "2624cff0250247e5675db515f11e7202eb4b1665",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-astra",
+      "change_id": "rwrnxyumxvzxpkpvktxxrpuoostqqpro",
+      "commit_id": "5b9b9388f7adce3a27acae3c048a5312220967d1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-auth-framing-review",
+      "change_id": "vxvxwvztktuzxoklyrroxqrypnpyxzln",
+      "commit_id": "f8c38071ab579f4b7dd718f8d899c1a2ee6376d8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-auth-ingress",
+      "change_id": "lykxtrxvmyoxpqnomootrxkvuwqmsmts",
+      "commit_id": "3ee0188be49a6b91d551efebe364e4241342b203",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-auth-ingress-review",
+      "change_id": "yutkxmusmnxtkpovoyvuxnwqyxnqvtvk",
+      "commit_id": "1753727c53b64e6651a271be68959da8d65cb252",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-board-insights",
+      "change_id": "qxvrlnqomvxwstmrzruytumoxsxtpuuw",
+      "commit_id": "ada45ee774d2d58d8dca39c8934faa270daacf3a",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-board-strict-validate",
+      "change_id": "umptwvnysmxoywurvrtlnsrvtvmzpkwy",
+      "commit_id": "e0b50cdce6fdb08e945984a119f4214c25893a5e",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-capability-restoration-20260930",
+      "change_id": "ysxupzwompkqpnsrmqmnluponpoytwtt",
+      "commit_id": "b1484ad34a9d3e5beab28e0bd0371199a6e8d8f3",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-clock-guard",
+      "change_id": "zzkpwsnukpuzktxpluoslstmzkokvxpx",
+      "commit_id": "c1841115ba3b2baf5597ca624c9f69fc9c22e6eb",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-clock-provenance",
+      "change_id": "qupsryxkkynlrykvspvlpqxuxulmluys",
+      "commit_id": "4a5e1fa3681afb66109874b526c549fec2821d89",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-concurrency-20261028-0105",
+      "change_id": "sokpumkoovtwtzwpsqzztykttsnqtzzm",
+      "commit_id": "65755894a280f138563a661c82f952f364f2a177",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-concurrency-fresh-0323",
+      "change_id": "luzxywzvnslskxmnxwuvvzyuynqvszpn",
+      "commit_id": "328be0715734317c2864a4e97d1add7b781d5d74",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-coordination-formal",
+      "change_id": "utmmzunuzrlxmvovlwxwyqpxvowpqkry",
+      "commit_id": "6d1cda9ad199a6cfad04b5d9fb5ca01587c5b156",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-coordination-impl",
+      "change_id": "mqzpmsuozqtxxzkzkkpnropzkuvopsws",
+      "commit_id": "a0c3fd11ea96eeb9a757e668a2cf365abae58b93",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-coordinator-recovery-20261024",
+      "change_id": "nqopwsvuouwlvxvuwrrzooxxyqruyzsk",
+      "commit_id": "fd85fe743c7476c58ef34586f367caafecd6d1e8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-ev-admission-20260909-0210",
+      "change_id": "worvrknnvzmumyplomyymprpvsztruzr",
+      "commit_id": "d9bd28497f84a5dc62cbc84eeeaa8e841fc6655f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-full-restoration-20260930",
+      "change_id": "ssvsklqpvqmozvqnnusxkrrtzwlxqwow",
+      "commit_id": "e96b14c6e9849ce23f38dcfd1caf1cfc3b20af95",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-hive-projection",
+      "change_id": "nrzkmvrqqqsoknqxuspxsupmuklypzwm",
+      "commit_id": "4e6632fcad35cd664899efb798cb33748424f2e8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-homeostasis-interface-repair",
+      "change_id": "lopzuptqkwmxzuyzxuprzutxrrproukn",
+      "commit_id": "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-homeostasis-release-20260908-0551",
+      "change_id": "owuunmmlvutsykzoyzkpwpqrlyqxuzln",
+      "commit_id": "45435f5b215d9cf5932a67d8d22e8c7ef7ed958b",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-live-evolution",
+      "change_id": "yxrxonoxuzwyuvrtuxzvtuvvoxknuwsl",
+      "commit_id": "78d8fef66199f1c5c82a7013efd43099d04437be",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-manual-ui-20260908-1150",
+      "change_id": "zosuwowvmzstltwnmzqmnqpuorrlkwot",
+      "commit_id": "c5a0d3e69067d35c291dfa2c769d202136e77cb9",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mcp-catalog",
+      "change_id": "tsslvxlylkuvnpwypqmmnvmvkkvzpyvq",
+      "commit_id": "b99598309dc0eaa8925862aca7c305201f1b51d1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mcp-runtime-check",
+      "change_id": "zkvsmloonztnwnmrnlovrznwuunlrtxz",
+      "commit_id": "cb625f48c9e3b7ab70fa6c1b8797f400302ad599",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mcp-stdio-runtime",
+      "change_id": "zrmkpozzvvtzystuwktrprsqtqovskos",
+      "commit_id": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mcp-wave34-tests",
+      "change_id": "ruprxopuznmomxmymmmnonzwoxxprmqv",
+      "commit_id": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-merge-20261025",
+      "change_id": "psrwvxtsvlnsnxmnkvwmqlmxoonxwrqm",
+      "commit_id": "9fc7eb6724c92266c3cb1b44222a13c62c11859a",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-merge-execute-20260908-1925",
+      "change_id": "zzqolopxkovwtrvuuukvtlyozmpyypqv",
+      "commit_id": "4719d3f4dce6d85899b1b82636bb4186f404fcf3",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-merge-plan-20260908-1439",
+      "change_id": "sklmwszosqulnoxnnonlrqkpmzkzktpx",
+      "commit_id": "2473ea54a72bc75ed69e5f57c8791efaa4982abd",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-audit",
+      "change_id": "ptnlxrpptppmwkmlwpzkpxrylruklsrm",
+      "commit_id": "b63169a3eea4792c0b4b690ff23a45be8dcef6db",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-audit-action-boundary",
+      "change_id": "zukslupsooszowzsylrwnqvukkvqtpty",
+      "commit_id": "02d43656ad7ac562277714e8864a7fb3ceb56b47",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-benchmark-review",
+      "change_id": "rrxrpkswsmkznmwksynzokkkqtkwnnwl",
+      "commit_id": "a7b479618b4a6f003aefeb435fe53a0807f63af4",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-evidence-audit",
+      "change_id": "kvmlnkuuztlvrpxyssrvozvvxrktsmzo",
+      "commit_id": "fe542cb830e917354f0845ddf6d70d809fe9bcab",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-feature",
+      "change_id": "npptqoznmyyzpqkynnqmrskvksozwopn",
+      "commit_id": "4aec1c8e1bd19521b66ab03de8ccf2077b05ae0b",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-governance-failclosed",
+      "change_id": "mumkznxtyoswqvxozpvslyprryroutox",
+      "commit_id": "c5960ff123cb1218d9a43775082d7ace8fd356a1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-metrics",
+      "change_id": "mopwrkrqkuuusnmmuxptoqmluttmmqsw",
+      "commit_id": "9962d6d17d5ec1ec0557cae6100d24a293f01bbc",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-tenders-audit",
+      "change_id": "mtrpsnkypxulszonwxtuszwsstrtqxln",
+      "commit_id": "b10e553273ad520e18aceeae345bdf1d83baf63c",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-verification",
+      "change_id": "sktupywrunrvlnslzlvmskosywyylpsn",
+      "commit_id": "72c7552b181fc44f6e30d5611efd84f3b18b9417",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-mirage-workorder",
+      "change_id": "rywsslnmkupqpzvyywwkywklnsurwmqt",
+      "commit_id": "059afa533f2efefdf809756b84da67b98112f6a3",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-observation-bridge",
+      "change_id": "rkvntpmvvmpkqtmzmnnwkxzkvpkxxttl",
+      "commit_id": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-oidc-auth-review",
+      "change_id": "qxtzlqnkzrrkppyuysqkurlqpvslxosz",
+      "commit_id": "294ebc47342ac372b886d22656fbd9103f1d5f12",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-oidc-verifier",
+      "change_id": "qrnynrvswtznnrzxrqsrqssunoynuzru",
+      "commit_id": "10ead02d11d8ffcbaf133702c87244d38b650210",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-reuse-ops",
+      "change_id": "zxqtoyxmxslmmkpzsuovqxmsuquwmkrz",
+      "commit_id": "e5572657abeeba9c6eaca2bdf9e24d77bf5603dc",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-session-durability",
+      "change_id": "mmzqmnytpzvypoynuokqzzmzskspsotn",
+      "commit_id": "de84ada81054f23ea06193ba0c92e124166a9fb8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-side-hive-fencing",
+      "change_id": "pnmksopxqrzrroxsqwoqsywsknzolpqk",
+      "commit_id": "311d2b12368d65c9b0f27f3d6adca315b94bbc62",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-side-interface-skills",
+      "change_id": "ylnmkosswnypxssplzmwlvtrnkwznpqx",
+      "commit_id": "efbaea22367d3363df94ee0e36924ce1bfe2585f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-side-resource-controls",
+      "change_id": "spqrrxnmnwxsmmtvkzomsknonzzkovzt",
+      "commit_id": "7c162d0f8d83825679c2badcb6703decccd3581e",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-solo5-source-review",
+      "change_id": "mqwsvpxkszotmmppsxuuxmqlozsszkou",
+      "commit_id": "52f8034f75bb60bf845d77c5ad5a4c250b47146f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-solo5-toolchain",
+      "change_id": "zrzxvvnlvlzmosruxuouozzutuqzlslv",
+      "commit_id": "e081c209ce5f32bd16e38c0fe73ea49b3c2125da",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-telegram-authority-20261001",
+      "change_id": "ktqqnltzzuntnlvpmyznrklnuxtnumwr",
+      "commit_id": "4d04f601dcd33bddfc9b4a408aa72b65662f8df8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-telegram-formal-20261011",
+      "change_id": "uuuxtmoltkvqsnwxyvxkswuurmzurrrx",
+      "commit_id": "d75fe43304baf32f611cf775a510e676535f0dc1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-telegram-mainline-20261025",
+      "change_id": "ysvurzrxswynxononmtzrmqmrzwypzlu",
+      "commit_id": "52e2b5bdf09f8f66d9e232429fb0168a79a5174d",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-telegram-mini-20261011",
+      "change_id": "lzqovyoussnovqktyqqvxxrtwrysqszn",
+      "commit_id": "f34473666902d7af46f313ac470cff5b81b70c23",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-telegram-poll-20261024",
+      "change_id": "kmnxlukkqyytswswwqztkxznoponqutr",
+      "commit_id": "8a8e648a79e086e8f32ece7f7aeedba252be4477",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-telemetry-repair",
+      "change_id": "qxuzvwkzzopstmvlkrxnvmosnxkpuqoq",
+      "commit_id": "8180c73608373b00b46f7836af71f50ce6f40de7",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-unification-20260908-0753",
+      "change_id": "prkplrtvukrlvoooqllzxkyzqmyyookr",
+      "commit_id": "9bbc5217a740ff03791d68c11913c0cc1823ff4b",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-unification-50-20260908-0852",
+      "change_id": "rvuxyuxyvlxpyzynrvvrkwqzkspwsrlv",
+      "commit_id": "6d15a6d32f798116634a8eb8760e775eb409133c",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "codex-unification-integration-20260908-0821",
+      "change_id": "pvsuywxmnpqosqpuxwmosyyuoypqystq",
+      "commit_id": "0114d3063109d120b04b958acf1db1445ba19fed",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "command-editor-20261028-0755",
+      "change_id": "ztnlnosmuwzytwurwvwvwzxxpslvkows",
+      "commit_id": "c9c24db8297476d35a09070f15074fc2b2093bfb",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "command-runtime-20261028-1404",
+      "change_id": "nrxvrxyuyytwpptswurxmwuwlrkpuszv",
+      "commit_id": "8f0f85a949933bb6f5fbe4b722c2c0e6ce1efcf1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "command-runtime-20261028-1551",
+      "change_id": "mywwnqwlvoszwqtsmkwzzkqyllonloqu",
+      "commit_id": "f057425b4156647fca32f473582bd6a8cca05109",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "command-runtime-20261028-1623",
+      "change_id": "xqmwvmyslsvuuoxnxmtmlryuvosuzvqv",
+      "commit_id": "29d6367e111f058d4e941e6bed1b7394387ec926",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "concurrency-cas-20261028",
+      "change_id": "omputunvpqpxysowtyrulmrsopwwrmuw",
+      "commit_id": "21c739ee8ca88a95269f940e2a5a97552618ee4a",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "default",
+      "change_id": "kvwwuvwpsnyxotpmkovvllqxmytpzmun",
+      "commit_id": "caa6fa3eb0970035252587c4b2e798058d3ca579",
+      "disposition": "active_canonical_integration_candidate",
+      "typed_kind": "ActiveCandidate",
+      "typed_commit_id": "caa6fa3eb0970035252587c4b2e798058d3ca579"
+    },
+    {
+      "name": "dev-harness-20261028-0105",
+      "change_id": "uxturtoupxupyyymwlqtlpvwnrvonmzo",
+      "commit_id": "7c801e99914f93116ffa2680307efc97ba7cfdeb",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "dev-harness-cas-integration-20261028-0850",
+      "change_id": "kwlxtqlutwsvnqovlssnpwzuqzxuxrpx",
+      "commit_id": "99cf8bb041b456b22209c11e3bab5442d7fa4808",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "dev-harness-command-accept-20261028-0420",
+      "change_id": "nzqlsmwpnlwywsnroqnmoosozzpyuyvq",
+      "commit_id": "f1879716cc951c355de86367fd3000345943e966",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "dev-harness-command-runner-20261028-0715",
+      "change_id": "zoxtwnzkyxuonyzqlzmupzutvtwtxwtq",
+      "commit_id": "ef4dff72c4d3c99de28d5d13d72e7600261225d0",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "dev-harness-plan-reconcile-20261028-0435",
+      "change_id": "vrvtzlskxmzzoyopxpttoqnxlvqmvquy",
+      "commit_id": "988fec0f2c01e4b6da968b032e60b8687f76ac78",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "e01-candidate",
+      "change_id": "pwzrpxmkqsqprqoysyowpsqwlpvpvnpk",
+      "commit_id": "a1a02a8845819809349af690d18095e2316ba881",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "e01-review",
+      "change_id": "pwzrpxmkqsqprqoysyowpsqwlpvpvnpk",
+      "commit_id": "a1a02a8845819809349af690d18095e2316ba881",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "e02-acceptance",
+      "change_id": "ksyzyrpprysxwwxrxmlzvmxrtxkyskyl",
+      "commit_id": "646741f77e8454fdedf5f036981cf93c5b0a8bed",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "e03-evidence",
+      "change_id": "rokqromluopouzpotusuotkxltstlqvv",
+      "commit_id": "42568ef75042598ff6261da4977e45d6017c476d",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "e04-census",
+      "change_id": "rouvwoowowsmykrstnmupzrukkuxtmor",
+      "commit_id": "dd00d2c914c0074fbe58ccdc2e7726350d91bce4",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev-delta-freshness-20260909",
+      "change_id": "ulwlonmzxrqrwpyurtrooplmxkwrnwuo",
+      "commit_id": "3d31036fd880b67937782c4ce1897dc7bfbeb2e7",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev-evidence-campaign-20260909",
+      "change_id": "osuysxrqlvwxsknlyqtkrowwkrmxkopo",
+      "commit_id": "48ef2240cc0207a5707c8c3d760b119f93bf1643",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev-homeostasis-repair-20260909",
+      "change_id": "rqvlqvpltyzlnzxwktowkxmmqzrtppzp",
+      "commit_id": "21876162350141ba20024083bd1bd157a66ffa42",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev-rag-freshness-20260909",
+      "change_id": "vlomvlmqppylwtnkonlynurmmykowpwm",
+      "commit_id": "9aadea1bbdc4a545cdbede3eba1d7e10b5b835e2",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev-receipt-validation-20260909",
+      "change_id": "osuonmumquxnrlnmmrtlrznkzmrmqoks",
+      "commit_id": "dbab4b956e884e4ce303c13cddf81d7af7939749",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev-scheduler-repair-20260909",
+      "change_id": "nsplqynkuonzysyyxutsswlvwztvxsmk",
+      "commit_id": "3374e20c181f457eb47fb1cf9c9ed1e29e76d41c",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev98-health-formal-20260909",
+      "change_id": "xoommmzzyynkvwspsnwrsonorstukrpr",
+      "commit_id": "a00843573fd1d20425bd875690d241c764b2de78",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev98-peer-loop-20260909",
+      "change_id": "tpwtrkomxslyvmlonluystmultuyxzoq",
+      "commit_id": "c3275374d57b5636576cbd763fdb99b4332ed2b6",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ev98-wire-codec-20260909",
+      "change_id": "vxxxyozzqyvqvopnrztozyoksrqwxtos",
+      "commit_id": "8331c04ed32fc6179c46df8108a2133d6675528a",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "execution-audit",
+      "change_id": "yvownwzkvnnmwktzrzsnqnxwsuluwlkl",
+      "commit_id": "84c050b87a7779b792db70977379f4819faa1017",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "execution-control",
+      "change_id": "yzuvuytqprwzmnkmkmlyuzlsruppypoo",
+      "commit_id": "e17fd93b3911597bf90241eb4a94103f9d8629da",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "execution-tracker",
+      "change_id": "sulrxtlukssqpyxkypxrswzosvlovquq",
+      "commit_id": "10b42a436b70669cec816fe7bf21b9bb5d4668e6",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "fable-l0",
+      "change_id": "unopwqsxtukszvzzwkwtzxttuqurxlqm",
+      "commit_id": "8a6ef8dae67f4509e59b559deab4a01991683bab",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "fable-w1",
+      "change_id": "trsqkouukykqtvzozyouvuxoxprlnolx",
+      "commit_id": "091a9c646dba4291ad36a7d47e0888dd32cdc59f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "fable-w2",
+      "change_id": "tvwwynqonotwtnxklkponmtruptnqtlp",
+      "commit_id": "1b33a07c372d01c110138da3f7e86deb666ddcc1",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "fable-w3",
+      "change_id": "slvtwqpyvlqnrtunpnuzrouzqrklmlzt",
+      "commit_id": "8ddbc0dca3c0951a60c6c51ce0a092b557246f69",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "fable-w4",
+      "change_id": "nsplntkzmlnosqlyomtrsmksmpxqsonq",
+      "commit_id": "60c580cc3a8417319ae73b52a22d9314e435b6ca",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "fractal-resilience-20261029-0738",
+      "change_id": "oynuqrpvuqnmupkwvquyxyryxplkxvxm",
+      "commit_id": "ee04d8d0bc7a5fbfe1142d9f1666bb8a707fd5a8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "full-implementation-plan-main",
+      "change_id": "stnrxslkxkomlozpmtswvpmwwyvyvuww",
+      "commit_id": "ca1d21c4dbb379931234ee92c654c32e7b2f7d15",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "host-backend-20261029-0609",
+      "change_id": "krtktqouznwmvulyxvtpwyouwyuvyvky",
+      "commit_id": "c587648a493babcb05c878f8d19e155efd73c09e",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "incoming-review",
+      "change_id": "nqumyrzzxkzrlswxzkllpxkyrmwosxxq",
+      "commit_id": "17aae5b726d97a3ee48d9844e165abc547f934da",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "lease-renewal-editor-20261028-1317",
+      "change_id": "xzypkrxuuvmrmxzspwvzzkxpzxrqmsly",
+      "commit_id": "b92c8e83af87295f14f226f275943c706d2c3f26",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "lease-renewal-editor-20261028-1627",
+      "change_id": "ynouxpvvqwknzoupopollvrqpopzrqpu",
+      "commit_id": "2e3f1d6ef60d8865cafa347145452ecc99fe7536",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "lease-runtime-20261028-2000",
+      "change_id": "uymsxyqqsortxlpvtqmwvlxovtmwvtvp",
+      "commit_id": "7fd0162cb40acde846ba1d81bc1105c3dd33290b",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "main-integration-20261029-0718",
+      "change_id": "kxprzxxqyulllrnpmtrrtsqnyyzouqvy",
+      "commit_id": "04a5f858937211a275738ff0e34d8e626c67c9af",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "n01-peer",
+      "change_id": "pyyukmvrykuouupnquxnrltopuvzyqqn",
+      "commit_id": "d3432a57e9d0e1fd83fd042425223a15ed91e987",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "ocaml-gleam-tests",
+      "change_id": "yrxuzoqoyqwsooynstwvyrozvpmmrvtp",
+      "commit_id": "4cc1ac15892877e885ce78518afbf266806d8cf8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "q01-warnings",
+      "change_id": "xosyyuxuuntuzpyrxomokrxxxvosnssp",
+      "commit_id": "1a4b34b5a571695d9044ef5e821887ad989a6b10",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "sa-plan-execution",
+      "change_id": "yupqvvlnmlwxpwkslpkzktuwvmwnkkqy",
+      "commit_id": "c5c048dda1facf4aafa1891659f001a2f4262320",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "skills-preparation",
+      "change_id": "zsypmxottwqvyslyyrlpsontlnppkmlx",
+      "commit_id": "fda0b91e5dfadf04230d20ed9f86a4908761665b",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "split-int",
+      "change_id": "ywlswkowxpyouxkrwywrxrnxuyxvnvwx",
+      "commit_id": "0705e34261a6d855b4f1e96f3bb1fd186252fb9f",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "telegram-staging-deploy",
+      "change_id": "yloknywxtvvzxssntulrmxxympotttkw",
+      "commit_id": "1ddb88613729a63fdf5326d90dd1a84dedeb6ba4",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "w-coverage2",
+      "change_id": "wwmuxmmvpomsupzuppoppnswoswppnky",
+      "commit_id": "af12bb89ce945be226f76f09ba87f01c2f716a39",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "name": "w-store2",
+      "change_id": "lzsymnzqrnytnnkumroutnrwsknxvnqu",
+      "commit_id": "381c400d4ae7f76ed4bfad7433c0e1b98accbbb8",
+      "disposition": "preserved_historical_workspace",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    }
+  ],
+  "visible_heads_count": 147,
+  "visible_heads": [
+    {
+      "change_id": "kvwwuvwpsnyxotpmkovvllqxmytpzmun",
+      "commit_id": "caa6fa3eb0970035252587c4b2e798058d3ca579",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "active_working_copy",
+      "typed_kind": "ActiveCandidate",
+      "typed_commit_id": "caa6fa3eb0970035252587c4b2e798058d3ca579"
+    },
+    {
+      "change_id": "zqovyvvrprnxtznvukzzoktutrkospwy",
+      "commit_id": "e30e0fab7d538c8a29829f486a6737bd69f92167",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "oynuqrpvuqnmupkwvquyxyryxplkxvxm",
+      "commit_id": "ee04d8d0bc7a5fbfe1142d9f1666bb8a707fd5a8",
+      "bookmarks": "",
+      "summary": "chore(workspace): post-fast-ooda-c2b authoring child",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "kxprzxxqyulllrnpmtrrtsqnyyzouqvy",
+      "commit_id": "04a5f858937211a275738ff0e34d8e626c67c9af",
+      "bookmarks": "",
+      "summary": "chore(harness): post-main-integration working copy",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xtyqxrlvzvyplztonqyqouwlxoqqrwym",
+      "commit_id": "a6a4645011e2187a0f3fc1e46a16b627495bf7cd",
+      "bookmarks": "",
+      "summary": "chore(harness): post-main-integration working copy",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zxtmxrttkvxkmyyollnnnwzoosrqtopx",
+      "commit_id": "06aaea83fc29dfdad923f3e88d75ee05cb323d7d",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "uxturtoupxupyyymwlqtlpvwnrvonmzo",
+      "commit_id": "80131c25d52b47e226bba19bb1e7b896ded7bc2e",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "sokpumkoovtwtzwpsqzztykttsnqtzzm",
+      "commit_id": "65755894a280f138563a661c82f952f364f2a177",
+      "bookmarks": "",
+      "summary": "work: isolated concurrency acceptance observations",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ynouxpvvqwknzoupopollvrqpopzrqpu",
+      "commit_id": "2e3f1d6ef60d8865cafa347145452ecc99fe7536",
+      "bookmarks": "",
+      "summary": "chore(harness): authoring child after tested lease source seal",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ztnlnosmuwzytwurwvwvwzxxpslvkows",
+      "commit_id": "c9c24db8297476d35a09070f15074fc2b2093bfb",
+      "bookmarks": "",
+      "summary": "handoff: continue source work after runtime114 freeze",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xqmwvmyslsvuuoxnxmtmlryuvosuzvqv",
+      "commit_id": "29d6367e111f058d4e941e6bed1b7394387ec926",
+      "bookmarks": "",
+      "summary": "freeze: runtime candidate after typed planning scan regressions",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mywwnqwlvoszwqtsmkwzzkqyllonloqu",
+      "commit_id": "f057425b4156647fca32f473582bd6a8cca05109",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "nrxvrxyuyytwpptswurxmwuwlrkpuszv",
+      "commit_id": "8f0f85a949933bb6f5fbe4b722c2c0e6ce1efcf1",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xzypkrxuuvmrmxzspwvzzkxpzxrqmsly",
+      "commit_id": "b92c8e83af87295f14f226f275943c706d2c3f26",
+      "bookmarks": "",
+      "summary": "lease-renewal metadata authoring",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "kwlxtqlutwsvnqovlssnpwzuqzxuxrpx",
+      "commit_id": "99cf8bb041b456b22209c11e3bab5442d7fa4808",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "uuymwmpyszuxkootqqnrswrktkntloml",
+      "commit_id": "c2157abc6aaf979fb91578a6ef45c12a4d05dc5f",
+      "bookmarks": "",
+      "summary": "checkpoint: FFI control identity regression",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zoxtwnzkyxuonyzqlzmupzutvtwtxwtq",
+      "commit_id": "ef4dff72c4d3c99de28d5d13d72e7600261225d0",
+      "bookmarks": "",
+      "summary": "follow-up: response projection review",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vrvtzlskxmzzoyopxpttoqnxlvqmvquy",
+      "commit_id": "988fec0f2c01e4b6da968b032e60b8687f76ac78",
+      "bookmarks": "",
+      "summary": "follow-up: planning reconciliation review",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "skqkmyuzoktkpluxkvuroyrvvwtnqytk",
+      "commit_id": "3eadc54747a6c64f0a147c48b28fa587f5c6648c",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "unopwqsxtukszvzzwkwtzxttuqurxlqm",
+      "commit_id": "8a6ef8dae67f4509e59b559deab4a01991683bab",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zrwtzpnlsooztsooqkrqmxokpvnmknul",
+      "commit_id": "bfb2bcad9965c884e429d47dfdebd39571570397",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "stkxmztywzvnnymylmszwvxpovmooupz",
+      "commit_id": "b92c194e0ed891668e868ab928075a03263093e1",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "svtqqpuvmuvuqwvrppvlwyyxromkmzww",
+      "commit_id": "ee0cc982f1d1544c4776b51fa8042ead17f30599",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ysyomwtypnzpsosrkqksmupylsuuwknm",
+      "commit_id": "27502753c0e73fe652a92d04eabaa4ba469dc03d",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "nyvtsuuonpwzwzzlpuzulwsmxusuwpmx",
+      "commit_id": "0f2c5b5462739f7e0592391d55acd87120ddc768",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "pksttvwywkkmlwumyotxytyrwtnlnowk",
+      "commit_id": "2415b31a1361b9c96dfab6e0ab3a769f93732fff",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vqnnnnvnmxqxvtzvkrtpvutkpmmotuqw",
+      "commit_id": "bc730cb483fbe2321cc7a3fb2d61c4fa609c6e3d",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "nnlxrmuzkqokxluozopszuzqyuytupwq",
+      "commit_id": "91c93c86e4e909f8a68b70a00962cfc0e2ea74a5",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xssvmwplxoyuvknstuymmxzvuwtxpvvs",
+      "commit_id": "c95d3bcda830f98b4775755bdbb9a89fead8cf76",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rxysntykuqoukunwwpywnruvtysvsnrk",
+      "commit_id": "7f08ed6f2b4a452d2e0eba531e8dfd0dff8dd5b5",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "wwqptsylrxkvvnuqtzrouorvtkrkuvmv",
+      "commit_id": "c7b58378ee89319e5e8017da37bef4b2547082c1",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vrxynpzvsommwonvxrokulystxtmnuml",
+      "commit_id": "4eadc019f6a06389ea46b00701ff0d53b7e17587",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yloknywxtvvzxssntulrmxxympotttkw",
+      "commit_id": "1ddb88613729a63fdf5326d90dd1a84dedeb6ba4",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lttpqxtrqupukxvwukqtnwqzoyzwvsmy",
+      "commit_id": "561a743f0dfe6950dce027bb1cb574b43dd6b969",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mxuxtmvqqrtsmvqunnnskqkwlksxxvmw",
+      "commit_id": "795ce070f992c296168ba2b8c6063150c8aed1c6",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lvwlymplmnxltlnurtulyptmrpqvqzpx",
+      "commit_id": "381ab36deb479533388eb2efa6bea51264836a84",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lttwxlxpkpuwqyxpupvvlstwmxynrwkl",
+      "commit_id": "d119219058c1f8a6b19720ecbc52f423a5a52489",
+      "bookmarks": "",
+      "summary": "telegram media: supervised bounded janitor actor running reclaim_expired",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xvtrmvutvzllkottktlulzrtruzksytw",
+      "commit_id": "a0ef869a0484c81e3f9e2b9420a64fb3c3037359",
+      "bookmarks": "",
+      "summary": "telegram media T4: bounded delete and expired reclaim",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "llzpvumnvwuxtwzwyyypwopttlvwsrvn",
+      "commit_id": "55ab456c514410dc8103e4e90a2bce7789b5daa3",
+      "bookmarks": "",
+      "summary": "telegram media T4: store review fixes M-01..M-11",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "wkpzqlokuoztpnwpqlzmyqkoxnwyrxtx",
+      "commit_id": "74ee9a6b8b5f4b4b51d4c0cf713c3c1ad53b8d12",
+      "bookmarks": "",
+      "summary": "telegram media T4: content-addressed store with retention and ceiling",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qlqstlszvosmuolmtqnpvwupzklpxmsl",
+      "commit_id": "5f1618de6f55e3c6a75bb54deb7007331d38a733",
+      "bookmarks": "",
+      "summary": "mini app immune page: actor snapshot message and observed read",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ntznuumwosolwykllwsrmmvqkxrwouqv",
+      "commit_id": "99de655a9764a2922d7bafd9a0389eb322eca736",
+      "bookmarks": "",
+      "summary": "telegram gateway: supervised outbox drain actor",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ryupussllrwxuuzmnlqopzwportknomk",
+      "commit_id": "323fd406ec6d7da185cdabb7e4285bcfc4c5fe99",
+      "bookmarks": "",
+      "summary": "telegram media T2: bounded download adapter with injected transport",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "norzlokslmktvolukopqwxqukuyysqns",
+      "commit_id": "d762f3f88678eb466a2101421711749c50a3a39c",
+      "bookmarks": "",
+      "summary": "telegram journeys: defence and HA spec, dispatcher-layer journey tests, real-traffic runbook",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zkuzwnupuqwxmtuvlznkuouppvuomlyr",
+      "commit_id": "2eec6da07233d6e6d6a8cd873df1e4e0a881e299",
+      "bookmarks": "",
+      "summary": "telegram journeys: critical responder spec, dispatcher-layer journey tests, real-traffic runbook",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qknorttlmqoprxqolyyptsomvvqlqxsm",
+      "commit_id": "07ea3a707bb1447ea779e396434de3dab1fd0e6a",
+      "bookmarks": "",
+      "summary": "telegram journeys: security incident spec, dispatcher-layer journey tests, real-traffic runbook",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "nxwyrozyrnxuqtyxskwspkunpxrrwqsu",
+      "commit_id": "c8c16c0a6b9a8efbe752a2ca867b5d2ecdc29808",
+      "bookmarks": "",
+      "summary": "telegram media T0+T1: typed MediaRef with total parsing; eleven legacy media arms report MediaUnsupported (MEDIA_IMPL attempt 1)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zoryvzlvqqxkmllwnqqvkmqotmxvtlll",
+      "commit_id": "6662bbdfedca4454cf21ed6b6b792eac2e1df9e4",
+      "bookmarks": "",
+      "summary": "telegram gateway: observed startup only, credential never in a payload, bounded outbox requests (GATEWAY_IMPL attempt 1)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lrmpxunuzsnlvovqxznvyxrorrkqlvnq",
+      "commit_id": "e0b8d7765b7e1f9f4d00c8f7add556f8cbad1e5d",
+      "bookmarks": "",
+      "summary": "telegram mini app: Immune, Inference, Federation, Telemetry pages observe real declared/observed state (MINI_API_IMPL attempt 9)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vpmxtyzvyompvtspvppypyqrumlxlunn",
+      "commit_id": "fa1be266fc10335841553254235bf75f6f940e1a",
+      "bookmarks": "",
+      "summary": "telegram actions w3-3: /eco-schedule /sidecar /voice-roll-call /pair-voice /verification adapters (preview/execute contract, no authority)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lpzklrwwsxonqzzolysplxmrsqotzour",
+      "commit_id": "6d0463fbaff137cafae61d01a919e0cde82770da",
+      "bookmarks": "",
+      "summary": "telegram actions w3-2: /repro /merge /bisect /rewind /commitments adapters (preview/execute contract, no authority)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mmpmqrrurmnnmooxksttyylqkomyyotu",
+      "commit_id": "4e072b9c8f1a7f122b2147a60f9367a9eb1fa047",
+      "bookmarks": "",
+      "summary": "telegram actions w3-1: /rotate-keys /lockbox /migrate /escalate /resuscitate adapters (preview/execute contract, no authority)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "kklrrnqzqsnxtqvyrxvtomlpqtorvorm",
+      "commit_id": "5fc4bda91ea5393ba35fe70617ee0168ff913f57",
+      "bookmarks": "",
+      "summary": "telegram actions w2: /chaos /gameday adapters (preview/execute contract, no authority)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rwkrurwolsrquuuorwsrwppwrlpxskym",
+      "commit_id": "d6fb145faeb3c6b0c1109a049a25120eca41dbe8",
+      "bookmarks": "",
+      "summary": "telegram actions w3: /export-audit /handover adapters (preview/execute contract, no authority)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ssxkqottwossxomnwkmwpsyqnwvzrszp",
+      "commit_id": "6f864e8143fae45584d14a729d2f323aa7077772",
+      "bookmarks": "",
+      "summary": "telegram actions w1: /andon /dark adapters (preview/execute contract, no authority)",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "suukkrkqkwuvstkyxxwxvxswkkkolswo",
+      "commit_id": "30f14f4957bcfe6f38796d8609b07ef2a382db2c",
+      "bookmarks": "preserved/default-before-d5-20261026 preserved/div-suukkrkqkwuv-8fad14d59042",
+      "summary": "feat(telegram): implement Slice 2 supervised OTP actor API and end-to-end integration tests",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yqokwstsoqqolrqxzsynrtkunmksxmyy",
+      "commit_id": "865cde847259ee3c64cefe232eace66cd408fdf0",
+      "bookmarks": "preserved/claude-merge-plan-20261025",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "pypmnmokzxuyyxyqsmwlowsvwxkmvtul",
+      "commit_id": "6a239d4c43f1e1feda5a60ec90cb28e251355438",
+      "bookmarks": "",
+      "summary": "Integrate confined service-provider authority without regressing current Telegram behavior",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "pypmnmokzxuyyxyqsmwlowsvwxkmvtul",
+      "commit_id": "1050dacd3aa60e0b769982c9830f2db7840d7ba9",
+      "bookmarks": "",
+      "summary": "Integrate confined service-provider authority without regressing current Telegram behavior",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "slxsstoxlylmymqlxymkmkmvtsslmzvm",
+      "commit_id": "d36416c1648e38df1687cf2f623fba9afdd9f3f1",
+      "bookmarks": "",
+      "summary": "Continue full Telegram Mini interactions and missing backends",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "kmnxlukkqyytswswwqztkxznoponqutr",
+      "commit_id": "8a8e648a79e086e8f32ece7f7aeedba252be4477",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "svrwyzwwwnmtzxtnxosozzssmnoqslmn",
+      "commit_id": "4452207cf7f61ba79ce83240d3420b206757096f",
+      "bookmarks": "preserved/snapshot-x1",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rkkmuwkyqwqpmvntxtpzunsnyvuvosxl",
+      "commit_id": "a026c484658e2b8f6978f0623329d57a057f4eca",
+      "bookmarks": "",
+      "summary": "feat(dashboard): pure Gleam read-only restoration dashboard and bounded observer",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "wtrtkwppyqmtslwmurxunnkttwqkyssw",
+      "commit_id": "ba1353c837cda6c108266ed319a7e398c802f7d3",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ktqqnltzzuntnlvpmyznrklnuxtnumwr",
+      "commit_id": "4d04f601dcd33bddfc9b4a408aa72b65662f8df8",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qktrklyusxtrvussyozpzuqwsxwsomrt",
+      "commit_id": "14785b6745aecae04a7c7efd044896490b927046",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vmwnssxryqtmkmrtvzyuskxpupspmmxk",
+      "commit_id": "c72513b8f2b4971d44ae9fd65002d4152b177f31",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "otomlknopnmrlnqkknuzxzqmrxnttmzo",
+      "commit_id": "b546f7e8e47533e4595505677ba8493fd62b95eb",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "npkouvsqnmtulomkltvovtvzywpyyyoz",
+      "commit_id": "73bb7d3c90b5483484aecc796cd86650845f9241",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ztlyrnxnttolnylyuurmypzslxwvxuns",
+      "commit_id": "57493b178cff9b5b8524271e993357479c2a53fd",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mpkovszkkqmxzmvuwzmlxplpktoykyut",
+      "commit_id": "9c41344754f847b48a33be64a46e4d6135fbd02c",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "wvvvqlzvytwvrrozqzouxtmnxsoklwlk",
+      "commit_id": "d5b57d052233504960826f7ff9cc11d154116a76",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "umsrkvltnuoutoxuqnlqllpwkrukmqzn",
+      "commit_id": "e5b8ded56ae6e3e521ea3a8601bccb2d08e6e882",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ysxupzwompkqpnsrmqmnluponpoytwtt",
+      "commit_id": "b1484ad34a9d3e5beab28e0bd0371199a6e8d8f3",
+      "bookmarks": "",
+      "summary": "chore: next isolated work after reviewed reclaim fix",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "tpwtrkomxslyvmlonluystmultuyxzoq",
+      "commit_id": "c3275374d57b5636576cbd763fdb99b4332ed2b6",
+      "bookmarks": "",
+      "summary": "Completed EV2 independent review HOLD_UNRUN; no further runtime work",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "worvrknnvzmumyplomyymprpvsztruzr",
+      "commit_id": "d9bd28497f84a5dc62cbc84eeeaa8e841fc6655f",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xoommmzzyynkvwspsnwrsonorstukrpr",
+      "commit_id": "a00843573fd1d20425bd875690d241c764b2de78",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vxxxyozzqyvqvopnrztozyoksrqwxtos",
+      "commit_id": "8331c04ed32fc6179c46df8108a2133d6675528a",
+      "bookmarks": "",
+      "summary": "docs(ev86): retain bounded capture review and unresolved route obligations",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "wutmvmzkmunoqzmvmyloqkxworynzqvk",
+      "commit_id": "57b5579be29765ea946411324e1cc9c95d6b2bee",
+      "bookmarks": "",
+      "summary": "Bind EV02 directory-bound mapping evidence",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "tuzsyylknolkozluqqvtzvkuoumormnm",
+      "commit_id": "0bfe5cb47dfd054f9833084dd876d150eb4dddd8",
+      "bookmarks": "",
+      "summary": "Bind EV02 hardened mapping boundary evidence",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mnqlrtnqxxpotovoszrkvmnuwmwvksrw",
+      "commit_id": "e623b584b356bf5ebb0d346a1623e6df7def8c33",
+      "bookmarks": "",
+      "summary": "Preserve EV02 boundary risk and active observations",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rnqmowpoqvqrpssnyuowpwuokyvlrtnm",
+      "commit_id": "dd5b6f753e72f4de6cc27d843db8cf77f7e2101b",
+      "bookmarks": "preserved/div-rnqmowpoqvqr-dd5b6f753e72",
+      "summary": "fix(ev01): bind native JJ child cwd to selected repository",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "pmqyxrywrrnlysytyputlqontxwtpsrl",
+      "commit_id": "8d0b9d340ec3401fbf7ef93c23700ee9c184de12",
+      "bookmarks": "",
+      "summary": "Bind EV02 directive mapping checks and HOLD evidence",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "smswpotrysolnomlxpzywmspyprtkloo",
+      "commit_id": "09f7620f0a9a4d0256fb5893f6416be69468d054",
+      "bookmarks": "",
+      "summary": "Preserve EV02 raw checks against 0a16 before runner manifest correction",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "swpvlqvtxrkrtwwnpxmwkrwyzntpyrqq",
+      "commit_id": "d2350ecb6eb23835b7fde923914b15d63d697e64",
+      "bookmarks": "",
+      "summary": "docs(ev01): bind immutable dossier reference verification",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lwmwqpunqpwsqqspunlqutznpmpwlmuu",
+      "commit_id": "5f6b9a12e9dd2cabcf463b1e71a8a129d0dcfc3d",
+      "bookmarks": "preserved/div-lwmwqpunqpws-5f6b9a12e9dd",
+      "summary": "fix(ev01): refuse JJ secure-config initialization before bootstrap observation",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yzmpqqrkmuylmlluolruwvnmnsyutuxs",
+      "commit_id": "ff0ed665fdb8c70331fefaf0b2459d2d8cf3c56f",
+      "bookmarks": "preserved/div-yzmpqqrkmuyl-ff0ed665fdb8",
+      "summary": "fix(ev01): observe standalone JJ behavior with bounded native predicate and campaign",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lqssoxkuwuvwykpmwopxmtpkvxnwxuxk",
+      "commit_id": "6ff487f0d72af0df0d5059db1a330f7ec8fddb53",
+      "bookmarks": "",
+      "summary": "chore: leave completed EV104 independent review quiescent",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xotsvzowrqlrpotvqovqrzkxlmszywtm",
+      "commit_id": "6c2c9327259ec6f506d41e62be5463196469e1a5",
+      "bookmarks": "",
+      "summary": "chore(ev-receipts): leave completed recipe workspace clean",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lzmlwtmotnyprxmoupurkqskoksqxrov",
+      "commit_id": "a9700f900046d5e308ac5a926eacad1fb7af098a",
+      "bookmarks": "preserved/div-lzmlwtmotnyp-a9700f900046",
+      "summary": "task(recipe-codec): extend closed campaign for reviewed wire source",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "osuysxrqlvwxsknlyqtkrowwkrmxkopo",
+      "commit_id": "48ef2240cc0207a5707c8c3d760b119f93bf1643",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vlomvlmqppylwtnkonlynurmmykowpwm",
+      "commit_id": "9aadea1bbdc4a545cdbede3eba1d7e10b5b835e2",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ulwlonmzxrqrwpyurtrooplmxkwrnwuo",
+      "commit_id": "3d31036fd880b67937782c4ce1897dc7bfbeb2e7",
+      "bookmarks": "",
+      "summary": "review(ev98): preserve health replay repair handoff",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "kkmxpuqtzsqvtywwkowovummvlkprkpq",
+      "commit_id": "bc652dcfd16363321e81100f1a6e30cf2bd3ead7",
+      "bookmarks": "",
+      "summary": "Record EV repair evidence and compose reviewed candidates",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "nsplqynkuonzysyyxutsswlvwztvxsmk",
+      "commit_id": "3374e20c181f457eb47fb1cf9c9ed1e29e76d41c",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "osuonmumquxnrlnmmrtlrznkzmrmqoks",
+      "commit_id": "dbab4b956e884e4ce303c13cddf81d7af7939749",
+      "bookmarks": "",
+      "summary": "review(evidence): pause repaired validator for independent rereview",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rqvlqvpltyzlnzxwktowkxmmqzrtppzp",
+      "commit_id": "21876162350141ba20024083bd1bd157a66ffa42",
+      "bookmarks": "",
+      "summary": "review: bounded proposal and autoscaler follow-up frozen pending independent review",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zzqolopxkovwtrvuuukvtlyozmpyypqv",
+      "commit_id": "4719d3f4dce6d85899b1b82636bb4186f404fcf3",
+      "bookmarks": "",
+      "summary": "work: Codex consolidation preserved; mainline held on ABI and review gates",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zosuwowvmzstltwnmzqmnqpuorrlkwot",
+      "commit_id": "5486a981678414f75caa106937b6fb50649e57bb",
+      "bookmarks": "preserved/div-zosuwowvmzst-5486a9816784",
+      "summary": "docs(testing): add manual GUI/TUI guide and candidate-bound verification receipts",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rwrnxyumxvzxpkpvktxxrpuoostqqpro",
+      "commit_id": "5b9b9388f7adce3a27acae3c048a5312220967d1",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ouopomnwytlnyypstotvtmrzsrvltmwr",
+      "commit_id": "67d5d57b4a0f7e3be6f042530e39d7bd8a88f9c5",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "owuunmmlvutsykzoyzkpwpqrlyqxuzln",
+      "commit_id": "0b23ec6b46c8754c83d4e04fa2f284f0cffb6889",
+      "bookmarks": "preserved/div-owuunmmlvuts-0b23ec6b46c8",
+      "summary": "work(unification): thirty bounded evidence cycles and artifact synchronization",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "owuunmmlvutsykzoyzkpwpqrlyqxuzln",
+      "commit_id": "45435f5b215d9cf5932a67d8d22e8c7ef7ed958b",
+      "bookmarks": "preserved/div-owuunmmlvuts-45435f5b215d",
+      "summary": "work(unification): thirty bounded evidence cycles and artifact synchronization",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ywlswkowxpyouxkrwywrxrnxuyxvnvwx",
+      "commit_id": "0705e34261a6d855b4f1e96f3bb1fd186252fb9f",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "spqrrxnmnwxsmmtvkzomsknonzzkovzt",
+      "commit_id": "7c162d0f8d83825679c2badcb6703decccd3581e",
+      "bookmarks": "",
+      "summary": "docs(plan): prepare dependency-gated hive stabilization",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ulurswzlqmqpouskoomzxuxllklvukkk",
+      "commit_id": "0e75c0ffe4176e6b649b38810df802cbe55ffeb8",
+      "bookmarks": "preserved/snapshot-x2",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "wwmuxmmvpomsupzuppoppnswoswppnky",
+      "commit_id": "af12bb89ce945be226f76f09ba87f01c2f716a39",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mqwsvpxkszotmmppsxuuxmqlozsszkou",
+      "commit_id": "52f8034f75bb60bf845d77c5ad5a4c250b47146f",
+      "bookmarks": "",
+      "summary": "work: Solo5 source review frozen; candidate remains unapproved",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mopwrkrqkuuusnmmuxptoqmluttmmqsw",
+      "commit_id": "9962d6d17d5ec1ec0557cae6100d24a293f01bbc",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vxvxwvztktuzxoklyrroxqrypnpyxzln",
+      "commit_id": "f8c38071ab579f4b7dd718f8d899c1a2ee6376d8",
+      "bookmarks": "",
+      "summary": "work: bounded auth framing review frozen; no rollout authority",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "lykxtrxvmyoxpqnomootrxkvuwqmsmts",
+      "commit_id": "3ee0188be49a6b91d551efebe364e4241342b203",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rywsslnmkupqpzvyywwkywklnsurwmqt",
+      "commit_id": "059afa533f2efefdf809756b84da67b98112f6a3",
+      "bookmarks": "",
+      "summary": "work: runtime component staging evidence frozen for integration",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yykrkuxqzyysskszknkwlnukwzmxvosu",
+      "commit_id": "a9b1872676ce466139f4484c4a15266bd3cf1596",
+      "bookmarks": "",
+      "summary": "work: runtime component staging evidence frozen for integration",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yutkxmusmnxtkpovoyvuxnwqyxnqvtvk",
+      "commit_id": "1753727c53b64e6651a271be68959da8d65cb252",
+      "bookmarks": "",
+      "summary": "work: ingress 6b033f37 review frozen pending bounded reader repair",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yolwptrpxvotpyvxlxztultkuwypwsms",
+      "commit_id": "9bb84b4c3876ad9d6990c7a9e9cadc154cd6be64",
+      "bookmarks": "",
+      "summary": "work: runtime loopback candidate frozen for staging",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qxtzlqnkzrrkppyuysqkurlqpvslxosz",
+      "commit_id": "294ebc47342ac372b886d22656fbd9103f1d5f12",
+      "bookmarks": "",
+      "summary": "work: OIDC independent review frozen; ingress gaps remain open",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qrnynrvswtznnrzxrqsrqssunoynuzru",
+      "commit_id": "10ead02d11d8ffcbaf133702c87244d38b650210",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "sktupywrunrvlnslzlvmskosywyylpsn",
+      "commit_id": "72c7552b181fc44f6e30d5611efd84f3b18b9417",
+      "bookmarks": "",
+      "summary": "work: Mirage model evidence frozen; implementation remains unapproved",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "tsxxzszonqykxzvpqsrmylxuzownppys",
+      "commit_id": "6968cb2bbb374a95f458b4ceeffec98b9dd6fb16",
+      "bookmarks": "",
+      "summary": "chore: working copy after EV-90 ratification",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mtrpsnkypxulszonwxtuszwsstrtqxln",
+      "commit_id": "b10e553273ad520e18aceeae345bdf1d83baf63c",
+      "bookmarks": "",
+      "summary": "work: Mirage tender review completed; candidate preserved",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "nmxzrtywpwpsvlzpkrzxwxrprnookwuq",
+      "commit_id": "2624cff0250247e5675db515f11e7202eb4b1665",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "npptqoznmyyzpqkynnqmrskvksozwopn",
+      "commit_id": "4aec1c8e1bd19521b66ab03de8ccf2077b05ae0b",
+      "bookmarks": "",
+      "summary": "work: Mirage handoff complete; integration held",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zukslupsooszowzsylrwnqvukkvqtpty",
+      "commit_id": "02d43656ad7ac562277714e8864a7fb3ceb56b47",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rrxrpkswsmkznmwksynzokkkqtkwnnwl",
+      "commit_id": "a7b479618b4a6f003aefeb435fe53a0807f63af4",
+      "bookmarks": "",
+      "summary": "review: pin final Mirage composition",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vnxytowxytwtylvluxoqmtnrlwvqymzo",
+      "commit_id": "1ee45aa34d683797be5580e88ea969b701d153e0",
+      "bookmarks": "",
+      "summary": "work: Mirage audit artifacts and final composition",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mumkznxtyoswqvxozpvslyprryroutox",
+      "commit_id": "c5960ff123cb1218d9a43775082d7ace8fd356a1",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rmmpuwlutnkulsmopwtozntwnmkszvqp",
+      "commit_id": "9f69efb21552c19da470262f90d5b98d2bb36173",
+      "bookmarks": "",
+      "summary": "work: review Mirage benchmark integration",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ptnlxrpptppmwkmlwpzkpxrylruklsrm",
+      "commit_id": "b63169a3eea4792c0b4b690ff23a45be8dcef6db",
+      "bookmarks": "",
+      "summary": "chore: preserve Mirage repair candidate",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "kvmlnkuuztlvrpxyssrvozvvxrktsmzo",
+      "commit_id": "fe542cb830e917354f0845ddf6d70d809fe9bcab",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zxqtoyxmxslmmkpzsuovqxmsuquwmkrz",
+      "commit_id": "e5572657abeeba9c6eaca2bdf9e24d77bf5603dc",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "usxqyqtqmttzomzyqkolqvzmpxmkvwql",
+      "commit_id": "31207adba558d200dcec854809d6bbfc00b860b9",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "pnpktttvlnvyrzvnwvyuqzolvnmprssk",
+      "commit_id": "fb945a48b815edefe6a7dada0032784a374c985b",
+      "bookmarks": "",
+      "summary": "merge(two-parent): telemetry reuse (tvzqzlox@a5fae5a5: bounded emission, truthful evidence; 88 focused tests; producer JSON correlates to a real board canary; collector unavailable) \u2014 verified development candidate from the Codex session (development-only, no OTLP backend claim); parents preserved",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "tkmtuvmqrnlplwunqntrlyqyxlvkxuyl",
+      "commit_id": "c476b52e473864653889d24b0c20cc632e6d792e",
+      "bookmarks": "",
+      "summary": "merge(two-parent): C04/C05 action boundary + mandatory decision records + hive projections/KPI (ae5fea50 -> 1353e658 -> 4e6632fc) \u2014 retry on main lvrollqx",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qupsryxkkynlrykvspvlpqxuxulmluys",
+      "commit_id": "4a5e1fa3681afb66109874b526c549fec2821d89",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rxxptmvmmlrqlyrkntmzrvwpuovltswo",
+      "commit_id": "02bbeca2107aeb9f21e93a8b2bbe8049e002904a",
+      "bookmarks": "",
+      "summary": "merge(two-parent): MCP corrective + stdio completion chain (cb625f48 -> 4eabfc34: native adapters gated on runtime load evidence, JSON-RPC framing preserved on stdio; positive NIF path UNRUN) \u2014 verified development candidate from the Codex session (not production admission); lineage 4eabfc34fea9d0a96317fff4c759d8b3141a2c73 preserved",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "zzkpwsnukpuzktxpluoslstmzkokvxpx",
+      "commit_id": "c1841115ba3b2baf5597ca624c9f69fc9c22e6eb",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "qtvsuzxulpvytyomlspwzpmuqmrmyrmm",
+      "commit_id": "501fdbffc9089a347a4f6d50a5b938b08d1630f5",
+      "bookmarks": "",
+      "summary": "merge(two-parent): telemetry repair (tvzqzlox: bounded emission, truthful evidence, 88 focused tests) \u2014 verified development candidate from the Codex session (not production admission); lineage a5fae5a56069d891c9dfeeef457132c6abff499c preserved",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mqzpmsuozqtxxzkzkkpnropzkuvopsws",
+      "commit_id": "a0c3fd11ea96eeb9a757e668a2cf365abae58b93",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "uoqzlolwnmuwrtroqzsunwnulloqpnxs",
+      "commit_id": "c9be3c149be0bb1e780a4534d8d680cf5125f69e",
+      "bookmarks": "",
+      "summary": "merge(two-parent): strict clock contract -> board insights (342bc544 -> ada45ee7) \u2014 verified development candidate from the Codex session (not production admission); lineage ada45ee774d2d58d8dca39c8934faa270daacf3a preserved onto the swarm stream",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "mmzqmnytpzvypoynuokqzzmzskspsotn",
+      "commit_id": "de84ada81054f23ea06193ba0c92e124166a9fb8",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "pyyukmvrykuouupnquxnrltopuvzyqqn",
+      "commit_id": "d3432a57e9d0e1fd83fd042425223a15ed91e987",
+      "bookmarks": "",
+      "summary": "N01: record endpoint provenance and integrate independent review",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "xosyyuxuuntuzpyrxomokrxxxvosnssp",
+      "commit_id": "1a4b34b5a571695d9044ef5e821887ad989a6b10",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "rouvwoowowsmykrstnmupzrukkuxtmor",
+      "commit_id": "dd00d2c914c0074fbe58ccdc2e7726350d91bce4",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "ksyzyrpprysxwwxrxmlzvmxrtxkyskyl",
+      "commit_id": "646741f77e8454fdedf5f036981cf93c5b0a8bed",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "vsxpqkzrxlkyymtykwvlqzlsowkypnyx",
+      "commit_id": "fbec9ddcbee7a0a4e3ecea9273d55b70a801d22c",
+      "bookmarks": "",
+      "summary": "execution: integrate independently reviewed E02 and skills preparation",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "stnrxslkxkomlozpmtswvpmwwyvyvuww",
+      "commit_id": "ca1d21c4dbb379931234ee92c654c32e7b2f7d15",
+      "bookmarks": "",
+      "summary": "docs(handover): integrate the latest AGY session handover with review provenance",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    },
+    {
+      "change_id": "yrxuzoqoyqwsooynstwvyrozvpmmrvtp",
+      "commit_id": "4cc1ac15892877e885ce78518afbf266806d8cf8",
+      "bookmarks": "",
+      "summary": "",
+      "disposition": "preserved_historical_or_held_head",
+      "typed_kind": "Held",
+      "hold_id": "preserved-historical-lineage",
+      "hold_reason": "Preserved untouched without destructive rewrite pending owner review"
+    }
+  ],
+  "preflight_exit_code": 0,
+  "preflight_observation_note": "Host tools/preflight exited 0 (31/31 checks PASS including tracked tools-tree 394 tracked / 0 untracked and vcs no-git-marker PASS; inside codex exec bwrap sandbox a synthetic 0555 tmpfs .git mount caused sandbox-only exit 1)."
+}

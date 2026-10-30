@@ -1,0 +1,145 @@
+```json
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "reviewer": "claude-independent-verifier",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "task_id": "T23",
+  "parent_main_commit": "b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae",
+  "core_dev_ready": true,
+  "mcp_full_dev_ready": false,
+  "system_admission": "NOT_ADMITTED",
+  "raw_verdict": "PASS",
+  "critical_findings_count": 0,
+  "critical_findings": [],
+  "minor_observations": [
+    "REVIEW SCOPE LIMIT (reviewer-side, not a candidate defect): this session's permission mode refused every compiler/test invocation (gleam build, erl/eunit all denied), so NO test in the five named modules was re-executed by me. My verdict is source-bound plus receipt-bound. Corroborating artifacts only: compiled BEAMs for all candidate modules exist with Oct 30 10:55-11:13 mtimes (cepaf_gleam@mcp@{registry,route_convergence,http_auth,disposition,epistemic_gates,transports@stdio,transports@zenoh,transports@http}.beam).",
+    "ROUTE CENSUS IS STRUCTURALLY REAL, NOT ASSERTED: I counted the three sources independently of the test's should.equal(101). tools.gleam declares exactly 65 `name:` entries; harness/mcp.gleam tool_definitions = 4 feature tools + development.tool_names (10) + peers.names (4) + tracking.names (3) = 21; operations.names = 15. 65+21+15 = 101. registry.classify_public covers all 65 names exactly (9+7+19+3+4+4+5+9+5), so the `_ -> (\"unclassified\", ReadOnly)` fallback arm at registry.gleam:274 is unreachable for the current catalog — but it would silently classify any future public tool as ReadOnly, bypassing the fence; prefer a total match or an explicit refusal.",
+    "SCHEMA-PINNING GATE IS NON-LOAD-BEARING IN THE LIVE PATH: the only production caller is route_convergence.gleam:46, `registry.verify_schema_digest(spec, spec.input_schema)`, while spec.schema_digest was itself computed as files.digest(json.to_string(def.input_schema)) in registry.gleam:95/111/127. It compares a spec against its own schema, so SCHEMA_MIGRATION_REQUIRED is structurally unreachable there. The negative case exists only in mcp_route_census_test.gleam:53 with a mutated schema. No authority impact (the schema is server-owned, so there is nothing client-supplied to tamper with) — but the check adds no protection and should not be cited as schema-drift defence.",
+    "TRANSPORT HARDENING ASYMMETRY (Zenoh vs HTTP): http_auth.gleam:168-175 uses crypto.hmac(Sha256) with domain separator \"uos-mcp-http-v1:\" and compares with crypto.secure_compare (http_auth.gleam:223-228), explicitly noting HMAC prevents length extension. transports/zenoh.gleam:64-79 instead uses secret-prefix SHA-256 (files.digest over shared_secret || fields) and compares with plain `==` at zenoh.gleam:189. The length-prefixed framing (`len:field|`) appears to defeat a practical length-extension forgery, because any extended byte string cannot re-encode as 8 honestly length-prefixed fields; and the digest comparison is over a 64-char hex of a keyed digest, so the timing channel is weak. No bypass demonstrated. Still: the two transports should share one HMAC + constant-time primitive.",
+    "PRIVATE-ROUTE RECEIPT IDENTITY IS NOT OWNER-BOUND: server.gleam:178-198 deliberately binds the public mutating intent_id to actor+workspace (owner_hash), with the comment 'never payload worker'. The development/successor path (route_convergence.run_converged -> dispatch.dispatch_validated, dispatch.gleam:111-112) builds intent_id as route:tool:payload_hash with no actor component. Two distinct principals, each separately fenced and route-granted, issuing a byte-identical payload therefore share one ledger entry: the second gets the memoized Complete (same bytes, same entitlement) or is blocked by the first's EffectUncertain. Conservative, not an escalation, but it is an asymmetry against the stated public-path rule.",
+    "TWO PUBLIC ENTRY POINTS WITH DIFFERENT GRANT REQUIREMENTS: execute_route_authenticated (server.gleam:110) enforces route_convergence (route grant required for every Mutating/ControlActuation/private spec, route_convergence.gleam:108-113), whereas the still-public execute_authenticated (server.gleam:74) requires only the TaskFence GrantTicket and no RouteGrant. A host calling the lower-level function silently drops the route-grant layer. The hard fence (TaskExecuting + worker match + unexpired lease + unrevoked/unexpired/workspace-matched grant, admission.gleam:168-267) still holds, so there is no privilege escalation — but the API shape invites a weaker call path.",
+    "harness_finish FENCE-MATCH IS VACUOUS WITHOUT A FENCE: route_convergence.fence_task_matches (gleam:192-197) returns True when context.task_fence is None. Today this is unreachable because classify_harness_effect (registry.gleam:134-147) defaults harness_finish to Mutating, so admission.verify_fenced_mutation refuses None with MISSING_TASK_FENCE first. The guard is one reclassification away from being a hole; prefer a fail-closed None arm.",
+    "DECLARED-UNAVAILABLE TOOLS ARE DISPATCHABLE ON THE TYPED PATH: tools.unavailable_reason gates only tools/list (operational_tool_definitions, tools.gleam:45-48) and the legacy string dispatcher (server.gleam:740-743). registry.lookup(\"public\", ...) resolves all 65 declared names, so the 12 unavailable_tools (control_loop, safety_status, run_selfcheck, registry_status, run_gate, zk_search, sa_bridge_submit, vault_status, vault_list_secrets, vault_policy_get, vault_audit_tail, vault_health) reach their typed adapters. The benchmark in mcp_assurance_test.gleam:731-771 relies on exactly this, asserting 10,000/10,000 Complete over a tool mix that includes safety_status and vault_status. Those adapters do enforce authority and refuse honestly (vault_metadata UnwiredVault -> VAULT_BACKEND_UNWIRED; evidence.classify_backend_payload maps UNAVAILABLE:/error payloads to Refused), so the direction of the inconsistency is safe (the catalog understates what the typed adapters now implement). Reconcile the unavailable_tools constant with the typed adapters so tools/list and tools/call tell the same story. Positive cross-check: 65 declared - 12 unavailable = 53, which matches tools_listed_count: 53 in every client row of the T19 receipt.",
+    "FORMAL GATE USED AN OFF-TREE PROVER: docs/reviews/20261030-1038-t20-formal-gate-probe.json names prover_binary \"/home/an/.nix-profile/bin/lean\" for both Traceability.lean and TwoLattice_STM.lean. SC-NIX-DEVENV-001 invariants 5/11/12 and the uos_toolchain_verify locality gate bar any entrypoint resolving under $HOME, and this repository already ships a pinned Lean at toolchains/lean-4.33.0 with the wrapper tools/lean. The quint and Hermes rows do resolve in-project (toolchains/nix-profile/bin/quint, engines/hermes/_build/...). Two of five rows therefore rest on an unpinned prover of unrecorded version. Re-run those two through tools/lean and reissue the receipt.",
+    "GOVERNING CONTRACT MISSTATES THE NEGOTIATED PROTOCOL VERSIONS: contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md MCP-04 claims the server accepts `2024-11-05` and `2025-11-25`. The implementation accepts `2024-11-05` and `2026-07-28` and nothing else (mcp/version.gleam:9-23, profiles/legacy.gleam:13, profiles/modern.gleam:13, transports/http.gleam:187-190). A client following the contract would be refused with UNSUPPORTED_PROTOCOL_VERSION. MCP-01 (101 routes = 65+21+15, 9 domain adapters) does match the code and the 9 files in mcp/adapters/.",
+    "T21 DISPOSITION ARTIFACT IS NOT BOUND TO THE TYPED VALIDATOR IT CITES: governance/planning/20261030-1052-t21-workspace-and-head-disposition.json is referenced by no source, tool, or test (grep over apps/tools/contracts/docs/governance returns only the file itself), and its vocabulary — 141 preserved_historical_workspace, 146 preserved_historical_or_held_head — has no counterpart among disposition.gleam's ContentDisposition constructors (Incorporated(content_sha256) / Superseded(by_commit, rationale) / Held(hold_id, reason) / ActiveCandidate(commit_id)). Under validate_reconciliation those 287 entries would classify as Unclassified and be refused. Counts are internally consistent (141+1 held+1 active_working_copy = 143 workspaces; 146+1 active_canonical_integration_candidate = 147 heads) and recovery evidence is present (rollback_locator to b5dfbe78 plus 12bf3ee5, and a quarantine receipt with sha256 d1dc2995... for verify_guardian.exe), so this is an evidence-binding gap, not a lost-work or recovery defect. The typed gate is proven by mcp_workspace_disposition_test.gleam only against synthetic entries.",
+    "PRIVATE-ROUTE EFFECTS ARE STUBBED IN THE 515-CELL MATRIX: mcp_client_matrix_test.gleam drives all 101 specs x 5 clients through real stdio framing, but the injected private_handler (gleam:144-149) returns a constant {\"ok\":true}. The 505 stdio cells therefore verify admission, route convergence, framing and evidence rebinding across every route — they do not verify the real development/successor side effects. The 10 Zenoh/HTTP cells are a single public tool (harness_execution_progress) across five clients, not a per-route transport sweep.",
+    "candidate_evidence_mismatch (route_convergence.gleam:237-246) treats the literals \"\" and \"uos-mcp\" as wildcards that skip the candidate check before rewriting evidence.candidate to store.active_candidate. Every typed adapter emits exactly \"uos-mcp\" via evidence.classify_backend_payload, so the wildcard is load-bearing today; it also means a backend that forgets to stamp a candidate is silently rebound rather than refused.",
+    "admission.GrantTicket carries an AuthorityScope (types.gleam:21-28) that verify_grant_ticket never reads: revocation, expiry and workspace are checked, scope is not. A TaskScopedMutation ticket and a ControlMutation ticket are interchangeable at the fence. Every fixture uses TaskScopedMutation, including for the ControlActuation tool control_loop (mcp_assurance_test.gleam:223-293), so scope is declared but unenforced.",
+    "POSITIVE, STATED FOR THE RECORD: the deny-dominates lattice is genuinely exhaustive (mcp_assurance_test.gleam:228-312 enumerates 2 specs x 192 fence combinations and asserts Ok iff every dimension is valid); observer non-interference folds 50 read-only calls and asserts final_pool == pool and planning_write/control unchanged; killed-worker containment asserts the linked child is dead and that a crash-after-effect latches EffectUncertain so blind replay is refused with UNCERTAIN_RECEIPT_RECONCILE_REQUIRED until an explicit reconcile; epistemic_gates never renders Refused/Unavailable/Unknown/Stale as operational and never lets a wrapper claim override a raw verdict; evidence records are honest by construction (formal_state \"unrun\", admission_state \"not_admitted\"); mcp_capability_inventory reports declared_unprobed / admission unknown / runtime_admission not_granted / effect_authority false."
+  ],
+  "matrix_summary": {
+    "public_routes_verified": 65,
+    "development_routes_verified": 21,
+    "successor_routes_verified": 15,
+    "total_routes_verified": 101,
+    "five_clients_stdio_verified": true,
+    "transports_verified": ["stdio", "zenoh", "streamable_http"],
+    "formal_and_oracle_gates_verified": false
+  },
+  "seventeen_aspects": [
+    {
+      "aspect_id": 1,
+      "name": "Requirements and scope traceability (101-route completion claim)",
+      "status": "PASS",
+      "evidence": "65/21/15 derived independently from tools.gleam (65 name entries), harness/mcp.gleam tool_definitions (4+10+4+3=21) and operations.names (15); matches registry.all_specs() and the census assertions in mcp_final_acceptance_test.gleam:108-117."
+    },
+    {
+      "aspect_id": 2,
+      "name": "Architecture and language boundaries (Gleam owns admission and dispatch)",
+      "status": "PASS",
+      "evidence": "admission.gleam, route_convergence.gleam, dispatch.gleam and the three transports are pure Gleam; native/Hermes work stays behind sa_plan_bridge and the adapters. No Python, Bevy or Graphite appears in any reviewed module."
+    },
+    {
+      "aspect_id": 3,
+      "name": "Registry and route-grant isolation (no cross-route widening)",
+      "status": "PASS",
+      "evidence": "registry.route_specs returns [] for unknown routes (UNKNOWN_ROUTE_OR_TOOL); verify_route_grant refuses CROSS_ROUTE_GRANT_FORBIDDEN on route mismatch and TOOL_NOT_IN_ROUTE_GRANT on name mismatch (route_convergence.gleam:61-113); requires_route_grant covers development, successor, Mutating and ControlActuation."
+    },
+    {
+      "aspect_id": 4,
+      "name": "Schema and contract integrity",
+      "status": "HOLD",
+      "evidence": "The live schema-digest check compares a spec against its own input_schema (route_convergence.gleam:46 with digests built in registry.gleam:95/111/127), so SCHEMA_MIGRATION_REQUIRED cannot fire in production; drift detection exists only in test with a mutated schema."
+    },
+    {
+      "aspect_id": 5,
+      "name": "Authority and effect-time fencing",
+      "status": "PASS",
+      "evidence": "admission.gleam enforces principal-workspace equality at admit and again at effect time, AuditOnly mutation refusal, TaskCompleted/TaskAvailable refusal, worker-identity match, lease expiry, and grant revoked/expired/workspace checks; planning_write adds target-task ownership plus STALE_ATTEMPT_FENCE; the 192-combination lattice test asserts Ok iff all dimensions valid."
+    },
+    {
+      "aspect_id": 6,
+      "name": "Transport security (stdio, Zenoh, Streamable HTTP)",
+      "status": "PASS",
+      "evidence": "stdio: NUL and escaped-NUL refusal, 1 MiB frame bound, depth 32, absolute frame deadline, truncated-frame-at-EOF refusal, stdout gated by a structural jsonrpc re-parse. Zenoh: strict topic grammar, client-id match, reply key pinned to the request key (FOREIGN_REPLY_DESTINATION_FORBIDDEN), signature over all fields, REST-only refusal. HTTP: HTTPS+tailnet origin allowlist, duplicate-header fail-closed, HMAC token with secure_compare, issuer/audience/scope/time/non-empty claim checks, session-id and actor bound to the principal, credential-forwarding refusal and credential-header stripping. See the Zenoh-vs-HTTP hardening asymmetry in minor observations."
+    },
+    {
+      "aspect_id": 7,
+      "name": "Data disclosure and secret hygiene",
+      "status": "PASS",
+      "evidence": "vault_metadata returns metadata only (sealed/healthy/names/policy/audit), refuses VAULT_CROSS_TENANT_FORBIDDEN outside the authenticated workspace scope and redacts hvs./Bearer/secret_value/PRIVATE KEY. knowledge enforces traversal, NUL, absolute-outside-root, a 16-marker credential/WAL blocklist, link-escape refusal, scope intersection (corpus AND principal, server passes [\"public\"] only), byte bound and transclusion depth/cycle refusal. HTTP refuses credential echo in body and strips credential headers before dispatch."
+    },
+    {
+      "aspect_id": 8,
+      "name": "Effect idempotence, receipts and unknown-outcome reconciliation",
+      "status": "PASS",
+      "evidence": "execute_receipted records an intent before any effect, replays a committed outcome, and refuses an EffectUncertain entry with ReconcileFirst; worker.run_isolated_with_receipts plus receipts.reconcile_uncertain are exercised end to end in mcp_assurance_test.gleam:544-610. Public intent ids are owner-bound; the private path is not (see minor observations)."
+    },
+    {
+      "aspect_id": 9,
+      "name": "Recovery, rollback and worker containment",
+      "status": "PASS",
+      "evidence": "Killed worker takes its linked child down (asserted); replace_poisoned_worker increments the generation and the next call on the fresh generation is clean; T21 records rollback_locator b5dfbe78 plus the 12bf3ee5 pre-session baseline, one quarantined artifact with receipt and sha256, and one hold preserved byte-for-byte."
+    },
+    {
+      "aspect_id": 10,
+      "name": "Observability and evidence truthfulness",
+      "status": "PASS",
+      "evidence": "evidence.classify_backend_payload emits formal_state \"unrun\" and admission_state \"not_admitted\" always, and converts nested JSON-RPC errors, UNAVAILABLE: payloads and error/ok:false/status:error payloads into Refused rather than Complete; mcp_capability_inventory reports effect_authority false and runtime_admission not_granted."
+    },
+    {
+      "aspect_id": 11,
+      "name": "Test design and negative controls",
+      "status": "PASS",
+      "evidence": "The five modules contain real falsifiers, not confirmations: 192-combination fence lattice, 201-input deterministic PRNG fuzz asserting wire/stdio/resource all refuse, 50-observer non-interference, backpressure/oversize/deadline refusals measured under a 50 ms budget, 10,000-request concurrency-16 p95 gate, and per-category masking tests that add a failing second cell in an already-satisfied category."
+    },
+    {
+      "aspect_id": 12,
+      "name": "Fresh runtime observation at the candidate",
+      "status": "HOLD",
+      "evidence": "Not established by me: every build/test invocation was refused by this session's permission mode, so I re-executed nothing. Receipt-attested only (T19 five real client binaries with versions codex-cli 0.164.0, Claude Code 2.1.312, pi 1.4.0, exit 0, 5 frames each, notification_silent, forbidden_path_code -32005, per-client stdout sha256) plus Oct 30 BEAM artifacts for all candidate modules. I did not reproduce those digests."
+    },
+    {
+      "aspect_id": 13,
+      "name": "Formal verification and independent oracle gates",
+      "status": "HOLD",
+      "evidence": "T20 reports exit 0 for all five artifacts, but the two Lean rows name /home/an/.nix-profile/bin/lean, outside $UOS_ROOT, while toolchains/lean-4.33.0 and tools/lean exist in-project; this violates the SC-NIX-DEVENV-001 locality gate and leaves the prover version unrecorded. quint typecheck and the two Hermes oracles (hermes_rete 1/1, parity_algebra 146/0) do resolve in-project."
+    },
+    {
+      "aspect_id": 14,
+      "name": "Documentation and epistemic projection truth",
+      "status": "HOLD",
+      "evidence": "The governing AK-47 rule MCP-04 advertises protocol versions 2024-11-05 and 2025-11-25; the implementation negotiates 2024-11-05 and 2026-07-28 only (version.gleam:9-23). Separately, tools/list hides 12 unavailable_tools that the typed path will dispatch. Gate semantics themselves are honest (hold_status, DEV_CANDIDATE_VERIFIED_NOT_SYSTEM_ADMITTED, four non-operational renderings)."
+    },
+    {
+      "aspect_id": 15,
+      "name": "Workspace, head disposition and provenance preservation",
+      "status": "HOLD",
+      "evidence": "The T21 artifact is complete by its own arithmetic (143 workspaces, 147 heads, zero unclassified) but is parsed by nothing and uses a free-text vocabulary outside disposition.gleam's typed constructors, so 287 entries carry neither a content digest nor a hold_id/reason pair; 'ancestry alone never proves integration' is asserted in prose rather than machine-checked for this candidate."
+    },
+    {
+      "aspect_id": 16,
+      "name": "Sa-plan sole execution authority and Jidoka stop line",
+      "status": "PASS",
+      "evidence": "Every Mutating/ControlActuation call requires an executing Sa-plan task fence with a live lease and matching worker; the legacy string path refuses all mutations outright with a transport-bound-authority-unavailable error (server.gleam:720-733) and keeps the -32002 Jidoka check ahead of authz; COMPLETION_EVIDENCE_REQUIRED gates every harness_finish on a candidate-bound passing receipt."
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sovereign admission separated from development readiness",
+      "status": "PASS",
+      "evidence": "evaluate_dev_acceptance requires sovereign_admission_granted AND core AND full AND two-key (reviews, formal, runtime) before ADMITTED, and the tests prove a grant alone, a stale review candidate, a single critical finding, a missing key, an unknown category or a failing second cell in a satisfied category each force NOT_ADMITTED. This review preserves that separation: NOT_ADMITTED."
+    }
+  ]
+}
+```

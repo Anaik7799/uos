@@ -1,0 +1,75 @@
+{
+  "schema": "uos.t24-staged-release-and-rollback-rehearsal.v1",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "task_id": "T24",
+  "candidate_source_digest": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+  "rollback_commit_locator": "b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae",
+  "inspected_service_units": [
+    {
+      "path": "ops/systemd/c3i-gleam-server.service",
+      "sha256": "780c1c828efb6828113d9b45e4416d618986efdac3b5a7682786daa7804c6e54",
+      "start_limit_burst": null,
+      "start_limit_note": "unit declares Restart=on-failure with RestartSec=2s; start-rate limiting is delegated to the target, no explicit StartLimitBurst",
+      "exec_start_pre_sha256_gate": null,
+      "environment_bindings": {
+        "UOS_ROOT": "/home/an/NAS-setup/uos",
+        "UOS_SA_PLAN_DB": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3"
+      },
+      "working_directory": "/home/an/NAS-setup/uos",
+      "zeromuda_interlock_note": "Zero-Muda: zero Bevy, zero Graphite, host NVMe 25503L801736 interlock",
+      "realized_nix_erlang_otp": null
+    },
+    {
+      "path": "ops/web/20260907-1309-uos-indrajaal-web@.service",
+      "sha256": "526639ebc0ff84c123ed90a8b85735bf96cb36e14d65fdb2e966e7e8477e2968",
+      "start_limit_burst": 3,
+      "start_limit_interval_sec": 60,
+      "exec_start_pre_sha256_gate": "/usr/bin/sha256sum --check --quiet --strict artifacts.sha256",
+      "environment_bindings": {
+        "UOS_WEB_MANAGED": "true"
+      },
+      "working_directory": "%h/NAS-setup/uos/var/releases/indrajaal-web/%i",
+      "realized_nix_erlang_otp": {
+        "otp_release": "29",
+        "erlang_store_path": "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6",
+        "erl_binary": "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6/lib/erlang/bin/erl"
+      },
+      "restart_policy": "on-failure RestartSec=3s, TimeoutStopSec=10s, KillMode=control-group",
+      "hardening": [
+        "UMask=0077",
+        "NoNewPrivileges=true",
+        "MemoryMax=1G",
+        "CPUQuota=200%",
+        "TasksMax=256",
+        "LimitNOFILE=4096"
+      ]
+    }
+  ],
+  "inspected_service_unit_observations": {
+    "start_limit_burst": 3,
+    "exec_start_pre_sha256_artifact_gate": "/usr/bin/sha256sum --check --quiet --strict artifacts.sha256",
+    "realized_nix_erlang_otp_29": {
+      "otp_release": "29",
+      "erlang_store_path": "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6"
+    },
+    "uos_sa_plan_db_binding": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+    "zeromuda_interlock_note": "Zero-Muda: zero Bevy, zero Graphite, host NVMe 25503L801736 interlock"
+  },
+  "rehearsal_verification": {
+    "module": "cepaf_gleam/mcp/release_rehearsal",
+    "test_suite": "mcp_release_rehearsal_test",
+    "tests_passed": 3,
+    "tests": [
+      "rollback_restores_compatible_tasks_and_receipts_test",
+      "old_runtime_cannot_resume_after_lease_loss_test",
+      "cutover_refused_without_explicit_release_authority_test"
+    ],
+    "build_target": "erlang",
+    "candidate_source_digest_reverified_after_build": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+    "proposed_canary_window_minutes": 30
+  },
+  "live_production_cutover_executed": false,
+  "release_authority_status": "HELD_SEPARATE_NOT_AUTO_AUTHORIZED_BY_PLANNING_REQUEST",
+  "system_admission": "NOT_ADMITTED",
+  "admitted_ev_ceiling": 93
+}

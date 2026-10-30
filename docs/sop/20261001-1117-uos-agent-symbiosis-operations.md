@@ -79,6 +79,37 @@ Build the completion packet from flat top-level fields and run the journal and d
 
 - **2026-10-29 Fast-OODA & Critical Code Resilience Update (`SC-AGENTIC-RESILIENCE-001`)**: Three-scope lease renewal (`sa_plan_bridge.renew_task` / `--task-renew`) is active; the successor development harness exposes **15 scoped tools** (`ops.names`, including `harness_client_mcp_config` and `harness_plan_intent`), pins **28 BEAM control modules** + `tools/ecology_process.ml` across **44 source files**, supports `host_immutable_nix` (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), and enforces 184/184 EUnit tests across 12 MCP + harness test modules under `gemini-4-argon` supervision with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) agent lanes.
 
+## 2026-10-30 Addendum — AK-47 Multi-Agent Supervisor & Unified 101-Route MCP Architecture (SC-AK47-SYMBIOSIS-001)
+
+Observed: 2026-10-30T10:58:00Z. Status: canonical reference addendum; `REPORT_ONLY` with respect to runtime admission. Grants no effect authority and no admission. Client adoption is **UNRUN**. The canonical operating SOP is [20261030-1058-uos-fractal-comprehensive-system-prompt.md](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md).
+
+Authority: [AK-47 multi-agent MCP symbiosis rule](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md) (`SC-AK47-SYMBIOSIS-001`). Companion surfaces: [client guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md) · [ZK ADR](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md) · [local skill](http://nas-1.tail55d152.ts.net:4100/files/governance/agents/20261001-1118-skills/ak47-multi-agent-mcp-symbiosis/SKILL.md). This addendum is a projection wrapper: it states no new runtime property and mints no EV.
+
+### AK-47 design principle, extended to agentic delivery
+
+The system is built the way the rifle is: a small number of **unbreakable steel-receiver invariants** carry everything that matters, while the remaining parts run with **loose bolt clearance** so ordinary tolerances never stop the mechanism. Steel = authority, safety, admission, provenance, secret hygiene, effect fencing, and the 28-module critical control path (hash-gated, CAS-written, independently verified; a critical file changes only under its own authorized control epoch with its own recovery path). Clearance = parallel disjoint-file workers, each owning one bounded new-file set, never a shared dispatcher, never a sibling's file. **Zero Muda** = pull only dependency-ready slices, merge verified work, then stop; do not build inventory for its own sake, recompute a landed candidate, or hold a ready record while its real blocker is an operator input.
+
+### 4-agent symbiosis
+
+| Agent | Role & boundary | Invocation discipline |
+|---|---|---|
+| **AGY Argon** | Strict Supervisor, integrator and verifier. **Never authors application code.** Holds the Sa-Plan claim/completion ledger and the `integration/main` epoch fence; runs the SHA-256 and EUnit gates; performs final merges. | One writer, one fence, one merge gate; no self-review conflict. |
+| **Pi + DeepSeek-v4.1-Flash** | Fast disjoint slices: adapters, transports, facilities, doc/mirror sweeps, unit-test authoring. | `--thinking low` + the 8-flag Zero-Muda isolation bundle (`--no-session --no-extensions --no-mcp --no-skills --no-prompt-templates --no-context-files --no-themes`), measured at a **-99.2%** prompt-token overhead. Supervisor post-run `sha256sum` re-checks every touched file. |
+| **Codex** | Complex multi-file integration and security-sensitive slices where the receiver steel must be understood as a whole (shared dispatcher wiring, HTTP/Zenoh auth, full-suite independent EUnit audit). | `-s workspace-write` is mandatory: `-s read-only` mounts `/tmp` read-only (`{error, erofs}`) and fails temp-dir fixture tests. |
+| **Claude** | Independent **cross-family Popperian falsification**, read-only. Proves falsification; does not author; may return `HOLD`. | `claude -p --allowedTools "Read"`. Its ACK is never admission. |
+
+The separation is a **STAMP control**: the executing agent never reviewed its own work, the reviewer never authored, and the supervisor never wrote application code.
+
+### Unified 101-route Gleam/OTP MCP server
+
+One server exposes **101 routes**: **65 public routes across 9 domain adapters** + **21 development routes** + **15 successor routes**. Reachable over three fenced transports: **stdio**, **Zenoh with an HMAC fence**, and **Streamable HTTP with Bearer / Origin / `Mcp-Session-Id` fences**. Accepted MCP protocol versions are **`2024-11-05`** (`Legacy20241105`) and **`2026-07-28`** (`Modern20260728`), matching `mcp/version.gleam` and `transports/http.gleam`; an unlisted version is refused rather than silently downgraded. The Streamable-HTTP `Origin` fence is HTTPS-only and Tailscale-FQDN-shaped: the `http_auth.gleam` allowlist accepts `https://nas-1.tail55d152.ts.net:4100` and refuses `http://` or raw IP literals. Zenoh topics carry an HMAC fence; the HTTP and Zenoh fences are steel and refuse before dispatch. **Five client profiles** (`agy`, `gemini`, `codex`, `claude`, `pi`) point at the one server. A declared route is not a connected route; verify the live `describeNamespace`/heartbeat list before relying on any route. Exact commands are in [the canonical SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md).
+
+**Catalog reconciliation note (`tools.gleam`).** The public catalog declares **65** public tools: **53** are listed directly in the default legacy unauthenticated `tools/list` (`tools.operational_tool_definitions()` = 65 declared minus 12 unavailable), and **12** gated domain tools (`control_loop`, `safety_status`, `run_selfcheck`, `registry_status`, `run_gate`, `zk_search`, `sa_bridge_submit`, `vault_status`, `vault_list_secrets`, `vault_policy_get`, `vault_audit_tail`, `vault_health`) fail closed with `UNAVAILABLE` on unauthenticated/unconfigured legacy calls and execute only through authenticated typed adapters in `server.execute_route_authenticated`. `65 declared − 12 unavailable = 53 advertised`, matching the T19 receipt's `tools_listed_count: 53`; `tools/list` and `tools/call` must tell the same story.
+
+### Truthful epistemic projection
+
+`Refused` is not `Operational`. Completed tasks alone are not green readiness. Raw review cannot be overridden. `DEV_READY` is not `SYSTEM_ADMITTED`. A live cutover requires separate **T24 operator release authority**. `UNRUN`, `UNKNOWN`, `STALE` and `NOT_ADMITTED` remain nonpassing. The `EV-93` ceiling, the `EV-94`..`EV-109` `NOT_ADMITTED` range and the held `SourceFX` plan are unchanged by this addendum.
+
 ## Comprehensive verification checklist
 
 Checks below are obligations, not blanket passing claims.

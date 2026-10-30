@@ -83,20 +83,28 @@ pub fn execute_authenticated(
     Ok(spec) ->
       case admission.admit(context, spec, args) {
         Error(err) -> #(Refused(err), pool, backends)
-        Ok(call) ->
-          case admission.verify_at_effect_time(context, call) {
-            Error(err) -> #(Refused(err), pool, backends)
-            Ok(verified) ->
-              case verified.spec.effect_class {
-                Mutating | ControlActuation ->
-                  execute_receipted(context, pool, backends, verified)
-                _ -> {
-                  let #(outcome, updated) =
-                    dispatch_authenticated(context, pool, backends, verified)
-                  #(outcome, pool, updated)
-                }
-              }
-          }
+        Ok(call) -> execute_admitted_public(context, pool, backends, call)
+      }
+  }
+}
+
+fn execute_admitted_public(
+  context: AdmissionContext,
+  pool: WorkerPool,
+  backends: ServerBackends,
+  call: ValidatedCall,
+) -> #(Outcome, WorkerPool, ServerBackends) {
+  case admission.verify_at_effect_time(context, call) {
+    Error(err) -> #(Refused(err), pool, backends)
+    Ok(verified) ->
+      case verified.spec.effect_class {
+        Mutating | ControlActuation ->
+          execute_receipted(context, pool, backends, verified)
+        _ -> {
+          let #(outcome, updated) =
+            dispatch_authenticated(context, pool, backends, verified)
+          #(outcome, pool, updated)
+        }
       }
   }
 }
@@ -129,7 +137,21 @@ pub fn execute_route_authenticated(
         )
       {
         Error(err) -> #(Refused(err), pool, backends)
-        Ok(_) -> execute_authenticated(context, pool, backends, tool_name, args)
+        Ok(admitted_call) -> {
+          let #(outcome, next_pool, next_backends) =
+            execute_admitted_public(context, pool, backends, admitted_call)
+          #(
+            route_convergence.verify_outcome_candidate(
+              next_pool,
+              next_backends.features,
+              "public",
+              tool_name,
+              outcome,
+            ),
+            next_pool,
+            next_backends,
+          )
+        }
       }
     "development" | "successor" -> {
       let #(outcome, next_pool) =
@@ -181,6 +203,10 @@ fn execute_receipted(
     receipts.hash_payload(call.spec.name, [
       #("actor", principal.actor_id(call.principal)),
       #("workspace", principal.workspace_root(call.principal)),
+      #("plan_id", option.unwrap(call.plan_id, "")),
+      #("task_id", option.unwrap(call.task_id, "")),
+      #("attempt", int.to_string(option.unwrap(call.attempt, 0))),
+      #("grant_id", option.unwrap(call.grant_id, "")),
     ])
   let requested_intent =
     result.unwrap(dict.get(call.arguments, "intent_id"), "")

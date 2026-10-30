@@ -1,0 +1,317 @@
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "round": 4,
+  "reviewer": "claude-opus-5",
+  "observed_utc": "2026-10-30T11:55:30Z",
+  "task": "T23",
+  "sa_plan": "20261029-1913-mcp-server-completion",
+  "workspace": "/home/an/NAS-setup/uos",
+  "audit_mode": "READ_ONLY_NO_REPOSITORY_MUTATION",
+  "candidate_observed": {
+    "declared": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+    "independently_recomputed": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+    "match": true,
+    "method": "cepaf_gleam@mcp@candidate_id:current() and :from_root/1 over the six core MCP sources, six-source length-framed SHA-256",
+    "agreement": {
+      "cwd_repo_root": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+      "from_root_repo_root": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+      "from_root_app_root": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+    },
+    "admission_gleam_md5": {
+      "expected": "c53ed6bf66cba56cfc0d6e850875a774",
+      "observed": "c53ed6bf66cba56cfc0d6e850875a774",
+      "match": true
+    },
+    "changed_file_sha256": {
+      "mcp/server.gleam": "1750edd45086f3cc01e7428d5e659ca0c7db6e8c4a9c1c32e0b507aa6c8cf3f3",
+      "mcp/candidate_id.gleam": "5f11b5f9dbc94f464370ff10887717e72fb0f9fde320228f908e4c84bc95a9fa",
+      "test/mcp_route_parity_test.gleam": "07e51e472505b2c393b43c1ba9135bdd34953e8a7c404ed0ffe17eaa8db1a91b",
+      "test/mcp_client_matrix_test.gleam": "3cb39cd546e0b404a08390c702134d7e3fb3785451061538aa5cf58e17d2b070",
+      "test/mcp_workspace_disposition_test.gleam": "731eb4f0fc442d6ebfd5a61905c1d358ae7ede1f16f21fd75750aa2231488224"
+    },
+    "build_freshness": "every exercised beam mtime is later than its .gleam source mtime (observed 2026-10-30 12:44:51-12:47:30 local vs sources 12:39:38-12:47:28); tests ran against code compiled from the observed candidate",
+    "otp_release_observed": "29"
+  },
+  "core_dev_ready": true,
+  "mcp_full_dev_ready": true,
+  "system_admission": "NOT_ADMITTED",
+  "admitted_ev_ceiling": 93,
+  "raw_verdict": "PASS",
+  "raw_verdict_basis": "All four Round-3 remediation clusters were independently falsified and survived; all eight declared EUnit gates pass (45/45 in a single ordered node), all five formal/oracle gates pass, the declared candidate was recomputed to the byte, and the 36-module blast radius is 358/358 green. Zero critical findings survived verification.",
+  "critical_findings_count": 0,
+  "critical_findings": [],
+  "round_3_findings_remediation_verified": [
+    {
+      "id": "T23-R3-C01",
+      "title": "execute_receipted owner_hash must fold all six owner fields in parity with dispatch.dispatch_validated",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "server.gleam:202-210 folds exactly [actor, workspace, plan_id, task_id, attempt, grant_id] through receipts.hash_payload(call.spec.name, ...); dispatch.gleam:114-122 folds the identical key list, identical order, identical option.unwrap defaults (\"\" and 0) and identical hash_payload(spec.name, ...) seed. Field-for-field textual parity confirmed. logical_id/intent_id composition is also equivalent (server.gleam:211-224 vs dispatch.gleam:123-134).",
+      "falsification_attempted": "Compared both folds key-by-key for key-name drift, ordering drift, default drift and hash-seed drift; also checked that the public receipted path receives an already effect-time-verified call (execute_admitted_public verifies before delegating), so payload_hash is computed over verified arguments in both paths. No divergence found."
+    },
+    {
+      "id": "T23-R3-M05",
+      "title": "public attempt-bump replay-cache behaviour must be covered by an executing test",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "public_mutation_attempt_bump_executes_fresh_handler_test exists at mcp_route_parity_test.gleam:850-935 and passes. It asserts: attempt-1 call completes and mutates the backend (1 ledger entry); exact replay returns the committed receipt without re-executing (ledger still 1, fresh backend NOT mutated); attempt bump to 2 busts the cache, grows the ledger to 2 and executes the fresh handler against the fresh backend.",
+      "falsification_attempted": "Read the test body to confirm it asserts observable backend mutation/non-mutation rather than only outcome shape; confirmed it drives the real server.execute_route_authenticated public branch, not a stub."
+    },
+    {
+      "id": "T23-R3-C01b",
+      "title": "execute_route_authenticated public branch must use Ok(admitted_call) instead of discarding it with Ok(_)",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "server.gleam:140-142 binds Ok(admitted_call) and passes admitted_call directly into the shared execute_admitted_public/4 (server.gleam:91-110). No Ok(_) discard remains on the public branch; the only surviving Ok(_) at server.gleam:181 is the deliberate UNSUPPORTED_ROUTE arm, which is correct (the admitted call must not be executed on an unsupported route) and server.gleam:745 is unrelated.",
+      "falsification_attempted": "Grepped every Ok(_) and Ok(admitted_call) occurrence in server.gleam and classified each; confirmed the public path no longer re-enters registry.lookup/admission.admit and that execute_authenticated remains the separately authoritative non-converged entry point."
+    },
+    {
+      "id": "T23-R3-C02",
+      "title": "candidate_id must drop the hardcoded absolute fallback and fail closed from an unrecognized root",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "candidate_id.gleam contains no absolute path literal; read_core_source/2 tries only <root>/src/cepaf_gleam/<rel> then <root>/apps/cepaf_gleam/src/cepaf_gleam/<rel>. current() honors UOS_MCP_WORKSPACE_ROOT and falls back to \".\", with blank/whitespace env degrading to \".\". A repo-wide grep of src/cepaf_gleam/mcp found the absolute repo path only in server.gleam:1020,1022 (the gleam build toolchain invocation), never in candidate identity. supervisor.gleam carries no path literal and start_worker_pool (supervisor.gleam:85-91) requires is_sha256_digest. is_sha256_digest enforces the \"sha256:\" prefix, byte_size == 71 and 64 lowercase hex graphemes.",
+      "falsification_attempted": "Executed from an unrecognized root: from_root(\"/tmp\") -> UNOBSERVED_CANDIDATE_SOURCE; from_root(\"\") -> UNOBSERVED_CANDIDATE_SOURCE; with process cwd set to /tmp and no env, current() -> UNOBSERVED_CANDIDATE_SOURCE; with UOS_MCP_WORKSPACE_ROOT set to the repo root from /tmp, current() -> the true candidate; with a whitespace-only env value from /tmp, current() -> UNOBSERVED_CANDIDATE_SOURCE (no silent reuse of another checkout). Length and alphabet falsifiers on is_sha256_digest: 70-byte false, 72-byte false, non-hex tail false, \"UNOBSERVED_CANDIDATE_SOURCE\" false. Runtime gating falsified end to end: start_worker_pool(1) from /tmp -> {error,\"unobserved_or_invalid_source_candidate\"}; start_worker_pool_for_candidate(1,\"uos-mcp\") and (1,\"UNOBSERVED_CANDIDATE_SOURCE\") -> {error,\"invalid_worker_pool_candidate\"}; from the repo root the pool binds the true SHA-256 candidate.",
+      "test_evidence": "candidate_id_from_unrecognized_root_fails_closed_test exists at mcp_route_parity_test.gleam:941-953 and passes."
+    },
+    {
+      "id": "T23-R3-M01",
+      "title": "_client_schema_digest must be documented explicitly as an opt-in advisory client pin",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md line 240 states verbatim: \"_client_schema_digest is an opt-in advisory client pin only: server-side schema digest verification is unconditional, and omitting _client_schema_digest is permitted for mixed-version clients and is never cited as a migration guarantee.\"",
+      "falsification_attempted": "Checked the sentence against code rather than accepting it: route_convergence.gleam:52 calls registry.verify_schema_digest unconditionally before any client pin is consulted; line 58 reads the pin via dict.get |> option.from_result so absence yields None; verify_client_schema_pin (336-356) returns Ok(Nil) on None and SCHEMA_MIGRATION_REQUIRED only on an explicit mismatch. The documentation is accurate against the candidate.",
+      "residual_observation": "The new sentence is not machine-bound by mcp_docs_truth_test; its truth was established here by code inspection, not by an executing docs gate. Non-critical."
+    },
+    {
+      "id": "T23-R3-M03",
+      "title": "mcp_workspace_disposition_test must pass when invoked from repo root without file:set_cwd",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "The test source contains no file:set_cwd / erl_set_cwd; read_t21_disposition_artifact/0 (mcp_workspace_disposition_test.gleam:255-267) tries the repo-root-relative governance path first and \"../../\" second. Invoked directly from /home/an/NAS-setup/uos with no cwd manipulation: \"All 3 tests passed\", RESULT = ok. It also passed in the single-node ordered 8-gate run after mcp_route_parity_test had temporarily changed and restored cwd (cwd_after = /home/an/NAS-setup/uos).",
+      "falsification_attempted": "Ran the module standalone from the repo root, then ran it in a shared node positioned after the cwd-mutating route-parity test to probe for cross-test cwd contamination; no contamination observed.",
+      "residual_observation": "Resolution is cwd-tolerant via a two-path fallback rather than an absolute canonical path. These are read-only governance/ artifact paths, not var/ state, so INV-WS-05 (absolute canonical var/ resolution) is not engaged. Non-critical."
+    },
+    {
+      "id": "Codex T23-C04",
+      "title": "mcp_client_matrix_test must drop the generic handled:true fallback, give all 28 private tools explicit handlers with real erlc/erl subprocesses for harness_build/harness_test, and semantically verify all 535 positive cells",
+      "status": "VERIFIED_REMEDIATED",
+      "evidence": "cell_has_tool_specific_semantics (mcp_client_matrix_test.gleam:905-984) rejects any result value containing \"\\\"handled\\\":true\" outright (910-911) and rejects an empty value (913-914), then dispatches per family with a fail-closed _ -> False. private_tool_semantic_ok (870-903) carries 28 distinct explicit arms (harness_write_file, harness_read_file, harness_build, harness_test, harness_client_mcp_config, harness_clock, harness_execution_progress, harness_system_feature_catalog, harness_system_feature_observations, harness_system_feature_intent, harness_status, harness_heartbeat, harness_claim, harness_attach, harness_release, harness_plan_intent, harness_risk_refresh, harness_risk_check, harness_assess, harness_finish, harness_reconcile, harness_peers, harness_peer_read, harness_peer_review, harness_peer_note, harness_feature_initialize, harness_feature_sync, harness_feature_status) with _ -> False, and private_handler itself fails closed at line 749 with unhandled_private_tool:<name>. harness_build shells the pinned /nix/store toolchain erlc via run_bounded (319-323) and asserts compiled_probe_sha256; harness_test shells the pinned erl running eunit:test(mcp_registry_test) (372-397) and asserts \"tested_module\":\"mcp_registry_test\". Denominator: 505 stdio + 15 zenoh + 15 http = 535, asserted twice (1342,1361-1366), with clients*specs+30 == 535 proving no silent denominator reduction; 1377-1384 requires zero cells lacking a real client, tool, positive frame, the live candidate and a 64-hex output digest; 1386-1389 requires exactly 535 positive cells on the live candidate; 1393-1394 requires zero cells failing tool_semantic_ok.",
+      "falsification_attempted": "Did not take the subprocess claim on trust: reset_matrix_execution_receipts (104-121) deletes real_build_receipt.json, real_test_receipt.json and the compiled probe beam before each run, so caching cannot survive a run boundary; I then timestamped the artifacts immediately after my own gate execution and found /tmp/uos-t23-matrix-workspace/uos_matrix_build_probe.beam (800 bytes), real_build_receipt.json and real_test_receipt.json all written 52 seconds before the probe, i.e. produced by my invocation, not inherited. Also verified the live candidate assertion is strict (starts_with \"sha256:\", byte_size 71, not equal to \"uos-mcp\").",
+      "residual_observation": "Within a single run the build/test receipts are reused across the five client cells, so one genuine erlc and one genuine erl eunit subprocess back each of those tool rows rather than five; matrix_test_payload's cached branch digests the cached receipt rather than fresh stdout. At least one real subprocess per run is guaranteed by the per-run reset and was empirically confirmed. Non-critical performance caching, not a semantic fallback."
+    }
+  ],
+  "gates_executed": [
+    {
+      "gate": "admission.gleam md5 pin",
+      "command": "/usr/bin/md5sum apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "result": "PASS",
+      "detail": "c53ed6bf66cba56cfc0d6e850875a774 == expected"
+    },
+    {
+      "gate": "mcp_route_parity_test",
+      "result": "PASS",
+      "detail": "All 13 tests passed; includes public_mutation_attempt_bump_executes_fresh_handler_test and candidate_id_from_unrecognized_root_fails_closed_test"
+    },
+    {
+      "gate": "mcp_client_matrix_test",
+      "result": "PASS",
+      "detail": "All 5 tests passed (535-cell matrix), elapsed 1881 ms; real erlc + erl eunit subprocess artifacts verified fresh by mtime"
+    },
+    {
+      "gate": "mcp_workspace_disposition_test",
+      "result": "PASS",
+      "detail": "All 3 tests passed, invoked directly from /home/an/NAS-setup/uos with no file:set_cwd"
+    },
+    {
+      "gate": "mcp_worker_recovery_test",
+      "result": "PASS",
+      "detail": "All 7 tests passed"
+    },
+    {
+      "gate": "mcp_final_acceptance_test",
+      "result": "PASS",
+      "detail": "All 4 tests passed"
+    },
+    {
+      "gate": "mcp_assurance_test",
+      "result": "PASS",
+      "detail": "All 5 tests passed"
+    },
+    {
+      "gate": "mcp_transport_test",
+      "result": "PASS",
+      "detail": "All 5 tests passed"
+    },
+    {
+      "gate": "mcp_docs_truth_test",
+      "result": "PASS",
+      "detail": "All 3 tests passed"
+    },
+    {
+      "gate": "all 8 declared gates, single node, declared order",
+      "result": "PASS",
+      "detail": "All 45 tests passed; cwd_after = /home/an/NAS-setup/uos, so the cwd-mutating candidate_id falsifier leaves no cross-test contamination"
+    },
+    {
+      "gate": "blast-radius regression (36 mcp_* and harness_* modules)",
+      "result": "PASS",
+      "detail": "All 358 tests passed with the complete dependency code path"
+    },
+    {
+      "gate": "formal/lean/Traceability.lean",
+      "command": "tools/lean formal/lean/Traceability.lean",
+      "result": "PASS",
+      "detail": "exit 0, no diagnostics; no sorry and no declared axiom (the Admitted token present is a VerificationStatus enum constructor, not a proof hole)"
+    },
+    {
+      "gate": "formal/lean/TwoLattice_STM.lean",
+      "command": "tools/lean formal/lean/TwoLattice_STM.lean",
+      "result": "PASS",
+      "detail": "exit 0, no diagnostics"
+    },
+    {
+      "gate": "formal/quint/parity_frontier.qnt reqClosed",
+      "command": "tools/quint run --max-steps=12 --max-samples=50 --invariant=reqClosed",
+      "result": "PASS",
+      "detail": "[ok] No violation found (35 ms, 1429 traces/s); trace length 13, seed 0x3d88d2368163afd6"
+    },
+    {
+      "gate": "hermes test_hermes_rete.exe",
+      "result": "PASS",
+      "detail": "1/1 passed, 0 failed, 0 skipped"
+    },
+    {
+      "gate": "hermes test_parity_algebra.exe",
+      "result": "PASS",
+      "detail": "146/146 passed, 0 failed, 0 skipped across unit, property, bdd, feature, fuzz, chaos, structure"
+    },
+    {
+      "gate": "candidate identity recomputation and fail-closed falsifiers",
+      "result": "PASS",
+      "detail": "current()/from_root parity at three roots; /tmp, empty-root, blank-env and bad-label paths all fail closed; worker-pool gating refuses unobserved and generic candidates"
+    }
+  ],
+  "gate_summary": {
+    "declared_eunit_gates": 8,
+    "declared_eunit_gates_passed": 8,
+    "declared_eunit_tests_passed": 45,
+    "declared_eunit_tests_failed": 0,
+    "formal_and_oracle_gates": 5,
+    "formal_and_oracle_gates_passed": 5,
+    "regression_modules": 36,
+    "regression_tests_passed": 358,
+    "regression_tests_failed": 0
+  },
+  "observations_non_critical": [
+    {
+      "id": "T23-R4-O01",
+      "severity": "informational",
+      "finding": "The declared -pa list in the audit instruction omits the esqlite, exception, filepath and envoy ebins. Running the wider blast radius with only the declared paths produced 11 failures in harness_cas_critical_section_test, harness_development_test, harness_pre_attach_assessment_test and harness_successor_test, all rooted in esqlite3:module_info/1 undef and {open_error,\"sqlite error: undef\"}. Adding the esqlite ebin turned those same four modules green at 131/131, and the complete 36-module run is 358/358. These were code-path artifacts of my own harness, not candidate defects, and are reported as such rather than as findings against T23 (the INV-WS-08 artifact class).",
+      "action": "None required of T23. Suggest extending the declared -pa list for future rounds so a broader regression cannot be misread as a regression."
+    },
+    {
+      "id": "T23-R4-O02",
+      "severity": "informational",
+      "finding": "mcp_client_matrix_test caches the real build/test receipts across the five client cells within a run; one genuine erlc and one genuine erl eunit subprocess back those rows per run rather than five. Per-run reset guarantees at least one real execution, confirmed empirically by artifact mtime."
+    },
+    {
+      "id": "T23-R4-O03",
+      "severity": "informational",
+      "finding": "The new _client_schema_digest advisory sentence in the SOP is not machine-bound by mcp_docs_truth_test; its accuracy was established here by inspecting route_convergence.gleam:52,58,336-356."
+    },
+    {
+      "id": "T23-R4-O04",
+      "severity": "informational",
+      "finding": "candidate_id_from_unrecognized_root_fails_closed_test temporarily mutates process cwd and restores it. Restoration and absence of cross-test contamination were verified in a single-node ordered run of all eight gates."
+    }
+  ],
+  "seventeen_aspects": [
+    {
+      "aspect": "1_requirements_and_intent",
+      "status": "PASS",
+      "evidence": "All four Round-3 remediation clusters (T23-R3-C01/M05, T23-R3-C02, T23-R3-M01/M03, Codex T23-C04) are present at the post-fix candidate and each was verified against its stated intent rather than its label."
+    },
+    {
+      "aspect": "2_source_identity_and_candidate_binding",
+      "status": "PASS",
+      "evidence": "Declared candidate sha256:5fb7a776...e1663 independently recomputed from the six core sources and matched exactly; admission.gleam md5 pin matched; all five changed files digested; beams confirmed newer than sources so the gates exercised the observed candidate."
+    },
+    {
+      "aspect": "3_build",
+      "status": "PASS",
+      "evidence": "No build mutation was performed. Existing build/dev/erlang beams were verified fresher than their .gleam sources for every file under review; OTP release observed as 29 from the pinned /nix/store profile erl."
+    },
+    {
+      "aspect": "4_unit_and_component_tests",
+      "status": "PASS",
+      "evidence": "Eight declared EUnit gates, 45/45 tests; 36-module blast radius, 358/358 tests."
+    },
+    {
+      "aspect": "5_system_and_integration",
+      "status": "PASS",
+      "evidence": "mcp_client_matrix_test exercises 535 positive client x tool cells across stdio, Zenoh and Streamable HTTP with per-tool semantic assertions and a non-reducible denominator; mcp_transport_test and mcp_protocol_conformance_test green."
+    },
+    {
+      "aspect": "6_negative_and_adversarial",
+      "status": "PASS",
+      "evidence": "Fail-closed falsifiers executed directly: unrecognized root, empty root, blank env, /tmp cwd, 70/72-byte and non-hex digests, generic and unobserved candidate labels, worker-pool refusal. All refused. The matrix semantics gate rejects handled:true and empty values with a fail-closed catch-all."
+    },
+    {
+      "aspect": "7_formal_verification",
+      "status": "PASS",
+      "evidence": "Traceability.lean and TwoLattice_STM.lean check clean at the pinned Lean toolchain with no sorry and no declared axiom; Quint reqClosed finds no violation over 50 samples x 12 steps. Formal authority remains invocation-specific and model-scoped, not a runtime claim."
+    },
+    {
+      "aspect": "8_differential_oracles",
+      "status": "PASS",
+      "evidence": "hermes test_parity_algebra.exe 146/146 and test_hermes_rete.exe 1/1. The owner_hash parity between server.execute_receipted and dispatch.dispatch_validated was additionally checked field-by-field as a hand oracle."
+    },
+    {
+      "aspect": "9_security_and_authority",
+      "status": "PASS",
+      "evidence": "Replay identity is bound to the authenticated principal and fence (actor, workspace, plan_id, task_id, attempt, grant_id), never to a payload-supplied worker; server-side schema digest verification is unconditional; route grants are required for development, successor, Mutating and ControlActuation specs; the public branch no longer discards its admitted call."
+    },
+    {
+      "aspect": "10_observability_and_receipts",
+      "status": "PASS",
+      "evidence": "Receipt ledger states OutcomeCommitted, EffectUncertain and the UNCERTAIN_RECEIPT_RECONCILE_REQUIRED refusal are exercised; the matrix requires a 64-hex output digest on every cell; the attempt-bump test proves replay-cache identity is fence-bound."
+    },
+    {
+      "aspect": "11_performance_and_bounds",
+      "status": "PASS",
+      "evidence": "535-cell matrix completed in 1881 ms including a real erlc and a real bounded erl eunit subprocess (both run_bounded with a 5000 ms ceiling); Quint model 35 ms."
+    },
+    {
+      "aspect": "12_reliability_and_recovery",
+      "status": "PASS",
+      "evidence": "mcp_worker_recovery_test 7/7; harness_cas_critical_section_test 6/6 under the complete code path covers rollback-before-rename, unknown-after-rename, killed writer and expired or stale coordinator leases refusing before effect."
+    },
+    {
+      "aspect": "13_documentation_truth",
+      "status": "PASS",
+      "evidence": "mcp_docs_truth_test 3/3; the SOP catalog reconciliation note is internally consistent (65 declared minus 12 unavailable equals 53 advertised) and the new _client_schema_digest sentence matches code behaviour. Residual: that sentence is not itself machine-bound (O03)."
+    },
+    {
+      "aspect": "14_governance_and_provenance",
+      "status": "PASS",
+      "evidence": "admitted_ev_ceiling held at 93; no EV number minted; EV-94..EV-109 untouched and still NOT_ADMITTED; feature_tracker_status cells assert admitted_ev_ceiling 93."
+    },
+    {
+      "aspect": "15_vcs_and_workspace_discipline",
+      "status": "PASS",
+      "evidence": "Audit was read-only: no repository file edited, no git or jj or sa-plan command invoked, no bookmark moved. Writes were confined to /tmp/uos-t23-matrix-workspace by the test harness itself and to the gitignored build tree by nothing I ran."
+    },
+    {
+      "aspect": "16_zero_muda_and_language_boundaries",
+      "status": "PASS",
+      "evidence": "No Bevy, Graphite or Graphene NIF introduced. Control and admission logic remain pure Gleam under OTP 29; Hermes OCaml retains bounded oracle duty; subprocesses invoke only pinned /nix/store toolchain binaries."
+    },
+    {
+      "aspect": "17_admission_and_release",
+      "status": "NOT_ADMITTED",
+      "evidence": "Development acceptance only. A green candidate-bound gate set is not system admission: two-key admission, independent sovereign review by Codex and AGY, and a separate operator release authority remain outstanding. No production cutover is claimed or implied."
+    }
+  ],
+  "scope_limits": [
+    "This is an independent development-acceptance verification at one candidate; it confers no deployment authority, no Sa-plan task completion and no system admission.",
+    "Lean and Quint results are statements about their models under declared assumptions, not about the running system.",
+    "The 358-test regression bounds the blast radius of the changed files; the full 702-module cepaf_gleam suite was not executed in this round and its state is UNRUN here.",
+    "Toolchain preflight PASS (31 checks) is an advisory session observation I did not re-execute, not a gate I ran.",
+    "No peer-review ACK, model verdict or board message was treated as evidence; every claim above rests on a command I executed or a source line I read at this candidate."
+  ]
+}

@@ -7,8 +7,10 @@ import cepaf_gleam/mcp/types.{
   UncertainReceipt,
 }
 import gleam/dict.{type Dict}
+import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/order
 import gleam/string
 
 pub type ReceiptState {
@@ -39,10 +41,19 @@ pub fn new_ledger(candidate: String) -> ReceiptLedger {
 pub fn hash_payload(tool: String, fields: List(#(String, String))) -> String {
   let canonical =
     fields
-    |> list.sort(fn(a, b) { string.compare(a.0, b.0) })
-    |> list.map(fn(kv) { kv.0 <> "=" <> kv.1 })
-    |> string.join("&")
-  files.digest(tool <> ":" <> canonical)
+    |> list.sort(fn(a, b) {
+      case string.compare(a.0, b.0) {
+        order.Eq -> string.compare(a.1, b.1)
+        other -> other
+      }
+    })
+    |> list.map(fn(kv) { frame_field(kv.0) <> frame_field(kv.1) })
+    |> string.concat
+  files.digest(frame_field(tool) <> canonical)
+}
+
+fn frame_field(field: String) -> String {
+  int.to_string(string.byte_size(field)) <> ":" <> field <> "|"
 }
 
 pub fn record_intent(
@@ -176,7 +187,10 @@ pub fn reconcile_uncertain(
   }
 }
 
-pub fn lookup(ledger: ReceiptLedger, intent_id: String) -> Option(ReceiptEntry) {
+pub fn lookup(
+  ledger: ReceiptLedger,
+  intent_id: String,
+) -> Option(ReceiptEntry) {
   case dict.get(ledger.entries, intent_id) {
     Ok(entry) -> Some(entry)
     Error(_) -> None

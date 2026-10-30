@@ -1,0 +1,375 @@
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "round": 2,
+  "reviewer": "codex-independent-verifier",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "task_id": "T23",
+  "observed_at": "2026-10-30T11:04:28Z",
+  "candidate_commit_observed": "e357381df05acc26cfea28e6599fae0d3df9c30e",
+  "core_dev_ready": false,
+  "mcp_full_dev_ready": false,
+  "system_admission": "NOT_ADMITTED",
+  "raw_verdict": "HOLD",
+  "critical_findings_count": 2,
+  "critical_findings": [
+    {
+      "id": "T23-C01",
+      "status": "PARTIALLY_CLOSED",
+      "category": "authority",
+      "location": "apps/cepaf_gleam/src/cepaf_gleam/mcp/route_convergence.gleam",
+      "finding": "Route-ticket validation is implemented, but private read calls bind the route ticket to the fence ticket by grant_id without enforcing the fence ticket's scope.",
+      "runtime_evidence": "An independent probe supplied a valid TaskScopedMutation route ticket and a same-id AuditOnly fence ticket for development:harness_read_file. admit_converged returned ok.",
+      "verified_repairs": [
+        "Valid route ticket admitted.",
+        "Revoked ticket refused with ROUTE_GRANT_REVOKED.",
+        "Expired ticket refused with ROUTE_GRANT_EXPIRED.",
+        "Foreign workspace refused with ROUTE_GRANT_WORKSPACE_MISMATCH.",
+        "Blank id refused with ROUTE_GRANT_ID_REQUIRED.",
+        "AuditOnly route ticket refused with ROUTE_GRANT_SCOPE_INSUFFICIENT.",
+        "Different ticket id refused with ROUTE_GRANT_TICKET_MISMATCH.",
+        "Missing private fence refused with MISSING_TASK_FENCE.",
+        "Completed private fence refused with TASK_FENCE_NOT_EXECUTING.",
+        "fence_task_matches now returns False for None."
+      ],
+      "required_correction": "Validate the authoritative fence ticket's applicable scope for private reads and verification calls, and reject inconsistent same-id route/fence tickets. Add a regression test for the independently reproduced case."
+    },
+    {
+      "id": "T23-C04",
+      "status": "OPEN",
+      "category": "acceptance_evidence",
+      "location": "apps/cepaf_gleam/test/mcp_client_matrix_test.gleam",
+      "finding": "The revised matrix asserts 535 positive frames and removes the extraction fallback, but still uses fixture backends, fabricated private-handler results and the constant candidate uos-mcp. It does not establish positive backend execution bound to the actual development candidate.",
+      "runtime_evidence": "every_required_matrix_cell_has_actual_client_turn_test passed. Source inspection shows matrix_candidate = uos-mcp, verification_runner always returns CheckExecuted(0, ok, 1), and private build/test handlers construct exit_code 0 without executing those operations. The default private handler constructs handled:true.",
+      "verified_repairs": [
+        "505 stdio cells cover 101 route specifications across five client profiles.",
+        "15 Zenoh and 15 HTTP cells cover one representative tool per route across five profiles.",
+        "Positive cells require result frames without top-level errors.",
+        "Missing candidate extraction returns an empty string and fails the candidate assertion.",
+        "Refusal cells have a separate passing regression test."
+      ],
+      "required_correction": "Bind matrix evidence to an immutable actual-candidate identity and execute meaningful admitted development backends. Assert tool-specific results and effects. Preserve fixture coverage separately and retain refusal tests outside the positive denominator."
+    }
+  ],
+  "round1_finding_reverification": [
+    {
+      "id": "T23-C01",
+      "status": "PARTIALLY_CLOSED",
+      "note": "Original missing ticket checks are repaired; the same-id fence-scope inconsistency remains reproducible."
+    },
+    {
+      "id": "T23-C02",
+      "status": "CLOSED",
+      "evidence": "hash_payload sorts fields and length-prefixes tool, keys and values using byte lengths. The original delimiter collision independently returned false. The delimiter regression, conflicting-payload refusal, committed replay and uncertain-reconciliation tests passed.",
+      "limitation": "This closes the ambiguous serialization defect; it is not a claim that cryptographic hashes are mathematically collision-free."
+    },
+    {
+      "id": "T23-C03",
+      "status": "CLOSED_FOR_ORIGINAL_CROSS_PRINCIPAL_DEFECT",
+      "evidence": "dispatch_validated hashes authenticated actor and workspace into receipt identity. private_route_replay_isolated_across_principals_test passed and asserts two ledger entries for two actors.",
+      "residual_observation": "Plan, task, attempt and grant are included only when present in ValidatedCall. admission discards these fields for ReadOnly and VerificationGate calls. An independent private-read probe changed attempt 1 to attempt 2 and received first-epoch again instead of executing the second handler. The claimed fence-epoch binding therefore does not cover every private route."
+    },
+    {
+      "id": "T23-C04",
+      "status": "OPEN",
+      "note": "Positive-frame validation improved, but actual-candidate binding and meaningful private backend execution remain absent."
+    }
+  ],
+  "runtime_verification": {
+    "working_directory": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+    "erlang_command_prefix": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl +S 4:4 -noshell -pa build/dev/erlang/*/ebin",
+    "eunit": {
+      "passed": 40,
+      "failed": 0,
+      "runs": [
+        {
+          "modules": [
+            "mcp_route_parity_test",
+            "mcp_worker_recovery_test",
+            "mcp_client_matrix_test",
+            "mcp_workspace_disposition_test"
+          ],
+          "passed": 21,
+          "exit_code": 0
+        },
+        {
+          "modules": [
+            "mcp_admission_test",
+            "mcp_transport_test",
+            "mcp_assurance_test",
+            "mcp_final_acceptance_test"
+          ],
+          "passed": 19,
+          "exit_code": 0
+        }
+      ]
+    },
+    "independent_scope_probe": {
+      "public_read_only": "GRANT_SCOPE_INSUFFICIENT",
+      "scoped_observation": "GRANT_SCOPE_INSUFFICIENT",
+      "audit_only": "GRANT_SCOPE_INSUFFICIENT",
+      "task_scoped_mutation": "CONTROL_MUTATION_SCOPE_REQUIRED",
+      "control_mutation": "ACCEPTED",
+      "release_authority": "ACCEPTED",
+      "tool": "public:control_loop"
+    },
+    "probe_execution_errors": [
+      "One exploratory probe terminated with badarg because the verifier used an incorrect Erlang tuple index. Corrected probes completed successfully; this was not a candidate failure.",
+      "One subsequent invocation had an Erlang parsing error and produced no candidate observation."
+    ],
+    "loaded_beam_code_md5": {
+      "cepaf_gleam@mcp@route_convergence": "B7042B6F7C464383D8EC265BC73E3776",
+      "cepaf_gleam@mcp@receipts": "E2D2B8D588527F183145D71927658473",
+      "cepaf_gleam@mcp@dispatch": "E472F24BC2F32C23AF5ECFB9D7ECE488",
+      "mcp_client_matrix_test": "77BC215078537B400903F3F4EF64445B"
+    },
+    "binding_limit": "Existing compiled artifacts were executed from the requested project build directory. This read-only review did not rebuild them or establish a complete source-to-BEAM reproducibility attestation."
+  },
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/route_convergence.gleam": "f8ff4adcabc02bf0b1d7939b377f8d10ac181dd0e0bdcf432c54d7057abb38b9",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/receipts.gleam": "5733fb7c65a9dbd5deda3c935305aa7ab7f5136653d6699f851b3bf748f0c666",
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/dispatch.gleam": "e8e97b24b8b98b44f1b6a72857a28d61567e26c82a05e3c0708de5a04cb45bef",
+    "apps/cepaf_gleam/test/mcp_client_matrix_test.gleam": "509e66be3a2847bccb0ea2acf666db83a9a63cb4bb61d7d2fd63e1752804fe8e"
+  },
+  "formal_verification": {
+    "receipt": "docs/reviews/20261030-1155-t20-inproject-formal-gate-probe.json",
+    "source_hashes_match_receipt": true,
+    "fresh_executions": [
+      {
+        "command": "tools/lean formal/lean/Traceability.lean",
+        "exit_code": 0
+      },
+      {
+        "command": "tools/lean formal/lean/TwoLattice_STM.lean",
+        "exit_code": 0
+      },
+      {
+        "command": "tools/quint run --max-steps=5 --max-samples=20 --invariant=reqClosed formal/quint/parity_frontier.qnt",
+        "exit_code": 0,
+        "result": "No violation found in bounded sampling."
+      },
+      {
+        "command": "tools/quint run --max-steps=10 --max-samples=20 --invariant=notConverged formal/quint/parity_frontier.qnt",
+        "exit_code": 1,
+        "result": "Expected negative control: invariant violated at step 8."
+      },
+      {
+        "command": "engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe",
+        "exit_code": 0,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "command": "engines/hermes/_build/default/modules/hermes_harness/test_parity_algebra.exe",
+        "exit_code": 0,
+        "passed": 146,
+        "failed": 0
+      }
+    ],
+    "applicability": "The in-project prover and bounded-invariant observations close the previous prover-locality and typecheck-only evidence gaps. They do not prove implementation correspondence for every MCP authorization or backend effect.",
+    "timestamp_caveat": "The receipt declares 2026-10-30T11:55:00Z, later than the host observations during this review. Its timestamp is not accepted as freshness evidence; the fresh executions above stand independently."
+  },
+  "minor_observations": [
+    {
+      "topic": "AuthorityScope enforcement",
+      "status": "PASS_WITH_PRIVATE_FENCE_EXCEPTION",
+      "evidence": "Admission now enforces GRANT_SCOPE_INSUFFICIENT and CONTROL_MUTATION_SCOPE_REQUIRED. Independent control_loop probes confirmed all six scope outcomes. The private read exception is recorded under T23-C01."
+    },
+    {
+      "topic": "Zenoh cryptography",
+      "status": "PASS",
+      "evidence": "Source uses domain-separated HMAC-SHA256 and crypto.secure_compare. check_secret rejects whitespace-only secrets. The empty-secret, malformed-topic and foreign-reply tests passed."
+    },
+    {
+      "topic": "Schema pinning",
+      "status": "PARTIALLY_CLOSED",
+      "evidence": "verify_client_schema_pin rejects an independently supplied bad digest with SCHEMA_MIGRATION_REQUIRED. No production caller was found. admit_converged still compares the server specification against its own input_schema."
+    },
+    {
+      "topic": "Registry census and fail-open future classification",
+      "status": "CENSUS_PASS_FALLBACK_REMAINS",
+      "evidence": "The passing matrix asserts 65 public, 21 development and 15 successor specifications. registry.classify_public still defaults unknown names to an unclassified ReadOnly specification."
+    },
+    {
+      "topic": "Actual workspace and head disposition",
+      "status": "PASS_FOR_TYPED_ARTIFACT_VALIDATION",
+      "evidence": "The fresh test parses the actual T21 artifact and validates all 143 workspace entries and 147 head entries through validate_reconciliation. It explicitly asserts the SourceFX hold.",
+      "limitation": "This establishes classification and required fields, not independent content incorporation or a fresh census of every external workspace."
+    },
+    {
+      "topic": "Protocol and Origin documentation",
+      "status": "PASS",
+      "evidence": "The named rule and SOP now specify 2024-11-05 and 2026-07-28. SOP Origin examples use https://nas-1.tail55d152.ts.net:4100."
+    },
+    {
+      "topic": "Feature tracker epistemic totals",
+      "status": "OPEN",
+      "evidence": "planning_read.feature_tracker_status still hardcodes declared_total 777, implemented_total 101, observed_executed_total 101, formally_verified_total 93 and admitted_total 93."
+    },
+    {
+      "topic": "Two public entry points",
+      "status": "UNCHANGED",
+      "evidence": "execute_authenticated still admits public tools without a RouteGrant. execute_route_authenticated applies route convergence first. Task fencing remains enforced on the lower-level mutating path."
+    },
+    {
+      "topic": "Candidate wildcard rebinding",
+      "status": "UNCHANGED",
+      "evidence": "candidate_evidence_mismatch still accepts empty and uos-mcp evidence identities before rewriting them to the active store candidate."
+    },
+    {
+      "topic": "Declared versus advertised tools",
+      "status": "DOCUMENTED_NOT_FUNCTIONALLY_RECONCILED",
+      "evidence": "The revised formal receipt explains 65 declared minus 12 unavailable equals 53 advertised. This explains the earlier count but does not establish identical tools/list and typed tools/call availability."
+    },
+    {
+      "topic": "Admission source digest",
+      "status": "CHANGED",
+      "evidence": "Current admission.gleam MD5 is baf96be517d51ec5fcfce9116eefca83, replacing the Round-1 value after scope-enforcement changes."
+    },
+    {
+      "topic": "Positive authority and recovery controls",
+      "status": "PASS",
+      "evidence": "Fresh tests passed for deny-dominates composition, observer non-interference, midflight revocation, descendant containment, worker replacement, committed replay and uncertain-outcome reconciliation."
+    },
+    {
+      "topic": "Development versus sovereign admission",
+      "status": "PASS",
+      "evidence": "Fresh final-acceptance tests confirm missing evidence and failing cells prevent admission. This review grants no release or system authority."
+    },
+    {
+      "topic": "Round-1 reviewer runtime limitation",
+      "status": "RESOLVED_FOR_LISTED_TESTS",
+      "evidence": "This reviewer independently executed the 40 listed EUnit tests rather than relying solely on the earlier reviewers' receipts."
+    }
+  ],
+  "matrix_summary": {
+    "registered_public_routes": 65,
+    "registered_development_routes": 21,
+    "registered_successor_routes": 15,
+    "registered_total_routes": 101,
+    "positive_fixture_cells_executed": 535,
+    "stdio_fixture_cells": 505,
+    "zenoh_fixture_cells": 15,
+    "http_fixture_cells": 15,
+    "separate_refusal_test_passed": true,
+    "candidate_extraction_fallback_present": false,
+    "actual_candidate_bound_positive_backend_matrix_verified": false,
+    "five_native_client_binaries_reexecuted": false,
+    "note": "Five in-process client profiles were exercised. This is not execution of five native client binaries across all routes."
+  },
+  "seventeen_aspects": [
+    {
+      "aspect_id": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Physical NVMe wiping and hardware interlock testing are outside this MCP development audit. No physical-storage acceptance is asserted."
+    },
+    {
+      "aspect_id": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Read-only JJ observations recorded the same candidate commit at both observations. No Git commands or VCS mutations were run."
+    },
+    {
+      "aspect_id": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Reviewed MCP code remains Gleam; no Bevy or Graphite matches were found in the project's Gleam dependency manifests. This is not a repository-wide exclusion attestation."
+    },
+    {
+      "aspect_id": 4,
+      "name": "Gleam/OTP Root Supervision",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Actual gateway-child, containment and replacement tests passed. Production durability and full four-domain operation are outside this audit."
+    },
+    {
+      "aspect_id": 5,
+      "name": "ZigVM Deterministic Engine & VFS",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Live ZigVM kernel and descriptor-relative VFS verification are outside the MCP remediation scope."
+    },
+    {
+      "aspect_id": 6,
+      "name": "Hermes Formal Evidence & Oracles",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Existing project-local Hermes executables freshly passed 1 and 146 checks. Broader Gospel and Z3 coverage is not inferred."
+    },
+    {
+      "aspect_id": 7,
+      "name": "Mathematical Authority & Conservation",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Both named Lean files passed; bounded Quint reqClosed passed and its negative control failed as expected. This is not exhaustive MCP implementation verification."
+    },
+    {
+      "aspect_id": 8,
+      "name": "Cybernetic Authority Isolation",
+      "status": "HOLD",
+      "applicability": "MCP authority applies directly. The private fence-scope inconsistency remains reproducible."
+    },
+    {
+      "aspect_id": 9,
+      "name": "Modular MAX/Mojo Inference",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Actual model inference is outside this audit. Matrix MaxDaemonReady data is a fixture and is not accepted as observed inference."
+    },
+    {
+      "aspect_id": 10,
+      "name": "Zenoh Mesh Backplane",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "MCP envelope cryptography and refusal tests passed. Live mesh delivery and fleet telemetry were not tested."
+    },
+    {
+      "aspect_id": 11,
+      "name": "AG-UI Event Stream",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "AG-UI browser rendering and its complete event protocol are outside the MCP development remediation scope."
+    },
+    {
+      "aspect_id": 12,
+      "name": "A2UI Component Catalog",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Full UI catalog rendering and accessibility are outside this MCP audit."
+    },
+    {
+      "aspect_id": 13,
+      "name": "Five-Client Interface Parity",
+      "status": "HOLD",
+      "applicability": "The in-process fixture matrix passed, but actual-candidate backend execution and five native client executions were not established."
+    },
+    {
+      "aspect_id": 14,
+      "name": "Tailscale Navigation & Origin",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "The named protocol and HTTPS Origin documentation is aligned. Live publication and TLS serving were not tested."
+    },
+    {
+      "aspect_id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "status": "HOLD",
+      "applicability": "Applicable MCP findings remain open; passing fixture counts cannot establish full development acceptance."
+    },
+    {
+      "aspect_id": 16,
+      "name": "Knowledge Management Triad",
+      "status": "PASS_IN_MCP_SCOPE",
+      "applicability": "Live Wiki, Zettelkasten and ontology integration is outside this bounded MCP remediation audit."
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sa-Plan & Durable Workflows",
+      "status": "HOLD",
+      "applicability": "Authority and replay apply directly. Mutation scope checks improved, but private fence scope and read-call epoch binding remain incomplete. No task state was changed."
+    }
+  ],
+  "review_constraints": {
+    "read_only_audit": true,
+    "git_commands_run": false,
+    "source_edits_performed": false,
+    "task_mutations_performed": false,
+    "deployment_performed": false,
+    "report_file_written": false,
+    "output_delivery": "JSON response for caller-side -o capture.",
+    "crash_dump_note": "The initial malformed probe attempted Erlang's default crash dump. The existing erl_crash.dump retained its pre-review modification time. Subsequent exploratory probes redirected crash dumps to /dev/null.",
+    "admitted_ev_ceiling": 93,
+    "new_ev_number_minted": false
+  }
+}

@@ -16,7 +16,7 @@ import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/server
 import cepaf_gleam/mcp/supervisor
 import cepaf_gleam/mcp/types.{
-  ClientProfile, Complete, Refused, TaskScopedMutation,
+  ClientProfile, Complete, ControlMutation, Refused, TaskScopedMutation,
 }
 import cepaf_gleam/planning/enforcer
 import gleam/dict
@@ -256,7 +256,7 @@ fn authenticated_context() -> admission.AdmissionContext {
       lease_until_ms: 2000,
       grant: Some(admission.GrantTicket(
         "grant",
-        TaskScopedMutation,
+        ControlMutation,
         False,
         2000,
         "/workspace",
@@ -327,6 +327,14 @@ pub fn authenticated_dispatch_routes_all_nine_public_families_test() {
       #("sa_plan_status", dict.new()),
       #("system_health", dict.new()),
       #("registry_status", dict.new()),
+      #(
+        "control_loop",
+        dict.from_list([
+          #("mode", "preview"),
+          #("action", "pause"),
+          #("controller", "c1"),
+        ]),
+      ),
       #("verification_run", dict.new()),
       #("read_file", dict.from_list([#("path", "readme.md")])),
       #("vault_status", dict.new()),
@@ -339,12 +347,41 @@ pub fn authenticated_dispatch_routes_all_nine_public_families_test() {
       let assert Complete(_, evidence) = outcome
       evidence.tool |> should.equal(entry.0)
       case entry.0 {
-        "registry_status" ->
+        "registry_status" | "control_loop" ->
           dict.size(unchanged_pool.ledger.entries) |> should.equal(1)
         _ -> unchanged_pool |> should.equal(pool)
       }
     },
   )
+
+  // The same ControlActuation route is refused when the grant is only
+  // task-scoped: ControlMutation (or ReleaseAuthority) is mandatory.
+  let assert Some(fence) = context.task_fence
+  let assert Some(grant) = fence.grant
+  let task_scoped_context =
+    admission.AdmissionContext(
+      ..context,
+      task_fence: Some(
+        admission.TaskFence(
+          ..fence,
+          grant: Some(admission.GrantTicket(..grant, scope: TaskScopedMutation)),
+        ),
+      ),
+    )
+  let #(task_scoped_refusal, _, _) =
+    server.execute_authenticated(
+      task_scoped_context,
+      pool,
+      backends,
+      "control_loop",
+      dict.from_list([
+        #("mode", "preview"),
+        #("action", "pause"),
+        #("controller", "c1"),
+      ]),
+    )
+  let assert Refused(err) = task_scoped_refusal
+  err.code |> should.equal("CONTROL_MUTATION_SCOPE_REQUIRED")
 
   let add_args =
     dict.from_list([

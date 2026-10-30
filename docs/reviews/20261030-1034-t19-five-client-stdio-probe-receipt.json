@@ -1,0 +1,97 @@
+{
+  "schema": "uos.t19-five-client-stdio-probe.v1",
+  "candidate_commit": "b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae",
+  "all_five_clients_passed": true,
+  "clients": [
+    {
+      "client": "agy",
+      "client_version": "profile-bound",
+      "exit_code": 0,
+      "elapsed_ms": 167.56,
+      "stdout_frame_count": 5,
+      "notification_silent": true,
+      "response_ids": [
+        "agy-init-1",
+        "agy-list-2",
+        "agy-inv-3",
+        "agy-read-4",
+        "agy-deny-5"
+      ],
+      "tools_listed_count": 53,
+      "forbidden_path_code": -32005,
+      "stdout_sha256": "c35ac2d83b6b13173f4ab99607f206ffc8423deae0bddefe3929d3d4f2f9a386"
+    },
+    {
+      "client": "gemini",
+      "client_version": "profile-bound",
+      "exit_code": 0,
+      "elapsed_ms": 165.18,
+      "stdout_frame_count": 5,
+      "notification_silent": true,
+      "response_ids": [
+        "gemini-init-1",
+        "gemini-list-2",
+        "gemini-inv-3",
+        "gemini-read-4",
+        "gemini-deny-5"
+      ],
+      "tools_listed_count": 53,
+      "forbidden_path_code": -32005,
+      "stdout_sha256": "dddcd5723179092c119280d0d66aff84040ac9f4bf87e5fe071af43f05287bbc"
+    },
+    {
+      "client": "codex",
+      "client_version": "codex-cli 0.164.0",
+      "exit_code": 0,
+      "elapsed_ms": 178.47,
+      "stdout_frame_count": 5,
+      "notification_silent": true,
+      "response_ids": [
+        "codex-init-1",
+        "codex-list-2",
+        "codex-inv-3",
+        "codex-read-4",
+        "codex-deny-5"
+      ],
+      "tools_listed_count": 53,
+      "forbidden_path_code": -32005,
+      "stdout_sha256": "e56e521bba5551c78b282c927e8196eba0bd23a75b40ea97f8981932979b89f5"
+    },
+    {
+      "client": "claude",
+      "client_version": "2.1.312 (Claude Code)",
+      "exit_code": 0,
+      "elapsed_ms": 151.62,
+      "stdout_frame_count": 5,
+      "notification_silent": true,
+      "response_ids": [
+        "claude-init-1",
+        "claude-list-2",
+        "claude-inv-3",
+        "claude-read-4",
+        "claude-deny-5"
+      ],
+      "tools_listed_count": 53,
+      "forbidden_path_code": -32005,
+      "stdout_sha256": "cc08536fae3a4c1bb9c103b14fbe98ece6ba4ec7ae965ddd4863ba134d058573"
+    },
+    {
+      "client": "pi",
+      "client_version": "1.4.0",
+      "exit_code": 0,
+      "elapsed_ms": 188.83,
+      "stdout_frame_count": 5,
+      "notification_silent": true,
+      "response_ids": [
+        "pi-init-1",
+        "pi-list-2",
+        "pi-inv-3",
+        "pi-read-4",
+        "pi-deny-5"
+      ],
+      "tools_listed_count": 53,
+      "forbidden_path_code": -32005,
+      "stdout_sha256": "482efa2d564d452e2217a3f980e65937c420042a25325d454947ea8b6ecd813e"
+    }
+  ]
+}

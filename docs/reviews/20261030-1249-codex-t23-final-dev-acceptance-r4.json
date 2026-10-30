@@ -1,0 +1,163 @@
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "round": 4,
+  "reviewer": "codex-independent-verifier",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "task_id": "T23",
+  "candidate_source_digest": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+  "core_dev_ready": true,
+  "mcp_full_dev_ready": true,
+  "system_admission": "NOT_ADMITTED",
+  "admitted_ev_ceiling": 93,
+  "raw_verdict": "PASS",
+  "critical_findings_count": 0,
+  "critical_findings": [],
+  "round3_finding_reverification": [
+    {
+      "id": "T23-C04",
+      "status": "CLOSED_IN_DEVELOPMENT_ACCEPTANCE_SCOPE",
+      "evidence": [
+        "private_handler has explicit branches covering the 28 distinct private tools across 21 development and 15 successor registrations.",
+        "The directory-presence success fallback is removed; unknown private tools return Error(\"unhandled_private_tool:\" <> spec.name).",
+        "Explicit file, state, catalog/config inspection and subprocess operations replace generic handled:true responses.",
+        "harness_build executes bounded erlc compilation of an Erlang probe containing the observed candidate digest and records the compiled artifact digest.",
+        "harness_test executes bounded erl with eunit:test(mcp_registry_test), requires successful exit and MATRIX_EUNIT_OK, and records an output digest.",
+        "Execution receipts and the compiled probe are reset before matrix execution.",
+        "cell_has_tool_specific_semantics rejects handled:true and checks tool/family-specific outputs; all 535 positive cells pass."
+      ]
+    },
+    {
+      "id": "Claude T23-R3-C01",
+      "status": "CLOSED",
+      "evidence": "execute_receipted hashes actor, workspace, plan_id, task_id, attempt and grant_id into owner_hash. public_mutation_attempt_bump_executes_fresh_handler_test passed."
+    },
+    {
+      "id": "T23-R3-M05",
+      "status": "CLOSED",
+      "evidence": "execute_route_authenticated passes Ok(admitted_call) directly to execute_admitted_public instead of discarding and reconstructing the validated call."
+    },
+    {
+      "id": "Claude T23-R3-C02",
+      "status": "CLOSED",
+      "evidence": "candidate_id has no hardcoded canonical-tree fallback. The regression and a separate compiled probe with UOS_MCP_WORKSPACE_ROOT unset confirmed current() from /tmp returns UNOBSERVED_CANDIDATE_SOURCE and start_worker_pool refuses unobserved_or_invalid_source_candidate."
+    },
+    {
+      "id": "Candidate validation",
+      "status": "CLOSED_FOR_DEFAULT_WORKER_POOL",
+      "evidence": "start_worker_pool requires is_sha256_digest. The predicate validates a trimmed 71-byte sha256:<64 lowercase hexadecimal characters> value. Independent probes rejected short and nonhex values and accepted a valid digest.",
+      "limit": "start_worker_pool_for_candidate intentionally retains permissive fixture-label validation."
+    }
+  ],
+  "runtime_verification": {
+    "requested_eunit": {
+      "modules": [
+        "mcp_route_parity_test",
+        "mcp_client_matrix_test",
+        "mcp_workspace_disposition_test",
+        "mcp_worker_recovery_test",
+        "mcp_admission_test",
+        "mcp_transport_test",
+        "mcp_assurance_test",
+        "mcp_final_acceptance_test",
+        "mcp_docs_truth_test",
+        "mcp_authz_wiring_test",
+        "mcp_route_census_test",
+        "mcp_catalog_truth_test",
+        "mcp_protocol_conformance_test"
+      ],
+      "module_count": 13,
+      "passed": 81,
+      "failed": 0,
+      "exit_code": 0,
+      "result": "All 81 tests passed."
+    },
+    "candidate_digest": {
+      "compiled_current_matches_requested": true,
+      "independent_reproduction_matches": true,
+      "method": "Independently framed the six core source files by byte length using Perl and hashed the resulting stream with sha256sum."
+    },
+    "admission_file_md5": {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "expected": "c53ed6bf66cba56cfc0d6e850875a774",
+      "observed": "c53ed6bf66cba56cfc0d6e850875a774",
+      "matches": true
+    },
+    "independent_candidate_probes": {
+      "result": "INDEPENDENT_CANDIDATE_PROBES_PASS",
+      "exit_code": 0
+    },
+    "build_freshness": {
+      "status": "OBSERVED_FOR_CHECKED_MODULES",
+      "evidence": "candidate_id, supervisor, server, mcp_client_matrix_test and mcp_route_parity_test BEAM timestamps follow their corresponding source timestamps.",
+      "limit": "No repository rebuild or complete source-to-BEAM attestation was performed."
+    },
+    "verification_invocation_errors": {
+      "count": 3,
+      "details": [
+        "Initial EUnit invocation had invalid Erlang quoting; corrected invocation passed all 81 tests.",
+        "Initial standalone /tmp probe used relative code paths, causing module loading failure after changing directory; absolute paths corrected this.",
+        "An optional BEAM abstract-code inspection used an incorrect result pattern; the final candidate probe omitted that inspection and exited successfully."
+      ],
+      "product_test_failures": 0
+    },
+    "constraints": {
+      "repository_files_written": 0,
+      "git_commands": 0,
+      "jj_commands": 0,
+      "sa_plan_commands": 0,
+      "deployments": 0,
+      "test_artifact_write_directory": "/tmp/uos-t23-matrix-workspace",
+      "erl_crash_dump": "/dev/null"
+    }
+  },
+  "matrix_summary": {
+    "public_route_specs": 65,
+    "development_route_specs": 21,
+    "successor_route_specs": 15,
+    "distinct_private_tools": 28,
+    "total_route_specs": 101,
+    "client_profiles": 5,
+    "stdio_positive_cells": 505,
+    "zenoh_positive_cells": 15,
+    "http_positive_cells": 15,
+    "total_positive_cells": 535,
+    "semantic_checks_passed": 535,
+    "candidate_bound_positive_cells": 535,
+    "generic_private_success_fallback_present": false,
+    "refusal_cells_counted_as_positive": false,
+    "real_candidate_bound_erlc_probe": true,
+    "real_registry_eunit_subprocess": true,
+    "real_file_roundtrip_verified": true,
+    "foreign_candidate_negative_controls_passed": true,
+    "five_native_client_binaries_reexecuted": false,
+    "live_http_or_zenoh_network_verified": false
+  },
+  "seventeen_aspects": {
+    "01_source_candidate_identity": "PASS: independently reproduced the requested six-source digest; /tmp fails closed.",
+    "02_admission_and_authority_fencing": "PASS_IN_DEV_SCOPE: admission and authorization regressions passed.",
+    "03_route_isolation_and_grant_scoping": "PASS_IN_DEV_SCOPE: route-grant and cross-principal regressions passed.",
+    "04_effect_class_classification": "PASS_IN_DEV_SCOPE: census, catalog and scope-refusal suites passed.",
+    "05_schema_digest_integrity": "PASS_WITH_LIMIT: schema-pin regression passed; client pin remains opt-in.",
+    "06_replay_and_idempotency": "PASS_IN_DEV_SCOPE: six-field owner identity and public/private attempt-bump regressions verified.",
+    "07_uncertain_effect_reconciliation": "PASS_IN_DEV_SCOPE: uncertain replay refuses until reconciliation.",
+    "08_completion_evidence_binding": "PASS_IN_DEV_SCOPE: legacy bypass and foreign-candidate completion regressions passed.",
+    "09_candidate_evidence_non_relabeling": "PASS_IN_DEV_SCOPE: matrix candidates are extracted from outputs; foreign candidates are refused.",
+    "10_transport_integrity": "PASS_IN_DEV_SCOPE: framing, authentication and destination-refusal tests passed.",
+    "11_worker_isolation_and_recovery": "PASS_IN_DEV_SCOPE: gateway supervision, replacement and descendant-containment tests passed.",
+    "12_overload_and_budget": "PASS_IN_DEV_SCOPE: bounded overload regression passed.",
+    "13_client_config_safety": "PASS_IN_DEV_SCOPE: rollback preserves unrelated entries; handoff retains authority.",
+    "14_matrix_denominator_honesty": "PASS: 535 positive cells have semantic assertions; refusals remain separate.",
+    "15_formal_evidence": "NOT_REEXECUTED: no fresh Lean, Quint, Gospel or Hermes proof execution claimed.",
+    "16_docs_and_epistemic_truth": "PASS_IN_DEV_SCOPE: documentation-truth and raw-review-preservation tests passed.",
+    "17_provenance_and_admission_vocabulary": "PASS: system_admission remains NOT_ADMITTED; admitted_ev_ceiling remains 93; no new EV number minted."
+  },
+  "scope_and_limits": [
+    "PASS applies to the requested Round-4 MCP development-acceptance verification, not system admission or production readiness.",
+    "Public mutating, control, vault and inference stores remain isolated development state-machine fixtures rather than mutations of production Sa-plan, Vault or MAX services.",
+    "Private operations exercise explicit development semantics; clock, risk, lease and peer artifacts do not establish live operational services or peer acknowledgements.",
+    "harness_build compiles a candidate-bound Erlang probe, not the entire UOS repository. Build/test receipts are reused within a matrix execution after reset.",
+    "The candidate digest identifies six core MCP sources, not the complete repository or loaded BEAM bytes.",
+    "Transport coverage uses five client profiles and in-process transport handlers; fresh execution of five native client applications and live network delivery was not established.",
+    "No full repository gate sweep, production observation or new formal proof run was performed."
+  ]
+}

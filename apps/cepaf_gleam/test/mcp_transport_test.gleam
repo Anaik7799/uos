@@ -160,6 +160,29 @@ pub fn malformed_zenoh_topic_has_no_unknown_fallback_test() {
 // Zenoh reply pinning and signatures
 // ---------------------------------------------------------------------------
 
+pub fn zenoh_empty_secret_is_refused_test() {
+  // An empty or whitespace-only shared secret can never authenticate an
+  // envelope; it is refused before the signature comparison.
+  let envelope =
+    envelope_with_topic(
+      "indrajaal/mcp/request/client-1/req-1",
+      "indrajaal/mcp/response/client-1/req-1",
+    )
+  list.each(["", "   "], fn(secret) {
+    let assert Error(error) =
+      zenoh.handle_envelope(
+        secret,
+        True,
+        Legacy20241105,
+        "client-1",
+        envelope,
+        complete_handler,
+      )
+    error.code |> should.equal("ZENOH_SECRET_REQUIRED")
+    error.retryability |> should.equal(NonRetryable)
+  })
+}
+
 pub fn foreign_reply_destination_refused_test() {
   let secret = "shared-secret"
   let topic = "indrajaal/mcp/request/client-1/req-1"

@@ -1,0 +1,191 @@
+{
+  "schema": "uos.t20-inproject-formal-gate-probe.v1",
+  "probe_id": "20261030-1155-t20-inproject-formal-gate-probe",
+  "observed_at": "2026-10-30T11:55:00Z",
+  "remediation": "T23 Remediation Worker C",
+  "fixes": [
+    "Claude T23 Aspect 13 SC-NIX-DEVENV-001: re-ran the two Lean rows through the in-project tools/lean wrapper instead of /home/an/.nix-profile/bin/lean.",
+    "Records exact in-project binary paths, versions, SHA-256 digests, exit codes, zero-sorry regex results and raw stdout summaries.",
+    "Preserves docs/reviews/20261030-1038-t20-formal-gate-probe.json untouched."
+  ],
+  "preserved_artifacts": [
+    "docs/reviews/20261030-1038-t20-formal-gate-probe.json (legacy receipt; unchanged)"
+  ],
+  "locality_constraint": "Zero /home/an/.nix-profile binaries; every prover entrypoint resolves under /home/an/NAS-setup/uos. tools/quint's symlink target is a /nix/store path reached through the in-project toolchains/nix-profile entrypoint, which is the honest store boundary, not a $HOME toolchain.",
+  "toolchains": {
+    "lean": {
+      "wrapper": "/home/an/NAS-setup/uos/tools/lean",
+      "resolved_entrypoint": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "wrapper_mechanism": "tools/lean sources tools/lib/uos-toolchain.sh and execs uos_tool lean",
+      "version_stdout": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+      "version_exit_code": 0
+    },
+    "quint": {
+      "wrapper": "/home/an/NAS-setup/uos/tools/quint",
+      "resolved_entrypoint": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+      "store_target": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/bin/quint",
+      "version_stdout": "0.32.0",
+      "version_exit_code": 0
+    }
+  },
+  "all_five_formal_and_oracle_gates_verified": true,
+  "checks": [
+    {
+      "artifact": "formal/lean/Traceability.lean",
+      "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c",
+      "zero_sorry_regex": "\\bsorry\\b",
+      "contains_sorry": false,
+      "prover_binary": "/home/an/NAS-setup/uos/tools/lean",
+      "resolved_prover_binary": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "prover_version": "Lean 4.33.0",
+      "subcommand": "formal/lean/Traceability.lean",
+      "exit_code": 0,
+      "stdout_summary": "",
+      "stderr_summary": "",
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "formal/lean/TwoLattice_STM.lean",
+      "sha256": "bc0a280b22516a5b0b3cd57c3572f10db484564f74bd74fc8cf97be7ce64b9ef",
+      "zero_sorry_regex": "\\bsorry\\b",
+      "contains_sorry": false,
+      "prover_binary": "/home/an/NAS-setup/uos/tools/lean",
+      "resolved_prover_binary": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "prover_version": "Lean 4.33.0",
+      "subcommand": "formal/lean/TwoLattice_STM.lean",
+      "exit_code": 0,
+      "stdout_summary": "",
+      "stderr_summary": "",
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "formal/quint/parity_frontier.qnt",
+      "sha256": "d5af3d49506e4ee54ba31ca5ac2d1435925bd512563b17ee32f2106c883564d0",
+      "prover_binary": "/home/an/NAS-setup/uos/tools/quint",
+      "resolved_prover_binary": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+      "prover_version": "quint 0.32.0",
+      "subcommand": "typecheck",
+      "exit_code": 0,
+      "stdout_summary": "",
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "formal/quint/parity_frontier.qnt",
+      "sha256": "d5af3d49506e4ee54ba31ca5ac2d1435925bd512563b17ee32f2106c883564d0",
+      "invariant": "reqClosed",
+      "invariant_expected": "Holds",
+      "prover_binary": "/home/an/NAS-setup/uos/tools/quint",
+      "subcommand": "run --max-steps=5 --max-samples=20 --invariant=reqClosed",
+      "exit_code": 0,
+      "stdout_summary": "[ok] No violation found (57ms at 351 traces/second). Trace length statistics: max=6, min=6, average=6.00. Reproduce with --seed=0x9d483b6b948d9c4.",
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "formal/quint/parity_frontier.qnt",
+      "sha256": "d5af3d49506e4ee54ba31ca5ac2d1435925bd512563b17ee32f2106c883564d0",
+      "invariant": "notConverged",
+      "invariant_expected": "Violated",
+      "prover_binary": "/home/an/NAS-setup/uos/tools/quint",
+      "subcommand": "run --max-steps=10 --max-samples=20 --invariant=notConverged",
+      "exit_code": 1,
+      "stdout_summary": "[violation] Found an issue (42ms at 476 traces/second). error: Invariant violated. Negative control confirms the checker checks; the declared-false invariant is falsified at step 8 (satisfied == intents).",
+      "formal_state": "negative-control-refuted-as-declared"
+    },
+    {
+      "artifact": "engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe",
+      "sha256": "3919d9a10b563c32895b3e604fcab216518650a5618bfbc78df01f50377ba928",
+      "prover_binary": "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe",
+      "exit_code": 0,
+      "stdout_summary": "hermes_rete: ok\nAS-IS test_hermes_rete: 1/1 passed, 0 failed, 0 skipped\nPREDICTIVE test_hermes_rete: 4 dependent(s) at risk if this is wrong: hermes_harness_drift_rules, hermes_harness_posterior_assessment, hermes_ops, hermes_ops_dashboard",
+      "formal_state": "verified"
+    },
+    {
+      "artifact": "engines/hermes/_build/default/modules/hermes_harness/test_parity_algebra.exe",
+      "sha256": "0f8e5aec0f6c26e138728e77de3474e6f121c09af8cffb952369f3a911fe66a2",
+      "prover_binary": "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/hermes_harness/test_parity_algebra.exe",
+      "exit_code": 0,
+      "stdout_summary": "parity algebra suite: unit done, property done, bdd done, feature done, fuzz done, chaos done, structure done. passed: 146   failed: 0\nAS-IS test_parity_algebra: 146/146 passed, 0 failed, 0 skipped\nPREDICTIVE test_parity_algebra: 17 dependent(s) at risk if this is wrong: hermes_harness_blueprint, hermes_harness_drift_rules, hermes_harness_evidence_rollup, hermes_harness_formal_coverage, hermes_harness_formal_specs ... +12 more",
+      "formal_state": "verified"
+    }
+  ],
+  "documentation_alignment": {
+    "protocol_versions": {
+      "legacy": "2024-11-05",
+      "modern": "2026-07-28",
+      "replaced_stale": "2025-11-25",
+      "source_of_truth": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/version.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/http.gleam"
+      ],
+      "files_updated": [
+        "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        "docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md",
+        "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md (2026-10-30 Addendum only)",
+        "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md",
+        "docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md",
+        "governance/agents/20261001-1118-skills/ak47-multi-agent-mcp-symbiosis/SKILL.md"
+      ],
+      "residual_2025_11_25_occurrences": 0
+    },
+    "https_tailscale_origin": {
+      "required_origin": "https://nas-1.tail55d152.ts.net:4100",
+      "refused_forms": [
+        "http://nas-1.tail55d152.ts.net:4100",
+        "raw-ip-literal"
+      ],
+      "source_of_truth": "apps/cepaf_gleam/src/cepaf_gleam/mcp/http_auth.gleam approved_origin/1 (explicit allowlist AND strict HTTPS tailnet host syntax)",
+      "examples_aligned": [
+        "docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md (2 curl examples)",
+        "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md (added Streamable-HTTP curl example)"
+      ]
+    },
+    "catalog_reconciliation": {
+      "declared_public_tools": 65,
+      "listed_in_default_legacy_unauthenticated_tools_list": 53,
+      "gated_domain_tools_fail_closed_unavailable": 12,
+      "arithmetic": "65 declared - 12 unavailable = 53 advertised",
+      "source_of_truth": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam get_tool_definitions() (65 ToolDefinition entries)",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam operational_tool_definitions() (65 minus unavailable_tools = 53)",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam unavailable_tools (12 names)",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam execute_route_authenticated (authenticated typed adapters)"
+      ],
+      "gated_tools": [
+        "control_loop",
+        "safety_status",
+        "run_selfcheck",
+        "registry_status",
+        "run_gate",
+        "zk_search",
+        "sa_bridge_submit",
+        "vault_status",
+        "vault_list_secrets",
+        "vault_policy_get",
+        "vault_audit_tail",
+        "vault_health"
+      ],
+      "note": "T19 receipt tools_listed_count: 53 matches 65 declared minus 12 unavailable. tools/list and tools/call must tell the same story."
+    },
+    "four_surface_rule_parity": {
+      "sha256": "3518b407f9f816e4243a3dc8a956ae894cae417408f2721c7fca1b079d1b400d",
+      "surfaces": [
+        "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        ".agents/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        ".claude/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        ".codex/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+        ".gemini/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md"
+      ],
+      "byte_identical_cmp": true
+    },
+    "diagram_gate": {
+      "tool": "/home/an/NAS-setup/uos/tools/diagram-check",
+      "markdown_files_checked": 6,
+      "verified_edge_sets": 5,
+      "unverified_box_art_ascii": 0,
+      "failed": 0,
+      "carry_no_mermaid_diagram": 1,
+      "verdict": "PASS",
+      "exit_code": 0
+    }
+  }
+}

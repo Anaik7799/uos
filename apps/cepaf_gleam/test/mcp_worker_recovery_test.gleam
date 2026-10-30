@@ -6,8 +6,7 @@ import cepaf_gleam/mcp/receipts
 import cepaf_gleam/mcp/registry
 import cepaf_gleam/mcp/supervisor as mcp_sup
 import cepaf_gleam/mcp/types.{
-  ClientProfile, Complete, NonRetryable, Refused, TaskScopedMutation,
-  Uncertain,
+  ClientProfile, Complete, NonRetryable, Refused, TaskScopedMutation, Uncertain,
 }
 import cepaf_gleam/mcp/worker
 import cepaf_gleam/uos_sup
@@ -15,6 +14,15 @@ import gleam/dict
 import gleam/list
 import gleam/option.{Some}
 import gleeunit/should
+
+pub fn delimiter_bearing_arguments_do_not_collide_receipt_hashes_test() {
+  // T23-C02: naive `key=value&` framing aliases one pair carrying the
+  // delimiters with two separate pairs. Length-prefixed framing must make the
+  // two payloads hash differently.
+  let single_pair = receipts.hash_payload("tool", [#("a", "x&b=y")])
+  let split_pairs = receipts.hash_payload("tool", [#("a", "x"), #("b", "y")])
+  single_pair |> should.not_equal(split_pairs)
+}
 
 pub fn gateway_is_actual_root_child_test() {
   let root_spec = uos_sup.uos_root_spec()
@@ -33,10 +41,11 @@ pub fn gateway_is_actual_root_child_test() {
 pub fn crash_after_effect_before_reply_is_uncertain_test() {
   let ledger = receipts.new_ledger("commit-cand-04")
   let intent_id = "intent-crash-after-effect-01"
-  let payload_hash = receipts.hash_payload("sa_task_complete", [
-    #("plan_id", "20261029-1913-mcp-server-completion"),
-    #("task_id", "T04"),
-  ])
+  let payload_hash =
+    receipts.hash_payload("sa_task_complete", [
+      #("plan_id", "20261029-1913-mcp-server-completion"),
+      #("task_id", "T04"),
+    ])
 
   let assert Ok(ledger1) =
     receipts.record_intent(
@@ -55,7 +64,9 @@ pub fn crash_after_effect_before_reply_is_uncertain_test() {
       route: "public",
       tool: "sa_task_complete",
       payload_hash: payload_hash,
-      action: fn() { worker.SimulatedCrashAfterEffect("effect_committed_pipe_broken") },
+      action: fn() {
+        worker.SimulatedCrashAfterEffect("effect_committed_pipe_broken")
+      },
     )
 
   case outcome {
@@ -71,8 +82,16 @@ pub fn crash_after_effect_before_reply_is_uncertain_test() {
 pub fn same_id_conflicting_payload_refused_test() {
   let ledger = receipts.new_ledger("commit-cand-04")
   let intent_id = "req-idempotent-42"
-  let hash_a = receipts.hash_payload("plan_update", [#("task_id", "T04"), #("state", "executing")])
-  let hash_b = receipts.hash_payload("plan_update", [#("task_id", "T04"), #("state", "completed")])
+  let hash_a =
+    receipts.hash_payload("plan_update", [
+      #("task_id", "T04"),
+      #("state", "executing"),
+    ])
+  let hash_b =
+    receipts.hash_payload("plan_update", [
+      #("task_id", "T04"),
+      #("state", "completed"),
+    ])
 
   let assert Ok(ledger1) =
     receipts.record_intent(
@@ -277,12 +296,9 @@ pub fn poisoned_worker_is_replaced_test() {
         )
       let assert Ok(call) = admission.admit(ctx, spec, dict.new())
       let #(clean_outcome, _) =
-        dispatch.dispatch_validated(
-          pool_after_poison,
-          ctx,
-          call,
-          fn(_args) { Ok("{\"status\":\"healthy\"}") },
-        )
+        dispatch.dispatch_validated(pool_after_poison, ctx, call, fn(_args) {
+          Ok("{\"status\":\"healthy\"}")
+        })
       case clean_outcome {
         Complete(val, ev) -> {
           val |> should.equal("{\"status\":\"healthy\"}")

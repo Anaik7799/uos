@@ -14,6 +14,7 @@ import cepaf_gleam/mcp/adapters/system_observation
 import cepaf_gleam/mcp/adapters/vault_metadata
 import cepaf_gleam/mcp/adapters/verification
 import cepaf_gleam/mcp/admission
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/receipts
 import cepaf_gleam/mcp/registry
@@ -23,18 +24,27 @@ import cepaf_gleam/mcp/route_convergence.{
 import cepaf_gleam/mcp/server
 import cepaf_gleam/mcp/supervisor
 import cepaf_gleam/mcp/types.{
-  type Outcome, type ToolSpec, ClientProfile, Complete, Modern20260728,
-  NonRetryable, PrivateDevelopmentView, PrivateSuccessorView, Refused,
-  TaskScopedMutation, ToolError,
+  type Outcome, type ToolError, type ToolSpec, AuditOnly, ClientProfile,
+  Complete, ControlMutation, Modern20260728, NonRetryable,
+  PrivateDevelopmentView, PrivateSuccessorView, Refused, TaskScopedMutation,
+  ToolError,
 }
 import gleam/dict
+import gleam/dynamic
+import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleeunit/should
+import simplifile
+
+@external(erlang, "file", "set_cwd")
+fn erl_set_cwd(path: String) -> Result(Nil, dynamic.Dynamic)
 
 const workspace = "/home/an/NAS-setup/uos"
 
-const candidate = "active-candidate-T14"
+fn active_candidate() -> String {
+  candidate_id.current()
+}
 
 fn receipt(
   task_id: String,
@@ -57,7 +67,7 @@ fn store_with(
   receipts: List(#(String, ExecutionReceipt)),
 ) -> FeatureEvidenceStore {
   FeatureEvidenceStore(
-    active_candidate: candidate,
+    active_candidate: active_candidate(),
     admitted_ev_ceiling: 93,
     capabilities: [],
     completed_task_ids: list.map(receipts, fn(entry) { entry.0 }),
@@ -77,12 +87,16 @@ fn ticket() -> admission.GrantTicket {
 }
 
 fn context() -> admission.AdmissionContext {
+  context_for_actor("T14-worker")
+}
+
+fn context_for_actor(actor: String) -> admission.AdmissionContext {
   admission.AdmissionContext(
     principal: principal.from_launcher_env(
-      "T14-worker",
+      actor,
       ClientProfile("test"),
       workspace,
-      "T14-session",
+      "T14-session-" <> actor,
     ),
     mode: admission.EnforcedMode,
     now_ms: 1_000_000,
@@ -90,7 +104,7 @@ fn context() -> admission.AdmissionContext {
     task_fence: Some(admission.TaskFence(
       plan_id: "T14-plan",
       task_id: "T14-task",
-      worker_id: "T14-worker",
+      worker_id: actor,
       attempt: 1,
       task_state: admission.TaskExecuting,
       lease_until_ms: 9_999_999_999_999,
@@ -248,7 +262,9 @@ pub fn legacy_finish_cannot_bypass_completion_evidence_test() {
   |> should.equal("COMPLETION_EVIDENCE_REQUIRED")
 
   let failed =
-    store_with([#("T-failed", receipt("T-failed", candidate, 1, None, None))])
+    store_with([
+      #("T-failed", receipt("T-failed", active_candidate(), 1, None, None)),
+    ])
   run(failed, "T-failed").0
   |> refused_code
   |> should.equal("COMPLETION_EVIDENCE_REQUIRED")
@@ -257,7 +273,13 @@ pub fn legacy_finish_cannot_bypass_completion_evidence_test() {
     store_with([
       #(
         "T-conflict",
-        receipt("T-conflict", candidate, 0, Some("HOLD"), Some("APPROVED")),
+        receipt(
+          "T-conflict",
+          active_candidate(),
+          0,
+          Some("HOLD"),
+          Some("APPROVED"),
+        ),
       ),
     ])
   run(conflicted, "T-conflict").0
@@ -266,11 +288,11 @@ pub fn legacy_finish_cannot_bypass_completion_evidence_test() {
 
   let valid =
     store_with([
-      #("T14-task", receipt("T14-task", candidate, 0, None, None)),
+      #("T14-task", receipt("T14-task", active_candidate(), 0, None, None)),
     ])
   case run(valid, "T14-task").0 {
     Complete(_, evidence) -> {
-      evidence.candidate |> should.equal(candidate)
+      evidence.candidate |> should.equal(active_candidate())
       evidence.route |> should.equal("development")
       evidence.tool |> should.equal("harness_finish")
     }
@@ -280,7 +302,9 @@ pub fn legacy_finish_cannot_bypass_completion_evidence_test() {
   // The receipt must be bound to the finishing task id, not merely present
   // under the requested key.
   let receipt_id_mismatch =
-    store_with([#("T14-task", receipt("T-other", candidate, 0, None, None))])
+    store_with([
+      #("T14-task", receipt("T-other", active_candidate(), 0, None, None)),
+    ])
   run(receipt_id_mismatch, "T14-task").0
   |> refused_code
   |> should.equal("COMPLETION_EVIDENCE_REQUIRED")
@@ -324,7 +348,9 @@ pub fn all_fifteen_successor_tools_same_candidate_test() {
   let successor_grant = grant("successor", names)
   let task_id = "T14-task"
   let store =
-    store_with([#(task_id, receipt(task_id, candidate, 0, None, None))])
+    store_with([
+      #(task_id, receipt(task_id, active_candidate(), 0, None, None)),
+    ])
   let assert Ok(pool) = supervisor.start_worker_pool(1)
 
   let #(_final_pool, completed_count) =
@@ -347,7 +373,7 @@ pub fn all_fifteen_successor_tools_same_candidate_test() {
         )
       case outcome {
         Complete(_, evidence) -> {
-          evidence.candidate |> should.equal(candidate)
+          evidence.candidate |> should.equal(active_candidate())
           evidence.route |> should.equal("successor")
           evidence.tool |> should.equal(spec.name)
         }
@@ -375,7 +401,7 @@ pub fn foreign_candidate_completion_evidence_is_refused_test() {
       ignored_handler,
     )
   let assert Complete(_, first_evidence) = first
-  first_evidence.candidate |> should.equal(candidate)
+  first_evidence.candidate |> should.equal(active_candidate())
   // Replay the committed receipt under a ledger naming a foreign candidate;
   // the stored ledger outcome keeps the original pool ledger candidate, so
   // the converged path must refuse instead of silently relabeling it.
@@ -406,14 +432,14 @@ fn server_backends(store: FeatureEvidenceStore) -> server.ServerBackends {
     planning_read: planning_read.sample_canonical_store("plan", []),
     planning_write: planning_write.new_store(),
     observation: system_observation.ObservedSnapshot(
-      "candidate",
+      active_candidate(),
       "test",
       1000,
       100,
       Some([]),
       dict.from_list([#("system_health.status", "healthy")]),
     ),
-    control: control.ControlBackend("candidate", 0, True, dict.new()),
+    control: control.ControlBackend(active_candidate(), 0, True, dict.new()),
     verification_runner: fn(_) { verification.CheckExecuted(0, "ok", 1) },
     knowledge: knowledge.new_corpus(
       "/workspace",
@@ -509,4 +535,419 @@ pub fn server_execute_route_authenticated_converges_public_and_private_test() {
     )
   unknown |> refused_code |> should.equal("UNKNOWN_ROUTE_OR_TOOL")
   unknown_pool |> should.equal(pool)
+}
+
+// ---------------------------------------------------------------------------
+// T23-C01: route grant ticket validation and fence binding
+// ---------------------------------------------------------------------------
+
+fn admission_error_code(result: Result(a, ToolError)) -> String {
+  case result {
+    Error(err) -> err.code
+    Ok(_) -> panic as "expected Error"
+  }
+}
+
+pub fn revoked_expired_or_foreign_route_grant_ticket_refused_test() {
+  // Revoked route grant ticket is refused before admission.
+  let revoked =
+    RouteGrant(
+      "development",
+      ["harness_read_file"],
+      admission.GrantTicket(..ticket(), revoked: True),
+    )
+  admit_converged(
+    context(),
+    Some(revoked),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_REVOKED")
+
+  // Expired route grant ticket is refused.
+  let expired =
+    RouteGrant(
+      "development",
+      ["harness_read_file"],
+      admission.GrantTicket(..ticket(), expires_at_ms: 500),
+    )
+  admit_converged(
+    context(),
+    Some(expired),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_EXPIRED")
+
+  // Foreign workspace route grant ticket is refused.
+  let foreign =
+    RouteGrant(
+      "development",
+      ["harness_read_file"],
+      admission.GrantTicket(..ticket(), workspace_root: "/foreign-workspace"),
+    )
+  admit_converged(
+    context(),
+    Some(foreign),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_WORKSPACE_MISMATCH")
+
+  // Blank grant id is refused.
+  let blank =
+    RouteGrant(
+      "development",
+      ["harness_read_file"],
+      admission.GrantTicket(..ticket(), grant_id: "   "),
+    )
+  admit_converged(
+    context(),
+    Some(blank),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_ID_REQUIRED")
+
+  // AuditOnly scope can never authorize a route grant.
+  let audit_only =
+    RouteGrant(
+      "development",
+      ["harness_read_file"],
+      admission.GrantTicket(..ticket(), scope: AuditOnly),
+    )
+  admit_converged(
+    context(),
+    Some(audit_only),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_SCOPE_INSUFFICIENT")
+
+  // The route ticket must match the active fence authority grant id.
+  let mismatched =
+    RouteGrant(
+      "development",
+      ["harness_read_file"],
+      admission.GrantTicket(..ticket(), grant_id: "other-route-ticket"),
+    )
+  admit_converged(
+    context(),
+    Some(mismatched),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_TICKET_MISMATCH")
+}
+
+// ---------------------------------------------------------------------------
+// T23-C03: receipt entries are isolated per authenticated principal
+// ---------------------------------------------------------------------------
+
+pub fn private_route_replay_isolated_across_principals_test() {
+  let assert Ok(pool) = supervisor.start_worker_pool(1)
+  let dev_grant = grant("development", ["harness_read_file"])
+  let store = store_with([])
+
+  let #(first_outcome, first_pool) =
+    execute_converged(
+      pool,
+      context_for_actor("T14-worker-a"),
+      Some(dev_grant),
+      store,
+      "development",
+      "harness_read_file",
+      dict.new(),
+      ignored_handler,
+    )
+  let assert Complete(_, _) = first_outcome
+
+  let #(second_outcome, second_pool) =
+    execute_converged(
+      first_pool,
+      context_for_actor("T14-worker-b"),
+      Some(dev_grant),
+      store,
+      "development",
+      "harness_read_file",
+      dict.new(),
+      ignored_handler,
+    )
+  let assert Complete(_, _) = second_outcome
+
+  // Two distinct principals issuing the same logical private-route call must
+  // never collapse into (or read) one shared receipt entry.
+  dict.size(first_pool.ledger.entries) |> should.equal(1)
+  dict.size(second_pool.ledger.entries) |> should.equal(2)
+}
+
+// ---------------------------------------------------------------------------
+// T23-C04: route grant scope and full ticket equality on private reads
+// ---------------------------------------------------------------------------
+
+pub fn same_id_audit_only_or_inconsistent_fence_ticket_refused_on_private_read_test() {
+  // The fence authority ticket carries the same grant_id as the route ticket
+  // but an AuditOnly scope: the scope gate must fire before any equality check.
+  let assert Some(fence) = context().task_fence
+  let audit_fence =
+    admission.TaskFence(
+      ..fence,
+      grant: Some(admission.GrantTicket(..ticket(), scope: AuditOnly)),
+    )
+  let audit_context =
+    admission.AdmissionContext(..context(), task_fence: Some(audit_fence))
+  admit_converged(
+    audit_context,
+    Some(grant("development", ["harness_read_file"])),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_SCOPE_INSUFFICIENT")
+
+  // Same grant_id, valid but different scope from the route ticket: the full
+  // ticket equality gate must refuse rather than treating the id as sufficient.
+  let control_fence =
+    admission.TaskFence(
+      ..fence,
+      grant: Some(admission.GrantTicket(..ticket(), scope: ControlMutation)),
+    )
+  let control_context =
+    admission.AdmissionContext(..context(), task_fence: Some(control_fence))
+  admit_converged(
+    control_context,
+    Some(grant("development", ["harness_read_file"])),
+    "development",
+    "harness_read_file",
+    dict.new(),
+  )
+  |> admission_error_code
+  |> should.equal("ROUTE_GRANT_TICKET_MISMATCH")
+}
+
+// ---------------------------------------------------------------------------
+// T23-C05: attempt bumps execute a fresh handler, never stale replay
+// ---------------------------------------------------------------------------
+
+pub fn private_read_attempt_bump_executes_fresh_handler_test() {
+  let assert Ok(pool) = supervisor.start_worker_pool(1)
+  let dev_grant = grant("development", ["harness_read_file"])
+  let store = store_with([])
+
+  let #(first, committed_pool) =
+    execute_converged(
+      pool,
+      context(),
+      Some(dev_grant),
+      store,
+      "development",
+      "harness_read_file",
+      dict.new(),
+      fn(_, _) { Ok("{\"epoch\":\"first\"}") },
+    )
+  let assert Complete("{\"epoch\":\"first\"}", _) = first
+
+  let assert Some(fence) = context().task_fence
+  let bumped_context =
+    admission.AdmissionContext(
+      ..context(),
+      task_fence: Some(admission.TaskFence(..fence, attempt: 2)),
+    )
+  let #(second, pool2) =
+    execute_converged(
+      committed_pool,
+      bumped_context,
+      Some(dev_grant),
+      store,
+      "development",
+      "harness_read_file",
+      dict.new(),
+      fn(_, _) { Ok("{\"epoch\":\"second\"}") },
+    )
+  // A bumped attempt must execute the fresh handler, not replay "first".
+  let assert Complete("{\"epoch\":\"second\"}", _) = second
+  dict.size(pool2.ledger.entries) |> int.to_string |> should.equal("2")
+}
+
+// ---------------------------------------------------------------------------
+// T23-C06: empty/generic candidate evidence is refused without relabeling
+// ---------------------------------------------------------------------------
+
+pub fn empty_or_generic_candidate_evidence_is_refused_without_relabeling_test() {
+  supervisor.start_worker_pool_for_candidate(size: 1, candidate: "")
+  |> should.be_error
+  supervisor.start_worker_pool_for_candidate(size: 1, candidate: "uos-mcp")
+  |> should.be_error
+
+  list.each(["uos-mcp", ""], fn(bad_candidate) {
+    let assert Ok(base_pool) = supervisor.start_worker_pool(1)
+    let pool =
+      supervisor.WorkerPool(
+        ..base_pool,
+        ledger: receipts.new_ledger(bad_candidate),
+      )
+    let store =
+      FeatureEvidenceStore(..store_with([]), active_candidate: bad_candidate)
+    execute_converged(
+      pool,
+      context(),
+      Some(grant("development", ["harness_read_file"])),
+      store,
+      "development",
+      "harness_read_file",
+      dict.new(),
+      ignored_handler,
+    ).0
+    |> refused_code
+    |> should.equal("CANDIDATE_EVIDENCE_MISMATCH")
+  })
+}
+
+// ---------------------------------------------------------------------------
+// T23-C07: `_client_schema_digest` pin is enforced inside admit_converged
+// ---------------------------------------------------------------------------
+
+pub fn client_schema_digest_pin_enforced_in_admit_converged_test() {
+  let assert Ok(spec) = registry.lookup("development", "harness_read_file")
+
+  admit_converged(
+    context(),
+    Some(grant("development", ["harness_read_file"])),
+    "development",
+    "harness_read_file",
+    dict.from_list([#("_client_schema_digest", "stale-digest")]),
+  )
+  |> admission_error_code
+  |> should.equal("SCHEMA_MIGRATION_REQUIRED")
+
+  admit_converged(
+    context(),
+    Some(grant("development", ["harness_read_file"])),
+    "development",
+    "harness_read_file",
+    dict.from_list([#("_client_schema_digest", spec.schema_digest)]),
+  )
+  |> should.be_ok
+}
+
+// ---------------------------------------------------------------------------
+// T23-R3-C01: a public mutation attempt bump must execute a fresh handler
+// ---------------------------------------------------------------------------
+
+pub fn public_mutation_attempt_bump_executes_fresh_handler_test() {
+  let assert Ok(pool0) = supervisor.start_worker_pool(1)
+  let backends0 = server_backends(store_with([]))
+  let args =
+    dict.from_list([
+      #("plan_id", "attempt-bump-plan"),
+      #("task_id", "attempt-bump-task"),
+    ])
+
+  let assert Some(base_fence) = context().task_fence
+  let fence1 =
+    admission.TaskFence(
+      ..base_fence,
+      plan_id: "attempt-bump-plan",
+      task_id: "attempt-bump-task",
+      attempt: 1,
+    )
+  let context1 =
+    admission.AdmissionContext(..context(), task_fence: Some(fence1))
+  let assert Some(grant_ticket) = fence1.grant
+  let pub_grant = Some(RouteGrant("public", ["plan_add"], grant_ticket))
+
+  let #(outcome1, pool1, backends1) =
+    server.execute_route_authenticated(
+      context1,
+      pub_grant,
+      pool0,
+      backends0,
+      "public",
+      "plan_add",
+      args,
+      ignored_handler,
+    )
+  let assert Complete(_, _) = outcome1
+  dict.size(pool1.ledger.entries) |> should.equal(1)
+  dict.has_key(backends1.planning_write.tasks, #(
+    "attempt-bump-plan",
+    "attempt-bump-task",
+  ))
+  |> should.equal(True)
+
+  // Replay the exact same attempt-1 call against fresh backends0: the
+  // committed receipt must be returned without re-executing the handler.
+  let #(replay_outcome, pool_replayed, backends_replayed) =
+    server.execute_route_authenticated(
+      context1,
+      pub_grant,
+      pool1,
+      backends0,
+      "public",
+      "plan_add",
+      args,
+      ignored_handler,
+    )
+  let assert Complete(_, _) = replay_outcome
+  dict.size(pool_replayed.ledger.entries) |> should.equal(1)
+  dict.has_key(backends_replayed.planning_write.tasks, #(
+    "attempt-bump-plan",
+    "attempt-bump-task",
+  ))
+  |> should.equal(False)
+
+  // Bumping the attempt busts the public replay cache and executes the fresh
+  // handler against the still-fresh backends0.
+  let fence2 = admission.TaskFence(..fence1, attempt: 2)
+  let context2 =
+    admission.AdmissionContext(..context(), task_fence: Some(fence2))
+  let #(bumped_outcome, pool2, backends2) =
+    server.execute_route_authenticated(
+      context2,
+      pub_grant,
+      pool1,
+      backends0,
+      "public",
+      "plan_add",
+      args,
+      ignored_handler,
+    )
+  let assert Complete(_, _) = bumped_outcome
+  dict.size(pool2.ledger.entries) |> should.equal(2)
+  dict.has_key(backends2.planning_write.tasks, #(
+    "attempt-bump-plan",
+    "attempt-bump-task",
+  ))
+  |> should.equal(True)
+}
+
+// ---------------------------------------------------------------------------
+// T23-R3-C02: candidate identity from an unrecognized root fails closed
+// ---------------------------------------------------------------------------
+
+pub fn candidate_id_from_unrecognized_root_fails_closed_test() {
+  candidate_id.from_root("/tmp") |> should.equal("UNOBSERVED_CANDIDATE_SOURCE")
+  candidate_id.is_valid("UNOBSERVED_CANDIDATE_SOURCE") |> should.equal(False)
+  candidate_id.is_sha256_digest("UNOBSERVED_CANDIDATE_SOURCE")
+  |> should.equal(False)
+
+  let assert Ok(orig_cwd) = simplifile.current_directory()
+  let _ = erl_set_cwd("/tmp")
+  let tmp_cand = candidate_id.current()
+  let _ = erl_set_cwd(orig_cwd)
+  tmp_cand |> should.equal("UNOBSERVED_CANDIDATE_SOURCE")
+  candidate_id.is_valid(tmp_cand) |> should.equal(False)
 }

@@ -1,0 +1,170 @@
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "reviewer": "codex-independent-verifier",
+  "plan_id": "20261029-1913-mcp-server-completion",
+  "task_id": "T23",
+  "parent_main_commit": "b5dfbe78d0fec1211ba08c0f3bb019fbb4c573ae",
+  "core_dev_ready": false,
+  "mcp_full_dev_ready": false,
+  "system_admission": "NOT_ADMITTED",
+  "raw_verdict": "HOLD",
+  "critical_findings_count": 4,
+  "critical_findings": [
+    {
+      "id": "T23-C01",
+      "category": "authority",
+      "location": "apps/cepaf_gleam/src/cepaf_gleam/mcp/route_convergence.gleam:61",
+      "finding": "verify_route_grant checks route and tool membership but never validates RouteGrant.ticket. Revocation, expiration, workspace and binding to the context grant are ignored.",
+      "verification": "A read-only Erlang probe against existing compiled modules supplied a revoked, expired, foreign-workspace route ticket for development:harness_status. admit_converged returned ok. Source inspection confirms the missing ticket checks.",
+      "required_correction": "Validate the route ticket and its binding to current authenticated authority before dispatch, with negative controls for each invalid ticket property."
+    },
+    {
+      "id": "T23-C02",
+      "category": "recovery",
+      "location": "apps/cepaf_gleam/src/cepaf_gleam/mcp/receipts.gleam:39",
+      "finding": "Receipt hashing serializes arguments using unescaped '=' and '&' delimiters. Distinct argument maps therefore have identical canonical bytes and hashes, allowing incorrect replay or bypass of idempotency-conflict detection.",
+      "verification": "A read-only Erlang probe confirmed hash_payload(\"tool\", [(\"a\", \"x&b=y\")]) equals hash_payload(\"tool\", [(\"a\", \"x\"), (\"b\", \"y\")]). This is a serialization collision, independent of SHA-256 strength.",
+      "required_correction": "Use an unambiguous canonical encoding and test delimiter-bearing keys and values through public and private replay paths."
+    },
+    {
+      "id": "T23-C03",
+      "category": "authority_and_data_disclosure",
+      "location": "apps/cepaf_gleam/src/cepaf_gleam/mcp/dispatch.gleam:110",
+      "finding": "Private converged dispatch derives replay identity only from route, tool and arguments. Unlike the public server path, it omits authenticated actor and workspace. Callers sharing a worker ledger can receive another principal's committed outcome or have their own effect suppressed.",
+      "verification": "Source tracing shows route_convergence.execute_converged delegates to dispatch_validated, whose intent_id contains no principal identity. Receipt entries also contain no owner binding.",
+      "required_correction": "Bind private replay identity and lookup authorization to authenticated ownership and the applicable fencing epoch; verify cross-principal replay isolation."
+    },
+    {
+      "id": "T23-C04",
+      "category": "acceptance_evidence",
+      "location": "apps/cepaf_gleam/test/mcp_client_matrix_test.gleam:172",
+      "finding": "The claimed full acceptance matrix accepts any JSON-RPC frame without asserting successful tool execution. Missing evidence is replaced with matrix-candidate, private handlers return a constant success payload, and public calls use empty arguments and fixture backends. Refusals can therefore count as verified valid cells.",
+      "verification": "Source inspection confirms frame-only assertions and candidate fallback. T19 records five profile-bound probes listing 53 tools, not positive execution of all 101 routes. A fresh attempt to execute the existing compiled matrix test terminated with undef for cepaf_gleam@mcp@adapters@analysis:execute/3.",
+      "required_correction": "Require positive, candidate-bound outcomes and meaningful backend effects for every required cell; preserve refusal cells separately. Rebuild through the authorized development workflow and provide source-bound passing receipts."
+    }
+  ],
+  "minor_observations": [
+    "The 65 public, 21 development and 15 successor totals are registry census claims, not verified positive execution counts. Existing compiled registry enumeration independently returned 101 entries.",
+    "T20 source artifact SHA-256 values match the inspected Lean and Quint files. The Quint receipt records typecheck, which does not establish temporal invariant verification. Fresh prover execution was not performed.",
+    "The admission MD5 matches the requested value.",
+    "T21 contains 143 workspace entries matching its declared count and explicitly preserves the SourceFX hold. Its historical disposition labels do not independently prove content incorporation.",
+    "The rule and SOP declare protocol 2025-11-25, while the inspected HTTP adapter uses 2026-07-28 for its modern profile.",
+    "The rule describes Zenoh HMAC, while the inspected implementation uses a length-prefixed secret-bearing SHA-256 digest. It also lacks an explicit empty-secret rejection.",
+    "planning_read.feature_tracker_status hardcodes implementation, observed, formal and admitted totals instead of deriving them from evidence.",
+    "No files were modified, no Git commands were run, and no task, release or system admission authority was exercised. Existing compiled probe results are corroborating observations, not proof of a source-bound build."
+  ],
+  "matrix_summary": {
+    "public_routes_verified": 0,
+    "development_routes_verified": 0,
+    "successor_routes_verified": 0,
+    "total_routes_verified": 0,
+    "five_clients_stdio_verified": false,
+    "transports_verified": [],
+    "formal_and_oracle_gates_verified": false,
+    "admission_md5_preserved": "c53ed6bf66cba56cfc0d6e850875a774"
+  },
+  "seventeen_aspects": [
+    {
+      "aspect_id": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "status": "UNVERIFIED",
+      "evidence": "analysis.gleam declares the denied serial; supplied evidence does not demonstrate the storage interlock at this candidate."
+    },
+    {
+      "aspect_id": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "status": "PARTIAL",
+      "evidence": "T21 records candidate and workspace dispositions; no Git commands were used. Exact current source-to-candidate binding remains unverified."
+    },
+    {
+      "aspect_id": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "status": "PARTIAL",
+      "evidence": "Inspected adapters use Gleam; a candidate-wide dependency exclusion scan was not performed."
+    },
+    {
+      "aspect_id": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "status": "HOLD",
+      "evidence": "Assurance tests exercise fixtures and simulated recovery; supplied receipts do not establish durable, serialized gateway ownership of actual effects."
+    },
+    {
+      "aspect_id": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "status": "UNVERIFIED",
+      "evidence": "knowledge.gleam checks supplied corpus metadata; actual descriptor-relative VFS behavior is not established by the supplied receipts."
+    },
+    {
+      "aspect_id": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "status": "PARTIAL",
+      "evidence": "T20 reports successful Hermes oracle executions; fresh candidate-bound execution and MCP authorization coverage remain unverified."
+    },
+    {
+      "aspect_id": 7,
+      "name": "Mathematical Authority & Conservation",
+      "status": "PARTIAL",
+      "evidence": "Both Lean source hashes match T20. Quint evidence is typechecking; correspondence to the defective route-ticket and replay implementations is not established."
+    },
+    {
+      "aspect_id": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "status": "PARTIAL",
+      "evidence": "analysis.gleam explicitly marks outputs advisory and refuses control-authority requests; broader authority isolation is blocked by T23-C01 and T23-C03."
+    },
+    {
+      "aspect_id": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "status": "PARTIAL",
+      "evidence": "Analysis adapter refuses an offline MAX backend; the matrix uses an offline fixture rather than observed inference."
+    },
+    {
+      "aspect_id": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "status": "HOLD",
+      "evidence": "Zenoh adapter checks topic grammar, reply destination and signatures. Matrix calls are in-process fixtures, not observed mesh transport."
+    },
+    {
+      "aspect_id": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "status": "UNVERIFIED",
+      "evidence": "HTTP adapter formats MCP SSE responses; this does not verify the AG-UI 32-event protocol."
+    },
+    {
+      "aspect_id": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "status": "UNVERIFIED",
+      "evidence": "Supplied tests and receipts do not demonstrate the A2UI catalog."
+    },
+    {
+      "aspect_id": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "status": "HOLD",
+      "evidence": "T19 profile probes and fixture transport turns do not establish positive semantic parity across required interfaces."
+    },
+    {
+      "aspect_id": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "status": "PARTIAL",
+      "evidence": "Documents contain full FQDN links, but SOP examples also use a raw IP and an HTTP Origin rejected by the HTTPS-only authentication policy."
+    },
+    {
+      "aspect_id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "status": "PARTIAL",
+      "evidence": "Rule and SOP include checklist obligations and explicit UNRUN states; matrix assertions do not substantiate full readiness."
+    },
+    {
+      "aspect_id": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "status": "PARTIAL",
+      "evidence": "Documents link wiki and ZK projections; knowledge adapter implements scope and link checks. Live triad integration remains unverified."
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "status": "HOLD",
+      "evidence": "Planning writes use returned in-memory stores; receipt serialization and private replay ownership defects block recovery and authority acceptance."
+    }
+  ]
+}

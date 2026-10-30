@@ -5,8 +5,9 @@
 import cepaf_gleam/mcp/principal.{type Principal}
 import cepaf_gleam/mcp/types.{
   type AuthorityScope, type EffectClass, type ToolError, type ToolSpec,
-  ControlActuation, Mutating, NonRetryable, ReadOnly, ToolError,
-  VerificationGate,
+  AuditOnly, ControlActuation, ControlMutation, Mutating, NonRetryable,
+  PublicReadOnly, ReadOnly, ReleaseAuthority, ScopedObservation,
+  TaskScopedMutation, ToolError, VerificationGate,
 }
 import gleam/dict.{type Dict}
 import gleam/option.{type Option, None, Some}
@@ -71,9 +72,7 @@ pub fn admit(
   spec: ToolSpec,
   args: Dict(String, String),
 ) -> Result(ValidatedCall, ToolError) {
-  case
-    principal.workspace_root(context.principal) == context.workspace_root
-  {
+  case principal.workspace_root(context.principal) == context.workspace_root {
     False ->
       Error(authority_error(
         "PRINCIPAL_WORKSPACE_MISMATCH",
@@ -102,9 +101,7 @@ pub fn verify_at_effect_time(
   context: AdmissionContext,
   call: ValidatedCall,
 ) -> Result(ValidatedCall, ToolError) {
-  case
-    principal.workspace_root(context.principal) == context.workspace_root
-  {
+  case principal.workspace_root(context.principal) == context.workspace_root {
     False ->
       Error(authority_error(
         "PRINCIPAL_WORKSPACE_MISMATCH",
@@ -151,15 +148,28 @@ fn verify_effect_class(
 ) -> Result(ValidatedCall, ToolError) {
   case spec.effect_class {
     ReadOnly | VerificationGate ->
-      Ok(ValidatedCall(
-        spec: spec,
-        principal: context.principal,
-        arguments: args,
-        plan_id: None,
-        task_id: None,
-        attempt: None,
-        grant_id: None,
-      ))
+      case context.task_fence {
+        None ->
+          Ok(ValidatedCall(
+            spec: spec,
+            principal: context.principal,
+            arguments: args,
+            plan_id: None,
+            task_id: None,
+            attempt: None,
+            grant_id: None,
+          ))
+        Some(fence) ->
+          Ok(ValidatedCall(
+            spec: spec,
+            principal: context.principal,
+            arguments: args,
+            plan_id: Some(fence.plan_id),
+            task_id: Some(fence.task_id),
+            attempt: Some(fence.attempt),
+            grant_id: option.map(fence.grant, fn(g) { g.grant_id }),
+          ))
+      }
     Mutating | ControlActuation ->
       verify_fenced_mutation(context, spec, args, at_effect_time)
   }
@@ -204,7 +214,13 @@ fn verify_fenced_mutation(
                     "Sa-plan task lease has expired",
                   ))
                 False ->
-                  verify_grant_ticket(context, spec, args, fence, at_effect_time)
+                  verify_grant_ticket(
+                    context,
+                    spec,
+                    args,
+                    fence,
+                    at_effect_time,
+                  )
               }
           }
       }
@@ -249,21 +265,58 @@ fn verify_grant_ticket(
                     "GRANT_WORKSPACE_MISMATCH",
                     "Grant workspace root does not match active workspace",
                   ))
-                True ->
-                  Ok(ValidatedCall(
-                    spec: spec,
-                    principal: context.principal,
-                    arguments: args,
-                    plan_id: Some(fence.plan_id),
-                    task_id: Some(fence.task_id),
-                    attempt: Some(fence.attempt),
-                    grant_id: Some(grant.grant_id),
-                  ))
+                True -> grant_scope_check(context, spec, args, fence, grant)
               }
           }
       }
     }
   }
+}
+
+fn grant_scope_check(
+  context: AdmissionContext,
+  spec: ToolSpec,
+  args: Dict(String, String),
+  fence: TaskFence,
+  grant: GrantTicket,
+) -> Result(ValidatedCall, ToolError) {
+  case grant.scope {
+    PublicReadOnly | ScopedObservation | AuditOnly ->
+      Error(authority_error(
+        "GRANT_SCOPE_INSUFFICIENT",
+        "Read-only or audit grant scope cannot authorize mutations",
+      ))
+    TaskScopedMutation ->
+      case spec.effect_class {
+        ControlActuation ->
+          Error(authority_error(
+            "CONTROL_MUTATION_SCOPE_REQUIRED",
+            "ControlActuation tool requires ControlMutation or ReleaseAuthority grant scope",
+          ))
+        Mutating | ReadOnly | VerificationGate ->
+          Ok(validated_mutation(context, spec, args, fence, grant))
+      }
+    ControlMutation | ReleaseAuthority ->
+      Ok(validated_mutation(context, spec, args, fence, grant))
+  }
+}
+
+fn validated_mutation(
+  context: AdmissionContext,
+  spec: ToolSpec,
+  args: Dict(String, String),
+  fence: TaskFence,
+  grant: GrantTicket,
+) -> ValidatedCall {
+  ValidatedCall(
+    spec: spec,
+    principal: context.principal,
+    arguments: args,
+    plan_id: Some(fence.plan_id),
+    task_id: Some(fence.task_id),
+    attempt: Some(fence.attempt),
+    grant_id: Some(grant.grant_id),
+  )
 }
 
 fn is_mutation_effect(effect: EffectClass) -> Bool {

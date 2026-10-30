@@ -2,6 +2,7 @@
 //// root until the principal contract supplies a separate authenticated tenant.
 
 import cepaf_gleam/mcp/admission.{type ValidatedCall}
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/evidence
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/types.{type Outcome, NonRetryable, Refused, ToolError}
@@ -110,6 +111,6 @@ fn complete(call: ValidatedCall, payload: json.Json) -> Outcome {
     call.spec.route,
     call.spec.name,
     json.to_string(payload),
-    "uos-mcp",
+    candidate_id.current(),
   )
 }

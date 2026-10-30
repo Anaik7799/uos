@@ -1,0 +1,197 @@
+{
+  "schema": "uos.t23-independent-dev-acceptance.v1",
+  "round": 3,
+  "reviewer": "claude-opus-5",
+  "role": "independent Popperian final development acceptance verification",
+  "observed_utc": "2026-10-30T11:24:06Z",
+  "task": "T23",
+  "sa_plan": "20261029-1913-mcp-server-completion",
+  "candidate_observed": "sha256:bfadfa4945b542a6711e3f65a95185b651476d690acf35c3e5b12a358159b0ea",
+  "control_module_digest_observed": {
+    "harness/admission.gleam.md5": "c53ed6bf66cba56cfc0d6e850875a774"
+  },
+  "core_dev_ready": false,
+  "mcp_full_dev_ready": false,
+  "system_admission": "NOT_ADMITTED",
+  "raw_verdict": "HOLD",
+  "raw_verdict_basis": "All 7 declared gate modules (40/40), both Lean proofs, Quint reqClosed, and both Hermes oracles are green and independently reproduced, and every Round-2 finding from both reviewers is genuinely remediated in freshly compiled code. Two defects survive falsification: an unresolved cross-route semantic inconsistency in replay identity that leaves the public route able to return a stale committed outcome under a bumped attempt, and a silent cross-tree candidate fallback that stamps the canonical tree's digest when invoked from an unrecognised cwd. Both sit inside the exact finding classes this round claimed closed (Codex T23-C03 and T23-R2-C01), so HOLD is reported rather than a pass. This raw verdict is not overridable by remediation narrative.",
+  "critical_findings_count": 2,
+  "critical_findings": [
+    {
+      "id": "T23-R3-C01",
+      "verdict": "CONFIRMED",
+      "category": "replay-identity-inconsistency",
+      "severity": "critical",
+      "title": "Public-route replay identity omits attempt/task/grant, so a bumped attempt replays a stale committed outcome",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+      "line": 194,
+      "evidence": "server.execute_receipted builds owner_hash from exactly two fields, actor and workspace (server.gleam:194-198), and intent_id from route:tool:owner_hash:logical_id (:205-212). dispatch.dispatch_validated, used by the private routes, builds owner_hash from actor, workspace, plan_id, task_id, attempt and grant_id (dispatch.gleam:115-122). The public branch of execute_route_authenticated calls admit_converged and then discards the returned ValidatedCall with Ok(_) (server.gleam:132), invoking execute_authenticated on the raw args, so the attempt that admission.gleam:162-171 now populates for ReadOnly|VerificationGate never reaches the receipt key.",
+      "failure_scenario": "A public mutating tool (plan_add, sa_task_claim, sa_task_complete, sa_bridge_submit) is called under attempt 1 and commits OutcomeCommitted. The lease is lost and reclaimed, producing attempt 2 with the same actor, workspace and payload. The second call computes an identical intent_id, receipts.lookup returns the attempt-1 OutcomeCommitted branch (server.gleam:225-229), and the caller receives Complete without the effect being executed under attempt 2. verify_outcome_candidate then approves that stale outcome because its candidate still matches store.active_candidate and pool.ledger.candidate, so attempt-1 evidence is reported as current attempt-2 completion.",
+      "why_it_survives_round_2": "The remediation test private_read_attempt_bump_executes_fresh_handler_test (mcp_route_parity_test.gleam:740-778) exercises only route \"development\" through execute_converged, and asserts ledger growth to 2 entries. No test drives a public-route attempt bump, so the public half of Codex T23-C03 is uncovered by the suite that was used to declare it closed.",
+      "honest_ambiguity": "Public idempotency keyed on (actor, workspace, payload) may be the intended design, and matching_replay_returns_committed_without_reexecuting_test ratifies replay-without-reexecution in general. The defect is therefore stated as an unresolved inconsistency: the private-route fix asserts attempt must bust the replay cache, the public route asserts it must not, and both cannot be canonical. Which side is corrected is a design decision for the owning task, not for this review.",
+      "falsifier_for_the_fix": "Add a public-route analogue of the attempt-bump test: commit a public mutating call under attempt 1, bump the fence attempt to 2 with identical payload, and require a fresh handler execution plus a second ledger entry. It must fail against the current code."
+    },
+    {
+      "id": "T23-R3-C02",
+      "verdict": "CONFIRMED",
+      "category": "candidate-binding-silent-fallback",
+      "severity": "critical",
+      "title": "candidate_id.current() silently falls back to the hardcoded canonical tree, stamping a foreign tree's digest instead of failing closed",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/candidate_id.gleam",
+      "line": 31,
+      "evidence": "read_core_source tries src/cepaf_gleam/<rel>, then apps/cepaf_gleam/src/cepaf_gleam/<rel>, then the hardcoded absolute /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/<rel> (candidate_id.gleam:25-39). Observed directly against the compiled module: cwd /home/an/NAS-setup/uos/apps/cepaf_gleam yields sha256:bfadfa49...; cwd /home/an/NAS-setup/uos yields the same; cwd /home/an/NAS-setup/uos/.uos-workspaces/agy-l3 correctly yields that workspace's own distinct sha256:942588be...; but cwd /tmp also yields sha256:bfadfa49..., the canonical tree's digest, with no error and no UNOBSERVED_CANDIDATE_SOURCE.",
+      "failure_scenario": "A test or harness run is launched from a cwd that is neither a Gleam project root nor an app root nor a sibling workspace root (for example a nested subdirectory of .uos-workspaces/<agent>, or /tmp as demonstrated). Every adapter, ledger and evidence record for that run is stamped with the canonical checkout's source digest rather than the tree actually under test. The result passes is_valid and passes the triple-equality check in candidate_evidence_mismatch, because all three sources agree on the same wrong candidate, so completion evidence is attributed to a tree whose bytes were never executed.",
+      "why_it_matters": "This defeats the stated purpose of T23-R2-C01, which was to make completion evidence incapable of naming a generic or stale candidate. A cross-tree digest is not generic, but it is stale with respect to the tree under test, and it is produced silently. It also contradicts the no-silent-fallback discipline that native_backend applies to its own CAS registry (poison on failure, never substitute), and SC-WORKSPACE-ISO-001 INV-WS-05, whose absolute-canonical-path rule is prescribed for shared var/ state and is the opposite of what candidate source identity requires.",
+      "falsifier_for_the_fix": "Require candidate_id to resolve its tree from an explicit workspace root (env-overridable) and return UNOBSERVED_CANDIDATE_SOURCE when that root cannot be established, then assert that current() invoked from /tmp is refused by is_valid rather than returning the canonical digest."
+    }
+  ],
+  "round_2_findings_remediation_verified": [
+    {
+      "id": "T23-R2-C01",
+      "source": "claude",
+      "state": "REMEDIATED_VERIFIED_WITH_RESIDUAL",
+      "evidence": "candidate_id.gleam exists and computes sha256 over 6 length-prefixed core MCP sources via crypto.hash(Sha256) (files.gleam:80-86). Live value observed from the compiled beam is sha256:bfadfa49..., 71 bytes, != uos-mcp. supervisor.start_worker_pool binds the ledger to candidate_id.current() (supervisor.gleam:86) and start_worker_pool_for_candidate rejects invalid candidates (:96-97). Residual recorded as T23-R3-C02."
+    },
+    {
+      "id": "T23-R2-C02",
+      "source": "claude",
+      "state": "REMEDIATED_VERIFIED",
+      "evidence": "candidate_evidence_mismatch rejects via is_valid on all three of evidence.candidate, store.active_candidate and pool.ledger.candidate, then requires triple equality (route_convergence.gleam:493-503). This closes the degenerate all-UNOBSERVED path I probed as a hypothesis, since is_valid rejects UNOBSERVED_CANDIDATE_SOURCE (candidate_id.gleam:73) even when all three agree. The success path rebinds only route and tool, never candidate (:484-487), so no relabeling occurs. Confirmed live: is_valid is false for \"\", \"uos-mcp\" and \"UNOBSERVED_CANDIDATE_SOURCE\"."
+    },
+    {
+      "id": "dead-code verify_client_schema_pin",
+      "source": "claude",
+      "state": "REMEDIATED_VERIFIED",
+      "evidence": "Now called in the production path at route_convergence.gleam:56 inside admit_converged, on dict.get(args, \"_client_schema_digest\"). Only two references exist in the tree, the definition and that live call site."
+    },
+    {
+      "id": "registry.gleam:274 fallback",
+      "source": "claude",
+      "state": "REMEDIATED_VERIFIED",
+      "evidence": "The classify_public catch-all now returns #(\"unclassified\", \"T01\", 0, ControlActuation, \"unclassified_fail_closed\", 3000) at registry.gleam:274-281. ControlActuation forces verify_fenced_mutation plus a ControlMutation-or-ReleaseAuthority grant scope, so an unclassified tool fails closed rather than defaulting to ReadOnly."
+    },
+    {
+      "id": "T23-C01",
+      "source": "codex",
+      "state": "REMEDIATED_VERIFIED",
+      "evidence": "verify_route_grant_fence_binding calls verify_ticket_scope on fence.grant for both the private branch (route_convergence.gleam:278) and the public branch (:236), and enforces full 5-field route_grant_ticket_equal on grant_id, scope, revoked, expires_at_ms and workspace_root (:320-326), plus fence revocation, expiry and workspace checks (:283-306). Covered by same_id_audit_only_or_inconsistent_fence_ticket_refused_on_private_read_test."
+    },
+    {
+      "id": "T23-C03",
+      "source": "codex",
+      "state": "PARTIALLY_REMEDIATED",
+      "evidence": "admission.verify_effect_class now populates plan_id, task_id, attempt and grant_id from context.task_fence on the ReadOnly|VerificationGate branch (admission.gleam:162-171), and dispatch_validated folds all four into owner_hash (dispatch.gleam:115-122). Verified green on the private route. The public route still omits them; see T23-R3-C01."
+    },
+    {
+      "id": "T23-C04",
+      "source": "codex",
+      "state": "REMEDIATED_VERIFIED",
+      "evidence": "All 535 cells carry a candidate parsed out of the emitted JSON-RPC frame by candidate_from_frame (mcp_client_matrix_test.gleam:452-469, wired at :605), which returns \"\" on any parse or field absence and therefore cannot launder a failure into the active candidate. The assertion is consequently non-tautological. Frames are produced through real transport paths: stdio.ingest_chunk, zenoh.handle_envelope with a computed HMAC signature, and the HTTP path with a signed bearer token plus Origin check."
+    },
+    {
+      "id": "feature_tracker_status dynamic row totals",
+      "source": "codex",
+      "state": "REMEDIATED_VERIFIED",
+      "evidence": "feature_tracker_status is classified in the planning_read ReadOnly family (registry.gleam:162) and implemented at planning_read.gleam:168, documented as decomposing into 5 distinct epistemic totals rather than a static row count."
+    }
+  ],
+  "matrix_summary": {
+    "total_positive_cells": 535,
+    "denominator_derivation": "505 stdio + 15 zenoh + 15 http, cross-checked against the structural identity clients * specs + 30 == 535, i.e. 5 clients x 101 route specs (65 public + 21 development + 15 successor) plus 30 alternate-transport cells. Both the computed lengths and the product identity are asserted, so the denominator is not a bare literal.",
+    "silent_denominator_reduction": "none observed",
+    "candidate_binding": "every cell's candidate is parsed from the emitted frame and must equal candidate_id.current(); asserted sha256: prefix, 71 bytes, != uos-mcp",
+    "negative_controls_present": true,
+    "negative_controls": [
+      "meaningful_backend_effects_and_foreign_candidate_negative_control_test",
+      "refusal_cells_never_count_as_positive_matrix_cells_test",
+      "foreign_candidate_completion_evidence_is_refused_test",
+      "empty_or_generic_candidate_evidence_is_refused_without_relabeling_test"
+    ],
+    "real_backend_effects_verified": [
+      "harness_write_file performs simplifile.write to /tmp/uos-t23-matrix-workspace/written.txt and reports written_bytes plus a content sha256",
+      "harness_read_file performs simplifile.read and reports content_sha256",
+      "harness_build and harness_test read the real gleam.toml, digest it, and require simplifile.is_file on the real compiled cepaf_gleam@mcp@server.beam, erroring beam_artifact_missing otherwise",
+      "harness_client_mcp_config runs the real client_config.inspect_json",
+      "verification_runner digests the real gleam.toml, returning gleam_toml_missing on failure"
+    ],
+    "real_backend_effects_boundary": "Honest scope limit, not a defect for development acceptance: the public-route cells run against in-memory fixture stores (sample_canonical_store, PlanningWriteStore, ObservedSnapshot, ControlBackend, knowledge corpus, SupervisedVault, MaxDaemonReady), and the private-route tools outside the five listed above return canned JSON gated only on simplifile.is_directory of the temp workspace. The matrix proves transport, admission, fencing, receipt and candidate-binding behaviour end to end; it does not exercise production Sa-plan, vault or MAX backends."
+  },
+  "gates_executed": {
+    "declared_gate_modules": {
+      "command": "erl +S 4:4 -noshell -pa .../ebin -eval eunit:test([mcp_route_parity_test, mcp_client_matrix_test, mcp_worker_recovery_test, mcp_final_acceptance_test, mcp_assurance_test, mcp_transport_test, mcp_docs_truth_test], [verbose])",
+      "result": "All 40 tests passed",
+      "modules": 7
+    },
+    "independent_regression_sweep": {
+      "scope": "20 further MCP modules not in the declared gate set",
+      "result": "123/123 passed",
+      "note": "First run reported 120 passed / 1 failed. The single failure, mcp_workspace_disposition_test:actual_t21_disposition_artifact_validates_through_typed_gate_test, was diagnosed as an artifact of my invocation cwd, not a code defect: the test reads the relative path ../../governance/planning/20261030-1052-t21-workspace-and-head-disposition.json, which resolves only from apps/cepaf_gleam. The artifact exists (124005 bytes). Re-running the module with file:set_cwd to apps/cepaf_gleam gave All 3 tests passed. Reported rather than suppressed."
+    },
+    "lean_traceability": "PASS (clean, no sorry/axiom output)",
+    "lean_twolattice_stm": "PASS (clean, no sorry/axiom output)",
+    "quint_parity_frontier": "PASS \u2014 no violation found, reqClosed invariant, 12 steps / 50 samples, seed 0x99381f85c1139c8e",
+    "hermes_rete": "PASS \u2014 1/1",
+    "hermes_parity_algebra": "PASS \u2014 146/146 across unit, property, bdd, feature, fuzz, chaos, structure",
+    "compile_freshness": "VERIFIED \u2014 all 8 core MCP beams and all 7 gate-module test beams timestamped 12:17, at or after the newest source (mcp_client_matrix_test.gleam 12:16, candidate_id/registry/admission/route_convergence/server/supervisor 12:14). No stale-artifact masking."
+  },
+  "minor_observations": [
+    {
+      "id": "T23-R3-M01",
+      "title": "Client schema pin is opt-in, so omitting the key bypasses it",
+      "detail": "verify_client_schema_pin returns Ok(Nil) when _client_schema_digest is absent (route_convergence.gleam:340-341). A client that simply omits the field is never pinned. This is a defensible compatibility choice for mixed protocol versions, but it means the pin constrains only honest clients and cannot be cited as a migration guarantee."
+    },
+    {
+      "id": "T23-R3-M02",
+      "title": "Prompt attributes the CANDIDATE_EVIDENCE_MISMATCH refusal to server.gleam, where neither the literal nor candidate_id appears",
+      "detail": "grep for CANDIDATE_EVIDENCE_MISMATCH and candidate_id in server.gleam returns nothing. The behaviour is nonetheless correct: the public branch reaches the refusal indirectly through route_convergence.verify_outcome_candidate (server.gleam:136-142). Attribution imprecision in the remediation narrative, not a code defect; recorded because a future reader grepping server.gleam would wrongly conclude the guard is absent."
+    },
+    {
+      "id": "T23-R3-M03",
+      "title": "Inconsistent path robustness between candidate_id and the disposition test",
+      "detail": "candidate_id carries a three-level fallback ending in an absolute path, while mcp_workspace_disposition_test hardcodes a bare relative ../../ path and crashes with a let_assert on enoent. Neither strategy is wrong in isolation, but the suite's results depend on cwd in ways no gate records, which is the INV-WS-09 hazard applied to invocation state rather than provisioning state."
+    },
+    {
+      "id": "T23-R3-M04",
+      "title": "dispatch.execute_on_pool is production-exported but only ever called from tests",
+      "detail": "The only callers are mcp_worker_recovery_test.gleam:252 and mcp_verification_execution_test.gleam:62. It accepts a SimulatedExecution variant, so it is a simulation harness living in a production module. Pre-existing, not introduced this round; worth relocating or marking so simulated outcomes cannot be reached from a real dispatch path."
+    },
+    {
+      "id": "T23-R3-M05",
+      "title": "Public-route ValidatedCall is computed then discarded",
+      "detail": "server.gleam:132 matches Ok(_) and re-derives everything from raw args inside execute_authenticated. Beyond the attempt-binding consequence in T23-R3-C01, this means admission work is performed twice and the authoritative validated arguments are not the ones executed, which is a standing source of drift between what was admitted and what runs."
+    }
+  ],
+  "seventeen_aspects": {
+    "01_source_candidate_identity": "PARTIAL \u2014 real sha256 over 6 length-prefixed core sources, live value reproduced from the compiled beam across four cwds; silent cross-tree fallback found (T23-R3-C02)",
+    "02_admission_and_authority_fencing": "PASS \u2014 workspace, mode, task state, worker match, lease expiry, grant revocation/expiry/workspace and scope all enforced; AuditOnly cannot admit mutations",
+    "03_route_isolation_and_grant_scoping": "PASS \u2014 cross-route grants refused, tool-not-in-grant refused, 5-field ticket equality against the fence enforced on both public and private branches",
+    "04_effect_class_classification": "PASS \u2014 unclassified catch-all is ControlActuation/unclassified_fail_closed, so misses fail closed",
+    "05_schema_digest_integrity": "PARTIAL \u2014 server-side digest verified unconditionally; client-side pin is opt-in (T23-R3-M01)",
+    "06_replay_and_idempotency": "FAIL \u2014 private and public routes disagree on whether attempt is part of replay identity (T23-R3-C01)",
+    "07_uncertain_effect_reconciliation": "PASS \u2014 EffectUncertain refuses with ReconcileFirst until explicit reconcile; reconcile_uncertain rejects non-uncertain targets",
+    "08_completion_evidence_binding": "PASS \u2014 harness_finish requires a candidate-bound passing receipt whose feature_or_task_id matches both the arg and the fence task; legacy finish bypass refused",
+    "09_candidate_evidence_non_relabeling": "PASS \u2014 triple is_valid plus triple equality; success path rewrites only route and tool",
+    "10_transport_integrity": "PASS \u2014 stdio split/slow frames bounded, stdout JSON-RPC only, Zenoh empty secret and malformed topic refused with no unknown fallback, foreign reply destination refused, HTTP Origin/Bearer/session fenced",
+    "11_worker_isolation_and_recovery": "PASS \u2014 poisoned worker replaced with generation bump, killed worker leaves no unowned descendants, crash-after-effect classified Uncertain, delimiter-bearing args do not collide receipt hashes",
+    "12_overload_and_budget": "PASS \u2014 overload refuses within budget (observed 1.516 s)",
+    "13_client_config_safety": "PASS \u2014 rollback preserves unrelated private entries and the planted FAKE_PRIVATE_CREDENTIAL marker never escapes; cross-client handoff retains authority",
+    "14_matrix_denominator_honesty": "PASS \u2014 535 asserted both as a computed length and as a structural product identity; refusal cells provably excluded from positives",
+    "15_formal_evidence": "PASS \u2014 Lean Traceability and TwoLattice_STM clean, Quint reqClosed no violation, Hermes rete 1/1 and parity algebra 146/146, all re-executed in this round",
+    "16_docs_and_epistemic_truth": "PASS \u2014 refusal is not operational, a completed task alone cannot turn a dashboard green, raw review cannot be overridden; this review itself applies that third rule to its own HOLD",
+    "17_provenance_and_admission_vocabulary": "PASS \u2014 EV ceiling remains 93, EV-94..109 remain NOT_ADMITTED, no new EV number minted; FeatureEvidenceStore carries admitted_ev_ceiling 93 and development readiness is kept strictly separate from system admission"
+  },
+  "scope_and_limits": [
+    "This is development-acceptance evidence at one observed candidate. It is not system admission, not a release, and not production readiness.",
+    "An independent byte-level reproduction of the candidate digest outside the implementation was attempted and not completed: writing the OCaml reproducer was denied by permissions, and the shell equivalent was blocked by a safety check. The digest is therefore corroborated by source reading, by the algorithm being real crypto.hash(Sha256), and by the live 71-byte value being stable across three cwds and correctly distinct in a sibling workspace, but it is not confirmed by a second independent implementation.",
+    "No public-route attempt-bump reproducer was executed; T23-R3-C01 is CONFIRMED on source evidence and on the asymmetry of the test coverage, not on an observed failing run.",
+    "The matrix exercises fixture backends for the public route and for most private tools; production Sa-plan, vault and MAX backends were not driven.",
+    "I ran the declared gate plus a 20-module regression sweep. I did not run the full repository suite, uos-cli gates, km-gate, journal-check or diagram-check, so no claim is made about those.",
+    "No source, test, Sa-plan record, journal or review artifact was modified by this review. Read-only verification only."
+  ],
+  "required_before_a_pass_verdict": [
+    "Resolve the replay-identity inconsistency in T23-R3-C01 by deciding which route's semantics are canonical, then make both routes agree and add the public-route attempt-bump falsifier.",
+    "Make candidate_id fail closed on an unresolvable workspace root instead of silently returning the hardcoded canonical tree's digest, with the /tmp invocation as the regression falsifier.",
+    "Either enforce the client schema pin or document it explicitly as advisory so it is never cited as a migration guarantee.",
+    "Re-run the 7 declared gate modules, the regression sweep and all five formal/Hermes gates at the post-fix candidate, and obtain a fresh independent cross-family review of that candidate."
+  ]
+}

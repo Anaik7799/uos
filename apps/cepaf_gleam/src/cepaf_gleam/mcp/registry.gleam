@@ -271,6 +271,13 @@ fn classify_public(
       "system_feature_store",
       3000,
     )
-    _ -> #("unclassified", "T01", 3, ReadOnly, "unknown", 3000)
+    _ -> #(
+      "unclassified",
+      "T01",
+      0,
+      ControlActuation,
+      "unclassified_fail_closed",
+      3000,
+    )
   }
 }

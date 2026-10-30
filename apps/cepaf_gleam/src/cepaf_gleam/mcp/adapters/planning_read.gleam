@@ -5,6 +5,7 @@
 //// feature_tracker_status into the 5 distinct epistemic totals.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/evidence
 import cepaf_gleam/mcp/types.{
   type Outcome, NonRetryable, Refused, Retryable, ToolError,
@@ -85,21 +86,27 @@ fn render_tool(
   case tool_name {
     "plan_list" | "sa_plan_list" -> {
       let payload = encode_rows(plan_id, rows)
-      evidence.classify_backend_payload("public", tool_name, payload, "uos-mcp")
+      evidence.classify_backend_payload(
+        "public",
+        tool_name,
+        payload,
+        candidate_id.current(),
+      )
     }
     "plan_list_pending" -> {
-      let pending =
-        list.filter(rows, fn(r) { r.state != "completed" })
+      let pending = list.filter(rows, fn(r) { r.state != "completed" })
       let payload = encode_rows(plan_id, pending)
-      evidence.classify_backend_payload("public", tool_name, payload, "uos-mcp")
+      evidence.classify_backend_payload(
+        "public",
+        tool_name,
+        payload,
+        candidate_id.current(),
+      )
     }
     "plan_status" | "sa_plan_status" | "sa_plan_status_for" -> {
-      let completed =
-        list.count(rows, fn(r) { r.state == "completed" })
-      let executing =
-        list.count(rows, fn(r) { r.state == "executing" })
-      let available =
-        list.count(rows, fn(r) { r.state == "available" })
+      let completed = list.count(rows, fn(r) { r.state == "completed" })
+      let executing = list.count(rows, fn(r) { r.state == "executing" })
+      let available = list.count(rows, fn(r) { r.state == "available" })
       let payload =
         json.object([
           #("plan_id", json.string(plan_id)),
@@ -110,7 +117,12 @@ fn render_tool(
           #("canonical_authority", json.string("sa_plan")),
         ])
         |> json.to_string
-      evidence.classify_backend_payload("public", tool_name, payload, "uos-mcp")
+      evidence.classify_backend_payload(
+        "public",
+        tool_name,
+        payload,
+        candidate_id.current(),
+      )
     }
     "plan_get" -> {
       let target_id = case dict.get(args, "task_id") {
@@ -124,7 +136,7 @@ fn render_tool(
             "public",
             tool_name,
             payload,
-            "uos-mcp",
+            candidate_id.current(),
           )
         }
         Error(_) ->
@@ -146,20 +158,42 @@ fn render_tool(
           || string.contains(string.lowercase(r.task_id), query)
         })
       let payload = encode_rows(plan_id, matched)
-      evidence.classify_backend_payload("public", tool_name, payload, "uos-mcp")
+      evidence.classify_backend_payload(
+        "public",
+        tool_name,
+        payload,
+        candidate_id.current(),
+      )
     }
     "feature_tracker_status" -> {
+      let declared_total = list.length(rows)
+      let implemented_total =
+        list.count(rows, fn(r) {
+          r.state == "executing" || r.state == "completed"
+        })
+      let observed_executed_total =
+        list.count(rows, fn(r) { r.state == "completed" })
+      let formally_verified_total = 0
+      let admitted_total = 0
+      let admitted_ev_ceiling = 93
+      let basis = "canonical_plan_rows_only"
       let payload =
         json.object([
-          #("declared_total", json.int(777)),
-          #("implemented_total", json.int(101)),
-          #("observed_executed_total", json.int(101)),
-          #("formally_verified_total", json.int(93)),
-          #("admitted_total", json.int(93)),
-          #("admitted_ev_ceiling", json.int(93)),
+          #("declared_total", json.int(declared_total)),
+          #("implemented_total", json.int(implemented_total)),
+          #("observed_executed_total", json.int(observed_executed_total)),
+          #("formally_verified_total", json.int(formally_verified_total)),
+          #("admitted_total", json.int(admitted_total)),
+          #("admitted_ev_ceiling", json.int(admitted_ev_ceiling)),
+          #("basis", json.string(basis)),
         ])
         |> json.to_string
-      evidence.classify_backend_payload("public", tool_name, payload, "uos-mcp")
+      evidence.classify_backend_payload(
+        "public",
+        tool_name,
+        payload,
+        candidate_id.current(),
+      )
     }
     _ ->
       Refused(ToolError(
