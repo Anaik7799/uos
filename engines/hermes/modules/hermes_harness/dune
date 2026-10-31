@@ -4,6 +4,36 @@
  (modules core))
 
 (library
+ (name hermes_ecology_release_grants)
+ (wrapped false)
+ (modules ecology_release_grants)
+ (libraries hermes_harness_evidence hermes_symbiosis_check_receipts sqlite3 digestif yojson unix))
+
+(executable
+ (name ecology_release_grants_port)
+ (modules ecology_release_grants_port)
+ (libraries hermes_ecology_release_grants yojson sqlite3 unix))
+
+(rule
+ (target ecology_release_guardian.ml)
+ (deps %{workspace_root}/../../tools/telegram_store_transport_guardian.ml)
+ (action (copy %{deps} %{target})))
+
+(executable
+ (name ecology_release_guardian)
+ (modules ecology_release_guardian)
+ (libraries unix mtime.clock.os))
+
+(test
+ (name test_ecology_release_grants)
+ (modules test_ecology_release_grants)
+ (deps ecology_release_grants_port.exe ecology_release_guardian.exe)
+ (libraries hermes_ecology_release_grants sqlite3 yojson unix)
+ (action (run %{exe:test_ecology_release_grants.exe}
+   --worker %{exe:ecology_release_grants_port.exe}
+   --guardian %{exe:ecology_release_guardian.exe})))
+
+(library
  (name hermes_symbiosis_check_receipts)
  (wrapped false)
  (modules symbiosis_check_receipts)
