@@ -9,8 +9,8 @@
     "UOS_MCP_WORKSPACE_ROOT": "/home/an/NAS-setup/uos",
     "UOS_MCP_ROUTE": "public",
     "UOS_MCP_CLIENT_NAME": "claude-code",
-    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261031-1214-e2558c24d0f9bd182399deb7ba5d3fec097b898a300f35996e96413abcae3764",
-    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "2234f05b842c8322748d458a58b2393d19e81c3d0cb061111989c7c64d3dfe64"
+    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261031-1214-83a69c7f642f743f8547bea1ba79f951f8353bf593b7af22ccf8e59aabef0fe3",
+    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "eea72d3f5e34d6fa5ad66a8ca1d80758965edd2af525299ffd7539213e4d04bc"
   }
 }
   }
