@@ -5,6 +5,8 @@
 
 import cepaf_gleam/harness/files
 import cepaf_gleam/mcp/adapters/knowledge
+import cepaf_gleam/ui/lustre/live_corpus
+import gleam/int
 import gleam/bit_array
 import gleam/dynamic
 import gleam/dynamic/decode
@@ -417,4 +419,82 @@ fn read_descriptor(
     True -> Error(Nil)
     False -> Ok(content)
   }
+}
+
+/// Expanded transient Brain Memory. Legacy prefetch above remains byte-for-byte.
+/// Retains descriptor identity/size/link checks and byte budget; the expanded
+/// path also anchors open directories to prevent ancestor substitution.
+pub fn prefetch_brain_memory(root: String, query: String) -> List(knowledge.CorpusEntry) {
+  case valid_root(root) && valid_query(root, query) {
+    False -> []
+    True -> {
+      let initial = list.fold(seed_paths, Budget([], 0, 0, 0), fn(b, p) { add(b, brain_document(root, p)) })
+      let available = brain_disk_catalog(root)
+      let q = query |> string.split("|") |> list.first |> result.unwrap(query) |> string.replace("[[wiki:", "") |> string.replace("[[zk:", "") |> string.replace("]]", "")
+      let q = case string.starts_with(q, root <> "/") { True -> string.drop_start(q, string.length(root) + 1) False -> q }
+      let words = query |> string.lowercase |> string.replace("\t", " ") |> string.replace("\n", " ") |> string.split(" ") |> list.filter(fn(w) { w != "" })
+      let direct = live_corpus.resolve(available, q)
+      let ranked = available
+        |> list.filter(fn(e) { !list.contains(direct, e) })
+        |> list.map(fn(e) {
+          let path = string.lowercase(e.path)
+          #(e, list.count(words, fn(w) { string.contains(path, w) }))
+        })
+        // Stable sorting retains the catalog's newest-first order on ties.
+        |> list.sort(fn(a, b) { int.compare(b.1, a.1) })
+        |> list.map(fn(scored) { scored.0 })
+      let selected = list.append(direct, ranked |> list.take(64 - int.min(64, list.length(direct)))) |> list.take(64)
+      let loaded = list.fold(selected, initial, fn(b, e) {
+        case brain_document(root, e.path) {
+          Some(entry) -> case list.contains(direct, e) || matches(entry, q) { True -> add(b, Some(entry)) False -> b }
+          None -> b
+        }
+      })
+      let completed = case q {
+        "" -> loaded
+        _ -> brain_references(root, available, loaded, 0)
+      }
+      list.reverse(completed.entries)
+    }
+  }
+}
+
+fn brain_disk_catalog(root: String) -> List(live_corpus.Entry) {
+  live_corpus.brain_catalog(root)
+}
+
+fn brain_document(root: String, path: String) -> Option(knowledge.CorpusEntry) {
+  case live_corpus.brain_file(path) {
+    False -> None
+    True -> case live_corpus.read(root, path, max_file_bytes) {
+      Ok(content) -> case string.contains(content, "\u{0000}") { True -> None False -> Some(knowledge.CorpusEntry(path, knowledge.RegularFile, "public", content)) }
+      Error(_) -> None
+    }
+  }
+}
+
+fn brain_references(root: String, available: List(live_corpus.Entry), state: Budget, depth: Int) -> Budget {
+  case depth >= 3 || !room(state) { True -> state False -> {
+    let targets = list.flat_map(state.entries, fn(e) { string.split(e.content, "[[") |> list.drop(1) |> list.filter_map(fn(part) {
+      case string.split_once(part, "]]") { Ok(#(tag, _)) -> case string.split_once(tag, ":") { Ok(#("wiki", t)) | Ok(#("zk", t)) -> Ok(t |> string.split("|") |> list.first |> result.unwrap(t)) _ -> Error(Nil) } _ -> Error(Nil) }
+    }) }) |> list.unique |> list.take(24)
+    let next = list.fold(targets, state, fn(b, target) {
+      case room(b) {
+        False -> b
+        True -> case live_corpus.resolve(available, target) { [e] -> add(b, brain_document(root, e.path)) _ -> b }
+      }
+    })
+    case next.count == state.count { True -> next False -> brain_references(root, available, next, depth + 1) }
+  } }
+}
+
+pub fn brain_memory_health_metrics(root: String) -> List(#(String, String)) {
+  let intact = live_corpus.canonical_intact(root)
+  [#("km_brain_memory_status", case intact { True -> "healthy" False -> "degraded" }),
+   #("km_canonical_triad_intact", case intact { True -> "true" False -> "false" }),
+   #("km_wiki_docs", int.to_string(live_corpus.count(root, "docs/wiki"))),
+   #("km_zk_docs", int.to_string(live_corpus.count(root, "docs/zk"))),
+   #("km_sop_docs", int.to_string(live_corpus.count(root, "docs/sop"))),
+   #("km_contracts_docs", int.to_string(live_corpus.count(root, "contracts/rules"))),
+   #("km_tailscale_cockpit_url", live_corpus.base_url <> "/km")]
 }

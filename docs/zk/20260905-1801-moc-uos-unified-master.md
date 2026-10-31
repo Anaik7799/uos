@@ -5,6 +5,10 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 
 ## §1.0 Executive Architecture & Corpus Triad
 
+### 20261031-1127 — Mandatory MCP brain-memory binding
+
+[UOS-local skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md), `.agents/skills/uos-km-triad-brain-memory/SKILL.md`, defines SC-MCP-KM-BRAIN-001 / GR-070 and supersedes stale external recall/writeback recipes without changing imported originals. Relevance-ranked search returns at most 2400 graphemes per hit; read only the top 1–2 needed documents. Reciprocal `[[wiki:20260905-1801-uos-zk-km-corpus-index]]` [corpus index](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md) and `[[wiki:20261031-1151-t01-always-fresh-km-and-verifiers-journal]]` [T01 journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1151-t01-always-fresh-km-and-verifiers-journal.md) record this development slice. No new EV/ADR number or runtime admission is asserted.
+
 ### Capability symmetry and selective activation — 20260909-0249
 
 [Permanent decision](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0249-ecology-capability-activation-decision.md) ·
@@ -365,6 +369,12 @@ This append-only hub registers the October `2026-10` unnumbered permanent decisi
 
 - [`20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md) · [`20261030-2215-formal-math-verification-and-github-checkpoint-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md) · [`20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md) · [`20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md).
 - [`20261031-1012-mcp-anti-brittle-fractal-km-index.json`](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json) · `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`.
+
+### §5.4.1 Always-fresh KM handover and T01 evidence
+
+- [[zk:20261031-1240-uos-open-items-fractal-design-implement-test-plan]] ([OI-01..OI-08 fractal plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md)); reciprocal [[wiki:20260905-1801-uos-zk-km-corpus-index]]. Design record only; EV-93 ceiling retained.
+- `[[wiki:20261031-1100-agy-to-codex-always-fresh-km-mcp-brain-and-fractal-plan-handover]]` ([AGY to Codex session handover](http://nas-1.tail55d152.ts.net:4100/files/docs/handover/20261031-1100-agy-to-codex-always-fresh-km-mcp-brain-and-fractal-plan-handover.md)).
+- `[[wiki:20261031-1151-t01-always-fresh-km-and-verifiers-journal]]` ([T01 always-fresh KM and verifiers journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1151-t01-always-fresh-km-and-verifiers-journal.md)).
 
 ### §5.5 Provenance caveat
 

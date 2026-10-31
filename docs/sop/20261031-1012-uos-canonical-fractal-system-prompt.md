@@ -28,6 +28,12 @@
 
 ---
 
+## Required `#km-triad` MCP Brain-Memory Binding (`SC-MCP-KM-BRAIN-001`)
+
+20261031-1127 update — AGY, Codex, Claude and Pi must follow the [UOS-local `uos-km-triad-brain-memory` skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md). Before planning, claiming, editing or reviewing, verify `uos://km/triad` health, recall relevant precedents with `knowledge_search` at `limit: 5` and bounded `zk_transclude`, then read only the top 1–2 needed documents. Bind recalled paths and counterevidence to Sa-plan/risk scope; retain the EV-93 ceiling and reject EV-94..109 / ADR-071..086 as admission evidence.
+
+Complete PREDICT → OBSERVE → ORIENT → DECIDE → ACT → VERIFY → REFLECT with timestamped, tagged, linked documentation, reciprocal wiki/ZK writeback, the 13-section journal, verified ASCII/Mermaid diagrams, six-domain checklist alignment and live Tailnet proof after authorized cutover. The skill supersedes stale external command recipes in imported `zk-recall`, `zk-learn` and `living-ontology`; preserve those originals read-only. `kms_catalog` manages cryptographic keys; use `uos://km/triad` or [the KM catalog](http://nas-1.tail55d152.ts.net:4100/api/v1/km/catalog) for knowledge. Process bindings do not grant runtime enforcement or deployment authority.
+
 ## 1. Fractal Tensor & KM Triad Topology (`SC-DIAGRAM-001`)
 
 $$\mathbf{UOS}_{\text{Fractal}} = \vec{\mathcal{V}}_{13} \times \mathcal{S}_{6} \times (L_0 \dots L_9) \times \text{POODAVR}_{7} \times \text{AK47}_{4} \times \text{TPS}_{4} \times \text{Math}_{6} \times \text{Test}_{9} \times \text{Gov}_{11} \times \text{KMTriad}_{4}$$
@@ -325,6 +331,15 @@ Checks below record candidate-scoped verification status and do not grant system
 
 **UOS footer:** Document, formal, and component evidence do not independently grant deployment authority or system admission.
 ````
+
+---
+
+## 5.1 Step-0 Epistemic Gate (`INV-RIGHT-PROBLEM-01`) & 4-Plane 4-Agent `#km-triad` Symbiosis Mandate
+
+1. **Always Ask First — *"Are We Working on the Right Problem?"* (`INV-RIGHT-PROBLEM-01`)**:
+   - At the start of every prompt, wave, and POODAVR cycle (`PREDICT -> OBSERVE -> ORIENT`), every agent (`Codex`, `Claude`, `AGY`, `Pi`) MUST verify: (a) alignment with the operator's primary outcome vs local over-processing (`Muda`), (b) live `#km-triad` recall via `uos://km/triad`, `knowledge_search`, and `zk_transclude` ([`.agents/skills/uos-km-triad-brain-memory/SKILL.md`](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md)), and (c) canonical `Sa-plan` + `SC-RISK-PRIORITY-001` readiness.
+2. **Full 4-Plane (`Operational × Control × Data × Evolutionary`) Symbiosis**:
+   - All four agents operate in lockstep across the **Operational** (`stdio`/`HTTP :4100/mcp`/`Zenoh` POODAVR harness), **Control** (`SC-HARNESS-MCP-001`, `SC-MCP-KM-BRAIN-001`, `SC-SA-PLAN-001`, `SC-RISK-CHECK-001`, `SC-PROVENANCE-001` `EV-93` ceiling), **Data** (zero-staleness descriptor-anchored `:4100` & MCP `#km-triad` VFS with `X-UOS-Content-SHA256`), and **Evolutionary** (`SC-JOURNAL-v3` + reciprocal `[[wiki:...]]`/`[[zk:...]]` + post-handover [Open-Items Fractal Plan `OI-01..OI-09`](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md)) planes.
 
 ---
 

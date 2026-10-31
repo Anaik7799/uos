@@ -289,3 +289,10 @@ TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED
 IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR
 ```
+
+## Required `#km-triad` MCP Brain-Memory Binding (`SC-MCP-KM-BRAIN-001`)
+
+20261031-1127 update — AGY, Codex, Claude and Pi must follow the [UOS-local `uos-km-triad-brain-memory` skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md). Before planning, claiming, editing or reviewing, verify `uos://km/triad` health, recall relevant precedents with `knowledge_search` at `limit: 5` and bounded `zk_transclude`, then read only the top 1–2 needed documents. Bind recalled paths and counterevidence to Sa-plan/risk scope; retain the EV-93 ceiling and reject EV-94..109 / ADR-071..086 as admission evidence.
+
+Complete PREDICT → OBSERVE → ORIENT → DECIDE → ACT → VERIFY → REFLECT with timestamped, tagged, linked documentation, reciprocal wiki/ZK writeback, the 13-section journal, verified ASCII/Mermaid diagrams, six-domain checklist alignment and live Tailnet proof after authorized cutover. The skill supersedes stale external command recipes in imported `zk-recall`, `zk-learn` and `living-ontology`; preserve those originals read-only. `kms_catalog` manages cryptographic keys; use `uos://km/triad` or [the KM catalog](http://nas-1.tail55d152.ts.net:4100/api/v1/km/catalog) for knowledge. Process bindings do not grant runtime enforcement or deployment authority.
+

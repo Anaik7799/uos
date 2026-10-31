@@ -112,6 +112,11 @@ let api_endpoints = [
 
 (* Documentation & Directory Planes *)
 let doc_endpoints = [
+  "/wiki"; "/zk"; "/km"; "/adrs"; "/docs"; "/docs/wiki"; "/docs/zk"; "/docs/sop"; "/files";
+  "/files/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md";
+  "/files/docs/zk/20260905-1801-moc-uos-unified-master.md";
+  "/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md";
+  "/api/v1/km/catalog"; "/api/v1/km/verify";
   "/files/AGENTS.md";
   "/docs/architecture/";
 ]
@@ -163,16 +168,89 @@ let normalize_url_to_path url =
   | Some idx -> String.sub path_only 0 idx
   | None -> path_only
 
+(* Inspect decoded entity bytes and real header fields, never body-spoofed headers. *)
+let contains_text text needle =
+  try ignore (Str.search_forward (Str.regexp_string needle) text 0); true with Not_found -> false
+
+let parse_http_entity raw =
+  let separator = Str.search_forward (Str.regexp_string "\r\n\r\n") raw 0 in
+  let header_block = String.sub raw 0 separator in
+  let body = String.sub raw (separator + 4) (String.length raw - separator - 4) in
+  let lines = String.split_on_char '\n' header_block in
+  let fields = List.filter_map (fun line -> match String.index_opt line ':' with
+    | None -> None
+    | Some i -> Some (String.lowercase_ascii (String.trim (String.sub line 0 i)),
+                     String.trim (String.sub line (i+1) (String.length line-i-1)))) (List.tl lines) in
+  let header name = List.filter_map (fun (k,v) -> if k=name then Some v else None) fields |> String.concat "," in
+  let stream = contains_text (String.lowercase_ascii (header "content-type")) "text/event-stream" in
+  let decoded, complete =
+    if contains_text (String.lowercase_ascii (header "transfer-encoding")) "chunked" then (
+      let output = Buffer.create (String.length body) in
+      let rec chunk at =
+        try
+          let eol = Str.search_forward (Str.regexp_string "\r\n") body at in
+          let size_text = String.sub body at (eol-at) |> String.split_on_char ';' |> List.hd |> String.trim in
+          let size = int_of_string ("0x" ^ size_text) in
+          if size < 0 then false else
+          let start = eol + 2 in
+          if size = 0 then
+            (start + 2 <= String.length body &&
+             (String.sub body start 2 = "\r\n" || contains_text (String.sub body start (String.length body-start)) "\r\n\r\n"))
+          else if size > String.length body - start - 2 then false
+          else if String.sub body (start+size) 2 <> "\r\n" then false
+          else (Buffer.add_substring output body start size; chunk (start+size+2))
+        with _ -> false
+      in
+      let complete = chunk 0 in Buffer.contents output, complete
+    ) else match header "content-length" with
+      | "" -> body, true
+      | len -> (match int_of_string_opt len with Some n when n >= 0 && n = String.length body -> body, true | _ -> body, false)
+  in
+  header, decoded, (complete || stream)
+
+let probe_error path status header entity complete timed_out =
+  let stream = contains_text (String.lowercase_ascii (header "content-type")) "text/event-stream" in
+  if status <> 200 || contains_text entity "C3I — Not Found" || contains_text entity "Document Not Found on Host VFS" then Some "Soft-404 or non-200"
+  else if not (List.mem (String.lowercase_ascii (header "content-encoding")) [""; "identity"]) then Some "Unsupported HTTP content encoding"
+  else if not complete || (timed_out && not stream && header "content-length" = "") then Some "Incomplete HTTP entity"
+  else if List.mem path doc_endpoints && not (List.mem "no-store" (String.split_on_char ',' (String.lowercase_ascii (header "cache-control")) |> List.map String.trim)) then Some "Missing no-store on DocPlane"
+  else None
+
+let verifier_selftest () =
+  let failures = ref 0 in
+  let check label raw expected =
+    let header, body, complete = parse_http_entity raw in
+    let passed = probe_error "/wiki" 200 header body complete false = None in
+    if passed <> expected then (incr failures; eprintf "FAIL %s\n" label)
+  in
+  check "real-no-store" "HTTP/1.1 200 OK\r\nCache-Control: no-store\r\nContent-Length: 2\r\n\r\nOK" true;
+  check "body-spoofed-header" "HTTP/1.1 200 OK\r\nContent-Length: 23\r\n\r\ncache-control: no-store" false;
+  check "truncated-length" "HTTP/1.1 200 OK\r\nCache-Control: no-store\r\nContent-Length: 999\r\n\r\nOK" false;
+  check "chunked-soft404" "HTTP/1.1 200 OK\r\nCache-Control: no-store\r\nTransfer-Encoding: chunked\r\n\r\n9\r\nDocument \r\n19\r\nNot Found on Host VFS\r\n0\r\n\r\n" false;
+  let a = "Document " and b = "Not Found on Host VFS" in
+  let raw = sprintf "HTTP/1.1 200 OK\r\nCache-Control: no-store\r\nTransfer-Encoding: chunked\r\n\r\n%x\r\n%s\r\n%x\r\n%s\r\n0\r\n\r\n" (String.length a) a (String.length b) b in
+  let _, decoded, complete = parse_http_entity raw in
+  if not complete || decoded <> a ^ b then incr failures;
+  check "split-soft404-entity" raw false;
+  check "complete-chunked" "HTTP/1.1 200 OK\r\nCache-Control: no-store\r\nTransfer-Encoding: chunked\r\n\r\n2\r\nOK\r\n0\r\n\r\n" true;
+  if !failures <> 0 then exit 1;
+  printf "6/6 verifier framing/header falsifiers passed\n";
+  exit 0
+
 (* Non-blocking POSIX socket prober with early Content-Length exit *)
 let http_get ?(host="127.0.0.1") ?(port=4100) ?(path="/") ?(timeout_sec=3.0) () =
   let t0 = Unix.gettimeofday () in
-  let inet_addr = Unix.inet_addr_of_string host in
-  let sock = Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in
+  let timed_out = ref false in
+  let sock_ref = ref None in
+  try
+  let addresses = Unix.getaddrinfo host (string_of_int port) [Unix.AI_SOCKTYPE Unix.SOCK_STREAM] in
+  let addr = match addresses with a :: _ -> a | [] -> failwith "DNS returned no addresses" in
+  let sock = Unix.socket addr.Unix.ai_family Unix.SOCK_STREAM 0 in
+  sock_ref := Some sock;
   Unix.setsockopt_float sock Unix.SO_RCVTIMEO timeout_sec;
   Unix.setsockopt_float sock Unix.SO_SNDTIMEO timeout_sec;
 
-  let sockaddr = Unix.ADDR_INET (inet_addr, port) in
-  try
+  let sockaddr = addr.Unix.ai_addr in
     Unix.connect sock sockaddr;
     let req = sprintf "GET %s HTTP/1.1\r\nHost: %s:%d\r\nUser-Agent: UOS-LinkTracker/20260912\r\nConnection: close\r\nAccept: text/html,application/json,*/*\r\n\r\n" path host port in
     let _ = Unix.send sock (Bytes.of_string req) 0 (String.length req) [] in
@@ -183,6 +261,7 @@ let http_get ?(host="127.0.0.1") ?(port=4100) ?(path="/") ?(timeout_sec=3.0) () 
     let rec read_loop () =
       let n = Unix.recv sock tmp_buf 0 buf_size [] in
       if n > 0 then (
+        if Buffer.length resp_buffer + n > 8_388_608 then failwith "HTTP entity exceeds probe budget";
         Buffer.add_subbytes resp_buffer tmp_buf 0 n;
         let cur_str = Buffer.contents resp_buffer in
         match String.index_opt cur_str '\r' with
@@ -220,11 +299,13 @@ let http_get ?(host="127.0.0.1") ?(port=4100) ?(path="/") ?(timeout_sec=3.0) () 
         | None -> read_loop ()
       )
     in
-    (try read_loop () with Unix.Unix_error (Unix.EAGAIN, _, _) | Unix.Unix_error (Unix.EWOULDBLOCK, _, _) -> ());
+    (try read_loop () with Unix.Unix_error (Unix.EAGAIN, _, _) | Unix.Unix_error (Unix.EWOULDBLOCK, _, _) -> timed_out := true);
     Unix.close sock;
+    sock_ref := None;
     let t1 = Unix.gettimeofday () in
     let latency_ms = (t1 -. t0) *. 1000.0 in
     let full_str = Buffer.contents resp_buffer in
+    let header, entity, complete = parse_http_entity full_str in
 
     let status_code =
       if String.length full_str >= 12 && String.sub full_str 0 5 = "HTTP/" then
@@ -295,7 +376,7 @@ let http_get ?(host="127.0.0.1") ?(port=4100) ?(path="/") ?(timeout_sec=3.0) () 
         if status_code = 200 then "OK" else "NONE"
     in
 
-    let extracted_links = extract_hrefs full_str in
+    let extracted_links = extract_hrefs entity in
 
     {
       path;
@@ -308,9 +389,10 @@ let http_get ?(host="127.0.0.1") ?(port=4100) ?(path="/") ?(timeout_sec=3.0) () 
       has_nav;
       has_checklist;
       extracted_links;
-      error_msg = None;
+      error_msg = probe_error path status_code header entity complete !timed_out;
     }
   with e ->
+    (match !sock_ref with Some sock -> (try Unix.close sock with _ -> ()) | None -> ());
     let t1 = Unix.gettimeofday () in
     {
       path;
@@ -493,28 +575,50 @@ let scan_knowledge_transclusions root_dir =
   let wiki_dir = Filename.concat root_dir "docs/wiki" in
   let zk_dir = Filename.concat root_dir "docs/zk" in
 
-  let wiki_exists id =
-    let f1 = Filename.concat wiki_dir (id ^ ".md") in
-    let f2 = Filename.concat root_dir id in
-    Sys.file_exists f1 || Sys.file_exists f2
+  let canonical_paths = ["docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"; "docs/zk/20260905-1801-moc-uos-unified-master.md";
+    "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md";
+    "docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md";
+    "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md"] in
+  let canonical_source full = List.mem full (List.map (Filename.concat root_dir) canonical_paths) in
+  let broken_at full message = (if canonical_source full then "canonical-triad:" else "") ^ message in
+  let regular path =
+    let prefix = root_dir ^ "/" in
+    if not (String.starts_with ~prefix path) then false else
+    let rel = String.sub path (String.length prefix) (String.length path - String.length prefix) in
+    let rec check parent = function
+      | [] -> false
+      | [name] -> let st = Unix.lstat (Filename.concat parent name) in st.Unix.st_kind = Unix.S_REG && st.Unix.st_nlink = 1
+      | name::rest -> let next = Filename.concat parent name in (Unix.lstat next).Unix.st_kind = Unix.S_DIR && check next rest
+    in try check root_dir (String.split_on_char '/' rel) with _ -> false
   in
-
-  let zk_exists id =
-    let f1 = Filename.concat zk_dir (id ^ ".md") in
-    let f2 = Filename.concat (Filename.concat zk_dir "adr") (id ^ ".md") in
-    let f3 = Filename.concat root_dir id in
-    Sys.file_exists f1 || Sys.file_exists f2 || Sys.file_exists f3
+  let note_exists dir id =
+    let safe = not (Filename.is_relative id = false) && not (String.contains id '\\') &&
+      List.for_all (fun p -> p <> "" && p <> "." && p <> "..") (String.split_on_char '/' id) in
+    safe && (regular (Filename.concat dir id) || regular (Filename.concat dir (id ^ ".md")) || regular (Filename.concat root_dir id) || regular (Filename.concat root_dir (id ^ ".md")) ||
+      (not (String.contains id '/') &&
+       let token = String.lowercase_ascii id in
+       let matches name =
+         let lower = String.lowercase_ascii name in
+         Filename.check_suffix lower ".md" && regular (Filename.concat dir name) &&
+         (if String.starts_with ~prefix:"adr-" token then
+            contains_text lower ("-" ^ token ^ "-") || Filename.check_suffix lower ("-" ^ token ^ ".md") || lower = token ^ ".md"
+          else contains_text lower token)
+       in
+       try Array.to_list (Sys.readdir dir) |> List.filter matches |> List.length = 1 with _ -> false))
   in
+  let wiki_exists id = note_exists wiki_dir id in
+  let zk_exists id = note_exists zk_dir id || note_exists (Filename.concat zk_dir "adr") id in
 
   let rec walk_files dir =
     if Sys.file_exists dir && Sys.is_directory dir then (
       let entries = Sys.readdir dir in
       Array.iter (fun e ->
         let full = Filename.concat dir e in
-        if Sys.is_directory full then (
+        let kind = try (Unix.lstat full).Unix.st_kind with _ -> Unix.S_SOCK in
+        if kind = Unix.S_DIR then (
           if e <> ".jj" && e <> "_build" && e <> "build" && e <> ".git" && e <> "node_modules" then
             walk_files full
-        ) else if Filename.check_suffix e ".md" then (
+        ) else if kind = Unix.S_REG && Filename.check_suffix e ".md" then (
           try
             let ic = open_in full in
             (try
@@ -533,16 +637,16 @@ let scan_knowledge_transclusions root_dir =
                   | Some vstart ->
                     (match String.index_from_opt line vstart ']' with
                      | Some vend when vend + 1 < llen && line.[vend + 1] = ']' ->
-                       let id = String.sub line vstart (vend - vstart) |> String.trim in
+                       let id = String.sub line vstart (vend - vstart) |> String.split_on_char '|' |> List.hd |> String.trim in
                        if String.length id > 0 && id <> "..." then (
                          if is_wiki then (
                            incr wiki_count;
                            if wiki_exists id then incr wiki_resolved
-                           else broken := (sprintf "wiki:%s (in %s)" id full) :: !broken
+                           else broken := broken_at full (sprintf "wiki:%s (in %s)" id full) :: !broken
                          ) else (
                            incr zk_count;
                            if zk_exists id then incr zk_resolved
-                           else broken := (sprintf "zk:%s (in %s)" id full) :: !broken
+                           else broken := broken_at full (sprintf "zk:%s (in %s)" id full) :: !broken
                          )
                        );
                        parse_prefix prefix is_wiki (vend + 2)
@@ -558,6 +662,13 @@ let scan_knowledge_transclusions root_dir =
       ) entries
     )
   in
+  List.iter (fun rel ->
+    let p = Filename.concat root_dir rel in
+    if not (try let st = Unix.lstat p in st.Unix.st_kind = Unix.S_REG && st.Unix.st_nlink = 1 with _ -> false)
+    then broken := ("canonical-triad:" ^ rel) :: !broken
+  ) ["AGENTS.md"; "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md";
+     "docs/zk/20260905-1801-moc-uos-unified-master.md";
+     "governance/capability-inventory/wiki-zk-km.toml"];
   walk_files (Filename.concat root_dir "docs");
   walk_files (Filename.concat root_dir "contracts");
 
@@ -607,6 +718,16 @@ let audit_a2ui_catalog root_dir =
     catalog_valid = total >= 233;
   }
 
+let json_quote value =
+  let b = Buffer.create (String.length value + 2) in
+  Buffer.add_char b '"';
+  String.iter (function
+    | '"' -> Buffer.add_string b "\\\""
+    | '\\' -> Buffer.add_string b "\\\\"
+    | c when Char.code c < 32 -> Buffer.add_string b (sprintf "\\u%04x" (Char.code c))
+    | c -> Buffer.add_char b c) value;
+  Buffer.add_char b '"'; Buffer.contents b
+
 let main () =
   let host = ref "127.0.0.1" in
   let port = ref 4100 in
@@ -618,6 +739,7 @@ let main () =
     ("--port", Arg.Set_int port, "Port to probe (default 4100)");
     ("--root", Arg.Set_string root_dir, "UOS Root directory path");
     ("--json", Arg.Set json_output, "Output machine-readable JSON");
+    ("--self-test", Arg.Unit verifier_selftest, "Run bounded framing/header falsifiers without network");
   ] in
   Arg.parse speclist (fun _ -> ()) "UOS Universal Link Tracker, Deep Content & Component Verifier";
 
@@ -644,8 +766,8 @@ let main () =
     { res with kind }
   ) all_targets in
 
-  let passed = List.filter (fun r -> r.http_status = 200) results in
-  let failed = List.filter (fun r -> r.http_status <> 200) results in
+  let passed = List.filter (fun r -> r.http_status = 200 && r.error_msg = None) results in
+  let failed = List.filter (fun r -> r.http_status <> 200 || r.error_msg <> None) results in
 
   (* 3. Deep HTML Link Audit across all crawled pages *)
   let all_extracted_links = List.fold_left (fun acc r -> acc @ r.extracted_links) [] results in
@@ -705,7 +827,7 @@ let main () =
     printf "| Target Route              | Category       | Status | Latency  | Size      | Nav | Checklist |\n";
     printf "+---------------------------+----------------+--------+----------+-----------+-----+-----------+\n";
     List.iter (fun r ->
-      let st_str = if r.http_status = 200 then "\027[32m200 OK\027[0m" else sprintf "\027[31m%d ERR\027[0m" r.http_status in
+      let st_str = if r.http_status = 200 && r.error_msg = None then "\027[32m200 OK\027[0m" else sprintf "\027[31m%d ERR\027[0m" r.http_status in
       let nav_str = if r.has_nav then "\027[32mYES\027[0m" else "\027[90m---\027[0m" in
       let chk_str = if r.has_checklist then "\027[32mPASS\027[0m" else "\027[90m---\027[0m" in
       printf "| %-25s | %-14s | %-15s | %6.2fms | %8dB | %-12s | %-18s |\n"
@@ -748,16 +870,19 @@ let main () =
 
     printf "=== LIVE VERIFICATION SUMMARY ===\n";
     printf "  Endpoints Probed:                 %d\n" (List.length results);
-    printf "  HTTP 200 Passed:                  \027[32m%d / %d (100.0%%)\027[0m\n" (List.length passed) (List.length results);
+    printf "  HTTP 200 Passed:                  \027[32m%d / %d \027[0m\n" (List.length passed) (List.length results);
     printf "  HTTP Failures:                    %s\n" (if List.length failed = 0 then "\027[32m0\027[0m" else sprintf "\027[31m%d\027[0m" (List.length failed));
     let avg_lat = (List.fold_left (fun acc r -> acc +. r.latency_ms) 0.0 results) /. float_of_int (List.length results) in
     printf "  Mean Latency:                     %.2f ms (Target: < 10.0 ms)\n" avg_lat;
     printf "  Tailscale FQDN Standard:          \027[32mENFORCED (http://nas-1.tail55d152.ts.net:4100)\027[0m\n";
-    printf "  SIL-6 DAL-A Compliance:           \027[32mVERIFIED & RATIFIED\027[0m\n"
+    printf "  Verification:                    %s\n" (if failed = [] && not (List.exists (String.starts_with ~prefix:"canonical-triad:") km_audit.broken_transclusions) then "PROBES AND CANONICAL CHAIN PASSED (no admission authority)" else "FAILED")
   ) else (
     (* JSON Output *)
     printf "{\n";
-    printf "  \"timestamp\": \"2026-09-12T10:38:00Z\",\n";
+    let canonical_intact = not (List.exists (String.starts_with ~prefix:"canonical-triad:") km_audit.broken_transclusions) in
+    printf "  \"status\": %s,\n" (json_quote (if failed = [] && canonical_intact then "verified" else "failed"));
+    printf "  \"canonical_chain_intact\": %b,\n" canonical_intact;
+
     printf "  \"total_endpoints\": %d,\n" (List.length results);
     printf "  \"passed\": %d,\n" (List.length passed);
     printf "  \"failed\": %d,\n" (List.length failed);
@@ -795,11 +920,13 @@ let main () =
     printf "  \"endpoints\": [\n";
     let len = List.length results in
     List.iteri (fun i r ->
-      printf "    {\"path\": \"%s\", \"kind\": \"%s\", \"status\": %d, \"latency_ms\": %.2f, \"bytes\": %d, \"has_nav\": %b, \"has_checklist\": %b, \"extracted_links_count\": %d}%s\n"
-        r.path (kind_to_string r.kind) r.http_status r.latency_ms r.bytes_received r.has_nav r.has_checklist (List.length r.extracted_links) (if i < len - 1 then "," else "")
+      printf "    {\"path\": \"%s\", \"kind\": \"%s\", \"status\": %d, \"latency_ms\": %.2f, \"bytes\": %d, \"has_nav\": %b, \"has_checklist\": %b, \"extracted_links_count\": %d, \"passed\": %b, \"error_msg\": %s}%s\n"
+        r.path (kind_to_string r.kind) r.http_status r.latency_ms r.bytes_received r.has_nav r.has_checklist (List.length r.extracted_links) (r.http_status = 200 && r.error_msg = None) (match r.error_msg with None -> "null" | Some message -> json_quote message) (if i < len - 1 then "," else "")
     ) results;
     printf "  ]\n";
     printf "}\n"
-  )
+  );
+  flush stdout;
+  if List.length failed > 0 || List.exists (String.starts_with ~prefix:"canonical-triad:") km_audit.broken_transclusions then exit 1
 
 let () = main ()

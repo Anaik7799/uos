@@ -104,9 +104,10 @@ checkpoint_probe(Key,N) ->
      ets:info(uos_mcp_durable_ledger_ets,memory)*erlang:system_info(wordsize)}.
 
 with_distinct_files(Fun) ->
-    Relative="var/harness/20261030-2325-mcp-resilience/wave2-r05-memory-"++
+    Relative="docs/journal/wave2-r05-memory-"++
         integer_to_list(erlang:unique_integer([positive,monotonic])),
     Dir=filename:join(?ROOT,Relative),
+    ok=filelib:ensure_dir(filename:join(?ROOT,"var/harness/20261030-2325-mcp-resilience/owner-memory-checkpoint-benchmark.json")),
     ok=file:make_dir(Dir),
     Paths=[filename:join(Relative,integer_to_list(I)++".md")||I<-lists:seq(1,50)],
     %% 50*128KiB exceeds4MiB, exposing permanent corpus/replay retention.

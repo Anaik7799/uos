@@ -7,11 +7,14 @@ import cepaf_gleam/mcp/evidence
 import cepaf_gleam/mcp/types.{
   type Outcome, type ToolError, NonRetryable, Refused, ToolError,
 }
+import cepaf_gleam/ui/lustre/live_corpus
+import gleam/bit_array
 import gleam/dict.{type Dict}
 import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/order
 import gleam/result
 import gleam/string
 
@@ -39,6 +42,8 @@ pub type KnowledgeCorpus {
     entries: Dict(String, CorpusEntry),
   )
 }
+
+pub const max_snippet_chars = 2400
 
 pub const credential_markers = [
   ".env",
@@ -277,7 +282,16 @@ fn search_as(
   tool_name: String,
 ) -> Outcome {
   let query = dict.get(args, "query") |> result.unwrap("")
-  let lowered = string.lowercase(query)
+  let normalized =
+    query
+    |> string.split("|")
+    |> list.first
+    |> result.unwrap(query)
+    |> string.replace("[[wiki:", "")
+    |> string.replace("[[zk:", "")
+    |> string.replace("]]", "")
+  let lowered = string.lowercase(string.trim(normalized))
+  let words = query_words(lowered)
   let matches =
     corpus.entries
     |> dict.values
@@ -286,11 +300,19 @@ fn search_as(
     })
     |> list.filter(fn(entry) {
       let haystack = string.lowercase(entry.rel_path <> " " <> entry.content)
-      list.all(string.split(lowered, " "), fn(word) {
-        string.contains(haystack, word)
-      })
+      case string.starts_with(lowered, "adr-") {
+        True -> live_corpus.slug_matches(entry.rel_path, lowered)
+        False -> list.all(words, fn(word) { string.contains(haystack, word) })
+      }
     })
-    |> list.sort(fn(a, b) { string.compare(a.rel_path, b.rel_path) })
+    |> list.map(fn(entry) { #(entry, relevance_score(entry, lowered, words)) })
+    |> list.sort(fn(a, b) {
+      case int.compare(b.1, a.1) {
+        order.Eq -> string.compare(b.0.rel_path, a.0.rel_path)
+        other -> other
+      }
+    })
+    |> list.map(fn(scored) { scored.0 })
     |> list.take(
       result.unwrap(dict.get(args, "limit") |> result.try(int.parse), 5)
       |> int.clamp(1, 20),
@@ -299,7 +321,10 @@ fn search_as(
     json.to_string(
       json.object([
         #("query", json.string(query)),
-        #("results", json.array(matches, encode_entry)),
+        #(
+          "results",
+          json.array(matches, fn(entry) { encode_entry(entry, lowered) }),
+        ),
       ]),
     )
   evidence.classify_backend_payload(
@@ -310,11 +335,105 @@ fn search_as(
   )
 }
 
-fn encode_entry(entry: CorpusEntry) -> json.Json {
+fn query_words(lowered: String) -> List(String) {
+  string.split(lowered, " ") |> list.filter(fn(word) { word != "" })
+}
+
+// A byte-bound header may end inside a UTF-8 codepoint. Drop only that suffix.
+fn utf8_prefix(bytes: BitArray) -> String {
+  case bit_array.to_string(bytes) {
+    Ok(text) -> text
+    Error(_) -> {
+      let assert Ok(shorter) =
+        bit_array.slice(bytes, 0, bit_array.byte_size(bytes) - 1)
+      utf8_prefix(shorter)
+    }
+  }
+}
+
+fn relevance_score(
+  entry: CorpusEntry,
+  lowered: String,
+  words: List(String),
+) -> Int {
+  let path = string.lowercase(entry.rel_path)
+  let body = string.lowercase(entry.content)
+  let assert Ok(header_bytes) =
+    bit_array.slice(<<body:utf8>>, 0, int.min(400, string.byte_size(body)))
+  let header = utf8_prefix(header_bytes)
+  let base = case string.contains(path, lowered) {
+    True -> 100
+    False -> 0
+  }
+  list.fold(words, base, fn(score, word) {
+    score
+    + case string.contains(path, word) {
+      True -> 30
+      False -> 0
+    }
+    + case string.contains(header, word) {
+      True -> 15
+      False -> 0
+    }
+    + case string.contains(body, word) {
+      True -> 2
+      False -> 0
+    }
+  })
+}
+
+fn search_excerpt(content: String, lowered: String) -> String {
+  let body = string.lowercase(content)
+  let first_match =
+    query_words(lowered)
+    |> list.filter_map(fn(word) {
+      string.split_once(body, word)
+      |> result.map(fn(parts) { string.length(parts.0) })
+    })
+    |> list.sort(int.compare)
+    |> list.first
+    |> result.unwrap(0)
+  let header_chars = 300
+  let separator = "\n...\n"
+  let window_chars = max_snippet_chars - header_chars - string.length(separator)
+  let start =
+    int.clamp(
+      first_match - 200,
+      header_chars,
+      string.length(content) - window_chars,
+    )
+  case first_match < header_chars || start == header_chars {
+    True -> string.slice(content, 0, max_snippet_chars)
+    False ->
+      string.slice(content, 0, header_chars)
+      <> separator
+      <> string.slice(content, start, window_chars)
+  }
+}
+
+fn encode_entry(entry: CorpusEntry, lowered: String) -> json.Json {
+  let truncated = string.length(entry.content) > max_snippet_chars
+  let content = case truncated {
+    False -> entry.content
+    True -> search_excerpt(entry.content, lowered)
+  }
   json.object([
     #("rel_path", json.string(entry.rel_path)),
     #("scope_tag", json.string(entry.scope_tag)),
-    #("content", json.string(entry.content)),
+    #("content", json.string(content)),
+    #("truncated", json.bool(truncated)),
+    #(
+      "tailscale_url",
+      json.string(live_corpus.base_url <> "/files/" <> entry.rel_path),
+    ),
+    #(
+      "resource_uri",
+      json.string(case entry.rel_path {
+        "docs/" <> rest -> "uos://docs/" <> rest
+        path -> "uos://km/" <> path
+      }),
+    ),
+    #("bytes", json.int(string.byte_size(entry.content))),
   ])
 }
 
@@ -331,13 +450,10 @@ fn transclude(
   principal_scopes: List(String),
   args: Dict(String, String),
 ) -> Outcome {
-  let key = case dict.get(args, "key") {
-    Ok(value) if value != "" -> value
-    _ -> dict.get(args, "query") |> result.unwrap("")
-  }
-  case dict.has_key(corpus.entries, key) || dict.has_key(args, "key") {
-    False -> search_as(corpus, principal_scopes, args, False, "zk_transclude")
-    True ->
+  case dict.get(args, "key") {
+    Error(_) ->
+      search_as(corpus, principal_scopes, args, False, "zk_transclude")
+    Ok(key) ->
       case expand_entry(corpus, principal_scopes, key, [], 0) {
         Error(error) -> Refused(error)
         Ok(expanded) ->
@@ -358,6 +474,7 @@ fn expand_entry(
   visited: List(String),
   depth: Int,
 ) -> Result(String, ToolError) {
+  let key = resolve_key(corpus, key)
   case depth > corpus.max_transclude_depth {
     True -> Error(cycle_or_depth_refusal())
     False ->
@@ -437,5 +554,41 @@ fn expand_references_loop(
           }
         }
       }
+  }
+}
+
+fn resolve_key(corpus: KnowledgeCorpus, raw: String) -> String {
+  let target =
+    raw
+    |> string.split("|")
+    |> list.first
+    |> result.unwrap(raw)
+    |> string.replace("[[wiki:", "")
+    |> string.replace("[[zk:", "")
+    |> string.replace("]]", "")
+  case dict.has_key(corpus.entries, target) {
+    True -> target
+    False -> {
+      let paths = dict.keys(corpus.entries)
+      let exact =
+        list.filter(paths, fn(p) {
+          p == target <> ".md"
+          || p == "docs/wiki/" <> target
+          || p == "docs/wiki/" <> target <> ".md"
+          || p == "docs/zk/" <> target
+          || p == "docs/zk/" <> target <> ".md"
+        })
+      case exact {
+        [p] -> p
+        [] ->
+          case
+            list.filter(paths, fn(p) { live_corpus.slug_matches(p, target) })
+          {
+            [p] -> p
+            _ -> target
+          }
+        _ -> target
+      }
+    }
   }
 }

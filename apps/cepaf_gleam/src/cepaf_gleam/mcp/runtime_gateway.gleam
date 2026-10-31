@@ -43,6 +43,7 @@ import cepaf_gleam/mcp/types
 import cepaf_gleam/mcp/version
 import cepaf_gleam/mcp/wire
 import cepaf_gleam/mcp/workspace_knowledge
+import cepaf_gleam/ui/lustre/live_corpus
 import gleam/bit_array
 import gleam/dict
 import gleam/dynamic
@@ -635,6 +636,10 @@ fn new_state_with_planning(
       features: evidence,
     )
   let entries = [
+    #("uos://km/triad", "Live KM Triad", ""),
+    #("uos://wiki/index", "Live Wiki Index", ""),
+    #("uos://zk/master-moc", "Live Master MOC", ""),
+    #("uos://sop/fractal-system-prompt", "Live Fractal System Prompt", ""),
     #(
       "uos://system/mcp-gateway-health",
       "MCP Gateway Health",
@@ -668,6 +673,21 @@ fn new_state_with_planning(
       }),
       [
         resources.ResourceTemplate(
+          "uos://wiki/{slug}",
+          "uos_wiki",
+          "Live wiki document",
+        ),
+        resources.ResourceTemplate(
+          "uos://zk/{slug}",
+          "uos_zk",
+          "Live ZK document",
+        ),
+        resources.ResourceTemplate(
+          "uos://km/{path}",
+          "uos_km",
+          "Allowlisted live Brain Memory",
+        ),
+        resources.ResourceTemplate(
           "uos://docs/{slug}",
           "uos_doc",
           "Canonical UOS documentation entry",
@@ -676,6 +696,12 @@ fn new_state_with_planning(
     ),
     resources.empty_cache(),
     [
+      prompts.PromptSpec(
+        "uos_km_brain_memory_orient",
+        "Advisory live KM Brain Memory orientation",
+        [],
+        "advisory_only: true. Orient using live #km-triad Brain Memory at http://nas-1.tail55d152.ts.net:4100/km, /wiki and /zk. Query fresh resources before each POODAVR stage; degraded roots grant no authority.",
+      ),
       prompts.PromptSpec(
         "uos_poodavr_review",
         "Advisory POODAVR review",
@@ -698,21 +724,6 @@ fn new_state_with_planning(
     commit_seq: 0,
     commit_order: dict.new(),
   )
-}
-
-// Refuse every symlink component, including links within the workspace. There
-// is no silent follow of an intermediate directory into a foreign tree.
-fn regular_components(root: String, parts: List(String)) -> Bool {
-  case parts {
-    [] -> True
-    [part, ..rest] -> {
-      let path = root <> "/" <> part
-      case simplifile.is_symlink(path) {
-        Ok(False) -> regular_components(path, rest)
-        _ -> False
-      }
-    }
-  }
 }
 
 fn load_document(
@@ -750,45 +761,58 @@ fn read_corpus_entry(
         True -> string.drop_start(path, string.length(root) + 1)
         False -> path
       }
-      let full = root <> "/" <> relative
-      case
-        !string.starts_with(relative, "/")
-        && relative != ""
-        && regular_components(root, string.split(relative, "/"))
-      {
-        False ->
-          Some(knowledge.CorpusEntry(
-            path,
-            knowledge.SymlinkEscape,
-            "public",
-            "",
-          ))
+      case !string.starts_with(relative, "/") && relative != "" {
+        False -> None
         True ->
-          case simplifile.file_info(full) {
-            Ok(info) if info.nlinks > 1 ->
-              Some(knowledge.CorpusEntry(
-                path,
-                knowledge.HardlinkEscape,
-                "public",
-                "",
-              ))
-            Ok(info) if info.size <= 1_048_576 ->
-              case simplifile.read(full) {
-                Ok(content) ->
-                  case string.byte_size(content) <= 1_048_576 {
-                    True ->
-                      Some(knowledge.CorpusEntry(
-                        path,
-                        knowledge.RegularFile,
-                        "public",
-                        content,
-                      ))
-                    False -> None
+          case detect_link_escape(root, string.split(relative, "/")) {
+            Some(escape) ->
+              Some(knowledge.CorpusEntry(path, escape, "public", ""))
+            None ->
+              case live_corpus.brain_file(relative) {
+                False -> None
+                True ->
+                  case live_corpus.read(root, relative, 1_048_576) {
+                    Ok(content) ->
+                      case string.contains(content, "\u{0000}") {
+                        True -> None
+                        False ->
+                          Some(knowledge.CorpusEntry(
+                            path,
+                            knowledge.RegularFile,
+                            "public",
+                            content,
+                          ))
+                      }
+                    Error(_) -> None
                   }
-                _ -> None
               }
+          }
+      }
+    }
+  }
+}
+
+fn detect_link_escape(
+  base: String,
+  segments: List(String),
+) -> Option(knowledge.LinkKind) {
+  case segments {
+    [] -> None
+    [seg, ..rest] -> {
+      let next = base <> "/" <> seg
+      case simplifile.link_info(next) {
+        Ok(info) ->
+          case simplifile.file_info_type(info) {
+            simplifile.Symlink -> Some(knowledge.SymlinkEscape)
+            simplifile.File ->
+              case rest == [] && info.nlinks > 1 {
+                True -> Some(knowledge.HardlinkEscape)
+                False -> None
+              }
+            simplifile.Directory -> detect_link_escape(next, rest)
             _ -> None
           }
+        Error(_) -> None
       }
     }
   }
@@ -880,7 +904,11 @@ fn observation_probe(
   now: Int,
   alive: Bool,
 ) -> system_observation.ObservationBackend {
-  let base = dict.from_list(live_beam_metrics())
+  let base =
+    dict.from_list(list.append(
+      live_beam_metrics(),
+      workspace_knowledge.brain_memory_health_metrics(root),
+    ))
   let base = dict.insert(base, "probe_kind", "local_bounded_observation")
   let base =
     dict.insert(
@@ -1461,19 +1489,40 @@ fn handle_dispatch(
       prefetched_gateway_alive,
       reply,
     ) -> {
-      let base_knowledge = state.backends.knowledge
+      let call_knowledge =
+        knowledge.KnowledgeCorpus(
+          ..state.backends.knowledge,
+          entries: dict.new(),
+        )
+      let call_knowledge =
+        list.fold(
+          extra_entries,
+          case prefetched_doc {
+            Some(#(path, entry)) ->
+              apply_document(call_knowledge, path, entry)
+            None -> call_knowledge
+          },
+          fn(corpus, entry) { knowledge.with_entry(corpus, entry) },
+        )
+      let retained_seeds =
+        knowledge.KnowledgeCorpus(
+          ..state.backends.knowledge,
+          entries: dict.filter(state.backends.knowledge.entries, fn(path, _) {
+            list.contains(["AGENTS.md", "CLAUDE.md", "GEMINI.md"], path)
+          }),
+        )
+      let retained_knowledge = case prefetched_doc {
+        Some(#(path, entry)) ->
+          case list.contains(["AGENTS.md", "CLAUDE.md", "GEMINI.md"], path) {
+            True -> apply_document(retained_seeds, path, entry)
+            False -> retained_seeds
+          }
+        None -> retained_seeds
+      }
       let backends =
         server.ServerBackends(
           ..state.backends,
-          knowledge: list.fold(
-            extra_entries,
-            case prefetched_doc {
-              Some(#(path, entry)) ->
-                apply_document(state.backends.knowledge, path, entry)
-              None -> state.backends.knowledge
-            },
-            fn(corpus, entry) { knowledge.with_entry(corpus, entry) },
-          ),
+          knowledge: call_knowledge,
           planning_read: option.unwrap(
             prefetched_plan,
             state.backends.planning_read,
@@ -1515,7 +1564,7 @@ fn handle_dispatch(
           ..next,
           backends: server.ServerBackends(
             ..next.backends,
-            knowledge: base_knowledge,
+            knowledge: retained_knowledge,
             verification_runner: fn(_) {
               verification.ProverMissing("Prefetch is per-call only")
             },
@@ -1736,6 +1785,15 @@ fn dispatch_public_actor_prefetched(
       }
       #(prefetched_doc, prefetched_plan, prefetched_check)
     }
+    "resources/read" -> {
+      let uri = raw_string(raw, ["params", "uri"], "")
+      let entry =
+        live_resource(root, uri)
+        |> option.map(fn(text) {
+          knowledge.CorpusEntry(uri, knowledge.RegularFile, "public", text)
+        })
+      #(Some(#(uri, entry)), None, None)
+    }
     "tasks/create" -> {
       let args = dict.from_list(msg.args)
       let plan_id =
@@ -1786,7 +1844,7 @@ fn dispatch_public_actor_prefetched(
       case list.contains(["knowledge_search", "zk_transclude"], tool) {
         True ->
           DispatchKnowledge(
-            workspace_knowledge.prefetch(
+            workspace_knowledge.prefetch_brain_memory(
               root,
               argument(args, "query", argument(args, "key", "")),
             ),
@@ -3876,9 +3934,37 @@ fn dispatch_non_private(
           )
         }
       }
-      case
-        resources.read_resource(state.resources, state.resource_cache, p, uri)
-      {
+      let live = case dict.get(state.backends.knowledge.entries, uri) {
+        Ok(e) -> Some(e.content)
+        Error(_) -> None
+      }
+      let registry = case live {
+        Some(content) ->
+          resources.ResourceRegistry(..state.resources, resources: [
+            resources.ResourceEntry(
+              uri,
+              "Live Brain Memory",
+              "text/plain",
+              resources.PublicResource,
+              "",
+              principal.workspace_root(p),
+              content,
+            ),
+            ..list.filter(state.resources.resources, fn(e) { e.uri != uri })
+          ])
+        None ->
+          resources.ResourceRegistry(
+            ..state.resources,
+            resources: list.filter(state.resources.resources, fn(e) {
+              !live_resource_uri(uri) || e.uri != uri
+            }),
+          )
+      }
+      let cache = case live_resource_uri(uri) {
+        True -> resources.empty_cache()
+        False -> state.resource_cache
+      }
+      case resources.read_resource(registry, cache, p, uri) {
         Error(error) -> #(types.Refused(error), state)
         Ok(#(entry, cache)) -> #(
           complete(
@@ -3898,7 +3984,10 @@ fn dispatch_non_private(
               ),
             ]),
           ),
-          GatewayState(..state, resource_cache: cache),
+          GatewayState(..state, resource_cache: case live_resource_uri(uri) {
+            True -> state.resource_cache
+            False -> cache
+          }),
         )
       }
     }
@@ -4250,7 +4339,39 @@ fn refresh_live_read_receipt(
                       state: receipts.OutcomeCommitted(refused),
                     ),
                   )
-                _ -> None
+                _ -> {
+                  // Match the normalized outcome stored by mark_complete,
+                  // without re-entering the authenticated execution path.
+                  let live_outcome = case call.spec.family {
+                    "feature_evidence" ->
+                      features.execute(
+                        state.backends.features,
+                        call.spec.name,
+                        call.arguments,
+                      )
+                    "vault_metadata" ->
+                      vault_metadata.execute(state.backends.vault, call)
+                    "planning_read" ->
+                      planning_read.execute(
+                        state.backends.planning_read,
+                        call.spec.name,
+                        call.arguments,
+                      )
+                    _ -> outcome
+                  }
+                  let live_outcome =
+                    route_convergence.verify_outcome_candidate(
+                      state.pool,
+                      state.backends.features,
+                      call.spec.route,
+                      call.spec.name,
+                      live_outcome,
+                    )
+                  case live_outcome == outcome {
+                    True -> Some(entry)
+                    False -> None
+                  }
+                }
               }
             types.Refused(_) -> None
             types.Uncertain(_) -> Some(entry)
@@ -5634,5 +5755,66 @@ fn private_snapshot_with_recovery(
         _ -> Error(Nil)
       }
     }
+  }
+}
+
+fn live_resource_uri(uri: String) -> Bool {
+  list.any(
+    ["uos://km/", "uos://wiki/", "uos://zk/", "uos://sop/", "uos://docs/"],
+    fn(p) { string.starts_with(uri, p) },
+  )
+}
+
+fn live_resource(root: String, uri: String) -> Option(String) {
+  let target = case uri {
+    "uos://km/triad" -> live_corpus.triad_manifest
+    "uos://wiki/index" -> live_corpus.wiki_index
+    "uos://zk/master-moc" -> live_corpus.zk_index
+    "uos://sop/fractal-system-prompt" -> live_corpus.system_prompt
+    "uos://wiki/" <> slug -> "docs/wiki/" <> slug
+    "uos://zk/" <> slug -> "docs/zk/" <> slug
+    "uos://sop/" <> slug -> "docs/sop/" <> slug
+    "uos://docs/" <> slug ->
+      case string.starts_with(slug, "docs/") {
+        True -> slug
+        False ->
+          case live_corpus.stat(root, "docs/" <> slug) {
+            Ok(_) -> "docs/" <> slug
+            Error(_) ->
+              case live_corpus.stat(root, slug) {
+                Ok(_) -> slug
+                Error(_) -> "docs/" <> slug
+              }
+          }
+      }
+    "uos://km/" <> path -> path
+    _ -> ""
+  }
+  let candidates = case uri {
+    "uos://wiki/" <> slug if slug != "index" ->
+      live_corpus.resolve(live_corpus.children(root, "docs/wiki"), slug)
+    "uos://zk/" <> slug if slug != "master-moc" ->
+      live_corpus.resolve(live_corpus.children(root, "docs/zk"), slug)
+    _ ->
+      case live_corpus.stat(root, target) {
+        Ok(e) -> [e]
+        Error(_) ->
+          case live_corpus.stat(root, target <> ".md") {
+            Ok(e) -> [e]
+            Error(_) -> []
+          }
+      }
+  }
+  case candidates {
+    [entry] ->
+      case live_corpus.brain_file(entry.path) {
+        False -> None
+        True ->
+          case live_corpus.read(root, entry.path, 1_048_576) {
+            Ok(text) -> Some(text)
+            Error(_) -> None
+          }
+      }
+    _ -> None
   }
 }

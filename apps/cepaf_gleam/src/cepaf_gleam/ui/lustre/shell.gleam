@@ -689,6 +689,10 @@ fn render_nav(active_path: String) -> Element(msg) {
       ]),
       make_group("Intelligence", "#00d4aa", [
         #("/knowledge", "Knowledge"),
+        #("/wiki", "Wiki"),
+        #("/zk", "ZK"),
+        #("/km", "KM"),
+        #("/docs", "Docs"),
         #("/zenoh", "Zenoh"),
         #("/mcp", "MCP"),
         #("/telemetry", "Telemetry"),

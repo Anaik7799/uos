@@ -1,0 +1,188 @@
+{
+  "schema": "uos.session-handover.v1",
+  "timestamp_utc": "2026-10-31T11:15:17Z",
+  "from_agent": "AGY",
+  "to_agent": "Codex",
+  "supporting_agents": [
+    "Claude",
+    "Pi"
+  ],
+  "admitted_ev_ceiling": 93,
+  "not_admitted_range": "EV-94..EV-109",
+  "new_ev_minted": 0,
+  "application_admitted": false,
+  "system_admitted": false,
+  "critical_invariants_closed": [
+    "INV-FRESH-4100-01",
+    "INV-MCP-KM-BRAIN-01",
+    "SC-HARNESS-MCP-001",
+    "SC-SA-PLAN-001",
+    "SC-RISK-PRIORITY-001",
+    "SC-DIAGRAM-001",
+    "SC-JOURNAL-v3"
+  ],
+  "formal_artifacts": [
+    "formal/lean/KmTriadAlwaysFreshMemory.lean",
+    "formal/lean/McpJsonProcessingFormal.lean",
+    "formal/lean/Traceability.lean",
+    "formal/lean/TwoLattice_STM.lean",
+    "formal/quint/km_triad_mcp_brain_memory.qnt",
+    "formal/smt/km_triad_freshness_allowlist.smt2"
+  ],
+  "handover_doc": "docs/handover/20261031-1100-agy-to-codex-always-fresh-km-mcp-brain-and-fractal-plan-handover.md",
+  "open_items_fractal_plan": "docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md",
+  "open_items_range": "OI-01..OI-09",
+  "open_items_portfolio": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "open_items_task_count_live_registered": 9,
+  "canonical_fractal_prompt": "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md",
+  "root_verification_eunit": {
+    "passing_tests": 350,
+    "total_tests": 350,
+    "passing_suites": 20,
+    "total_suites": 20,
+    "status": "ALL_20_CANONICAL_EUNIT_SUITES=PASS",
+    "otp_version": "29.0.5",
+    "otp_store_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5"
+  },
+  "tailscale_endpoints": [
+    "http://nas-1.tail55d152.ts.net:4100/",
+    "http://nas-1.tail55d152.ts.net:4100/wiki",
+    "http://nas-1.tail55d152.ts.net:4100/zk",
+    "http://nas-1.tail55d152.ts.net:4100/km",
+    "http://nas-1.tail55d152.ts.net:4100/docs",
+    "http://nas-1.tail55d152.ts.net:4100/mcp"
+  ],
+  "next_fractal_waves": [
+    "Wave A: EV-94..109 Sovereign Evidence Audit",
+    "Wave B: Production Immutable Capsule & Two-Key Release Authority",
+    "Wave C: Lean 4 Reservoir Nix FOD Integration (Plausible, Batteries, Cedar-Spec, Aeneas)",
+    "Wave D: Full 101-Route Live Backend Wiring & Chaos Soak"
+  ],
+  "two_day_activity_waves": [
+    {
+      "date": "2026-10-30",
+      "revision": "fce0200638d3..2ccd20b09a44",
+      "sa_plan": "T00–T24; 25/25 complete (historical)",
+      "summary": "Unified 101-route Gleam/OTP 29 MCP Gateway, Waves 1–5: registry, principals, admission, workers, receipts; 65 tools + resources/prompts = 101 routes; stdio, Zenoh and Streamable-HTTP :4100/mcp; 535-cell 5-client matrix; 7/7 formal/oracle gates; 143-workspace disposition; AK-47 4-agent symbiosis ADR/Wiki/SOP."
+    },
+    {
+      "date": "2026-10-30",
+      "revision": "6cbc7c53bd67; 981a668e8395",
+      "sa_plan": "C01–C04; S01–S04",
+      "summary": "Live OTP 29 service cutover and AGY, Codex, Claude, Pi 3-transport MCP symbiosis closure."
+    },
+    {
+      "date": "2026-10-30",
+      "revision": "092337be02b0",
+      "sa_plan": "Formal impact checkpoint",
+      "summary": "Lean 4, Quint and Z3 impact proofs (formal/z3/20261030-2215-mcp-symbiosis-impact.smt2), M1–M4 operational math receipts and Claude Fable checkpoint audit."
+    },
+    {
+      "date": "2026-10-31",
+      "revision": "2a518a1fc1b4",
+      "sa_plan": "Merge #1 on main; R04 Claude Fable 5.1 PASS (historical)",
+      "summary": "Never-Down MCP Resilience and OTP 29.0.5 stdlib/json push/3 streaming quarantine: json_guard.gleam, mcp_json_guard_ffi.erl, McpJsonProcessingFormal.lean (0 sorry), Z3 10/10 unsat, 0 native heap leak across 1,000 hostile frames.",
+      "evidence": "docs/reviews/20261031-0656-mcp-resilience-otp29-json-r04-claude-fable-audit-receipt.json"
+    },
+    {
+      "date": "2026-10-31",
+      "revision": "ca9d3271cda3",
+      "sa_plan": "Merge #2; uos/mcp-canonical-completion/20261031-0327-v2; KM01 uos/km-triad-fractal-prompt-sync/20261031-1008",
+      "summary": "Wave 2 canonical SQLite Sa-plan store: canonical_planning_store.gleam, WAL -journal Enoent fix, offline Determinate Nix pkgs.sqlite.bin 3.53.3; cryptographic Vault metadata verifier; candidate-bound feature receipt ledger; canonical fractal system prompt and OTP 29 #km-triad ADR/Wiki/13D JSON index."
+    },
+    {
+      "date": "2026-10-31",
+      "revision": "wnsoqqup",
+      "sa_plan": "uos/tailscale-4100-always-fresh-km-and-verifiers/20261031-1018; T01 executing, T02 acceptance/cutover pending",
+      "summary": "Unified Mainline Closure candidate: Always-Fresh Tailscale :4100 #km-triad, INV-FRESH-4100-01, live_corpus.gleam, no-store, X-UOS-Content-SHA256, HTTP 403 allowlist, sw.js v2 bypass, DNS/Soft-404 fail-closed link_tracker_verifier.exe. Never-Down 4-Agent MCP Brain Memory: INV-MCP-KM-BRAIN-01, SC-MCP-KM-BRAIN-001, 13-root prefetch_brain_memory plus allowlisted local skills, brain_memory_health_metrics across 11 operational/POODAVR tools, relevance-ranked <= 2,400-grapheme excerpts, dereferenceable resource_uri, Pure-Projection Replay Equivalence. Formal artifacts: KmTriadAlwaysFreshMemory.lean, km_triad_mcp_brain_memory.qnt, formal/smt/km_triad_freshness_allowlist.smt2. Planned 14-target atomic capsule cutover: 4 tracked workspace dotfiles + 10 systemd/release/home targets; no cutover performed by this micro-fix."
+    }
+  ],
+  "two_day_journals": [
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-0754-pi-to-agy-mcp-completion-handover.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-0844-fractal-rca-ak47-multi-agent-mcp-completion-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1214-mcp-server-completion-plan-of-record-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1512-mcp-full-service-cutover-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-0823-wave2-step1-canonical-gateway-journal.md",
+    "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1151-t01-always-fresh-km-and-verifiers-journal.md"
+  ],
+  "canonical_brain_memory_skill": [
+    ".agents/skills/uos-km-triad-brain-memory/SKILL.md"
+  ],
+  "pinned_capsule_config_targets_count": 14,
+  "pinned_capsule_config_targets": [
+    {
+      "kind": "workspace_dotfile",
+      "agent": "Claude",
+      "target": ".mcp.json"
+    },
+    {
+      "kind": "workspace_dotfile",
+      "agent": "Codex",
+      "target": ".codex/config.toml"
+    },
+    {
+      "kind": "workspace_dotfile",
+      "agent": "AGY",
+      "target": ".gemini/settings.json"
+    },
+    {
+      "kind": "workspace_dotfile",
+      "agent": "Pi",
+      "target": ".pi/mcp.json"
+    },
+    {
+      "kind": "pointer",
+      "target": "var/releases/ecology/current-mcp-release"
+    },
+    {
+      "kind": "service",
+      "target": "c3i-gleam-server.service"
+    },
+    {
+      "kind": "service_and_env",
+      "target": "uos-ecology@<active-capsule>.service",
+      "env_target": "<capsule>.env"
+    },
+    {
+      "kind": "home_config",
+      "agent": "AGY",
+      "target": "~/.gemini/antigravity-cli/mcp_config.json"
+    },
+    {
+      "kind": "home_config",
+      "agent": "AGY",
+      "target": "~/.gemini/config/mcp_config.json"
+    },
+    {
+      "kind": "home_config",
+      "agent": "AGY",
+      "target": "~/.gemini/settings.json"
+    },
+    {
+      "kind": "home_config",
+      "agent": "Codex",
+      "target": "~/.codex/config.toml",
+      "constraint": "read-only #km-triad/Sa-plan/POODAVR tool approvals"
+    },
+    {
+      "kind": "home_config",
+      "agent": "Claude",
+      "target": "~/.claude.json"
+    },
+    {
+      "kind": "home_config",
+      "agent": "Pi",
+      "target": "~/.pi/agent/mcp.json",
+      "constraint": "settings.projectServers = \"allow\""
+    },
+    {
+      "kind": "home_config",
+      "agent": "Pi",
+      "target": "~/.pi/agent/mcp-adapter.json"
+    }
+  ]
+}

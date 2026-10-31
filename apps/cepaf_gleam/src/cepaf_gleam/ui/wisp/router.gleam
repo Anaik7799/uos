@@ -74,6 +74,7 @@ import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/lustre/link_tracker_view
+import cepaf_gleam/ui/lustre/live_corpus
 import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/lustre/sciviz_cockpit
 import cepaf_gleam/ui/lustre/sciviz_comprehensive_explorer
@@ -3222,7 +3223,26 @@ fn is_post_only_path(path: String) -> Bool {
   }
 }
 
-fn handle_get(path: String) -> HttpResponse(String) {
+fn handle_get(target: String) -> HttpResponse(String) {
+  let #(path, query) = live_corpus.split_target(target)
+  case live_corpus.handles(path) {
+    True -> live_corpus.handle(path, query)
+    False ->
+      case path {
+        "/sw.js" | "/static/sw.js" ->
+          serve_static_file("priv/static/sw.js", "application/javascript")
+          |> live_corpus.freshness
+        _ -> handle_legacy_get(target)
+      }
+  }
+}
+
+fn handle_legacy_get(path: String) -> HttpResponse(String) {
+  let #(clean_path, _) = live_corpus.split_target(path)
+  let path = case is_api_path(clean_path) {
+    True -> path
+    False -> clean_path
+  }
   // SC-AGUI-UI / audit P3 #21 fix — strip cache-bust ?v=… for /static/ routes
   // so `asset_cachebust_id()` query strings don't break exact-match routing.
   // Live regression caught 2026-04-30 via Playwright probe: /static/planning-grid.js?v=… returned HTML 404.
@@ -3383,8 +3403,9 @@ fn handle_get(path: String) -> HttpResponse(String) {
       )
     // Service worker + register (pass-2 — Allium OfflineMode closed).
     // SC-PLANNING-EVO-005, SC-AGUI-UI-008.
-    "/static/sw.js" ->
+    "/sw.js" | "/static/sw.js" ->
       serve_static_file("priv/static/sw.js", "application/javascript")
+      |> live_corpus.freshness
     "/static/sw-register.js" ->
       serve_static_file("priv/static/sw-register.js", "application/javascript")
     // Telegram Mini App routes — mobile-optimized SSR HTML (SC-OPENCLAW-001)
@@ -3416,23 +3437,8 @@ fn handle_get(path: String) -> HttpResponse(String) {
         False ->
           case string.starts_with(path, "/docs/") {
             True -> {
-              let doc_name = case string.split(path, "/") |> list.reverse {
-                [filename, ..] -> filename
-                _ -> ""
-              }
-              let html_name = case string.ends_with(doc_name, ".md") {
-                True -> string.drop_end(doc_name, 3) <> ".html"
-                False -> doc_name <> ".html"
-              }
-              let static_path = "priv/static/" <> html_name
-              case read_file(static_path) {
-                Ok(_) ->
-                  serve_static_file(static_path, "text/html; charset=utf-8")
-                Error(_) -> {
-                  let _ = hot_reload.reload_changed()
-                  html_response(route_html(path))
-                }
-              }
+              let #(clean_path, query) = live_corpus.split_target(path)
+              live_corpus.handle(clean_path, query)
             }
             False ->
               case mini_app_routes.is_mini_app_path(path) {

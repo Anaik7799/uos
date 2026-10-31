@@ -628,3 +628,15 @@ Append-only precommitment recorded 2026-10-31T07:31:09Z: **p = 0.88**, **Horizon
 
 UOS footer: preflight observations and component evidence do not confer application or system admission; the existing comprehensive verification checklists above remain scoped to their original observations.
 <!-- SYMBIOSIS-LEARNINGS-87-90-END -->
+
+<!-- T01-CODEX-HANDOVER-LEARNING-123-BEGIN -->
+## Thread of Progress — 20261031-1100 T01 candidate and Codex handover
+
+Recorded 2026-10-31T11:16:42Z UTC. The [T01 always-fresh KM and verifiers journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1151-t01-always-fresh-km-and-verifiers-journal.md) (`[[wiki:20261031-1151-t01-always-fresh-km-and-verifiers-journal]]`) records the isolated implementation and formal-model evidence. The [AGY to Codex handover](http://nas-1.tail55d152.ts.net:4100/files/docs/handover/20261031-1100-agy-to-codex-always-fresh-km-mcp-brain-and-fractal-plan-handover.md) (`[[wiki:20261031-1100-agy-to-codex-always-fresh-km-mcp-brain-and-fractal-plan-handover]]`) and [machine-readable manifest](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1100-agy-to-codex-session-handover.json) capture continuity and the next four fractal waves. Both Markdown artifacts are registered in the wiki corpus, ZK MOC and capability inventory; all 137 ADR listings and 16 quarantine markers are retained.
+
+Learning #123: the chronological replay regression first reproduced `wire_replay_reexecuted`. `refresh_live_read_receipt` now compares the pure outcome from already-prefetched feature, vault or planning backends after the same candidate normalization used before `mark_complete`. Equality retains the committed receipt without authenticated route reexecution; inequality refreshes execution against current truth. Existing candidate-mismatch refusals and uncertain-effect latches remain intact. The development build passed; requested EUnit verification passed 88/88: fresh KM 11/11, canonical gateway wiring 33/33 (including receipt downgrade/deletion, vault refresh and same-intent planning mutation), vault/feature ledger 43/43, and newest-twenty chronological replay with owner restart 1/1.
+
+KM provenance gate: PASS, 100% ADR enumeration and quarantine marking. T01 journal: 10/10 PASS. Diagram gate over the two new artifacts: 0 FAILED; handover topology verified, T01 diagram reported UNVERIFIED by the existing parser, so its subset PASS is not a full topology-verification claim. This addendum preserves preceding journal sections, diagrams and historical observations. Independent Claude acceptance, mainline merge, live capsule cutover and Sa-plan completion remain subsequent authorized work. No protected source, live Sa-plan database or systemd service was modified. `admitted_ev_ceiling = 93`; EV-94..EV-109 remain `NOT_ADMITTED`; no new EV number; `application_admitted = false`, `system_admitted = false`.
+
+#fractal-l0 #fractal-l3 #fractal-l4 #fractal-l9 #km-triad #zk-adr #zero-muda
+<!-- T01-CODEX-HANDOVER-LEARNING-123-END -->
