@@ -109,6 +109,8 @@ No observation edge is an actuation edge. Existing Gleam/OTP owns control; Sa-pl
 
 ## 10. Remaining Gaps
 
+Live publication found two scoped limitations: the .smt2 raw file route refuses403 (its exact safe query source is embedded in the served design), and MCP read_file refuses the design filename because it contains the credential marker token. Those refusals are preserved. Existing inventory/MOC/handover search bytes refresh, but direct MCP expansion of the new design is not a PASS. Protected access policy remains unchanged; OI09 must resolve the integration gap under its own source/release fences.
+
 Engine4 residual analysis. Runtime scale control/MCP/Zenoh binding, exact native-Gleam refinement, signed live round trips, persistent monitor attachment, general Pi multi-response accounting, provider-authenticated billing, current route-price admissibility and unknown Claude timeout usage remain open. The explicit local file interface is not a descriptor-relative VFS or a proof of wall-time bounded I/O on hostile filesystems.
 
 Public OpenRouter Pro0813 headline output price exceeds the pinned UOS ceiling; a new paid request requires a fresh actual route quote and normal budget admission. No universal cheapest model or achieved10x throughput is claimed. The original nine tasks, OI08→OI09 dependency repair and separate release authority remain outstanding.

@@ -105,7 +105,8 @@
       "unsafe_unknown_release"
     ],
     "bounds": "3 fixed worker identities,5 effect IDs,one fixed day,finite clock/generation; not full 40-request exhaustion",
-    "exhaustive": false
+    "exhaustive": false,
+    "negative_control_expected_exit": 1
   },
   "smt": {
     "theory": "QF_LIA",
@@ -131,7 +132,8 @@
       "invalid_positive_fixture"
     ],
     "control_refusal_exit": 2,
-    "unsat_independent_general_proof": false
+    "unsat_independent_general_proof": false,
+    "independent_source_receipt_review": "PASS_SCOPED_SOURCE_AND_RECEIPT_RECHECK"
   },
   "gleam": {
     "otp": 29,
@@ -550,8 +552,54 @@
     "historical_broken_transclusions": 163,
     "canonical_chain_intact": true
   },
-  "integration_status": "PENDING",
-  "live_delivery": "UNRUN",
+  "integration_status": "CANONICAL_WORKSPACE_SOURCE_READY",
+  "live_delivery": {
+    "published_allowed_files": [
+      {
+        "path": "docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md",
+        "http_status": "200",
+        "disk_sha256": "e6903729938566b159b250ffb14f7262b495404a2ca0d932700d173f18cda470",
+        "body_sha256": "e6903729938566b159b250ffb14f7262b495404a2ca0d932700d173f18cda470",
+        "header_sha256": "e6903729938566b159b250ffb14f7262b495404a2ca0d932700d173f18cda470",
+        "pass": true
+      },
+      {
+        "path": "docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md",
+        "http_status": "200",
+        "disk_sha256": "29cdaf828b67f53607e40b2c0d905d70fcd49630bec884a30847a624dfd89916",
+        "body_sha256": "29cdaf828b67f53607e40b2c0d905d70fcd49630bec884a30847a624dfd89916",
+        "header_sha256": "29cdaf828b67f53607e40b2c0d905d70fcd49630bec884a30847a624dfd89916",
+        "pass": true
+      },
+      {
+        "path": "formal/lean/AgentScaleControl.lean",
+        "http_status": "200",
+        "disk_sha256": "25b956ecfbd82fb4f8e5da97be58724833dfb2183c893793ca235583f73d2835",
+        "body_sha256": "25b956ecfbd82fb4f8e5da97be58724833dfb2183c893793ca235583f73d2835",
+        "header_sha256": "25b956ecfbd82fb4f8e5da97be58724833dfb2183c893793ca235583f73d2835",
+        "pass": true
+      },
+      {
+        "path": "formal/quint/agent_scale_control.qnt",
+        "http_status": "200",
+        "disk_sha256": "f59738336d2dcde65a43ce31cdfe53cb9d529ccedbf2c0a41e8fde0f1a507b9b",
+        "body_sha256": "f59738336d2dcde65a43ce31cdfe53cb9d529ccedbf2c0a41e8fde0f1a507b9b",
+        "header_sha256": "f59738336d2dcde65a43ce31cdfe53cb9d529ccedbf2c0a41e8fde0f1a507b9b",
+        "pass": true
+      }
+    ],
+    "raw_smt_source": {
+      "status": 403,
+      "classification": "viewer_extension_not_allowlisted",
+      "served_exact_embedding_sha256": "dcd84f5b398d85d94acfe7fad368a33ac026edb0fe8d129111f7a6a4deeed3b9"
+    },
+    "mcp": {
+      "search_updated_reference_bytes": true,
+      "direct_design_read": "REFUSED_filename_contains_token_credential_marker",
+      "protected_policy_unchanged": true
+    },
+    "runtime_cutover": false
+  },
   "runtime_release": "NOT_GRANTED",
   "application_admitted": false,
   "SYSTEM_ADMITTED": false,
@@ -564,7 +612,9 @@
     "MCP/Zenoh scale-control activation",
     "unknown Claude timeout usage/cost",
     "provider-route pricing reconciliation",
-    "original nine handover tasks"
+    "original nine handover tasks",
+    "MCP direct design expansion filename false-positive",
+    "raw SMT extension delivery"
   ],
   "references": {
     "design": "docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md",

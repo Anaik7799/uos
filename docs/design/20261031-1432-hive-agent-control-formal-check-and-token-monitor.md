@@ -127,7 +127,7 @@ M03_METHOD_COVERAGE extends the same canonical plan. Technique coverage is not a
 |---|---|---|
 | Type theory and inductive proof | Lean typed role slots, Reach history, financial and consumed-request invariants | Kernel proofs for the abstract serialized model; external oracle assumptions and native refinement remain explicit. |
 | Temporal/interleaving modeling | Independent [Quint model](http://nas-1.tail55d152.ts.net:4100/files/formal/quint/agent_scale_control.qnt) with fresh/replayed commands, uncertainty and drain | Seeded bounded simulation and a deliberately false invariant; not exhaustive checking, fairness or unconditional liveness. |
-| SMT / linear integer arithmetic | [QF_LIA constraints](http://nas-1.tail55d152.ts.net:4100/files/formal/smt/agent_scale_control.smt2) derive post-admission capacity, liability and strict-time bounds | Guarded unsafe query UNSAT, positive control SAT, two weakened-rule counterexamples SAT. Solver workers are bounded. |
+| SMT / linear integer arithmetic | [QF_LIA constraints](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md#smt-source-and-reproduction) derive post-admission capacity, liability and strict-time bounds | Guarded unsafe query UNSAT, positive control SAT, two weakened-rule counterexamples SAT. Solver workers are bounded. |
 | Independent differential oracle | [OCaml integer evaluator](http://nas-1.tail55d152.ts.net:4100/files/tools/agent_control_smt_oracle.ml) re-evaluates every SAT witness and enumerates a finite refutation domain | Three witness evaluations,246000 finite candidates and16800 admissible cases; not an independent general proof of solver UNSAT. Unknown verdicts/bad witnesses fail closed. |
 | Algebraic / metamorphic laws | Compatible bounded receipt maps have identity, idempotent insertion, order-independent sums and conflict refusal | Independent list oracle, permutations/replays,4096 boundary and raw provider fixtures on real OTP; not native-to-Lean refinement. |
 | Set/cardinality / injectivity analysis | Count held typed slots once globally and expose missing real worker-ID injectivity proof |3 modeled slots do not prove3 distinct real worker processes or per-layer telemetry coverage. |
@@ -141,6 +141,104 @@ M03_METHOD_COVERAGE extends the same canonical plan. Technique coverage is not a
 | Rewrite confluence / numeric FP / ML | Not governing this finite integer control/admission slice | INAPPLICABLE here. There is no rewrite transform, floating-point safety kernel or adequate labeled training population to justify those techniques as guards. |
 
 The numerical SMT slice includes an independent finite refutation check, positive admissible witness and two genuine counterexamples: counting only running workers can admit a fourth held slot, and a closed deadline permits the exact expired boundary. This diversity catches different mistakes; agreement does not establish cross-model equivalence or deployed enforcement.
+
+
+## SMT source and reproduction
+
+The canonical source is formal/smt/agent_scale_control.smt2. The current file viewer refuses that extension with403, so the exact non-sensitive query text is included here for review. Its bytes are bound to the source hash in the observation packet. The solver worker must retain both the SMT timeout and an external process deadline; any timeout/unknown fails closed. Reproduce from UOS using:
+
+```text
+timeout --kill-after=2s 12s tools/z3 -smt2 formal/smt/agent_scale_control.smt2
+ocaml tools/agent_control_smt_oracle.ml PATH_TO_CAPTURED_Z3_OUTPUT
+```
+
+```smt2
+; UOS agent-control numeric admission slice, QF_LIA, report-only.
+; Budget is RESERVED LIABILITY in microUSD, not provider invoice/spend.
+; All queries additionally require a bounded external worker invocation.
+(set-logic QF_LIA)
+(set-option :timeout 3000)
+(declare-const running_w Int)
+(declare-const uncertain_w Int)
+(declare-const running_r Int)
+(declare-const uncertain_r Int)
+(declare-const dw Int)
+(declare-const dr Int)
+(declare-const target Int)
+(declare-const liability Int)
+(declare-const now Int)
+(declare-const deadline Int)
+(declare-const lease Int)
+(define-fun w () Int (+ running_w uncertain_w))
+(define-fun r () Int (+ running_r uncertain_r))
+(define-fun pre () Bool (and
+ (>= running_w 0) (>= uncertain_w 0) (>= running_r 0) (>= uncertain_r 0)
+ (<= w 2) (<= r 1) (<= (+ w r) 3)
+ (>= target 0) (<= target 3) (>= liability 0) (<= liability 10000000)
+ (>= now 0) (>= deadline 0) (>= lease 0)
+ (or (and (= dw 1) (= dr 0)) (and (= dw 0) (= dr 1)))))
+(define-fun guard () Bool (and pre
+ (< (+ w r) target)
+ (=> (= dw 1) (< w 2))
+ (=> (= dr 1) (< r 1))
+ (<= liability 9750000) (< now deadline) (< now lease)))
+(define-fun unsafe_post () Bool (or
+ (> (+ w dw) 2) (> (+ r dr) 1) (> (+ w r dw dr) 3)
+ (> (+ liability 250000) 10000000)
+ (>= now deadline) (>= now lease)))
+(echo "GUARDED_UNSAFE")
+(push)
+(assert guard)
+(assert unsafe_post)
+(check-sat)
+(pop)
+(echo "VALID_ADMISSION")
+(push)
+(assert guard)
+(assert (= running_w 1))
+(assert (= uncertain_w 0))
+(assert (= running_r 1))
+(assert (= uncertain_r 0))
+(assert (= dw 1))
+(assert (= dr 0))
+(assert (= target 3))
+(assert (= liability 0))
+(assert (= now 0))
+(assert (= deadline 1))
+(assert (= lease 1))
+(check-sat)
+(get-value (running_w uncertain_w running_r uncertain_r dw dr target liability now deadline lease))
+(pop)
+(echo "MUTANT_RUNNING_ONLY")
+(push)
+(assert pre)
+(assert (< (+ running_w running_r) target))
+(assert (=> (= dw 1) (< running_w 2)))
+(assert (=> (= dr 1) (< running_r 1)))
+(assert (<= liability 9750000))
+(assert (< now deadline))
+(assert (< now lease))
+(assert unsafe_post)
+(check-sat)
+(get-value (running_w uncertain_w running_r uncertain_r dw dr target liability now deadline lease))
+(pop)
+(echo "MUTANT_CLOSED_EXPIRY")
+(push)
+(assert pre)
+(assert (< (+ w r) target))
+(assert (=> (= dw 1) (< w 2)))
+(assert (=> (= dr 1) (< r 1)))
+(assert (<= liability 9750000))
+(assert (<= now deadline))
+(assert (< now lease))
+(assert (= now deadline))
+(check-sat)
+(get-value (running_w uncertain_w running_r uncertain_r dw dr target liability now deadline lease))
+(pop)
+
+```
+
+The current MCP file reader also refuses this design's filename because the harmless documentation name contains the credential marker “token”; direct read was refused and is not counted as passing MCP delivery. Fresh search observes the updated inventory/MOC/handover references, and HTTP delivers the allowed document bytes. Direct discovery/expansion of this file remains an OI09 integration gap pending an independently reviewed access-policy repair. No protected policy was changed or bypassed.
 
 
 ## Verification obligations
