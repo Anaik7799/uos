@@ -1,0 +1,196 @@
+{
+  "schema": "uos.oi02-cutover-foundations.v1",
+  "observed_at": "2026-10-31T17:30:38Z",
+  "status": "PASS_SCOPED_DEVELOPMENT_FOUNDATIONS",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "SYSTEM_ADMITTED": false,
+  "plan": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "task": "OI02_ATOMIC_11_TARGET_CAPSULE_CUTOVER",
+  "task_state": "executing",
+  "worker": "codex-hive-cutover-20261031",
+  "attempt": 1,
+  "source_base": "316f049b077a9e7ed4a75b8dccb01666c8e1afb9",
+  "implementation_code_revision": "199fcff2c780f24d9f69905b25b1cec3a1bbc3f2",
+  "implementation_change": "rkozpuxzspzkxsnwwqxpnuslyopwwlmm",
+  "sources": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/cutover_protocol.gleam",
+      "sha256": "c2bf492c87144881aa18b095e8510acb3e977b5b3af7f3e1e606eb312a633d2a",
+      "bytes": 13685,
+      "candidate_bound": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/cutover_targets.gleam",
+      "sha256": "64fca0f811fe3b523004d958c54519b2e409d4976abd0bb28bbf03a6977b446a",
+      "bytes": 11329,
+      "candidate_bound": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_cutover_protocol_test.gleam",
+      "sha256": "79f62a299ad20e211079ee1e396a3a4c0d1771952ef9d965c1d69efef9ec5bfb",
+      "bytes": 11180,
+      "candidate_bound": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_cutover_targets_test.gleam",
+      "sha256": "f35a0780c18370ef94be7c4346cffbac6884c8dda73ee3046f3412d354635699",
+      "bytes": 6938,
+      "candidate_bound": true
+    },
+    {
+      "path": "formal/quint/ecology_cutover.qnt",
+      "sha256": "10582c010f76103f6758aba6e3737691055ff4043ef33cc24ab33920cf83947c",
+      "bytes": 9620,
+      "candidate_bound": true
+    },
+    {
+      "path": "tools/ecology_file_transaction.ml",
+      "sha256": "64789f843adf44440b8190fd3c6eb8fadba4b5d7d052dd790a33e8375d240cd2",
+      "bytes": 28538,
+      "candidate_bound": true
+    },
+    {
+      "path": "tools/ecology_file_transaction_test.ml",
+      "sha256": "1e69d99258d76bc2b2dc17d5c339b159941e926ab70d30769e1975b794fef0d9",
+      "bytes": 19945,
+      "candidate_bound": true
+    },
+    {
+      "path": "tools/ecology_pin_edit.ml",
+      "sha256": "56570d0d7cf1715abcf631b369ae701119e2a710e2318a4970438161102e48fc",
+      "bytes": 13175,
+      "candidate_bound": true
+    },
+    {
+      "path": "tools/ecology_pin_edit_test.ml",
+      "sha256": "f29984ed7ada826c1f256405cddcd8fbeacbbe2b8642b9d51f0eb3bbfd2a3e9f",
+      "bytes": 11072,
+      "candidate_bound": true
+    },
+    {
+      "path": "tools/ecology_release.mojo",
+      "sha256": "817f698a23e7126236bcf5a11f0cb51475920a1d651805d847e9934653e6bddb",
+      "bytes": 2602,
+      "candidate_bound": true
+    },
+    {
+      "path": "tools/ecology_release_mojo_test.ml",
+      "sha256": "967a6681bc086086a45d8ac7e83262f66e6e822985b54e435d53c086075603d8",
+      "bytes": 4192,
+      "candidate_bound": true
+    }
+  ],
+  "journal": {
+    "path": "docs/journal/20261031-1756-oi02-recoverable-cutover-foundations-journal.md",
+    "sha256": "8520abef5fbe96f3901843dd415524a7f937ed1cf5bada97ed9ea5c197b0600b"
+  },
+  "checks": {
+    "gleam_tests": 16,
+    "pin_checks": 82,
+    "tracked_repository_configurations": 4,
+    "tracked_selected_server_slots": 6,
+    "mojo_inert_backend_argv_checks": 9,
+    "native_checks_per_run": 3083,
+    "native_postmutation_crash_cases_per_run": 58,
+    "native_author_and_root_runs": 2,
+    "quint_deterministic_tests": 10,
+    "quint_traces_14": 2000,
+    "quint_traces_15": 2000,
+    "quint_max_steps": 100,
+    "quint_seed_15": 31011705,
+    "quint_seed_14": 31011714
+  },
+  "private_receipts": {
+    "native_root_repeat": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-native-root-repeat.log",
+      "sha256": "ba0595b66a278e8c4afc0bbbe5814e9e4bdc7b7188c89e0db5537fd0a5d98fbe"
+    },
+    "gleam": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-gleam-tests.log",
+      "sha256": "b9e416c7f80cf36dfc10790bd6a9e10d2567002609143666b533f7114ac9df77"
+    },
+    "pin": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-pin-tests-final.log",
+      "sha256": "41419b4ba9fa93d6021c2036774fd2bb064fc93f123955ba0c8f5485ab2d5db1"
+    },
+    "tracked_pin_probe": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-pin-tracked-probe-final.json",
+      "sha256": "be91da6fc9dc4e2dcd01bfc6ffcb8d23e1b81a132fef78cc2f8fa6e64fa2d3b6"
+    },
+    "mojo_argv": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-mojo-argv-tests.log",
+      "sha256": "0e549cbd3eb53ed234db75714a4da3042a4416ed44a7f796044f2f6d0651f2fe"
+    },
+    "quint_tests": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-quint-tests.log",
+      "sha256": "e6a1e89548f9ef19181da802ef9f0055cacc92ff85d1ce5b1c07dff813127085"
+    },
+    "quint_15": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-quint-simulations.log",
+      "sha256": "e4555c6cd3b9312b2ad05025e59f0660a36ae6d1b16ea60e00f580047a327899"
+    },
+    "quint_14": {
+      "private_locator": "var/harness/20261031-1334-codex-hive/oi02-quint-simulations14.log",
+      "sha256": "eea3204453dab392aff72472eff0531c44d57cce1de4168014b2b30060a08c0f"
+    }
+  },
+  "parallelism": {
+    "peak_collaboration_agents": 3,
+    "supervisors": 1,
+    "disjoint_helper_lanes": 2,
+    "executing_canonical_top_level_tasks": 1,
+    "integration_serialized": true,
+    "tenfold_speedup_measured": false
+  },
+  "model_review_provenance": "Earlier native Pi/OpenRouter Argon+DeepSeekPro and Claude reviews remain in journal20261031-1621; this continuation uses two local Codex relays",
+  "new_paid_model_calls": 0,
+  "registered_provider_monitor": {
+    "status": "REPORT_ONLY",
+    "authority": "NONE",
+    "hard_cap_enforced": false,
+    "decision": "HOLD_UNKNOWN_USAGE",
+    "unique_calls": 26,
+    "known_usage_calls": 25,
+    "unknown_usage_calls": 1,
+    "invocations_reporting_error": 3,
+    "accepted_work_outcomes": "UNVERIFIED_SEPARATE_REVIEW_REQUIRED",
+    "input_tokens_uncached": 32899,
+    "output_tokens_including_reasoning": 139176,
+    "cache_read_input_tokens": 1637742,
+    "cache_write_input_tokens": 275337,
+    "known_total_tokens": 2085154,
+    "estimated_nanodollars": 4137299838,
+    "unknown_cost_calls": 1,
+    "billing_basis": "unverified_receipt_sdk_or_list_price_estimates_not_invoice",
+    "known_input_tokens": 1945978,
+    "cache_read_basis_points_of_input": 8416,
+    "max_tokens": 1000000,
+    "max_calls": 40,
+    "optimization_hints": [
+      "Recall top 1-2 fresh canonical documents; keep stable instruction prefixes",
+      "Prefer accepted-work yield and full failed-attempt cost over cheap token price",
+      "Reasoning tokens are included in output; cache counters are distinct input classes",
+      "New calls still require canonical Sa-plan and daily budget admission"
+    ]
+  },
+  "openrouter_reservation_liability_usd": "3.50",
+  "thread_goal_counter_separate_observation": {
+    "tokens_used": 5142295,
+    "basis": "goal tool cumulative counter, separate from provider-call token records; not summed and not an invoice"
+  },
+  "protected_process_sha256": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b",
+  "limits": [
+    "No live ReleaseAuthority issuer/ingress, reader barrier, cutover command, service activation or home-config audit is established.",
+    "Kernel is per-file atomic under cooperative frozen owned-directory topology; group consistency needs actual reader fencing.",
+    "Private descriptor pin must be retained independently by the genuine controller; no local digest authenticates itself.",
+    "58 declared process-crash points, not all interrupted syscalls, power loss, hostile VFS or unlimited retries.",
+    "Partial log tails/UNKNOWN images hold; no truncation/regeneration/blind overwrite. One uninterrupted restore pass is reserved; further retries can hold.",
+    "POSIX mode/UID/GID tested; ACL/xattr, production secret/preimage handling and runtime health require separate integration.",
+    "Mojo checks use an inert private backend; actual cutover/audit-pins parity is UNRUN.",
+    "Quint is an independent sampled abstraction, not native refinement, authenticated observation truth, exhaustive proof or liveness.",
+    "OI02 and OI03..OI09 remain unfinished; no full goal, release or EV admission."
+  ]
+}

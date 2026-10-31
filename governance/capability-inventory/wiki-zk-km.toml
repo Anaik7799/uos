@@ -324,3 +324,18 @@ ledger = "governance/provenance/20261031-1658-ev94-109-observed-adjudication-led
 model = "formal/lean/ProvenanceAdjudication.lean"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+[[knowledge_group]]
+id = "OI02-CUTOVER-FOUNDATIONS-20261031-1756"
+plan = "uos/codex-handover-open-items-fractal-plan/20261031-1240"
+task = "OI02_ATOMIC_11_TARGET_CAPSULE_CUTOVER"
+state = "development"
+admitted = false
+design = "docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md"
+journal = "docs/journal/20261031-1756-oi02-recoverable-cutover-foundations-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1756-oi02-recoverable-cutover-foundations-journal.md"
+index = "governance/planning/20261031-1756-oi02-recoverable-cutover-foundations.json"
+model = "formal/quint/ecology_cutover.qnt"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
