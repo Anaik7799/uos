@@ -4,12 +4,14 @@
 //// is confined to stderr so hostile input can never forge protocol bytes.
 
 import cepaf_gleam/harness/value
+import cepaf_gleam/mcp/json_guard
 import cepaf_gleam/mcp/principal.{type Principal}
 import cepaf_gleam/mcp/types.{
   type Outcome, type ProtocolProfile, type ToolError, ClientProfile, Complete,
   NonRetryable, Refused, ToolError, Uncertain,
 }
 import cepaf_gleam/mcp/wire
+import gleam/bit_array
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -247,6 +249,17 @@ fn process_parts(
     [line, ..rest] -> {
       use _ <- result.try(check_frame_size(line))
       use _ <- result.try(check_depth(line))
+      // Preserve the legacy transport's diagnostic-only malformed-JSON path;
+      // standard RPC ingress emits parse errors separately. Security refusal
+      // must precede wire decoding at every object nesting depth.
+      use _ <- result.try(case json_guard.inspect(line, "STDIO") {
+        Ok(_) -> Ok(Nil)
+        Error(error) ->
+          case error.code {
+            "INVALID_JSON_SYNTAX" -> Ok(Nil)
+            _ -> Error(error)
+          }
+      })
       let #(next, emitted_rev) =
         handle_line(session, line, handler, emitted_rev)
       // Any remaining parts belong to a frame that started within this chunk.
@@ -327,42 +340,33 @@ fn is_valid_jsonrpc_frame(frame: String) -> Bool {
 /// string literals and honoring backslash escapes. Malformed input yields the
 /// observed depth and is rejected later by the wire decoder.
 fn json_depth(text: String) -> Int {
-  scan_depth(string.to_graphemes(text), False, False, 0, 0)
+  scan_depth(bit_array.from_string(text), False, False, 0, 0)
 }
 
 fn scan_depth(
-  graphemes: List(String),
+  bytes: BitArray,
   in_string: Bool,
   escaped: Bool,
   depth: Int,
   maximum: Int,
 ) -> Int {
-  case graphemes {
-    [] -> maximum
-    [grapheme, ..rest] ->
-      case in_string {
-        True ->
-          case escaped {
-            True -> scan_depth(rest, True, False, depth, maximum)
-            False ->
-              case grapheme {
-                "\\" -> scan_depth(rest, True, True, depth, maximum)
-                "\"" -> scan_depth(rest, False, False, depth, maximum)
-                _ -> scan_depth(rest, True, False, depth, maximum)
-              }
-          }
-        False ->
-          case grapheme {
-            "\"" -> scan_depth(rest, True, False, depth, maximum)
-            "{" | "[" -> {
-              let opened = depth + 1
-              scan_depth(rest, False, False, opened, int_max(opened, maximum))
-            }
-            "}" | "]" ->
-              scan_depth(rest, False, False, int_max(depth - 1, 0), maximum)
-            _ -> scan_depth(rest, False, False, depth, maximum)
-          }
-      }
+  case bytes, in_string, escaped {
+    <<>>, _, _ -> maximum
+    <<_, rest:bytes>>, True, True ->
+      scan_depth(rest, True, False, depth, maximum)
+    <<0x5c, rest:bytes>>, True, False ->
+      scan_depth(rest, True, True, depth, maximum)
+    <<0x22, rest:bytes>>, _, _ ->
+      scan_depth(rest, !in_string, False, depth, maximum)
+    <<0x7b, rest:bytes>>, False, _ | <<0x5b, rest:bytes>>, False, _ -> {
+      let opened = depth + 1
+      scan_depth(rest, False, False, opened, int_max(opened, maximum))
+    }
+    <<0x7d, rest:bytes>>, False, _ | <<0x5d, rest:bytes>>, False, _ ->
+      scan_depth(rest, False, False, int_max(depth - 1, 0), maximum)
+    <<_, rest:bytes>>, _, _ ->
+      scan_depth(rest, in_string, False, depth, maximum)
+    _, _, _ -> maximum
   }
 }
 

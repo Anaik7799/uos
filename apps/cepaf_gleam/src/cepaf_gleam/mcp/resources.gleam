@@ -11,6 +11,8 @@ import gleam/list
 import gleam/result
 import gleam/string
 
+pub const max_cache_entries = 1024
+
 pub const page_default = 100
 
 pub const page_max = 500
@@ -150,11 +152,14 @@ fn cache_entry(
   principal: Principal,
   entry: ResourceEntry,
 ) -> ResourceCache {
-  ResourceCache(dict.insert(
-    cache.entries,
-    cache_key(principal, entry.uri),
-    entry,
-  ))
+  let key = cache_key(principal, entry.uri)
+  case
+    dict.has_key(cache.entries, key)
+    || dict.size(cache.entries) < max_cache_entries
+  {
+    True -> ResourceCache(dict.insert(cache.entries, key, entry))
+    False -> cache
+  }
 }
 
 pub fn list_resources(

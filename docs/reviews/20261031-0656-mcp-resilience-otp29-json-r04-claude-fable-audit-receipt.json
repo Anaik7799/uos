@@ -1,0 +1,137 @@
+{
+  "schema": "uos.r04.final-claude-fable-audit.v1",
+  "auditor": "Claude Fable 5.1 (--model fable --effort max)",
+  "plan_id": "20261030-2325-mcp-resilience-perf-scale-bdd-fractal",
+  "task_id": "R04",
+  "audited_source_jj_commit": "cd93c3bfb1901dd8aef385ff61be5abfb1925150",
+  "audited_closure_jj_commit": "973a93d48cd9a29fe23c182967962e8acbe6b537",
+  "audited_release_id": "20261031-0540-5ca1f1721b7efb73804ca0b9eb30df183281f24c6ba1aa59f1ff8764dafc84c9",
+  "verdict": "PASS",
+  "critical_findings_count": 0,
+  "high_findings_count": 0,
+  "medium_findings_count": 0,
+  "low_findings_count": 4,
+  "prior_r04_dispositions_verified": {
+    "R04-01": {
+      "status": "CLOSED",
+      "evidence": "runtime_gateway.gleam:139-140 adds commit_seq/commit_order to GatewayState; assign_commit_order (1046-1052) gives every newly committed entry the next owner-serialized sequence (unsequenced legacy entries migrate once in declared lexical order); bound_receipt_ledger_ordered (1054-1091) sorts newest-first by order, always retains IntentRecorded/EffectUncertain entries and mutating OutcomeCommitted fences (tombstoned as REPLAY_PAYLOAD_NOT_RETAINED/ReconcileFirst when >16384 B or >16 MiB total), and retains ReadOnly commits only up to max_committed_receipts=4096 (line 989); checkpoint_state (1093-1111) prunes commit_order to surviving ids and persists ledger+state (including seq/order) via durable_checkpoint into uos_mcp_durable_ledger_ets; rehydrate_state (1113-1143) restores from durable_state and re-checkpoints. Test mcp_review_resilience_test_ffi.erl:93-175 (chronological_replay) seeds 4096 readonly commits, commits 20 adversarial high-map-order ids, asserts isError:false on every call, map_size(CommitOrder)=4096, identical Seq/CommitOrder after owner kill+restart, 4096 entries retained with all 20 new ids present and seeds 0000-0019 evicted, worker replay returns the committed outcome with zero re-execution, and 20 wire replays traced on server:execute_route_authenticated/8 inside the owner yield zero calls and exact result equality. Wave 2.5 receipt: retained_committed 4096, readonly_replays 20, readonly_reexecutions 0, bounded_commit_order_entries 4096, sequence_order_survive_restart true; full suite 14371/0 (log tail verified, sha256 3c655721... matches receipt)."
+    },
+    "R04-02": {
+      "status": "CLOSED",
+      "evidence": "mcp_stdio_ffi.erl:1201-1213 ensure_native_guardian reuses a live registered uos_mcp_native_guardian and, on register badarg, kills the just-spawned duplicate and recurses instead of crashing the ledger guardian; start_mcp_tables (1183-1200) calls it in both the fresh-guardian and existing-table branches, and ensure_mcp_tables (1178-1182) checks ledger guardian, ETS table and native guardian presence. Test native_guardian_recovery (test ffi 49-59) kills the native guardian, runs run_workspace_bounded_cd, and asserts a bounded {error,_}/{ok,{127,_}} result with a live re-registered guardian. guardian_publication (test ffi 276-310) traces that a recovered heir arms both ETS heirs before erlang:register and survives a second kill with identical table identities. Residual (recorded as new low finding, not a reopen): the durable-ledger guardian registrations at 1188 and 1240 remain unguarded true=register(...) and ensure_mcp_tables still raises mcp_tables_failed/mcp_tables_timeout/mcp_guardian_recovery_timeout; with_inflight_slot/with_native_workspace_slot catch and refuse, but gateway_handle_new/durable_initial/cached_supervised_gateway propagate into the supervisor restart budget."
+    },
+    "R04-03": {
+      "status": "CLOSED",
+      "evidence": "with_inflight_slot (mcp_stdio_ffi.erl:1345-1350) and with_native_workspace_slot (1389-1394) match {Ready, whereis(Name)} and return overloaded() / {error,<<\"backend_spawn_failed\">>} when the guardian is undefined, so no `undefined ! Msg` badarg can reach the ingress process; with_native_guardian creates alias+monitor only after the pid is confirmed (1396) and maps guardian DOWN to backend_spawn_failed (1410); guardian_send (1242-1247) re-ensures tables before sending; the pre-CAS ETS inflight_watch row (1356) lets a recovering heir re-adopt caller monitors (1235-1239)."
+    },
+    "R04-04": {
+      "status": "CLOSED",
+      "evidence": "runtime_gateway.gleam:1204-1235: the prefetched read_file document and knowledge prefetch entries are merged into request-local backends only; the post-dispatch state restores knowledge: base_knowledge and a per-call ProverMissing verification runner before checkpoint_state. checkpoint_state (1104-1105) further restricts the durable ETS copy of the corpus to AGENTS.md/CLAUDE.md/GEMINI.md. Wave 2 memory receipt: 50 files read -> 3 corpus entries, serialized state 53680 -> 53680 bytes, ETS 118976 -> 118976 bytes."
+    },
+    "R04-05": {
+      "status": "CLOSED",
+      "evidence": "await_owner_reply (runtime_gateway.gleam:1562-1582) monitors the owner pid, waits on a revocable alias reply subject (new_reply_subject/close_reply_subject -> mcp_stdio_ffi.erl:224-227 alias()/unalias/drain) and selects reply OR DOWN; the ReservePrivate wait (1509-1516) maps DOWN to GATEWAY_RESTARTING and timeout to GATEWAY_TIMEOUT before any effect; commit_prepared_private (1529-1553) returns Uncertain immediately when the effect executed and never retargets a commit. Test private_owner_fault (test ffi 61-91): reserve-phase owner death -> GATEWAY_RESTARTING, commit-phase death -> uncertain, both asserted under 500000 us."
+    },
+    "R04-06": {
+      "status": "CLOSED",
+      "evidence": "mcp_stdio_ffi.erl:1398 Minimum = 50 ms when TimeoutMs >= 100 else 1 ms; native_fill (1451) grants only when Deadline - now >= Minimum, otherwise replies {Tag,timeout} without spawning a port; the granted caller re-checks Remaining >= Minimum (1404) before run_workspace_unchecked. Test native_minimum_budget (test ffi 33-47): a 30 ms-deadline request with Minimum 50 receives timeout, a 200 ms control request is granted."
+    },
+    "R04-07": {
+      "status": "CLOSED",
+      "evidence": "register_or_stop_supervisor (mcp_stdio_ffi.erl:173-187) stops the losing tree and calls restore_gateway_subject(Existing), republishing the surviving tree's subject from its ETS handle box (201-210); register_supervisor (189-199) does the same on badarg; gateway_owner_set (212-220) publishes a child's subject only when its box belongs to the currently registered supervisor, and gateway_owner_register (221-222) publishes after registration; runtime_gateway.gleam:4523-4529 registers first, then owner_box_register. Test registration_publication (test ffi 8-31) pre-publishes a loser subject, asserts register_or_stop_supervisor returns false, the loser is dead, and the winner subject is restored in persistent_term."
+    },
+    "R04-08": {
+      "status": "ACCEPTED_LOW_RESIDUAL",
+      "evidence": "with_private_route_lock (mcp_stdio_ffi.erl:166-171) still polls global:set_lock with 0 retries and a 1 ms sleep (bounded, not FIFO). Wave 2.5 receipt finding_dispositions.open_low lists 'R04-08 private polling fairness'; limits state it remains LOW/open. Declared honestly; no false closure claim found."
+    },
+    "R04-09": {
+      "status": "ACCEPTED_LOW_RESIDUAL",
+      "evidence": "Snapshot and ObservationTarget are still answered from the owner mailbox (runtime_gateway.gleam:1152-1159) behind public Dispatch execution; private_snapshot_with_recovery (4542-4574) now monitors and retargets on owner DOWN but not on timeout. Wave 2.5 receipt lists 'R04-09 snapshot/observation priority inversion' as open low. Declared honestly."
+    },
+    "R04-10": {
+      "status": "CLOSED",
+      "evidence": "new_reply_subject() = {subject, alias(), make_ref()} and close_reply_subject -> unalias + receive-after-0 drain (mcp_stdio_ffi.erl:224-227); every wait closes its alias: dispatch_public (1410/1437), await_owner_reply (1567/1573), private_snapshot_with_recovery (4553/4561). Test private_fault(\"late\") (test ffi 73-74, 84-86) injects a 60 ms-late commit reply against a 20 ms wait and asserts no LATE_REPLY_FIXTURE message exists in the caller mailbox 100 ms later while the outcome is Uncertain."
+    },
+    "R04-11": {
+      "status": "CLOSED",
+      "evidence": "tools/uos-mcp-stdio:92-98 selects XDG_RUNTIME_DIR, then /run/user/UID, then ${HOME}/.cache/uos-mcp-verified-UID; 99-105 refuses a symlinked cache, creates it under umask 077 and asserts owner:mode == uid:700; 122 anchors success on top-level `jq -e '.status == \"PASS\"'`; 126-128 cross-checks the verifier's payload_sha256 against the manifest. headless-cache-final-observation.json (sha256 38c6200e... matches receipt): cache_path /home/an/.cache/uos-mcp-verified-1000, mode 0700, top_level_verifier_json_status_and_payload_match true, null_ping_succeeded true, via a controlled filesystem predicate with host runtime dir and HOME untouched."
+    }
+  },
+  "wave2_and_wave25_verifications": {
+    "otp29_stdlib_json_ingress_and_streaming": {
+      "verified": true,
+      "evidence": "mcp_stdio_ffi.erl:28-34 mcp_json_strict_inspect/2 runs one json:decode(Binary,{0,MaxDepth},strict_decoders()) pass plus a trailing-whitespace check; 36-47 mcp_json_stream_decode/2 uses json:decode_start/3 and json:decode_continue/2 (end_of_input finish) with per-chunk trailing checks; 69-73 depth guard throws depth_exceeded when D >= M (32 nested containers accepted, 33 rejected, consistent with Lean pushDepth 32 32 = none); 75-80 duplicate members rejected via a Seen map after string decoding (surfaced as DUPLICATE_JSON_KEY by json_guard.gleam:25); 83-84 post-unescape NUL in strings and keys plus raw invalid_byte 0 (line 52) -> nul_byte_forbidden; 91-108 checked outbound json:encode_key_value_list_checked/2 recursive encoder and json:format/2 roundtrip. json_guard.gleam variant shapes match the Erlang atoms/tuples. Production stdio ingress standard_raw (runtime_gateway.gleam:4100-4109) refuses >1 MiB and textual NUL, then json_guard.inspect before any wire projection; standard_loop (4168-4212) recurses on every ReadError and only stops at EndOfFile; read_line (mcp_stdio_ffi.erl:113-156) drains oversized/invalid-UTF-8 lines in 4096-byte chunks. HTTP validate_envelope (http.gleam:285-297) inspects after size/NUL checks; transports/stdio.gleam depth scan is a BitArray byte scan (342-371), no grapheme lists. Tests: mcp_market_leader_json_protocol_test.gleam suite1 (RFC 8259 vectors incl. exact depth 32 vs 33, NUL, surrogates, duplicates), suite5 streaming parity at every chunk size, checked encoder/format roundtrip; mcp_market_fixture.erl:11-47 real erl subprocess survives invalid UTF-8 (-32700), 1.1 MB line (-32600), decoded NUL (-32600), duplicate member (-32600), syntax (-32700), stays silent on notifications and answers initialize/ping/system_health from a single OS process. Final receipts bound to release 0540: stdio-fault 5/5 process_survived."
+    },
+    "go_sdk_null_params_and_arguments_interop": {
+      "verified": true,
+      "evidence": "validate_standard_document (runtime_gateway.gleam:4064-4078): params null accepted only for tools/list, resources/list, prompts/list and ping; arguments null accepted inside object params; primitive/array params or arguments and params null on any other method (tools/call, resources/read, prompts/get) -> INVALID_PARAMS, mapped to -32602 at 3856; tools/call without params -> INVALID_PARAMS. null_wire_projection (1730-1748) strips null params/arguments before the frozen wire decoder; the private path (1616-1628) maps arguments null to an empty object. Tests market leader 39-58: four parameterless methods with params null return result; tools/call integrity_check with arguments null returns isError false; six negative vectors return -32602. Live go-null-live-interoperability.json (sha256 12a42d2c... matches receipt): 5 positive / 6 negative on both stdio and HTTP against release 0540, payload f6609a5a...; the receipt truthfully records official_go_sdk_executed_by_this_probe false (operator-supplied encoding/json nil vectors)."
+    },
+    "lean4_44_theorems_zero_sorry_and_z3_47_queries": {
+      "verified": true,
+      "evidence": "Independently counted 44 `theorem` declarations in formal/lean/McpJsonProcessingFormal.lean (provenance_ceiling ... notification_silent_even_when_validation_fails); grep for sorry|axiom|admit yields only three substring hits of the identifier admitted_ev_ceiling (lines 13,17,19) and no native_decide, so zero placeholders and zero custom axioms; proofs are rfl/decide/omega/simp/induction over explicit models and the header (lines 3-14) states it is a source-bound abstract model, not a parser extraction. Z3 harness test_mcp_json_formal_z3.ml: independently enumerated core_queries 30 + extended_queries 15 + 2 trailing = 47, with 31 sat controls and 16 unsat proofs, each proof paired to a passing sat control, executed through tools/ecology_process.ml with -T:3/-memory:256 bounds, plus 512-state independent OCaml oracles and a word-boundary forbidden-token scan (435-439). wave25/z3-final.log: 47/47 [PASS], 'Lean exit=0 forbidden_tokens=0', 'Queries: 47; SAT controls: 31; UNSAT proofs: 16; failures: 0', 50/50 suite; the written verification_receipt.json carries source_digest c5191705c71b25d1c0b35e39dbcd8f0e equal to the current md5 of the Lean file, status pass, query_count 47. On-disk sha256 of both formal files match the sealed source-binding receipt for cd93c3bf..."
+    },
+    "poka_yoke_53_tools_and_hardware_nvme_interlock": {
+      "verified": true,
+      "evidence": "adapters/analysis.gleam:41 denied_nvme_serial \"25503L801736\", 43-52 sql_markers, 642-669 trap_reason (raw NUL, denied serial, SQL fragments after whitespace/comment normalization), 540-551 ast_anomaly_detect applies trap_reason to every argument key and value including `code` before any analysis (closes the Learning #22 bypass); market leader suite4 (441-471) asserts refusal for the serial, 'SELECT ... DROP TABLE' and a NUL byte inside code. adapters/system_observation.gleam:175-201 resolve_probe_status refuses OBSERVATION_PROBE_MISSING (Retryable) instead of synthesizing healthy; 139-146 zero containers requires an actual probe. market-53-schema-results.json: 53 tool entries, 45 isError:false and 8 isError:true, all eight domain refusals (plan_add, plan_update, sa_task_claim, sa_task_complete, sa_job_enqueue, sa_workflow_start -> ROUTE_GRANT_REQUIRED on ungranted public route; kms_catalog -> OBSERVATION_PROBE_MISSING; harness_system_feature_intent -> UNKNOWN_FEATURE_INTENT), zero INVALID_PARAMS or schema mismatches. tools.gleam sha256 recomputed = 9af105c618bfdfcff21b6dd39aff81cb0fefad77b8b31de670f83f5913594787 (tools_sha256 pin); mcp_live_cutover_wiring_test.gleam:2681 asserts exactly 53 tools; schema parity test 629-649 refuses 400-digit integers instead of crashing."
+    },
+    "three_transports_soak_and_http_413_close": {
+      "verified": true,
+      "evidence": "web/server.gleam:1531-1551: mist.read_body(req, 1_048_576) -> 413 HTTP_BODY_TOO_LARGE with #(\"connection\", \"close\") on mist.ExcessBody and 400 + close on MalformedBody; transports/http.gleam:302-304 returns 413 at the transport layer and OPTIONS/DELETE/Origin/HEADER_BODY_MISMATCH behaviors are covered by mcp_http_wire_wave2_test.gleam:65-180. Final receipts bound to release 0540 (release field verified in each file): wave2-live-http-wire 20/20 oversized cycles -> 413 with connection: close (20 occurrences) and next_call_failures 0; wave2-live-zenoh-performance 100/100 valid envelopes answered, 100 forged -> 0 answered, tool_count 53, router nas-1:8080; wave2-perf-scalability-soak 10000 requests, gateway_failures 0, process_delta 0, port_delta 0, andon latches survived, three owner-kill recoveries 4.4/44.4/72.3 ms; wave2-live-stdio-fault-survival 5/5 survived in a single OS process; wave2-daemon-chaos two automatic SIGKILL recoveries, all six services active, whole_vm_ets_persistence_claimed false. Launcher seal cache (tools/uos-mcp-stdio:72-134) refuses writable/symlinked capsules and -perm /222 payloads and binds boot_id + manifest hashes + full inode/ctime inventory; cached p50 250.7 ms vs full 1717.5 ms (6.85x) per receipt."
+    },
+    "protected_pins_and_journals_85_learnings": {
+      "verified": true,
+      "evidence": "wave25-r04-pre-signoff-receipt.json protected: admission_md5 c53ed6bf66cba56cfc0d6e850875a774, candidate_id sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663, tools_sha256 9af105c6..., ecology_process_sha256 b8ed1735..., control_modules 28, protected_control_beam_bytes_unchanged 56; admitted_ev_ceiling 93, application_admitted false, system_admitted false, new_ev_numbers_minted []. read-only-review-final.json (sha256 145a8df9... matches) records production_source_unchanged_since_initial_review true and the five wire-replay assertions. Independently recomputed by this audit: tools.gleam and tools/ecology_process.ml digests match their pins; all 10 protected/core sources listed in the Wave 2 receipt (harness admission/operations/successor_mcp, sa_plan_bridge, mcp registry/admission/receipts/dispatch/route_convergence/server) match; all 16 inspected source/test/proof/launcher files match wave2-final-source-bindings.json for source_revision cd93c3bf...; var/releases/ecology/current-mcp-release points to release 0540 whose manifest payload_sha256 f6609a5a... matches. Journals: both carry exactly 85 numbered learnings (grep count 85/85, Learning #77 chronology and #85 isError:false present in both); .before copies hash to the receipt's before_sha256 (ed1bbcdf..., 582e4fc5...), current files hash to after_sha256 (5ce4c7cf..., eb409c05...), and line-level diff shows 0 removed / 268 added lines in each, so historical bytes and Brier commitments are preserved; the Wave 2.5 ledger carries an ISO-8601 horizon 2026-10-31T08:00:00Z, mean_brier 0.00866 over five resolved forecasts, and a prospective p=0.80 R04 forecast left UNRESOLVED. final-handoff.json: R08 completed, R04 executing, no admission."
+    }
+  },
+  "new_findings": [
+    {
+      "id": "R04-13",
+      "severity": "low",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",
+      "lines": "4214-4239 (canonical_loop), 4142-4157 (wire mode selection)",
+      "mechanism": "In the opt-in UOS_MCP_WIRE_MODE=canonical stdio mode, canonical_loop handles Error(error) from ingest_canonical by printing error.code and returning Nil, so one oversized frame, textual or escaped NUL, duplicate member, depth-33 frame, or frame-deadline violation terminates the stdio gateway process (the -eval then reaches halt(0)) with no JSON-RPC error emitted to the client. This contradicts the J1 'never terminates before EOF' property that standard_loop (4168-4212) does satisfy, and matches the rmcp #557 DoS class the journals claim to have closed. Reachability: no pinned client configuration (.mcp.json, .pi/mcp.json, .gemini/settings.json, .codex/config.toml, user-level configs) sets UOS_MCP_WIRE_MODE; the launcher merely documents the variable; no test, receipt or Lean model covers canonical mode. Not a falsification of any sealed claim, which are all scoped to standard_loop.",
+      "recommendation": "Either recurse canonical_loop after emitting a standard_response refusal (as the ReadError arm already does) or remove the canonical mode from the launcher help; add a fault-survival test for the mode if retained."
+    },
+    {
+      "id": "R04-14",
+      "severity": "low",
+      "file": "apps/cepaf_gleam/src/mcp_stdio_ffi.erl",
+      "lines": "1178-1200, 1188, 1240, 1278, 1300-1301, 1325-1326",
+      "mechanism": "The R04-02 wedge (orphan native guardian) is closed, but the third interim recommendation was not adopted: ensure_mcp_tables still raises error(mcp_tables_failed|mcp_tables_timeout|mcp_guardian_recovery_timeout) rather than returning {error,Reason}. with_inflight_slot and with_native_workspace_slot catch it and refuse, but gateway_handle_new, durable_initial and cached_supervised_gateway (owner child-start/boot path) let the raise propagate into the OneForOne restart budget (20/60 s). The durable-ledger guardian name is still taken with unguarded true=register(...) at 1188 (fresh guardian) and 1240 (heir takeover); both are protected only by the ETS-presence precondition and the global:trans boot lock, and await_mcp_guardian allows 200 ms for heir registration while mcp_heir_takeover may wait up to 1000 ms for a missing ETS-TRANSFER.",
+      "recommendation": "Return typed errors from ensure_mcp_tables and translate them to GATEWAY_UNAVAILABLE/Retryable at the three boot-path callers; wrap the two ledger-guardian register calls in the same badarg-adopt pattern as ensure_native_guardian."
+    },
+    {
+      "id": "R04-15",
+      "severity": "low",
+      "file": "tools/uos-mcp-stdio",
+      "lines": "2, 97, 122, 126",
+      "mechanism": "The R04-11 headless fallback expands ${HOME} under set -u, so a systemd or cron context with HOME unset fails with a bash 'unbound variable' message instead of the launcher's own diagnostic (fail-closed but opaque, the exact symptom R04-11 set out to remove); the verifier result is parsed with an unpinned host `jq` from PATH (absent jq -> 'full capsule verification failed'), while every other toolchain path in the script is pinned. The controlled-predicate test (headless-cache-final-observation.json) left HOME set and jq present, so neither path was exercised.",
+      "recommendation": "Guard with ${HOME:-} plus an explicit error, and either pin jq from the Nix profile or parse the verifier JSON with the already-pinned OCaml binary."
+    },
+    {
+      "id": "R04-16",
+      "severity": "low",
+      "file": "verification_receipt.json (repository root)",
+      "lines": "test_mcp_json_formal_z3.ml:444-448, 533-534; z3-final.log:49",
+      "mechanism": "The formal harness writes verification_receipt.json to the current directory when MCP_JSON_FORMAL_WORKDIR is unset; the Wave 2.5 run executed from the repository root, leaving a 104973-byte unsealed receipt at /home/an/NAS-setup/uos/verification_receipt.json (mtime 2026-10-31 06:07). .gitignore has no rule for it, so it is snapshot-eligible untracked content in the canonical default working copy (SC-WORKSPACE-ISO-001 INV-WS-01; SC-JOURNAL section 8 clean diff accounting), and it is not among the hash-sealed evidence files in the receipt.",
+      "recommendation": "Run the harness with MCP_JSON_FORMAL_WORKDIR under var/harness, add an ignore rule, and seal the receipt digest alongside z3-final.log."
+    }
+  ],
+  "accepted_residual_limits": [
+    "Audit method: Read/Grep/Glob plus non-mutating shell reads only (sha256sum, md5sum, diff, wc, grep, head/tail, ls); zero writes, zero jj/git invocations. Tests, Lean and Z3 were not re-executed by this auditor; their results are taken from hash-sealed logs (z3-final.log, full-gleam-test-final.log, final-assertions-green.log 'All 108 tests passed') whose digests match the receipt.",
+    "Receipt-only claims not independently recomputable without an Erlang runtime: BEAM md5 pins (admission_md5, 28 control_md5s, loaded_mcp_beams_sha256 c51ce553...), 14371/43/108 test counts, soak and chaos timings, 7 ms checkpoint latency.",
+    "R04-12 (Node.js orchestration drivers) remains an operator-waived residual: wave25 still contains go-null-live.js, journal-sync.js, seal-receipt.js, R07-native-compiler-repair.js and drivers/wave2/*.js as digest-pinned evidence-only drivers; the operational-language migration (OCaml/Mojo/Gleam) is explicitly outside this pass.",
+    "Lean and Z3 artifacts are abstract source-bound models, not extracted refinement (declared by the Lean header and receipt formal_refinement_claimed=false). Several theorems are trivial by functionality (envelope/outcome pairwise disjointness) and the J5 I-JSON integer theorems have no ingress counterpart: strict_decoders uses binary_to_integer, which accepts bignums; integer bounds are enforced only in adapter numeric conversion (schema parity test 629-649).",
+    "Go SDK interoperability is wire-vector conformance against operator-supplied encoding/json nil vectors on live stdio and HTTP; the official Go SDK was not executed (official_go_sdk_executed_by_this_probe=false).",
+    "The push-streaming decoder (mcp_json_stream_decode) is proven chunk-split invariant by tests but the production stdio ingress decodes fully assembled lines single-pass; no receipt claims a live chunked-stream path.",
+    "await_public_dispatch (runtime_gateway.gleam:4409-4448) re-sends the identical request to the replacement owner up to 3 times after owner DOWN without a poison-message guard; a deterministically crashing request would cost up to 4 owner restarts against the 20/60 s budget. No crash input was found (no let assert/panic in gateway, dispatch, adapters, wire, json_guard or transport modules; 10000-request soak with 10% negative traffic had 0 failures; mutating replays are fenced by write-ahead intents), so this is recorded as a design observation, not a defect.",
+    "R04-08 (1 ms polling private route lock) and R04-09 (snapshot/observation served from the owner mailbox behind public dispatch) remain open-low exactly as the Wave 2.5 receipt declares.",
+    "Legacy unsequenced receipts migrate in declared lexical order with no invented historical chronology; node-local ETS survives owner/guardian death only, not whole-VM or host loss; existing attached stdio clients retain the previous capsule until reconnect.",
+    "Readiness fixture poll deadline is soft (no strict 1 s or 20 ms recovery SLO); the journal filename prefix 20261030-2330 versus the observed 00:13Z authoring time remains a disclosed deviation from the host-clock prefix rule.",
+    "Application and system admission are not granted by this audit, by any receipt, or by the sealed release; admitted EV ceiling stays 93 with EV-94..EV-109 NOT_ADMITTED and no new EV number minted."
+  ],
+  "admiralty_rating": "B2",
+  "application_admitted": false,
+  "system_admitted": false,
+  "admitted_ev_ceiling": 93
+}

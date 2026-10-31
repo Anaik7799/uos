@@ -1,0 +1,1784 @@
+{
+  "schema": "UOS-MCP-RESILIENCE-STAGE1-v1",
+  "observed_at": "2026-10-31T00:13:45.063Z",
+  "operator_artifact_label": "20261030-2330; filename is requested label, not fabricated observation time",
+  "status": "STAGE1_EXECUTED_WITH_OPEN_AVAILABILITY_LIMITS_PENDING_R04",
+  "plan_id": "20261030-2325-mcp-resilience-perf-scale-bdd-fractal",
+  "worker": "agy-argon-sup-20261030-0844",
+  "task_states": [
+    {
+      "id": "R01",
+      "state": "completed",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": null
+    },
+    {
+      "id": "R02",
+      "state": "completed",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": null
+    },
+    {
+      "id": "R03",
+      "state": "completed",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": null
+    },
+    {
+      "id": "R04",
+      "state": "executing",
+      "worker": "agy-argon-sup-20261030-0844",
+      "attempt": 1,
+      "lease_until_ns": 1793409199475240200
+    }
+  ],
+  "application_admitted": false,
+  "system_admission": "NOT_ADMITTED",
+  "admitted_ev_ceiling": 93,
+  "unadmitted_ev_range": "EV-94..EV-109",
+  "new_ev_numbers_minted": [],
+  "vcs": {
+    "kind": "standalone Jujutsu",
+    "main_unchanged": "092337be02b0cb6ce40b7cfe962abc5da4281839",
+    "working_copy_change": "mprwvumqxkqkmyymprkxnmzykmwvnrql",
+    "recovery_tag": "tag/20261030-2259-mcp-101-4agent-otp29-checkpoint",
+    "main_advanced": false,
+    "pushed": false,
+    "independent_audit": "R04 pending; no Claude audit performed in this stage"
+  },
+  "runtime": {
+    "otp": "29",
+    "erts": "17.0.5",
+    "capsule": {
+      "status": "PASS",
+      "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415",
+      "candidate_sha256": "7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415",
+      "payload_sha256": "ef076ff50fa7e948225df7b9ef817b843cc66b649f3e60e64aa19ecd38656d0c",
+      "source_sha256": "1f714dafd9c421e612bd83d0337fd6e0ddbef4135eca39333d6225bfbe3bf198",
+      "files": 1470,
+      "payload_bytes": 35977752,
+      "otp": {
+        "otp_release": "29",
+        "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+        "erts_version": "17.0.5"
+      },
+      "application_admitted": false,
+      "source_revision": "66bfc0801ddbf3d776f6a15e656a42723ed2cc92",
+      "old_release": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-2346-8f30a3c0e563003e843dcb8b73cda867d097e61bbb78ae0eb1df29cef23c7bc0",
+      "release_id": "20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415",
+      "source_inputs": 3459,
+      "source_manifest_sha256": "1f714dafd9c421e612bd83d0337fd6e0ddbef4135eca39333d6225bfbe3bf198",
+      "app_source_changes_since_staging": []
+    },
+    "integrity": {
+      "runtime_modules": {
+        "cepaf_gleam@mcp@resources": "740f916a77cfd4c0487219161a5d7a4b",
+        "cepaf_gleam@mcp@runtime_gateway": "387f4e4ceacb683f57517bb6344b16de",
+        "cepaf_gleam@mcp@supervisor": "81f65934edbbfb38e2cf9d650e1df609",
+        "mcp_stdio_ffi": "de956aecf50537154f85e5373bfdc093"
+      },
+      "benchmark_module_parity": true,
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:07:48.001Z",
+      "control_modules": 28,
+      "differences": [],
+      "control_md5s": {
+        "cepaf_gleam@harness@admission": "5104acfe5e71793ef069548e007832ed",
+        "cepaf_gleam@harness@client_config": "0c2e263939b361001053c689e81274f8",
+        "cepaf_gleam@harness@client_mcp": "e7aa56a5fcb03b4787f6dcba421cf499",
+        "cepaf_gleam@harness@client_profiles": "dcdd0d8a3946724d16cbb9d975aa5b7a",
+        "cepaf_gleam@harness@clock": "97a94ee9e10fd52b144d97fdaaac4ac1",
+        "cepaf_gleam@harness@development": "ff02fa524b34555f33321f6f8a4160e2",
+        "cepaf_gleam@harness@files": "9016b5ef3c680dd039beb5365b460735",
+        "cepaf_gleam@harness@mcp": "c806834378744986964f8c21b354c27d",
+        "cepaf_gleam@harness@native_backend": "c7cce8b648dd94941da211bfb4fa9839",
+        "cepaf_gleam@harness@operations": "e1c851464b2bfbff39f1f4264ff1c6fc",
+        "cepaf_gleam@harness@planning_intents": "7f824764fe4205f6bda0c623609b7e66",
+        "cepaf_gleam@harness@successor_mcp": "774fb4baf76dfa8bbb9112906276235d",
+        "cepaf_gleam@harness@value": "a0b2c57ba385f4d02a7ff07f11b959a6",
+        "cepaf_gleam@planning@sa_plan_bridge": "2f5f95d37e2300f19b63acb98fcb2289",
+        "client_config_io": "7fa8444686d4eadbd6570fe55f9a042c",
+        "ecology_capability_ffi": "46e123aa3e8444abcdafba45c2715173",
+        "esqlite3": "559df945b9931ff4d5dfb312c46b240e",
+        "esqlite3_nif": "5b3ef93e642fff3efc7e69f45de83cbf",
+        "harness_native_backend_ffi": "32a7a136f88a231812ef5d843f711586",
+        "session_store_cli": "7b758634d57f2af3cbc61022d7a05567",
+        "session_store_ffi": "640bb2d1f550cc52743f13ec5efec3b4",
+        "session_sync_ffi": "84df5c4ac97f59dfd224b70cd9b21701",
+        "uos_swarm@board": "a703e22b5da3afd1894e818a4f085e0b",
+        "uos_swarm@coord": "2ce7f6544e5041b1c4ad73486b066cb0",
+        "uos_swarm@session_authority": "dd6c192ad92e73059ca3a2a5631b2e2d",
+        "uos_swarm@session_store": "eeaf8f6939252ca62ed7a9db4bf85a72",
+        "uos_swarm@session_sync": "3fae88ea61b0f4195507411d34aedf46",
+        "uos_swarm_ffi": "c10aa59407df5842db9d2d0bdf100f50"
+      },
+      "admission_md5": "c53ed6bf66cba56cfc0d6e850875a774",
+      "core_candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+      "source_inputs": 3459,
+      "app_source_changes_since_staging": [],
+      "old_capsule_preserved": true
+    },
+    "config_parity": {
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:06:05.818Z",
+      "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415",
+      "payload_sha256": "ef076ff50fa7e948225df7b9ef817b843cc66b649f3e60e64aa19ecd38656d0c",
+      "files": [
+        "/home/an/.gemini/config/mcp_config.json",
+        "/home/an/.gemini/antigravity-cli/mcp_config.json",
+        "/home/an/.gemini/settings.json",
+        "/home/an/NAS-setup/uos/.gemini/settings.json",
+        "/home/an/NAS-setup/uos/.mcp.json",
+        "/home/an/.claude.json",
+        "/home/an/.pi/agent/mcp.json",
+        "/home/an/NAS-setup/uos/.pi/mcp.json",
+        "/home/an/.pi/agent/mcp-adapter.json",
+        "/home/an/NAS-setup/uos/.codex/config.toml",
+        "/home/an/.codex/config.toml"
+      ],
+      "preservation": [
+        {
+          "path": "/home/an/.gemini/config/mcp_config.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 13,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/.gemini/antigravity-cli/mcp_config.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 3,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/.gemini/settings.json",
+          "other_top_level_members_byte_preserved": 1,
+          "other_servers_byte_preserved": 0,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.gemini/settings.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 0,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.mcp.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 0,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/.claude.json",
+          "other_top_level_members_byte_preserved": 80,
+          "other_servers_byte_preserved": 0,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/.pi/agent/mcp.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 15,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.pi/mcp.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 0,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/.pi/agent/mcp-adapter.json",
+          "other_top_level_members_byte_preserved": 0,
+          "other_servers_byte_preserved": 7,
+          "other_uos_settings_byte_preserved": true
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/.codex/config.toml",
+          "other_bytes_preserved": true,
+          "only_two_pin_values_changed_per_uos_env": true
+        },
+        {
+          "path": "/home/an/.codex/config.toml",
+          "other_bytes_preserved": true,
+          "only_two_pin_values_changed_per_uos_env": true
+        }
+      ],
+      "private_values_printed": false
+    },
+    "runtime_lease_release": {
+      "all_four_released": true,
+      "leases": [
+        {
+          "resource": "runtime:c3i-gleam-server",
+          "epoch": 11,
+          "holder": "agy-argon-sup-20261030-0844",
+          "released": true
+        },
+        {
+          "resource": "runtime:uos-cognitive-worker",
+          "epoch": 6,
+          "holder": "agy-argon-sup-20261030-0844",
+          "released": true
+        },
+        {
+          "resource": "runtime:uos-ecology",
+          "epoch": 7,
+          "holder": "agy-argon-sup-20261030-0844",
+          "released": true
+        },
+        {
+          "resource": "runtime:uos-clock-guard",
+          "epoch": 6,
+          "holder": "agy-argon-sup-20261030-0844",
+          "released": true
+        }
+      ]
+    },
+    "chaos": {
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:07:38.674Z",
+      "before": {
+        "services": [
+          {
+            "unit": "c3i-gleam-server.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3797328,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-cognitive-worker.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3797397,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-clock-guard@primary.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3798126,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-clock-guard@backup.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3797998,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-ecology@20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3801873,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-telegram-bridge.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 429614,
+            "restarts": 0
+          }
+        ],
+        "gateway_health": {
+          "status": "running",
+          "child_id": "mcp_unified_gateway",
+          "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+          "loaded_beam_sha256": "a26b2ee0ab26d8907e9759f4e162e0ed2ec5849f82b96fc7bac1cdf7167461a2",
+          "zenoh_subscriber_enabled": true,
+          "zenoh_subscriber_alive": true,
+          "zenoh_subscriber_state": "connected_fresh",
+          "zenoh_subscriber_last_activity_age_ms": 8452,
+          "public_routes": 65,
+          "development_routes": 21,
+          "successor_routes": 15,
+          "total_routes": 101,
+          "application_admitted": false
+        }
+      },
+      "chaos": [
+        {
+          "phase": "ecology_sigkill",
+          "unit": "uos-ecology@20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415.service",
+          "old_pid": 3801873,
+          "new_pid": 3829114,
+          "time_to_active_http_and_subscriber_ms": 7045.153711999999,
+          "time_to_verified_all_three_ms": 7276.828659999999,
+          "full_negative_guard_verification_ms": 8296.456710999999,
+          "restart_count": 1,
+          "automatic": true,
+          "zenoh_positive_negative": {
+            "status": "PASS",
+            "router": "http://nas-1.tail55d152.ts.net:8080/",
+            "positive_completed_after_ms": 231.51988700000038,
+            "negative_observation_window_ms": 1000,
+            "valid_envelopes": 4,
+            "valid_answered": 4,
+            "forged_envelopes": 1,
+            "forged_answered": 0,
+            "negative_result": "OBSERVED_SILENT_DROP_WITH_POSITIVE_BRACKET",
+            "post_forgery_ping_answered": true,
+            "tool_count": 53,
+            "subscriber_alive": true,
+            "subscriber_state": "connected_fresh",
+            "elapsed_ms": 1247.0424220000004,
+            "samples": 5,
+            "p50_ms": 120.30535699999928,
+            "p95_ms": 225.98125400000026,
+            "p99_ms": 225.98125400000026,
+            "max_ms": 225.98125400000026,
+            "parse_errors": 0,
+            "no_delete_requests": true
+          }
+        },
+        {
+          "phase": "mcp_sigkill",
+          "unit": "c3i-gleam-server.service",
+          "old_pid": 3797328,
+          "new_pid": 3833561,
+          "time_to_active_http_and_subscriber_ms": 7190.832547000002,
+          "time_to_verified_all_three_ms": 7440.258400999999,
+          "full_negative_guard_verification_ms": 8458.502607999999,
+          "restart_count": 1,
+          "automatic": true,
+          "zenoh_positive_negative": {
+            "status": "PASS",
+            "router": "http://nas-1.tail55d152.ts.net:8080/",
+            "positive_completed_after_ms": 249.41915099999824,
+            "negative_observation_window_ms": 1000,
+            "valid_envelopes": 4,
+            "valid_answered": 4,
+            "forged_envelopes": 1,
+            "forged_answered": 0,
+            "negative_result": "OBSERVED_SILENT_DROP_WITH_POSITIVE_BRACKET",
+            "post_forgery_ping_answered": true,
+            "tool_count": 53,
+            "subscriber_alive": true,
+            "subscriber_state": "connected_fresh",
+            "elapsed_ms": 1265.3847700000006,
+            "samples": 5,
+            "p50_ms": 148.3351049999983,
+            "p95_ms": 242.2624829999986,
+            "p99_ms": 242.2624829999986,
+            "max_ms": 242.2624829999986,
+            "parse_errors": 0,
+            "no_delete_requests": true
+          }
+        }
+      ],
+      "after": {
+        "services": [
+          {
+            "unit": "c3i-gleam-server.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3833561,
+            "restarts": 1
+          },
+          {
+            "unit": "uos-cognitive-worker.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3797397,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-clock-guard@primary.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3798126,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-clock-guard@backup.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3797998,
+            "restarts": 0
+          },
+          {
+            "unit": "uos-ecology@20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 3829114,
+            "restarts": 1
+          },
+          {
+            "unit": "uos-telegram-bridge.service",
+            "active": "active",
+            "substate": "running",
+            "pid": 429614,
+            "restarts": 0
+          }
+        ],
+        "gateway_health": {
+          "status": "running",
+          "child_id": "mcp_unified_gateway",
+          "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+          "loaded_beam_sha256": "a26b2ee0ab26d8907e9759f4e162e0ed2ec5849f82b96fc7bac1cdf7167461a2",
+          "zenoh_subscriber_enabled": true,
+          "zenoh_subscriber_alive": true,
+          "zenoh_subscriber_state": "connected_fresh",
+          "zenoh_subscriber_last_activity_age_ms": 1318,
+          "public_routes": 65,
+          "development_routes": 21,
+          "successor_routes": 15,
+          "total_routes": 101,
+          "application_admitted": false
+        }
+      },
+      "limits": [
+        "Ecology4110 and actual C3I MCP4100 are distinct services",
+        "Expected restart counters increase after deliberate SIGKILL; counts are preserved",
+        "Whole VM restart does not preserve node-local ETS"
+      ],
+      "secret_values_recorded": false
+    },
+    "services_final": {
+      "observed_at": "2026-10-31T00:12:54.671Z",
+      "all_six_active": true,
+      "all_four_released": true,
+      "services": [
+        {
+          "unit": "c3i-gleam-server.service",
+          "ActiveState": "active",
+          "SubState": "running",
+          "MainPID": "3833561",
+          "NRestarts": "1"
+        },
+        {
+          "unit": "uos-cognitive-worker.service",
+          "ActiveState": "active",
+          "SubState": "running",
+          "MainPID": "3797397",
+          "NRestarts": "0"
+        },
+        {
+          "unit": "uos-clock-guard@primary.service",
+          "ActiveState": "active",
+          "SubState": "running",
+          "MainPID": "3798126",
+          "NRestarts": "0"
+        },
+        {
+          "unit": "uos-clock-guard@backup.service",
+          "ActiveState": "active",
+          "SubState": "running",
+          "MainPID": "3797998",
+          "NRestarts": "0"
+        },
+        {
+          "unit": "uos-ecology@20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415.service",
+          "ActiveState": "active",
+          "SubState": "running",
+          "MainPID": "3829114",
+          "NRestarts": "1"
+        },
+        {
+          "unit": "uos-telegram-bridge.service",
+          "ActiveState": "active",
+          "SubState": "running",
+          "MainPID": "429614",
+          "NRestarts": "0"
+        }
+      ]
+    }
+  },
+  "source_changes": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",
+      "sha256": "d58e493423ca53be187d3b079125e5d2ed8f436046b09c54cb7878feeceab427"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+      "sha256": "f3e8ac249122f944c7fa90400979d004aa077db344fc1dbe02deccc3b6d397f3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/resources.gleam",
+      "sha256": "995d8881ef5df9018e4b5034ab4c6712f476feb48f4fbf09d9b3a9795726fb0a"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/mcp_stdio_ffi.erl",
+      "sha256": "d04a964ae12a3042c609dd4123af21bd5a73fddf085cf518fc7a112ca5b78f4c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_resilience_bdd_test.gleam",
+      "sha256": "85bd0a54d429403eaa58f67129596d8c49ff55b5fb55d32d1906abf2df7ce3fc"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_fractal_path_resilience_test.gleam",
+      "sha256": "6ae54cdc63d17f3110d9fa6c794dcb6f07d75143cb7f1617bb9dbced1a24e8db"
+    },
+    {
+      "path": "tools/uos-mcp-stdio",
+      "sha256": "601a15540d872e95b0f6c41bf09f478b597ba64a814fd732a613f90dd4a5c21d"
+    }
+  ],
+  "verification": {
+    "tests": {
+      "selected_suites": 48,
+      "selected_passed": 566,
+      "selected_failed": 0,
+      "existing_tests": 526,
+      "new_tests": 40,
+      "bdd_tests": 29,
+      "fractal_tests": 11,
+      "web_passed": 43,
+      "swarm_passed": 702,
+      "tui_passed": 198,
+      "non_duplicate_total": 1509,
+      "suite_names": [
+        "browser_harness_test",
+        "c3i_nif_mcp_test",
+        "client_mcp_test",
+        "dart_mcp_tools_wiring_test",
+        "harness_authority_test",
+        "harness_cas_critical_section_test",
+        "harness_development_test",
+        "harness_native_backend_test",
+        "harness_pre_attach_assessment_test",
+        "harness_sa_plan_boundary_test",
+        "harness_stdio_pipe_test",
+        "harness_successor_test",
+        "harness_telegram_test",
+        "harness_tracking_test",
+        "mcp_admission_test",
+        "mcp_analysis_test",
+        "mcp_assurance_test",
+        "mcp_authz_wiring_test",
+        "mcp_catalog_truth_test",
+        "mcp_client_matrix_test",
+        "mcp_control_test",
+        "mcp_docs_truth_test",
+        "mcp_feature_acceptance_test",
+        "mcp_final_acceptance_test",
+        "mcp_http_auth_test",
+        "mcp_inference_models_test",
+        "mcp_knowledge_test",
+        "mcp_live_cutover_wiring_test",
+        "mcp_observation_test",
+        "mcp_planning_read_test",
+        "mcp_planning_write_test",
+        "mcp_protocol_conformance_test",
+        "mcp_registry_test",
+        "mcp_release_rehearsal_test",
+        "mcp_route_census_test",
+        "mcp_route_parity_test",
+        "mcp_runtime_truth_test",
+        "mcp_server_facilities_test",
+        "mcp_transport_test",
+        "mcp_vault_metadata_test",
+        "mcp_verification_execution_test",
+        "mcp_worker_recovery_test",
+        "mcp_workspace_disposition_test",
+        "otp_app_release_test",
+        "otp_release_test",
+        "system_feature_census_test",
+        "mcp_resilience_bdd_test",
+        "mcp_fractal_path_resilience_test"
+      ],
+      "scope": "Selected48EUnit and three companion applications only; focused40is subset, not added twice"
+    },
+    "tdd": {
+      "initial_red": {
+        "failed": 4,
+        "passed": 0,
+        "log": "tdd-red.log"
+      },
+      "last_green": {
+        "passed": 40,
+        "failed": 0,
+        "log": "tdd-sqlite-busy-green.log"
+      },
+      "history": "Each production behavior was preceded by a failing behavior test; failed load experiments retained and converted to deterministic regressions",
+      "red_failure_logs": [
+        "tdd-boot-racer-red.log",
+        "tdd-commit-capacity-red.log",
+        "tdd-fresh-read-red.log",
+        "tdd-killed-slot-red.log",
+        "tdd-mirror-red.log",
+        "tdd-native-bulkhead-red.log",
+        "tdd-overload-red.log",
+        "tdd-private-128-red.log",
+        "tdd-private-convoy-red.log",
+        "tdd-private-queued-crash-red.log",
+        "tdd-queued-crash-red.log",
+        "tdd-red.log",
+        "tdd-replay-candidate-red.log",
+        "tdd-sqlite-busy-red.log",
+        "tdd-unauth-burst-red.log",
+        "tdd-volatile-health-red.log",
+        "tdd-warm-burst-red.log",
+        "tdd-warm-only-red.log"
+      ]
+    },
+    "build": {
+      "compiler": "toolchains/gleam-1.16.0/bin/gleam",
+      "otp_path": "toolchains/nix-profile/bin",
+      "build_exit": 0,
+      "compile_package_exit": 0,
+      "erlc_werror_exit": 0,
+      "modified_file_warnings": 0,
+      "unrelated_preexisting_warnings": "Retained; no whole-tree zero-warning claim",
+      "companion_dependency_note": "uos_swarm and uos_tui have no cepaf dependency; their observed702/198 results precede final gateway-only changes and remain source-current. Web43 was rebuilt/tested on final dependency source."
+    },
+    "formal": {
+      "command": "tools/lean formal/lean/McpSymbiosis101FormalImpact.lean",
+      "exit": 0,
+      "proofs": 24,
+      "source_changed": false,
+      "limits": "Existing underlying string-only decoder theorem remains true; gateway now projects typed public JSON after authentication/size/depth checks. No new extraction/refinement proof, scheduler bound, OS availability or ledger eviction theorem is claimed."
+    },
+    "bdd_matrix": {
+      "agents": 4,
+      "transports": 3,
+      "profiles": [
+        "2024-11-05",
+        "2026-07-28"
+      ],
+      "route_planes": 3,
+      "route_cases": 72,
+      "extra_typed_public_calls": 24,
+      "total_matrix_transport_invocations": 96,
+      "erratum": "R02 completion text said144; correct product4*3*2*3is72. Canonical event preserved; correction recorded here and R03 result."
+    },
+    "fractal_layers": [
+      "L0",
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "L6",
+      "L7",
+      "L8",
+      "L9"
+    ],
+    "evidence": [
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/tdd-red.log",
+        "sha256": "de58497d22961fce64521bb5ab51c97abff9759bbf3742d382dcadce18902d8e"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/tdd-sqlite-busy-red.log",
+        "sha256": "e21f15353af8489f2fc1c48468768d716527f3b8f6425a0e27df8c04c28d1532"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/tdd-sqlite-busy-green.log",
+        "sha256": "d0d1979d5690c33af4198e24ad1b2014f540a410355a7c35b6eec8b489759283"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/R03-48-sealed.log",
+        "sha256": "1885711d6ba9f9e07f7200ba744dfdfc3688abae930e4a44a470c7c64192d689"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/R03-web-sealed.log",
+        "sha256": "b6e44862770bcd6d2408de4e512565f5501f2dc9117c5e58202fa215d16a5ecc"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/R03-uos_swarm.log",
+        "sha256": "c8cf441ab2c59b536010ba97e03fff4c19a42edd9845499051c480246d95c007"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/R03-uos_tui.log",
+        "sha256": "0d2bfbc55410cfadb18e1152a5d89ae5b31aead5bc9312c70e1618b75c3499c5"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/R03-source-final-build.log",
+        "sha256": "e905c932f8abd57a35230a8177dc2232775264b2e3d6e0e164e236cdb94ab8e4"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/R03-source-final-compile.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/erlc-Werror-final.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/lean-impact-final.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/perf-scalability-soak.log",
+        "sha256": "476038777aa847cbdf136ac622b3bb6498910e6b46f3c537bcf65fc8569576f1"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/perf-scalability-soak-red.log",
+        "sha256": "a3c552d8ec40b1893034d59a7c2ad15a344b78f83f2f1033296aca2512f33e65"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/capsule-stage.log",
+        "sha256": "30a670d46f90b6fa58bf721a404e2d6d652a41e0284852f0029c6011d72a53ac"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/capsule-verify.log",
+        "sha256": "96698b49ba0c4549d21e8b6992ef273f27aa3b25580b2c63e99ed471325bd551"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/live-perf-final.log",
+        "sha256": "0e5f871cb148d2378b6e7dc1213153213846df7c0e8b7b9b05d2f59f208413d7"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/stdio-perf-final.log",
+        "sha256": "8cb3e199c80ab16725630224bf23778a657e2f839171b412bcf46d1ede968c03"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/tamper-final.log",
+        "sha256": "81ed67e6c23a888dbf64047538645b6ca82831303771fe7c397209ad0d13cfd0"
+      },
+      {
+        "path": "var/harness/20261030-2325-mcp-resilience/chaos-final.log",
+        "sha256": "e64d568a598b1240cfc8026b5a05d1209aa00ee2e1fe147d0ae4571a219b464f"
+      }
+    ]
+  },
+  "performance": {
+    "in_vm": {
+      "driver": "Actual supervised ingress; real planning/sqlite and cached/native preflight subprocesses in callers; fresh read-only calls, explicit-intent replays and10% negative traffic",
+      "status": "PASS",
+      "otp": "29",
+      "erts": "17.0.5",
+      "peak": {
+        "port_count": 17,
+        "process_count": 178,
+        "ets_memory_bytes": 916224,
+        "total_memory_bytes": 90824808
+      },
+      "andon_latches_survived": true,
+      "before": {
+        "port_count": 1,
+        "process_count": 50,
+        "ets_memory_bytes": 835664,
+        "total_memory_bytes": 45340720
+      },
+      "compiled_runtime_modules": {
+        "cepaf_gleam@mcp@resources": "740f916a77cfd4c0487219161a5d7a4b",
+        "cepaf_gleam@mcp@runtime_gateway": "387f4e4ceacb683f57517bb6344b16de",
+        "cepaf_gleam@mcp@supervisor": "81f65934edbbfb38e2cf9d650e1df609",
+        "mcp_stdio_ffi": "de956aecf50537154f85e5373bfdc093"
+      },
+      "gateway_failures": 0,
+      "levels": [
+        {
+          "seconds": 64.281842,
+          "requests": 2000,
+          "gateway_failures": 0,
+          "concurrency": 1,
+          "max_ms": 186.585,
+          "owner_kill_recoveries": [],
+          "p50_ms": 1.398,
+          "p95_ms": 123.736,
+          "p99_ms": 145.594,
+          "statuses": {
+            "refused": 400,
+            "negative_validation": 66,
+            "answered": 1534
+          },
+          "throughput_rps": 31.112985219060775
+        },
+        {
+          "seconds": 19.965182,
+          "requests": 2000,
+          "gateway_failures": 0,
+          "concurrency": 4,
+          "max_ms": 181.596,
+          "owner_kill_recoveries": [],
+          "p50_ms": 1.266,
+          "p95_ms": 123.87,
+          "p99_ms": 139.879,
+          "statuses": {
+            "refused": 400,
+            "negative_validation": 66,
+            "answered": 1534
+          },
+          "throughput_rps": 100.17439360182142
+        },
+        {
+          "seconds": 8.422911,
+          "requests": 2000,
+          "gateway_failures": 0,
+          "concurrency": 16,
+          "max_ms": 291.587,
+          "owner_kill_recoveries": [
+            {
+              "andon_latches_survived": true,
+              "recovery_ms": 3.283
+            }
+          ],
+          "p50_ms": 2.316,
+          "p95_ms": 221.576,
+          "p99_ms": 258.204,
+          "statuses": {
+            "refused": 400,
+            "negative_validation": 66,
+            "answered": 1534
+          },
+          "throughput_rps": 237.44759976687396
+        },
+        {
+          "seconds": 7.457613,
+          "requests": 2000,
+          "gateway_failures": 0,
+          "concurrency": 64,
+          "max_ms": 877.883,
+          "owner_kill_recoveries": [
+            {
+              "andon_latches_survived": true,
+              "recovery_ms": 2.774
+            }
+          ],
+          "p50_ms": 3.071,
+          "p95_ms": 810.309,
+          "p99_ms": 848.643,
+          "statuses": {
+            "refused": 400,
+            "negative_validation": 66,
+            "answered": 1534
+          },
+          "throughput_rps": 268.18232589972155
+        },
+        {
+          "seconds": 7.556234,
+          "requests": 2000,
+          "gateway_failures": 0,
+          "concurrency": 128,
+          "max_ms": 1684.676,
+          "owner_kill_recoveries": [
+            {
+              "andon_latches_survived": true,
+              "recovery_ms": 2.471
+            }
+          ],
+          "p50_ms": 3.385,
+          "p95_ms": 1600.92,
+          "p99_ms": 1635.311,
+          "statuses": {
+            "refused": 400,
+            "negative_validation": 66,
+            "answered": 1534
+          },
+          "throughput_rps": 264.68211545592686
+        }
+      ],
+      "limits": [
+        "Node-local ETS only; whole VM death is a separate recovery boundary",
+        "Missing metabolic/POODAVR probes are explicit refusals, not fabricated healthy outputs"
+      ],
+      "observed_at": "2026-10-31T00:03:18Z",
+      "port_delta": 0,
+      "post_gc": {
+        "port_count": 1,
+        "process_count": 50,
+        "ets_memory_bytes": 835816,
+        "total_memory_bytes": 43417616
+      },
+      "process_delta": 0,
+      "total_requests": 10000
+    },
+    "http": {
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:06:35.503Z",
+      "endpoint": "http://nas-1.tail55d152.ts.net:4100/mcp",
+      "origin": "https://nas-1.tail55d152.ts.net:4101",
+      "levels": [
+        {
+          "concurrency": 1,
+          "requests": 300,
+          "throughput_rps": 124.72260787769093,
+          "samples": 300,
+          "p50_ms": 1.3123099999997976,
+          "p95_ms": 5.983841000000211,
+          "p99_ms": 134.40501100000006,
+          "max_ms": 173.25403899999992,
+          "statuses": {
+            "200": 300
+          },
+          "typed_numeric_preflight_calls": 15
+        },
+        {
+          "concurrency": 8,
+          "requests": 300,
+          "throughput_rps": 615.4441209408009,
+          "samples": 300,
+          "p50_ms": 3.1791330000000926,
+          "p95_ms": 9.256038999999873,
+          "p99_ms": 180.25005499999997,
+          "max_ms": 206.59715600000027,
+          "statuses": {
+            "200": 300
+          },
+          "typed_numeric_preflight_calls": 15
+        },
+        {
+          "concurrency": 32,
+          "requests": 300,
+          "throughput_rps": 639.9170899528021,
+          "samples": 300,
+          "p50_ms": 24.29846600000019,
+          "p95_ms": 94.83512599999995,
+          "p99_ms": 208.10348099999965,
+          "max_ms": 281.23103600000013,
+          "statuses": {
+            "200": 300
+          },
+          "typed_numeric_preflight_calls": 15
+        },
+        {
+          "concurrency": 64,
+          "requests": 300,
+          "throughput_rps": 755.4167459938183,
+          "samples": 300,
+          "p50_ms": 46.24790200000007,
+          "p95_ms": 102.76571000000013,
+          "p99_ms": 252.57215399999995,
+          "max_ms": 292.6367,
+          "statuses": {
+            "200": 300
+          },
+          "typed_numeric_preflight_calls": 15
+        }
+      ],
+      "total_requests": 1200,
+      "negative_flood": {
+        "requests": 120,
+        "statuses": {
+          "400": 50,
+          "401": 50,
+          "413": 20
+        },
+        "server_5xx": 0
+      },
+      "gateway_health": {
+        "status": "running",
+        "child_id": "mcp_unified_gateway",
+        "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+        "loaded_beam_sha256": "a26b2ee0ab26d8907e9759f4e162e0ed2ec5849f82b96fc7bac1cdf7167461a2",
+        "zenoh_subscriber_enabled": true,
+        "zenoh_subscriber_alive": true,
+        "zenoh_subscriber_state": "connected_fresh",
+        "zenoh_subscriber_last_activity_age_ms": 21451,
+        "public_routes": 65,
+        "development_routes": 21,
+        "successor_routes": 15,
+        "total_routes": 101,
+        "application_admitted": false
+      },
+      "secret_values_recorded": false
+    },
+    "zenoh": {
+      "status": "PASS",
+      "router": "http://nas-1.tail55d152.ts.net:8080/",
+      "positive_completed_after_ms": 347.35825799999975,
+      "negative_observation_window_ms": 1000,
+      "valid_envelopes": 100,
+      "valid_answered": 100,
+      "forged_envelopes": 100,
+      "forged_answered": 0,
+      "negative_result": "OBSERVED_SILENT_DROP_WITH_POSITIVE_BRACKET",
+      "post_forgery_ping_answered": true,
+      "tool_count": 53,
+      "subscriber_alive": true,
+      "subscriber_state": "connected_fresh",
+      "elapsed_ms": 1364.4523910000003,
+      "samples": 101,
+      "p50_ms": 266.7396160000003,
+      "p95_ms": 282.1844989999995,
+      "p99_ms": 284.16350400000056,
+      "max_ms": 285.96577599999955,
+      "parse_errors": 0,
+      "no_delete_requests": true
+    },
+    "stdio": {
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:06:58.898Z",
+      "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415",
+      "payload_sha256": "ef076ff50fa7e948225df7b9ef817b843cc66b649f3e60e64aa19ecd38656d0c",
+      "full_verify": {
+        "samples": 10,
+        "p50_ms": 1812.5360989999995,
+        "p95_ms": 1897.7370040000005,
+        "p99_ms": 1897.7370040000005,
+        "max_ms": 1897.7370040000005
+      },
+      "seal_cached": {
+        "samples": 10,
+        "p50_ms": 322.7091110000001,
+        "p95_ms": 339.327573999999,
+        "p99_ms": 339.327573999999,
+        "max_ms": 339.327573999999
+      },
+      "median_speedup": 5.616625119084409,
+      "target_fivefold_met": true,
+      "pipeline": {
+        "requests": 1000,
+        "tool_count": 53,
+        "throughput_rps": 24190.862811150233,
+        "samples": 1000,
+        "p50_ms": 19.91051900000093,
+        "p95_ms": 36.92199099999925,
+        "p99_ms": 38.56339000000298,
+        "max_ms": 38.948506000000634
+      },
+      "tamper_wrong_pin_exit": 1,
+      "dev_fallback_unset": true,
+      "secret_values_recorded": false
+    },
+    "tamper": {
+      "positive": {
+        "exit": 0,
+        "stderr": ""
+      },
+      "writable": {
+        "exit": 1,
+        "stderr": "uos-mcp-stdio: capsule seal missing or writable"
+      },
+      "missing": {
+        "exit": 1,
+        "stderr": "uos-mcp-stdio: capsule seal missing or writable"
+      },
+      "payload_tamper_with_restored_mtime": {
+        "exit": 1,
+        "stderr": "uos-mcp-stdio: full capsule verification failed"
+      },
+      "pass": true,
+      "original_capsule_untouched": true
+    },
+    "final_auth_stdio": {
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:08:13.602Z",
+      "release": "/home/an/NAS-setup/uos/var/releases/ecology/20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415",
+      "bearer_negative": {
+        "status": 401,
+        "www_authenticate": "Bearer resource_metadata=\"https://nas-1.tail55d152.ts.net:4101/.well-known/oauth-protected-resource\""
+      },
+      "stdio": {
+        "initialize": true,
+        "tool_count": 53,
+        "typed_numeric_preflight": {
+          "id": 43,
+          "exit_code": 0,
+          "candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+        },
+        "canonical_plan": {
+          "plan_id": "20261030-2325-mcp-resilience-perf-scale-bdd-fractal",
+          "total_tasks": 4,
+          "canonical_authority": "sa_plan"
+        }
+      },
+      "secret_values_recorded": false
+    },
+    "availability": {
+      "observed_at": "2026-10-31T00:07:41.597Z",
+      "sample_period_ms": 50,
+      "request_timeout_ms": 750,
+      "measurement": "Observed failure span and adjacent-success bracket; resolution50ms, not an exact physical downtime proof",
+      "samples": 6621,
+      "windows": [
+        {
+          "target": "cockpit_health",
+          "phases": [
+            "final_cutover"
+          ],
+          "failed_samples": 41,
+          "first_failure_ms": 1793405172109,
+          "last_failure_ms": 1793405174113,
+          "observed_failed_span_ms": 2054,
+          "success_bracket_ms": 2151,
+          "resumed_at_ms": 1793405174217
+        },
+        {
+          "target": "cockpit_health",
+          "phases": [
+            "mcp_sigkill"
+          ],
+          "failed_samples": 142,
+          "first_failure_ms": 1793405249873,
+          "last_failure_ms": 1793405256937,
+          "observed_failed_span_ms": 7114,
+          "success_bracket_ms": 7181,
+          "resumed_at_ms": 1793405257026
+        },
+        {
+          "target": "ecology_health",
+          "phases": [
+            "final_cutover"
+          ],
+          "failed_samples": 168,
+          "first_failure_ms": 1793405179122,
+          "last_failure_ms": 1793405187486,
+          "observed_failed_span_ms": 8414,
+          "success_bracket_ms": 8471,
+          "resumed_at_ms": 1793405187546
+        },
+        {
+          "target": "ecology_health",
+          "phases": [
+            "ecology_sigkill"
+          ],
+          "failed_samples": 140,
+          "first_failure_ms": 1793405238498,
+          "last_failure_ms": 1793405245463,
+          "observed_failed_span_ms": 7015,
+          "success_bracket_ms": 7066,
+          "resumed_at_ms": 1793405245516
+        },
+        {
+          "target": "mcp",
+          "phases": [
+            "final_cutover"
+          ],
+          "failed_samples": 41,
+          "first_failure_ms": 1793405172109,
+          "last_failure_ms": 1793405174113,
+          "observed_failed_span_ms": 2054,
+          "success_bracket_ms": 2140,
+          "resumed_at_ms": 1793405174200
+        },
+        {
+          "target": "mcp",
+          "phases": [
+            "mcp_sigkill"
+          ],
+          "failed_samples": 141,
+          "first_failure_ms": 1793405249923,
+          "last_failure_ms": 1793405256937,
+          "observed_failed_span_ms": 7064,
+          "success_bracket_ms": 7131,
+          "resumed_at_ms": 1793405257007
+        }
+      ],
+      "all_targets_recovered": true,
+      "zero_observed_interruption": false,
+      "secret_values_recorded": false
+    },
+    "oversized_http_residual": {
+      "status": "RESIDUAL_STATUS_MISMATCH",
+      "observed_at": "2026-10-31T00:08:13.733Z",
+      "oversized_then_valid_cycles": 20,
+      "oversized_statuses": {
+        "405": 19,
+        "413": 1
+      },
+      "next_call_failures": [],
+      "connection_identity": "Pooled fetch client; physical socket identities not traced",
+      "expected_oversized_status": 413,
+      "secret_values_recorded": false
+    },
+    "first_cutover": {
+      "path": "var/harness/20261030-2325-mcp-resilience/first-cutover",
+      "initial_soak_gateway_failures": 5509,
+      "initial_recovery_ms": [
+        3.321,
+        31.361,
+        3785.545
+      ],
+      "initial_cutover_windows": [
+        {
+          "target": "cockpit_health",
+          "phases": [
+            "cutover"
+          ],
+          "failed_samples": 40,
+          "first_failure_ms": 1793403779436,
+          "last_failure_ms": 1793403781390,
+          "observed_failed_span_ms": 2004,
+          "success_bracket_ms": 2070,
+          "resumed_at_ms": 1793403781479
+        },
+        {
+          "target": "cockpit_health",
+          "phases": [
+            "mcp_sigkill"
+          ],
+          "failed_samples": 141,
+          "first_failure_ms": 1793404091116,
+          "last_failure_ms": 1793404098135,
+          "observed_failed_span_ms": 7069,
+          "success_bracket_ms": 7131,
+          "resumed_at_ms": 1793404098217
+        },
+        {
+          "target": "ecology_health",
+          "phases": [
+            "cutover"
+          ],
+          "failed_samples": 198,
+          "first_failure_ms": 1793403786045,
+          "last_failure_ms": 1793403795916,
+          "observed_failed_span_ms": 9921,
+          "success_bracket_ms": 9977,
+          "resumed_at_ms": 1793403795973
+        },
+        {
+          "target": "ecology_health",
+          "phases": [
+            "ecology_sigkill"
+          ],
+          "failed_samples": 124,
+          "first_failure_ms": 1793404079447,
+          "last_failure_ms": 1793404085610,
+          "observed_failed_span_ms": 6213,
+          "success_bracket_ms": 6270,
+          "resumed_at_ms": 1793404085668
+        },
+        {
+          "target": "mcp",
+          "phases": [
+            "cutover"
+          ],
+          "failed_samples": 40,
+          "first_failure_ms": 1793403779436,
+          "last_failure_ms": 1793403781390,
+          "observed_failed_span_ms": 2004,
+          "success_bracket_ms": 2069,
+          "resumed_at_ms": 1793403781457
+        },
+        {
+          "target": "mcp",
+          "phases": [
+            "mcp_sigkill"
+          ],
+          "failed_samples": 140,
+          "first_failure_ms": 1793404091166,
+          "last_failure_ms": 1793404098135,
+          "observed_failed_span_ms": 7019,
+          "success_bracket_ms": 7083,
+          "resumed_at_ms": 1793404098201
+        }
+      ],
+      "chaos": [
+        {
+          "phase": "ecology_sigkill",
+          "unit": "uos-ecology@20261030-2346-8f30a3c0e563003e843dcb8b73cda867d097e61bbb78ae0eb1df29cef23c7bc0.service",
+          "old_pid": 3519495,
+          "new_pid": 3632281,
+          "time_to_active_http_and_subscriber_ms": 7147.394754,
+          "time_to_verified_all_three_ms": 7395.661215000001,
+          "full_negative_guard_verification_ms": 8416.133655999998,
+          "restart_count": 1,
+          "automatic": true,
+          "zenoh_positive_negative": {
+            "status": "PASS",
+            "router": "http://nas-1.tail55d152.ts.net:8080/",
+            "positive_completed_after_ms": 248.13265900000079,
+            "negative_observation_window_ms": 1000,
+            "valid_envelopes": 4,
+            "valid_answered": 4,
+            "forged_envelopes": 1,
+            "forged_answered": 0,
+            "negative_result": "OBSERVED_SILENT_DROP_WITH_POSITIVE_BRACKET",
+            "post_forgery_ping_answered": true,
+            "tool_count": 53,
+            "subscriber_alive": true,
+            "subscriber_state": "connected_fresh",
+            "elapsed_ms": 1264.7946080000002,
+            "samples": 5,
+            "p50_ms": 127.67856700000084,
+            "p95_ms": 241.58891399999993,
+            "p99_ms": 241.58891399999993,
+            "max_ms": 241.58891399999993,
+            "parse_errors": 0,
+            "no_delete_requests": true
+          }
+        },
+        {
+          "phase": "mcp_sigkill",
+          "unit": "c3i-gleam-server.service",
+          "old_pid": 3515026,
+          "new_pid": 3636738,
+          "time_to_active_http_and_subscriber_ms": 7127.986539999998,
+          "time_to_verified_all_three_ms": 7365.826920999996,
+          "full_negative_guard_verification_ms": 8383.621781999998,
+          "restart_count": 1,
+          "automatic": true,
+          "zenoh_positive_negative": {
+            "status": "PASS",
+            "router": "http://nas-1.tail55d152.ts.net:8080/",
+            "positive_completed_after_ms": 237.82847799999945,
+            "negative_observation_window_ms": 1000,
+            "valid_envelopes": 4,
+            "valid_answered": 4,
+            "forged_envelopes": 1,
+            "forged_answered": 0,
+            "negative_result": "OBSERVED_SILENT_DROP_WITH_POSITIVE_BRACKET",
+            "post_forgery_ping_answered": true,
+            "tool_count": 53,
+            "subscriber_alive": true,
+            "subscriber_state": "connected_fresh",
+            "elapsed_ms": 1252.0136459999994,
+            "samples": 5,
+            "p50_ms": 134.97690200000216,
+            "p95_ms": 233.69654300000184,
+            "p99_ms": 233.69654300000184,
+            "max_ms": 233.69654300000184,
+            "parse_errors": 0,
+            "no_delete_requests": true
+          }
+        }
+      ]
+    },
+    "chaos_measurement_correction": "time_to_active_http_and_subscriber_ms measures actual readiness. Historical helper field time_to_verified_all_three_ms verifies HTTP health and Zenoh positive calls; it does NOT itself execute a new stdio child. Fresh capsule-backed stdio execution was separately checked after chaos, so do not treat that field as simultaneous three-transport recovery latency."
+  },
+  "math_gates": {
+    "M1": {
+      "route_partition": {
+        "public_operational": 53,
+        "public_gated_unavailable": 12,
+        "public_total": 65,
+        "development": 21,
+        "successor": 15,
+        "total": 101
+      },
+      "pairwise_plane_identity_intersections": {
+        "public_development": [],
+        "public_successor": [],
+        "development_successor": []
+      },
+      "config_pins": 11,
+      "control_md5s": 28,
+      "core_candidate": "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+      "old_baseline_differences": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/resources.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+        "apps/cepaf_gleam/src/mcp_stdio_ffi.erl",
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam.app",
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@agents@cybernetic.beam",
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@mcp@resources.beam",
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@mcp@runtime_gateway.beam",
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@mcp@supervisor.beam",
+        "apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/mcp_stdio_ffi.beam"
+      ],
+      "final_capsule_source_inputs": 3459,
+      "changes_since_final_stage": []
+    },
+    "M2": {
+      "initial_full_soak_gateway_failures": 5509,
+      "final_gateway_failures": 0,
+      "delta": -5509,
+      "interpretation": "Retrospective defect-count descent, not a physical Lyapunov stability proof",
+      "sse_hot_path_persistent_term_replacements": 0,
+      "constant_cardinality_limits": {
+        "committed": 4096,
+        "unresolved": 4096,
+        "resource_cache": 1024,
+        "inflight": 256,
+        "native_active": 16,
+        "native_total": 256
+      },
+      "gc_model": "One immutable persistent_term publication per registered SSE worker; atomics freshness writes per chunk; no measured global-GC pause claim"
+    },
+    "M3": {
+      "model": "UndecayedBeta(1,1)bookkeeping over nonduplicate selected/companion tests",
+      "successes": 1509,
+      "failures": 0,
+      "alpha": 1510,
+      "beta": 1,
+      "posterior_mean": 0.99933818663137,
+      "one_sided_95_lower": 0.9980180380276742,
+      "assumptions": "Correlated deterministic tests are not exchangeable independent production trials; this score is not an uptime reliability guarantee. Failed exploratory RED tests and old broad-suite failures remain separately visible."
+    },
+    "M4": {
+      "measurement": "Mixed-request finite-concurrency throughput and end-to-end latency tables; no fitted M/G/1 production queue or arrival distribution",
+      "native_peak_ports": 17,
+      "active_native_cap": 16,
+      "baseline_ports": 1,
+      "request_count": 10000,
+      "resource_deltas": {
+        "process": 0,
+        "port": 0,
+        "ets_bytes": 152,
+        "total_bytes": -1923104
+      }
+    }
+  },
+  "forecasts": {
+    "observed_at": "2026-10-30T23:07:03.303Z",
+    "horizon": "End of R03 before R04 audit handoff",
+    "forecasts": [
+      {
+        "id": "owner-recovery",
+        "p": 0.9,
+        "claim": "All three measured in-VM owner restarts recover within50ms"
+      },
+      {
+        "id": "soak-delivery",
+        "p": 0.9,
+        "claim": "10000mixed in-VM requests yield no gateway timeouts under three owner kills"
+      },
+      {
+        "id": "protected-parity",
+        "p": 0.99,
+        "claim": "28control BEAM digests and six-file candidate remain unchanged"
+      },
+      {
+        "id": "cutover-availability",
+        "p": 0.7,
+        "claim": "Measured live MCP cutover interruption <=1000ms"
+      },
+      {
+        "id": "ecology-resurrection",
+        "p": 0.8,
+        "claim": "Ecology SIGKILL service recovers automatically within3000ms"
+      },
+      {
+        "id": "mcp-resurrection",
+        "p": 0.8,
+        "claim": "Actual C3I MCP daemon SIGKILL recovers HTTP and Zenoh within5000ms"
+      },
+      {
+        "id": "launcher-speedup",
+        "p": 0.85,
+        "claim": "Median cached attach is at least5x faster than full-verify attach"
+      }
+    ],
+    "scoring": "Brier=(p-outcome)^2; unresolved forecasts remain unscored",
+    "application_admitted": false,
+    "admitted_ev_ceiling": 93,
+    "scored": [
+      {
+        "id": "owner-recovery",
+        "p": 0.9,
+        "claim": "All three measured in-VM owner restarts recover within50ms",
+        "outcome": 0,
+        "brier": 0.81,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      },
+      {
+        "id": "soak-delivery",
+        "p": 0.9,
+        "claim": "10000mixed in-VM requests yield no gateway timeouts under three owner kills",
+        "outcome": 0,
+        "brier": 0.81,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      },
+      {
+        "id": "protected-parity",
+        "p": 0.99,
+        "claim": "28control BEAM digests and six-file candidate remain unchanged",
+        "outcome": 1,
+        "brier": 0.00010000000000000018,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      },
+      {
+        "id": "cutover-availability",
+        "p": 0.7,
+        "claim": "Measured live MCP cutover interruption <=1000ms",
+        "outcome": 0,
+        "brier": 0.48999999999999994,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      },
+      {
+        "id": "ecology-resurrection",
+        "p": 0.8,
+        "claim": "Ecology SIGKILL service recovers automatically within3000ms",
+        "outcome": 0,
+        "brier": 0.6400000000000001,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      },
+      {
+        "id": "mcp-resurrection",
+        "p": 0.8,
+        "claim": "Actual C3I MCP daemon SIGKILL recovers HTTP and Zenoh within5000ms",
+        "outcome": 0,
+        "brier": 0.6400000000000001,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      },
+      {
+        "id": "launcher-speedup",
+        "p": 0.85,
+        "claim": "Median cached attach is at least5x faster than full-verify attach",
+        "outcome": 1,
+        "brier": 0.022500000000000006,
+        "interpretation": "First full corresponding experiment; original failures remain scored after remediation"
+      }
+    ],
+    "mean_brier": 0.48751428571428573,
+    "final_repeat": "Later corrected runs are reported separately; first experiment outcomes are never overwritten"
+  },
+  "residual_risks": [
+    {
+      "id": "R-AVAIL",
+      "severity": "high",
+      "status": "OPEN",
+      "finding": "Zero downtime and universal never-down objective are not achieved. Single-instance MCP cutover has a measured interruption; OS daemon kill loses node-local ETS.",
+      "evidence": "availability-probe.json",
+      "next": "Independently reviewed redundant ingress/durable receipt persistence and a separately authorized rolling release design"
+    },
+    {
+      "id": "R-HTTP-SIZE",
+      "severity": "medium",
+      "status": "OPEN",
+      "finding": "Pooled repeated oversized HTTP requests may return405 rather than413; following valid calls succeed. Socket identities were not traced.",
+      "evidence": "http-connection-reuse-after-oversize.json",
+      "next": "R04 audit and separately scoped web/Mist body-draining investigation; web source outside this edit scope"
+    },
+    {
+      "id": "R-HEALTH",
+      "severity": "medium",
+      "status": "OPEN",
+      "finding": "Cockpit health HTTP200 is not semantic quorum admission; quorum_healthy=false remains a known NIF/container fallback observation.",
+      "next": "Separate backend/quorum work, no synthetic healthy claim"
+    },
+    {
+      "id": "R-HISTORY",
+      "severity": "medium",
+      "status": "BOUNDED_BY_DESIGN",
+      "finding": "Finite4096 committed receipt retention limits the idempotency replay horizon. Deterministic eviction is not chronological FIFO; pending/uncertain are retained and new unresolved work is refused at4096."
+    },
+    {
+      "id": "R-MEMORY",
+      "severity": "medium",
+      "status": "BOUNDED_OBSERVATION",
+      "finding": "Cardinality caps are constant relative to request history, not a formal byte/RSS bound or O(1) per-request time proof. Pruning scans the bounded ledger and ETS copies state. A larger unreconciled historical fixture is preserved rather than silently evicted."
+    },
+    {
+      "id": "R-GUARDIAN",
+      "severity": "medium",
+      "status": "OPEN",
+      "finding": "Linked-free guardian survives state-owner crashes, not whole VM death or deliberate guardian kill; ETS is public to trusted same-node BEAM code, not a hostile-code security boundary."
+    },
+    {
+      "id": "R-BACKENDS",
+      "severity": "medium",
+      "status": "OPEN",
+      "finding": "Missing metabolic/POODAVR probes and excluded knowledge paths refuse honestly. Tool route coverage does not prove external backend availability."
+    },
+    {
+      "id": "R-FULL-SUITE",
+      "severity": "medium",
+      "status": "HISTORICAL_UNRESOLVED",
+      "finding": "Prior broad cepaf test run had14139 passes/115 failures. This stage runs the authorized48 selected suites, not a fresh all-application green claim."
+    },
+    {
+      "id": "R-SEAL",
+      "severity": "medium",
+      "status": "BOUNDED_BY_THREAT_MODEL",
+      "finding": "Seal cache defends observed accidental tampering via readonly checks, metadata, manifests and payload pin. It does not defeat a malicious same-UID owner racing chmod/exec or arbitrary privileged writes."
+    },
+    {
+      "id": "R-SCALE",
+      "severity": "low",
+      "status": "UNMEASURED",
+      "finding": "10000 requests and five concurrency levels are a finite local benchmark, not a sustained production arrival-rate model or unbounded soak."
+    }
+  ],
+  "rollback": {
+    "capsule": "/home/an/NAS-setup/uos/var/releases/ecology/20261030-1811-79c8aa73a27a372e027e3fa677b75deae56e4fd1a1f84af6632b4409e82ba1e2",
+    "github_anchor": "092337be02b0cb6ce40b7cfe962abc5da4281839",
+    "backup_dir": "var/harness/20261030-2325-mcp-resilience/config-backups",
+    "execution": "Acquire runtime leases, verify retained capsule, restore service/config pins and old ecology instance, reload and verify all transports. Not automatically invoked on the healthy final cutover."
+  },
+  "secret_values_recorded": false,
+  "gates": {
+    "status": "PASS",
+    "commands": [
+      {
+        "gate": "format",
+        "command": [
+          "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+          "format",
+          "--check",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/resources.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",
+          "apps/cepaf_gleam/test/mcp_resilience_bdd_test.gleam",
+          "apps/cepaf_gleam/test/mcp_fractal_path_resilience_test.gleam"
+        ],
+        "exit": 0,
+        "duration_ms": 42.170249,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-format.log"
+      },
+      {
+        "gate": "erlc",
+        "command": [
+          "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erlc",
+          "-Werror",
+          "-o",
+          "/home/an/NAS-setup/uos/var/harness/20261030-2325-mcp-resilience/erlc",
+          "apps/cepaf_gleam/src/mcp_stdio_ffi.erl"
+        ],
+        "exit": 0,
+        "duration_ms": 509.68810800000006,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-erlc.log"
+      },
+      {
+        "gate": "lean",
+        "command": [
+          "/home/an/NAS-setup/uos/tools/lean",
+          "formal/lean/McpSymbiosis101FormalImpact.lean"
+        ],
+        "exit": 0,
+        "duration_ms": 526.6364930000001,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-lean.log"
+      },
+      {
+        "gate": "journal",
+        "command": [
+          "bash",
+          "tools/journal-check",
+          "docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md"
+        ],
+        "exit": 0,
+        "duration_ms": 16.443323999999848,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-journal.log"
+      },
+      {
+        "gate": "diagram",
+        "command": [
+          "bash",
+          "tools/diagram-check",
+          "docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md"
+        ],
+        "exit": 0,
+        "duration_ms": 13.848721000000069,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-diagram.log"
+      },
+      {
+        "gate": "km",
+        "command": [
+          "bash",
+          "tools/km-gate",
+          "--gate"
+        ],
+        "exit": 0,
+        "duration_ms": 842.0166019999999,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-km.log"
+      },
+      {
+        "gate": "preflight",
+        "command": [
+          "bash",
+          "tools/preflight",
+          "--receipt"
+        ],
+        "exit": 0,
+        "duration_ms": 2349.1893710000004,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-preflight.log"
+      },
+      {
+        "gate": "capsule",
+        "command": [
+          "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+          "tools/ecology_release.ml",
+          "verify",
+          "/home/an/NAS-setup/uos/var/releases/ecology/20261031-0023-7f1cfe33765c21e790fb740a5a15d4fc269203890fe2c731a462c17fc3c9f415"
+        ],
+        "exit": 0,
+        "duration_ms": 1496.349131,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-capsule.log"
+      },
+      {
+        "gate": "invariants",
+        "command": [
+          "node",
+          "/tmp/r-capsule-invariants.js"
+        ],
+        "exit": 0,
+        "duration_ms": 441.87898199999927,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-invariants.log"
+      },
+      {
+        "gate": "pins",
+        "command": [
+          "node",
+          "/tmp/r-final-integrity.js"
+        ],
+        "exit": 0,
+        "duration_ms": 456.6971679999997,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-pins.log"
+      },
+      {
+        "gate": "json",
+        "command": [
+          "node",
+          "-e",
+          "JSON.parse(require('fs').readFileSync(\"docs/reviews/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-receipt.json\"));"
+        ],
+        "exit": 0,
+        "duration_ms": 32.08312599999954,
+        "log": "var/harness/20261030-2325-mcp-resilience/gate-json.log"
+      }
+    ],
+    "risk_all": {
+      "status": "PASS",
+      "authority": "NONE",
+      "reviewed_selection_checks": 54,
+      "baseline_checks": 375,
+      "adversarial_checks": 32953,
+      "independent_dag_scenarios": 32768,
+      "package": {
+        "status": "PASS",
+        "local_paths_checked": 39,
+        "authority": "REPORT_ONLY",
+        "runtime_enforcement": "NOT_ASSERTED",
+        "global_skill_dependency": false
+      },
+      "runtime_admission": "NOT_GRANTED",
+      "live_agent_tests": "UNRUN"
+    },
+    "preflight": {
+      "status": "PASS",
+      "checks": 31,
+      "failures": 0
+    },
+    "journal": {
+      "passed": 10,
+      "total": 10
+    },
+    "diagram": "PASS",
+    "km": "PASS",
+    "secret_scan": {
+      "status": "PASS",
+      "observed_at": "2026-10-31T00:12:02.273Z",
+      "main": "092337be02b0cb6ce40b7cfe962abc5da4281839",
+      "working_copy": "75691d044e5cb3c2a4a8e378e05eca4cab5ceebd",
+      "change_id": "mprwvumqxkqkmyymprkxnmzykmwvnrql",
+      "tracked_paths": [
+        ".codex/config.toml",
+        ".gemini/settings.json",
+        ".mcp.json",
+        ".pi/mcp.json",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/resources.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+        "apps/cepaf_gleam/src/mcp_stdio_ffi.erl",
+        "apps/cepaf_gleam/test/mcp_fractal_path_resilience_test.gleam",
+        "apps/cepaf_gleam/test/mcp_resilience_bdd_test.gleam",
+        "docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md",
+        "docs/reviews/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-receipt.json",
+        "tools/uos-mcp-stdio"
+      ],
+      "tracked_count": 13,
+      "conflicts": 0,
+      "tracked_var_paths": 0,
+      "protected_source_changes": [],
+      "secret_values_or_private_keys_found": 0,
+      "secret_scan": "Exact locally loaded secret values plus token/private-key patterns; only counts recorded",
+      "native_git_commands": 0,
+      "main_advanced": false,
+      "pushed": false,
+      "working_copy_note": "Observed before this receipt finalization; final handoff revision is recorded separately under ignored var evidence"
+    },
+    "risk_closure": {
+      "R03_active": "ACTIVE_OBSERVATION_PASS",
+      "R04_preflight": "PREFLIGHT_PASS",
+      "R04_active": "ACTIVE_OBSERVATION_PASS",
+      "R04_attempt": 1,
+      "authority": "REPORT_ONLY"
+    }
+  },
+  "remaining_audit_items": [
+    "R-AVAIL",
+    "R-HTTP-SIZE",
+    "R-HEALTH",
+    "R-GUARDIAN",
+    "R-BACKENDS",
+    "R-FULL-SUITE"
+  ]
+}

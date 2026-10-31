@@ -1487,7 +1487,7 @@ pub fn apply_gateway_response(
               |> response.set_header("access-control-allow-origin", origin)
               |> response.set_header(
                 "access-control-allow-methods",
-                "GET, POST, OPTIONS",
+                "GET, POST, DELETE, OPTIONS",
               )
             False -> with_headers
           }
@@ -1509,6 +1509,14 @@ fn handle_mcp_streamable_http(
   let method = mcp_method_to_string(req.method)
 
   case req.path, req.method {
+    "/mcp", http.Options
+    | "/mcp", http.Delete
+    | "/.well-known/oauth-protected-resource", http.Options
+    -> {
+      let #(status, headers, body) =
+        runtime_gateway.handle_http_request(method, req.path, req.headers, "")
+      apply_gateway_response(req.headers, status, headers, body)
+    }
     "/.well-known/oauth-protected-resource", http.Get -> {
       let #(status, headers, body) =
         runtime_gateway.handle_http_request("GET", req.path, req.headers, "")
@@ -1525,14 +1533,20 @@ fn handle_mcp_streamable_http(
           apply_gateway_response(
             req.headers,
             413,
-            [#("content-type", "application/json; charset=utf-8")],
+            [
+              #("content-type", "application/json; charset=utf-8"),
+              #("connection", "close"),
+            ],
             "{\"error\":\"HTTP_BODY_TOO_LARGE\"}",
           )
         Error(mist.MalformedBody) ->
           apply_gateway_response(
             req.headers,
             400,
-            [#("content-type", "application/json; charset=utf-8")],
+            [
+              #("content-type", "application/json; charset=utf-8"),
+              #("connection", "close"),
+            ],
             "{\"error\":\"MALFORMED_HTTP_BODY\"}",
           )
         Ok(read_req) ->
@@ -1542,7 +1556,7 @@ fn handle_mcp_streamable_http(
                 req.headers,
                 400,
                 [#("content-type", "application/json; charset=utf-8")],
-                "{\"error\":\"INVALID_UTF8_BODY\"}",
+                "{\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32700,\"message\":\"HTTP_INVALID_UTF8: invalid UTF-8 body\"}}",
               )
             Ok(body_str) -> {
               let #(status, headers, body) =
@@ -1572,9 +1586,12 @@ fn handle_normal_http_inner(
   case req.path == "/.well-known/oauth-protected-resource", req.method {
     True, http.Get -> handle_mcp_streamable_http(req)
     True, http.Head -> handle_mcp_streamable_http(req)
+    True, http.Options -> handle_mcp_streamable_http(req)
     _, _ ->
       case req.path == "/mcp", req.method {
         True, http.Post -> handle_mcp_streamable_http(req)
+        True, http.Options -> handle_mcp_streamable_http(req)
+        True, http.Delete -> handle_mcp_streamable_http(req)
         _, _ ->
           case req.path == mini_api.data_path || mini_control.owns(req.path) {
             True -> mini_http.handle(req)

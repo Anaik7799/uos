@@ -8,6 +8,7 @@ import cepaf_gleam/mcp/types.{
   type Outcome, type ToolError, NonRetryable, Refused, ToolError,
 }
 import gleam/dict.{type Dict}
+import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -249,6 +250,7 @@ fn searchable(
           list.contains(corpus.allowed_scopes, entry.scope_tag)
           && list.contains(principal_scopes, entry.scope_tag)
           && zk_ok
+          && string.byte_size(entry.content) <= corpus.max_bytes
         }
         SymlinkEscape | HardlinkEscape -> False
       }
@@ -261,6 +263,19 @@ fn search(
   args: Dict(String, String),
   zk_only: Bool,
 ) -> Outcome {
+  search_as(corpus, principal_scopes, args, zk_only, case zk_only {
+    True -> "zk_search"
+    False -> "knowledge_search"
+  })
+}
+
+fn search_as(
+  corpus: KnowledgeCorpus,
+  principal_scopes: List(String),
+  args: Dict(String, String),
+  zk_only: Bool,
+  tool_name: String,
+) -> Outcome {
   let query = dict.get(args, "query") |> result.unwrap("")
   let lowered = string.lowercase(query)
   let matches =
@@ -270,12 +285,16 @@ fn search(
       searchable(corpus, principal_scopes, entry, zk_only)
     })
     |> list.filter(fn(entry) {
-      string.contains(string.lowercase(entry.content), lowered)
+      let haystack = string.lowercase(entry.rel_path <> " " <> entry.content)
+      list.all(string.split(lowered, " "), fn(word) {
+        string.contains(haystack, word)
+      })
     })
-  let tool_name = case zk_only {
-    True -> "zk_search"
-    False -> "knowledge_search"
-  }
+    |> list.sort(fn(a, b) { string.compare(a.rel_path, b.rel_path) })
+    |> list.take(
+      result.unwrap(dict.get(args, "limit") |> result.try(int.parse), 5)
+      |> int.clamp(1, 20),
+    )
   let payload =
     json.to_string(
       json.object([
@@ -316,15 +335,19 @@ fn transclude(
     Ok(value) if value != "" -> value
     _ -> dict.get(args, "query") |> result.unwrap("")
   }
-  case expand_entry(corpus, principal_scopes, key, [], 0) {
-    Error(error) -> Refused(error)
-    Ok(expanded) ->
-      evidence.classify_backend_payload(
-        "public",
-        "zk_transclude",
-        expanded,
-        candidate_id.current(),
-      )
+  case dict.has_key(corpus.entries, key) || dict.has_key(args, "key") {
+    False -> search_as(corpus, principal_scopes, args, False, "zk_transclude")
+    True ->
+      case expand_entry(corpus, principal_scopes, key, [], 0) {
+        Error(error) -> Refused(error)
+        Ok(expanded) ->
+          evidence.classify_backend_payload(
+            "public",
+            "zk_transclude",
+            expanded,
+            candidate_id.current(),
+          )
+      }
   }
 }
 

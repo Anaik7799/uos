@@ -10,33 +10,150 @@
          zenoh_sse_registered_health_fixture/1,
          zenoh_sse_registered_isolation_fixture/3, zenoh_sse_stdio_guard_fixture/2, zenoh_test_environment/1, zenoh_sse_handshake_fixture/0, zenoh_sse_atomics_fixture/1]).
 
+-export([cached_supervised_gateway/2,with_inflight_slot/2,gateway_supervisor_running/0]).
+-export([durable_initial/2,durable_state/2,durable_ledger/2,durable_checkpoint/3]).
+-export([gateway_handle_new/0,gateway_handle_set/2,gateway_handle_register/2,gateway_handle_get/2]).
+-export([gateway_owner_set/2,gateway_owner_register/2,new_reply_subject/0,close_reply_subject/1]).
+
+-export([mcp_json_strict_inspect/2,mcp_json_stream_decode/2,mcp_json_encode_checked/1,mcp_json_format_checked/1,cached_readonly_receipt_keys/1,beam_metrics/0,loopback_probe/1,coordination_metrics/1]).
+
 -include_lib("kernel/include/file.hrl").
 
 -define(MAX_LINE_BYTES, 1048576).
 -define(OUTPUT_LIMIT, 1048576).
 -define(UNOBSERVED_ACTIVITY, -9223372036854775808).
 
-%% io:get_line/1 returns a character list under the default standard_io
-%% configuration and a binary when binary mode is enabled. Normalize both
-%% without changing global IO options, and reject oversized request frames.
-read_line() ->
-    case io:get_line("") of
-        eof -> end_of_file;
-        {error, Reason} -> {read_error, reason_binary(Reason)};
-        Data -> normalize_line(Data)
+%% Native OTP JSON callbacks retain one bounded structural stack. Object keys
+%% are checked after unescaping, before any map/association-list projection.
+mcp_json_strict_inspect(Binary, MaxDepth) when is_binary(Binary), is_integer(MaxDepth), MaxDepth > 0 ->
+    json_guarded(fun() ->
+        {Value, _, Rest} = json:decode(Binary, {0, MaxDepth}, strict_decoders()),
+        true = json_whitespace(Rest),
+        {ok, json_value(Value)}
+    end);
+mcp_json_strict_inspect(_, _) -> {error,invalid_json_syntax}.
+
+mcp_json_stream_decode(Chunks, MaxDepth) when is_list(Chunks), is_integer(MaxDepth), MaxDepth > 0 ->
+    json_guarded(fun() -> stream_start(Chunks,{0,MaxDepth},strict_decoders()) end);
+mcp_json_stream_decode(_, _) -> {error,invalid_json_syntax}.
+
+stream_start([], Acc, Dec) -> stream_finish(json:decode_start(<<>>,Acc,Dec),[]);
+stream_start([B|Bs], Acc, Dec) when is_binary(B) -> stream_finish(json:decode_start(B,Acc,Dec),Bs).
+stream_finish({continue,State},[]) -> stream_finish(json:decode_continue(end_of_input,State),[]);
+stream_finish({continue,State},[B|Bs]) when is_binary(B) -> stream_finish(json:decode_continue(B,State),Bs);
+stream_finish({Value,_,Rest},Bs) ->
+    true = json_whitespace(Rest),
+    true = lists:all(fun(B) -> is_binary(B) andalso json_whitespace(B) end,Bs),
+    {ok,json_value(Value)}.
+
+json_guarded(Fun) ->
+    try Fun() catch
+        throw:{json_guard,Why} -> {error,Why};
+        error:{invalid_byte,0} -> {error,nul_byte_forbidden};
+        _:_ -> {error,invalid_json_syntax}
     end.
+json_whitespace(<<>>) -> true;
+json_whitespace(<<C,Rest/binary>>) when C =:= 32; C =:= 9; C =:= 10; C =:= 13 -> json_whitespace(Rest);
+json_whitespace(_) -> false.
+strict_decoders() ->
+    #{object_start => fun strict_object_start/1,
+      object_push => fun strict_object_push/3,
+      object_finish => fun strict_object_finish/2,
+      array_start => fun strict_array_start/1,
+      array_push => fun(V,{D,M,Vs}) -> {D,M,[json_value(V)|Vs]} end,
+      array_finish => fun({_,_,Vs},Old) -> {{array,lists:reverse(Vs)},Old} end,
+      string => fun strict_string/1,
+      integer => fun(B) -> {integer,binary_to_integer(B)} end,
+      float => fun(B) -> {number,binary_to_float(B)} end,
+      null => null}.
+strict_depth({D,M}) -> strict_depth(D,M);
+strict_depth({D,M,_}) -> strict_depth(D,M);
+strict_depth({D,M,_,_}) -> strict_depth(D,M).
+strict_depth(D,M) when D < M -> {D+1,M};
+strict_depth(_,_) -> throw({json_guard,depth_exceeded}).
+strict_object_start(Old) -> {D,M}=strict_depth(Old), {D,M,#{},[]}.
+strict_object_push(Key,Value,{D,M,Seen,Fields}) ->
+    {text,K}=Key,
+    case maps:is_key(K,Seen) of
+        true -> throw({json_guard,{duplicate_key,K}});
+        false -> {D,M,Seen#{K=>true},[{K,json_value(Value)}|Fields]}
+    end.
+strict_object_finish({_,_,_,Fields},Old) -> {{object,lists:reverse(Fields)},Old}.
+strict_array_start(Old) -> {D,M}=strict_depth(Old), {D,M,[]}.
+strict_string(B) ->
+    case binary:match(B,<<0>>) of nomatch -> {text,B}; _ -> throw({json_guard,nul_byte_forbidden}) end.
+%% OTP callbacks are not invoked for booleans; wrap them only at their parent
+%% insertion/top scalar boundary. Containers and other values are already tagged.
+json_value(true) -> {boolean,true};
+json_value(false) -> {boolean,false};
+json_value(V) -> V.
 
-normalize_line(Data) when is_binary(Data) -> bounded_line(Data);
-normalize_line(Data) when is_list(Data) ->
-    case unicode:characters_to_binary(Data) of
-        Binary when is_binary(Binary) -> bounded_line(Binary);
-        {error, _, _} -> {read_error, <<"stdin line is not valid Unicode">>};
-        {incomplete, _, _} -> {read_error, <<"stdin line has incomplete Unicode">>}
-    end;
-normalize_line(_) -> {read_error, <<"stdin returned an unsupported value">>}.
+mcp_json_encode_checked(Pairs) when is_list(Pairs) ->
+    try {ok,iolist_to_binary(json:encode_key_value_list_checked(Pairs,fun checked_encoder/2))}
+    catch _:_ -> {error,<<"duplicate_or_invalid_output_key">>} end;
+mcp_json_encode_checked(_) -> {error,<<"object_pairs_required">>}.
+mcp_json_format_checked(Pairs) ->
+    case mcp_json_encode_checked(Pairs) of
+        {ok,Binary} ->
+            try {ok,iolist_to_binary(json:format(json:decode(Binary),#{}))}
+            catch _:_ -> {error,<<"invalid_format_input">>} end;
+        Error -> Error
+    end.
+checked_encoder({object,Pairs},Encode) -> json:encode_key_value_list_checked(Pairs,Encode);
+checked_encoder({array,Vs},Encode) -> json:encode_list(Vs,Encode);
+checked_encoder({text,S},_) -> json:encode_binary(S);
+checked_encoder({integer,N},_) -> json:encode_integer(N);
+checked_encoder({number,N},_) -> json:encode_float(N);
+checked_encoder({boolean,B},Encode) -> json:encode_atom(B,Encode);
+checked_encoder(V,Encode) -> json:encode_value(V,Encode).
 
-bounded_line(Binary) when byte_size(Binary) =< ?MAX_LINE_BYTES -> {line, Binary};
-bounded_line(_) -> {read_error, <<"stdin line exceeds 1048576-byte limit">>}.
+%% OTP's fd line driver bounds every delivered chunk to4096bytes. Unlike
+%% file:read/2 it returns a short interactive line without waiting for4096bytes.
+%% -noinput on the launcher leaves this port the sole stdin consumer.
+read_line() ->
+    case get(uos_mcp_stdin_port) of
+        eof -> end_of_file;
+        undefined ->
+            %% Legacy direct -noshell callers also need a protocol-clean stdout.
+            stdio_logger_stderr(),
+            Port=open_port({fd,0,1},[binary,in,eof,{line,4096}]),
+            put(uos_mcp_stdin_port,Port),read_port_line(Port,[],0,false);
+        Port -> read_port_line(Port,[],0,false)
+    end.
+stdio_logger_stderr() ->
+    case logger:get_handler_config(default) of
+        {ok,#{module:=logger_std_h,config:=#{type:=standard_io}}=Config} ->
+            _=logger:remove_handler(default),
+            Base=maps:without([id,module],Config),
+            _=logger:add_handler(default,logger_std_h,Base#{config=>#{type=>standard_error}}),ok;
+        _ -> ok
+    end.
+read_port_line(Port,Parts,Size,Large) ->
+    receive
+        {Port,{data,{Kind,B}}} when is_binary(B) ->
+            Oversized=Large orelse Size+byte_size(B)>?MAX_LINE_BYTES,
+            case {Kind,Oversized} of
+                {eol,true}->{read_error,<<"STDIO_FRAME_TOO_LARGE">>};
+                {eol,false}->finish_raw_line([B|Parts]);
+                {noeol,true}->read_port_line(Port,[],0,true);
+                {noeol,false}->read_port_line(Port,[B|Parts],Size+byte_size(B),false)
+            end;
+        {Port,eof}->
+            put(uos_mcp_stdin_port,eof),
+            case {Size,Large} of
+                {0,false}->end_of_file;
+                {_,true}->{read_error,<<"STDIO_FRAME_TOO_LARGE">>};
+                _->finish_raw_line(Parts)
+            end;
+        {'EXIT',Port,normal}->put(uos_mcp_stdin_port,eof),end_of_file;
+        {'EXIT',Port,Why}->timer:sleep(100),{read_error,reason_binary(Why)}
+    end.
+finish_raw_line(Parts) ->
+    B=iolist_to_binary(lists:reverse(Parts)),
+    case unicode:characters_to_binary(B,utf8,utf8) of
+        V when is_binary(V)->{line,V};
+        _->{read_error,<<"STDIO_INVALID_UTF8">>}
+    end.
 
 reason_binary(Reason) ->
     unicode:characters_to_binary(io_lib:format("~p", [Reason])).
@@ -47,7 +164,11 @@ with_gateway_boot_lock(Fun) ->
 %% Only private caller processes acquire this lock. The gateway mailbox and
 %% public ingress never acquire it. global releases it if the caller dies.
 with_private_route_lock(Fun) ->
-    global:trans({uos_mcp_private_routes, self()}, fun() -> Fun() end).
+    Id = {uos_mcp_private_routes,self()},
+    case global:set_lock(Id,[node()],0) of
+        true -> try Fun() after global:del_lock(Id,[node()]) end;
+        false -> receive after 1 -> with_private_route_lock(Fun) end
+    end.
 
 register_or_stop_supervisor(Pid) ->
     case erlang:whereis(uos_mcp_runtime_gateway_sup) of
@@ -58,6 +179,7 @@ register_or_stop_supervisor(Pid) ->
                     try erlang:unlink(Pid) catch _:_ -> ok end,
                     try gen_server:stop(Pid, shutdown, 1000) catch _:_ -> ok end,
                     try exit(Pid, shutdown) catch _:_ -> ok end,
+                    restore_gateway_subject(Existing),
                     false;
                 false -> register_supervisor(Pid)
             end;
@@ -72,8 +194,37 @@ register_supervisor(Pid) ->
         error:badarg ->
             try erlang:unlink(Pid) catch _:_ -> ok end,
             try exit(Pid, shutdown) catch _:_ -> ok end,
+            restore_gateway_subject(whereis(uos_mcp_runtime_gateway_sup)),
             false
     end.
+
+restore_gateway_subject(Pid) when is_pid(Pid) ->
+    case gateway_handle_get(Pid,none) of
+        {some,{subject,Owner,_}}=Subject when is_pid(Owner) ->
+            case is_process_alive(Owner) of
+                true->persistent_term:put(uos_mcp_runtime_gateway_subject,Subject);
+                false->ok
+            end;
+        _ -> ok
+    end;
+restore_gateway_subject(_) -> ok.
+
+gateway_owner_set(Box,Subject) ->
+    gateway_handle_set(Box,Subject),
+    case whereis(uos_mcp_runtime_gateway_sup) of
+        Sup when is_pid(Sup) -> case ets:lookup(uos_mcp_gateway_handles_ets,Sup) of
+            [{Sup,Box}] -> persistent_term:put(uos_mcp_runtime_gateway_subject,Subject);
+            _ -> ok
+        end;
+        _ -> ok
+    end,nil.
+gateway_owner_register(Sup,Box) ->
+    gateway_handle_register(Sup,Box),restore_gateway_subject(Sup),nil.
+
+new_reply_subject() -> {subject,alias(),make_ref()}.
+close_reply_subject({subject,Alias,Tag}) ->
+    unalias(Alias),drain_reply(Tag),nil.
+drain_reply(Tag) -> receive {Tag,_}->drain_reply(Tag) after 0->ok end.
 
 %% The executable/guardian belong to the loaded capsule, while the child cwd
 %% belongs to the caller's workspace (or an isolated absolute test directory).
@@ -81,6 +232,10 @@ register_supervisor(Pid) ->
 run_workspace_bounded_cd(Path, Args, Cwd, TimeoutMs)
   when is_binary(Path), is_list(Args), is_binary(Cwd),
        is_integer(TimeoutMs), TimeoutMs > 0, TimeoutMs =< 60000 ->
+    with_native_workspace_slot(Path,Args,Cwd,TimeoutMs);
+run_workspace_bounded_cd(_, _, _, _) -> {error, <<"invalid_resource_bound">>}.
+
+run_workspace_unchecked(Path,Args,Cwd,TimeoutMs) ->
     try
         CwdList = utf8_chars(Cwd),
         absolute = filename:pathtype(CwdList),
@@ -101,8 +256,7 @@ run_workspace_bounded_cd(Path, Args, Cwd, TimeoutMs)
           erlang:monotonic_time(millisecond) + TimeoutMs + 1000, 0, [])
     catch
         _:_ -> {error, <<"backend_spawn_failed">>}
-    end;
-run_workspace_bounded_cd(_, _, _, _) -> {error, <<"invalid_resource_bound">>}.
+    end.
 
 utf8_chars(Bytes) when is_binary(Bytes) ->
     case unicode:characters_to_list(Bytes, utf8) of
@@ -760,14 +914,16 @@ zenoh_sse_stdio_guard_fixture(Enabled, StdioMain) ->
         ], fun() ->
             IO = spawn(fun test_eof_io/0),
             OldLeader = group_leader(),
+            OldInput = get(uos_mcp_stdin_port),
             try
+                put(uos_mcp_stdin_port,eof),
                 true = group_leader(IO, self()),
                 StdioMain(),
                 false = Enabled(),
                 undefined = whereis(uos_mcp_zenoh_subscriber),
                 undefined = whereis(uos_mcp_zenoh_sup),
                 {ok, nil}
-            after group_leader(OldLeader, self()), test_kill_wait(IO) end
+            after case OldInput of undefined->erase(uos_mcp_stdin_port);_->put(uos_mcp_stdin_port,OldInput) end, group_leader(OldLeader, self()), test_kill_wait(IO) end
         end)
     after persistent_term:put(uos_mcp_stdio_only, Before) end.
 
@@ -1016,3 +1172,343 @@ test_meta_trace(Pid, Atomics, Fence, Publications, TimestampWrites) ->
             test_meta_trace(Pid, Atomics, Fence, Publications, TimestampWrites);
         {trace_delivered, Pid, Fence} -> {Publications, TimestampWrites}
     after 1000 -> error(atomics_trace_timeout) end.
+
+%% A paired, node-local guardian/heir keeps table ownership and inflight
+%% registrations across either process dying. This is not disk durability.
+ensure_mcp_tables() ->
+    case {whereis(uos_mcp_durable_ledger_guardian),ets:whereis(uos_mcp_durable_ledger_ets),whereis(uos_mcp_native_guardian)} of
+        {P,T,N} when is_pid(P), T =/= undefined, is_pid(N) -> ok;
+        _ -> global:trans({uos_mcp_tables_boot,self()},fun start_mcp_tables/0)
+    end.
+start_mcp_tables() ->
+    case ets:whereis(uos_mcp_durable_ledger_ets) of
+        undefined ->
+            Parent=self(), Tag=make_ref(),
+            {Pid,Mon}=spawn_monitor(fun()->
+                true=register(uos_mcp_durable_ledger_guardian,self()),
+                persistent_term:put(uos_mcp_inflight,atomics:new(256,[{signed,false}])),
+                ensure_native_guardian(),
+                Backup=spawn_mcp_heir(self()),
+                _=ets:new(uos_mcp_gateway_handles_ets,[named_table,public,set,{read_concurrency,true},{write_concurrency,auto},{heir,Backup,handles}]),
+                _=ets:new(uos_mcp_durable_ledger_ets,[named_table,public,set,{read_concurrency,true},{write_concurrency,auto},{heir,Backup,ledger}]),
+                Parent!{Tag,ready},mcp_tables_loop(#{})
+            end),
+            receive {Tag,ready}->demonitor(Mon,[flush]),ok;
+                    {'DOWN',Mon,process,Pid,Why}->error({mcp_tables_failed,Why})
+            after 1000 -> error(mcp_tables_timeout) end;
+        _ -> await_mcp_guardian(100),ensure_native_guardian()
+    end.
+ensure_native_guardian() ->
+    case whereis(uos_mcp_native_guardian) of
+        P when is_pid(P) -> ok;
+        undefined ->
+            Native=spawn(fun()->native_queue_loop(queue:new(),#{},0) end),
+            try register(uos_mcp_native_guardian,Native),ok
+            catch error:badarg -> exit(Native,kill),
+                case whereis(uos_mcp_native_guardian) of
+                    P when is_pid(P)->ok;
+                    _->ensure_native_guardian()
+                end
+            end
+    end.
+await_mcp_guardian(0) -> error(mcp_guardian_recovery_timeout);
+await_mcp_guardian(N) ->
+    case whereis(uos_mcp_durable_ledger_guardian) of
+        P when is_pid(P) -> ok;
+        _ -> receive after 2 -> await_mcp_guardian(N-1) end
+    end.
+spawn_mcp_heir(Owner) ->
+    P=spawn(fun()->Mon=monitor(process,Owner),mcp_heir_wait(Owner,Mon,#{}) end),
+    Mon=monitor(process,P),put(uos_mcp_heir,{P,Mon}),P.
+mcp_heir_wait(Owner,Mon,Tables) ->
+    receive
+        {'ETS-TRANSFER',T,Owner,Kind} -> mcp_heir_wait(Owner,Mon,Tables#{Kind=>T});
+        {'DOWN',Mon,process,Owner,_} -> mcp_heir_takeover(Owner,Tables)
+    end.
+mcp_heir_takeover(Old,Tables) when map_size(Tables) < 2 ->
+    receive {'ETS-TRANSFER',T,Old,Kind}->mcp_heir_takeover(Old,Tables#{Kind=>T})
+    after 1000 -> error(mcp_heir_missing_table) end;
+mcp_heir_takeover(_,_) ->
+    Backup=spawn_mcp_heir(self()),
+    true=ets:setopts(uos_mcp_gateway_handles_ets,{heir,Backup,handles}),
+    true=ets:setopts(uos_mcp_durable_ledger_ets,{heir,Backup,ledger}),
+    Monitors=lists:foldl(fun
+        ({{inflight_watch,Token},Pid,A},Ms)->Ms#{monitor(process,Pid)=>{inflight,Token,A}};
+        ({Pid,Box},Ms) when is_pid(Pid),is_reference(Box)->Ms#{monitor(process,Pid)=>{Pid,Box}};
+        (_,Ms)->Ms
+    end,#{},ets:tab2list(uos_mcp_gateway_handles_ets)),
+    true=register(uos_mcp_durable_ledger_guardian,self()),
+    mcp_tables_loop(Monitors).
+guardian_send(Message) ->
+    ensure_mcp_tables(),
+    case whereis(uos_mcp_durable_ledger_guardian) of
+        P when is_pid(P) -> P!Message,ok;
+        _ -> guardian_send(Message)
+    end.
+mcp_tables_loop(Monitors) ->
+    receive
+        {watch_inflight,Pid,Token,A} ->
+            Mon=monitor(process,Pid),mcp_tables_loop(Monitors#{Mon=>{inflight,Token,A}});
+        {finish_inflight,Token} ->
+            ets:delete(uos_mcp_gateway_handles_ets,{inflight_watch,Token}),
+            Next=maps:filter(fun(Mon,V)->case V of
+                {inflight,Token,_}->demonitor(Mon,[flush]),false; _->true end end,Monitors),
+            mcp_tables_loop(Next);
+        {watch_supervisor,Pid,Box} ->
+            Mon=monitor(process,Pid),mcp_tables_loop(Monitors#{Mon=>{Pid,Box}});
+        {'DOWN',Mon,process,Pid,_} ->
+            case get(uos_mcp_heir) of
+                {Pid,Mon}->
+                    Backup=spawn_mcp_heir(self()),
+                    true=ets:setopts(uos_mcp_gateway_handles_ets,{heir,Backup,handles}),
+                    true=ets:setopts(uos_mcp_durable_ledger_ets,{heir,Backup,ledger}),
+                    mcp_tables_loop(Monitors);
+                _ -> case maps:take(Mon,Monitors) of
+                    {{inflight,Token,A},Next}->
+                        [atomics:compare_exchange(A,I,Token,0)||I<-lists:seq(1,maps:get(size,atomics:info(A)))],
+                        ets:delete(uos_mcp_gateway_handles_ets,{inflight_watch,Token}),mcp_tables_loop(Next);
+                    {{Pid,Box},Next}->ets:delete(uos_mcp_gateway_handles_ets,Pid),ets:delete(uos_mcp_gateway_handles_ets,Box),mcp_tables_loop(Next);
+                    error->mcp_tables_loop(Monitors)
+                end
+            end;
+        _ -> mcp_tables_loop(Monitors)
+    end.
+
+-spec gateway_handle_new() -> reference().
+gateway_handle_new() -> ensure_mcp_tables(), make_ref().
+-spec gateway_handle_set(reference(), term()) -> nil.
+gateway_handle_set(Box, Subject) ->
+    true = ets:insert(uos_mcp_gateway_handles_ets,{Box,Subject}), nil.
+-spec gateway_handle_register(pid(), reference()) -> nil.
+gateway_handle_register(Sup, Box) ->
+    true = ets:insert(uos_mcp_gateway_handles_ets,{Sup,Box}),
+    guardian_send({watch_supervisor,Sup,Box}), nil.
+-spec gateway_handle_get(pid(), term()) -> term().
+gateway_handle_get(Sup, Fallback) ->
+    case ets:whereis(uos_mcp_gateway_handles_ets) of
+        undefined -> Fallback;
+        _ -> case ets:lookup(uos_mcp_gateway_handles_ets,Sup) of
+            [{Sup,Box}] -> case ets:lookup(uos_mcp_gateway_handles_ets,Box) of
+                [{Box,Subject}] -> Subject;
+                [] -> Fallback
+            end;
+            [] -> Fallback
+        end
+    end.
+
+-spec durable_initial(binary(), fun(() -> term())) -> term().
+durable_initial(Key, Factory) ->
+    ensure_mcp_tables(),
+    case ets:lookup(uos_mcp_durable_ledger_ets,{initial,Key}) of
+        [{{initial,Key},State}] -> State;
+        [] -> State = Factory(),
+            true = ets:insert(uos_mcp_durable_ledger_ets,{{initial,Key},State}), State
+    end.
+-spec durable_state(binary(), term()) -> term().
+durable_state(Key, Default) ->
+    case ets:lookup(uos_mcp_durable_ledger_ets,{state,Key}) of
+        [{{state,Key},State}] -> State;
+        [] -> Default
+    end.
+-spec durable_ledger(binary(), term()) -> term().
+durable_ledger(Key, Default) ->
+    case ets:lookup(uos_mcp_durable_ledger_ets,{ledger,Key}) of
+        [{{ledger,Key},Ledger}] -> Ledger;
+        [] -> Default
+    end.
+-spec durable_checkpoint(binary(), term(), term()) -> nil.
+durable_checkpoint(Key, Ledger, State) ->
+    true = ets:insert(uos_mcp_durable_ledger_ets,
+      [{{ledger,Key},Ledger},{{state,Key},State}]), nil.
+
+-spec cached_supervised_gateway(binary(), fun(() -> term())) -> term().
+cached_supervised_gateway(Key, Factory) ->
+    ensure_mcp_tables(),
+    Existing = ets:lookup(uos_mcp_durable_ledger_ets,{supervised,Key}),
+    case Existing of
+        [{{supervised,Key},G}] when is_tuple(G), tuple_size(G) =:= 4 ->
+            case is_process_alive(element(3,G)) of
+                true -> {ok,G};
+                false -> start_cached_gateway(Key,Factory)
+            end;
+        _ -> start_cached_gateway(Key,Factory)
+    end.
+start_cached_gateway(Key, Factory) ->
+    case Factory() of
+        {ok,G}=Ok ->
+            unlink(element(3,G)),
+            true = ets:insert(uos_mcp_durable_ledger_ets,{{supervised,Key},G}), Ok;
+        Error -> Error
+    end.
+
+-spec with_inflight_slot(pos_integer(), fun(() -> term())) -> term().
+with_inflight_slot(Max, Fun) when is_integer(Max), Max > 0, Max =< 256 ->
+    Ready=try ensure_mcp_tables(),true catch _:_ -> false end,
+    case {Ready,whereis(uos_mcp_durable_ledger_guardian)} of
+        {true,Guardian} when is_pid(Guardian) -> with_inflight_guardian(Max,Fun,Guardian);
+        _ -> overloaded()
+    end.
+with_inflight_guardian(Max,Fun,Guardian) ->
+    A = persistent_term:get(uos_mcp_inflight),
+    Token = erlang:unique_integer([positive,monotonic]),
+    %% Send monitoring intent before the CAS. DOWN cannot precede a dead
+    %% caller's last CAS; kill between acquire and try/after is safe too.
+    true=ets:insert(uos_mcp_gateway_handles_ets,{{inflight_watch,Token},self(),A}),
+    Guardian ! {watch_inflight,self(),Token,A},
+    case acquire_inflight(A,Token,1,Max) of
+        full -> ets:delete(uos_mcp_gateway_handles_ets,{inflight_watch,Token}), Guardian ! {finish_inflight,Token}, overloaded();
+        {ok,Slot} ->
+            try Fun()
+            after
+                atomics:compare_exchange(A,Slot,Token,0),
+                ets:delete(uos_mcp_gateway_handles_ets,{inflight_watch,Token}),
+                Guardian ! {finish_inflight,Token}
+            end
+    end.
+acquire_inflight(_,_,I,Max) when I > Max -> full;
+acquire_inflight(A,Token,I,Max) ->
+    case atomics:compare_exchange(A,I,0,Token) of
+        ok -> {ok,I};
+        _ -> acquire_inflight(A,Token,I+1,Max)
+    end.
+
+overloaded() ->
+    {refused,{tool_error,<<"GATEWAY_OVERLOADED">>,
+      <<"Gateway in-flight concurrency limit reached; retry with backoff">>,retryable}}.
+
+-spec gateway_supervisor_running() -> boolean().
+gateway_supervisor_running() ->
+    case whereis(uos_mcp_runtime_gateway_sup) of
+        Pid when is_pid(Pid) -> is_process_alive(Pid);
+        _ -> false
+    end.
+
+%% Separate bulkhead for bounded OS work. Waiting occurs only in ingress
+%% callers, counts against the original deadline, and never occupies the state
+%% actor. The monitor uses the same kill-safe token law as dispatch admission.
+with_native_workspace_slot(Path,Args,Cwd,TimeoutMs) ->
+    Ready=try ensure_mcp_tables(),true catch _:_ -> false end,
+    case {Ready,whereis(uos_mcp_native_guardian)} of
+        {true,Guardian} when is_pid(Guardian) -> with_native_guardian(Guardian,Path,Args,Cwd,TimeoutMs);
+        _ -> {error,<<"backend_spawn_failed">>}
+    end.
+with_native_guardian(Guardian,Path,Args,Cwd,TimeoutMs) ->
+    Tag=make_ref(), Alias=alias(), Mon=monitor(process,Guardian),
+    Deadline=erlang:monotonic_time(millisecond)+TimeoutMs,
+    Minimum=case TimeoutMs>=100 of true->50;false->1 end,
+    Guardian ! {native_acquire,self(),Alias,Tag,Deadline,Minimum},
+    try
+        receive
+            {Tag,granted} ->
+                Remaining=Deadline-erlang:monotonic_time(millisecond),
+                try case Remaining >= Minimum of
+                    true -> run_workspace_unchecked(Path,Args,Cwd,Remaining);
+                    false -> {error,<<"timeout">>}
+                end after Guardian ! {native_release,Tag} end;
+            {Tag,timeout} -> {error,<<"timeout">>};
+            {Tag,overloaded} -> {error,<<"backend_spawn_failed">>};
+            {'DOWN',Mon,process,Guardian,_} -> {error,<<"backend_spawn_failed">>}
+        after TimeoutMs -> Guardian ! {native_release,Tag}, {error,<<"timeout">>}
+        end
+    after unalias(Alias), demonitor(Mon,[flush]),
+          receive {Tag,_} -> ok after 0 -> ok end
+    end.
+
+%% FIFO, bounded256 records/16 active ports. Dispatch admission remains atomic;
+%% this independent guardian only schedules OS prefetch outside GatewayState.
+%% Reply aliases prevent late grants poisoning timed-out caller mailboxes.
+native_queue_loop(Queue,Records,Active) ->
+    receive
+        {native_acquire,Pid,Alias,Tag,Deadline,Minimum} ->
+            case map_size(Records) >= 256 of
+                true -> Alias ! {Tag,overloaded}, native_queue_loop(Queue,Records,Active);
+                false ->
+                    Mon=monitor(process,Pid),
+                    native_fill(queue:in(Tag,Queue),Records#{Tag=>{Pid,Alias,Deadline,Minimum,Mon,queued}},Active)
+            end;
+        {native_release,Tag} -> native_drop(Tag,Queue,Records,Active);
+        {'DOWN',Mon,process,_,_} ->
+            case [Tag || {Tag,{_,_,_,_,Ref,_}}<-maps:to_list(Records),Ref=:=Mon] of
+                [Tag] -> native_drop(Tag,Queue,Records,Active);
+                [] -> native_queue_loop(Queue,Records,Active)
+            end;
+        _ -> native_queue_loop(Queue,Records,Active)
+    end.
+native_drop(Tag,Queue,Records,Active) ->
+    case maps:take(Tag,Records) of
+        {{_,_,_,_,Mon,Status},Next} ->
+            demonitor(Mon,[flush]),
+            Q=queue:filter(fun(T)->T=/=Tag end,Queue),
+            Count=case Status of active->Active-1;queued->Active end,
+            native_fill(Q,Next,Count);
+        error -> native_queue_loop(Queue,Records,Active)
+    end.
+native_fill(Queue,Records,Active) when Active < 16 ->
+    case queue:out(Queue) of
+        {empty,_} -> native_queue_loop(Queue,Records,Active);
+        {{value,Tag},Rest} ->
+            {Pid,Alias,Deadline,Minimum,Mon,queued}=maps:get(Tag,Records),
+            case is_process_alive(Pid) andalso Deadline-erlang:monotonic_time(millisecond) >= Minimum of
+                true -> Alias ! {Tag,granted},
+                    native_fill(Rest,Records#{Tag=>{Pid,Alias,Deadline,Minimum,Mon,active}},Active+1);
+                false -> Alias ! {Tag,timeout}, demonitor(Mon,[flush]),
+                    native_fill(Rest,maps:remove(Tag,Records),Active)
+            end
+    end;
+native_fill(Queue,Records,Active) -> native_queue_loop(Queue,Records,Active).
+
+%% Local observations run only in the ingress caller, never in GatewayState.
+beam_metrics() ->
+    {Uptime,_}=erlang:statistics(wall_clock),
+    [{<<"otp_release">>,list_to_binary(erlang:system_info(otp_release))},
+     {<<"erts_version">>,list_to_binary(erlang:system_info(version))},
+     {<<"process_count">>,integer_to_binary(erlang:system_info(process_count))},
+     {<<"schedulers_online">>,integer_to_binary(erlang:system_info(schedulers_online))},
+     {<<"memory_total_mb">>,float_to_binary(erlang:memory(total)/1048576,[{decimals,3}])},
+     {<<"run_queue">>,integer_to_binary(erlang:statistics(run_queue))},
+     {<<"uptime_s">>,integer_to_binary(Uptime div 1000)},
+     {<<"durable_guardian_present">>,bool_binary(is_pid(whereis(uos_mcp_durable_ledger_guardian)))},
+     {<<"durable_ets_present">>,bool_binary(ets:whereis(uos_mcp_durable_ledger_ets)=/=undefined)},
+     {<<"handles_ets_present">>,bool_binary(ets:whereis(uos_mcp_gateway_handles_ets)=/=undefined)}].
+bool_binary(true)-><<"true">>;bool_binary(false)-><<"false">>.
+loopback_probe(Port) when Port=:=8080; Port=:=7447 ->
+    case gen_tcp:connect({127,0,0,1},Port,[binary,{active,false}],500) of
+        {ok,S}->gen_tcp:close(S),true;
+        _->false
+    end.
+coordination_metrics(Root) ->
+    bounded_local(fun()->
+        {ok,Text}=session_store_cli:run([<<Root/binary,"/var/coordination/tri-agent/coordinator.sqlite3">>,<<"status">>]),
+        #{<<"sessions">>:=Sessions,<<"leases">>:=Leases}=json:decode(Text),
+        Live=[S||S<-Sessions,maps:get(<<"status">>,S,<<"unknown">>)=:=<<"fresh-self-reported">>],
+        [{<<"chain_intact">>,<<"true">>},{<<"active_sessions">>,integer_to_binary(length(Live))},
+         {<<"active_leases">>,integer_to_binary(length(Leases))}]
+    end,2000).
+bounded_local(F,Timeout) ->
+    Alias=alias(),Tag=make_ref(),{Pid,Mon}=spawn_monitor(fun()->
+        R=try {ok,F()} catch _:_->{error,<<"local_probe_failed">>} end,Alias!{Tag,R}
+    end),
+    try receive {Tag,R}->demonitor(Mon,[flush]),R;
+        {'DOWN',Mon,process,Pid,_}->{error,<<"local_probe_failed">>}
+    after Timeout->exit(Pid,kill),receive {'DOWN',Mon,process,Pid,_}->ok end,{error,<<"local_probe_timeout">>}
+    end after unalias(Alias) end.
+
+%% Immutable route classification is keyed by the loaded policy/catalog code,
+%% never by client data. One constant publication replaces stale code versions;
+%% checkpoints do not rebuild/hash every schema while the code is unchanged.
+cached_readonly_receipt_keys(Factory) ->
+    Modules=['cepaf_gleam@mcp@registry','cepaf_gleam@mcp@tools',
+             'cepaf_gleam@harness@mcp','cepaf_gleam@harness@successor_mcp'],
+    Signature=[begin {module,M}=code:ensure_loaded(M),M:module_info(md5) end || M<-Modules],
+    Key=uos_mcp_readonly_receipt_keys,
+    case persistent_term:get(Key,missing) of
+        {Signature,Keys}->Keys;
+        _->
+            %% Cold contenders may do the same bounded pure work. None waits
+            %% on another caller's lifetime; unchanged warm code is one lookup.
+            Keys=Factory(),
+            case persistent_term:get(Key,missing) of
+                {Signature,Published}->Published;
+                _->persistent_term:put(Key,{Signature,Keys}),Keys
+            end
+    end.

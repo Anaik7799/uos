@@ -20,6 +20,7 @@ import cepaf_gleam/mcp/adapters/vault_metadata
 import cepaf_gleam/mcp/adapters/verification
 import cepaf_gleam/mcp/admission
 import cepaf_gleam/mcp/candidate_id
+import cepaf_gleam/mcp/json_guard
 import cepaf_gleam/mcp/http_auth
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/profiles/modern
@@ -37,13 +38,16 @@ import cepaf_gleam/mcp/transports/stdio
 import cepaf_gleam/mcp/transports/zenoh as zenoh_transport
 import cepaf_gleam/mcp/types
 import cepaf_gleam/mcp/version
+import cepaf_gleam/mcp/workspace_knowledge
 import cepaf_gleam/mcp/wire
 import gleam/bit_array
 import gleam/dict
+import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/erlang/atom
 import gleam/erlang/charlist
 import gleam/erlang/process
+import gleam/float
 import gleam/int
 import gleam/io
 import gleam/json
@@ -115,6 +119,7 @@ pub opaque type PrivateSnapshot {
     workspace_root: String,
     successor: Option(SuccessorSessionRecord),
     successor_count: Int,
+    durable: Bool,
   )
 }
 
@@ -130,6 +135,9 @@ pub type GatewayState {
     negotiated_task_sessions: dict.Dict(String, Bool),
     successor_sessions: dict.Dict(String, SuccessorSessionRecord),
     supervised_gateway: supervisor.SupervisedGateway,
+    durable_key: Option(String),
+    commit_seq: Int,
+    commit_order: dict.Dict(String, Int),
   )
 }
 
@@ -139,6 +147,12 @@ pub type Message {
   Ping(process.Subject(Bool))
   Snapshot(principal.Principal, process.Subject(PrivateSnapshot))
   ObservationTarget(process.Subject(supervisor.SupervisedGateway))
+  DispatchKnowledge(List(knowledge.CorpusEntry), Message)
+  DispatchObserved(system_observation.ObservationBackend, Message)
+  ReservePrivate(
+    admission.ValidatedCall,
+    process.Subject(Result(Nil, types.ToolError)),
+  )
   CommitPrivate(PreparedPrivateCall, process.Subject(types.Outcome))
   Dispatch(
     principal.Principal,
@@ -179,11 +193,20 @@ fn stored_subject(
   default: Option(process.Subject(Message)),
 ) -> Option(process.Subject(Message))
 
-@external(erlang, "persistent_term", "put")
-fn store_subject(
-  key: atom.Atom,
-  subject: Option(process.Subject(Message)),
-) -> Nil
+@external(erlang, "mcp_stdio_ffi", "gateway_handle_new")
+fn owner_box_new() -> dynamic.Dynamic
+
+@external(erlang, "mcp_stdio_ffi", "gateway_owner_set")
+fn owner_box_set(box: dynamic.Dynamic, subject: Option(process.Subject(Message))) -> Nil
+
+@external(erlang, "mcp_stdio_ffi", "gateway_owner_register")
+fn owner_box_register(pid: process.Pid, box: dynamic.Dynamic) -> Nil
+
+@external(erlang, "mcp_stdio_ffi", "new_reply_subject")
+fn new_reply_subject() -> process.Subject(a)
+
+@external(erlang, "mcp_stdio_ffi", "close_reply_subject")
+fn close_reply_subject(reply: process.Subject(a)) -> Nil
 
 @external(erlang, "mcp_stdio_ffi", "run_workspace_bounded_cd")
 fn run_bounded_cd(
@@ -397,7 +420,7 @@ pub fn supervised_gateway_pids_alive(
   gateway: supervisor.SupervisedGateway,
 ) -> Bool {
   process.is_alive(gateway.supervisor_pid)
-  && subject_alive(gateway.gateway_subject)
+  && subject_alive(supervisor.current_gateway_subject(gateway))
 }
 
 fn gateway_alive(gateway: supervisor.SupervisedGateway) -> Bool {
@@ -405,7 +428,10 @@ fn gateway_alive(gateway: supervisor.SupervisedGateway) -> Bool {
     False -> False
     True -> {
       let reply = process.new_subject()
-      process.send(gateway.gateway_subject, supervisor.Ping(reply))
+      process.send(
+        supervisor.current_gateway_subject(gateway),
+        supervisor.Ping(reply),
+      )
       process.receive(reply, 1000) == Ok(True)
     }
   }
@@ -448,57 +474,15 @@ pub fn ensure_started_with_subscriber_for_test(
 ) -> Bool {
   let running =
     with_gateway_boot_lock(fn() {
-      case is_running() {
+      case gateway_supervisor_running() && { case stored_subject(gateway_key(), None) { Some(subject) -> subject_alive(subject) None -> False } } {
         True -> True
-        False -> {
-          let root = workspace_root()
-          let cand = candidate_id.from_root(root)
-          case candidate_id.is_sha256_digest(cand) {
-            False -> False
-            True -> {
-              // The state owner is a real supervisor child, with its subject
-              // refreshed in persistent_term on every OTP restart.
-              let child =
-                supervision.worker(fn() {
-                  case
-                    supervisor.start_supervised_gateway(),
-                    supervisor.start_worker_pool_for_candidate(
-                      size: 4,
-                      candidate: cand,
-                    )
-                  {
-                    Ok(gateway), Ok(pool) -> {
-                      let state = new_state(root, cand, pool, gateway)
-                      case start_state_owner(state) {
-                        Ok(started) -> {
-                          store_subject(gateway_key(), Some(started.data))
-                          Ok(started)
-                        }
-                        Error(error) -> Error(error)
-                      }
-                    }
-                    Error(error), _ -> Error(error)
-                    _, Error(reason) -> Error(actor.InitFailed(reason))
-                  }
-                })
-              case
-                otp_supervisor.new(otp_supervisor.OneForOne)
-                |> otp_supervisor.restart_tolerance(intensity: 5, period: 60)
-                |> otp_supervisor.add(child)
-                |> otp_supervisor.start
-              {
-                Ok(started) -> {
-                  process.unlink(started.pid)
-                  case register_or_stop_supervisor(started.pid) {
-                    True -> is_running()
-                    False -> is_running()
-                  }
-                }
-                Error(_) -> False
-              }
-            }
+        False ->
+          case gateway_supervisor_running() {
+            // A live owner supervisor is already responsible for restart. Never
+            // create a losing tree whose child could publish a dead subject.
+            True -> wait_replacement_subject(100) != None
+            False -> start_gateway_owner_supervisor()
           }
-        }
       }
     })
   case running {
@@ -541,10 +525,10 @@ fn health_json(running: Bool, candidate: String) -> json.Json {
       "zenoh_subscriber_last_activity_age_ms",
       json.int(zenoh_subscriber_last_activity_age_ms()),
     ),
-    #("public_routes", json.int(65)),
-    #("development_routes", json.int(21)),
-    #("successor_routes", json.int(15)),
-    #("total_routes", json.int(101)),
+    #("public_routes", json.int(list.length(list.filter(registry.all_specs(),fn(spec) { spec.route == "public" })))),
+    #("development_routes", json.int(list.length(list.filter(registry.all_specs(),fn(spec) { spec.route == "development" })))),
+    #("successor_routes", json.int(list.length(list.filter(registry.all_specs(),fn(spec) { spec.route == "successor" })))),
+    #("total_routes", json.int(list.length(registry.all_specs()))),
     #("application_admitted", json.bool(False)),
   ])
 }
@@ -555,6 +539,18 @@ pub fn new_state(
   cand: String,
   pool: supervisor.WorkerPool,
   gateway: supervisor.SupervisedGateway,
+) -> GatewayState {
+  // Preserve the eager constructor used by isolated canonical-store fixtures.
+  new_state_with_planning(root,cand,pool,gateway,
+    load_planning(root,default_live_plan(root)))
+}
+
+fn new_state_with_planning(
+  root: String,
+  cand: String,
+  pool: supervisor.WorkerPool,
+  gateway: supervisor.SupervisedGateway,
+  initial_planning: planning_read.PlanningReadStore,
 ) -> GatewayState {
   let corpus = knowledge.new_corpus(root, ["public"], 1_048_576, 4)
   let corpus =
@@ -590,7 +586,7 @@ pub fn new_state(
     )
   let backends =
     server.ServerBackends(
-      planning_read: load_planning(root, completion_plan),
+      planning_read: initial_planning,
       planning_write: planning_write.new_store(),
       observation: observation(
         cand,
@@ -669,6 +665,9 @@ pub fn new_state(
     dict.new(),
     dict.new(),
     gateway,
+    durable_key: None,
+    commit_seq: 0,
+    commit_order: dict.new(),
   )
 }
 
@@ -791,6 +790,20 @@ fn sqlite_binary(root: String) -> Option(String) {
   |> option.from_result
 }
 
+fn default_live_plan(root: String) -> String {
+  case sqlite_binary(root) {
+    None -> completion_plan
+    Some(binary) -> {
+      let query = "SELECT id FROM sa_plan_plan WHERE id='" <> completion_plan <> "' OR EXISTS(SELECT1 FROM sa_plan_task WHERE plan_id=sa_plan_plan.id AND state='executing') ORDER BY CASE WHEN id='" <> completion_plan <> "' THEN0 ELSE1 END,created_at_ns DESC LIMIT1;"
+      let query = query |> string.replace("SELECT1","SELECT 1") |> string.replace("THEN0","THEN 0") |> string.replace("ELSE1","ELSE 1") |> string.replace("LIMIT1","LIMIT 1")
+      case run_bounded_cd(binary,["-readonly","-cmd",".timeout 1000",root <> "/var/sa-plan/uos.sqlite3",query],root,1500) {
+        Ok(#(0,text)) -> case string.trim(text) { "" -> completion_plan id -> id }
+        _ -> completion_plan
+      }
+    }
+  }
+}
+
 fn load_planning(
   root: String,
   plan: String,
@@ -806,7 +819,12 @@ fn load_planning(
         <> selected
         <> " ORDER BY plan_id, id LIMIT 500;"
       let output =
-        run_bounded_cd(binary, ["-readonly", "-json", db, query], root, 3000)
+        run_bounded_cd(
+          binary,
+          ["-readonly", "-cmd", ".timeout 1000", "-json", db, query],
+          root,
+          3000,
+        )
       let output = case output {
         Ok(#(code, text)) if code != 0 ->
           case string.contains(text, "no such table: sa_plan_task") {
@@ -815,6 +833,8 @@ fn load_planning(
                 binary,
                 [
                   "-readonly",
+                  "-cmd",
+                  ".timeout 1000",
                   "-json",
                   db,
                   string.replace(query, "FROM sa_plan_task", "FROM tasks"),
@@ -834,8 +854,14 @@ fn load_planning(
                 "Canonical query output too large",
               )
             True ->
-              case json.parse(text, decode.list(task_row_decoder())) {
-                Ok(rows) -> planning_read.sample_canonical_store(plan, rows)
+              case json.parse(case string.trim(text) { "" -> "[]" _ -> text }, decode.list(task_row_decoder())) {
+                Ok(rows) -> case rows {
+                  [] -> case sqlite_observe(root,"var/sa-plan/uos.sqlite3","SELECT count(*) FROM sa_plan_plan WHERE id='" <> string.replace(plan,"'","''") <> "';") {
+                    Ok("0") -> planning_read.UnknownPlanStore(plan)
+                    _ -> planning_read.sample_canonical_store(plan,rows)
+                  }
+                  _ -> planning_read.sample_canonical_store(plan,rows)
+                }
                 Error(_) ->
                   planning_read.unavailable_store(
                     "Canonical task query returned invalid JSON or no rows",
@@ -856,34 +882,263 @@ fn load_planning(
   }
 }
 
-fn observation(
-  cand: String,
-  now: Int,
-  alive: Bool,
-  scope: String,
-) -> system_observation.ObservationBackend {
-  system_observation.ObservedSnapshot(
-    cand,
-    "beam_otp29_live",
-    now,
-    30_000,
-    Some(["c3i-zenoh-router-1", "c3i-docs-server"]),
-    dict.from_list([
-      #("system_health.status", case alive {
-        True -> "healthy"
-        False -> "stopped"
-      }),
-      #("gateway_alive", case alive {
-        True -> "true"
-        False -> "false"
-      }),
-      #(
-        "observation_scope",
-        scope <> "; container names are configured inventory",
+fn observation(cand: String,now: Int,alive: Bool,scope: String) -> system_observation.ObservationBackend {
+  system_observation.ObservedSnapshot(cand,"beam_otp29_live",now,30_000,None,dict.from_list([
+    #("probe_kind","gateway_pid_liveness"),#("observed_source",scope),
+    #("system_health.status",case alive { True -> "healthy" False -> "stopped" })
+  ]))
+}
+
+@external(erlang,"mcp_stdio_ffi","beam_metrics")
+fn live_beam_metrics() -> List(#(String,String))
+
+@external(erlang,"mcp_stdio_ffi","loopback_probe")
+fn loopback_probe(port: Int) -> Bool
+
+@external(erlang,"mcp_stdio_ffi","coordination_metrics")
+fn coordination_metrics(root: String) -> Result(List(#(String,String)),String)
+
+fn sqlite_observe(root: String,relative: String,query: String) -> Result(String,Nil) {
+  use binary <- result.try(sqlite_binary(root) |> option.to_result(Nil))
+  case run_bounded_cd(binary,["-readonly","-cmd",".timeout 1000",root <> "/" <> relative,query],root,2000) {
+    Ok(#(0,text)) -> Ok(string.trim(text))
+    _ -> Error(Nil)
+  }
+}
+
+fn task_count_metrics(root: String) -> Result(List(#(String,String)),Nil) {
+  use text <- result.try(sqlite_observe(root,"var/sa-plan/uos.sqlite3","SELECT json_object('executing_tasks',sum(state='executing'),'completed_tasks',sum(state='completed'),'ready_tasks',sum(state in ('available','ready','pending')),'total_tasks',count(*),'active_workers',count(distinct case when state='executing' then worker end)) FROM sa_plan_task;"))
+  json.parse(text,decode.dict(decode.string,decode.int))
+  |> result.map(fn(rows) { list.map(dict.to_list(rows),fn(row) { #(row.0,int.to_string(row.1)) }) })
+  |> result.map_error(fn(_) { Nil })
+}
+
+fn observation_probe(tool: String,root: String,cand: String,now: Int,alive: Bool) -> system_observation.ObservationBackend {
+  let base = dict.from_list(live_beam_metrics())
+  let base = dict.insert(base,"probe_kind","local_bounded_observation")
+  let base = dict.insert(base,"observed_source","BEAM runtime; canonical SQLite read-only; loopback socket; local filesystem")
+  let base = dict.insert(base,"loaded_beam_sha256",loaded_mcp_beams_digest())
+  let base = dict.insert(base,"admitted_ev_ceiling","93")
+  let base = dict.insert(base,"gateway_alive",case alive { True -> "true" False -> "false" })
+  let queue = int.parse(argument(base,"run_queue","0")) |> result.unwrap(0)
+  let schedulers = int.parse(argument(base,"schedulers_online","1")) |> result.unwrap(1)
+  let memory_mb = float.parse(argument(base,"memory_total_mb","0.0")) |> result.unwrap(0.0)
+  let healthy = alive && argument(base,"durable_ets_present","false") == "true" && argument(base,"handles_ets_present","false") == "true" && queue <= schedulers * 4 && memory_mb <. 16_384.0
+  let needs_tasks = list.contains(["system_verification","fractal_status","evolution_metrics","holon_status","swarm_status","agent_hierarchy","ooda_phase","ooda_decide","system_dashboard"],tool)
+  let counts = case needs_tasks { True -> task_count_metrics(root) False -> Ok([]) }
+  let metrics = case counts { Ok(rows) -> list.fold(rows,base,fn(d,p) { dict.insert(d,p.0,p.1) }) Error(_) -> base }
+  let metrics = case list.contains(["holon_status","swarm_status","agent_hierarchy","ooda_phase","ooda_decide","system_dashboard","integrity_check"],tool) {
+    True -> case coordination_metrics(root) { Ok(rows) -> list.fold(rows,metrics,fn(d,p) { dict.insert(d,p.0,p.1) }) Error(_) -> dict.insert(metrics,"coordination_probe","failed") }
+    False -> metrics
+  }
+  let needs_integrity = list.contains(["integrity_check","prajna_health","dark_cockpit_mode","system_immune"],tool)
+  let db_ok = case needs_integrity {
+    True -> sqlite_observe(root,"var/sa-plan/uos.sqlite3","PRAGMA quick_check;") == Ok("ok") && sqlite_observe(root,"var/coordination/tri-agent/coordinator.sqlite3","PRAGMA quick_check;") == Ok("ok")
+    False -> True
+  }
+  let metrics = case needs_integrity {
+    True -> dict.insert(metrics,"sqlite_quick_check",case db_ok { True -> "ok" False -> "failed" })
+    False -> metrics
+  }
+  let metrics = case list.contains(["prajna_health","dark_cockpit_mode","system_immune"],tool) {
+    True -> {
+      let quarantined = case simplifile.read_directory(root <> "/var/coordination/tri-agent/events-quarantine") { Ok(files) -> list.length(files) Error(_) -> -1 }
+      dict.insert(metrics,"quarantine_files",int.to_string(quarantined))
+    }
+    False -> metrics
+  }
+  let net_tool = list.contains(["system_zenoh","mesh_topology"],tool)
+  let rest = case net_tool { True -> loopback_probe(8080) False -> False }
+  let tcp = case net_tool { True -> loopback_probe(7447) False -> False }
+  let metrics = case net_tool {
+    True -> metrics |> dict.insert("zenoh_subscriber_status",zenoh_subscriber_state()) |> dict.insert("zenoh_rest_reachable",case rest { True -> "true" False -> "false" }) |> dict.insert("zenoh_tcp_reachable",case tcp { True -> "true" False -> "false" })
+    False -> metrics
+  }
+  let age = case simplifile.read(root <> "/var/preflight/latest.json") {
+    Ok(text) -> case json.parse(text,decode.at(["epoch_s"],decode.int)) { Ok(epoch) -> now / 1000 - epoch Error(_) -> 1_000_000_000 }
+    Error(_) -> 1_000_000_000
+  }
+  let metrics = case needs_tasks { True -> dict.insert(metrics,"preflight_age_s",int.to_string(age)) False -> metrics }
+  let metrics = case tool {
+    "integrity_check" -> metrics |> dict.insert("candidate_sha256_valid",case cand == candidate_id.from_root(root) && candidate_id.is_valid(cand) { True -> "true" False -> "false" })
+    "ooda_phase" | "ooda_decide" -> {
+      let phase = case int.parse(argument(metrics,"executing_tasks","0")) |> result.unwrap(0) > 0 { True -> "act" False -> "reflect" }
+      metrics |> dict.insert("phase",phase) |> dict.insert("phase_derivation","canonical_task_projection") |> dict.insert("decision","preview_only_canonical_task_snapshot")
+    }
+    _ -> metrics
+  }
+  let containers = case list.contains(["podman_containers","system_dashboard"],tool) {
+    True -> case run_bounded_cd("/usr/bin/podman",["ps","--format","{{.Names}}"],root,1500) {
+      Ok(#(0,text)) -> Some(string.split(text,"\n") |> list.map(string.trim) |> list.filter(fn(s) { s != "" }))
+      _ -> None
+    }
+    False -> None
+  }
+  let status = case tool {
+    "kms_catalog" -> None
+    "system_zenoh" | "mesh_topology" -> Some(case rest && tcp && zenoh_subscriber_alive() { True -> "connected" False -> "degraded" })
+    "system_verification" | "fractal_status" | "evolution_metrics" -> Some(case healthy && counts != Error(Nil) && age >= 0 && age <= 900 { True -> "healthy" False -> "degraded" })
+    "system_immune" | "prajna_health" | "dark_cockpit_mode" -> Some(case healthy && db_ok && argument(metrics,"quarantine_files","-1") == "0" { True -> "healthy" False -> "degraded" })
+    "system_dashboard" -> Some(case healthy && counts != Error(Nil) && containers != None { True -> "healthy" False -> "degraded" })
+    _ -> Some(case healthy && db_ok && counts != Error(Nil) { True -> "healthy" False -> "degraded" })
+  }
+  let metrics = case status { Some(status) -> dict.insert(metrics,tool <> ".status",status) None -> metrics }
+  system_observation.ObservedSnapshot(cand,"beam_otp29_live",now,30_000,containers,metrics)
+}
+
+pub const max_committed_receipts = 4096
+
+pub const max_unresolved_receipts = 4096
+
+@external(erlang, "mcp_stdio_ffi", "cached_supervised_gateway")
+fn cached_supervised_gateway(
+  key: String,
+  factory: fn() -> Result(supervisor.SupervisedGateway, actor.StartError),
+) -> Result(supervisor.SupervisedGateway, actor.StartError)
+
+@external(erlang, "mcp_stdio_ffi", "durable_initial")
+fn durable_initial(key: String, factory: fn() -> GatewayState) -> GatewayState
+
+@external(erlang, "mcp_stdio_ffi", "durable_state")
+fn durable_state(key: String, fallback: GatewayState) -> GatewayState
+
+@external(erlang, "mcp_stdio_ffi", "durable_ledger")
+fn durable_ledger(
+  key: String,
+  fallback: receipts.ReceiptLedger,
+) -> receipts.ReceiptLedger
+
+@external(erlang, "mcp_stdio_ffi", "durable_checkpoint")
+fn durable_checkpoint(
+  key: String,
+  ledger: receipts.ReceiptLedger,
+  state: GatewayState,
+) -> Nil
+
+/// Deterministic bounded terminal retention. Pending/uncertain entries are never evicted.
+@external(erlang, "erlang", "external_size")
+fn stored_bytes(value: a) -> Int
+
+@external(erlang,"mcp_stdio_ffi","cached_readonly_receipt_keys")
+fn cached_readonly_keys(factory: fn() -> dict.Dict(#(String,String),Nil)) -> dict.Dict(#(String,String),Nil)
+
+fn readonly_receipt_keys() -> dict.Dict(#(String,String),Nil) {
+  cached_readonly_keys(fn() { list.fold(registry.all_specs(),dict.new(),fn(keys,spec) {
+    case spec.effect_class == types.ReadOnly {
+      True -> dict.insert(keys,#(spec.route,spec.name),Nil)
+      False -> keys
+    }
+  }) })
+}
+
+fn readonly_receipt(entry: receipts.ReceiptEntry,keys: dict.Dict(#(String,String),Nil)) -> Bool {
+  dict.has_key(keys,#(entry.route,entry.tool)) || { entry.route == "public" && entry.tool == "ping" }
+}
+
+pub fn bound_receipt_ledger(ledger: receipts.ReceiptLedger) -> receipts.ReceiptLedger {
+  let #(_, order) = assign_commit_order(ledger, 0, dict.new())
+  bound_receipt_ledger_ordered(ledger, order)
+}
+
+// Old node-local snapshots have no historical chronology. Migrate their
+// unsequenced entries in lexical order once; every subsequent commit receives
+// the next owner-serialized sequence, persisted in the same ETS checkpoint.
+fn assign_commit_order(ledger: receipts.ReceiptLedger, seq: Int, order: dict.Dict(String, Int)) -> #(Int, dict.Dict(String, Int)) {
+  ledger.entries
+  |> dict.to_list
+  |> list.filter(fn(pair) { case pair.1.state { receipts.OutcomeCommitted(_) -> !dict.has_key(order, pair.0) _ -> False } })
+  |> list.sort(fn(a, b) { string.compare(a.0, b.0) })
+  |> list.fold(#(seq, order), fn(acc, pair) { #(acc.0 + 1, dict.insert(acc.1, pair.0, acc.0 + 1)) })
+}
+
+fn bound_receipt_ledger_ordered(ledger: receipts.ReceiptLedger, order: dict.Dict(String, Int)) -> receipts.ReceiptLedger {
+  let pairs = dict.to_list(ledger.entries)
+    |> list.sort(fn(a, b) { int.compare(dict.get(order, b.0) |> result.unwrap(0), dict.get(order, a.0) |> result.unwrap(0)) })
+  let readonly_keys = readonly_receipt_keys()
+  // Preserve effect fences and unresolved entries before expendable read-only
+  // replay payloads. Admission refuses further effects before the byte/count cap.
+  let protected = list.filter(pairs,fn(pair) { case pair.1.state { receipts.OutcomeCommitted(_) -> !readonly_receipt(pair.1,readonly_keys) _ -> True } })
+  let readonly = list.filter(pairs,fn(pair) { case pair.1.state { receipts.OutcomeCommitted(_) -> readonly_receipt(pair.1,readonly_keys) _ -> False } })
+  let #(entries,_,_) = list.fold(list.append(protected,readonly),#(dict.new(),0,0),fn(acc,pair) {
+    let #(entries,count,bytes) = acc
+    let entry = pair.1
+    case entry.state {
+      receipts.OutcomeCommitted(outcome) -> {
+        let size = stored_bytes(pair)
+        let large = stored_bytes(outcome) > 16_384 || bytes + size > 16_777_216
+        case readonly_receipt(entry,readonly_keys) {
+          True -> case count >= max_committed_receipts || large {
+            True -> acc
+            False -> #(dict.insert(entries,pair.0,entry),count+1,bytes+size)
+          }
+          False -> {
+            let entry = case large {
+              True -> receipts.ReceiptEntry(..entry,state:receipts.OutcomeCommitted(types.Refused(types.ToolError(
+                "REPLAY_PAYLOAD_NOT_RETAINED",
+                "Terminal outcome recorded; large replay payload compacted. Reconcile the durable receipt before retry; do not execute again",
+                types.ReconcileFirst,
+              ))))
+              False -> entry
+            }
+            #(dict.insert(entries,pair.0,entry),count+1,bytes+stored_bytes(#(pair.0,entry)))
+          }
+        }
+      }
+      _ -> #(dict.insert(entries,pair.0,entry),count,bytes+stored_bytes(pair))
+    }
+  })
+  receipts.ReceiptLedger(..ledger,entries:entries)
+}
+
+fn checkpoint_state(state: GatewayState) -> GatewayState {
+  let #(seq, order) = assign_commit_order(state.pool.ledger, state.commit_seq, state.commit_order)
+  let pool =
+    supervisor.WorkerPool(
+      ..state.pool,
+      ledger: bound_receipt_ledger_ordered(state.pool.ledger, order),
+    )
+  let order = dict.filter(order, fn(id, _) { dict.has_key(pool.ledger.entries, id) })
+  let state = GatewayState(..state, pool: pool, commit_seq: seq, commit_order: order)
+  case state.durable_key {
+    Some(key) -> {
+      let durable_corpus = knowledge.KnowledgeCorpus(..state.backends.knowledge,entries:dict.filter(state.backends.knowledge.entries,fn(path,_) { list.contains(["AGENTS.md","CLAUDE.md","GEMINI.md"],path) }))
+      let durable = GatewayState(..state,backends:server.ServerBackends(..state.backends,knowledge:durable_corpus,verification_runner:fn(_) { verification.ProverMissing("Prefetch is per-call only") }))
+      durable_checkpoint(key, pool.ledger, durable)
+      state
+    }
+    None -> state
+  }
+}
+
+fn rehydrate_state(key: String, initial: GatewayState) -> GatewayState {
+  let state = durable_state(key, initial)
+  let ledger = durable_ledger(key, state.pool.ledger)
+  let entries =
+    dict.map_values(ledger.entries, fn(_, entry) {
+      case entry.state {
+        receipts.IntentRecorded ->
+          receipts.ReceiptEntry(
+            ..entry,
+            state: receipts.EffectUncertain(types.UncertainReceipt(
+              entry.intent_id,
+              entry.route,
+              entry.tool,
+              "State owner interrupted before commit; reconcile required",
+              entry.candidate,
+            )),
+          )
+        _ -> entry
+      }
+    })
+  checkpoint_state(
+    GatewayState(
+      ..state,
+      durable_key: Some(key),
+      pool: supervisor.WorkerPool(
+        ..state.pool,
+        ledger: receipts.ReceiptLedger(..ledger, entries: entries),
       ),
-      #("public_routes", "65"),
-      #("total_routes", "101"),
-    ]),
+    ),
   )
 }
 
@@ -892,6 +1147,8 @@ fn handle_message(
   message: Message,
 ) -> actor.Next(GatewayState, Message) {
   case message {
+    DispatchKnowledge(entries,inner) -> handle_dispatch(state,inner,entries)
+    DispatchObserved(snapshot,inner) -> handle_message(GatewayState(..state,backends:server.ServerBackends(..state.backends,observation:snapshot)),inner)
     Snapshot(p, reply) -> {
       process.send(reply, private_snapshot(state, p))
       actor.continue(state)
@@ -900,8 +1157,21 @@ fn handle_message(
       process.send(reply, state.supervised_gateway)
       actor.continue(state)
     }
+    ReservePrivate(call, reply) -> {
+      case reserve_call(state, call) {
+        Error(error) -> {
+          process.send(reply, Error(error))
+          actor.continue(state)
+        }
+        Ok(next) -> {
+          process.send(reply, Ok(Nil))
+          actor.continue(next)
+        }
+      }
+    }
     CommitPrivate(prepared, reply) -> {
       let #(outcome, next) = commit_private(state, prepared)
+      let next = checkpoint_state(next)
       process.send(reply, outcome)
       actor.continue(next)
     }
@@ -912,6 +1182,12 @@ fn handle_message(
       )
       actor.continue(state)
     }
+    Dispatch(..) as dispatch -> handle_dispatch(state,dispatch,[])
+  }
+}
+
+fn handle_dispatch(state: GatewayState,message: Message,extra_entries: List(knowledge.CorpusEntry)) -> actor.Next(GatewayState,Message) {
+  case message {
     Dispatch(
       p,
       profile,
@@ -925,14 +1201,14 @@ fn handle_message(
       prefetched_gateway_alive,
       reply,
     ) -> {
+      let base_knowledge = state.backends.knowledge
       let backends =
         server.ServerBackends(
           ..state.backends,
-          knowledge: case prefetched_doc {
-            Some(#(path, entry)) ->
-              apply_document(state.backends.knowledge, path, entry)
+          knowledge: list.fold(extra_entries,case prefetched_doc {
+            Some(#(path,entry)) -> apply_document(state.backends.knowledge,path,entry)
             None -> state.backends.knowledge
-          },
+          },fn(corpus,entry) { knowledge.with_entry(corpus,entry) }),
           planning_read: option.unwrap(
             prefetched_plan,
             state.backends.planning_read,
@@ -956,9 +1232,12 @@ fn handle_message(
           now,
           prefetched_gateway_alive,
         )
+      let next = GatewayState(..next,backends:server.ServerBackends(..next.backends,knowledge:base_knowledge,verification_runner:fn(_) { verification.ProverMissing("Prefetch is per-call only") }))
+      let next = checkpoint_state(next)
       process.send(reply, outcome)
       actor.continue(next)
     }
+    _ -> actor.continue(state)
   }
 }
 
@@ -969,6 +1248,14 @@ pub fn start_state_owner(
   actor.new(state) |> actor.on_message(handle_message) |> actor.start
 }
 
+pub const max_inflight_dispatches = 256
+
+@external(erlang, "mcp_stdio_ffi", "with_inflight_slot")
+pub fn with_inflight_slot(
+  limit: Int,
+  work: fn() -> types.Outcome,
+) -> types.Outcome
+
 fn dispatch_actor(
   p: principal.Principal,
   profile: types.ProtocolProfile,
@@ -977,25 +1264,70 @@ fn dispatch_actor(
   msg: wire.NormalizedMessage,
   now: Int,
 ) -> types.Outcome {
-  case ensure_started(), stored_subject(gateway_key(), None) {
+  with_inflight_slot(max_inflight_dispatches, fn() {
+    dispatch_actor_admitted(p, profile, route, raw, msg, now)
+  })
+}
+
+fn dispatch_actor_admitted(
+  p: principal.Principal,
+  profile: types.ProtocolProfile,
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+  now: Int,
+) -> types.Outcome {
+  let ready = case stored_subject(gateway_key(), None) {
+    Some(subject) -> subject_alive(subject)
+    None -> False
+  }
+  let ready = case ready {
+    True -> True
+    False -> ensure_started()
+  }
+  case ready, stored_subject(gateway_key(), None) {
     True, Some(subject) -> {
       case msg.method == "tools/call" && is_private_route(route) {
-        True ->
-          with_private_route_lock(fn() {
-            dispatch_private_actor(
-              subject,
-              p,
-              route,
-              raw,
-              msg,
-              live_private_binding,
-            )
-          })
+        True -> case private_ingress_binding_present(route,raw,msg) {
+          Error(error) -> types.Refused(error)
+          Ok(Nil) -> with_private_route_lock(fn() {
+              dispatch_private_actor(
+                subject,
+                p,
+                route,
+                raw,
+                msg,
+                live_private_binding,
+              )
+            })
+        }
         False ->
           dispatch_public_actor(subject, p, profile, route, raw, msg, now)
       }
     }
     _, _ -> refuse("GATEWAY_UNAVAILABLE", "OTP gateway could not start")
+  }
+}
+
+// Refusal-only live ingress check: absence of a binding cannot depend on the
+// owner's mailbox. A present binding grants nothing here and is loaded and
+// fenced again by the unchanged canonical snapshot/admission/effect path.
+fn private_ingress_binding_present(
+  route: String,
+  raw: String,
+  msg: wire.NormalizedMessage,
+) -> Result(Nil,types.ToolError) {
+  let #(tool,args) = tool_arguments(raw,msg)
+  use _ <- result.try(private_tool_precheck(route,tool,args))
+  use _ <- result.try(private_arguments(raw,msg))
+  let present = case route {
+    "development" -> result.is_ok(dev.load_binding())
+    "successor" -> result.is_ok(harness_admission.load())
+    _ -> False
+  }
+  case present {
+    True -> Ok(Nil)
+    False -> Error(private_error("ROUTE_GRANT_REQUIRED","A live private route binding is required"))
   }
 }
 
@@ -1033,14 +1365,14 @@ fn dispatch_public_actor(
       }
       let prefetched_plan = case registry.lookup(route, tool) {
         Ok(spec) if spec.family == "planning_read" ->
-          Some(load_planning(root, argument(args, "plan_id", completion_plan)))
+          Some(load_planning(root, argument(args, "plan_id", argument(args,"plan",default_live_plan(root)))))
         _ -> None
       }
       let prefetched_check = case verification.is_verification_tool(tool) {
         True -> {
           let check_raw =
             argument(args, "check_id", case tool {
-              "preflight_check" -> "preflight_toolchain"
+              "preflight_check" | "verification_run" -> "preflight_toolchain"
               _ -> ""
             })
           case verification.parse_check_id(check_raw) {
@@ -1065,9 +1397,18 @@ fn dispatch_public_actor(
     }
     _ -> #(None, None, None)
   }
-  let reply = process.new_subject()
-  process.send(
-    subject,
+  let prefetched_observation = case msg.method {
+    "tools/call" -> {
+      let #(tool,_) = tool_arguments(raw,msg)
+      case system_observation.is_known_observation_tool(tool) {
+        True -> Some(observation_probe(tool,workspace_root(),candidate_id.from_root(workspace_root()),now,option.unwrap(prefetched_gateway_alive,False)))
+        False -> None
+      }
+    }
+    _ -> None
+  }
+  let reply = new_reply_subject()
+  let request =
     Dispatch(
       p,
       profile,
@@ -1080,17 +1421,21 @@ fn dispatch_public_actor(
       prefetched_check,
       prefetched_gateway_alive,
       reply,
-    ),
-  )
-  case process.receive(reply, 15_000) {
-    Ok(outcome) -> outcome
-    Error(Nil) ->
-      types.Refused(types.ToolError(
-        "GATEWAY_TIMEOUT",
-        "MCP gateway call timed out",
-        types.Retryable,
-      ))
+    )
+  let request = case msg.method {
+    "tools/call" -> {
+      let #(tool,args) = tool_arguments(raw,msg)
+      case list.contains(["knowledge_search","zk_transclude"],tool) {
+        True -> DispatchKnowledge(workspace_knowledge.prefetch(workspace_root(),argument(args,"query",argument(args,"key",""))),request)
+        False -> request
+      }
+    }
+    _ -> request
   }
+  let request = case prefetched_observation { Some(snapshot) -> DispatchObserved(snapshot,request) None -> request }
+  let outcome = await_public_dispatch(subject, request, reply, 3)
+  close_reply_subject(reply)
+  outcome
 }
 
 // Both waits are in the ingress caller. The actor only sends a target handle.
@@ -1143,14 +1488,37 @@ pub fn dispatch_private_actor_with_timeouts(
   snapshot_timeout_ms: Int,
   commit_timeout_ms: Int,
 ) -> types.Outcome {
-  let reply = process.new_subject()
-  process.send(subject, Snapshot(p, reply))
-  case process.receive(reply, snapshot_timeout_ms) {
+  case private_snapshot_with_recovery(subject, p, snapshot_timeout_ms, 3) {
     Error(_) -> refuse("GATEWAY_TIMEOUT", "Private snapshot timed out")
-    Ok(snapshot) ->
+    Ok(#(subject, snapshot)) ->
       // Admission may observe subprocesses. This is the ingress caller, never
       // the state actor. Refresh UTC after waiting for the private lock.
-      case prepare_private(snapshot, p, route, raw, msg, now_ms(), resolver) {
+      case
+        prepare_private(
+          snapshot,
+          p,
+          route,
+          raw,
+          msg,
+          now_ms(),
+          resolver,
+          fn(call) {
+            case snapshot.durable {
+              False -> Ok(Nil)
+              True -> {
+                case await_owner_reply(subject, fn(reply) { ReservePrivate(call, reply) }, snapshot_timeout_ms) {
+                  Ok(result) -> result
+                  Error(owner_down) ->
+                    Error(private_error(
+                      case owner_down { True -> "GATEWAY_RESTARTING" False -> "GATEWAY_TIMEOUT" },
+                      "Private reservation interrupted before effect",
+                    ))
+                }
+              }
+            }
+          },
+        )
+      {
         Error(outcome) -> outcome
         Ok(prepared) ->
           commit_prepared_private(subject, prepared, commit_timeout_ms)
@@ -1163,9 +1531,7 @@ fn commit_prepared_private(
   prepared: PreparedPrivateCall,
   timeout_ms: Int,
 ) -> types.Outcome {
-  let reply = process.new_subject()
-  process.send(subject, CommitPrivate(prepared, reply))
-  case process.receive(reply, timeout_ms) {
+  case await_owner_reply(subject, fn(reply) { CommitPrivate(prepared, reply) }, timeout_ms) {
     Ok(outcome) -> outcome
     Error(_) ->
       case prepared.effect_executed {
@@ -1183,6 +1549,35 @@ fn commit_prepared_private(
             candidate: prepared.candidate,
           ))
       }
+  }
+}
+
+type OwnerReply(a) {
+  OwnerReplied(a)
+  ReplyOwnerDown
+}
+
+// Reply aliases are revoked before returning, dropping replies which arrive
+// after a timeout as well as draining replies already in the caller mailbox.
+fn await_owner_reply(subject: process.Subject(Message), request: fn(process.Subject(a)) -> Message, timeout: Int) -> Result(a, Bool) {
+  case process.subject_owner(subject) {
+    Error(_) -> Error(True)
+    Ok(pid) -> {
+      let monitor = process.monitor(pid)
+      let reply = new_reply_subject()
+      process.send(subject, request(reply))
+      let selected = process.new_selector()
+        |> process.select_map(reply, OwnerReplied)
+        |> process.select_specific_monitor(monitor, fn(_) { ReplyOwnerDown })
+        |> process.selector_receive(timeout)
+      close_reply_subject(reply)
+      process.demonitor_process(monitor)
+      case selected {
+        Ok(OwnerReplied(result)) -> Ok(result)
+        Ok(ReplyOwnerDown) -> Error(True)
+        Error(_) -> Error(False)
+      }
+    }
   }
 }
 
@@ -1224,6 +1619,7 @@ pub fn private_arguments(
       case value.get(params, "arguments") {
         Error(_) -> Ok(fallback)
         Ok(value.Object(_) as args) -> Ok(args)
+        Ok(value.Null) -> Ok(value.Object([]))
         Ok(_) ->
           Error(private_error(
             "INVALID_PRIVATE_ARGUMENTS",
@@ -1237,7 +1633,7 @@ pub fn private_arguments(
 // those bindings for it, after ingress has validated the ORIGINAL frame. The
 // original typed object remains the only source of backend arguments and is
 // included in the receipt hash. No identity/meta/version field is rewritten.
-fn private_wire_projection(raw: String) -> Option(String) {
+fn private_wire_projection_fields(raw: String) -> Option(String) {
   use document <- option.then(
     json.parse(raw, value.decoder()) |> option.from_result,
   )
@@ -1273,6 +1669,112 @@ fn private_wire_projection(raw: String) -> Option(String) {
   }
 }
 
+/// Pure projection only: callers must first gate the original frame/authentication.
+fn public_wire_projection_fields(raw: String) -> Option(String) {
+  use doc <- option.then(json.parse(raw, value.decoder()) |> option.from_result)
+  use _ <- option.then(case value.get(doc, "method") {
+    Ok(value.Text("tools/call")) -> Some(Nil)
+    _ -> None
+  })
+  use params <- option.then(value.get(doc, "params") |> option.from_result)
+  case value.get(params, "arguments") {
+    Ok(value.Object(fields)) -> {
+      let projected =
+        list.map(fields, fn(pair) {
+          #(pair.0, value.Text(public_argument_text(pair.1)))
+        })
+      case projected == fields {
+        True -> None
+        False ->
+          Some(
+            value.set(
+              doc,
+              "params",
+              value.set(params, "arguments", value.Object(projected)),
+            )
+            |> value.encode
+            |> json.to_string,
+          )
+      }
+    }
+    _ -> None
+  }
+}
+
+fn public_argument_text(v: value.Value) -> String {
+  case v {
+    value.Text(s) -> s
+    value.Integer(n) -> int.to_string(n)
+    value.Number(n) -> float.to_string(n)
+    value.Boolean(True) -> "true"
+    value.Boolean(False) -> "false"
+    value.Null -> "null"
+    value.Array(_) | value.Object(_) -> json.to_string(value.encode(v))
+  }
+}
+
+fn wire_projection(route: String, raw: String) -> Option(String) {
+  case is_private_route(route) {
+    True -> private_wire_projection(raw)
+    False -> public_wire_projection(raw)
+  }
+}
+
+fn without_field(document: value.Value, key: String) -> value.Value {
+  case document {
+    value.Object(fields) -> value.Object(list.filter(fields, fn(pair) { pair.0 != key }))
+    _ -> document
+  }
+}
+
+fn null_wire_projection(raw: String) -> String {
+  case json.parse(raw, value.decoder()) {
+    Error(_) -> raw
+    Ok(doc) -> {
+      let normalized = case value.get(doc, "method"), value.get(doc, "params") {
+        Ok(value.Text(method)), Ok(value.Null) -> case list.contains(["tools/list", "resources/list", "prompts/list", "ping"], method) {
+          True -> without_field(doc, "params")
+          False -> doc
+        }
+        Ok(value.Text("tools/call")), Ok(params) -> case value.get(params, "arguments") {
+          Ok(value.Null) -> value.set(doc, "params", without_field(params, "arguments"))
+          _ -> doc
+        }
+        _, _ -> doc
+      }
+      case normalized == doc { True -> raw False -> normalized |> value.encode |> json.to_string }
+    }
+  }
+}
+
+fn private_wire_projection(raw: String) -> Option(String) {
+  let normalized = null_wire_projection(raw)
+  case private_wire_projection_fields(normalized) {
+    Some(projected) -> Some(projected)
+    None -> case normalized == raw { True -> None False -> Some(normalized) }
+  }
+}
+
+pub fn public_wire_projection(raw: String) -> Option(String) {
+  let normalized = null_wire_projection(raw)
+  case public_wire_projection_fields(normalized) {
+    Some(projected) -> Some(projected)
+    None -> case normalized == raw { True -> None False -> Some(normalized) }
+  }
+}
+
+fn original_request_id(raw: String) -> wire.WireId {
+  case
+    json.parse(raw, value.decoder())
+    |> result.map_error(fn(_) { "invalid_json" })
+    |> result.try(fn(v) { value.get(v, "id") })
+  {
+    Ok(value.Integer(n)) -> wire.IntId(n)
+    Ok(value.Text(s)) -> wire.StringId(s)
+    _ -> wire.NoIdNotification
+  }
+}
+
 /// Injectable trusted resolver shared by fixtures and production. Both paths
 /// run the very same pre-admission, receipt/finish gate, and canonical commit.
 pub fn dispatch_private_with_resolver(
@@ -1293,6 +1795,7 @@ pub fn dispatch_private_with_resolver(
       msg,
       now,
       resolver,
+      fn(call) { reserve_call(state, call) |> result.map(fn(_) { Nil }) },
     )
   {
     Error(outcome) -> #(outcome, state)
@@ -1311,6 +1814,7 @@ pub fn private_snapshot(
     dict.get(state.successor_sessions, successor_session_key(p))
       |> option.from_result,
     dict.size(state.successor_sessions),
+    state.durable_key != None,
   )
 }
 
@@ -1322,6 +1826,7 @@ fn prepare_private(
   msg: wire.NormalizedMessage,
   now: Int,
   resolver: PrivateResolver,
+  reserve: fn(admission.ValidatedCall) -> Result(Nil, types.ToolError),
 ) -> Result(PreparedPrivateCall, types.Outcome) {
   use _ <- result.try(
     case is_private_route(route) && msg.method == "tools/call" {
@@ -1442,6 +1947,9 @@ fn prepare_private(
       "private_execution_pending",
       _,
     )) -> {
+      use _ <- result.try(
+        reserve(validated_call) |> result.map_error(types.Refused),
+      )
       let #(output, next) = binding.execute()
       Ok(
         PreparedPrivateCall(
@@ -1618,6 +2126,10 @@ fn commit_private(
     )
   // Successor errors may latch unresolved-operation state. Persist those too;
   // the private lock covers snapshot, execution and this state commit.
+  let pool = case outcome {
+    types.Refused(_) -> supervisor.WorkerPool(..pool,ledger:receipts.mark_complete(pool.ledger,prepared.intent_id,outcome))
+    _ -> pool
+  }
   let sessions = case prepared.next_successor {
     Some(next) ->
       dict.insert(
@@ -2242,7 +2754,7 @@ fn tool_arguments(
       dict.insert(args, "plan_id", argument(args, "plan", completion_plan))
     False -> args
   }
-  let args = case tool == "preflight_check" && !dict.has_key(args, "check_id") {
+  let args = case list.contains(["preflight_check","verification_run"],tool) && argument(args,"check_id","") == "" {
     True -> dict.insert(args, "check_id", "preflight_toolchain")
     False -> args
   }
@@ -2282,7 +2794,7 @@ fn dispatch_non_private(
   raw: String,
   msg: wire.NormalizedMessage,
   now: Int,
-  prefetched_gateway_alive: Option(Bool),
+  _prefetched_gateway_alive: Option(Bool),
 ) -> #(types.Outcome, GatewayState) {
   let args = dict.from_list(msg.args)
   case msg.method {
@@ -2422,22 +2934,7 @@ fn dispatch_non_private(
     "tools/call" -> {
       let #(tool, args) = tool_arguments(raw, msg)
       let root = state.backends.knowledge.workspace_root
-      let backends =
-        server.ServerBackends(
-          ..state.backends,
-          observation: observation(
-            state.pool.ledger.candidate,
-            now,
-            option.unwrap(
-              prefetched_gateway_alive,
-              supervised_gateway_pids_alive(state.supervised_gateway),
-            ),
-            case prefetched_gateway_alive {
-              Some(_) -> "gateway_ping"
-              None -> "gateway_pid_liveness"
-            },
-          ),
-        )
+      let backends = state.backends
       // This arm is public-only. Caller fence/grant strings are bindings, not evidence of a live lease
       // or authority. No mutation grant is fabricated by the transport layer.
       let fence = case
@@ -2460,18 +2957,102 @@ fn dispatch_non_private(
       }
       let context =
         admission.AdmissionContext(p, admission.EnforcedMode, now, root, fence)
-      let #(outcome, pool, updated) =
-        server.execute_route_authenticated(
-          context,
-          None,
-          state.pool,
-          backends,
-          route,
-          tool,
-          args,
-          fn(_, _) { Error("Private calls require caller-side admission") },
-        )
-      #(outcome, GatewayState(..state, pool: pool, backends: updated))
+      case route_convergence.admit_converged(context, None, route, tool, args) {
+        Error(error) -> #(types.Refused(error), state)
+        Ok(call) -> {
+          let retain = case call.spec.effect_class {
+            types.Mutating | types.ControlActuation -> True
+            _ -> dict.has_key(args, "intent_id")
+          }
+          let reservation = case retain {
+            True -> reserve_call(state, call)
+            False -> Ok(state)
+          }
+          case reservation {
+            Error(error) -> #(types.Refused(error), state)
+            Ok(reserved) ->
+              case
+                case retain {
+                  True ->
+                    receipts.lookup(
+                      reserved.pool.ledger,
+                      private_ledger_intent_id(call),
+                    )
+                  False -> None
+                }
+              {
+                Some(receipts.ReceiptEntry(
+                  state: receipts.OutcomeCommitted(outcome),
+                  ..,
+                )) -> #(
+                  route_convergence.verify_outcome_candidate(
+                    reserved.pool,
+                    backends.features,
+                    route,
+                    tool,
+                    outcome,
+                  ),
+                  reserved,
+                )
+                Some(receipts.ReceiptEntry(
+                  state: receipts.EffectUncertain(_),
+                  ..,
+                )) -> #(
+                  types.Refused(types.ToolError(
+                    "UNCERTAIN_RECEIPT_RECONCILE_REQUIRED",
+                    "Uncertain effect requires explicit reconciliation",
+                    types.ReconcileFirst,
+                  )),
+                  reserved,
+                )
+                _ -> {
+                  let #(outcome, pool, updated) =
+                    server.execute_route_authenticated(
+                      context,
+                      None,
+                      reserved.pool,
+                      backends,
+                      route,
+                      tool,
+                      args,
+                      fn(_, _) {
+                        Error("Private calls require caller-side admission")
+                      },
+                    )
+                  let outcome = case tool {
+                    "preflight_check" -> verification.with_preflight_utility(outcome,args)
+                    _ -> outcome
+                  }
+                  let ledger = case outcome {
+                    types.Complete(_, _) ->
+                      receipts.mark_complete(
+                        pool.ledger,
+                        private_ledger_intent_id(call),
+                        outcome,
+                      )
+                    types.Uncertain(receipt) ->
+                      receipts.mark_uncertain(
+                        pool.ledger,
+                        private_ledger_intent_id(call),
+                        receipt.reason,
+                      ).1
+                    types.Refused(_) -> receipts.mark_complete(pool.ledger,private_ledger_intent_id(call),outcome)
+                  }
+                  #(
+                    outcome,
+                    checkpoint_state(
+                      GatewayState(
+                        ..reserved,
+                        pool: supervisor.WorkerPool(..pool, ledger: ledger),
+                        backends: updated,
+                      ),
+                    ),
+                  )
+                }
+              }
+          }
+        }
+      }
     }
     "resources/list" ->
       case
@@ -2520,6 +3101,38 @@ fn dispatch_non_private(
       }
     "resources/read" -> {
       let uri = raw_string(raw, ["params", "uri"], argument(args, "uri", ""))
+      let state = case uri == "uos://system/mcp-gateway-health" {
+        False -> state
+        True -> {
+          let content =
+            health_json(
+              supervised_gateway_pids_alive(state.supervised_gateway),
+              state.pool.ledger.candidate,
+            )
+            |> json.to_string
+          let registry =
+            resources.ResourceRegistry(
+              ..state.resources,
+              resources: list.map(state.resources.resources, fn(entry) {
+                case entry.uri == uri {
+                  True -> resources.ResourceEntry(..entry, content: content)
+                  False -> entry
+                }
+              }),
+            )
+          GatewayState(
+            ..state,
+            resources: registry,
+            resource_cache: resources.ResourceCache(
+              dict.delete(state.resource_cache.entries, #(
+                principal.actor_id(p),
+                principal.workspace_root(p),
+                uri,
+              )),
+            ),
+          )
+        }
+      }
       case
         resources.read_resource(state.resources, state.resource_cache, p, uri)
       {
@@ -2853,7 +3466,7 @@ fn executing_task_record(
         && row.state == "executing"
       })
       |> option.from_result
-    planning_read.UnavailableStore(_) -> None
+    planning_read.UnavailableStore(_) | planning_read.UnknownPlanStore(_) -> None
   }
   case row {
     Some(row) ->
@@ -2938,80 +3551,66 @@ pub fn handle_http_with_config(
   config: http_auth.AuthConfig,
   now_ms: Int,
 ) -> #(Int, List(#(String, String)), String) {
-  let _ = ensure_started()
-  let profile =
-    profile_for(
-      http_auth.header(headers, "mcp-protocol-version") |> result.unwrap(""),
-    )
-  let route =
-    http_auth.header(headers, "uos-mcp-route")
-    |> result.unwrap(
-      http_auth.header(headers, "x-uos-mcp-route") |> result.unwrap("public"),
-    )
-  let handler = fn(p, _clean, msg) {
-    case route {
-      "public" -> dispatch_actor(p, profile, route, body, msg, now_ms)
-      "development" ->
-        case
-          http_auth.token_has_scope(config, headers, "mcp:development", now_ms)
-        {
-          True -> dispatch_actor(p, profile, route, body, msg, now_ms)
-          False ->
-            refuse(
-              "HTTP_ROUTE_SCOPE_FORBIDDEN",
-              "Token lacks mcp:development scope",
-            )
+  let profile = profile_for(http_auth.header(headers, "mcp-protocol-version") |> result.unwrap(""))
+  let route = http_auth.header(headers, "uos-mcp-route") |> result.unwrap(http_auth.header(headers, "x-uos-mcp-route") |> result.unwrap("public"))
+  let request = http.HttpRequest(method,path,headers,body)
+  let response = case method == "POST" && path == "/mcp" {
+    False -> http.handle(request,config,profile,now_ms,config.expected_audience,[config.expected_issuer],fn(_,_,_) { refuse("METHOD_NOT_FOUND","No POST dispatch") })
+    True -> case http.prepare_standard(request,config,profile,now_ms) {
+      Error(response) -> response
+      Ok(#(p,_,sse)) -> {
+        let permitted = case route {
+          "development" -> http_auth.token_has_scope(config,headers,"mcp:development",now_ms)
+          "successor" -> http_auth.token_has_scope(config,headers,"mcp:successor",now_ms)
+          _ -> True
         }
-      "successor" ->
-        case
-          http_auth.token_has_scope(config, headers, "mcp:successor", now_ms)
-        {
-          True -> dispatch_actor(p, profile, route, body, msg, now_ms)
-          False ->
-            refuse(
-              "HTTP_ROUTE_SCOPE_FORBIDDEN",
-              "Token lacks mcp:successor scope",
-            )
+        let reply = case permitted {
+          True -> standard_raw(p,profile,route,body,now_ms,"HTTP")
+          False -> Some(standard_response(original_request_id(body),"",refuse("HTTP_ROUTE_SCOPE_FORBIDDEN","Token lacks route scope")))
         }
-      _ -> refuse("UNSUPPORTED_ROUTE", route)
+        case reply {
+          None -> http.HttpResponse(202,http.security_headers(),"")
+          Some(frame) -> {
+            let frame = http_compatibility_result(frame)
+            let status = case permitted, json.parse(frame,decode.at(["error","code"],decode.int)) {
+              True, Ok(-32_700) | True, Ok(-32_600) -> 400
+              _, _ -> 200
+            }
+            case sse {
+              True -> http.HttpResponse(status,[#("Content-Type","text/event-stream"),..http.security_headers()],"event: message\ndata: " <> frame <> "\n\n")
+              False -> http.HttpResponse(status,[#("Content-Type","application/json"),..http.security_headers()],frame)
+            }
+          }
+        }
+      }
     }
   }
-  let response =
-    http.handle(
-      http.HttpRequest(method, path, headers, body),
-      config,
-      profile,
-      now_ms,
-      config.expected_audience,
-      [config.expected_issuer],
-      handler,
-    )
-  // Only retry the string-only normalization failure, after the original
-  // request passed HTTP auth, credentials, identity, byte and depth checks.
-  let response = case
-    method == "POST"
-    && path == "/mcp"
-    && is_private_route(route)
-    && response.status == 400
-    && response.body == "{\"error\":\"MALFORMED_JSONRPC\"}"
-  {
-    False -> response
-    True ->
-      case private_wire_projection(body) {
-        None -> response
-        Some(projected) ->
-          http.handle(
-            http.HttpRequest(method, path, headers, projected),
-            config,
-            profile,
-            now_ms,
-            config.expected_audience,
-            [config.expected_issuer],
-            handler,
-          )
+  let response = http.with_cors(response,config,headers)
+  #(response.status,response.headers,response.body)
+}
+
+// Older UOS HTTP clients consume result.value. Preserve that additive field
+// alongside native MCP structured fields, without adding a second envelope.
+fn http_compatibility_result(raw: String) -> String {
+  case json.parse(raw,value.decoder()) {
+    Ok(value.Array(items)) -> json.to_string(json.array(items,fn(item) {
+      case json.parse(http_compatibility_result(json.to_string(value.encode(item))),value.decoder()) {
+        Ok(v) -> value.encode(v)
+        _ -> value.encode(item)
       }
+    }))
+    Ok(document) -> case value.get(document,"result") {
+      Ok(value.Object(_) as result_value) -> {
+        let payload = case value.get(result_value,"content") {
+          Ok(value.Array([first,..])) -> case value.get(first,"text") { Ok(value.Text(t)) -> t _ -> json.to_string(value.encode(result_value)) }
+          _ -> json.to_string(value.encode(result_value))
+        }
+        value.set(document,"result",value.set(result_value,"value",value.Text(payload))) |> value.encode |> json.to_string
+      }
+      _ -> raw
+    }
+    _ -> raw
   }
-  #(response.status, response.headers, response.body)
 }
 
 pub fn handle_zenoh_with_secret(
@@ -3021,16 +3620,60 @@ pub fn handle_zenoh_with_secret(
   envelope: zenoh_transport.SignedZenohEnvelope,
   now_ms: Int,
 ) -> Result(Option(#(String, String)), types.ToolError) {
-  zenoh_transport.handle_envelope(
-    shared_secret: shared_secret,
-    supports_subscriptions: True,
-    profile: profile,
-    expected_client_id: expected_client_id,
-    envelope: envelope,
-    handler: fn(p, msg) {
-      dispatch_actor(p, profile, "public", envelope.payload, msg, now_ms)
-    },
-  )
+  let observed =
+    zenoh_transport.handle_envelope(
+      shared_secret: shared_secret,
+      supports_subscriptions: True,
+      profile: profile,
+      expected_client_id: expected_client_id,
+      envelope: envelope,
+      handler: fn(p, msg) {
+        dispatch_actor(p, profile, "public", envelope.payload, msg, now_ms)
+      },
+    )
+  case observed {
+    Error(types.ToolError("MALFORMED_JSONRPC", _, _)) ->
+      case public_wire_projection(envelope.payload) {
+        None -> observed
+        Some(projected) -> {
+          // The original envelope already passed HMAC, topic, byte, NUL and depth gates.
+          // Authenticate only this deterministic local projection; identity fields never change.
+          let signature =
+            zenoh_transport.compute_signature(
+              shared_secret,
+              envelope.topic,
+              envelope.reply_topic,
+              envelope.sender_actor,
+              envelope.client_name,
+              envelope.workspace_root,
+              envelope.session_id,
+              projected,
+            )
+          zenoh_transport.handle_envelope(
+            shared_secret,
+            True,
+            profile,
+            expected_client_id,
+            zenoh_transport.SignedZenohEnvelope(
+              ..envelope,
+              payload: projected,
+              signature: signature,
+            ),
+            fn(p, msg) {
+              dispatch_actor(
+                p,
+                profile,
+                "public",
+                envelope.payload,
+                msg,
+                now_ms,
+              )
+            },
+          )
+        }
+      }
+    _ -> observed
+  }
 }
 
 fn envelope_decoder(
@@ -3158,9 +3801,9 @@ fn ingest_parts(
           _ -> "\n"
         }
       let raw = session.buffer <> part
-      let projection = case is_private_route(route), rest {
-        True, [_, ..] -> private_wire_projection(raw)
-        _, _ -> None
+      let projection = case rest {
+        [_, ..] -> wire_projection(route, raw)
+        _ -> None
       }
       // Framing and security always inspect the original bytes first. A
       // complete typed private frame is then decoded through a string-only
@@ -3198,73 +3841,23 @@ fn ingest_parts(
   }
 }
 
-// Standard JSON-RPC shares the stdio framing/security gates. Validation uses a
-// non-effecting closure, then exactly one dispatch enters the state actor.
-fn validate_standard_line(
-  raw: String,
-  profile: types.ProtocolProfile,
-  p: principal.Principal,
-  now: Int,
-  route: String,
-) -> Result(wire.NormalizedMessage, types.ToolError) {
-  use session <- result.try(stdio.new_session(
-    actor_id: principal.actor_id(p),
-    client_name: principal.client_profile(p).name,
-    workspace_root: principal.workspace_root(p),
-    session_id: principal.session_id(p),
-    profile: profile,
-    deadline_ms: stdio.default_frame_deadline_ms,
-  ))
-  use #(session, _) <- result.try(
-    stdio.ingest_chunk(
-      session: session,
-      chunk: raw,
-      now_ms: now,
-      handler: fn(_, _) {
-        refuse("VALIDATION_ONLY", "No effect during framing")
-      },
-    ),
-  )
-  use _ <- result.try(
-    stdio.ingest_chunk(
-      session: session,
-      chunk: "\n",
-      now_ms: now,
-      handler: fn(_, _) {
-        refuse("VALIDATION_ONLY", "No effect during framing")
-      },
-    ),
-  )
-  use document <- result.try(
-    json.parse(raw, value.decoder())
-    |> result.map_error(fn(_) {
-      types.ToolError("MALFORMED_JSONRPC", "Invalid JSON", types.NonRetryable)
-    }),
-  )
-  use _ <- result.try(case value.get(document, "jsonrpc") {
-    Ok(value.Text("2.0")) | Error(_) -> Ok(Nil)
-    _ ->
-      Error(types.ToolError(
-        "MALFORMED_JSONRPC",
-        "jsonrpc must be 2.0",
-        types.NonRetryable,
-      ))
-  })
-  let projected = case is_private_route(route) {
-    True -> option.unwrap(private_wire_projection(raw), raw)
-    False -> raw
-  }
-  wire.decode_request(profile, projected)
-  |> result.map_error(fn(error) {
-    types.ToolError(error.code, error.reason, types.NonRetryable)
-  })
-}
-
 fn request_id_json(id: wire.WireId) -> json.Json {
   case id {
     wire.IntId(n) -> json.int(n)
     wire.StringId(s) -> json.string(s)
     wire.NoIdNotification -> json.null()
+  }
+}
+
+fn standard_error_code(code: String) -> Int {
+  case code {
+    "INVALID_JSON_SYNTAX" | "STDIO_INVALID_UTF8" | "HTTP_INVALID_UTF8" -> -32_700
+    "METHOD_NOT_FOUND" -> -32_601
+    "MISSING_URI" | "INVALID_CURSOR" | "MISSING_PROMPT_NAME" | "INVALID_PARAMS" | "UNSUPPORTED_PROTOCOL_VERSION" | "MISSING_RESOURCE_URI" | "EMPTY_RESOURCE_URI" | "RESOURCE_URI_REQUIRED" | "INVALID_RESOURCE_URI" -> -32_602
+    "RESOURCE_NOT_FOUND" | "UNKNOWN_RESOURCE_URI" -> -32_002
+    "GATEWAY_OVERLOADED" | "RECEIPT_LEDGER_CAPACITY_EXCEEDED" | "GATEWAY_TIMEOUT" -> -32_001
+    "INTERNAL_ERROR" -> -32_603
+    _ -> -32_600
   }
 }
 
@@ -3277,7 +3870,9 @@ pub fn standard_response(
     types.Complete(text, ev) -> {
       let payload = case method {
         "tools/call" ->
-          json.object([
+          json.object(list.append(
+            case json.parse(text, value.decoder()) { Ok(value.Object(_) as object) -> [#("structuredContent", value.encode(object))] _ -> [] },
+            [
             #("isError", json.bool(False)),
             #(
               "content",
@@ -3296,7 +3891,7 @@ pub fn standard_response(
                 #("output_sha256", json.string(ev.output_sha256)),
               ]),
             ),
-          ])
+          ]))
         _ ->
           case json.parse(text, value.decoder()) {
             Ok(v) -> value.encode(v)
@@ -3306,8 +3901,8 @@ pub fn standard_response(
       #("result", payload)
     }
     types.Refused(error) ->
-      case method {
-        "tools/call" -> #(
+      case method, standard_error_code(error.code) {
+        "tools/call", code if code != -32_001 -> #(
           "result",
           json.object([
             #("isError", json.bool(True)),
@@ -3322,15 +3917,13 @@ pub fn standard_response(
             ),
           ]),
         )
-        _ -> #(
+        _, _ -> #(
           "error",
           json.object([
+            #("data", json.object([#("retryable",json.bool(standard_error_code(error.code) == -32_001 || error.retryability == types.Retryable)),#("code",json.string(error.code))])),
             #(
               "code",
-              json.int(case error.code {
-                "METHOD_NOT_FOUND" -> -32_601
-                _ -> -32_600
-              }),
+              json.int(standard_error_code(error.code)),
             ),
             #("message", json.string(error.code <> ": " <> error.reason)),
           ]),
@@ -3354,12 +3947,15 @@ pub fn standard_response(
       ]),
     )
   }
-  json.object([
+  let raw = json.object([
     #("jsonrpc", json.string("2.0")),
     #("id", request_id_json(id)),
     response,
-  ])
-  |> json.to_string
+  ]) |> json.to_string
+  case json_guard.native_inspect(raw, 32) {
+    Ok(value.Object(fields)) -> json_guard.encode_checked(fields) |> result.unwrap("{\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32603,\"message\":\"INVALID_OUTBOUND_ENVELOPE\"}}")
+    _ -> "{\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32603,\"message\":\"INVALID_OUTBOUND_ENVELOPE\"}}"
+  }
 }
 
 pub fn handle_standard_mcp_line(
@@ -3389,6 +3985,130 @@ pub fn handle_standard_mcp_line(
   )
 }
 
+fn standard_document(
+  p: principal.Principal,
+  profile: types.ProtocolProfile,
+  route: String,
+  document: value.Value,
+  now: Int,
+) -> Option(String) {
+  case document {
+    value.Array(items) -> {
+      let count = list.length(items)
+      case items {
+        [] -> Some(standard_response(wire.NoIdNotification, "", refuse("MALFORMED_JSONRPC", "empty batch")))
+        _ if count > 64 -> Some(standard_response(wire.NoIdNotification, "", refuse("BATCH_TOO_LARGE", "Batch exceeds64items")))
+        _ -> {
+          let replies = list.filter_map(items, fn(item) {
+            case item {
+              value.Array(_) -> Ok(json.object([#("jsonrpc",json.string("2.0")),#("id",json.null()),#("error",json.object([#("code",json.int(-32_600)),#("message",json.string("MALFORMED_JSONRPC: batch item must be a request object"))]))]))
+              _ -> case standard_document(p, profile, route, item, now) {
+              Some(reply) -> json.parse(reply, value.decoder()) |> result.map(value.encode) |> result.map_error(fn(_) { Nil })
+              None -> Error(Nil)
+              }
+            }
+          })
+          case replies {
+            [] -> None
+            _ -> Some(json.to_string(json.preprocessed_array(replies)))
+          }
+        }
+      }
+    }
+    value.Object(_) -> {
+      let has_id = case value.get(document, "id") { Ok(_) -> True Error(_) -> False }
+      let method = value.get(document, "method")
+      // Absence and explicit null are distinct. Every method-bearing notification
+      // is silent, including invalid params and unknown future notification names.
+      case has_id, method {
+        False, Ok(value.Text(_)) -> None
+        _, _ -> {
+          let id = case value.get(document, "id") {
+            Ok(value.Integer(n)) -> wire.IntId(n)
+            Ok(value.Text(s)) -> wire.StringId(s)
+            _ -> wire.NoIdNotification
+          }
+          let valid_id = case value.get(document, "id") {
+            Ok(value.Integer(_)) | Ok(value.Text(_)) | Ok(value.Null) | Error(_) -> True
+            _ -> False
+          }
+          let raw = json.to_string(value.encode(document))
+          case valid_id {
+            False -> Some(standard_response(wire.NoIdNotification, "", refuse("MALFORMED_JSONRPC", "id must be integer, string or null")))
+            True -> case validate_standard_document(document, raw, profile, route) {
+              Error(error) -> Some(standard_response(id, "", types.Refused(error)))
+              Ok(msg) -> Some(standard_response(id, msg.method, dispatch_actor(p, profile, route, raw, msg, now)))
+            }
+          }
+        }
+      }
+    }
+    _ -> Some(standard_response(wire.NoIdNotification, "", refuse("MALFORMED_JSONRPC", "Request must be an object")))
+  }
+}
+
+fn validate_standard_document(
+  document: value.Value,
+  raw: String,
+  profile: types.ProtocolProfile,
+  route: String,
+) -> Result(wire.NormalizedMessage, types.ToolError) {
+  use _ <- result.try(case value.get(document, "jsonrpc") {
+    Ok(value.Text("2.0")) -> Ok(Nil)
+    _ -> Error(private_error("MALFORMED_JSONRPC", "jsonrpc must be2.0"))
+  })
+  use _ <- result.try(case value.get(document, "method") {
+    Ok(value.Text(_)) -> Ok(Nil)
+    _ -> Error(private_error("MALFORMED_JSONRPC", "method must be a string"))
+  })
+  use _ <- result.try(case value.get(document, "params") {
+    Error(_) -> Ok(Nil)
+    Ok(value.Null) -> case value.get(document, "method") {
+      Ok(value.Text(method)) -> case list.contains(["tools/list", "resources/list", "prompts/list", "ping"], method) {
+        True -> Ok(Nil)
+        False -> Error(private_error("INVALID_PARAMS", "method requires object params"))
+      }
+      _ -> Error(private_error("INVALID_PARAMS", "params must be an object"))
+    }
+    Ok(value.Object(_) as params) -> case value.get(params, "arguments") {
+      Error(_) | Ok(value.Object(_)) | Ok(value.Null) -> Ok(Nil)
+      _ -> Error(private_error("INVALID_PARAMS", "arguments must be an object"))
+    }
+    _ -> Error(private_error("INVALID_PARAMS", "params must be an object"))
+  })
+  use _ <- result.try(case value.get(document, "method"), value.get(document, "params") {
+    Ok(value.Text("tools/call")), Ok(params) -> case value.get(params, "name") {
+      Ok(value.Text(name)) if name != "" -> Ok(Nil)
+      _ -> Error(private_error("INVALID_PARAMS", "tools/call requires name"))
+    }
+    Ok(value.Text("tools/call")), Error(_) -> Error(private_error("INVALID_PARAMS", "tools/call requires params"))
+    _, _ -> Ok(Nil)
+  })
+  let projected = option.unwrap(wire_projection(route, raw), raw)
+  wire.decode_request(profile, projected)
+  |> result.map_error(fn(error) { private_error(error.code, error.reason) })
+}
+
+fn standard_raw(
+  p: principal.Principal,
+  profile: types.ProtocolProfile,
+  route: String,
+  raw: String,
+  now: Int,
+  transport: String,
+) -> Option(String) {
+  case string.byte_size(raw) > 1_048_576 {
+    True -> Some(standard_response(wire.NoIdNotification, "", refuse(transport <> "_FRAME_TOO_LARGE", "Frame exceeds1048576-byte limit")))
+    False -> case string.contains(raw, "\u{0000}") || string.contains(string.lowercase(raw), "\\u0000") {
+      True -> Some(standard_response(original_request_id(raw),"",refuse(transport <> "_NUL_BYTE_FORBIDDEN","NUL bytes are forbidden")))
+      False -> case json_guard.inspect(raw, transport) {
+      Error(error) -> Some(standard_response(original_request_id(raw), "", types.Refused(error)))
+      Ok(document) -> standard_document(p,profile,route,document,now)
+      }
+    }
+  }
+}
+
 fn handle_standard_with_profile(
   actor_id: String,
   client_name: String,
@@ -3399,24 +4119,8 @@ fn handle_standard_with_profile(
   now_ms: Int,
   profile: types.ProtocolProfile,
 ) -> Option(String) {
-  let p =
-    principal.from_launcher_env(
-      actor: actor_id,
-      client: types.ClientProfile(client_name),
-      workspace_root: workspace_root,
-      session_id: session_id,
-    )
-  case validate_standard_line(raw_line, profile, p, now_ms, route) {
-    Error(error) ->
-      Some(standard_response(wire.NoIdNotification, "", types.Refused(error)))
-    Ok(msg) -> {
-      let outcome = dispatch_actor(p, profile, route, raw_line, msg, now_ms)
-      case msg.id {
-        wire.NoIdNotification -> None
-        _ -> Some(standard_response(msg.id, msg.method, outcome))
-      }
-    }
-  }
+  let p = principal.from_launcher_env(actor_id,types.ClientProfile(client_name),workspace_root,session_id)
+  standard_raw(p,profile,route,raw_line,now_ms,"STDIO")
 }
 
 pub fn stdio_main() -> Nil {
@@ -3499,7 +4203,11 @@ fn standard_loop(
       standard_loop(actor_id, client, root, session_id, route, profile)
     }
     EndOfFile -> Nil
-    ReadError(reason) -> io.println_error("MCP stdin: " <> reason)
+    ReadError(reason) -> {
+      io.println_error("MCP stdin: " <> reason)
+      io.println(standard_response(wire.NoIdNotification, "", refuse(reason, "stdin frame rejected")))
+      standard_loop(actor_id, client, root, session_id, route, profile)
+    }
   }
 }
 
@@ -3523,7 +4231,11 @@ fn canonical_loop(session: stdio.StdioSession, route: String) -> Nil {
         Ok(_) -> Nil
         Error(error) -> io.println_error(error.code)
       }
-    ReadError(reason) -> io.println_error(reason)
+    ReadError(reason) -> {
+      io.println_error(reason)
+      io.println(standard_response(wire.NoIdNotification, "", refuse(reason, "stdin frame rejected")))
+      canonical_loop(session, route)
+    }
   }
 }
 
@@ -3633,5 +4345,230 @@ fn sse_json_depth_ok(
         <<_, rest:bytes>>, _, _ -> sse_json_depth_ok(rest, quoted, False, depth)
         _, _, _ -> False
       }
+  }
+}
+
+// Synchronous write-ahead mirror: a killed owner can never blindly replay an
+// effect whose outcome was not acknowledged. Capacity refuses before execution.
+fn reserve_call(
+  state: GatewayState,
+  call: admission.ValidatedCall,
+) -> Result(GatewayState, types.ToolError) {
+  let id = private_ledger_intent_id(call)
+  let fresh = !dict.has_key(state.pool.ledger.entries,id)
+  let readonly_keys = readonly_receipt_keys()
+  let effects = list.count(dict.values(state.pool.ledger.entries),fn(entry) { case entry.state { receipts.OutcomeCommitted(_) -> !readonly_receipt(entry,readonly_keys) _ -> False } })
+  use _ <- result.try(case fresh && { string.byte_size(id) > 1024 || stored_bytes(state.pool.ledger) + 20_480 > 16_777_216 || { call.spec.effect_class != types.ReadOnly && effects >= max_committed_receipts } } {
+    True -> Error(types.ToolError("RECEIPT_LEDGER_CAPACITY_EXCEEDED","Receipt byte or effect-retention capacity exceeded before execution; reconcile retained effects",types.Retryable))
+    False -> Ok(Nil)
+  })
+  let unresolved =
+    list.count(dict.values(state.pool.ledger.entries), fn(entry) {
+      case entry.state {
+        receipts.OutcomeCommitted(_) -> False
+        _ -> True
+      }
+    })
+  case
+    !dict.has_key(state.pool.ledger.entries, id)
+    && unresolved >= max_unresolved_receipts
+  {
+    True ->
+      Error(types.ToolError(
+        "RECEIPT_LEDGER_CAPACITY_EXCEEDED",
+        "Unresolved receipt capacity exceeded; reconcile before new work",
+        types.Retryable,
+      ))
+    False ->
+      receipts.record_intent(
+        state.pool.ledger,
+        id,
+        call.spec.route,
+        call.spec.name,
+        receipts.hash_payload(call.spec.name, dict.to_list(call.arguments)),
+      )
+      |> result.map(fn(ledger) {
+        checkpoint_state(
+          GatewayState(
+            ..state,
+            pool: supervisor.WorkerPool(..state.pool, ledger: ledger),
+          ),
+        )
+      })
+  }
+}
+
+// Ingress callers monitor the owner, so queued requests follow a replacement
+// without a 15-second black hole. Re-admission always consults the rehydrated
+// write-ahead ledger; uncertain effects refuse reconciliation instead of replay.
+type PublicWait {
+  PublicReply(types.Outcome)
+  PublicOwnerDown
+}
+
+fn await_public_dispatch(
+  subject: process.Subject(Message),
+  request: Message,
+  reply: process.Subject(types.Outcome),
+  retries: Int,
+) -> types.Outcome {
+  case process.subject_owner(subject) {
+    Error(_) -> refuse("GATEWAY_UNAVAILABLE", "Gateway subject has no owner")
+    Ok(pid) -> {
+      let monitor = process.monitor(pid)
+      process.send(subject, request)
+      let selected =
+        process.new_selector()
+        |> process.select_map(reply, PublicReply)
+        |> process.select_specific_monitor(monitor, fn(_) { PublicOwnerDown })
+        |> process.selector_receive(15_000)
+      process.demonitor_process(monitor)
+      case selected {
+        Ok(PublicReply(outcome)) -> outcome
+        Ok(PublicOwnerDown) if retries > 0 ->
+          case wait_replacement_subject(50) {
+            Some(next) ->
+              await_public_dispatch(next, request, reply, retries - 1)
+            None ->
+              types.Refused(types.ToolError(
+                "GATEWAY_RESTARTING",
+                "Gateway is recovering; retry with backoff",
+                types.Retryable,
+              ))
+          }
+        _ ->
+          types.Refused(types.ToolError(
+            "GATEWAY_TIMEOUT",
+            "MCP gateway call timed out",
+            types.Retryable,
+          ))
+      }
+    }
+  }
+}
+
+fn wait_replacement_subject(
+  remaining: Int,
+) -> Option(process.Subject(Message)) {
+  case stored_subject(gateway_key(), None) {
+    Some(subject) ->
+      case subject_alive(subject) {
+        True -> Some(subject)
+        False if remaining > 0 -> {
+          process.sleep(1)
+          wait_replacement_subject(remaining - 1)
+        }
+        False -> None
+      }
+    None if remaining > 0 -> {
+      process.sleep(1)
+      wait_replacement_subject(remaining - 1)
+    }
+    None -> None
+  }
+}
+
+@external(erlang, "mcp_stdio_ffi", "gateway_supervisor_running")
+fn gateway_supervisor_running() -> Bool
+
+fn start_gateway_owner_supervisor() -> Bool {
+  let root = workspace_root()
+  let cand = candidate_id.from_root(root)
+  case candidate_id.is_sha256_digest(cand) {
+    False -> False
+    True -> {
+      // The state owner is a real supervisor child, with its subject
+      // refreshed in persistent_term on every OTP restart.
+      let box = owner_box_new()
+      let child =
+        supervision.worker(fn() {
+          case
+            cached_supervised_gateway(
+              root <> ":" <> cand,
+              supervisor.start_supervised_gateway,
+            ),
+            supervisor.start_worker_pool_for_candidate(size: 4, candidate: cand)
+          {
+            Ok(gateway), Ok(pool) -> {
+              let state =
+                durable_initial(root <> ":" <> cand, fn() {
+                  process.unlink(gateway.supervisor_pid)
+                  // Planning tools/tasks-create prefetch their real rows in
+                  // ingress callers. Initialize/ping/list need no database IO.
+                  new_state_with_planning(root,cand,pool,gateway,
+                    planning_read.unavailable_store(
+                      "Planning is prefetched per admitted request"))
+                })
+              let state = rehydrate_state(root <> ":" <> cand, state)
+              case start_state_owner(state) {
+                Ok(started) -> {
+                  owner_box_set(box, Some(started.data))
+                  Ok(started)
+                }
+                Error(error) -> Error(error)
+              }
+            }
+            Error(error), _ -> Error(error)
+            _, Error(reason) -> Error(actor.InitFailed(reason))
+          }
+        })
+      case
+        otp_supervisor.new(otp_supervisor.OneForOne)
+        |> otp_supervisor.restart_tolerance(intensity: 20, period: 60)
+        |> otp_supervisor.add(child)
+        |> otp_supervisor.start
+      {
+        Ok(started) -> {
+          process.unlink(started.pid)
+          case register_or_stop_supervisor(started.pid) {
+            True -> {
+              owner_box_register(started.pid, box)
+              is_running()
+            }
+            False -> is_running()
+          }
+        }
+        Error(_) -> False
+      }
+    }
+  }
+}
+
+type SnapshotWait {
+  SnapshotReply(PrivateSnapshot)
+  SnapshotOwnerDown
+}
+
+fn private_snapshot_with_recovery(
+  subject: process.Subject(Message),
+  p: principal.Principal,
+  timeout: Int,
+  retries: Int,
+) -> Result(#(process.Subject(Message), PrivateSnapshot), Nil) {
+  case process.subject_owner(subject) {
+    Error(_) -> Error(Nil)
+    Ok(pid) -> {
+      let canonical_owner = stored_subject(gateway_key(),None) == Some(subject)
+      let monitor = process.monitor(pid)
+      let reply = new_reply_subject()
+      process.send(subject, Snapshot(p, reply))
+      let observed =
+        process.new_selector()
+        |> process.select_map(reply, SnapshotReply)
+        |> process.select_specific_monitor(monitor, fn(_) { SnapshotOwnerDown })
+        |> process.selector_receive(timeout)
+      process.demonitor_process(monitor)
+      close_reply_subject(reply)
+      case observed {
+        Ok(SnapshotReply(snapshot)) -> Ok(#(subject, snapshot))
+        Ok(SnapshotOwnerDown) if retries > 0 && canonical_owner ->
+          case wait_replacement_subject(100) {
+            Some(next) ->
+              private_snapshot_with_recovery(next, p, timeout, retries - 1)
+            None -> Error(Nil)
+          }
+        _ -> Error(Nil)
+      }
+    }
   }
 }

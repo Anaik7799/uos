@@ -27,6 +27,7 @@ Environment variables:
   UOS_COCKPIT_RELEASE
   UOS_MCP_EXPECTED_PAYLOAD_SHA256
   UOS_MCP_ALLOW_DEV_BUILD
+  UOS_MCP_FORCE_FULL_VERIFY
 EOF
     exit 0
     ;;
@@ -68,24 +69,68 @@ if [ -n "${CAPSULE}" ]; then
     exit 1
   fi
 
-  VERIFY_OUT=""
-  if ! VERIFY_OUT="$("${OCAML_BIN}" "${UOS_ROOT}/tools/ecology_release.ml" verify "${CAPSULE}" 2>&1)"; then
-    echo "${VERIFY_OUT}" >&2
-    exit 1
-  fi
-
-  if ! printf '%s' "${VERIFY_OUT}" | grep -Fq '"status": "PASS"'; then
-    echo "${VERIFY_OUT}" >&2
-    exit 1
-  fi
-
-  if [ -n "${UOS_MCP_EXPECTED_PAYLOAD_SHA256:-}" ]; then
-    ACTUAL_PAYLOAD_SHA="$(printf '%s\n' "${VERIFY_OUT}" | sed -n 's/^[[:space:]]*"payload_sha256":[[:space:]]*"\([0-9a-fA-F]\{64\}\)"[[:space:]]*,\{0,1\}[[:space:]]*$/\1/p' | head -n 1)"
-    if [ -z "${ACTUAL_PAYLOAD_SHA}" ] || [ "${ACTUAL_PAYLOAD_SHA}" != "${UOS_MCP_EXPECTED_PAYLOAD_SHA256}" ]; then
-      echo "uos-mcp-stdio: payload digest mismatch (expected ${UOS_MCP_EXPECTED_PAYLOAD_SHA256})" >&2
-      echo "${VERIFY_OUT}" >&2
+  CAPSULE="$(realpath -e -- "${CAPSULE}")"
+  for SEALED_PATH in "${CAPSULE}" "${CAPSULE}/release-manifest.json" "${CAPSULE}/source-manifest.json" "${CAPSULE}/runtime-dependencies.json"; do
+    if [ ! -e "${SEALED_PATH}" ] || [ -w "${SEALED_PATH}" ] || [ -L "${SEALED_PATH}" ]; then
+      echo "uos-mcp-stdio: capsule seal missing or writable" >&2
       exit 1
     fi
+  done
+  ACTUAL_PAYLOAD_SHA="$(sed -n 's/^[[:space:]]*"payload_sha256":[[:space:]]*"\([0-9a-f]\{64\}\)"[[:space:]]*,\{0,1\}[[:space:]]*$/\1/p' "${CAPSULE}/release-manifest.json")"
+  if [[ ! "${ACTUAL_PAYLOAD_SHA}" =~ ^[0-9a-f]{64}$ ]] || { [ -n "${UOS_MCP_EXPECTED_PAYLOAD_SHA256:-}" ] && [ "${ACTUAL_PAYLOAD_SHA}" != "${UOS_MCP_EXPECTED_PAYLOAD_SHA256}" ]; }; then
+    echo "uos-mcp-stdio: payload digest mismatch" >&2
+    exit 1
+  fi
+
+  # A seal binds the whole capsule's inode/ctime inventory as well as the three
+  # manifest hashes. Editing a BEAM then restoring mtime cannot reuse the seal.
+  if [ -n "$(find "${CAPSULE}" -perm /222 -print -quit)" ]; then
+    echo "uos-mcp-stdio: writable capsule payload refused" >&2
+    exit 1
+  fi
+  BOOT_ID="$(cat /proc/sys/kernel/random/boot_id)"
+  if [ -n "${XDG_RUNTIME_DIR:-}" ]; then
+    CACHE_ROOT="${XDG_RUNTIME_DIR}/uos-mcp-verified"
+  elif [ -d "/run/user/$(id -u)" ]; then
+    CACHE_ROOT="/run/user/$(id -u)/uos-mcp-verified"
+  else
+    CACHE_ROOT="${HOME}/.cache/uos-mcp-verified-$(id -u)"
+  fi
+  if [ -L "${CACHE_ROOT}" ]; then
+    echo "uos-mcp-stdio: unsafe verification cache" >&2; exit 1
+  fi
+  (umask 077; mkdir -p -- "${CACHE_ROOT}")
+  if [ "$(stat -c '%u:%a' -- "${CACHE_ROOT}")" != "$(id -u):700" ]; then
+    echo "uos-mcp-stdio: verification cache must be user-owned mode 0700" >&2; exit 1
+  fi
+  SEAL_KEY="$(printf '%s' "${CAPSULE}" | sha256sum | cut -d ' ' -f 1)"
+  SEAL_FILE="${CACHE_ROOT}/${SEAL_KEY}"
+  SEAL="$(
+    {
+      printf '%s\n' "${BOOT_ID}" "${CAPSULE}" "${ACTUAL_PAYLOAD_SHA}"
+      stat -c '%d:%i:%s:%y:%z:%a' -- "${CAPSULE}"
+      sha256sum -- "${CAPSULE}/release-manifest.json" "${CAPSULE}/source-manifest.json" "${CAPSULE}/runtime-dependencies.json"
+      find "${CAPSULE}" -printf '%P %m %i %s %T@ %C@\n' | LC_ALL=C sort | sha256sum
+    } | sha256sum | cut -d ' ' -f 1
+  )"
+  CACHE_HIT=0
+  if [ -f "${SEAL_FILE}" ] && [ ! -L "${SEAL_FILE}" ] && [ "$(stat -c '%u:%a' -- "${SEAL_FILE}")" = "$(id -u):600" ] && [ "$(cat "${SEAL_FILE}")" = "${SEAL}" ]; then
+    CACHE_HIT=1
+  fi
+  if [ "${CACHE_HIT}" != 1 ] || [ "${UOS_MCP_FORCE_FULL_VERIFY:-0}" = 1 ]; then
+    VERIFY_OUT=""
+    if ! VERIFY_OUT="$("${OCAML_BIN}" "${UOS_ROOT}/tools/ecology_release.ml" verify "${CAPSULE}")" || ! printf '%s' "${VERIFY_OUT}" | jq -e '.status == "PASS"' >/dev/null; then
+      echo "uos-mcp-stdio: full capsule verification failed" >&2
+      exit 1
+    fi
+    VERIFIED_PAYLOAD_SHA="$(printf '%s\n' "${VERIFY_OUT}" | jq -er '.payload_sha256')"
+    if [ "${VERIFIED_PAYLOAD_SHA}" != "${ACTUAL_PAYLOAD_SHA}" ]; then
+      echo "uos-mcp-stdio: verified payload mismatch" >&2; exit 1
+    fi
+    SEAL_TMP="$(mktemp "${CACHE_ROOT}/.seal.XXXXXXXX")"
+    chmod 600 "${SEAL_TMP}"
+    printf '%s\n' "${SEAL}" > "${SEAL_TMP}"
+    mv -f -- "${SEAL_TMP}" "${SEAL_FILE}"
   fi
 
   UOS_MCP_EBIN_GLOB="${CAPSULE}/apps/*/ebin"
@@ -99,4 +144,17 @@ fi
 
 export UOS_MCP_EBIN_GLOB
 
-exec "${ERL_BIN}" +S 2:2 +A 2 -noshell -eval 'io:setopts([{encoding, utf8}]), case file:set_cwd(os:getenv("UOS_MCP_WORKSPACE_ROOT")) of ok -> code:add_paths(filelib:wildcard(os:getenv("UOS_MCP_EBIN_GLOB"))), '\''cepaf_gleam@mcp@runtime_gateway'\'':stdio_main(), halt(0); {error, Reason} -> io:format(standard_error, "uos-mcp-stdio: set_cwd failed: ~p~n", [Reason]), halt(1) end.'
+# The guarded-JSON module marks the bounded fd-reader ABI. Retained capsules
+# without it use io:get_line and require OTP's input server. The capsule seal
+# and payload checks above apply before either input mode is selected.
+STDIN_MODE_ARGS=()
+if [ -n "${CAPSULE}" ]; then
+  NATIVE_STDIO_MARKER="${CAPSULE}/apps/cepaf_gleam/ebin/cepaf_gleam@mcp@json_guard.beam"
+else
+  NATIVE_STDIO_MARKER="${UOS_ROOT}/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@mcp@json_guard.beam"
+fi
+if [ -f "${NATIVE_STDIO_MARKER}" ]; then
+  STDIN_MODE_ARGS=(-noinput)
+fi
+
+exec "${ERL_BIN}" +S 2:2 +A 2 -noshell "${STDIN_MODE_ARGS[@]}" -eval 'io:setopts([{encoding, utf8}]), case file:set_cwd(os:getenv("UOS_MCP_WORKSPACE_ROOT")) of ok -> code:add_paths(filelib:wildcard(os:getenv("UOS_MCP_EBIN_GLOB"))), '\''cepaf_gleam@mcp@runtime_gateway'\'':stdio_main(), halt(0); {error, Reason} -> io:format(standard_error, "uos-mcp-stdio: set_cwd failed: ~p~n", [Reason]), halt(1) end.'

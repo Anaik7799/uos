@@ -1,0 +1,4 @@
+(test
+ (name test_mcp_json_formal_z3)
+ (modules test_mcp_json_formal_z3)
+ (libraries unix hermes_harness_suite_telemetry))

@@ -3,11 +3,11 @@
 
 import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/http_auth as auth
+import cepaf_gleam/mcp/json_guard
 import cepaf_gleam/mcp/principal.{type Principal}
 import cepaf_gleam/mcp/types.{type Outcome, type ProtocolProfile}
 import cepaf_gleam/mcp/version
 import cepaf_gleam/mcp/wire
-import gleam/bit_array
 import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
@@ -36,7 +36,7 @@ pub const metadata_path = "/.well-known/oauth-protected-resource"
 fn response(status: Int, code: String) -> HttpResponse {
   HttpResponse(
     status,
-    [#("Content-Type", "application/json"), #("Cache-Control", "no-store")],
+    [#("Content-Type", "application/json"), ..security_headers()],
     json.object([#("error", json.string(code))]) |> json.to_string,
   )
 }
@@ -51,15 +51,108 @@ pub fn handle(
   dispatch: fn(Principal, List(#(String, String)), wire.NormalizedMessage) ->
     Outcome,
 ) -> HttpResponse {
+  let origin_check = case request.method {
+    // Authentication supplies the same Origin check plus the resource
+    // metadata challenge on POST/DELETE failures.
+    "POST" | "DELETE" -> Ok(Nil)
+    _ -> optional_origin(config, request.headers)
+  }
+  case origin_check {
+    Error(reply) -> reply
+    Ok(Nil) ->
+      handle_allowed_origin(
+        request,
+        config,
+        profile,
+        now_ms,
+        resource_url,
+        auth_servers,
+        dispatch,
+      )
+  }
+}
+
+/// Headers shared by standard ingress, preflight and session termination.
+pub fn security_headers() -> List(#(String, String)) {
+  [
+    #("Cache-Control", "no-store"),
+    #("X-Content-Type-Options", "nosniff"),
+    #("X-Frame-Options", "DENY"),
+    #("Referrer-Policy", "strict-origin-when-cross-origin"),
+    #(
+      "Content-Security-Policy",
+      "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
+    ),
+    #("Vary", "Origin, Accept-Encoding"),
+  ]
+}
+
+fn optional_origin(
+  config: auth.AuthConfig,
+  headers: List(#(String, String)),
+) -> Result(Nil, HttpResponse) {
+  case list.filter(headers, fn(h) { string.lowercase(h.0) == "origin" }) {
+    [] -> Ok(Nil)
+    [#(_, origin)] ->
+      case auth.approved_origin(config, origin) {
+        True -> Ok(Nil)
+        False -> Error(response(403, "HTTP_ORIGIN_FORBIDDEN"))
+      }
+    _ -> Error(response(403, "HTTP_ORIGIN_FORBIDDEN"))
+  }
+}
+
+fn handle_allowed_origin(
+  request: HttpRequest,
+  config: auth.AuthConfig,
+  profile: ProtocolProfile,
+  now_ms: Int,
+  resource_url: String,
+  auth_servers: List(String),
+  dispatch: fn(Principal, List(#(String, String)), wire.NormalizedMessage) ->
+    Outcome,
+) -> HttpResponse {
   case request.method, request.path {
+    "OPTIONS", "/mcp" | "OPTIONS", "/.well-known/oauth-protected-resource" ->
+      with_cors(
+        HttpResponse(
+          204,
+          [
+            #("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS"),
+            #(
+              "Access-Control-Allow-Headers",
+              "Authorization, Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version",
+            ),
+            #("Access-Control-Max-Age", "86400"),
+            ..security_headers()
+          ],
+          "",
+        ),
+        config,
+        request.headers,
+      )
+    "DELETE", "/mcp" ->
+      case auth.authenticate(config, request.headers, now_ms) {
+        Ok(_) ->
+          with_cors(
+            HttpResponse(204, security_headers(), ""),
+            config,
+            request.headers,
+          )
+        Error(error) ->
+          response(
+            case error.code {
+              "HTTP_ORIGIN_FORBIDDEN" -> 403
+              _ -> 401
+            },
+            error.code,
+          )
+      }
     "GET", "/.well-known/oauth-protected-resource" ->
       with_cors(
         HttpResponse(
           200,
-          [
-            #("Content-Type", "application/json"),
-            #("Cache-Control", "no-store"),
-          ],
+          [#("Content-Type", "application/json"), ..security_headers()],
           auth.protected_resource_metadata(resource_url, auth_servers, [
             config.required_scope,
           ]),
@@ -79,7 +172,7 @@ pub fn handle(
   }
 }
 
-fn with_cors(
+pub fn with_cors(
   resp: HttpResponse,
   config: auth.AuthConfig,
   req_headers: List(#(String, String)),
@@ -90,8 +183,11 @@ fn with_cors(
         True ->
           HttpResponse(..resp, headers: [
             #("Access-Control-Allow-Origin", origin),
-            #("Access-Control-Allow-Methods", "GET, POST, OPTIONS"),
-            ..resp.headers
+            #("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS"),
+            ..list.filter(resp.headers, fn(h) {
+              string.lowercase(h.0) != "access-control-allow-methods"
+              && string.lowercase(h.0) != "access-control-allow-origin"
+            })
           ])
         False -> resp
       }
@@ -187,6 +283,22 @@ fn origin_base(url: String) -> Result(String, Nil) {
 }
 
 fn validate_envelope(request: HttpRequest) -> Result(Bool, HttpResponse) {
+  use sse <- result.try(validate_transport_envelope(request))
+  // Retain the canonical transport's stricter historical textual NUL policy.
+  // The native decoder independently rejects decoded NUL in keys and values.
+  use _ <- result.try(case has_forbidden_nul(request.body) {
+    True -> Error(response(400, "HTTP_NUL_BYTE_FORBIDDEN"))
+    False -> Ok(Nil)
+  })
+  case json_guard.inspect(request.body, "HTTP") {
+    Ok(_) -> Ok(sse)
+    Error(error) -> Error(response(400, error.code))
+  }
+}
+
+fn validate_transport_envelope(
+  request: HttpRequest,
+) -> Result(Bool, HttpResponse) {
   use _ <- result.try(case string.byte_size(request.body) <= max_body_bytes {
     True -> Ok(Nil)
     False -> Error(response(413, "HTTP_BODY_TOO_LARGE"))
@@ -210,26 +322,117 @@ fn validate_envelope(request: HttpRequest) -> Result(Bool, HttpResponse) {
   let json_ok = accepts(accept, "application/json")
   let sse_ok = accepts(accept, "text/event-stream")
   case json_ok || sse_ok {
-    True ->
-      case has_forbidden_nul(request.body) {
-        True -> Error(response(400, "HTTP_NUL_BYTE_FORBIDDEN"))
-        False ->
-          case
-            json_depth_bytes(
-              bit_array.from_string(request.body),
-              False,
-              False,
-              0,
-              0,
-            )
-            > max_json_depth
-          {
-            True -> Error(response(400, "HTTP_JSON_DEPTH_EXCEEDED"))
-            False -> Ok(sse_ok && !json_ok)
-          }
-      }
+    True -> Ok(sse_ok && !json_ok)
     False -> Error(response(406, "HTTP_ACCEPT_REQUIRED"))
   }
+}
+
+/// Authenticate standard JSON-RPC ingress without converting typed arguments to
+/// the legacy string-only wire representation. JSON syntax/envelope failures
+/// are left to the standard handler; no invalid document is dispatched here.
+/// Batch items share the authenticated HTTP identity, and each item's explicit
+/// identity/protocol fields must agree before any item may execute.
+pub fn prepare_standard(
+  request: HttpRequest,
+  config: auth.AuthConfig,
+  profile: ProtocolProfile,
+  now_ms: Int,
+) -> Result(#(Principal, List(#(String, String)), Bool), HttpResponse) {
+  use sse <- result.try(validate_transport_envelope(request))
+  use p <- result.try(
+    auth.authenticate(config, request.headers, now_ms)
+    |> result.map_error(fn(error) {
+      let reply =
+        response(
+          case error.code {
+            "HTTP_ORIGIN_FORBIDDEN" -> 403
+            _ -> 401
+          },
+          error.code,
+        )
+      let metadata_uri =
+        origin_base(config.expected_audience)
+        |> result.or(origin_base(config.expected_issuer))
+        |> result.unwrap("")
+        |> string.append(metadata_path)
+      HttpResponse(..reply, headers: [
+        #(
+          "WWW-Authenticate",
+          "Bearer resource_metadata=\"" <> metadata_uri <> "\"",
+        ),
+        ..reply.headers
+      ])
+    }),
+  )
+  use ver <- result.try(
+    case auth.header(request.headers, "mcp-protocol-version") {
+      Ok(ver) ->
+        case
+          version.matches_profile(profile, ver)
+          && auth.header(request.headers, "mcp-session-id")
+          == Ok(principal.session_id(p))
+        {
+          True -> Ok(ver)
+          False -> Error(response(400, "HEADER_BODY_MISMATCH"))
+        }
+      Error(_) -> Error(response(400, "HEADER_BODY_MISMATCH"))
+    },
+  )
+  let credentials = credential_values(request.headers, config)
+  use _ <- result.try(case json_guard.inspect(request.body, "HTTP") {
+    Error(_) -> Ok(Nil)
+    Ok(body) -> {
+      let items = case body {
+        value.Array(items) -> items
+        _ -> [body]
+      }
+      use _ <- result.try(
+        case
+          list.all(items, fn(item) {
+            standard_field_matches(item, ["params", "protocolVersion"], ver)
+            && standard_field_matches(
+              item,
+              ["params", "_meta", "session_id"],
+              principal.session_id(p),
+            )
+          })
+        {
+          True -> Ok(Nil)
+          False -> Error(response(400, "HEADER_BODY_MISMATCH"))
+        },
+      )
+      use _ <- result.try(
+        case
+          list.all(items, fn(item) {
+            standard_field_matches(
+              item,
+              ["params", "arguments", "actor"],
+              principal.actor_id(p),
+            )
+            && standard_field_matches(
+              item,
+              ["params", "_meta", "actor"],
+              principal.actor_id(p),
+            )
+          })
+        {
+          True -> Ok(Nil)
+          False -> Error(response(403, "HEADER_BODY_MISMATCH"))
+        },
+      )
+      case safe_value(body, credentials) {
+        True -> Ok(Nil)
+        False -> Error(response(403, "HTTP_CREDENTIAL_FORWARDING_FORBIDDEN"))
+      }
+    }
+  })
+  let clean =
+    list.filter(request.headers, fn(h) {
+      !credential_header(h.0)
+      && !contains_credential(h.0, credentials)
+      && !contains_credential(h.1, credentials)
+    })
+  Ok(#(p, clean, sse))
 }
 
 fn has_forbidden_nul(text: String) -> Bool {
@@ -238,35 +441,24 @@ fn has_forbidden_nul(text: String) -> Bool {
   || string.contains(text, "\\U0000")
 }
 
-// Scan bytes directly: no per-byte list cells, and string braces do not nest.
-fn json_depth_bytes(
-  bytes: BitArray,
-  in_string: Bool,
-  escaped: Bool,
-  depth: Int,
-  maximum: Int,
-) -> Int {
-  case bytes, in_string, escaped {
-    <<>>, _, _ -> maximum
-    <<_, rest:bytes>>, True, True ->
-      json_depth_bytes(rest, True, False, depth, maximum)
-    <<0x5c, rest:bytes>>, True, False ->
-      json_depth_bytes(rest, True, True, depth, maximum)
-    <<0x22, rest:bytes>>, _, _ ->
-      json_depth_bytes(rest, !in_string, False, depth, maximum)
-    <<0x7b, rest:bytes>>, False, _ | <<0x5b, rest:bytes>>, False, _ -> {
-      let next = depth + 1
-      let maximum = case next > maximum {
-        True -> next
-        False -> maximum
+fn standard_field_matches(
+  body: value.Value,
+  path: List(String),
+  expected: String,
+) -> Bool {
+  case path {
+    [] -> body == value.Text(expected)
+    [key, ..rest] ->
+      case body {
+        value.Object(_) ->
+          case value.get(body, key) {
+            Ok(child) -> standard_field_matches(child, rest, expected)
+            Error(_) -> True
+          }
+        // A malformed params/arguments container is a standard RPC validation
+        // error. It cannot contain an explicit contradictory identity field.
+        _ -> True
       }
-      json_depth_bytes(rest, False, False, next, maximum)
-    }
-    <<0x7d, rest:bytes>>, False, _ | <<0x5d, rest:bytes>>, False, _ ->
-      json_depth_bytes(rest, False, False, depth - 1, maximum)
-    <<_, rest:bytes>>, _, _ ->
-      json_depth_bytes(rest, in_string, False, depth, maximum)
-    _, _, _ -> maximum
   }
 }
 

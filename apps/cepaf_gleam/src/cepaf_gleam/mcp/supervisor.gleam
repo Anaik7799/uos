@@ -51,31 +51,79 @@ pub fn supervised() -> supervision.ChildSpecification(
   supervision.worker(fn() { start_gateway_actor() })
 }
 
+pub type GatewayHandle
+
+@external(erlang, "mcp_stdio_ffi", "gateway_handle_new")
+fn handle_new() -> GatewayHandle
+
+@external(erlang, "mcp_stdio_ffi", "gateway_handle_set")
+fn handle_set(
+  box: GatewayHandle,
+  subject: process.Subject(GatewayMessage),
+) -> Nil
+
+@external(erlang, "mcp_stdio_ffi", "gateway_handle_register")
+fn handle_register(pid: process.Pid, box: GatewayHandle) -> Nil
+
+@external(erlang, "mcp_stdio_ffi", "gateway_handle_get")
+fn handle_get(
+  pid: process.Pid,
+  fallback: process.Subject(GatewayMessage),
+) -> process.Subject(GatewayMessage)
+
+pub fn current_gateway_subject(
+  gateway: SupervisedGateway,
+) -> process.Subject(GatewayMessage) {
+  handle_get(gateway.supervisor_pid, gateway.gateway_subject)
+}
+
 pub fn start_supervised_gateway() -> Result(SupervisedGateway, actor.StartError) {
-  case start_gateway_actor() {
-    Error(err) -> Error(err)
-    Ok(started_gateway) -> {
-      case
-        sup.new(sup.OneForOne)
-        |> sup.restart_tolerance(intensity: 5, period: 60)
-        |> sup.add(supervised())
-        |> sup.start
-      {
-        Error(err) -> Error(err)
-        Ok(started_sup) ->
-          Ok(SupervisedGateway(
-            child_id: "mcp_unified_gateway",
-            supervisor_pid: started_sup.pid,
-            gateway_subject: started_gateway.data,
-          ))
+  let box = handle_new()
+  let child =
+    supervision.worker(fn() {
+      case start_gateway_actor() {
+        Ok(started) -> {
+          handle_set(box, started.data)
+          Ok(started)
+        }
+        Error(error) -> Error(error)
       }
+    })
+  case
+    sup.new(sup.OneForOne)
+    |> sup.restart_tolerance(intensity: 20, period: 60)
+    |> sup.add(child)
+    |> sup.start
+  {
+    Error(error) -> Error(error)
+    Ok(started) -> {
+      handle_register(started.pid, box)
+      Ok(SupervisedGateway(
+        "mcp_unified_gateway",
+        started.pid,
+        handle_get(started.pid, process.new_subject()),
+      ))
     }
   }
 }
 
 pub fn is_gateway_alive(gateway: SupervisedGateway) -> Bool {
-  process.is_alive(gateway.supervisor_pid)
-  && process.call(gateway.gateway_subject, 1000, Ping)
+  let subject = current_gateway_subject(gateway)
+  case
+    process.is_alive(gateway.supervisor_pid),
+    process.subject_owner(subject)
+  {
+    True, Ok(pid) ->
+      case process.is_alive(pid) {
+        False -> False
+        True -> {
+          let reply = process.new_subject()
+          process.send(subject, Ping(reply))
+          process.receive(reply, 1000) == Ok(True)
+        }
+      }
+    _, _ -> False
+  }
 }
 
 pub fn child_id(gateway: SupervisedGateway) -> String {

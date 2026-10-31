@@ -894,7 +894,7 @@ pub fn gateway_owner_never_waits_for_unresponsive_supervised_gateway_test() {
       "public",
       raw,
       msg,
-      now,
+      fixture_time() / 1_000_000,
       None,
       None,
       None,
@@ -944,7 +944,7 @@ pub fn private_route_bridge_admits_before_running_backend_test() {
   let state = fixture()
   let p = test_principal("private-worker", "private-session")
   let raw =
-    "{\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"harness_execution_progress\",\"arguments\":{}}}"
+    "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"harness_execution_progress\",\"arguments\":{}}}"
   let assert Ok(msg) = wire.decode_request(types.Modern20260728, raw)
   let #(outcome, _) =
     gateway.dispatch_private_with_resolver(
@@ -971,6 +971,7 @@ fn private_request(
 ) -> #(String, wire.NormalizedMessage) {
   let raw =
     json.object([
+      #("jsonrpc", json.string("2.0")),
       #("id", json.int(71)),
       #("method", json.string("tools/call")),
       #(
@@ -1059,7 +1060,7 @@ pub fn private_live_ungranted_routes_and_all_route_tool_lists_test() {
   list.each(
     [#("public", 53), #("development", 21), #("successor", 15)],
     fn(pair) {
-      let raw = "{\"id\":1,\"method\":\"tools/list\"}"
+      let raw = "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}"
       let assert Ok(msg) = wire.decode_request(types.Modern20260728, raw)
       let #(outcome, _) =
         gateway.dispatch_normalized(
@@ -1424,7 +1425,11 @@ pub fn private_arguments_omission_fallback_and_explicit_invalid_rejection_test()
     )
   gateway.private_arguments("{\"params\":{}}", msg)
   |> should.equal(Ok(value.Object([#("path", value.Text("file.txt"))])))
-  list.each(["null", "[]", "false", "17"], fn(invalid) {
+  // Go SDK nil argument maps are the empty object, independent of the
+  // omission-only legacy fallback. Other non-object bindings stay invalid.
+  gateway.private_arguments("{\"params\":{\"arguments\":null}}", msg)
+  |> should.equal(Ok(value.Object([])))
+  list.each(["[]", "false", "17", "\"bad\""], fn(invalid) {
     gateway.private_arguments(
       "{\"params\":{\"arguments\":" <> invalid <> "}}",
       msg,
@@ -1655,7 +1660,7 @@ pub fn private_blocking_backend_does_not_block_public_actor_and_serializes_succe
           root,
           "public-S01",
           "public",
-          "{\"id\":12,\"method\":\"tools/list\"}",
+          "{\"jsonrpc\":\"2.0\",\"id\":12,\"method\":\"tools/list\"}",
           now,
         ),
       )
@@ -1726,7 +1731,7 @@ pub fn modern_revision_initialize_and_http_followup_test() {
       "POST",
       "/mcp",
       hs,
-      "{\"id\":82,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2026-07-28\"}}",
+      "{\"jsonrpc\":\"2.0\",\"id\":82,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2026-07-28\"}}",
       config(),
       now,
     )
@@ -2058,6 +2063,7 @@ fn subscription_params(id: String) -> json.Json {
 pub fn subscriptions_namespace_ids_and_roundtrip_through_live_gateway_test() {
   let raw =
     json.object([
+      #("jsonrpc", json.string("2.0")),
       #("id", json.int(101)),
       #("method", json.string("resources/subscribe")),
       #("params", subscription_params("roundtrip")),
@@ -2068,6 +2074,7 @@ pub fn subscriptions_namespace_ids_and_roundtrip_through_live_gateway_test() {
   |> should.equal(Ok("cutover-operator:roundtrip"))
   let raw =
     json.object([
+      #("jsonrpc", json.string("2.0")),
       #("id", json.int(102)),
       #("method", json.string("resources/unsubscribe")),
       #("params", subscription_params("cutover-operator:roundtrip")),
@@ -2170,7 +2177,7 @@ pub fn subscription_capacity_refuses_without_growing_and_can_recover_test() {
 pub fn logging_completion_and_cancel_notification_live_wiring_test() {
   let logging =
     standard(
-      "{\"id\":103,\"method\":\"logging/setLevel\",\"params\":{\"level\":\"info\"}}",
+      "{\"jsonrpc\":\"2.0\",\"id\":103,\"method\":\"logging/setLevel\",\"params\":{\"level\":\"info\"}}",
     )
   json.parse(logging, decode.at(["error"], decode.dynamic)) |> should.be_error
   let completion = standard(request("completion/complete"))
@@ -2190,7 +2197,7 @@ pub fn logging_completion_and_cancel_notification_live_wiring_test() {
     root,
     "cutover-session",
     "public",
-    "{\"method\":\"notifications/cancelled\",\"params\":{\"requestId\":103}}",
+    "{\"jsonrpc\":\"2.0\",\"method\":\"notifications/cancelled\",\"params\":{\"requestId\":103}}",
     now,
   )
   |> should.equal(None)
@@ -2704,7 +2711,7 @@ pub fn standard_mcp_returns_structured_results_and_silent_notifications_test() {
     root,
     "s",
     "public",
-    "{\"method\":\"notifications/initialized\"}",
+    "{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}",
     now,
   )
   |> should.equal(None)
@@ -2853,7 +2860,7 @@ pub fn standard_resources_prompts_and_fresh_observation_test() {
       "/foreign",
       "s",
       "public",
-      "{\"id\":33,\"method\":\"resources/read\",\"params\":{\"uri\":\"uos://governance/ev-provenance-ceiling\"}}",
+      "{\"jsonrpc\":\"2.0\",\"id\":33,\"method\":\"resources/read\",\"params\":{\"uri\":\"uos://governance/ev-provenance-ceiling\"}}",
       now,
     )
   foreign |> string.contains("PRINCIPAL_WORKSPACE_MISMATCH") |> should.be_true

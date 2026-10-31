@@ -4,13 +4,16 @@
 
 import cepaf_gleam/harness/files
 import cepaf_gleam/mcp/types.{
-  type Outcome, Complete, EvidenceRecord, NonRetryable, Refused, Retryable,
-  type ToolError, ToolError,
+  type Outcome, type ToolError, Complete, EvidenceRecord, NonRetryable, Refused,
+  Retryable, ToolError,
 }
 import gleam/dict.{type Dict}
+import gleam/float
+import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/string
 
 pub type ObservationBackend {
   MissingBackend(backend_name: String, reason: String)
@@ -108,10 +111,7 @@ pub fn observe(
   }
 }
 
-fn freshness_error(
-  snapshot: SnapshotData,
-  now_ms: Int,
-) -> Option(ToolError) {
+fn freshness_error(snapshot: SnapshotData, now_ms: Int) -> Option(ToolError) {
   case snapshot.observed_at_ms > now_ms {
     True -> Some(stale_error())
     False ->
@@ -184,9 +184,12 @@ fn resolve_probe_status(
       case dict.get(snapshot.metrics, tool_name <> ".status") {
         Ok(status) -> Ok(status)
         Error(_) ->
-          case dict.get(snapshot.metrics, "status") {
-            Ok(status) -> Ok(status)
-            Error(_) ->
+          case
+            fixture_snapshot(snapshot),
+            dict.get(snapshot.metrics, "status")
+          {
+            True, Ok(status) -> Ok(status)
+            _, _ ->
               Error(ToolError(
                 "OBSERVATION_PROBE_MISSING",
                 "Missing observed probe status for " <> tool_name,
@@ -225,6 +228,130 @@ fn base_fields(
 }
 
 fn tool_fields(
+  snapshot: SnapshotData,
+  tool_name: String,
+  observed_status: String,
+) -> List(#(String, json.Json)) {
+  let fixture = fixture_snapshot(snapshot)
+  let original = legacy_tool_fields(snapshot, tool_name, observed_status)
+  let projected =
+    list.filter_map(original, fn(field) {
+      case probe_field(snapshot, tool_name, field.0) {
+        Ok(raw) -> Ok(#(field.0, encode_metric(field.0, raw)))
+        Error(_) ->
+          case
+            fixture
+            || derived_status_field(field.0)
+            || tool_name == "podman_containers"
+            || field.0 == "mode"
+            || field.0 == "compatibility"
+          {
+            True -> Ok(field)
+            False -> Error(Nil)
+          }
+      }
+    })
+  let observation_fields = [
+    "probe_kind", "observed_source", "otp_release", "erts_version",
+    "process_count", "schedulers_online", "memory_total_mb", "run_queue",
+    "uptime_s", "peers", "active_sessions", "active_leases", "active_workers",
+    "executing_tasks", "completed_tasks", "ready_tasks", "total_tasks",
+    "chain_intact", "loaded_beam_sha256", "admitted_ev_ceiling", "phase",
+    "decision", "gateway_alive", "guardian_ets_present", "preflight_age_s",
+    "preflight_fresh", "sqlite_quick_check", "quarantined_events",
+    "zenoh_subscriber_status", "zenoh_rest_reachable", "zenoh_tcp_reachable",
+  ]
+  let extra =
+    list.filter_map(observation_fields, fn(key) {
+      case list.any(projected, fn(field) { field.0 == key }) {
+        True -> Error(Nil)
+        False ->
+          case probe_field(snapshot, tool_name, key) {
+            Ok(raw) -> Ok(#(key, encode_metric(key, raw)))
+            Error(_) -> Error(Nil)
+          }
+      }
+    })
+  list.append(projected, extra)
+}
+
+fn fixture_snapshot(snapshot: SnapshotData) -> Bool {
+  !dict.has_key(snapshot.metrics, "probe_kind")
+  && !dict.has_key(snapshot.metrics, "observed_source")
+}
+
+fn probe_field(
+  snapshot: SnapshotData,
+  tool: String,
+  key: String,
+) -> Result(String, Nil) {
+  case dict.get(snapshot.metrics, tool <> "." <> key) {
+    Ok(value) -> Ok(value)
+    Error(_) -> dict.get(snapshot.metrics, key)
+  }
+}
+
+fn derived_status_field(key: String) -> Bool {
+  key == "status" || key == "integrity" || string.ends_with(key, "_state")
+}
+
+fn encode_metric(key: String, raw: String) -> json.Json {
+  case
+    list.contains(
+      [
+        "connected",
+        "probe_completed",
+        "chain_intact",
+        "gateway_alive",
+        "guardian_ets_present",
+        "preflight_fresh",
+        "zenoh_rest_reachable",
+        "zenoh_tcp_reachable",
+      ],
+      key,
+    )
+  {
+    True -> json.bool(raw == "true" || raw == "1")
+    False ->
+      case
+        list.contains(
+          [
+            "otp_release",
+            "erts_version",
+            "loaded_beam_sha256",
+            "probe_kind",
+            "observed_source",
+            "phase",
+            "decision",
+            "status",
+            "mode",
+            "compatibility",
+            "transport",
+            "topology",
+            "cockpit",
+            "root",
+            "sqlite_quick_check",
+            "zenoh_subscriber_status",
+          ],
+          key,
+        )
+        || derived_status_field(key)
+      {
+        True -> json.string(raw)
+        False ->
+          case int.parse(raw) {
+            Ok(n) -> json.int(n)
+            Error(_) ->
+              case float.parse(raw) {
+                Ok(n) -> json.float(n)
+                Error(_) -> json.string(raw)
+              }
+          }
+      }
+  }
+}
+
+fn legacy_tool_fields(
   snapshot: SnapshotData,
   tool_name: String,
   observed_status: String,

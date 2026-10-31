@@ -4,10 +4,13 @@
 //// unrun and output/exit disagreement can never be reported as Complete.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/types.{
-  type Outcome, Complete, EvidenceRecord, NonRetryable, Refused, Retryable,
-  type ToolError, ToolError,
+  type Outcome, type ToolError, Complete, EvidenceRecord, NonRetryable, Refused,
+  Retryable, ToolError,
 }
+import gleam/dict.{type Dict}
+import gleam/float
 import gleam/int
 import gleam/json
 import gleam/list
@@ -38,6 +41,78 @@ pub const verification_tools = [
 
 pub fn is_verification_tool(tool_name: String) -> Bool {
   list.contains(verification_tools, tool_name)
+}
+
+/// Arithmetic is advisory; the result retains the actual bounded checker
+/// observation. This helper does not execute a command or authorize an effect.
+pub fn with_preflight_utility(
+  outcome: Outcome,
+  args: Dict(String, String),
+) -> Outcome {
+  case dict.get(args, "benefit"), dict.get(args, "cost") {
+    Error(_), Error(_) -> outcome
+    Ok(benefit), Ok(cost) ->
+      case parse_numeric(benefit), parse_numeric(cost) {
+        Ok(benefit), Ok(cost) ->
+          case outcome {
+            Complete(payload, ev) ->
+              case json.parse(payload, value.decoder()) {
+                Ok(value.Object(fields)) -> {
+                  let updated =
+                    value.Object(fields)
+                    |> value.set("benefit", value.Number(benefit))
+                    |> value.set("cost", value.Number(cost))
+                    |> value.set("net_utility", value.Number(benefit -. cost))
+                    |> value.set(
+                      "seu_decision",
+                      value.Boolean(benefit >=. cost),
+                    )
+                    |> value.set("advisory_only", value.Boolean(True))
+                    |> value.set("effect_authority", value.Boolean(False))
+                    |> value.encode
+                    |> json.to_string
+                  Complete(
+                    updated,
+                    EvidenceRecord(..ev, output_sha256: files.digest(updated)),
+                  )
+                }
+                _ ->
+                  Refused(ToolError(
+                    "INVALID_VERIFICATION_RESULT",
+                    "Bounded check must return an object payload",
+                    NonRetryable,
+                  ))
+              }
+            _ -> outcome
+          }
+        _, _ ->
+          Refused(ToolError(
+            "INVALID_PARAMS",
+            "benefit and cost must be finite numeric values",
+            NonRetryable,
+          ))
+      }
+    _, _ ->
+      Refused(ToolError(
+        "INVALID_PARAMS",
+        "benefit and cost must be supplied together",
+        NonRetryable,
+      ))
+  }
+}
+
+fn parse_numeric(raw: String) -> Result(Float, Nil) {
+  case float.parse(string.trim(raw)) {
+    Ok(n) if n >=. -9_007_199_254_740_991.0 && n <=. 9_007_199_254_740_991.0 ->
+      Ok(n)
+    Ok(_) -> Error(Nil)
+    Error(_) ->
+      case int.parse(string.trim(raw)) {
+        Ok(n) if n >= -9_007_199_254_740_991 && n <= 9_007_199_254_740_991 ->
+          Ok(int.to_float(n))
+        _ -> Error(Nil)
+      }
+  }
 }
 
 pub fn parse_check_id(raw: String) -> Result(CheckId, ToolError) {
@@ -72,7 +147,19 @@ pub fn execute_verification(
         NonRetryable,
       ))
     True ->
-      case parse_check_id(check_raw) {
+      case
+        parse_check_id(
+          case
+            string.trim(check_raw) == ""
+            && {
+              tool_name == "verification_run" || tool_name == "preflight_check"
+            }
+          {
+            True -> "preflight_toolchain"
+            False -> check_raw
+          },
+        )
+      {
         Error(error) -> Refused(error)
         Ok(check_id) ->
           case runner(check_id) {

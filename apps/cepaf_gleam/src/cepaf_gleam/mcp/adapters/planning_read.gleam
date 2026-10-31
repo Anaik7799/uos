@@ -28,6 +28,7 @@ pub type CanonicalTaskRow {
 
 pub type PlanningReadStore {
   AvailableStore(default_plan_id: String, rows: List(CanonicalTaskRow))
+  UnknownPlanStore(plan_id: String)
   UnavailableStore(reason: String)
 }
 
@@ -52,6 +53,7 @@ pub fn execute(
   args: Dict(String, String),
 ) -> Outcome {
   case store {
+    UnknownPlanStore(plan) -> Refused(ToolError("UNKNOWN_PLAN_ID","Unknown canonical plan: " <> plan,NonRetryable))
     UnavailableStore(reason) ->
       Refused(ToolError(
         code: "SA_PLAN_STORE_UNAVAILABLE",
@@ -61,7 +63,11 @@ pub fn execute(
     AvailableStore(default_plan_id, rows) -> {
       let requested_plan = case dict.get(args, "plan_id") {
         Ok(id) if id != "" -> id
-        _ -> default_plan_id
+        _ ->
+          case dict.get(args, "plan") {
+            Ok(id) if id != "" -> id
+            _ -> default_plan_id
+          }
       }
       case requested_plan == default_plan_id {
         False ->
@@ -85,6 +91,23 @@ fn render_tool(
 ) -> Outcome {
   case tool_name {
     "plan_list" | "sa_plan_list" -> {
+      let rows = case dict.get(args, "status") {
+        Ok("pending") ->
+          list.filter(rows, fn(row) {
+            list.contains(["available", "ready", "pending"], row.state)
+          })
+        Ok("in_progress") ->
+          list.filter(rows, fn(row) {
+            list.contains(["claimed", "executing", "in_progress"], row.state)
+          })
+        Ok("completed") ->
+          list.filter(rows, fn(row) { row.state == "completed" })
+        Ok("blocked") ->
+          list.filter(rows, fn(row) {
+            row.state == "blocked" || row.state == "hold"
+          })
+        _ -> rows
+      }
       let payload = encode_rows(plan_id, rows)
       evidence.classify_backend_payload(
         "public",
@@ -126,8 +149,12 @@ fn render_tool(
     }
     "plan_get" -> {
       let target_id = case dict.get(args, "task_id") {
-        Ok(id) -> id
-        Error(_) -> ""
+        Ok(id) if id != "" -> id
+        _ ->
+          case dict.get(args, "id") {
+            Ok(id) -> id
+            Error(_) -> ""
+          }
       }
       case list.find(rows, fn(r) { r.task_id == target_id }) {
         Ok(row) -> {

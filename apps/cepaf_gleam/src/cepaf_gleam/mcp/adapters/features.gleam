@@ -15,6 +15,7 @@ import cepaf_gleam/mcp/types.{
   NonRetryable, Refused, ToolError,
 }
 import gleam/dict.{type Dict}
+import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -28,7 +29,7 @@ pub fn execute(
 ) -> Outcome {
   case tool_name {
     "mcp_capability_inventory" -> mcp_capability_inventory(store)
-    "harness_system_feature_catalog" -> harness_system_feature_catalog(store)
+    "harness_system_feature_catalog" -> catalog_page(store, args)
     "harness_system_feature_observations" -> {
       let task_id = result.unwrap(dict.get(args, "task_id"), "")
       let feature_id = result.unwrap(dict.get(args, "feature_id"), "")
@@ -38,16 +39,25 @@ pub fn execute(
       }
       case target {
         "" ->
-          Refused(ToolError(
-            "MISSING_ARGUMENT",
-            "Missing required task_id or feature_id",
-            NonRetryable,
-          ))
+          case dict.has_key(args, "offset") {
+            True -> observations_page(store, args)
+            False ->
+              Refused(ToolError(
+                "MISSING_ARGUMENT",
+                "Missing required task_id or feature_id",
+                NonRetryable,
+              ))
+          }
         _ -> harness_system_feature_observations(store, target)
       }
     }
     "harness_system_feature_intent" -> {
-      let intent_id = result.unwrap(dict.get(args, "intent_id"), "")
+      let intent_id =
+        result.unwrap(dict.get(args, "intent_id"), "") |> string.trim
+      let intent_id = case intent_id {
+        "" -> result.unwrap(dict.get(args, "intent"), "") |> string.trim
+        id -> id
+      }
       case intent_id {
         "" ->
           Refused(ToolError(
@@ -408,6 +418,165 @@ fn catalog_payload(store: FeatureEvidenceStore) -> String {
     ),
   ])
   |> json.to_string
+}
+
+/// Digest of the complete canonical catalog, independent of pagination.
+pub fn catalog_digest(store: FeatureEvidenceStore) -> String {
+  files.digest(catalog_payload(store))
+}
+
+fn validate_catalog_digest(
+  store: FeatureEvidenceStore,
+  args: Dict(String, String),
+) -> Result(Nil, ToolError) {
+  let expected =
+    result.unwrap(dict.get(args, "catalog_sha256"), "") |> string.trim
+  case
+    expected == "" || expected == "any" || expected == catalog_digest(store)
+  {
+    True -> Ok(Nil)
+    False ->
+      Error(ToolError(
+        "CATALOG_DIGEST_MISMATCH",
+        "Requested catalog_sha256 differs from the canonical catalog",
+        NonRetryable,
+      ))
+  }
+}
+
+pub fn ledger_digest(store: FeatureEvidenceStore) -> String {
+  store.receipts
+  |> dict.to_list
+  |> list.sort(fn(a, b) { string.compare(a.0, b.0) })
+  |> json.array(fn(pair) {
+    json.object([
+      #("id", json.string(pair.0)),
+      #("candidate", json.string(pair.1.candidate_commit)),
+      #("exit_code", json.int(pair.1.exit_code)),
+      #(
+        "raw_review_verdict",
+        json.nullable(pair.1.raw_review_verdict, json.string),
+      ),
+      #("wrapper_verdict", json.nullable(pair.1.wrapper_verdict, json.string)),
+      #("output_sha256", json.string(pair.1.output_sha256)),
+    ])
+  })
+  |> json.to_string
+  |> files.digest
+}
+
+fn validate_ledger_digest(
+  store: FeatureEvidenceStore,
+  args: Dict(String, String),
+) -> Result(Nil, ToolError) {
+  let expected =
+    result.unwrap(dict.get(args, "ledger_sha256"), "") |> string.trim
+  case expected == "" || expected == "any" || expected == ledger_digest(store) {
+    True -> Ok(Nil)
+    False ->
+      Error(ToolError(
+        "LEDGER_DIGEST_MISMATCH",
+        "Requested ledger_sha256 differs from the canonical ledger",
+        NonRetryable,
+      ))
+  }
+}
+
+fn page_offset(args: Dict(String, String)) -> Result(Int, ToolError) {
+  case dict.get(args, "offset") {
+    Error(_) -> Ok(0)
+    Ok(raw) ->
+      case int.parse(string.trim(raw)) {
+        Ok(offset) if offset >= 0 -> Ok(offset)
+        _ ->
+          Error(ToolError(
+            "INVALID_OFFSET",
+            "offset must be a nonnegative integer",
+            NonRetryable,
+          ))
+      }
+  }
+}
+
+fn catalog_page(
+  store: FeatureEvidenceStore,
+  args: Dict(String, String),
+) -> Outcome {
+  case validate_catalog_digest(store, args), page_offset(args) {
+    Error(error), _ | _, Error(error) -> Refused(error)
+    Ok(_), Ok(offset) ->
+      case dict.has_key(args, "offset") {
+        False -> harness_system_feature_catalog(store)
+        True ->
+          harness_system_feature_catalog(
+            FeatureEvidenceStore(
+              ..store,
+              capabilities: list.drop(store.capabilities, offset)
+                |> list.take(100),
+            ),
+          )
+      }
+  }
+}
+
+fn observations_page(
+  store: FeatureEvidenceStore,
+  args: Dict(String, String),
+) -> Outcome {
+  case
+    check_ceiling(store),
+    validate_observation_digests(store, args),
+    page_offset(args)
+  {
+    Error(error), _, _ | _, Error(error), _ | _, _, Error(error) ->
+      Refused(error)
+    Ok(_), Ok(_), Ok(offset) ->
+      case store_has_conflict(store) {
+        True -> Refused(conflict_error())
+        False -> {
+          let observations =
+            dict.to_list(store.receipts)
+            |> list.sort(fn(a, b) { string.compare(a.0, b.0) })
+            |> list.drop(offset)
+            |> list.take(100)
+          let payload =
+            json.object([
+              #("active_candidate", json.string(store.active_candidate)),
+              #("catalog_sha256", json.string(catalog_digest(store))),
+              #("ledger_sha256", json.string(ledger_digest(store))),
+              #("offset", json.int(offset)),
+              #("total_observations", json.int(dict.size(store.receipts))),
+              #(
+                "observations",
+                json.array(observations, fn(pair) {
+                  json.object([
+                    #("task_id", json.string(pair.0)),
+                    #("candidate_commit", json.string(pair.1.candidate_commit)),
+                    #("exit_code", json.int(pair.1.exit_code)),
+                    #("output_sha256", json.string(pair.1.output_sha256)),
+                    #(
+                      "verified_for_active_candidate",
+                      json.bool(valid_active_receipt(store, pair.1)),
+                    ),
+                    #("formal_state", json.string("unrun")),
+                    #("admission_state", json.string("not_admitted")),
+                  ])
+                }),
+              ),
+            ])
+            |> json.to_string
+          complete("harness_system_feature_observations", payload, store)
+        }
+      }
+  }
+}
+
+fn validate_observation_digests(
+  store: FeatureEvidenceStore,
+  args: Dict(String, String),
+) -> Result(Nil, ToolError) {
+  use _ <- result.try(validate_catalog_digest(store, args))
+  validate_ledger_digest(store, args)
 }
 
 pub fn harness_system_feature_catalog(store: FeatureEvidenceStore) -> Outcome {

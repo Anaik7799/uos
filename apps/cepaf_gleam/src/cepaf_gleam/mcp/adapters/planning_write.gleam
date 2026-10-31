@@ -2,6 +2,7 @@
 //// and commit its returned state before accepting the next call; stale snapshots
 //// must never be committed independently by concurrent workers.
 
+import cepaf_gleam/harness/files
 import cepaf_gleam/mcp/admission.{
   type TaskLifecycleState, type ValidatedCall, TaskAvailable, TaskCompleted,
   TaskExecuting,
@@ -13,10 +14,15 @@ import cepaf_gleam/mcp/types.{type Outcome, NonRetryable, Refused, ToolError}
 import gleam/dict.{type Dict}
 import gleam/int
 import gleam/json
+import gleam/list
 import gleam/option.{Some}
+import gleam/string
 
 pub type Task {
   Task(state: TaskLifecycleState, worker: String, attempt: Int)
+  /// Local hold preserves the last canonical lifecycle state and its fence.
+  /// It is never represented as completed or as a fresh claim.
+  HeldTask(state: TaskLifecycleState, worker: String, attempt: Int)
 }
 
 pub type PlanningWriteStore {
@@ -39,6 +45,40 @@ fn arg(call: ValidatedCall, key: String) -> String {
   }
 }
 
+fn alias(call: ValidatedCall, first: String, second: String) -> String {
+  case arg(call, first) {
+    "" -> arg(call, second)
+    value -> value
+  }
+}
+
+fn plan_id(call: ValidatedCall) -> String {
+  case alias(call, "plan_id", "plan") {
+    "" ->
+      case arg(call, "title") != "" || arg(call, "id") != "" {
+        True -> "default"
+        False -> ""
+      }
+    value -> value
+  }
+}
+
+fn task_id(call: ValidatedCall) -> String {
+  case alias(call, "task_id", "id") {
+    "" ->
+      case string.trim(arg(call, "title")) {
+        "" -> ""
+        title -> "title-" <> files_digest(title)
+      }
+    value -> value
+  }
+}
+
+fn files_digest(title: String) -> String {
+  // A deterministic content-derived slug avoids process/time-dependent IDs.
+  string.slice(files.digest(title), 0, 16)
+}
+
 fn refuse(
   store: PlanningWriteStore,
   code: String,
@@ -58,7 +98,20 @@ fn success(
     evidence.classify_backend_payload(
       call.spec.route,
       call.spec.name,
-      json.to_string(json.object([#("result", json.string(value))])),
+      json.to_string(
+        json.object([
+          #("result", json.string(value)),
+          ..list.filter_map(
+            ["title", "priority", "name", "queue", "args", "kind", "input"],
+            fn(key) {
+              case dict.get(call.arguments, key) {
+                Ok(value) -> Ok(#(key, json.string(value)))
+                Error(_) -> Error(Nil)
+              }
+            },
+          )
+        ]),
+      ),
       candidate_id.current(),
     ),
     store,
@@ -70,7 +123,7 @@ pub fn execute(
   call: ValidatedCall,
 ) -> #(Outcome, PlanningWriteStore) {
   let actor = principal.actor_id(call.principal)
-  let key = #(arg(call, "plan_id"), arg(call, "task_id"))
+  let key = #(plan_id(call), task_id(call))
   case actor == "" {
     True -> refuse(store, "MISSING_AUTHENTICATED_WORKER")
     False -> {
@@ -102,7 +155,7 @@ pub fn execute(
             Ok(task) -> transition(store, call, key, task, actor)
           }
         "sa_job_enqueue" -> {
-          let id = arg(call, "job_id")
+          let id = alias(call, "job_id", "id")
           case id == "" {
             True -> refuse(store, "MISSING_JOB_ID")
             False ->
@@ -121,7 +174,7 @@ pub fn execute(
           }
         }
         "sa_workflow_start" -> {
-          let id = arg(call, "workflow_id")
+          let id = alias(call, "workflow_id", "id")
           case id == "" {
             True -> refuse(store, "MISSING_WORKFLOW_ID")
             False ->
@@ -140,7 +193,7 @@ pub fn execute(
           }
         }
         "sa_bridge_submit" -> {
-          let id = arg(call, "bridge_key")
+          let id = alias(call, "bridge_key", "task")
           case id == "" {
             True -> refuse(store, "MISSING_BRIDGE_KEY")
             False ->
@@ -185,8 +238,64 @@ fn transition(
   let target = case call.spec.name {
     "sa_task_claim" -> "executing"
     "sa_task_complete" -> "completed"
-    _ -> arg(call, "state")
+    _ ->
+      case alias(call, "state", "status") {
+        "in_progress" -> "executing"
+        "pending" -> "available"
+        state -> state
+      }
   }
+  case target, task {
+    "blocked", Task(..) ->
+      case task.worker == "" || task.worker == actor {
+        False -> refuse(store, "PRINCIPAL_WORKER_MISMATCH")
+        True ->
+          success(
+            PlanningWriteStore(
+              ..store,
+              tasks: dict.insert(
+                store.tasks,
+                key,
+                HeldTask(task.state, task.worker, task.attempt),
+              ),
+            ),
+            call,
+            "blocked",
+          )
+      }
+    "blocked", HeldTask(..) -> success(store, call, "blocked")
+    "available", HeldTask(..) ->
+      case task.worker == "" || task.worker == actor {
+        False -> refuse(store, "PRINCIPAL_WORKER_MISMATCH")
+        True ->
+          success(
+            PlanningWriteStore(
+              ..store,
+              tasks: dict.insert(
+                store.tasks,
+                key,
+                Task(TaskAvailable, "", task.attempt),
+              ),
+            ),
+            call,
+            "available",
+          )
+      }
+    "available", Task(state: TaskAvailable, ..) ->
+      success(store, call, "available")
+    _, HeldTask(..) -> refuse(store, "TASK_BLOCKED")
+    _, Task(..) -> transition_active(store, call, key, task, actor, target)
+  }
+}
+
+fn transition_active(
+  store: PlanningWriteStore,
+  call: ValidatedCall,
+  key: #(String, String),
+  task: Task,
+  actor: String,
+  target: String,
+) -> #(Outcome, PlanningWriteStore) {
   case target, task.state {
     "executing", TaskAvailable -> {
       let claimed = Task(TaskExecuting, actor, task.attempt + 1)
@@ -218,7 +327,7 @@ fn transition(
                       tasks: dict.insert(
                         store.tasks,
                         key,
-                        Task(..task, state: TaskCompleted),
+                        Task(TaskCompleted, task.worker, task.attempt),
                       ),
                     ),
                     call,
