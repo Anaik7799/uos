@@ -118,6 +118,8 @@ Admiralty B2 is the bounded assessment for directly repeated local source/test o
 | Protected process helper |SHA b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b unchanged | No protected source relaxation |
 | Full system/cutover |UNRUN | No live activation or admission |
 
+Canonical source-publication gates were then observed: eleven implementation hashes match code revision199fcff2c780f24d9f69905b25b1cec3a1bbc3f2; journal10/10, two diagram documents verified with zero unverified, and KM gate PASS with ceiling93. Initial live journal/packet requests returned HTTP200 with disk/header/body SHA-256 equality, and MCP recall found both new artifacts. Updated closure bytes require the same parity check again; final exact hashes are retained in the separate publication receipt, avoiding a self-referential document hash. These are documentation/source gates, not cutover admission.
+
 Use the repository-pinned toolchains and no-install/frozen existing Mojo environment. New source can be compiled in a private low-level Gleam package against the existing canonical library output; no package download or shared build-tree concurrency is required. The JSON/TOML and filesystem suites use synthetic private fixtures. The full original release gates, seven services, route fidelity, security falsifiers and OI08 soak remain separate acceptance work.
 
 ### 7.1 Seventeen canonical aspects
@@ -146,7 +148,7 @@ PARTIAL and UNRUN are not admission passes. Aspect names follow the repository r
 
 ## 8. Files Modified
 
-New Gleam catalog/protocol and their tests, the independent Quint model, native file kernel/tests, pure pin editor/tests, Mojo argv extension and its inert-backend test are confined to the isolated OI02 workspace. This journal and its packet record the development scope. Reciprocal wiki/ZK/inventory registration and the original plan progress note must be reconciled before publication. No protected harness cluster, process guardian, live config, service unit or pointer was changed.
+New Gleam catalog/protocol and their tests, the independent Quint model, native file kernel/tests, pure pin editor/tests, Mojo argv extension and its inert-backend test were authored in the isolated OI02 workspace and checked out as a canonical source candidate. This journal and its packet record the development scope. Reciprocal wiki/ZK/inventory registration and the original plan progress note are included and the canonical KM gate passes. No protected harness cluster, process guardian, live config, service unit or pointer was changed.
 
 ## 9. Architectural Observations
 
@@ -204,9 +206,9 @@ All four UCA types apply. Not provided: required reader fence, full restore or h
 <details><summary>Domain 1 — Metadata and navigation</summary>
 
 - [x] CHK-01-TIME — Observed synchronized host time and canonical prefix.
-- [ ] CHK-02-TAIL — Final publication/live byte proof pending.
+- [x] CHK-02-TAIL — Source-publication HTTP200/disk/header/body proof observed; final closure hashes recorded separately.
 - [x] CHK-03-FRACT — L0..L9 tags and concrete affected-layer RCA.
-- [ ] CHK-04-KM — Reciprocal registration and gate pending.
+- [x] CHK-04-KM — Reciprocal registration and canonical KM PASS; MCP recalls the new artifacts.
 
 </details>
 <details><summary>Domain 2 — Purity and storage safety</summary>
@@ -236,7 +238,7 @@ All four UCA types apply. Not provided: required reader fence, full restore or h
 <details><summary>Domain 5 — Sovereignty and Jujutsu</summary>
 
 - [ ] CHK-17-SOV — No genuine live release grant or system admission.
-- [ ] CHK-18-JJ — Final candidate/source integration receipt pending.
+- [x] CHK-18-JJ — Standalone JJ candidate/source accounting and canonical checkout verified; bookmark publication receipt separate.
 
 </details>
 <details><summary>Domain 6 — Provenance extension</summary>

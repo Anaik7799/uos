@@ -1,6 +1,6 @@
 {
   "schema": "uos.oi02-cutover-foundations.v1",
-  "observed_at": "2026-10-31T17:30:38Z",
+  "observed_at": "2026-10-31T17:32:31Z",
   "status": "PASS_SCOPED_DEVELOPMENT_FOUNDATIONS",
   "authority": "NONE",
   "runtime_admission": "NOT_GRANTED",
@@ -85,7 +85,7 @@
   ],
   "journal": {
     "path": "docs/journal/20261031-1756-oi02-recoverable-cutover-foundations-journal.md",
-    "sha256": "8520abef5fbe96f3901843dd415524a7f937ed1cf5bada97ed9ea5c197b0600b"
+    "sha256": "269145c538a437d9af3a1ce5f40536235d01ccd740bd0d208a3f23d166ddd414"
   },
   "checks": {
     "gleam_tests": 16,
