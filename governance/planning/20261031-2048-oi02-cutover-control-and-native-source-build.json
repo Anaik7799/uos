@@ -1,0 +1,370 @@
+{
+  "schema": "uos.oi02-cutover-control-source-evidence.v1",
+  "observed_host_utc": "2026-10-31T20:33:48Z",
+  "plan": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "tasks_in_scope": [
+    "OI02_ATOMIC_11_TARGET_CAPSULE_CUTOVER",
+    "OI02B_ALL_AGENT_SYMBIOSIS_PREFLIGHT"
+  ],
+  "worker": "codex-symbiosis-preflight-20261031",
+  "attempt": 1,
+  "source_revision": "a09044f4136f142c9644be13ce706c4dd9aea62e",
+  "source_publication": {
+    "main_equals_origin": true,
+    "supervisor_observed_utc": "2026-10-31T20:32:00Z",
+    "runtime_activation": false
+  },
+  "authorship": "LOCAL_CODEX_SUPERVISOR_AND_LOCAL_CODEX_RELAYS_NOT_NATIVE_PI_OR_CLAUDE_EXECUTION",
+  "prior_native_advice": "Earlier real AGY Argon, Claude Fable and Pi/OpenRouter advice remains separately recorded; no new model call in this slice",
+  "source_files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/cutover_controller.gleam",
+      "sha256": "a353304f5961323ea217d89f5f2eaada733922f1f0cb2b362e4bb9c6f122e15f"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/cutover_transport.gleam",
+      "sha256": "59bf6a2d8d0f149ab5be95378f20d3781dc767f412aa00331f36afa7b84b2365"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/symbiosis_receipt_store.gleam",
+      "sha256": "1ae5d5c5a57cc50b6b6be166ee432b37ee4788dde071bff7ea22eb8b4144d3cf"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_cutover_controller_test.gleam",
+      "sha256": "c38046321828afab5215878a5ec471767e74b4d6a20fca0d662a263943d79cfd"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_cutover_transport_test.gleam",
+      "sha256": "23b5b0844f0aece770ea74209286f3467fa6122bd14af962c60c33817f05a1e3"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/symbiosis_receipt_store_test.gleam",
+      "sha256": "b22f62f4626389d573a899570b44bb4c1d82a8268e81fb3f12a546909374b04d"
+    },
+    {
+      "path": "tools/ecology_file_transaction_port.ml",
+      "sha256": "463e6c48bbbee414d5be551ed5485f84ec49a478d2830d888a9f4ee7d20918b6"
+    },
+    {
+      "path": "tools/ecology_file_transaction_port_test.ml",
+      "sha256": "2545eb419e2f106fc2395cbfbbb2186915c43e3459fb3f6ff743ee9c20a22d65"
+    },
+    {
+      "path": "tools/ecology_native_build.ml",
+      "sha256": "cc67cbd215ba1dbb1f4aaccff0e91e4ee9afbe81d7513fbdc14dbeabde0f7d02"
+    },
+    {
+      "path": "tools/ecology_native_build_test.ml",
+      "sha256": "0c9faa80f2d2037f68b294aadb65ad802abb7233e63e97e6ba90d899d546b8fb"
+    },
+    {
+      "path": "tools/ecology_pin_audit.ml",
+      "sha256": "6f2e79f01dc6890e82d4a0692e13087aa0d0d1b9c332d447cfcd29c8a41e5a88"
+    },
+    {
+      "path": "tools/ecology_pin_audit_cli.ml",
+      "sha256": "78fd952c5708eebd8ae03962259498dc93d794b9dca8e38b2089bb7eaec50356"
+    },
+    {
+      "path": "tools/ecology_pin_audit_test.ml",
+      "sha256": "d6b42cb413006e2dc72697bc50bcf7e2250536f4c6aa4d9f37dc59c5d280fe77"
+    },
+    {
+      "path": "tools/ecology_pin_edit.ml",
+      "sha256": "4289c0265e695861316f5b7c5ae62226d9ed2af13b0eeb0e1be0722e619d4b76"
+    },
+    {
+      "path": "tools/ecology_pin_edit_test.ml",
+      "sha256": "9651f14537f9ae9ce4e9f116ff7bf0031ef5fc51243170a6f71ec27fc447322d"
+    },
+    {
+      "path": "tools/ecology_release.ml",
+      "sha256": "91619429e2410354a6fc985d290bf46c777236f50885c23608db4c8ff54c89ba"
+    }
+  ],
+  "protected_unchanged": {
+    "tools/ecology_file_transaction.ml": "64789f843adf44440b8190fd3c6eb8fadba4b5d7d052dd790a33e8375d240cd2",
+    "tools/ecology_process.ml": "b8ed1735909701376949b0ca00acd2f4cb8aac177fb771a5c59532319cea249b",
+    "tools/telegram_store_transport_guardian.ml": "9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5"
+  },
+  "task_projection": {
+    "observed_utc": "2026-10-31T20:33:29Z",
+    "total": 15,
+    "completed": 5,
+    "executing": 2,
+    "available": 8,
+    "available_is_dependency_ready": false,
+    "completed_ids": [
+      "OI01A_OBSERVED_SCANNER",
+      "OI01B_FORMAL_GATEWAY",
+      "OI01_EV94_109_SOVEREIGN_AUDIT",
+      "OI02A_OPENROUTER_USAGE_RECONCILIATION",
+      "OI02C_SOAK_DEPENDENCY_REPAIR"
+    ],
+    "executing_ids": [
+      "OI02_ATOMIC_11_TARGET_CAPSULE_CUTOVER",
+      "OI02B_ALL_AGENT_SYMBIOSIS_PREFLIGHT"
+    ],
+    "source": "var/harness/20261031-1334-codex-hive/control-documentation-active-risk.json",
+    "authority": "NONE"
+  },
+  "checks_separate_scopes_not_aggregate_proof": [
+    {
+      "scope": "controller_and_transport",
+      "passed": 27,
+      "observer": "root_supervisor",
+      "receipt": "var/harness/20261031-1334-codex-hive/cutover-controller/native-tests-1793478602582689-2614727.log",
+      "limit": "private14/15-file fixtures, owner/worker/replay/deadline/recovery; production root attachment unverified"
+    },
+    {
+      "scope": "durable_receipt_frontend",
+      "passed": 15,
+      "raw_status_cross_product": 864,
+      "mutants_rejected": 3,
+      "receipt": "/tmp/uos-symbiosis-receipt-frontend-20261031/cleanup-final-tests.log",
+      "limit": "raw all-true UNKNOWN; false STOP; unconfirmed cleanup blocks submit and readback; no global alias linearity"
+    },
+    {
+      "scope": "native_cutover_port",
+      "passed": 257,
+      "actual_guardian": true,
+      "receipt": "/tmp/uos-cutover-port-20261031/final-257-guarded-tests.log",
+      "limit": "one uninterrupted finite recovery reserve, not unlimited crash or torn-tail repair"
+    },
+    {
+      "scope": "native_builder",
+      "passed": 273,
+      "observer": "root_independent_rerun_and_relay",
+      "root_fixture": "/tmp/uos-native-build-test-acf4e3",
+      "relay_receipt": "/tmp/uos-native-build-snapshot-helper-tests.log",
+      "mutants_rejected": 2,
+      "seeds": [
+        17,
+        91
+      ],
+      "cases_per_seed": 100,
+      "full_transitive_build_closure_correspondence": "UNPROVEN",
+      "whole_helper_io": "REQUIRES_OUTER_OS_SUPERVISION_AND_LOCAL_FS_PREMISES"
+    },
+    {
+      "scope": "pin_auditor",
+      "passed": 51,
+      "receipt": "var/harness/20261031-1334-codex-hive/root-pin-audit-final-tests.log"
+    },
+    {
+      "scope": "pin_editor",
+      "passed": 82,
+      "receipt": "var/harness/20261031-1334-codex-hive/root-pin-editor-final-tests.log",
+      "limit": "pure synthetic byte-span editor; no configuration write"
+    },
+    {
+      "scope": "packager",
+      "passed": 35,
+      "receipt": "var/harness/20261031-1334-codex-hive/root-release-native-selftest.json",
+      "real_native_payload_composition_receipt": "var/harness/20261031-1334-codex-hive/root-real-native-package-receipt.json",
+      "whole_new_capsule_stage": "STAGED_AND_VERIFIED_DEVELOPMENT_ONLY"
+    },
+    {
+      "scope": "canonical_Hermes_repository_target",
+      "target": "modules/hermes_harness/symbiosis_receipt_port.exe",
+      "build_exit": 0,
+      "guarded_synthetic_test_functions_passed": 3,
+      "elapsed_seconds_observed": 0.77,
+      "maximum_rss_kib_observed": 108024,
+      "worker_sha256": "848fbf26005c3f45d228ffae624472a7f533ecebba44b57bcb6175f74512f3da",
+      "receipt": "/tmp/20261031-2002-canonical-hermes-symbiosis-receipt-build.json",
+      "limit": "not whole Hermes suite or supply-chain proof"
+    },
+    {
+      "scope": "abstract_Quint_model",
+      "passed": 10,
+      "seed": 17,
+      "observer": "root_supervisor",
+      "receipt": "var/harness/20261031-1334-codex-hive/candidate-cutover-quint-tests.log",
+      "limit": "bounded abstract model, not native refinement or operational liveness"
+    }
+  ],
+  "native_artifact": {
+    "canonical_id": "77aa82a2c6cca91224af4614d9ee63e5446b3d0af52e163bd90f35f969386152",
+    "source_workspace_id": "ce25911f4979c7a6af10080b774d42915ce1a9cbd6d1d4755b93e898920af86f",
+    "worker_sha256": "352e620d99b7d0442b7e4278cea802b8f0f4b05556ef8582f07e4117e87238eb",
+    "guardian_sha256": "13fd313f141190dcf8c081f1076e286d05124ffd433f79f117088c30dfc92604",
+    "receipt": "var/harness/20261031-1334-codex-hive/canonical-native-build-result.json",
+    "captured_inputs_only": true,
+    "complete_compiler_assembler_linker_runtime_closure": "UNPROVEN",
+    "independent_artifact_id_required": true,
+    "input_index_authority": false
+  },
+  "private_application_build": {
+    "receipt": "var/harness/20261031-1334-codex-hive/cutover-build/20261031-2044-private-offline-closure-receipt.json",
+    "observed_utc": "2026-10-31T20:26:44Z",
+    "four_local_packages_compiled": true,
+    "closure_applications": 36,
+    "missing_apps": [],
+    "missing_modules": [],
+    "production_inputs_before_after_stable": 1165,
+    "test_inputs_postbuild_only": 875,
+    "tests_executed_by_this_build": false,
+    "local_app_descriptors": 4,
+    "descriptor_authority": "VALIDATED_PROJECTIONS_NOT_OFFICIAL_GLEAM_GENERATED",
+    "existing_warnings_retained": true,
+    "warnings_as_errors": false,
+    "full_compiler_correctness": "UNPROVEN",
+    "runtime_activation": false
+  },
+  "inventory_only": {
+    "config_metadata_surfaces": 11,
+    "config_metadata_observed": 11,
+    "existing_distinct_physical_paths": 15,
+    "receipt": "var/harness/20261031-1334-codex-hive/cutover-build/runtime-inventory/20261031-2002-runtime-target-inventory.json",
+    "candidate_environment_manifest": "UNVERIFIED",
+    "actual_release_authority": "UNVERIFIED",
+    "all_reader_drain": "UNVERIFIED",
+    "kernel_absent_primitive_exists": true,
+    "candidate_absence_or_path_authority_established": false
+  },
+  "counterevidence_preserved": [
+    "stale_preflight_and_risk_refusal_before_fresh31_and160_file_observations",
+    "old_frontend_dropped_reaping_witness",
+    "old_pair_only_log_reservation_stranded_recovery",
+    "old_control_target_alias_stranded_prepared_namespace",
+    "postappend_response_failure_uncertainty",
+    "initial_missing_root_app_metadata_then_explicit_projection_repair",
+    "existing_compile_warnings",
+    "build_directory_rename_after_readonly_mode_EACCES",
+    "coherent_manifest_rewrite_and_source_drift_mutants_rejected",
+    "initial_journal_gate_two_of_ten_rejected_missing_explicit_ACH_IDs_and_Forecast_label_corrected_without_checker_change"
+  ],
+  "risk": {
+    "raw_fmea_review_judgments_not_probabilities": [
+      {
+        "hazard": "unauthorized_release_or_undrained_readers",
+        "severity": 10,
+        "occurrence": 4,
+        "detection": 7,
+        "rpn": 280
+      },
+      {
+        "hazard": "worker_before_uncertain_cleanup",
+        "severity": 9,
+        "occurrence": 4,
+        "detection": 6,
+        "rpn": 216
+      },
+      {
+        "hazard": "recovery_capacity_or_private_namespace_damage",
+        "severity": 9,
+        "occurrence": 3,
+        "detection": 6,
+        "rpn": 162
+      },
+      {
+        "hazard": "stale_or_incoherent_artifact",
+        "severity": 8,
+        "occurrence": 3,
+        "detection": 6,
+        "rpn": 144
+      }
+    ],
+    "uca_types": [
+      "required_safe_control_not_provided",
+      "unsafe_control_provided",
+      "wrong_timing_or_order",
+      "applied_too_long_or_stopped_too_soon"
+    ],
+    "risk_observation": "var/harness/20261031-1334-codex-hive/control-documentation-active-risk.json",
+    "effect_authority": false,
+    "cleanup_required_evidence": "Observed BEAM worker DOWN AND genuine paired native-exit/quiescence witness; row readback alone cannot clear uncertain cleanup"
+  },
+  "forecast_resolution": {
+    "prior_journal": "docs/journal/20261031-1918-hive-task-fences-native-advice-and-activation-journal.md",
+    "probability": 0.8,
+    "horizon_utc": "2026-10-31T20:15:00Z",
+    "event": "earlier_source_and_documentation_publication",
+    "outcome": 1,
+    "brier_score": 0.04,
+    "publication_revision": "790f51bae67cf49924ec9c398dab588020aca465",
+    "supervisor_publication_utc": "2026-10-31T19:41:00Z",
+    "receipt": "var/harness/20261031-1334-codex-hive/hive-source-publication-receipt.json",
+    "calibration_established": false
+  },
+  "forecast": {
+    "probability": 0.65,
+    "horizon_utc": "2026-10-31T21:15:00Z",
+    "event": "this_documentation_bundle_local_gates_and_exact_source_publication",
+    "outcome": null,
+    "brier_score": null,
+    "runtime_prediction": false
+  },
+  "open_gates": [
+    "new_candidate_environment_manifest",
+    "real_ReleaseAuthority_issuer",
+    "all_reader_drain",
+    "production_controller_root_wiring",
+    "authenticated_collectors_and_complete_service_catalogs",
+    "signed_ingress_and_effect_consumers",
+    "operational_switch_and_rollback",
+    "OI03_to_OI09_and_OI02D_acceptance",
+    "24_hour_OI08_soak",
+    "full_transitive_toolchain_closure_and_native_refinement",
+    "native_Hermes_receipt_worker_packaging_and_production_frontend_owner_attachment"
+  ],
+  "journal": "docs/journal/20261031-2048-oi02-cutover-control-and-native-source-build-journal.md",
+  "journal_url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2048-oi02-cutover-control-and-native-source-build-journal.md",
+  "task_graph": "docs/design/20261031-1908-full-hive-outstanding-task-graph.md",
+  "wiki": "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md",
+  "zk": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+  "documentation_live_parity": "PENDING_ROOT_PUBLICATION",
+  "all_nine_goal_complete": false,
+  "authority": "NONE",
+  "application_admitted": false,
+  "system_admitted": false,
+  "admitted_ev_ceiling": 93,
+  "EV94_to_EV109": "NOT_ADMITTED",
+  "new_ev_numbers": 0,
+  "canonical_capsule": {
+    "release": "var/releases/ecology/20261031-2024-0b4b73524dbdbb92ef069f1aecfdcaef1395ab6e43413fd065214c136de4d5b8",
+    "payload_sha256": "6689dba2e10910abe06d7c09694725bd2c59948bf730b65aa08249765d397b12",
+    "source_sha256": "0d0b65c48e56453cc18698ed54cbe47a4e201460863eb29e641b759d1851e4bf",
+    "files": 2317,
+    "bytes": 62819326,
+    "closure_applications": 36,
+    "otp_release": "29",
+    "erts": "17.0.5",
+    "verify_result": "PASS",
+    "receipt": "var/harness/20261031-1334-codex-hive/canonical-capsule-verify-result.json",
+    "runtime_activation": false,
+    "application_admitted": false
+  },
+  "packaged_candidate_checks": {
+    "controller_and_transport_passed": 27,
+    "controller_receipt": "var/harness/20261031-1334-codex-hive/cutover-controller/native-tests-1793478998595212-2626335.log",
+    "frontend_passed": 15,
+    "frontend_receipt": "var/harness/20261031-1334-codex-hive/packaged-symbiosis-frontend-tests.log",
+    "beams_from_new_capsule": true,
+    "native_worker_and_guardian_from_capsule": true,
+    "frontend_Hermes_worker": "EXTERNAL_CANONICAL_TEST_BINARY_NOT_PACKAGED",
+    "frontend_Hermes_worker_sha256": "848fbf26005c3f45d228ffae624472a7f533ecebba44b57bcb6175f74512f3da",
+    "scopes_not_aggregate_proof": true
+  },
+  "km_recall": {
+    "supervisor_taskgraph_query_results": 5,
+    "supervisor_transclusion_and_read_file": "SUCCESS",
+    "relay_different_query_results": 0,
+    "search_limit_argument": "NOT_EXPOSED_CAPABILITY_GAP",
+    "relay_zk_transclude_limit": 2,
+    "overall_search_failure": false
+  },
+  "documentation_gate_observations": {
+    "initial_journal_failed_checks": 2,
+    "initial_journal_total_checks": 10,
+    "initial_failure_causes": [
+      "ACH_H1_H2_identifiers_missing",
+      "recognized_uppercase_Forecast_label_missing"
+    ],
+    "final_journal_rerun": "PENDING_ROOT_FROZEN_BYTE_CHECK",
+    "diagram_documents_verified": 2,
+    "diagram_documents_unverified": 0,
+    "diagram_scope": "matching_ASCII_Mermaid_sources_only"
+  }
+}

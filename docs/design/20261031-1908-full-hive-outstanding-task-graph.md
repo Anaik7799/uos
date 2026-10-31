@@ -2,16 +2,16 @@
 
 #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #km-triad #zk-adr #zero-muda
 
-Observed 2026-10-31T19:33:08Z. Canonical Sa-plan uos/codex-handover-open-items-fractal-plan/20261031-1240: **15 tasks,4 completed,3 executing,8 available**. Available does not mean dependency-ready. Eleven tasks remain. [Self](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1908-full-hive-outstanding-task-graph.md) · [Full hive specification](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1918-full-hive-service-activation-and-checks.md) · [Planning cockpit](http://nas-1.tail55d152.ts.net:4100/planning).
+Observed 2026-10-31T20:33:29Z in the read-only active-risk task snapshot. Canonical Sa-plan uos/codex-handover-open-items-fractal-plan/20261031-1240: **15 tasks,5 completed,2 executing,8 available**. Available does not mean dependency-ready. Ten tasks remain. [Self](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1908-full-hive-outstanding-task-graph.md) · [Full hive specification](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1918-full-hive-service-activation-and-checks.md) · [Planning cockpit](http://nas-1.tail55d152.ts.net:4100/planning).
 
 ## Dependency view
 
-This is a transitive reduction for readability: omitted direct prerequisites remain enforced by Sa-plan. The original nine tasks retain their scope. Three completed supporting tasks are listed below rather than expanding the dependency drawing. RUN means executing, WAIT means available with unfinished dependencies. These are task states, not runtime readiness badges.
+This is a transitive reduction for readability: omitted direct prerequisites remain enforced by Sa-plan. The original nine tasks retain their scope. Completed supporting tasks are listed below; OI02C remains drawn to show its completed prerequisite. RUN means executing, WAIT means available with unfinished dependencies. These are task states, not runtime readiness badges.
 
 ```ascii
 [OI01 Done] --> [OI02 Capsule RUN]
 [OI01 Done] --> [OI02B Checks RUN]
-[OI01 Done] --> [OI02C DAG Repair RUN]
+[OI01 Done] --> [OI02C DAG Repair Done]
 [OI02 Capsule RUN] --> [OI03 Routes WAIT]
 [OI02 Capsule RUN] --> [OI04 Toolchains WAIT]
 [OI02 Capsule RUN] --> [OI05 Aliases WAIT]
@@ -23,7 +23,7 @@ This is a transitive reduction for readability: omitted direct prerequisites rem
 [OI04 Toolchains WAIT] --> [OI02D Full Hive WAIT]
 [OI06 Telegram WAIT] --> [OI02D Full Hive WAIT]
 [OI09 Native KM WAIT] --> [OI02D Full Hive WAIT]
-[OI02C DAG Repair RUN] --> [OI02D Full Hive WAIT]
+[OI02C DAG Repair Done] --> [OI02D Full Hive WAIT]
 [OI02D Full Hive WAIT] --> [OI08 Soak And Dossier WAIT]
 ```
 
@@ -31,7 +31,7 @@ This is a transitive reduction for readability: omitted direct prerequisites rem
 flowchart TD
  O1[OI01 Done] --> O2[OI02 Capsule RUN]
  O1 --> B[OI02B Checks RUN]
- O1 --> C[OI02C DAG Repair RUN]
+ O1 --> C[OI02C DAG Repair Done]
  O2 --> O3[OI03 Routes WAIT]
  O2 --> O4[OI04 Toolchains WAIT]
  O2 --> O5[OI05 Aliases WAIT]
@@ -51,7 +51,7 @@ flowchart TD
 |---|---|
 | OI02 | Candidate-bound capsule/configuration cutover, complete physical-target audit, reader fencing, independently authorized release and tested rollback |
 | OI02B | All-agent authenticated collectors/catalog, monitor ownership, durable sink integration, effect consumers, cost/dashboard coverage and recovery |
-| OI02C | Tested additive prerequisite API, exact live OI09/full-hive-to-soak edges, durable audit, independent source acceptance and publication |
+| OI02C | COMPLETED: tested additive prerequisite API, exact live OI09/full-hive-to-soak edges, durable audit, independent source acceptance and publication; no runtime activation implied |
 | OI03 | Actual 101-route backend fidelity and truthful capability states |
 | OI04 | Repository-pinned offline Nix/Lean4 formal toolchain reservoir and actual invocations |
 | OI05 | Historical 374-link/alias disposition with semantic content and fragment checks |
@@ -61,7 +61,11 @@ flowchart TD
 | OI02D | Required canonical hive functionality and provenance-verified adaptation; supervised real services, four-agent operations, homeostasis and controlled self-evolution acceptance |
 | OI08 | Planned 24-hour four-agent chaos/soak, operational mathematical gates, recovery and 17-aspect two-key dossier |
 
-Completed: OI01 provenance dossier, OI01A observed scanner, OI01B formal gateway and OI02A OpenRouter usage reconciliation. OI01 completion does not admit EV94..109. OI02A retains unknown provider charges explicitly.
+Completed: OI01 provenance dossier, OI01A observed scanner, OI01B formal gateway, OI02A OpenRouter usage reconciliation and OI02C dependency repair. OI01 completion does not admit EV94..109. OI02A retains unknown provider charges explicitly.
+
+### 20261031-2048 source integration observation
+
+[Control/build journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2048-oi02-cutover-control-and-native-source-build-journal.md) · [16-file source packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-2048-oi02-cutover-control-and-native-source-build.json). Source a09044f4136f142c9644be13ce706c4dd9aea62e is published main==origin. A canonical development capsule was staged/verified; separate packaged controller27 and frontend15 test scopes passed. The frontend's canonical Hermes test worker is external to that capsule. Complete compiler/runtime closure, actual release issuer, all-reader drain, operational switch, authenticated full service coverage and production adoption remain UNVERIFIED. OI02/B and the overall nine-task objective remain open.
 
 The full direct dependency sets of the two final stages are: OI02D requires OI02,OI02C,OI03,OI04,OI05,OI06,OI07,OI09; OI08 requires OI02D,OI03,OI04,OI05,OI07,OI09. OI02B runtime acceptance remains open and its components are integrated during the full-hive work; no invented B-to-D execution edge or self-authorizing completion is implied.
 
@@ -119,7 +123,7 @@ Current disjoint development lanes cover supervision/integration, dependency rep
 <details><summary>Domain 5 — Governance and Jujutsu</summary>
 
 - [ ] CHK-17-SOV — Runtime release and two-key acceptance outstanding.
-- [ ] CHK-18-JJ — Final source publication receipt pending.
+- [x] CHK-18-JJ — Source a090 publication observed; updated documentation publication remains pending.
 
 </details>
 <details><summary>Domain 6 — Provenance extension</summary>
