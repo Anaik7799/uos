@@ -1,0 +1,65 @@
+{
+  "schema": "uos.openrouter-usage-reconciliation.v1",
+  "observed_at": "2026-10-31T18:10:54Z",
+  "status": "SCOPED_DEVELOPMENT_TESTED_RUNTIME_NOT_ADMITTED",
+  "authority": "NONE",
+  "implementation_code_revision": "7beb9340e85224108a639989c358aca2144e6f35",
+  "implementation_change": "osmkpnntpsmrkllutorzoovosovzmmxz",
+  "plan": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "task": "OI02A_OPENROUTER_USAGE_RECONCILIATION",
+  "attempt": 1,
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "SYSTEM_ADMITTED": false,
+  "tests_passed": 37,
+  "source_compiled_byte_equality": true,
+  "sources": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_usage.gleam",
+      "sha256": "c557de05e7b34dbe1b946342e15dc05e1c6a441a34f2f1f22ca16520b76c983d",
+      "bytes": 10323
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_usage_cli.gleam",
+      "sha256": "56f4769026b76ef8f5e6cb3a8522b2ae97dd617f96191e5c8e501e3b0427939d",
+      "bytes": 1001
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_openrouter_usage_ffi.erl",
+      "sha256": "68542600e1a990d84dda8bba7ab80e4f71a64e6186c5da15eb08f52091393b37",
+      "bytes": 2766
+    },
+    {
+      "path": "apps/uos_swarm/test/openrouter_usage_test.gleam",
+      "sha256": "88409925fb5a7a60fa987a1b3503edda81e7c9d4069bd794db6f7214dd8c0f16",
+      "bytes": 10300
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor_billing.gleam",
+      "sha256": "624b1a12282b35f133a932868592a4e4e618375b86fed3e6f19d29a42d89aaae",
+      "bytes": 14425
+    },
+    {
+      "path": "apps/uos_swarm/src/token_monitor_billing_cli.gleam",
+      "sha256": "3e11ad032de382a0c7f9d288b7008e0e8380e54f128e3776259751921ad81534",
+      "bytes": 1030
+    },
+    {
+      "path": "apps/uos_swarm/test/token_monitor_billing_test.gleam",
+      "sha256": "737c8ee917e3dd4d9bad261a9a77b2ff0f5308790d868cf90ab636a8914c449f",
+      "bytes": 14062
+    }
+  ],
+  "provider_generation_known_calls": 12,
+  "provider_generation_unknown_calls": 2,
+  "provider_generation_subtotal_nanodollars": 55783730,
+  "sdk_estimate_subtotal_nanodollars": 51955638,
+  "native_claude_unknown_calls": 1,
+  "invoice": false,
+  "inference_dispatched": false,
+  "ledger_mutated": false,
+  "daily_budget_policy_changed": false,
+  "decision": "HOLD_UNKNOWN_USAGE",
+  "journal": "docs/journal/20261031-1854-openrouter-usage-reconciliation-journal.md",
+  "runtime_activation": "UNRUN"
+}

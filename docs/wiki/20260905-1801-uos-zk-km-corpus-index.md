@@ -556,3 +556,8 @@ Development evidence for Sa-plan uos/hive-agent-control-math/20261031-1431: [mat
 ## 20261031-1756 — OI02 recoverable cutover foundations
 
 [Development journal and framework research](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1756-oi02-recoverable-cutover-foundations-journal.md) · [Candidate-bound source/test packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1756-oi02-recoverable-cutover-foundations.json). Gleam policy/catalog, strict private pin editing and bounded native file primitives:3083 repeated native checks/58 process-crash scenarios,16 Gleam tests,82 pin checks,9 inert-backend Mojo argv checks and10 Quint controls with4000 seeded traces. Three-agent peak width is measured; tenfold speedup is not. OI02 remains executing; actual release issuer/ingress, home audit, reader barrier and live activation remain unrun. Reciprocal journal links bind this index and the ZK MOC; EV93 ceiling and NOT_ADMITTED range unchanged.
+
+
+### 20261031-1854 — OpenRouter cost provenance
+
+[Usage reconciliation journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1854-openrouter-usage-reconciliation-journal.md) and [source-bound packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1854-openrouter-usage-reconciliation.json). Thirty-seven tests PASS; twelve provider generations observed, two generation-less requests unresolved. Account balances stay private. Scoped development only; no budget change or system admission.

@@ -339,3 +339,15 @@ index = "governance/planning/20261031-1756-oi02-recoverable-cutover-foundations.
 model = "formal/quint/ecology_cutover.qnt"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+[[knowledge_group]]
+id = "OPENROUTER-USAGE-20261031-1854"
+plan = "uos/codex-handover-open-items-fractal-plan/20261031-1240"
+task = "OI02A_OPENROUTER_USAGE_RECONCILIATION"
+state = "development"
+admitted = false
+journal = "docs/journal/20261031-1854-openrouter-usage-reconciliation-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1854-openrouter-usage-reconciliation-journal.md"
+index = "governance/planning/20261031-1854-openrouter-usage-reconciliation.json"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
