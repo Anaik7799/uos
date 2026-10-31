@@ -4,10 +4,16 @@
  (modules km_chain)
  (libraries cryptokit sqlite3 unix))
 
+(library
+ (name km_adjudication_core)
+ (wrapped false)
+ (modules km_adjudication)
+ (libraries yojson))
+
 (executable
  (name km_gate)
  (modules km_corpus km_metrics km_ooda km_rete km_ev km_merge km_gate)
- (libraries km_chain_core yojson unix cryptokit sqlite3 str))
+ (libraries km_chain_core km_adjudication_core km_forensic_scan_core km_forensic_schema_core yojson unix cryptokit sqlite3 str))
 
 (test
  (name km_chain_test)
@@ -18,3 +24,31 @@
  (name recovery_verify)
  (modules recovery_verify)
  (libraries km_chain_core yojson unix sqlite3))
+
+(test
+ (name km_adjudication_test)
+ (modules km_adjudication_test)
+ (deps km_adjudication.ml)
+ (libraries km_adjudication_core yojson))
+
+(library
+ (name km_forensic_scan_core)
+ (wrapped false)
+ (modules km_forensic_scan)
+ (libraries bos unix yojson cryptokit str mtime.clock.os))
+
+(test
+ (name km_forensic_scan_test)
+ (modules km_forensic_scan_test)
+ (libraries km_forensic_scan_core bos unix yojson))
+
+(library
+ (name km_forensic_schema_core)
+ (wrapped false)
+ (modules km_forensic_schema)
+ (libraries km_adjudication_core km_forensic_scan_core yojson))
+
+(test
+ (name km_forensic_schema_test)
+ (modules km_forensic_schema_test)
+ (libraries km_forensic_schema_core km_forensic_scan_core bos unix yojson))

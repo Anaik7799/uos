@@ -308,3 +308,19 @@ journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1
 index = "governance/planning/20261031-1621-requested-native-math-reviews-and-budget-hardening.json"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+[[knowledge_group]]
+id = "OI01-OBSERVED-PROVENANCE-20261031-1658"
+plan = "uos/codex-handover-open-items-fractal-plan/20261031-1240"
+task = "OI01_EV94_109_SOVEREIGN_AUDIT"
+state = "development"
+admitted = false
+design = "docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md"
+journal = "docs/journal/20261031-1658-oi01-observed-provenance-dossier-and-formal-gateway-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1658-oi01-observed-provenance-dossier-and-formal-gateway-journal.md"
+index = "governance/planning/20261031-1658-oi01-observed-provenance-verification.json"
+ledger = "governance/provenance/20261031-1658-ev94-109-observed-adjudication-ledger.json"
+model = "formal/lean/ProvenanceAdjudication.lean"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

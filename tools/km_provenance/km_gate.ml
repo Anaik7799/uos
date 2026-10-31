@@ -22,6 +22,8 @@
      km_gate --merge-selftest               the merge-readiness laws
      km_gate --metrics-selftest             the fractal-layer entropy laws
      km_gate --merge-hold BRANCH REASON CONDITION   record a hold as data
+     km_gate --adjudication-report          REPORT_ONLY EV94..109 caller-assertion report;
+                                            bounded stdin (262144 bytes), no path/SQLite effects
 *)
 
 open Km_corpus
@@ -814,6 +816,55 @@ let merge_hold branch reason condition =
     print_json (`Assoc ["recorded", `Bool true; "branch", `String branch]);
     0)
 
+(* --adjudication-report: bounded stdin only, through the pure Km_adjudication core.
+   REPORT_ONLY; no path reads, no SQLite, no admission. Reads at most
+   max_input + 1 bytes: the extra byte is a sentinel that refuses oversize input. *)
+let adjudication_report ?(observed=false) () =
+  let max_input = 262144 in
+  let hold msg =
+    print_endline (Yojson.Safe.to_string (`Assoc [
+      "status", `String "HOLD"; "authority", `String "NONE";
+      "rule", `String "KMP-ADJUDICATION-INVALID"; "detail", `String msg;
+      "admitted_ev_ceiling", `Int 93; "application_admitted", `Bool false;
+      "system_admitted", `Bool false; "readback_verified", `Bool false]));
+    2 in
+  set_binary_mode_in stdin true;
+  let buf = Buffer.create 4096 in
+  let chunk = Bytes.create 4096 in
+  let rec fill () =
+    let want = min 4096 (max_input + 1 - Buffer.length buf) in
+    if want > 0 then
+      match input stdin chunk 0 want with
+      | 0 -> ()
+      | n -> Buffer.add_subbytes buf chunk 0 n; fill () in
+  match (try fill (); Ok () with Sys_error msg -> Error ("stdin read failed: " ^ msg)) with
+  | Error msg -> hold msg
+  | Ok () ->
+    if Buffer.length buf > max_input then hold "input exceeds 262144 bytes"
+    else
+    let result = if observed then
+      Result.map Km_forensic_schema.summary_to_json
+        (Km_forensic_schema.validate (Buffer.contents buf))
+    else Km_adjudication.Adjudicator.adjudicate (Buffer.contents buf) in
+    match result with
+    | Ok report -> print_endline (Yojson.Safe.to_string report); 0
+    | Error msg -> hold msg
+
+(* Local observations only. No status, journal, database or VCS mutation.
+   A generated HOLD dossier is not an admission/whole-task verification result. *)
+let adjudication_scan () =
+  let report = Km_forensic_scan.scan ~root:(Sys.getcwd ()) in
+  let json = Km_forensic_scan.to_json report in
+  match Km_forensic_schema.validate (Yojson.Safe.to_string json) with
+  | Ok _ ->
+      print_endline (Yojson.Safe.to_string json);
+      (match report.candidate with None -> 2 | Some _ -> 0)
+  | Error msg ->
+      print_endline (Yojson.Safe.to_string (`Assoc ["status", `String "HOLD";
+        "authority", `String "NONE"; "detail", `String ("generated observed schema: " ^ msg);
+        "admitted_ev_ceiling", `Int 93; "application_admitted", `Bool false;
+        "system_admitted", `Bool false; "readback_verified", `Bool false])); 2
+
 let () =
   let fail msg =
     print_json (`Assoc ["status", `String "HOLD"; "authority", `String "NONE";
@@ -832,6 +883,17 @@ let () =
     | [_; "--ev-admission"; rev] -> exit (ev_admission rev)
     | [_; "--ev-selftest"] -> exit (ev_selftest ())
     | [_; "--merge-selftest"] -> exit (merge_selftest ())
+    | [_; "--adjudication-report"] -> exit (adjudication_report ())
+    | [_; "--adjudication-report"; "--scan"] -> exit (adjudication_scan ())
+    | [_; "--adjudication-report"; "--validate-observed"] ->
+        exit (adjudication_report ~observed:true ())
+    | _ :: "--adjudication-report" :: _ ->
+        print_json (`Assoc ["status", `String "HOLD"; "authority", `String "NONE";
+          "rule", `String "KMP-ADJUDICATION-INVALID";
+          "detail", `String "--adjudication-report accepts bounded stdin, --scan or --validate-observed";
+          "admitted_ev_ceiling", `Int 93; "application_admitted", `Bool false;
+          "system_admitted", `Bool false; "readback_verified", `Bool false]);
+        exit 2
     | [_; "--metrics-selftest"] -> exit (metrics_selftest ())
     | [_; "--merge-hold"; b; r; c] -> exit (merge_hold b r c)
     | [_; "--ev-record"; n; rev; rt; fm; by] ->

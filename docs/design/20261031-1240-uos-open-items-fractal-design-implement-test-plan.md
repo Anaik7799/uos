@@ -13,6 +13,8 @@
 
 ## 1. Paired Architecture & Dependency Topology (`SC-DIAGRAM-001`)
 
+2026-10-31 continuation evidence: OI01 now has an [observed sixteen-claim dossier](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1658-oi01-observed-provenance-verification.json), [source-bound verification packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1658-oi01-observed-provenance-verification.json) and [13-section journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1658-oi01-observed-provenance-dossier-and-formal-gateway-journal.md). The canonical portfolio retains the original nine top-level tasks and adds two OI01 subtasks, for eleven total. The dated registration statements below remain historical. Dossier completion is distinct from sovereign adjudication: ceiling93 and NOT_ADMITTED history remain unchanged. The timestamped observed ledger supersedes the future-date example filename in OI01 without rewriting historical source evidence.
+
 ```text
 [OI02_Atomic11TargetCutover] --> [OI07_EffectTimeKmRiskFencing]
 [OI01_Ev94To109SovereignAudit] --> [OI02_Atomic11TargetCutover]
