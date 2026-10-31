@@ -99,7 +99,7 @@ let specialized_pages = [
 (* REST Endpoints *)
 let api_endpoints = [
   "/api/health";
-  "/api/v1/reload";
+  "/api/v1/system/snapshot";
   "/ag-ui/events";
   "/api/v1/dashboard";
   "/api/v1/pages";
@@ -118,7 +118,7 @@ let doc_endpoints = [
   "/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md";
   "/api/v1/km/catalog"; "/api/v1/km/verify";
   "/files/AGENTS.md";
-  "/docs/architecture/";
+  "/docs/design";
 ]
 
 (* Extract all href="..." and href='...' from HTML buffer *)

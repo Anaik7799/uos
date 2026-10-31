@@ -57,7 +57,7 @@ import cepaf_gleam/symbiosis/tensor as symbiosis_tensor
 import cepaf_gleam/symbiosis/types as symbiosis_types
 import cepaf_gleam/testing/tri_language_orchestrator
 import cepaf_gleam/ui/domain.{
-  type HealthStatus, Agents, Bicameral, Biomorphic, Bridge, Cockpit,
+  type HealthStatus, Agents, Auth, Bicameral, Biomorphic, Bridge, Cockpit,
   ComponentDemo, Config, Critical, Dashboard, Database, Degraded, Evolution,
   Federation, Git, HealthGrid, Healthy, Holon, HomeostasisPage, Immune,
   Integrity, Kms, Knowledge, Mcp, Metabolic, Planning, PlanningDashboard, Podman,
@@ -1566,7 +1566,7 @@ fn pages_json() -> String {
     Substrate, Metabolic, Podman, Mcp, Kms, Telemetry, Federation, HealthGrid,
     Prajna, Agents, Holon, Config, Git, Database, Bridge, Smriti,
     PlanningDashboard, Integrity, Evolution, Biomorphic, HomeostasisPage,
-    Bicameral, Singularity, ComponentDemo,
+    Bicameral, Singularity, ComponentDemo, Auth,
   ]
   json.object([
     #(
@@ -3769,6 +3769,21 @@ fn route_html(path: String) -> String {
         "Component Demo",
         "components",
         guard("components", page_views.component_demo_view),
+      )
+    "/auth" ->
+      shell.render_page(
+        "Authentication & RBAC Boundary",
+        "auth",
+        html.div([attribute.class("card")], [
+          html.h2([], [
+            html.text("Authentication & RBAC Boundary (SC-SEC-001)"),
+          ]),
+          html.p([], [
+            html.text(
+              "Fail-closed Bearer and FerrisKey OIDC authentication middleware active on http://nas-1.tail55d152.ts.net:4100. Mutating HTTP endpoints require verified authorization; OIDC mode never downgrades to static administrator.",
+            ),
+          ]),
+        ]),
       )
     "/sciviz" ->
       shell.render_page("SciViz Cockpit", "sciviz", sciviz_cockpit.view())
