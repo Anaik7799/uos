@@ -1,5 +1,6 @@
 //// Given/When/Then regression scenarios for bounded MCP resilience.
 
+import cepaf_gleam/mcp/adapters/canonical_planning_store as canonical
 import cepaf_gleam/mcp/adapters/planning_read
 import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/http_auth
@@ -28,6 +29,33 @@ import gleeunit/should
 import simplifile
 
 const root = "/home/an/NAS-setup/uos"
+
+pub const sqlite_fixture_root = "/tmp/uos-v01-eunit-sqlite-toolchain"
+
+/// Isolated EUnit workspace backed by an already-realized Nix output. This
+/// never changes or substitutes for the real workspace's configured profile.
+pub fn fixture_sqlite_binary() -> String {
+  install_sqlite_fixture_toolchain(sqlite_fixture_root)
+}
+
+pub fn install_sqlite_fixture_toolchain(workspace: String) -> String {
+  let directory = workspace <> "/toolchains/nix-profile/bin"
+  let bin = directory <> "/sqlite3"
+  let assert Ok(_) = simplifile.create_directory_all(directory)
+  case simplifile.is_file(bin) {
+    Ok(True) -> Nil
+    _ -> {
+      let assert Ok(_) =
+        simplifile.create_symlink(
+          "/nix/store/6slrxch2idk9v1hz54yf8bw8sknpxwhc-sqlite-3.53.3-bin/bin/sqlite3",
+          bin,
+        )
+      Nil
+    }
+  }
+  let assert Some(resolved) = canonical.resolve_sqlite_binary(workspace)
+  resolved
+}
 
 @external(erlang, "erlang", "exit")
 fn terminate(pid: process.Pid, reason: atom.Atom) -> Bool
@@ -161,10 +189,14 @@ fn monotonic_ms(unit: atom.Atom) -> Int
 fn wait_owner_ready(deadline: Int) -> Bool {
   case gateway.is_running() {
     True -> True
-    False -> case monotonic_ms(atom.create("millisecond")) >= deadline {
-      True -> False
-      False -> { sleep(2) wait_owner_ready(deadline) }
-    }
+    False ->
+      case monotonic_ms(atom.create("millisecond")) >= deadline {
+        True -> False
+        False -> {
+          sleep(2)
+          wait_owner_ready(deadline)
+        }
+      }
   }
 }
 
@@ -1322,28 +1354,28 @@ pub fn given_mirrored_replay_with_foreign_candidate_when_rehydrated_then_fail_cl
 }
 
 pub fn given_short_sqlite_writer_lock_when_planning_prefetched_then_waits_within_budget_test() {
-  let fixture =
-    root <> "/var/harness/20261030-2325-mcp-resilience/sqlite-busy-fixture"
+  let fixture = "/tmp/uos-v01-eunit-sqlite-busy-fixture"
   let db = fixture <> "/var/sa-plan/uos.sqlite3"
   let marker = fixture <> "/writer-ready"
   let assert Ok(Nil) =
     simplifile.create_directory_all(fixture <> "/var/sa-plan")
   let _ = simplifile.delete(marker)
   let _ = simplifile.delete(db)
+  let bin = install_sqlite_fixture_toolchain(fixture)
   let schema =
     "CREATE TABLE sa_plan_task(plan_id TEXT,id TEXT,title TEXT,state TEXT,worker TEXT,attempt INTEGER); INSERT INTO sa_plan_task VALUES('20261029-1913-mcp-server-completion','fixture','fixture only, not execution authority','executing','fixture-worker',1);"
-  bounded_command("/usr/bin/sqlite3", [db, schema], fixture, 3000)
+  bounded_command(bin, ["-init", "/dev/null", db, schema], fixture, 3000)
   |> should.equal(Ok(#(0, "")))
   let finished = process.new_subject()
   let _ =
     process.spawn_unlinked(fn() {
       let script =
-        "{ printf 'BEGIN EXCLUSIVE;\\n.shell touch %s\\n' \"$2\"; sleep 0.25; printf 'COMMIT;\\n'; } | /usr/bin/sqlite3 \"$1\""
+        "{ printf 'BEGIN EXCLUSIVE;\\n.shell touch %s\\n' \"$2\"; sleep 0.25; printf 'COMMIT;\\n'; } | \"$3\" -init /dev/null \"$1\""
       process.send(
         finished,
         bounded_command(
           "/bin/bash",
-          ["-c", script, "fixture", db, marker],
+          ["-c", script, "fixture", db, marker, bin],
           fixture,
           3000,
         ),
@@ -1355,7 +1387,14 @@ pub fn given_short_sqlite_writer_lock_when_planning_prefetched_then_waits_within
   let assert Ok(g) = supervisor.start_supervised_gateway()
   let state = gateway.new_state(fixture, pool.ledger.candidate, pool, g)
   let observed = case state.backends.planning_read {
-    planning_read.AvailableStore(_, [_]) -> True
+    planning_read.MultiPlanStore(_, plans, [row], counts, _, _, False) ->
+      plans == ["20261029-1913-mcp-server-completion"]
+      && row.plan_id == "20261029-1913-mcp-server-completion"
+      && row.task_id == "fixture"
+      && row.state == "executing"
+      && row.worker == "fixture-worker"
+      && row.attempt == 1
+      && dict.get(counts, row.plan_id) == Ok(#(1, 0, 1, 0))
     _ -> False
   }
   process.receive(finished, 3000) |> should.equal(Ok(Ok(#(0, ""))))
@@ -1363,6 +1402,7 @@ pub fn given_short_sqlite_writer_lock_when_planning_prefetched_then_waits_within
   let _ = terminate(g.supervisor_pid, atom.create("kill"))
   let assert Ok(Nil) = simplifile.delete(marker)
   let assert Ok(Nil) = simplifile.delete(db)
+  let _ = simplifile.delete_all([fixture])
   observed |> should.be_true
 }
 
