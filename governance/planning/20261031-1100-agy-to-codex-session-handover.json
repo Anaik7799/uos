@@ -1,6 +1,6 @@
 {
   "schema": "uos.session-handover.v1",
-  "timestamp_utc": "2026-10-31T11:15:17Z",
+  "timestamp_utc": "2026-10-31T13:04:00Z",
   "from_agent": "AGY",
   "to_agent": "Codex",
   "supporting_agents": [
@@ -62,20 +62,20 @@
     {
       "date": "2026-10-30",
       "revision": "fce0200638d3..2ccd20b09a44",
-      "sa_plan": "T00–T24; 25/25 complete (historical)",
-      "summary": "Unified 101-route Gleam/OTP 29 MCP Gateway, Waves 1–5: registry, principals, admission, workers, receipts; 65 tools + resources/prompts = 101 routes; stdio, Zenoh and Streamable-HTTP :4100/mcp; 535-cell 5-client matrix; 7/7 formal/oracle gates; 143-workspace disposition; AK-47 4-agent symbiosis ADR/Wiki/SOP."
+      "sa_plan": "T00\u2013T24; 25/25 complete (historical)",
+      "summary": "Unified 101-route Gleam/OTP 29 MCP Gateway, Waves 1\u20135: registry, principals, admission, workers, receipts; 65 tools + resources/prompts = 101 routes; stdio, Zenoh and Streamable-HTTP :4100/mcp; 535-cell 5-client matrix; 7/7 formal/oracle gates; 143-workspace disposition; AK-47 4-agent symbiosis ADR/Wiki/SOP."
     },
     {
       "date": "2026-10-30",
       "revision": "6cbc7c53bd67; 981a668e8395",
-      "sa_plan": "C01–C04; S01–S04",
+      "sa_plan": "C01\u2013C04; S01\u2013S04",
       "summary": "Live OTP 29 service cutover and AGY, Codex, Claude, Pi 3-transport MCP symbiosis closure."
     },
     {
       "date": "2026-10-30",
       "revision": "092337be02b0",
       "sa_plan": "Formal impact checkpoint",
-      "summary": "Lean 4, Quint and Z3 impact proofs (formal/z3/20261030-2215-mcp-symbiosis-impact.smt2), M1–M4 operational math receipts and Claude Fable checkpoint audit."
+      "summary": "Lean 4, Quint and Z3 impact proofs (formal/z3/20261030-2215-mcp-symbiosis-impact.smt2), M1\u2013M4 operational math receipts and Claude Fable checkpoint audit."
     },
     {
       "date": "2026-10-31",
@@ -92,9 +92,9 @@
     },
     {
       "date": "2026-10-31",
-      "revision": "wnsoqqup",
-      "sa_plan": "uos/tailscale-4100-always-fresh-km-and-verifiers/20261031-1018; T01 executing, T02 acceptance/cutover pending",
-      "summary": "Unified Mainline Closure candidate: Always-Fresh Tailscale :4100 #km-triad, INV-FRESH-4100-01, live_corpus.gleam, no-store, X-UOS-Content-SHA256, HTTP 403 allowlist, sw.js v2 bypass, DNS/Soft-404 fail-closed link_tracker_verifier.exe. Never-Down 4-Agent MCP Brain Memory: INV-MCP-KM-BRAIN-01, SC-MCP-KM-BRAIN-001, 13-root prefetch_brain_memory plus allowlisted local skills, brain_memory_health_metrics across 11 operational/POODAVR tools, relevance-ranked <= 2,400-grapheme excerpts, dereferenceable resource_uri, Pure-Projection Replay Equivalence. Formal artifacts: KmTriadAlwaysFreshMemory.lean, km_triad_mcp_brain_memory.qnt, formal/smt/km_triad_freshness_allowlist.smt2. Planned 14-target atomic capsule cutover: 4 tracked workspace dotfiles + 10 systemd/release/home targets; no cutover performed by this micro-fix."
+      "revision": "209a3d5aa7ef..69f468c84eef (main == main@origin)",
+      "sa_plan": "uos/tailscale-4100-always-fresh-km-and-verifiers/20261031-1018; 2/2 completed",
+      "summary": "Completed 14-target sealed OTP 29.0.5 capsule cutover with mainline closure (main == main@origin); live :4100 verification passed 69/69 HTTP 200 OK with canonical_broken_transclusions = 0; canonical root EUnit sweep passed 350/350; independent Claude and Codex post-cutover sign-offs both PASS."
     }
   ],
   "two_day_journals": [
@@ -184,5 +184,36 @@
       "agent": "Pi",
       "target": "~/.pi/agent/mcp-adapter.json"
     }
+  ],
+  "single_consolidated_handover": true,
+  "active_sealed_capsule": {
+    "capsule_id": "20261031-1214-83a69c7f642f743f8547bea1ba79f951f8353bf593b7af22ccf8e59aabef0fe3",
+    "candidate_sha256": "83a69c7f642f743f8547bea1ba79f951f8353bf593b7af22ccf8e59aabef0fe3",
+    "payload_sha256": "eea72d3f5e34d6fa5ad66a8ca1d80758965edd2af525299ffd7539213e4d04bc",
+    "source_sha256": "583658be80824dff71d132395d3414384d1b5f7ee75716b144e2948499c6fc4a",
+    "pinned_targets_verified": 14
+  },
+  "live_4100_verification": {
+    "probed_endpoints_passed": 69,
+    "probed_endpoints_total": 69,
+    "http_failures": 0,
+    "scc_count": 1,
+    "canonical_broken_transclusions": 0,
+    "historical_broken_transclusions": 163,
+    "zero_staleness_sha256_parity": true,
+    "security_403_verified": true,
+    "hard_404_verified": true
+  },
+  "independent_post_cutover_signoffs": {
+    "codex": "CODEX_POST_CUTOVER_MCP_VERDICT: PASS",
+    "claude": {
+      "v01_verdict": "PASS",
+      "t02_verdict": "PASS",
+      "overall_verdict": "PASS"
+    }
+  },
+  "completed_sa_plan_portfolios": [
+    "uos/mcp-canonical-completion/20261031-0327-v2 (6/6 completed)",
+    "uos/tailscale-4100-always-fresh-km-and-verifiers/20261031-1018 (2/2 completed)"
   ]
 }
