@@ -552,7 +552,7 @@
     "historical_broken_transclusions": 163,
     "canonical_chain_intact": true
   },
-  "integration_status": "CANONICAL_WORKSPACE_SOURCE_READY",
+  "integration_status": "SOURCE_MERGED_AND_PUSHED",
   "live_delivery": {
     "published_allowed_files": [
       {
@@ -614,10 +614,32 @@
     "provider-route pricing reconciliation",
     "original nine handover tasks",
     "MCP direct design expansion filename false-positive",
-    "raw SMT extension delivery"
+    "raw SMT extension delivery",
+    "163 historical link/transclusion defects tracked separately; canonical chain verified"
   ],
   "references": {
     "design": "docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md",
     "journal": "docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md"
+  },
+  "task_closure": {
+    "observed_at": "2026-10-31T15:11:04Z",
+    "total": 3,
+    "completed": 3,
+    "scope": "report-only mathematical verification and read-only monitor development",
+    "task_ids": [
+      "M01_CONTROL_SAFETY",
+      "M02_TOKEN_MONITOR",
+      "M03_METHOD_COVERAGE"
+    ]
+  },
+  "integration": {
+    "verified_source_revision": "5792369f1d6011221be1ee9728d211fed6da2d5f",
+    "origin_readback_verified": true,
+    "current_followup": "metadata closure only; source hashes unchanged"
+  },
+  "source_finalization": {
+    "task_id": "M04_SOURCE_CLOSURE",
+    "scope": "source publication and metadata only",
+    "state": "SOURCE_PUBLICATION_READY"
   }
 }
