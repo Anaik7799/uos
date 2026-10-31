@@ -13,6 +13,7 @@ let max_input_bytes = 16_384
 let max_body_bytes = 65_536
 let max_tokens = 4096
 let template_tokens = 2048
+let max_ledger_bytes = 32*1024*1024
 
 type error = Invalid_request of string | Exhausted | Duplicate_call_id
   | Clock_rollback | Invalid_clock | Missing_ledger | Corrupt_ledger
@@ -29,6 +30,7 @@ let error_label = function
 let ceilings = [
   "z-ai/glm-5.3",(1400,4400);
   "moonshotai/kimi-k3",(3000,15000);
+  "google/gemini-4-argon",(4000,20000);
   "deepseek/deepseek-v4-pro-0813",(1320,3960);
   "deepseek/deepseek-v4-flash-0731",(65,180);
   "google/gemma-4-31b-it",(90,340);
@@ -143,8 +145,14 @@ let oracle_selftest () =
   List.iter(fun(id,tokens,input,body)->match Request.make ~call_id:id ~model:"z-ai/glm-5.3" ~max_tokens:tokens ~input_bytes:input ~body_bytes:body with
     | Error(Invalid_request _)->()|_->failwith "B9 smart constructor accepted invalid input")bad_cases;
   if Request.worst_case(fixture "worst")<>116_736_000L then failwith "price arithmetic";
+  let argon=get_ok(Request.make ~call_id:"argon-max" ~model:"google/gemini-4-argon"
+    ~max_tokens:4096 ~input_bytes:16384 ~body_bytes:20000) in
+  if Request.worst_case argon<>155_648_000L then failwith "Argon price arithmetic";
+  List.iter(fun model->match Request.make ~call_id:"argon-alias" ~model ~max_tokens:512 ~input_bytes:1 ~body_bytes:2 with
+    | Error(Invalid_request _)->()|_->failwith "Argon alias admitted")
+    ["gemini-4-argon";"google/gemini-4-argon:free"];
   `Assoc["status",`String"PASS";"interpretation",`String"immutable_event_oracle";
-    "checks",`Int(count+List.length bad_cases+1);"network_calls",`Int 0]
+    "checks",`Int(count+List.length bad_cases+4);"network_calls",`Int 0]
 
 exception Budget_error of error
 let fail error=raise(Budget_error error)
@@ -174,10 +182,10 @@ let db_int = function Sqlite3.Data.INT n->n|_->fail Corrupt_ledger
 let db_text = function Sqlite3.Data.TEXT s->s|_->fail Corrupt_ledger
 
 let quoted value="'"^value^"'" (* Only the finite source-owned model constants use this. *)
-let price_case side="CASE model "^String.concat " "(List.map(fun(model,prices)->"WHEN "^quoted model^" THEN "^string_of_int(side prices))ceilings)^" ELSE -1 END"
-let schema = [
+let price_case prices side="CASE model "^String.concat " "(List.map(fun(model,rates)->"WHEN "^quoted model^" THEN "^string_of_int(side rates))prices)^" ELSE -1 END"
+let schema_for prices = [
   "budget_meta","CREATE TABLE budget_meta (id INTEGER PRIMARY KEY CHECK(id=1), version INTEGER NOT NULL CHECK(version=1), initialized_us INTEGER NOT NULL CHECK(initialized_us>=0 AND initialized_us<=8000000000000000), daily_limit_nd INTEGER NOT NULL CHECK(daily_limit_nd=10000000000), reservation_nd INTEGER NOT NULL CHECK(reservation_nd=250000000)) STRICT";
-  "reservations","CREATE TABLE reservations (call_id TEXT PRIMARY KEY NOT NULL CHECK(length(call_id)>=1 AND length(call_id)<=128 AND call_id NOT GLOB '*[^a-zA-Z0-9._:-]*' AND instr(call_id,char(0))=0), utc_day TEXT NOT NULL CHECK(length(utc_day)=10), observed_us INTEGER NOT NULL CHECK(observed_us>=0 AND observed_us<=8000000000000000), model TEXT NOT NULL CHECK(model IN ("^String.concat ","(List.map(fun(model,_)->quoted model)ceilings)^")), max_tokens INTEGER NOT NULL CHECK(max_tokens>=1 AND max_tokens<=4096), input_bytes INTEGER NOT NULL CHECK(input_bytes>=0 AND input_bytes<=1048576), body_bytes INTEGER NOT NULL CHECK(body_bytes>=1 AND body_bytes>=input_bytes AND body_bytes<=4194304), worst_case_nd INTEGER NOT NULL CHECK(worst_case_nd>=0 AND worst_case_nd<=250000000), amount_nd INTEGER NOT NULL CHECK(amount_nd=250000000), CHECK(utc_day IS strftime('%Y-%m-%d',observed_us/1000000,'unixepoch')), CHECK(worst_case_nd=(input_bytes+2048)*("^price_case fst^")+max_tokens*("^price_case snd^"))) STRICT";
+  "reservations","CREATE TABLE reservations (call_id TEXT PRIMARY KEY NOT NULL CHECK(length(call_id)>=1 AND length(call_id)<=128 AND call_id NOT GLOB '*[^a-zA-Z0-9._:-]*' AND instr(call_id,char(0))=0), utc_day TEXT NOT NULL CHECK(length(utc_day)=10), observed_us INTEGER NOT NULL CHECK(observed_us>=0 AND observed_us<=8000000000000000), model TEXT NOT NULL CHECK(model IN ("^String.concat ","(List.map(fun(model,_)->quoted model)prices)^")), max_tokens INTEGER NOT NULL CHECK(max_tokens>=1 AND max_tokens<=4096), input_bytes INTEGER NOT NULL CHECK(input_bytes>=0 AND input_bytes<=1048576), body_bytes INTEGER NOT NULL CHECK(body_bytes>=1 AND body_bytes>=input_bytes AND body_bytes<=4194304), worst_case_nd INTEGER NOT NULL CHECK(worst_case_nd>=0 AND worst_case_nd<=250000000), amount_nd INTEGER NOT NULL CHECK(amount_nd=250000000), CHECK(utc_day IS strftime('%Y-%m-%d',observed_us/1000000,'unixepoch')), CHECK(worst_case_nd=(input_bytes+2048)*("^price_case prices fst^")+max_tokens*("^price_case prices snd^"))) STRICT";
   "reservations_day","CREATE INDEX reservations_day ON reservations(utc_day)";
   "reservations_time","CREATE INDEX reservations_time ON reservations(observed_us)";
   "meta_no_update","CREATE TRIGGER meta_no_update BEFORE UPDATE ON budget_meta BEGIN SELECT RAISE(ABORT,'append_only'); END";
@@ -189,6 +197,12 @@ let schema = [
   "reservations_cap","CREATE TRIGGER reservations_cap BEFORE INSERT ON reservations WHEN COALESCE((SELECT SUM(amount_nd) FROM reservations WHERE utc_day=NEW.utc_day),0)+NEW.amount_nd>10000000000 BEGIN SELECT RAISE(ABORT,'budget_exhausted'); END";
   "reservations_clock","CREATE TRIGGER reservations_clock BEFORE INSERT ON reservations WHEN NEW.observed_us<(SELECT initialized_us FROM budget_meta WHERE id=1) OR NEW.observed_us<COALESCE((SELECT MAX(observed_us) FROM reservations),0) BEGIN SELECT RAISE(ABORT,'clock_rollback'); END"]
 
+(* These are the exact pre-Argon six-model SQL bytes, not a permissive schema
+   version range. Recognizing this history does not enable Argon reservations. *)
+let schema = schema_for ceilings
+let legacy_schema = schema_for (List.filter(fun(model,_)->model<>"google/gemini-4-argon")ceilings)
+type schema_version = Legacy | Current
+
 let normalize_path path =
   require(String.length path>0 && String.length path<=4096 && not(String.contains path '\000'))(Invalid_request "ledger_path");
   require(path<>"" && path<>":memory:")(Invalid_request "ledger_path");
@@ -198,7 +212,7 @@ let normalize_path path =
 let regular path =
   let st=try Unix.lstat path with Unix.Unix_error(Unix.ENOENT,_,_)->fail Missing_ledger in
   require(st.Unix.st_kind=Unix.S_REG)Corrupt_ledger;
-  require(st.Unix.st_size>=0 && st.Unix.st_size<=32*1024*1024)Resource_bound;
+  require(st.Unix.st_size>=0 && st.Unix.st_size<=max_ledger_bytes)Resource_bound;
   st
 
 let sidecar_bounds path =
@@ -231,10 +245,15 @@ let with_db ~write path f =
     try let result=f db in exec db "COMMIT";result
     with e->ignore(Sqlite3.exec db "ROLLBACK");raise e)
 
-let validate_schema db =
+let schema_version db =
   let actual=rows db "SELECT name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY name" []
     |> List.map(fun row->db_text row.(0),String.trim(db_text row.(1))) in
-  require(actual=List.sort compare schema)Corrupt_ledger;
+  if actual=List.sort compare schema then Current
+  else if actual=List.sort compare legacy_schema then Legacy
+  else fail Corrupt_ledger
+
+let validate_schema db =
+  let version=schema_version db in
   let integrity=one db "PRAGMA integrity_check(1)" [] in
   require(db_text integrity.(0)="ok")Corrupt_ledger;
   let meta=one db "SELECT version,initialized_us,daily_limit_nd,reservation_nd FROM budget_meta WHERE id=1" [] in
@@ -242,11 +261,11 @@ let validate_schema db =
   let initialized=db_int meta.(1) in
   let broken=rows db "SELECT utc_day FROM reservations GROUP BY utc_day HAVING SUM(amount_nd)>10000000000 LIMIT 1" [] in
   require(broken=[])Corrupt_ledger;
-  initialized
+  initialized,version
 
 let observe_db db ~now =
   let at=match time now with Ok t->t|Error e->fail e in
-  let initialized=validate_schema db in
+  let initialized,_version=validate_schema db in
   let maximum=one db "SELECT COALESCE(MAX(observed_us),0) FROM reservations" [] |> fun row->db_int row.(0) in
   require(now>=initialized && now>=maximum)Clock_rollback;
   let totals=one db "SELECT COALESCE(SUM(amount_nd),0),COUNT(*) FROM reservations WHERE utc_day=?" [Sqlite3.Data.TEXT at.day] in
@@ -261,6 +280,8 @@ let reserve_with_clock clock path request = safe_result(fun()->
        Lock acquisition order must not manufacture apparent clock rollback. *)
     let now=clock() in
     let observation=observe_db db ~now in
+    require(Request.model request<>"google/gemini-4-argon" || schema_version db=Current)
+      (Invalid_request "argon_schema_upgrade_required");
     let exists=rows db "SELECT 1 FROM reservations WHERE call_id=?" [Sqlite3.Data.TEXT(Request.call_id request)] in
     require(exists=[])Duplicate_call_id;
     require(Int64.add observation.reserved reservation<=daily_limit)Exhausted;
@@ -295,6 +316,56 @@ module Persistent : STORE with type t=string = struct
   let reserve ~now path request = reserve_with_clock(fun()->now)path request
 end
 module _ : STORE = Persistent
+
+(* Explicit opt-in migration of the ONE existing ledger. Never initializes a
+   new database. BEGIN IMMEDIATE / COMMIT / rollback are owned by with_db;
+   32MiB ledger and sidecar bounds, busy timeout and operation deadline apply.
+   Only exact legacy/current SQL is accepted. No refund or amount change. *)
+let upgrade_argon_db db =
+    let _,version=validate_schema db in
+    let meta ()=Array.to_list(one db "SELECT * FROM budget_meta WHERE id=1" []) in
+    let totals table=one db ("SELECT COUNT(*),COALESCE(SUM(amount_nd),0) FROM "^table) []
+      |> Array.to_list in
+    let before_meta=meta() and before_totals=totals "reservations" in
+    (match version with
+    | Current -> ()
+    | Legacy ->
+      List.iter(fun name->exec db ("DROP INDEX "^name))["reservations_day";"reservations_time"];
+      let triggers=["reservations_no_update";"reservations_no_delete";"reservations_no_replace";
+        "reservations_cap";"reservations_clock"] in
+      List.iter(fun name->exec db ("DROP TRIGGER "^name))triggers;
+      exec db "ALTER TABLE reservations RENAME TO reservations_argon_legacy";
+      exec db (List.assoc "reservations" schema);
+      exec db "INSERT INTO reservations SELECT * FROM reservations_argon_legacy";
+      let difference left right=one db ("SELECT COUNT(*) FROM (SELECT * FROM "^left^
+        " EXCEPT SELECT * FROM "^right^")") [] |> fun row->db_int row.(0) in
+      require(difference "reservations" "reservations_argon_legacy"=0L &&
+        difference "reservations_argon_legacy" "reservations"=0L)Corrupt_ledger;
+      require(totals "reservations"=before_totals && totals "reservations_argon_legacy"=before_totals &&
+        meta()=before_meta)Corrupt_ledger;
+      (* Old rows survive until bidirectional full-row equality, count, total
+         liability and immutable metadata equality have all been established. *)
+      exec db "DROP TABLE reservations_argon_legacy";
+      List.iter(fun name->exec db (List.assoc name schema))
+        (["reservations_day";"reservations_time"]@triggers));
+    let _,after=validate_schema db in
+    require(after=Current && meta()=before_meta && totals "reservations"=before_totals)Corrupt_ledger;
+    (* Rebuilding can leave allocated freelist pages after the old table is
+       dropped. Check the complete committed-image size under the same writer
+       transaction, before with_db commits. Division avoids overflow in the
+       equivalent page_count * page_size <= 32MiB bound. This does not preempt
+       a C-level SQLite query: the 30s between-SQL deadline and an externally
+       bounded worker process remain separate operational obligations. *)
+    let pages=db_int (one db "PRAGMA page_count" []).(0) in
+    let page_size=db_int (one db "PRAGMA page_size" []).(0) in
+    require(pages>=0L && page_size>0L && page_size<=65536L &&
+      pages<=Int64.div(Int64.of_int max_ledger_bytes)page_size)Resource_bound;
+    (version=Legacy),before_totals
+
+let upgrade_argon path = safe_result(fun()->
+  let path=normalize_path path in
+  with_db ~write:true path(fun db->
+    let changed,totals=upgrade_argon_db db in path,changed,totals))
 
 let json_int value=`Intlit(Int64.to_string value)
 let snapshot_json ~path ~grant ~call_id snapshot = `Assoc[
@@ -338,11 +409,19 @@ let main () =
     let actual=normalize_path path in
     let snapshot=get_ok(safe_result(fun()->with_db ~write:false actual(fun db->observe_db db ~now:(host_now())))) in
     snapshot_json ~path:actual ~grant:false ~call_id:None snapshot
+  | [_;"upgrade-argon";path] ->
+    let actual,changed,totals=get_ok(upgrade_argon path) in
+    let count,liability=match totals with [count;liability]->db_int count,db_int liability|_->fail Corrupt_ledger in
+    `Assoc["status",`String(if changed then "upgraded" else "unchanged");
+      "dispatch_authorized",`Bool false;"task_authority",`Bool false;
+      "ledger_path",`String actual;"budget_scope",`String"this_database_only";
+      "reservation_count",json_int count;"retained_liability_nanodollars",json_int liability;
+      "refunds_supported",`Bool false]
   | [_;"reserve";path] ->
     let request=get_ok(decode_request(read_stdin())) in
     let actual,snapshot=get_ok(reserve_with_clock host_now path request) in
     snapshot_json ~path:actual ~grant:true ~call_id:(Some(Request.call_id request)) snapshot
-  | _ -> fail(Invalid_request "usage: init DB | reserve DB | status DB | oracle-selftest")
+  | _ -> fail(Invalid_request "usage: init DB | reserve DB | status DB | upgrade-argon DB | oracle-selftest")
 
 let cli () = try print_endline(Yojson.Safe.to_string(main())) with
   | Budget_error error ->

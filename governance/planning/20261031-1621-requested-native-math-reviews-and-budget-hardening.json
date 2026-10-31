@@ -1,0 +1,206 @@
+{
+  "observed_at": "2026-10-31T15:55:55Z",
+  "schema": "uos-requested-math-review/v1",
+  "authority": "NONE",
+  "plan_id": "uos/hive-agent-control-math/20261031-1431",
+  "admitted_ev_ceiling": 93,
+  "requested_models": [
+    {
+      "via": "Pi1.4/OpenRouter",
+      "model": "google/gemini-4-argon",
+      "stop_reason": "length",
+      "usage": {
+        "input": 3851,
+        "output": 512,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "reasoning": 0,
+        "totalTokens": 4363,
+        "cost": {
+          "input": 0.007702,
+          "output": 0.00512,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0.012822
+        }
+      },
+      "scope": "Control model excerpt; length-capped advice; refund-changing recommendation rejected"
+    },
+    {
+      "via": "Pi1.4/OpenRouter",
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "stop_reason": "stop",
+      "usage": {
+        "input": 2733,
+        "output": 301,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "reasoning": 0,
+        "totalTokens": 3034,
+        "cost": {
+          "input": 0.00180378,
+          "output": 0.0005959800000000001,
+          "cacheRead": 0,
+          "cacheWrite": 0,
+          "total": 0.00239976
+        }
+      },
+      "scope": "Actual Gleam report-only monitor; unknown-cost recommendation gap confirmed"
+    },
+    {
+      "via": "native Claude CLI",
+      "model": "claude-sonnet-5-5",
+      "session_id": "0fddf90e-8798-4729-914a-820dfee6661b",
+      "usage": {
+        "input_tokens": 2,
+        "cache_creation_input_tokens": 14331,
+        "cache_read_input_tokens": 649,
+        "output_tokens": 1063,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 14331,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "global",
+        "iterations": [
+          {
+            "input_tokens": 2,
+            "output_tokens": 1063,
+            "cache_read_input_tokens": 649,
+            "cache_creation_input_tokens": 14331,
+            "cache_creation": {
+              "ephemeral_5m_input_tokens": 0,
+              "ephemeral_1h_input_tokens": 14331
+            },
+            "type": "message"
+          }
+        ],
+        "speed": "standard",
+        "fallback_credit": null
+      },
+      "reported_list_equivalent_cost_usd": 0.0680229,
+      "scope": "Independent advice reconciled invalid Argon fixes and confirmed reporting/storage followups"
+    }
+  ],
+  "financial_scope": "SDK and list-equivalent estimates are not invoices. FournewPi reservations retained including two ZDR-route refusals. Canonical14liabilities total3.50USD; earlierClaude outcome/cost remainsUNKNOWN.",
+  "verification_scope": "Model advice is not mathematical proof, native refinement, runtime activation or system admission",
+  "provider_reported_successful_pi_charges": {
+    "argon": {
+      "provider": "Google",
+      "model": "google/gemini-4-argon-20261013",
+      "total_cost_usd": 0.012822
+    },
+    "deepseek": {
+      "provider": "DeepInfra",
+      "model": "deepseek/deepseek-v4-pro-20260813",
+      "total_cost_usd": 0.0043355
+    },
+    "sum_usd": 0.0171575,
+    "basis": "OpenRouter generation metadata; scope two successful requests only, not global invoice"
+  },
+  "sdk_cost_counterevidence": {
+    "deepseek_sdk_estimate_usd": 0.00239976,
+    "deepseek_provider_reported_usd": 0.0043355,
+    "underestimate_usd": 0.00193574,
+    "reason": "Pi catalog rates0.66/1.98 perM differ from pinned served DeepInfra route1.3/2.6 perM; never use SDK estimate as budget authority"
+  },
+  "metadata_recovery": "DeepSeek generation read initially404; bounded laterread200, bothhistory retained",
+  "publication_observed_at": "2026-10-31T16:02:02Z",
+  "base_main": "f47eb2b1caa98ff0a44b2e74d23ff1749ff49b22",
+  "working_change": "yxzsoqvv",
+  "source_hashes": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "03d188bea69591c640dc13bce70adb4450baa09265db47d8d96853a4d88dc4ad",
+      "observed_at": "2026-10-31T15:59:48Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+      "sha256": "df3505ef163a1c3bd7a7e1fd2ebe198ff2aee21253e7b69e2651723a2024e514",
+      "observed_at": "2026-10-31T15:59:48Z"
+    },
+    {
+      "path": "tools/ecology_budget.ml",
+      "sha256": "ebf98ed6cbde2a879cca535bd4e48af350d9fd16876148b450ed66b1c33436b9",
+      "observed_at": "2026-10-31T15:59:48Z"
+    },
+    {
+      "path": "tools/ecology_budget_test.ml",
+      "sha256": "699dc706fe6768dd3071fbae2ec692163e2f417e4ac555763ef1205aca99be6a",
+      "observed_at": "2026-10-31T15:59:48Z"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+      "sha256": "2f07332032115bb52644727638a563520dc07758d0b5f989270e1743bd622fe9",
+      "observed_at": "2026-10-31T15:59:48Z"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor.gleam",
+      "sha256": "bee30df0aec2681229f8871c2efba90a1f1eae92481d41173f590e08d26bfa12",
+      "observed_at": "2026-10-31T15:59:48Z"
+    },
+    {
+      "path": "apps/uos_swarm/test/token_monitor_test.gleam",
+      "sha256": "5fa78957f3a593241e23d4e24a010a87fa92a57574ace5b5404d1090bc34b04d",
+      "observed_at": "2026-10-31T15:59:48Z"
+    }
+  ],
+  "monitor": {
+    "status": "REPORT_ONLY",
+    "authority": "NONE",
+    "hard_cap_enforced": false,
+    "decision": "HOLD_UNKNOWN_USAGE",
+    "unique_calls": 26,
+    "known_usage_calls": 25,
+    "unknown_usage_calls": 1,
+    "invocations_reporting_error": 3,
+    "accepted_work_outcomes": "UNVERIFIED_SEPARATE_REVIEW_REQUIRED",
+    "input_tokens_uncached": 32899,
+    "output_tokens_including_reasoning": 139176,
+    "cache_read_input_tokens": 1637742,
+    "cache_write_input_tokens": 275337,
+    "known_total_tokens": 2085154,
+    "estimated_nanodollars": 4137299838,
+    "unknown_cost_calls": 1,
+    "billing_basis": "unverified_receipt_sdk_or_list_price_estimates_not_invoice",
+    "known_input_tokens": 1945978,
+    "cache_read_basis_points_of_input": 8416,
+    "max_tokens": 1000000,
+    "max_calls": 40,
+    "optimization_hints": [
+      "Recall top 1-2 fresh canonical documents; keep stable instruction prefixes",
+      "Prefer accepted-work yield and full failed-attempt cost over cheap token price",
+      "Reasoning tokens are included in output; cache counters are distinct input classes",
+      "New calls still require canonical Sa-plan and daily budget admission"
+    ]
+  },
+  "liability": {
+    "reservation_count": 14,
+    "daily_reserved_nanodollars": 3500000000,
+    "remaining_nanodollars": 6500000000,
+    "actual_spend_nanodollars": null,
+    "refunds_supported": false
+  },
+  "checks": {
+    "swarm_package_otp29": 730,
+    "budget_engine_targeted": 18,
+    "monitor_targeted": 18,
+    "event_oracle": 58,
+    "sqlite_fixtures": 90,
+    "near_bound_initial_bytes": 33554432,
+    "near_bound_rebuilt_bytes": 67072000,
+    "near_bound_rollback": "PASS"
+  },
+  "journal": "docs/journal/20261031-1621-requested-native-math-reviews-and-budget-hardening-journal.md",
+  "design": "docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md",
+  "status": "DEVELOPMENT_SOURCE_VERIFIED",
+  "runtime_admission": "NOT_GRANTED",
+  "integration_proof": "Separate serialized JJ and coordinator receipts; no runtime admission or self-referential commit assertion"
+}

@@ -3,6 +3,7 @@
 //// Denotation: unique (provider, request_id) -> immutable final receipt.
 //// Laws: replay idempotence; conflicting replay refusal; order-independent sum;
 //// missing usage remains unknown; reasoning is a subset of output, never added.
+//// Unknown cost independently holds advice after unknown usage, before limits.
 
 import gleam/dict.{type Dict}
 import gleam/json
@@ -33,6 +34,7 @@ pub type Policy {
 
 pub type Decision {
   HoldUnknownUsage
+  HoldUnknownCost
   StopNewCalls
   ContinueWithinObservedLimit
 }
@@ -193,11 +195,13 @@ pub fn decide(m: Monitor, p: Policy) -> Result(Decision, String) {
       let s = summary(m)
       case
         s.unknown_calls > 0,
+        s.unknown_cost_calls > 0,
         total(s) >= p.max_tokens || s.unique_calls >= p.max_calls
       {
-        True, _ -> Ok(HoldUnknownUsage)
-        False, True -> Ok(StopNewCalls)
-        False, False -> Ok(ContinueWithinObservedLimit)
+        True, _, _ -> Ok(HoldUnknownUsage)
+        False, True, _ -> Ok(HoldUnknownCost)
+        False, False, True -> Ok(StopNewCalls)
+        False, False, False -> Ok(ContinueWithinObservedLimit)
       }
     }
   }
@@ -218,6 +222,7 @@ pub fn report(m: Monitor, p: Policy) -> Result(json.Json, String) {
   let s = summary(m)
   let decision = case d {
     HoldUnknownUsage -> "HOLD_UNKNOWN_USAGE"
+    HoldUnknownCost -> "HOLD_UNKNOWN_COST"
     StopNewCalls -> "STOP_NEW_CALLS"
     ContinueWithinObservedLimit -> "WITHIN_OBSERVED_LIMIT_ONLY"
   }

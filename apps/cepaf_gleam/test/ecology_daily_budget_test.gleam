@@ -29,6 +29,8 @@ pub fn worst_provider_and_maximum_request_fit_fixed_reservation_test() {
 }
 
 pub fn provider_ceilings_are_exact_and_free_route_is_separate_test() {
+  budget.provider_ceiling("google/gemini-4-argon")
+  |> should.equal(Ok(budget.Price(4000, 20_000, 0)))
   budget.provider_ceiling("deepseek/deepseek-v4-pro-0813")
   |> should.equal(Ok(budget.Price(1320, 3960, 0)))
   budget.provider_ceiling("deepseek/deepseek-v4-flash-0731")
@@ -42,6 +44,33 @@ pub fn provider_ceilings_are_exact_and_free_route_is_separate_test() {
   budget.provider_ceiling("openrouter/free")
   |> should.be_error
   budget.provider_ceiling("unknown") |> should.be_error
+}
+
+pub fn argon_maximum_request_and_aliases_are_bounded_test() {
+  let assert Ok(r) =
+    budget.admit(
+      "argon:1",
+      "google/gemini-4-argon",
+      4096,
+      input(16_384),
+      input(20_000),
+      budget.Price(4000, 20_000, 0),
+    )
+  budget.worst_case_nanodollars(r) |> should.equal(155_648_000)
+  list.each(["gemini-4-argon", "google/gemini-4-argon:free"], fn(model) {
+    budget.provider_ceiling(model) |> should.be_error
+  })
+  list.each(
+    [
+      budget.Price(4001, 20_000, 0),
+      budget.Price(4000, 20_001, 0),
+      budget.Price(4000, 20_000, 1),
+    ],
+    fn(price) {
+      budget.admit("argon:2", "google/gemini-4-argon", 512, "x", "{}", price)
+      |> should.be_error
+    },
+  )
 }
 
 pub fn live_price_must_be_nonnegative_within_provider_ceiling_and_no_fee_test() {
