@@ -27,58 +27,72 @@ pub fn execute(
   tool_name: String,
   args: Dict(String, String),
 ) -> Outcome {
-  case tool_name {
-    "mcp_capability_inventory" -> mcp_capability_inventory(store)
-    "harness_system_feature_catalog" -> catalog_page(store, args)
-    "harness_system_feature_observations" -> {
-      let task_id = result.unwrap(dict.get(args, "task_id"), "")
-      let feature_id = result.unwrap(dict.get(args, "feature_id"), "")
-      let target = case task_id {
-        "" -> feature_id
-        _ -> task_id
-      }
-      case target {
-        "" ->
-          case dict.has_key(args, "offset") {
-            True -> observations_page(store, args)
-            False ->
+  // The quarantine/ceiling guard runs ahead of every argument check so a
+  // corrupt or symlinked ledger always yields the quarantine refusal code
+  // across all five tools, including missing-argument requests.
+  case check_ceiling(store) {
+    Error(error) -> Refused(error)
+    Ok(_) ->
+      case tool_name {
+        "mcp_capability_inventory" -> mcp_capability_inventory(store)
+        "harness_system_feature_catalog" -> catalog_page(store, args)
+        "harness_system_feature_observations" -> {
+          let task_id = result.unwrap(dict.get(args, "task_id"), "")
+          let feature_id = result.unwrap(dict.get(args, "feature_id"), "")
+          let target = case task_id {
+            "" -> feature_id
+            _ -> task_id
+          }
+          case target {
+            "" ->
+              case dict.has_key(args, "offset") {
+                True -> observations_page(store, args)
+                False ->
+                  Refused(ToolError(
+                    "MISSING_ARGUMENT",
+                    "Missing required task_id or feature_id",
+                    NonRetryable,
+                  ))
+              }
+            _ -> harness_system_feature_observations(store, target)
+          }
+        }
+        "harness_system_feature_intent" -> {
+          let intent_id =
+            result.unwrap(dict.get(args, "intent_id"), "") |> string.trim
+          let intent_id = case intent_id {
+            "" -> result.unwrap(dict.get(args, "intent"), "") |> string.trim
+            id -> id
+          }
+          case intent_id {
+            "" ->
               Refused(ToolError(
                 "MISSING_ARGUMENT",
-                "Missing required task_id or feature_id",
+                "Missing required intent_id",
                 NonRetryable,
               ))
+            _ -> harness_system_feature_intent(store, intent_id)
           }
-        _ -> harness_system_feature_observations(store, target)
-      }
-    }
-    "harness_system_feature_intent" -> {
-      let intent_id =
-        result.unwrap(dict.get(args, "intent_id"), "") |> string.trim
-      let intent_id = case intent_id {
-        "" -> result.unwrap(dict.get(args, "intent"), "") |> string.trim
-        id -> id
-      }
-      case intent_id {
-        "" ->
+        }
+        "harness_execution_progress" -> harness_execution_progress(store)
+        _ ->
           Refused(ToolError(
-            "MISSING_ARGUMENT",
-            "Missing required intent_id",
+            "UNSUPPORTED_FEATURE_TOOL",
+            "Unsupported tool in features adapter: " <> tool_name,
             NonRetryable,
           ))
-        _ -> harness_system_feature_intent(store, intent_id)
       }
-    }
-    "harness_execution_progress" -> harness_execution_progress(store)
-    _ ->
-      Refused(ToolError(
-        "UNSUPPORTED_FEATURE_TOOL",
-        "Unsupported tool in features adapter: " <> tool_name,
-        NonRetryable,
-      ))
   }
 }
 
 pub const ev_ceiling = 93
+
+/// Sentinel ceilings used by the strict receipt-ledger loader. A negative
+/// ceiling can never be mistaken for legitimate admitted evidence and is
+/// refused ahead of every other check so quarantined stores fail closed.
+pub const corrupt_ledger_sentinel = -1
+
+pub const symlink_ledger_sentinel = -2
 
 pub const feature_tools = [
   "mcp_capability_inventory",
@@ -109,6 +123,16 @@ pub type CapabilityRecord {
     formal_state: String,
     admission_state: String,
   )
+  /// Same capability evidence with a verified disk SHA-256 source pin.
+  Sha256PinnedCapabilityRecord(
+    id: String,
+    route: String,
+    declaration_state: String,
+    implementation_state: String,
+    execution_state: String,
+    formal_state: String,
+    admission_state: String,
+  )
 }
 
 pub type FeatureEvidenceStore {
@@ -120,6 +144,37 @@ pub type FeatureEvidenceStore {
     receipts: Dict(String, ExecutionReceipt),
     intents: Dict(String, String),
   )
+}
+
+pub fn pinned_store(store: FeatureEvidenceStore) -> FeatureEvidenceStore {
+  FeatureEvidenceStore(
+    ..store,
+    capabilities: list.map(store.capabilities, fn(c) {
+      Sha256PinnedCapabilityRecord(
+        c.id,
+        c.route,
+        c.declaration_state,
+        c.implementation_state,
+        c.execution_state,
+        c.formal_state,
+        c.admission_state,
+      )
+    }),
+  )
+}
+
+pub fn merge_actor_intents(
+  store: FeatureEvidenceStore,
+  memory: Dict(String, String),
+) -> FeatureEvidenceStore {
+  FeatureEvidenceStore(..store, intents: dict.merge(store.intents, memory))
+}
+
+fn ledger_authenticity(store: FeatureEvidenceStore) -> String {
+  case store.capabilities {
+    [Sha256PinnedCapabilityRecord(..), ..] -> "sha256_pinned"
+    _ -> "workspace_self_attested_unpinned"
+  }
 }
 
 pub type CapabilityInventory {
@@ -191,11 +246,32 @@ fn failed_receipt_error() -> ToolError {
 }
 
 /// The admitted evidence ceiling is immutable at 93. Any store claiming a
-/// higher ceiling is refused before any evidence is reported.
+/// higher ceiling is refused before any evidence is reported. A negative
+/// sentinel ceiling means the receipt ledger was symlinked or failed the
+/// strict loader guard, in which case every feature tool must fail closed.
 pub fn check_ceiling(store: FeatureEvidenceStore) -> Result(Nil, ToolError) {
-  case store.admitted_ev_ceiling > ev_ceiling {
-    True -> Error(ceiling_error())
-    False -> Ok(Nil)
+  let ceiling = store.admitted_ev_ceiling
+  case ceiling == symlink_ledger_sentinel {
+    True ->
+      Error(ToolError(
+        "FEATURE_LEDGER_SYMLINK_FORBIDDEN",
+        "Feature receipt ledger symlink is forbidden",
+        NonRetryable,
+      ))
+    False ->
+      case ceiling < 0 {
+        True ->
+          Error(ToolError(
+            "FEATURE_LEDGER_CORRUPT",
+            "Feature receipt ledger corrupt or failed strict OTP29 JSON guard",
+            NonRetryable,
+          ))
+        False ->
+          case ceiling > ev_ceiling {
+            True -> Error(ceiling_error())
+            False -> Ok(Nil)
+          }
+      }
   }
 }
 
@@ -502,21 +578,35 @@ fn catalog_page(
   store: FeatureEvidenceStore,
   args: Dict(String, String),
 ) -> Outcome {
-  case validate_catalog_digest(store, args), page_offset(args) {
-    Error(error), _ | _, Error(error) -> Refused(error)
-    Ok(_), Ok(offset) ->
-      case dict.has_key(args, "offset") {
-        False -> harness_system_feature_catalog(store)
-        True ->
-          harness_system_feature_catalog(
-            FeatureEvidenceStore(
-              ..store,
-              capabilities: list.drop(store.capabilities, offset)
-                |> list.take(100),
-            ),
-          )
+  // The quarantined-ledger check runs before any digest work so a corrupt or
+  // symlinked ledger fails closed without touching the catalog projection.
+  case check_ceiling(store) {
+    Error(error) -> Refused(error)
+    Ok(_) ->
+      case validate_catalog_digest(store, args), page_offset(args) {
+        Error(error), _ | _, Error(error) -> Refused(error)
+        Ok(_), Ok(offset) ->
+          case dict.has_key(args, "offset") {
+            False -> harness_system_feature_catalog(store)
+            True ->
+              complete(
+                "harness_system_feature_catalog",
+                catalog_payload(page_store(store, offset)),
+                store,
+              )
+          }
       }
   }
+}
+
+fn page_store(
+  store: FeatureEvidenceStore,
+  offset: Int,
+) -> FeatureEvidenceStore {
+  FeatureEvidenceStore(
+    ..store,
+    capabilities: list.drop(store.capabilities, offset) |> list.take(100),
+  )
 }
 
 fn observations_page(
@@ -610,7 +700,13 @@ fn observation_payload(
     #("candidate_commit", json.string(receipt.candidate_commit)),
     #("exit_code", json.int(receipt.exit_code)),
     #("output_sha256", json.string(receipt.output_sha256)),
-    #("execution_state", json.string("observed")),
+    #(
+      "execution_state",
+      json.string(case receipt.exit_code == 0 {
+        True -> "observed"
+        False -> "failed_observation"
+      }),
+    ),
     #("formal_state", json.string("unrun")),
     #("admission_state", json.string("not_admitted")),
     #(
@@ -629,44 +725,54 @@ pub fn harness_system_feature_observations(
   case check_ceiling(store) {
     Error(error) -> Refused(error)
     Ok(_) ->
-      case dict.get(store.receipts, task_id) {
-        Ok(receipt) ->
-          case wrapper_raw_conflict(receipt) {
-            True -> Refused(conflict_error())
-            False ->
-              case is_active_candidate_receipt(store, receipt) {
-                False -> Refused(stale_error())
+      case store_has_conflict(store) {
+        True -> Refused(conflict_error())
+        False -> observations_for_task(store, task_id)
+      }
+  }
+}
+
+fn observations_for_task(
+  store: FeatureEvidenceStore,
+  task_id: String,
+) -> Outcome {
+  case dict.get(store.receipts, task_id) {
+    Ok(receipt) ->
+      case wrapper_raw_conflict(receipt) {
+        True -> Refused(conflict_error())
+        False ->
+          case is_active_candidate_receipt(store, receipt) {
+            False -> Refused(stale_error())
+            True ->
+              case list.contains(store.completed_task_ids, task_id) {
                 True ->
-                  case list.contains(store.completed_task_ids, task_id) {
+                  case receipt.exit_code == 0 {
                     True ->
-                      case receipt.exit_code == 0 {
-                        True ->
-                          complete(
-                            "harness_system_feature_observations",
-                            observation_payload(store, task_id, receipt),
-                            store,
-                          )
-                        False -> Refused(failed_receipt_error())
-                      }
-                    False ->
                       complete(
                         "harness_system_feature_observations",
                         observation_payload(store, task_id, receipt),
                         store,
                       )
+                    False -> Refused(failed_receipt_error())
                   }
+                False ->
+                  complete(
+                    "harness_system_feature_observations",
+                    observation_payload(store, task_id, receipt),
+                    store,
+                  )
               }
           }
-        Error(_) ->
-          case list.contains(store.completed_task_ids, task_id) {
-            True -> Refused(missing_receipt_error())
-            False ->
-              Refused(ToolError(
-                "UNKNOWN_FEATURE_OR_TASK",
-                "No receipt or completed task for id " <> task_id,
-                NonRetryable,
-              ))
-          }
+      }
+    Error(_) ->
+      case list.contains(store.completed_task_ids, task_id) {
+        True -> Refused(missing_receipt_error())
+        False ->
+          Refused(ToolError(
+            "UNKNOWN_FEATURE_OR_TASK",
+            "No receipt or completed task for id " <> task_id,
+            NonRetryable,
+          ))
       }
   }
 }
@@ -719,6 +825,13 @@ fn complete(
   payload: String,
   store: FeatureEvidenceStore,
 ) -> Outcome {
+  // All feature payloads are generated JSON objects; bind the authenticity to
+  // this loaded projection, never to a later environment observation.
+  let payload =
+    "{\"ledger_authenticity\":\""
+    <> ledger_authenticity(store)
+    <> "\","
+    <> string.drop_start(payload, 1)
   Complete(
     payload,
     EvidenceRecord(

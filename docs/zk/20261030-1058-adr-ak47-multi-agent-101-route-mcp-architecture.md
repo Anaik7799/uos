@@ -126,4 +126,8 @@ EV ceiling remains 93. EV-94..109 remain NOT_ADMITTED. No new EV number is minte
 
 </details>
 
+---
+
+**2-Way Navigation**: [Wiki Index](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/zk) · [KM Corpus Index](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Next: ADR OTP 29 JSON Total Quarantine & Canonical MCP Seams ->](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md)
+
 **UOS footer:** ZK decision record; document evidence grants no system admission.

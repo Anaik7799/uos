@@ -57,6 +57,12 @@ RED evidence reproduced6/20 retained new readonly commits, a1.501s private commi
 Both native trees were rebuilt by the adapted historical R07 driver under OTP29.0.5 compiler10.0.3:62 sources,124 artifacts,62 equal code-MD5 pairs and56 unchanged protected BEAM bytes. The original compiler-drift precondition stopped honestly because pinned PATH had prevented drift. [Native rebuild receipt](http://nas-1.tail55d152.ts.net:4100/files/var/harness/20261030-2325-mcp-resilience/wave25/R07-native-compiler-repair-current.json). Final capsule: 20261031-0540-5ca1f1721b7efb73804ca0b9eb30df183281f24c6ba1aa59f1ff8764dafc84c9. All4 lease releases: observed.
 <!-- WAVE25-SECTION-3-END -->
 
+### Wave 2 canonical gateway wiring (`C01` + `P01` + `C02`)
+
+Observed synchronization 2026-10-31T09:15:00Z, plan uos/km-triad-fractal-prompt-sync/20261031-1008. Wave 2 step 1 wired the canonical SQLite `C01` seam (Zero-DDL `RAISE(ROLLBACK, ...)` refusal with 0 `pragma_schema_version` drift), the Redacted Vault plus receipt-verified Feature Ledger `P01`, and the canonical 6-Seam Gateway `C02` with `Quarantine > Replay` precedence evaluated before `reserve_call` or cached receipt replay. `14` EUnit suites report `271/271` `PASS` on the frozen candidate; missing, `0`-byte, truncated, oversized, duplicate-key, lone-surrogate, `\u0000`, ancestor-symlink and schema-drifted inputs all return typed `Refused` `NonRetryable` values with 0 crashes, and live read refreshes never erase mutating receipt fences.
+
+The Wave 2 step-1 canonical gateway journal `20261031-0823-wave2-step1-canonical-gateway-journal.md` is the named successor artifact and is not yet materialized on disk in this workspace; its observations are carried here. Evidence: [OTP 29 JSON anti-brittle MCP & fractal symbiosis wiki](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md) · [ADR OTP 29 JSON total quarantine & canonical MCP seams](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md) · [KM index](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json) · [Canonical fractal system prompt](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md). Transclusions: `[[wiki:20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki]]` · `[[zk:20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams|@supports]]` · `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`.
+
 ## 4. Root Cause Analysis
 
 Engine1 ACH disconfirmation matrix uses0=consistent and2=contradicted for specific observations, not probabilities.
@@ -253,6 +259,42 @@ Engine2 admissibility: A2=direct pinned-tool observation; B2=bounded integration
 
 Final live measurements: stdio speedup 6.851945x; HTTP 20/20 oversized413 responses with Connection:close and0 following-call failures; Zenoh 100/100 valid answered and0/100 forged answered. All four runtime leases are released. The final actual stdio and HTTP null-vector probe each covers5 successful and6 invalid cases, including isError:false for null tool arguments.
 <!-- WAVE25-SECTION-7-END -->
+
+### Wave 2 canonical gateway and #km-triad verification matrix
+
+Engine2 admissibility: A2=direct pinned-tool observation; B2=bounded integration observation. UNRUN and OPEN are not passing.
+
+| Check | Current observation | Grade |
+|---|---|---|
+| Wave 2 canonical SQLite `C01` refusal | 0 `pragma_schema_version` drift; typed refusal codes |A2|
+| Redacted Vault and Feature Ledger `P01` | fresh allowlisted vault; receipt-verified ledger, distinct implemented vs observed |B2|
+| Canonical 6-Seam Gateway `C02` | `Quarantine > Replay` precedes `reserve_call`; live read fences preserved |B2|
+| MCP EUnit Wave 2 suites | 14 suites, 271/271 passed |A2|
+| #km-triad doc integration | Wiki, ZK ADR, SOP, KM index and corpus index bidirectionally wired |B2|
+| Client adoption beyond four native bindings | not observed |OPEN|
+
+#km-triad integration learnings `#91..#110` (cumulative catalog continuation):
+
+91. **Learning #91** — A quarantine check that runs after `reserve_call` is decoration; precedence is the invariant.
+92. **Learning #92** — A refusal that emits DDL before `RAISE(ROLLBACK, ...)` is a schema mutation, not a refusal.
+93. **Learning #93** — A Feature Ledger entry is truthful only when the receipt verifies it.
+94. **Learning #94** — Read projections must never erase a mutating receipt fence.
+95. **Learning #95** — Compare all algebraic constructors and schema pattern matches before editing.
+96. **Learning #96** — Subagents never run VCS mutations during parallel compile or test.
+97. **Learning #97** — `Quarantine > Replay` must hold across VM restart and WAL recovery.
+98. **Learning #98** — A dual ETS heir is not ready until both tables have replacement heirs.
+99. **Learning #99** — A revocable `alias([reply])` bulkhead bounds mailbox growth without blocking reads.
+100. **Learning #100** — Mist `413 Connection: close` must close unread rejected bodies per RFC 9112.
+101. **Learning #101** — Zero-DDL refusal is measured by `pragma_schema_version` equality, not by intent.
+102. **Learning #102** — Schema drift is detected by byte comparison, not by narration.
+103. **Learning #103** — A source digest pins a file; compiled-code parity pins the build.
+104. **Learning #104** — Cached receipts must not replay across a quarantine boundary.
+105. **Learning #105** — `stdlib/json` single-pass callbacks reject nested duplicate keys during the traversal.
+106. **Learning #106** — `±(2^53-1)` is the I-JSON range; out-of-range values refuse honestly.
+107. **Learning #107** — A zero-flatten `iolist` write preserves the wire bytes.
+108. **Learning #108** — The KM Triad is complete only when Wiki, ZK, KB and SOP are bidirectionally wired.
+109. **Learning #109** — A Tailscale FQDN link that is not served is a broken envelope, not evidence.
+110. **Learning #110** — `admitted_ev_ceiling = 93` and `application_admitted = false` remain binding on every artifact.
 
 ## 8. Files Modified
 

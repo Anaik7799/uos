@@ -23,15 +23,80 @@ pub type VaultHandle {
   )
 }
 
-/// Conservative whole-field redaction prevents leaking suffixes or multiline keys.
+/// Conservative whole-field redaction prevents leaking suffixes or multiline
+/// keys. Matching is case-insensitive. Bare `sk-` is deliberately NOT a
+/// pattern because it would falsely redact benign identifiers such as
+/// `task-123` or `disk-1`; only concrete provider prefixes are matched.
 pub fn redact(value: String) -> String {
+  let lower = string.lowercase(value)
   case
-    list.any(["hvs.", "Bearer ", "secret_value=", "PRIVATE KEY"], fn(pattern) {
-      string.contains(value, pattern)
-    })
+    list.any(
+      [
+        "hvs.",
+        "hvb.",
+        "hvr.",
+        "eyj",
+        "bearer ",
+        "bearer\t",
+        "token=",
+        "secret=",
+        "secret_value=",
+        "private key",
+        "-----begin",
+        "ghp_",
+        "ghs_",
+        "glpat-",
+        "ya29.",
+        "aiza",
+        "github_pat_",
+        "xoxb-",
+        "sk-proj-",
+        "sk-ant-",
+        "sk-live-",
+        "root_token=",
+        "password=",
+        "password:",
+        "apikey=",
+        "api_key=",
+        "vault_token=",
+      ],
+      fn(pattern) { string.contains(lower, pattern) },
+    )
+    || aws_key(value)
+    || url_userinfo(value)
   {
     True -> "[REDACTED]"
     False -> value
+  }
+}
+
+fn aws_key(value: String) -> Bool {
+  case string.split_once(value, "AKIA") {
+    Error(_) -> False
+    Ok(#(_, suffix)) -> {
+      let chars = string.to_graphemes(string.slice(suffix, 0, 16))
+      list.length(chars) == 16
+      && list.all(chars, fn(c) {
+        string.contains("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", c)
+      })
+      || aws_key(suffix)
+    }
+  }
+}
+
+fn url_userinfo(value: String) -> Bool {
+  case string.split_once(value, "://") {
+    Error(_) -> False
+    Ok(#(_, rest)) -> {
+      let authority = string.split(rest, "/") |> list.first
+      case authority {
+        Ok(host) ->
+          string.contains(host, "@")
+          && string.contains(host, ":")
+          || url_userinfo(rest)
+        _ -> False
+      }
+    }
   }
 }
 

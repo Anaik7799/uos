@@ -42,6 +42,7 @@
         pkgs.jujutsu                   # 0.44.0 -- the sole VCS; see note below
         pkgs.nodejs_22                 # 22.23.2 -- complete npm (see note)
         pkgs.coreutils                 # 9.x -- cp/printf/sleep/false, see note below
+        pkgs.sqlite.bin                    # 3.53.3 -- canonical Sa-plan & coordinator SQLite CLI
       ];
 
       # The exact erl this pin admits. Every guard compares against THIS path and

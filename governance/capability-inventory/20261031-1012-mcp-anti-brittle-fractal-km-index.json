@@ -1,0 +1,283 @@
+{
+  "schema": "uos.mcp-anti-brittle-fractal-km-index.v1",
+  "generated_at_utc": "2026-10-31T09:15:00Z",
+  "parent_plan": "uos/km-triad-fractal-prompt-sync/20261031-1008",
+  "task_id": "KM01_ZK_KB_WIKI_AND_FRACTAL_PROMPT_INTEGRATION",
+  "admitted": false,
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "system_admitted": false,
+  "tailscale_base_url": "http://nas-1.tail55d152.ts.net:4100",
+  "trace_13d": {
+    "L": "L0..L9",
+    "C": "cepaf_gleam-mcp-hermes-wiki",
+    "F": "otp29-anti-brittle-mcp-km-triad",
+    "S": "Web:4100+MCP:101+Wiki+ZK+Zenoh",
+    "I": "POODAVR-7",
+    "P": "Control+Evidence+Knowledge",
+    "M": "Canonical-JJ",
+    "Phi": "Lean4+Z3+Quint+Gospel+Rete+Ruliad"
+  },
+  "nodes": [
+    {
+      "kind": "wiki",
+      "path": "docs/wiki/20261026-0220-telegram-journeys-guide.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0220-telegram-journeys-guide.md"
+    },
+    {
+      "kind": "wiki",
+      "path": "docs/wiki/20261026-0801-telegram-media-pipeline-guide.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0801-telegram-media-pipeline-guide.md"
+    },
+    {
+      "kind": "wiki",
+      "path": "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md",
+      "layer": "#fractal-l6",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md"
+    },
+    {
+      "kind": "wiki",
+      "path": "docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md",
+      "layer": "#fractal-l9",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md"
+    },
+    {
+      "kind": "zk_permanent_decision",
+      "path": "docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md"
+    },
+    {
+      "kind": "zk_permanent_decision",
+      "path": "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md",
+      "layer": "#fractal-l9",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md"
+    },
+    {
+      "kind": "sop",
+      "path": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261001-1117-uos-agent-symbiosis-operations.md"
+    },
+    {
+      "kind": "sop",
+      "path": "docs/sop/20261026-1018-telegram-review-packets.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261026-1018-telegram-review-packets.md"
+    },
+    {
+      "kind": "sop",
+      "path": "docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md",
+      "layer": "#fractal-l0",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md"
+    },
+    {
+      "kind": "sop",
+      "path": "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md",
+      "layer": "#fractal-l0",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20260930-0800-expired-claim-preflight.md",
+      "layer": "#fractal-l0",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260930-0800-expired-claim-preflight.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20261026-0220-telegram-journey-acceptance.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261026-0220-telegram-journey-acceptance.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20261026-1910-telegram-secret-hygiene-and-browser-verification.md",
+      "layer": "#fractal-l6",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261026-1910-telegram-secret-hygiene-and-browser-verification.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20261027-0836-core-development-learnings.md",
+      "layer": "#fractal-l0",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261027-0836-core-development-learnings.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20261027-1758-agent-surface-mirror-projection-contract.md",
+      "layer": "#fractal-l9",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261027-1758-agent-surface-mirror-projection-contract.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20261029-0745-critical-code-agentic-resilience-and-mcp-mandate.md",
+      "layer": "#fractal-l0",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261029-0745-critical-code-agentic-resilience-and-mcp-mandate.md"
+    },
+    {
+      "kind": "rule",
+      "path": "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20260927-0526-system-mcp-agy-implementation-plan.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260927-0526-system-mcp-agy-implementation-plan.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261026-0215-telegram-journey-critical-responder.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-critical-responder.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261026-0215-telegram-journey-defence-ha.md",
+      "layer": "#fractal-l6",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-defence-ha.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261026-0215-telegram-journey-security-incident.md",
+      "layer": "#fractal-l6",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-security-incident.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md",
+      "layer": "#fractal-l0",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md",
+      "layer": "#fractal-l6",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md",
+      "layer": "#fractal-l7",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261027-1013-typed-planning-intent-design.md",
+      "layer": "#fractal-l3",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-1013-typed-planning-intent-design.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261027-1920-mcp-critical-interface-formal-checks.md",
+      "layer": "#fractal-l1",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-1920-mcp-critical-interface-formal-checks.md"
+    },
+    {
+      "kind": "design",
+      "path": "docs/design/20261030-0932-ak47-fractal-thinking-as-is-to-be-architecture.md",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261030-0932-ak47-fractal-thinking-as-is-to-be-architecture.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md",
+      "agent": "agy-argon",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261027-0745-mcp-core-journal.md",
+      "agent": "codex",
+      "layer": "#fractal-l2",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0745-mcp-core-journal.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261027-0745-receipt-core-journal.md",
+      "agent": "codex",
+      "layer": "#fractal-l3",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0745-receipt-core-journal.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md",
+      "agent": "agy-argon",
+      "layer": "#fractal-l5",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md",
+      "agent": "agy-argon",
+      "layer": "#fractal-l1",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md",
+      "agent": "agy-argon",
+      "layer": "#fractal-l8",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md",
+      "agent": "agy-argon",
+      "layer": "#fractal-l1",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md"
+    },
+    {
+      "kind": "capability_index",
+      "path": "governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json",
+      "layer": "#fractal-l9",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json"
+    }
+  ],
+  "pending_groups": [
+    "wave2-step1-canonical-gateway-journal-20261031-0823-not-materialized",
+    "client-adoption-beyond-four-native-bindings",
+    "system-admission-separate-t24-authority"
+  ],
+  "edges": [
+    {
+      "from": "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md",
+      "to": "docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md",
+      "relation": "documented_by"
+    },
+    {
+      "from": "docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md",
+      "to": "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md",
+      "relation": "specified_by"
+    },
+    {
+      "from": "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md",
+      "to": "docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md",
+      "relation": "supports"
+    },
+    {
+      "from": "docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md",
+      "to": "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md",
+      "relation": "explains_decision"
+    },
+    {
+      "from": "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md",
+      "to": "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "relation": "governed_by"
+    },
+    {
+      "from": "docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md",
+      "to": "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md",
+      "relation": "evidences"
+    }
+  ]
+}

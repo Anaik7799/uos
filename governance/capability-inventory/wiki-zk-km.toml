@@ -35,7 +35,14 @@ source = "uos"
 path = "docs/zk"
 state = "admitted"
 master_moc = "docs/zk/20260905-1801-moc-uos-unified-master.md"
-adrs_total = 88
+adrs_total = 137
+admitted_ev_ceiling = 93
+permanent_decisions = "ADR-001..ADR-137"
+quarantined_not_admitted_adrs = "ADR-071..ADR-086"
+unnumbered_permanent_decisions = [
+  "docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md",
+  "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md"
+]
 adrs = [
   "ADR-001",
   "ADR-002",
@@ -124,7 +131,56 @@ adrs = [
   "ADR-085",
   "ADR-086",
   "ADR-087",
-  "ADR-088"
+  "ADR-088",
+  "ADR-089",
+  "ADR-090",
+  "ADR-091",
+  "ADR-092",
+  "ADR-093",
+  "ADR-094",
+  "ADR-095",
+  "ADR-096",
+  "ADR-097",
+  "ADR-098",
+  "ADR-099",
+  "ADR-100",
+  "ADR-101",
+  "ADR-102",
+  "ADR-103",
+  "ADR-104",
+  "ADR-105",
+  "ADR-106",
+  "ADR-107",
+  "ADR-108",
+  "ADR-109",
+  "ADR-110",
+  "ADR-111",
+  "ADR-112",
+  "ADR-113",
+  "ADR-114",
+  "ADR-115",
+  "ADR-116",
+  "ADR-117",
+  "ADR-118",
+  "ADR-119",
+  "ADR-120",
+  "ADR-121",
+  "ADR-122",
+  "ADR-123",
+  "ADR-124",
+  "ADR-125",
+  "ADR-126",
+  "ADR-127",
+  "ADR-128",
+  "ADR-129",
+  "ADR-130",
+  "ADR-131",
+  "ADR-132",
+  "ADR-133",
+  "ADR-134",
+  "ADR-135",
+  "ADR-136",
+  "ADR-137"
 ]
 
 [wiki_tags]
@@ -148,3 +204,50 @@ index = "governance/capability-inventory/20260909-0249-ecology-km-index.json"
 wiki = "docs/wiki/20260909-0249-agentic-ecology.md"
 zk = "docs/zk/20260909-0249-ecology-capability-activation-decision.md"
 specification = "docs/design/20260909-0249-agentic-ecology-spec.json"
+
+[[knowledge_group]]
+id = "SYMBIOSIS-20261001-1117"
+plan = "uos/agent-symbiosis/20261001-1117"
+state = "implemented"
+admitted = false
+index = "governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json"
+wiki = "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261001-1117-uos-agent-symbiosis-operations.md"
+
+[[knowledge_group]]
+id = "TELEGRAM-JOURNEYS-20261026"
+plan = "uos/telegram-journeys/20261026"
+state = "implemented"
+admitted = false
+index = "governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json"
+wiki = "docs/wiki/20261026-0220-telegram-journeys-guide.md"
+media = "docs/wiki/20261026-0801-telegram-media-pipeline-guide.md"
+acceptance = "contracts/rules/20261026-0220-telegram-journey-acceptance.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0220-telegram-journeys-guide.md"
+acceptance_url = "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261026-0220-telegram-journey-acceptance.md"
+
+[[knowledge_group]]
+id = "AK47-101ROUTE-MCP-20261030-1058"
+plan = "uos/ak47-multi-agent-mcp-symbiosis/20261030-1058"
+state = "implemented"
+admitted = false
+index = "governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json"
+wiki = "docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md"
+zk = "docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md"
+rule = "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md"
+zk_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md"
+
+[[knowledge_group]]
+id = "OTP29-ANTI-BRITTLE-FRACTAL-MCP-20261031-1012"
+plan = "uos/km-triad-fractal-prompt-sync/20261031-1008"
+state = "implemented"
+admitted = false
+index = "governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json"
+wiki = "docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md"
+zk = "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md"
+sop = "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md"
+zk_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md"
+sop_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md"
+index_url = "http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json"

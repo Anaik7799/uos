@@ -341,6 +341,35 @@ and Mermaid sources.
 - Zero-Muda Graphene Exclusion: `[[zk:pure_erlang_math]]` (`apps/cepaf_gleam/src/graphene_nif.erl`)
 - Manual TUI & GUI Verification Guide: `[[wiki:20260908-1325-tui-and-gui-manual-verification-guide]]` ([DOC-MANUAL-TUI-GUI](http://nas-1.tail55d152.ts.net:4100/docs/manual/20260908-1325-tui-and-gui-manual-verification-guide.md))
 
+---
+
+## §5.0 October 2026-10 Permanent Unnumbered Decisions & Cross-Plane Symbiosis Hub
+
+This append-only hub registers the October `2026-10` unnumbered permanent decisions and cross-plane symbiosis artifacts. It does not modify, renumber, or re-admit any existing `ADR-001..ADR-137` row or any `ADR-071..ADR-086` `NOT_ADMITTED` marker. `admitted_ev_ceiling = 93`; zero new EV numbers are minted.
+
+### §5.1 Permanent unnumbered decisions (`docs/zk/`)
+
+- `[[zk:20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture]]` ([ADR AK-47 multi-agent 101-route MCP architecture](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md)) — `ADR-AK47-SYMBIOSIS-001`.
+- `[[zk:20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams]]` ([ADR OTP 29 JSON total quarantine & canonical MCP seams](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md)) — `ADR-OTP29-ANTI-BRITTLE-MCP-001`.
+
+### §5.2 October Wiki guides (`docs/wiki/`)
+
+- `[[wiki:20261026-0220-telegram-journeys-guide]]` ([Telegram journey guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0220-telegram-journeys-guide.md)) · `[[wiki:20261026-0801-telegram-media-pipeline-guide]]` ([Telegram media pipeline guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0801-telegram-media-pipeline-guide.md)).
+- `[[wiki:20261030-1058-unified-101-route-mcp-client-guide]]` ([Unified 101-route MCP client guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md)) · `[[wiki:20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki]]` ([OTP 29 JSON anti-brittle MCP & fractal symbiosis wiki](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md)).
+
+### §5.3 Canonical fractal system prompt SOP (`docs/sop/`)
+
+- `[[wiki:20261030-1058-uos-fractal-comprehensive-system-prompt]]` ([UOS fractal comprehensive system prompt](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md)) · `[[wiki:20261031-1012-uos-canonical-fractal-system-prompt]]` ([Canonical UOS fractal system prompt suite](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md)).
+
+### §5.4 October journals and capability index (`docs/journal/`, `governance/`)
+
+- [`20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md) · [`20261030-2215-formal-math-verification-and-github-checkpoint-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md) · [`20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md) · [`20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md).
+- [`20261031-1012-mcp-anti-brittle-fractal-km-index.json`](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json) · `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`.
+
+### §5.5 Provenance caveat
+
+This hub is report-only. `admitted_ev_ceiling = 93`, `application_admitted = false`, `SYSTEM_ADMITTED = false`; `EV-94..EV-109` and `ADR-071..ADR-086` remain `NOT_ADMITTED`. Registration here is not admission evidence.
+
 ## Comprehensive verification checklist
 
 Document checks and production gates have different evidence scopes. Checked

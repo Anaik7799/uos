@@ -3,6 +3,7 @@
 //// must never be committed independently by concurrent workers.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/mcp/adapters/canonical_planning_store as canonical
 import cepaf_gleam/mcp/admission.{
   type TaskLifecycleState, type ValidatedCall, TaskAvailable, TaskCompleted,
   TaskExecuting,
@@ -15,14 +16,24 @@ import gleam/dict.{type Dict}
 import gleam/int
 import gleam/json
 import gleam/list
-import gleam/option.{Some}
+import gleam/option.{type Option, Some}
 import gleam/string
+import simplifile
 
 pub type Task {
   Task(state: TaskLifecycleState, worker: String, attempt: Int)
   /// Local hold preserves the last canonical lifecycle state and its fence.
   /// It is never represented as completed or as a fresh claim.
   HeldTask(state: TaskLifecycleState, worker: String, attempt: Int)
+  /// Explicit canonical backend configuration. Dispatch inspects this variant,
+  /// never an encoded task identifier, and independently requires canonical
+  /// storage for an actual Sa-plan workspace if configuration is lost.
+  CanonicalBackendTask(
+    state: TaskLifecycleState,
+    worker: String,
+    attempt: Int,
+    backend: canonical.WriteBackend,
+  )
 }
 
 pub type PlanningWriteStore {
@@ -36,6 +47,37 @@ pub type PlanningWriteStore {
 
 pub fn new_store() -> PlanningWriteStore {
   PlanningWriteStore(dict.new(), dict.new(), dict.new(), dict.new())
+}
+
+pub fn new_canonical_store(root: String) -> PlanningWriteStore {
+  new_canonical_store_with_db(
+    root,
+    root <> "/var/sa-plan/uos.sqlite3",
+    canonical.resolve_sqlite_binary(root),
+  )
+}
+
+pub fn new_canonical_store_with_db(
+  root: String,
+  db_path: String,
+  sqlite_bin: Option(String),
+) -> PlanningWriteStore {
+  PlanningWriteStore(
+    dict.from_list([
+      #(
+        #("", ""),
+        CanonicalBackendTask(
+          TaskAvailable,
+          "",
+          0,
+          canonical.CanonicalSqliteWriteBackend(root, db_path, sqlite_bin),
+        ),
+      ),
+    ]),
+    dict.new(),
+    dict.new(),
+    dict.new(),
+  )
 }
 
 fn arg(call: ValidatedCall, key: String) -> String {
@@ -119,6 +161,47 @@ fn success(
 }
 
 pub fn execute(
+  store: PlanningWriteStore,
+  call: ValidatedCall,
+) -> #(Outcome, PlanningWriteStore) {
+  case canonical.arguments_bounded(call) {
+    False -> refuse(store, "INVALID_ARGUMENT")
+    True -> execute_bounded(store, call)
+  }
+}
+
+fn execute_bounded(
+  store: PlanningWriteStore,
+  call: ValidatedCall,
+) -> #(Outcome, PlanningWriteStore) {
+  let backends =
+    dict.values(store.tasks)
+    |> list.filter_map(fn(task) {
+      case task {
+        CanonicalBackendTask(backend: backend, ..) -> Ok(backend)
+        _ -> Error(Nil)
+      }
+    })
+  case backends {
+    [backend] ->
+      case canonical.execute(backend, call, plan_id(call), task_id(call)) {
+        Ok(value) -> success(store, call, value)
+        Error(error) -> #(Refused(error), store)
+      }
+    [] ->
+      case
+        simplifile.is_directory(
+          principal.workspace_root(call.principal) <> "/var/sa-plan",
+        )
+      {
+        Ok(False) -> execute_in_memory(store, call)
+        _ -> refuse(store, "SA_PLAN_STORE_UNAVAILABLE")
+      }
+    _ -> refuse(store, "SA_PLAN_STORE_UNAVAILABLE")
+  }
+}
+
+fn execute_in_memory(
   store: PlanningWriteStore,
   call: ValidatedCall,
 ) -> #(Outcome, PlanningWriteStore) {
@@ -245,46 +328,61 @@ fn transition(
         state -> state
       }
   }
+  case task.state == TaskCompleted {
+    True -> refuse(store, "COMPLETED_TASK_IMMUTABLE")
+    False -> transition_owned(store, call, key, task, actor, target)
+  }
+}
+
+fn transition_owned(
+  store: PlanningWriteStore,
+  call: ValidatedCall,
+  key: #(String, String),
+  task: Task,
+  actor: String,
+  target: String,
+) -> #(Outcome, PlanningWriteStore) {
   case target, task {
-    "blocked", Task(..) ->
-      case task.worker == "" || task.worker == actor {
-        False -> refuse(store, "PRINCIPAL_WORKER_MISMATCH")
-        True ->
+    "blocked", Task(..)
+    | "blocked", HeldTask(..)
+    | "available", HeldTask(..)
+    | "executing", HeldTask(..)
+    -> {
+      let requested = int.parse(arg(call, "attempt"))
+      let fence_matches = case call.attempt {
+        Some(fence) -> requested == Ok(fence)
+        _ -> True
+      }
+      case
+        task.state,
+        task.worker == actor,
+        requested == Ok(task.attempt) && fence_matches
+      {
+        TaskExecuting, True, True -> {
+          let updated = case target {
+            "blocked" -> HeldTask(task.state, task.worker, task.attempt)
+            "executing" -> Task(TaskExecuting, actor, task.attempt)
+            _ -> Task(TaskAvailable, "", task.attempt)
+          }
           success(
             PlanningWriteStore(
               ..store,
-              tasks: dict.insert(
-                store.tasks,
-                key,
-                HeldTask(task.state, task.worker, task.attempt),
-              ),
+              tasks: dict.insert(store.tasks, key, updated),
             ),
             call,
-            "blocked",
+            target,
           )
+        }
+        TaskAvailable, _, _ -> refuse(store, "TASK_NOT_EXECUTING")
+        _, False, _ -> refuse(store, "PRINCIPAL_WORKER_MISMATCH")
+        _, _, _ -> refuse(store, "STALE_ATTEMPT_FENCE")
       }
-    "blocked", HeldTask(..) -> success(store, call, "blocked")
-    "available", HeldTask(..) ->
-      case task.worker == "" || task.worker == actor {
-        False -> refuse(store, "PRINCIPAL_WORKER_MISMATCH")
-        True ->
-          success(
-            PlanningWriteStore(
-              ..store,
-              tasks: dict.insert(
-                store.tasks,
-                key,
-                Task(TaskAvailable, "", task.attempt),
-              ),
-            ),
-            call,
-            "available",
-          )
-      }
+    }
     "available", Task(state: TaskAvailable, ..) ->
       success(store, call, "available")
     _, HeldTask(..) -> refuse(store, "TASK_BLOCKED")
     _, Task(..) -> transition_active(store, call, key, task, actor, target)
+    _, CanonicalBackendTask(..) -> refuse(store, "UNKNOWN_TASK_ID")
   }
 }
 
