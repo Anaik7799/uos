@@ -9,7 +9,7 @@
 
 #fractal-l 0 #fractal-l 1 #fractal-l 2 #fractal-l 3 #fractal-l 4 #fractal-l 5 #fractal-l 6 #fractal-l 7 #fractal-l 8 #fractal-l 9 #zk-adr #zero-muda #tailscale-web
 
-Transclusions: [[wiki: 20261030-1058-unified-101-route-mcp-client-guide]] · [[zk: 20261030-1058-adr-ak 47-multi-agent-101-route-mcp-architecture]].
+Transclusions: [[wiki: 20261030-1058-unified-101-route-mcp-client-guide]] · [[zk:20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture]].
 
 ## 1. Scope & Trigger
 

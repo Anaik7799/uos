@@ -563,6 +563,8 @@ type transclusion_audit = {
   total_zk_links : int;
   resolved_zk_links : int;
   broken_transclusions : string list;
+  canonical_broken_transclusions : int;
+  historical_broken_transclusions : int;
 }
 
 let scan_knowledge_transclusions root_dir =
@@ -575,37 +577,141 @@ let scan_knowledge_transclusions root_dir =
   let wiki_dir = Filename.concat root_dir "docs/wiki" in
   let zk_dir = Filename.concat root_dir "docs/zk" in
 
-  let canonical_paths = ["docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"; "docs/zk/20260905-1801-moc-uos-unified-master.md";
+  let corpus_dirs = [
+    "docs/wiki";
+    "docs/zk";
+    "docs/sop";
+    "docs/design";
+    "docs/handover";
+    "docs/journal";
+    "docs/guides";
+    "docs/tomes";
+    "contracts/rules";
+    "formal/lean";
+    "formal/quint";
+  ] in
+  let canonical_paths = [
     "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md";
     "docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md";
-    "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md"] in
-  let canonical_source full = List.mem full (List.map (Filename.concat root_dir) canonical_paths) in
-  let broken_at full message = (if canonical_source full then "canonical-triad:" else "") ^ message in
+    "docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md";
+    "docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md";
+    "docs/handover/20261031-1100-agy-to-codex-always-fresh-km-mcp-brain-and-fractal-plan-handover.md";
+    "docs/journal/20261031-1151-t01-always-fresh-km-and-verifiers-journal.md";
+  ] in
+  let canonical_sources = List.map (Filename.concat root_dir) canonical_paths in
+  let corpus_index_full = Filename.concat root_dir "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md" in
+  let moc_full = Filename.concat root_dir "docs/zk/20260905-1801-moc-uos-unified-master.md" in
+
+  let canonical_source full = List.mem full canonical_sources in
+  let broken_at full id message =
+    let canonical_context =
+      canonical_source full ||
+      ((full = corpus_index_full || full = moc_full) && contains_text id "2026103")
+    in
+    (if canonical_context then "canonical-triad:" else "") ^ message
+  in
+
   let regular path =
     let prefix = root_dir ^ "/" in
-    if not (String.starts_with ~prefix path) then false else
-    let rel = String.sub path (String.length prefix) (String.length path - String.length prefix) in
-    let rec check parent = function
-      | [] -> false
-      | [name] -> let st = Unix.lstat (Filename.concat parent name) in st.Unix.st_kind = Unix.S_REG && st.Unix.st_nlink = 1
-      | name::rest -> let next = Filename.concat parent name in (Unix.lstat next).Unix.st_kind = Unix.S_DIR && check next rest
-    in try check root_dir (String.split_on_char '/' rel) with _ -> false
+    if not (String.starts_with ~prefix path) then false
+    else
+      let rel = String.sub path (String.length prefix) (String.length path - String.length prefix) in
+      let parts = String.split_on_char '/' rel in
+      let rec check parent = function
+        | [] -> false
+        | [name] ->
+          let st = Unix.lstat (Filename.concat parent name) in
+          st.Unix.st_kind = Unix.S_REG && st.Unix.st_nlink = 1
+        | name :: rest ->
+          let next = Filename.concat parent name in
+          (Unix.lstat next).Unix.st_kind = Unix.S_DIR && check next rest
+      in
+      try check root_dir parts with _ -> false
   in
+
+  let rec walk_regular_files dir acc =
+    if Sys.file_exists dir then
+      try
+        let st = Unix.lstat dir in
+        if st.Unix.st_kind = Unix.S_DIR then
+          let entries = Sys.readdir dir in
+          Array.fold_left (fun acc e ->
+            let full = Filename.concat dir e in
+            try
+              let est = Unix.lstat full in
+              if est.Unix.st_kind = Unix.S_DIR then
+                walk_regular_files full acc
+              else if est.Unix.st_kind = Unix.S_REG && est.Unix.st_nlink = 1 && regular full then
+                full :: acc
+              else
+                acc
+            with _ -> acc
+          ) acc entries
+        else acc
+      with _ -> acc
+    else acc
+  in
+
+  let corpus_files =
+    List.fold_left (fun acc rel ->
+      walk_regular_files (Filename.concat root_dir rel) acc
+    ) [] corpus_dirs
+    |> List.sort_uniq String.compare
+  in
+
+  let files_in_dir dir = List.filter (fun full -> Filename.dirname full = dir) corpus_files in
+  let lower_basename full = String.lowercase_ascii (Filename.basename full) in
+  let is_md_file full = Filename.check_suffix (lower_basename full) ".md" in
+
   let note_exists dir id =
-    let safe = not (Filename.is_relative id = false) && not (String.contains id '\\') &&
-      List.for_all (fun p -> p <> "" && p <> "." && p <> "..") (String.split_on_char '/' id) in
-    safe && (regular (Filename.concat dir id) || regular (Filename.concat dir (id ^ ".md")) || regular (Filename.concat root_dir id) || regular (Filename.concat root_dir (id ^ ".md")) ||
-      (not (String.contains id '/') &&
-       let token = String.lowercase_ascii id in
-       let matches name =
-         let lower = String.lowercase_ascii name in
-         Filename.check_suffix lower ".md" && regular (Filename.concat dir name) &&
-         (if String.starts_with ~prefix:"adr-" token then
-            contains_text lower ("-" ^ token ^ "-") || Filename.check_suffix lower ("-" ^ token ^ ".md") || lower = token ^ ".md"
-          else contains_text lower token)
-       in
-       try Array.to_list (Sys.readdir dir) |> List.filter matches |> List.length = 1 with _ -> false))
+    let segments = String.split_on_char '/' id in
+    let safe =
+      id <> "" && Filename.is_relative id && not (String.contains id '\\') &&
+      List.for_all (fun p -> p <> "" && p <> "." && p <> "..") segments
+    in
+    if not safe then false
+    else
+      let direct_candidates = [id; id ^ ".md"; id ^ ".lean"; id ^ ".qnt"] in
+      let direct_exists base =
+        List.exists (fun c -> regular (Filename.concat base c)) direct_candidates
+      in
+      if direct_exists dir || direct_exists root_dir then true
+      else
+        let dir_files = files_in_dir dir in
+        let exact_targets =
+          [id ^ ".md"; id ^ ".lean"; id ^ ".qnt"; id]
+          |> List.map String.lowercase_ascii
+          |> List.sort_uniq String.compare
+        in
+        let exact_matches files =
+          List.filter (fun full -> List.mem (lower_basename full) exact_targets) files
+        in
+        let exact_dir_matches = exact_matches dir_files in
+        if List.length exact_dir_matches = 1 then true
+        else if List.length exact_dir_matches > 1 then false
+        else
+          let exact_corpus_matches = exact_matches corpus_files in
+          if List.length exact_corpus_matches = 1 then true
+          else if String.contains id '/' then false
+          else
+            let token = String.lowercase_ascii id in
+            let substring_matches files =
+              List.filter (fun full ->
+                let lower = lower_basename full in
+                is_md_file full &&
+                (if String.starts_with ~prefix:"adr-" token then
+                   contains_text lower ("-" ^ token ^ "-") ||
+                   Filename.check_suffix lower ("-" ^ token ^ ".md") ||
+                   lower = token ^ ".md"
+                 else contains_text lower token)
+              ) files
+            in
+            let dir_sub_matches = substring_matches dir_files in
+            if List.length dir_sub_matches = 1 then true
+            else if List.length dir_sub_matches > 1 then false
+            else List.length (substring_matches (List.filter is_md_file corpus_files)) = 1
   in
+
   let wiki_exists id = note_exists wiki_dir id in
   let zk_exists id = note_exists zk_dir id || note_exists (Filename.concat zk_dir "adr") id in
 
@@ -638,15 +744,16 @@ let scan_knowledge_transclusions root_dir =
                     (match String.index_from_opt line vstart ']' with
                      | Some vend when vend + 1 < llen && line.[vend + 1] = ']' ->
                        let id = String.sub line vstart (vend - vstart) |> String.split_on_char '|' |> List.hd |> String.trim in
-                       if String.length id > 0 && id <> "..." then (
+                       let placeholder = String.starts_with ~prefix:"<" id && String.ends_with ~suffix:">" id in
+                       if String.length id > 0 && id <> "..." && not placeholder then (
                          if is_wiki then (
                            incr wiki_count;
                            if wiki_exists id then incr wiki_resolved
-                           else broken := broken_at full (sprintf "wiki:%s (in %s)" id full) :: !broken
+                           else broken := broken_at full id (sprintf "wiki:%s (in %s)" id full) :: !broken
                          ) else (
                            incr zk_count;
                            if zk_exists id then incr zk_resolved
-                           else broken := broken_at full (sprintf "zk:%s (in %s)" id full) :: !broken
+                           else broken := broken_at full id (sprintf "zk:%s (in %s)" id full) :: !broken
                          )
                        );
                        parse_prefix prefix is_wiki (vend + 2)
@@ -662,6 +769,7 @@ let scan_knowledge_transclusions root_dir =
       ) entries
     )
   in
+
   List.iter (fun rel ->
     let p = Filename.concat root_dir rel in
     if not (try let st = Unix.lstat p in st.Unix.st_kind = Unix.S_REG && st.Unix.st_nlink = 1 with _ -> false)
@@ -669,15 +777,26 @@ let scan_knowledge_transclusions root_dir =
   ) ["AGENTS.md"; "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md";
      "docs/zk/20260905-1801-moc-uos-unified-master.md";
      "governance/capability-inventory/wiki-zk-km.toml"];
+
   walk_files (Filename.concat root_dir "docs");
   walk_files (Filename.concat root_dir "contracts");
+
+  let broken_transclusions = List.rev !broken in
+  let canonical_broken_transclusions =
+    List.fold_left (fun acc entry ->
+      if String.starts_with ~prefix:"canonical-triad:" entry then acc + 1 else acc
+    ) 0 broken_transclusions
+  in
+  let historical_broken_transclusions = List.length broken_transclusions - canonical_broken_transclusions in
 
   {
     total_wiki_links = !wiki_count;
     resolved_wiki_links = !wiki_resolved;
     total_zk_links = !zk_count;
     resolved_zk_links = !zk_resolved;
-    broken_transclusions = List.rev !broken;
+    broken_transclusions;
+    canonical_broken_transclusions;
+    historical_broken_transclusions;
   }
 
 (* A2UI Component Catalog Validator *)
@@ -864,6 +983,8 @@ let main () =
     printf "  Wiki Transclusions ([[wiki:...]]):%d / %d Resolved\n" km_audit.resolved_wiki_links km_audit.total_wiki_links;
     printf "  ZK Transclusions ([[zk:...]]):    %d / %d Resolved\n" km_audit.resolved_zk_links km_audit.total_zk_links;
     printf "  Broken Transclusions:             %d\n" (List.length km_audit.broken_transclusions);
+    printf "  Canonical Broken Transclusions:   %d\n" km_audit.canonical_broken_transclusions;
+    printf "  Historical Broken Transclusions:  %d\n" km_audit.historical_broken_transclusions;
     printf "  A2UI Registered Components:       %d (Core: %d, W1: %d, W2: %d) — %s\n\n"
       a2ui_audit.total_components a2ui_audit.core_count a2ui_audit.wave1_count a2ui_audit.wave2_count
       (if a2ui_audit.catalog_valid then "\027[32mPASS (>= 233)\027[0m" else "\027[31mFAIL\027[0m");
@@ -894,6 +1015,9 @@ let main () =
     printf "  \"wiki_resolved\": %d,\n" km_audit.resolved_wiki_links;
     printf "  \"zk_transclusions\": %d,\n" km_audit.total_zk_links;
     printf "  \"zk_resolved\": %d,\n" km_audit.resolved_zk_links;
+    printf "  \"broken_transclusions\": %d,\n" (List.length km_audit.broken_transclusions);
+    printf "  \"canonical_broken_transclusions\": %d,\n" km_audit.canonical_broken_transclusions;
+    printf "  \"historical_broken_transclusions\": %d,\n" km_audit.historical_broken_transclusions;
     printf "  \"a2ui_components\": %d,\n" a2ui_audit.total_components;
     printf "  \"a2ui_valid\": %b,\n" a2ui_audit.catalog_valid;
     printf "  \"pagerank_top\": [\n";
