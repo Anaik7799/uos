@@ -566,9 +566,9 @@
       {
         "path": "docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md",
         "http_status": "200",
-        "disk_sha256": "29cdaf828b67f53607e40b2c0d905d70fcd49630bec884a30847a624dfd89916",
-        "body_sha256": "29cdaf828b67f53607e40b2c0d905d70fcd49630bec884a30847a624dfd89916",
-        "header_sha256": "29cdaf828b67f53607e40b2c0d905d70fcd49630bec884a30847a624dfd89916",
+        "disk_sha256": "5c934dd1767bc653527c82c545e3a82a3d616b3a2de14fb427512b5df04befad",
+        "body_sha256": "5c934dd1767bc653527c82c545e3a82a3d616b3a2de14fb427512b5df04befad",
+        "header_sha256": "5c934dd1767bc653527c82c545e3a82a3d616b3a2de14fb427512b5df04befad",
         "pass": true
       },
       {
@@ -640,6 +640,6 @@
   "source_finalization": {
     "task_id": "M04_SOURCE_CLOSURE",
     "scope": "source publication and metadata only",
-    "state": "SOURCE_PUBLICATION_READY"
+    "state": "SOURCE_PUBLICATION_VERIFIED"
   }
 }
