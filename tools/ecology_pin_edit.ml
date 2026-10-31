@@ -1,8 +1,8 @@
 (* Pure byte-span pin editing. No filesystem, process, hashing, logging or
    authority effects. Load the existing pure Km_adjudication module first.
    JSON uses its RFC/UTF8/depth/duplicate-key checks. TOML supports bare dotted
-   tables, bare keys and single-line JSON-basic/literal strings, booleans,
-   decimal integers, arrays and bare-key inline tables. Unsupported syntax is
+   tables with bounded bare or quoted path parts, bare/quoted assignment keys and single-line JSON-basic/literal strings, booleans,
+   decimal integers, bounded finite decimal floats, arrays and bare-key inline tables. Unsupported syntax is
    HOLD, never a fallback. Only explicitly selected existing pin literals change.
    Nonowned bytes remain verbatim, including approval/disabled/auth settings. *)
 module Pin : sig
@@ -10,13 +10,19 @@ module Pin : sig
   type prepared
   val json : servers:string list -> capsule:string -> payload_sha256:string -> string -> (prepared,string) result
   val toml : servers:string list -> capsule:string -> payload_sha256:string -> string -> (prepared,string) result
+  (* Read-only observed pins; outputs only validated owned metadata. No source
+     body, unowned value, secret fingerprint or write effect is returned. *)
+  val inspect_json : servers:string list -> string -> (metadata list,string) result
+  val inspect_toml : servers:string list -> string -> (metadata list,string) result
+  val inspect_all_json : string -> (metadata list,string) result
+  val inspect_all_toml : string -> (metadata list,string) result
   (* Private staging input, not a receipt or public response. Never log/hash it. *)
   val bytes_for_private_commit : prepared -> string
   val owned_metadata : prepared -> metadata list
 end = struct
   module A=Km_adjudication.Adjudicator
   type metadata={server:string;capsule:string;payload_sha256:string}
-  type prepared={bytes:string;metadata:metadata list}
+  type prepared={bytes:string;metadata:metadata list;previous:metadata list}
   type span={first:int;last:int;replacement:string;server:string;key:string}
   exception Invalid of string
   let refuse s=raise(Invalid s)
@@ -72,7 +78,17 @@ end = struct
       Buffer.add_string output span.replacement;position:=span.last)ordered;
     Buffer.add_substring output body !position(String.length body- !position);
     let bytes=Buffer.contents output in require(String.length bytes<=maximum) "output_bound";
-    {bytes;metadata=List.map(fun server->{server;capsule;payload_sha256=payload})servers}
+    let prior server key =
+      let span=List.find(fun s->s.server=server && s.key=key)spans in
+      let size=span.last-span.first in
+      require(size>=2) "owned_pin_not_string";
+      match body.[span.first] with
+      | '"'->json_string body span.first span.last
+      | '\''->String.sub body(span.first+1)(size-2)
+      | _->refuse "owned_pin_not_string" in
+    let previous=List.map(fun server->{server;capsule=prior server release_key;
+      payload_sha256=prior server payload_key})servers in
+    {bytes;metadata=List.map(fun server->{server;capsule;payload_sha256=payload})servers;previous}
   let protect f=try Ok(f()) with
     | Invalid reason->Error reason
     | A.Input_error _|Yojson.Json_error _->Error "invalid_strict_json_or_utf8"
@@ -122,6 +138,38 @@ end = struct
   let bare s=s<>"" && String.for_all(function 'a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-'->true|_->false)s
   let prefix left right=
     let rec loop a b=match a,b with [],_->true|x::xs,y::ys when x=y->loop xs ys|_->false in loop left right
+  (* Finite decimal TOML floats only. OCaml float_of_string alone also accepts
+     forms outside this grammar, so validate groups/leading zeros first.
+     Unowned scalar bytes remain opaque and are never normalized/re-emitted. *)
+  let finite_float token =
+    let n=String.length token in
+    let digit i=i<n && token.[i]>='0' && token.[i]<='9' in
+    let group start=
+      if not(digit start)then None else
+      let rec loop i=
+        if digit i then loop(i+1)
+        else if i<n && token.[i]='_'then
+          if i>start && digit(i-1) && digit(i+1)then loop(i+1)else None
+        else Some i in loop start in
+    if n=0 || n>128 then false else
+    let first=if token.[0]='+' || token.[0]='-'then 1 else 0 in
+    match group first with
+    |None->false
+    |Some ending when token.[first]='0' && ending>first+1->false
+    |Some ending->
+      let fraction=ending<n && token.[ending]='.'in
+      let after_fraction=if fraction then group(ending+1)else Some ending in
+      match after_fraction with None->false|Some after_fraction->
+      let exponent=after_fraction<n && (token.[after_fraction]='e'||token.[after_fraction]='E')in
+      let after_exponent=if exponent then
+        let start=after_fraction+1 in
+        let start=if start<n && (token.[start]='+'||token.[start]='-')then start+1 else start in group start
+        else Some after_fraction in
+      match after_exponent with
+      |Some last when last=n && (fraction||exponent)->
+        let literal=String.to_seq token|>Seq.filter((<>)'_')|>String.of_seq in
+        (try match classify_float(float_of_string literal)with FP_nan|FP_infinite->false|_->true with Failure _->false)
+      |_->false
   (* A finite one-line value parser is needed even for opaque values: ignoring
      an unclosed array/string could mistake its next line for an owned table. *)
   let toml_value line start=
@@ -180,9 +228,34 @@ end = struct
         then String.sub token 1(String.length token-1) else token in
       let decimal=unsigned<>"" && String.for_all(function '0'..'9'->true|_->false)unsigned &&
         (String.length unsigned=1 || unsigned.[0]<>'0') in
-      require(token="true" || token="false" || decimal) "unsupported_toml_scalar";
+      require(token="true" || token="false" || decimal || finite_float token) "unsupported_toml_scalar";
       if decimal then (try ignore(Int64.of_string token) with Failure _->refuse "toml_integer_bound");last in
     value 0 start
+
+  (* TOML1.0 table paths use decoded bare/quoted key parts. Consume closing
+     brackets only outside strings, so dots/comments/brackets inside a quoted
+     unowned project name cannot change an owned MCP path. Bounded subset:
+     array tables and multiline/unsupported string escapes remain HOLD. *)
+  let toml_header text first =
+    let n=String.length text in
+    require(first+1<n && text.[first]='[' && text.[first+1]<>'[') "unsupported_array_table";
+    let rec parts i acc =
+      require(List.length acc<32) "toml_structure_bound";
+      let i=skip text i in require(i<n) "unsupported_toml_header";
+      let key,last=match text.[i] with
+      | '"'|'\'' as quote->
+        let last=toml_value text i in
+        let key=if quote='"' then json_string text i last else String.sub text(i+1)(last-i-2)in
+        require(String.length key<=4096 && not(String.contains key '\000')) "invalid_toml_key";
+        key,last
+      | _->let rec ending j=if j<n && not(ws text.[j] || text.[j]='.' || text.[j]=']')then ending(j+1)else j in
+        let last=ending i in let key=String.sub text i(last-i)in require(bare key) "invalid_toml_key";key,last in
+      let tail=skip text last in require(tail<n) "unsupported_toml_header";
+      match text.[tail] with
+      |'.'->parts(tail+1)(key::acc)
+      |']'->List.rev(key::acc),tail+1
+      |_->refuse "invalid_toml_header_separator" in
+    parts(first+1)[]
 
   let toml ~servers ~capsule ~payload_sha256 body=protect(fun()->
     bindings ["uos_gleam";"uos_development"] servers capsule payload_sha256;
@@ -197,19 +270,22 @@ end = struct
       let n=String.length text in let first=skip text 0 in
       if first<n && text.[first]<>'#' then
       if text.[first]='[' then (
-        let close=try String.index_from text(first+1)']' with Not_found->refuse "unsupported_toml_header" in
-        let raw=String.sub text(first+1)(close-first-1) in
-        let parts=String.split_on_char '.' raw in
+        let parts,after=toml_header text first in
         require(List.length parts<=32 && List.length !headers<256) "toml_structure_bound";
-        require(List.for_all bare parts) "unsupported_quoted_or_array_table";
-        let tail=skip text(close+1) in require(tail=n || text.[tail]='#') "invalid_toml_header_tail";
+        let tail=skip text after in require(tail=n || text.[tail]='#') "invalid_toml_header_tail";
         require(not(List.mem parts !headers)) "duplicate_toml_section";
         require(not(List.exists(fun key->prefix key parts)!assignments)) "toml_key_table_conflict";
         headers:=parts::!headers;section:=parts)
       else (
-        let eq=try String.index_from text first '=' with Not_found->refuse "unsupported_toml_assignment" in
-        let key=String.trim(String.sub text first(eq-first)) in
-        require(bare key) "unsupported_quoted_or_dotted_key";
+        let key,eq=match text.[first] with
+        |'"'|'\'' as quote->
+          let last=toml_value text first in
+          let key=if quote='"'then json_string text first last else String.sub text(first+1)(last-first-2)in
+          require(String.length key<=4096 && not(String.contains key '\000')) "invalid_toml_key";
+          let eq=skip text last in require(eq<n && text.[eq]='=') "unsupported_dotted_or_invalid_assignment";key,eq
+        |_->let eq=try String.index_from text first '='with Not_found->refuse "unsupported_toml_assignment"in
+          let key=String.trim(String.sub text first(eq-first))in
+          require(bare key) "unsupported_dotted_key";key,eq in
         let path= !section@[key] in
         require(List.length !assignments<2048) "toml_structure_bound";
         require(not(List.mem path !assignments)) "duplicate_toml_key";
@@ -230,4 +306,35 @@ end = struct
     finish body servers capsule payload_sha256 !spans)
   let bytes_for_private_commit p=p.bytes
   let owned_metadata p=p.metadata
+  let observed parsed = match parsed with
+    | Error e->Error e
+    | Ok p->
+      if List.for_all(fun m->valid_capsule m.capsule && hex64 m.payload_sha256)p.previous
+      then Ok p.previous else Error "invalid_current_owned_pin"
+  let audit_capsule="/audit/20261031-0000-"^String.make 64 '0'
+  let audit_payload=String.make 64 '0'
+  let inspect_json ~servers body=
+    observed(json ~servers ~capsule:audit_capsule ~payload_sha256:audit_payload body)
+  let inspect_toml ~servers body=
+    observed(toml ~servers ~capsule:audit_capsule ~payload_sha256:audit_payload body)
+  let inspect_all_json body =
+    match protect(fun()->bounded body;A.bound_nesting body;A.strict_validate body;
+      let parsed=Yojson.Safe.from_string body in A.check_duplicate_keys parsed "root";
+      let servers=match parsed with
+        |`Assoc fields->(match List.assoc_opt "mcpServers"fields with
+          |Some(`Assoc servers)->List.map fst servers|>List.filter(fun s->List.mem s["uos-gleam";"uos-harness";"uos-harness-dev"])
+          |_->[])|_->[]in
+      require(servers<>[]) "missing_owned_servers";servers)with
+    |Error reason->Error reason|Ok servers->inspect_json ~servers body
+  let inspect_all_toml body =
+    match protect(fun()->bounded body;
+      let servers=String.split_on_char '\n' body|>List.filter_map(fun text->
+        let first=skip text 0 in
+        if first>=String.length text || text.[first]<>'['then None else
+        let parts,_=toml_header text first in
+        match parts with
+        |["mcp_servers";server]|["mcp_servers";server;"env"]when List.mem server["uos_gleam";"uos_development"]->Some server
+        |_->None)|>List.sort_uniq String.compare in
+      require(servers<>[]) "missing_owned_servers";servers)with
+    |Error reason->Error reason|Ok servers->inspect_toml ~servers body
 end

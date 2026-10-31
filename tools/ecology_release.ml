@@ -8,7 +8,8 @@
    aborts before publication; dependency absence is not success; manifests are
    deterministic for identical input bytes. Owner permissions are not cryptographic
    immutability: verify again at runtime effects.
-   Usage: ecology_release.ml stage ROOT | verify RELEASE | rebind RELEASE | selftest *)
+   Usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID |
+     verify RELEASE | rebind RELEASE | audit-pins ROOT | selftest *)
 
 open Unix
 open Yojson.Safe.Util
@@ -212,7 +213,7 @@ let payload root apps =
     if Sys.file_exists(root^"/"^src) then [src,"apps/"^app^"/priv/"^rel] else [] else [] in
   let assets=List.map(fun n->let p="apps/cepaf_gleam/priv/static/"^n in p,p)static_names in
   beams @ assets @ optional "certifi" "cacerts.pem" @ optional "esqlite" "esqlite3_nif.so" @
-  List.map(fun n->"apps/indrajaal_gleam_web/build/packages/lustre/priv/static/"^n,"apps/lustre/priv/static/"^n)
+  List.map(fun n->List.assoc "lustre" apps^"/priv/static/"^n,"apps/lustre/priv/static/"^n)
     ["lustre-server-component.mjs";"lustre-server-component.min.mjs"] @
   List.map(fun p->p,p)["tools/ecology_process.ml";"services/inference/max/ecology_max_worker.py"]
 let source_inputs root payload =
@@ -226,7 +227,11 @@ let source_inputs root payload =
     ["cepaf_gleam";"indrajaal_gleam_web";"uos_swarm";"uos_tui"] in
   List.map fst payload @ app_sources @
     ["flake.nix";"flake.lock";"devenv.nix";"tools/ecology_release.ml";
-     "tools/ecology_release.mojo";"services/inference/max/pixi.toml";"services/inference/max/pixi.lock"]
+     "tools/ecology_release.mojo";"tools/ecology_pin_audit.ml";"tools/ecology_pin_audit_cli.ml";
+     "tools/ecology_pin_edit.ml";"tools/km_provenance/km_adjudication.ml";
+     "tools/ecology_native_build.ml";"tools/ecology_file_transaction.ml";
+     "tools/ecology_file_transaction_port.ml";"tools/telegram_store_transport_guardian.ml";
+     "services/inference/max/pixi.toml";"services/inference/max/pixi.lock"]
   |> List.sort_uniq String.compare
 let source_manifest root inputs =
   need(List.length inputs<=maximum_files) "source count bound";
@@ -246,6 +251,48 @@ let disk_preflight root needed =
   need(List.length fields>=6) "disk observation unknown";
   let available=int_of_string(List.nth fields 3) in
   need(available>=needed+needed/5 && available-needed>=512*1024*1024) "disk headroom or 512MiB floor unavailable"
+(* The independently retained build ID binds actual native outputs and the
+   captured input set. It does not prove a complete transitive compiler closure
+   or confer release authority. Packaged verification needs no mutable build tree. *)
+let verify_native_cutover ~staging root binding =
+  let id=binding|>member "artifact_id"|>to_string in
+  need(hex 64 id) "native artifact identity";
+  let dir=root^"/native/cutover" in
+  let encoded=read(dir^"/manifest.json") in
+  need(String.length encoded<=1048576 && digest encoded=id) "native manifest identity";
+  let m=Yojson.Safe.from_string encoded in
+  need(encoded=canonical m) "native manifest canonical encoding";
+  need(m|>to_assoc|>List.map fst|>List.sort String.compare =
+       ["admitted";"authority";"inputs";"outputs";"recipe";"schema"]) "native manifest fields";
+  need(m|>member "schema"|>to_string="uos.native-build.v1") "native manifest schema";
+  need(m|>member "admitted"|>to_bool=false && m|>member "authority"|>to_string="NONE") "native build cannot grant authority";
+  let inputs=member "inputs" m and recipe=member "recipe" m in
+  need(inputs|>member "schema"|>to_string="uos.native-build-inputs.v1") "native captured inputs schema";
+  need(List.length(to_assoc recipe)>0 && digest(canonical recipe)=(inputs|>member "recipe_sha256"|>to_string)) "native recipe binding";
+  List.iter(fun key->let rows=inputs|>member key|>to_list in
+    need(rows<>[] && List.length rows<=2048) "native captured input inventory";
+    List.iter(fun row->need(safe_relative(row|>member "path"|>to_string) &&
+      hex 64(row|>member "sha256"|>to_string) && row|>member "bytes"|>to_int>=0) "native captured input binding")rows)["sources";"toolchain"];
+  let outputs=m|>member "outputs"|>to_list in
+  let names=List.map(fun x->member "path" x|>to_string)outputs in
+  need(List.sort String.compare names=["guardian.exe";"worker.exe"]) "native output inventory";
+  List.iter(fun row->
+    let name=row|>member "path"|>to_string in
+    let path=dir^"/"^name in let st=regular path in
+    need(st.st_size=(row|>member "bytes"|>to_int) && sha path=(row|>member "sha256"|>to_string)) "native output changed";
+    if not staging then need(st.st_perm=0o555) "native executable permissions")outputs;
+  need(Sys.readdir dir|>Array.to_list|>List.sort String.compare=["guardian.exe";"manifest.json";"worker.exe"]) "native directory inventory";
+  if not staging then need((lstat(dir^"/manifest.json")).st_perm=0o444) "native manifest permissions"
+let native_cutover_inputs root id =
+  need(hex 64 id) "native artifact identity";
+  let ocaml=realpath(root^"/toolchains/opam-ocaml/bin/ocaml") in
+  let checked=run root ocaml ["-I";"+unix";root^"/tools/ecology_native_build.ml";"verify";root;root;id]
+    |>Yojson.Safe.from_string in
+  need(checked|>member "status"|>to_string="BUILT_OR_VERIFIED" &&
+       checked|>member "artifact_id"|>to_string=id) "native artifact verification failed";
+  let base="var/ecology/native-builds/cas/"^id in
+  let copied=List.map(fun name->base^"/"^name,"native/cutover/"^name)["worker.exe";"guardian.exe";"manifest.json"] in
+  obj["artifact_id",s id;"scope",s"Captured build inputs and actual output bytes; complete transitive toolchain correspondence unproven; no authority"],copied
 let verify ?(staging=false) ?(dependency_recovery=false) release =
   let root=realpath release in need(read(root^"/.uos-ecology-release")=marker) "release marker";
   let encoded=read(root^"/release-manifest.json") in let m=Yojson.Safe.from_string encoded in
@@ -267,6 +314,7 @@ let verify ?(staging=false) ?(dependency_recovery=false) release =
     permissions root);
   let source=read(root^"/source-manifest.json") in
   need(digest source=(m|>member "source_sha256"|>to_string)) "source manifest identity";
+  (match member "native_cutover" m with `Null -> () | binding -> verify_native_cutover ~staging root binding);
   let deps=read(root^"/runtime-dependencies.json")|>Yojson.Safe.from_string in
   verify_dependencies ~allow_metadata_drift:dependency_recovery deps;
   let otp=m|>member "otp" in
@@ -280,15 +328,16 @@ let verify ?(staging=false) ?(dependency_recovery=false) release =
   need(same(verify_app_closure root executable apps)(m|>member "application_closure")) "packaged application closure changed";
   m
 let freeze root =
-  List.iter(fun p->chmod(root^"/"^p)0o444)(files root "");
+  List.iter(fun p->chmod(root^"/"^p)(if List.mem p ["native/cutover/worker.exe";"native/cutover/guardian.exe"] then 0o555 else 0o444))(files root "");
   let rec dirs p=Array.iter(fun n->let q=p^"/"^n in if(lstat q).st_kind=S_DIR then dirs q)(Sys.readdir p);chmod p 0o555 in dirs root
-let stage source =
+let stage ?native_id source =
   let root=realpath source in need(Sys.file_exists(root^"/.jj")) "standalone UOS root required";
   let erl=dependency root "toolchains/nix-profile/bin/erl" true in
   let exe=erl|>member "path"|>to_string in
   let identity=otp_identity root exe and deps=runtime_dependencies ~snapshot:true root in
   let apps=build_apps root in let closure=verify_app_closure root exe apps in
-  let copied=payload root apps in let inputs=source_inputs root copied in
+  let native_binding,native_copied=match native_id with None->`Null,[]|Some id->native_cutover_inputs root id in
+  let copied=payload root apps@native_copied in let inputs=source_inputs root copied in
   let before=source_manifest root inputs in
   let expected_sources=before|>member "inputs"|>to_list|>List.map(fun v->(v|>member "path"|>to_string),(v|>member "sha256"|>to_string)) in
   need(List.length copied=List.length(List.sort_uniq String.compare(List.map snd copied))) "duplicate destination";
@@ -312,17 +361,19 @@ let stage source =
     "artifact_closure",s"Entire final indrajaal_gleam_web build closure, including its cepaf_gleam dependency; no independently compiled production modules merged";
     "payload_sha256",s payload_hash;"source_sha256",s(digest(json before));
     "otp",obj["executable",erl;"identity",identity];"application_closure",closure;
-    "files",arr content;"application_admitted",`Bool false] in
+    "files",arr content;"native_cutover",native_binding;"application_admitted",`Bool false] in
   let candidate=digest(canonical manifest) in
   let manifest=obj(("candidate_sha256",s candidate)::to_assoc manifest) in
   write(temporary^"/release-manifest.json")(json manifest);
   need(same before(source_manifest root inputs)) "source changed during packaging; partial stage retained";
+  (match native_id with None->()|Some id->ignore(native_cutover_inputs root id));
   verify_dependencies deps;ignore(verify ~staging:true temporary);freeze temporary;
   let now=gmtime(gettimeofday()) in
   let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d" (now.tm_year+1900)(now.tm_mon+1)now.tm_mday now.tm_hour now.tm_sec in
   let final=parent^"/"^stamp^"-"^candidate in
   need(not(Sys.file_exists final)) "release target already exists";rename temporary final;
   let fd=openfile parent [O_RDONLY;O_CLOEXEC] 0 in Fun.protect(fun()->fsync fd)~finally:(fun()->close fd);
+  ignore(verify final);
   obj["status",s"PASS";"release",s final;"candidate_sha256",s candidate;"payload_sha256",s payload_hash;
     "source_sha256",s(digest(json before));"files",`Int(List.length content);
     "payload_bytes",`Int size;"otp",identity;"application_admitted",`Bool false]
@@ -454,16 +505,77 @@ let selftest () =
   let changed=obj(("application_admitted",`Bool true)::List.remove_assoc "application_admitted" (to_assoc m)) in
   write(dir^"/release-manifest.json")(json changed);
   check "verify-admission-refusal" (fun()->try ignore(verify ~staging:true dir);false with Failure e -> e="package cannot grant admission" | _->false);
+  let native=dir^"/native/cutover" in mkdir native;
+  write(native^"/worker.exe")"synthetic worker";write(native^"/guardian.exe")"synthetic guardian";
+  let outputs=List.map(fun name->let path=native^"/"^name in
+    obj["path",s name;"bytes",`Int(regular path).st_size;"sha256",s(sha path)])["worker.exe";"guardian.exe"] in
+  let recipe=obj["fixture",s"synthetic recipe, no build or admission claim"] in
+  let captured=obj["path",s"fixture/source";"sha256",s(digest "fixture");"bytes",`Int 7] in
+  let inputs=obj["schema",s"uos.native-build-inputs.v1";"recipe_sha256",s(digest(canonical recipe));
+    "sources",arr[captured];"toolchain",arr[captured]] in
+  let nm=obj["schema",s"uos.native-build.v1";"inputs",inputs;"recipe",recipe;"outputs",arr outputs;"admitted",`Bool false;"authority",s"NONE"] in
+  let encoded=canonical nm in write(native^"/manifest.json")encoded;
+  let binding=obj["artifact_id",s(digest encoded)] in
+  check "native-staged-captured-output-binding" (fun()->verify_native_cutover ~staging:true dir binding;true);
+  check "native-no-execute-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:false dir binding));
+  freeze(dir^"/native"); (* These paths are intentionally not capsule-rooted. *)
+  check "native-executability-not-inferred-from-file-name" (fun()->(lstat(native^"/worker.exe")).st_perm=0o444);
+  chmod(dir^"/native")0o700;chmod native 0o700;
+  List.iter(fun n->chmod(native^"/"^n)0o555)["worker.exe";"guardian.exe"];
+  check "native-published-output-binding" (fun()->verify_native_cutover ~staging:false dir binding;true);
+  let published=Filename.temp_file "uos-native-capsule-freeze-" "" in unlink published;
+  mkdir(published^"/native/cutover");
+  List.iter(fun name->write(published^"/native/cutover/"^name)(read(native^"/"^name)))["worker.exe";"guardian.exe";"manifest.json"];
+  freeze published;
+  check "native-capsule-freeze-preserves-executables" (fun()->verify_native_cutover ~staging:false published binding;true);
+  List.iter(fun p->chmod p 0o700)[published;published^"/native";published^"/native/cutover"];
+  List.iter(fun n->unlink(published^"/native/cutover/"^n))["worker.exe";"guardian.exe";"manifest.json"];
+  rmdir(published^"/native/cutover");rmdir(published^"/native");rmdir published;
+  chmod(native^"/worker.exe")0o444;
+  check "native-execute-bit-loss-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:false dir binding));
+  chmod(native^"/worker.exe")0o555;
+  unlink(native^"/worker.exe");write(native^"/worker.exe")"changed worker";
+  check "native-output-byte-change-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir binding));
+  unlink(native^"/worker.exe");write(native^"/worker.exe")"synthetic worker";
+  unlink(native^"/manifest.json");write(native^"/manifest.json")(encoded^" ");
+  check "native-manifest-byte-change-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir binding));
+  let incomplete=canonical(obj(List.remove_assoc "inputs"(to_assoc nm))) in
+  unlink(native^"/manifest.json");write(native^"/manifest.json")incomplete;
+  check "native-missing-captured-inputs-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir(obj["artifact_id",s(digest incomplete)])));
+  let mismatched=canonical(obj(("recipe",obj["changed",`Bool true])::List.remove_assoc "recipe"(to_assoc nm))) in
+  unlink(native^"/manifest.json");write(native^"/manifest.json")mismatched;
+  check "native-mismatched-recipe-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir(obj["artifact_id",s(digest mismatched)])));
+  unlink(native^"/manifest.json");write(native^"/manifest.json")encoded;
+  write(native^"/unexpected")"extra";
+  check "native-unexpected-output-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir binding));
+  unlink(native^"/unexpected");
+  let admitted=canonical(obj(("admitted",`Bool true)::List.remove_assoc "admitted"(to_assoc nm))) in
+  unlink(native^"/manifest.json");write(native^"/manifest.json")admitted;
+  check "native-coherent-admission-claim-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir(obj["artifact_id",s(digest admitted)])));
+  List.iter(fun n->unlink(native^"/"^n))["worker.exe";"guardian.exe";"manifest.json"];
+  rmdir native;rmdir(dir^"/native");
   List.iter(fun p->unlink(dir^"/"^p))(files dir "");
   rmdir dir;
   obj["status",s"PASS";"checks",`Int !count;"scope",s"bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"]
+let audit_pins repository =
+  let root=realpath repository in
+  need(Sys.file_exists(root^"/.jj")) "standalone UOS root required";
+  let ocaml=dependency root "toolchains/opam-ocaml/bin/ocaml" true|>member "path"|>to_string in
+  let home=(getpwuid(geteuid())).pw_dir in
+  let output=run root ocaml["-I";root^"/tools";root^"/tools/ecology_pin_audit_cli.ml";root;home]in
+  let report=Yojson.Safe.from_string output in
+  need(member "schema"report=`String "uos.ecology-pin-audit.v1" && member "authority"report=`String "NONE")
+    "unrecognized pin observation report";
+  report
 let () = try
-  need(Array.length Sys.argv<=3 && Array.for_all(fun x->String.length x<=4096)Sys.argv) "usage: ecology_release.ml stage ROOT | verify RELEASE | rebind RELEASE | selftest";
+  need(Array.length Sys.argv<=4 && Array.for_all(fun x->String.length x<=4096)Sys.argv) "usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID | verify RELEASE | rebind RELEASE | audit-pins ROOT | selftest";
   let result=match Array.to_list Sys.argv with
     | [_;"stage";root] -> stage root
+    | [_;"stage-native";root;id] -> stage ~native_id:id root
     | [_;"rebind";release] -> rebind release
     | [_;"verify";release] -> let m=verify release in obj["status",s"PASS";"release",s release;"payload_sha256",member "payload_sha256" m;"application_admitted",`Bool false]
+    | [_;"audit-pins";root] -> audit_pins root
     | [_;"selftest"] -> selftest()
-    | _ -> failwith "usage: ecology_release.ml stage ROOT | verify RELEASE | rebind RELEASE | selftest" in
+    | _ -> failwith "usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID | verify RELEASE | rebind RELEASE | audit-pins ROOT | selftest" in
   print_string(json result)
 with e -> prerr_endline(Yojson.Safe.to_string(obj["status",s"FAIL";"error",s(Printexc.to_string e);"application_admitted",`Bool false]));exit 1

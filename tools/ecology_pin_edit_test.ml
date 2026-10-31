@@ -92,8 +92,8 @@ let ()=
   let literal=replace_first t ("\""^oldcap^"\"  # release") ("'"^oldcap^"'  # release") in
   check "TOML literal-string pin edits exact literal span" (P.bytes_for_private_commit(ok(edit_toml literal))=bytes);
   hold "missing TOML pin" (edit_toml(replace_first t "UOS_COCKPIT_RELEASE  =" "OTHER_RELEASE  ="));
-  hold "quoted TOML section alias" (edit_toml(replace_first t "[mcp_servers.uos_gleam.env]" "[mcp_servers.\"uos_gleam\".env]"));
-  hold "quoted TOML pin alias" (edit_toml(replace_first t "UOS_COCKPIT_RELEASE  =" "\"UOS_COCKPIT_RELEASE\" ="));
+  check "quoted TOML section semantic alias preserves bytes" (P.bytes_for_private_commit(ok(edit_toml(replace_first t "[mcp_servers.uos_gleam.env]" "[mcp_servers.\"uos_gleam\".env]")))=replace_first bytes "[mcp_servers.uos_gleam.env]" "[mcp_servers.\"uos_gleam\".env]");
+  check "quoted TOML pin semantic alias preserves bytes" (P.bytes_for_private_commit(ok(edit_toml(replace_first t "UOS_COCKPIT_RELEASE  =" "\"UOS_COCKPIT_RELEASE\" =")))=replace_first bytes "UOS_COCKPIT_RELEASE  =" "\"UOS_COCKPIT_RELEASE\" =");
   hold "dotted TOML key alias" (edit_toml(replace_first t "UOS_COCKPIT_RELEASE  =" "prefix.UOS_COCKPIT_RELEASE ="));
   hold "duplicate TOML section" (edit_toml(t^"[mcp_servers.uos_gleam.env]\n"));
   hold "duplicate TOML owned key" (edit_toml(replace_first t "OTHER =" "UOS_COCKPIT_RELEASE ="));
@@ -107,7 +107,7 @@ let ()=
   hold "TOML invalid slash escape" (edit_toml("bad=\"\\/\"\n"^t));
   hold "TOML surrogate pairs are not scalar escapes" (edit_toml("bad=\"\\ud83d\\ude00\"\n"^t));
   hold "TOML unsupported 8-digit escape" (edit_toml("bad=\"\\U0001F600\"\n"^t));
-  hold "TOML unsupported floating point" (edit_toml("bad=0.25\n"^t));
+  check "TOML finite floating point preserved" (P.bytes_for_private_commit(ok(edit_toml("bad=0.25\n"^t)))="bad=0.25\n"^bytes);
   hold "TOML unsupported date" (edit_toml("bad=2026-10-31\n"^t));
   hold "TOML leading zero integer" (edit_toml("bad=01\n"^t));
   hold "TOML integer overflow" (edit_toml("bad=9223372036854775808\n"^t));
