@@ -1,0 +1,83 @@
+{
+  "schema": "uos.all-agent-symbiosis-preflight.v1",
+  "observed_host_basis": "2026-10-31T18:30:07Z",
+  "implementation_code_revision": "b7a0b1d3c3411ff3a5cac0693d8707daa73e9df7",
+  "implementation_change": "qvrxxksymswypxunuyxootmpwtuvlpms",
+  "plan": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "task": "OI02B_ALL_AGENT_SYMBIOSIS_PREFLIGHT",
+  "task_state": "executing",
+  "attempt": 1,
+  "authority": "NONE",
+  "runtime_activation": "UNRUN",
+  "runtime_enforcement": false,
+  "system_admitted": false,
+  "admitted_ev_ceiling": 93,
+  "agents": [ "claude", "pi", "agy", "codex" ],
+  "sources": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/symbiosis_preflight.gleam",
+      "sha256": "ad60979791edf1ab4e8e3be3a7039b86dbbe29c93af5a7ebdcbec46db7369248",
+      "bytes": 30177,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/symbiosis_watchdog.gleam",
+      "sha256": "ab5698297c785e4b06e103b5fd76516827ac37f7ab7274ca4c693fdb7b7ac3b2",
+      "bytes": 24236,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/uos_swarm/test/symbiosis_preflight_test.gleam",
+      "sha256": "15de8933ea54abc3fe55d658b0097d5850b72fdc2d63d5e039f9678114d0b1c0",
+      "bytes": 23008,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/uos_swarm/test/symbiosis_watchdog_test.gleam",
+      "sha256": "8a0e747f0b0e7327e899f4f50328e4f71ce048419fb5599dd39d2e260126b0d2",
+      "bytes": 17847,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/symbiosis_guard_rules.gleam",
+      "sha256": "f1fca750c0e589bf2eea12db76670b9149b90a63032e3ca0a52404ca70137b5c",
+      "bytes": 8967,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/symbiosis_guard_rules_test.gleam",
+      "sha256": "8c879dfb831e125bce1610ca39a2b9bb89873dc9ceda459c765ca3baf4da0fa7",
+      "bytes": 10340,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/knowledge.gleam",
+      "sha256": "574ec9912ce04e248d86a5cd58bf1d360f1cece341e55feab5f85987a3c7cf74",
+      "bytes": 16221,
+      "compiled_input_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/mcp_knowledge_ranking_test.gleam",
+      "sha256": "1ab5ccbd55d1dbcbacb72abd00a41df6747370b5e143f02ee7432f029bcccd95",
+      "bytes": 2036,
+      "compiled_input_equal": true
+    }
+  ],
+  "tests": {
+    "policy": 28,
+    "actor": 16,
+    "typed_bridge": 10,
+    "knowledge_regression": 24,
+    "whole_application": "UNRUN"
+  },
+  "journal": "docs/journal/20261031-1807-all-agent-symbiosis-preflight-and-governance-journal.md",
+  "sop": "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md",
+  "contract": "contracts/rules/20261031-1807-all-agent-symbiosis-monitoring-contract.md",
+  "artifact_bindings": "governance/agents/policy/20261031-1807-all-agent-symbiosis-artifact-bindings.json",
+  "unknowns": [
+    "official catalog and authentic collectors", "unique production owner",
+    "effect-time consumers", "runtime dashboard and overhead",
+    "high-performance collection/indexing", "chaos/rollback/soak",
+    "hostile worker plus guardian-loss cleanup"
+  ]
+}

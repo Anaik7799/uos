@@ -123,3 +123,10 @@ name = "constitutional-invariant-guarding"
 source = "uos"
 version = "1.0.0"
 state = "implemented"
+
+[[workflow_binding]]
+name = "all-agent-symbiosis-preflight"
+source = "uos_local_adapter"
+state = "development_guidance_runtime_adoption_unverified"
+sop = "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md"
+authority = "Advisory lifecycle binding; no production activation"

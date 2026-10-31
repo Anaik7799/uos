@@ -296,3 +296,11 @@ IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR
 
 Complete PREDICT → OBSERVE → ORIENT → DECIDE → ACT → VERIFY → REFLECT with timestamped, tagged, linked documentation, reciprocal wiki/ZK writeback, the 13-section journal, verified ASCII/Mermaid diagrams, six-domain checklist alignment and live Tailnet proof after authorized cutover. The skill supersedes stale external command recipes in imported `zk-recall`, `zk-learn` and `living-ontology`; preserve those originals read-only. `kms_catalog` manages cryptographic keys; use `uos://km/triad` or [the KM catalog](http://nas-1.tail55d152.ts.net:4100/api/v1/km/catalog) for knowledge. Process bindings do not grant runtime enforcement or deployment authority.
 
+
+## 20261031-1807 — All-agent operational and evolutionary preflight
+
+#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #km-triad #zero-muda
+
+Full Codex symbiosis with Claude, Pi and AGY is priority one. Follow [SC-SYMBIOSIS-PREFLIGHT-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261031-1807-all-agent-symbiosis-monitoring-contract.md) and the [all-agent preflight, TPS and evolution SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md). Separate heartbeats from functional/performance/operational evidence; use bounded single-flight scheduling, expiry, scoped stop/recovery and exact agent-bound required-service coverage. Reuse valid evidence without refreshing deeper proofs from heartbeats. Bind all17 aspects, raw FMEA, all four STPA UCAs, typed advisory Rete facts, Stan trigger/uncertainty boundaries and Superpowers lifecycle checks.
+
+The source observer and advisory bridge do not establish activated monitoring or compulsory execution gates. Actual unique OTP ownership, authentic collectors, official catalog completeness, effect-time enforcement, release/recovery and soak proof remain required. Existing applicable six-domain/18-core-check and provenance obligations remain in force. Imported/history/global sources stay read-only; no new EV number or system admission is granted.

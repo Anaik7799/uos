@@ -351,3 +351,17 @@ journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1
 index = "governance/planning/20261031-1854-openrouter-usage-reconciliation.json"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+[[knowledge_group]]
+id = "ALL-AGENT-SYMBIOSIS-20261031-1807"
+plan = "uos/codex-handover-open-items-fractal-plan/20261031-1240"
+task = "OI02B_ALL_AGENT_SYMBIOSIS_PREFLIGHT"
+state = "development"
+admitted = false
+sop = "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md"
+contract = "contracts/rules/20261031-1807-all-agent-symbiosis-monitoring-contract.md"
+journal = "docs/journal/20261031-1807-all-agent-symbiosis-preflight-and-governance-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1807-all-agent-symbiosis-preflight-and-governance-journal.md"
+index = "governance/planning/20261031-1807-all-agent-symbiosis-preflight-verification.json"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

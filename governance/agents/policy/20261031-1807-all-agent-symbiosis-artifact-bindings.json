@@ -1,0 +1,124 @@
+{
+  "artifacts": [
+    {
+      "path": ".agents/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "sha256": "e419b5e144094123963ebfa0c50e3a24d9a1bfba814f4214d5bd0905c7afeb18"
+    },
+    {
+      "path": ".agents/rules/full-symbiosis.md",
+      "sha256": "1101d1edd4877946c4f26aa78ecb145d1b8a686ff218a115295b133898d8502a"
+    },
+    {
+      "path": ".agents/skills/uos-km-triad-brain-memory/SKILL.md",
+      "sha256": "f3cbd2527b90b015b4f4c52022cda8eb7e30484040e980dce8b79ed85cc3648f"
+    },
+    {
+      "path": ".claude/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "sha256": "e419b5e144094123963ebfa0c50e3a24d9a1bfba814f4214d5bd0905c7afeb18"
+    },
+    {
+      "path": ".claude/rules/full-symbiosis.md",
+      "sha256": "1101d1edd4877946c4f26aa78ecb145d1b8a686ff218a115295b133898d8502a"
+    },
+    {
+      "path": ".codex/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "sha256": "e419b5e144094123963ebfa0c50e3a24d9a1bfba814f4214d5bd0905c7afeb18"
+    },
+    {
+      "path": ".codex/rules/full-symbiosis.md",
+      "sha256": "1101d1edd4877946c4f26aa78ecb145d1b8a686ff218a115295b133898d8502a"
+    },
+    {
+      "path": ".gemini/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "sha256": "e419b5e144094123963ebfa0c50e3a24d9a1bfba814f4214d5bd0905c7afeb18"
+    },
+    {
+      "path": ".gemini/rules/full-symbiosis.md",
+      "sha256": "1101d1edd4877946c4f26aa78ecb145d1b8a686ff218a115295b133898d8502a"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"
+    },
+    {
+      "path": "contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md",
+      "sha256": "e419b5e144094123963ebfa0c50e3a24d9a1bfba814f4214d5bd0905c7afeb18"
+    },
+    {
+      "path": "contracts/rules/20261031-1807-all-agent-symbiosis-monitoring-contract.md",
+      "sha256": "696831f73c90426c21d235eebc1947ccb85f31bc948a636c33893b567517f824"
+    },
+    {
+      "path": "docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md",
+      "sha256": "d022fc772f126531450fbb2411389a24546612963e59f26b3336948ddafb90dd"
+    },
+    {
+      "path": "docs/journal/20261031-1807-all-agent-symbiosis-preflight-and-governance-journal.md",
+      "sha256": "52c9750254110abecaa05aa9457519ad4fdba71d7d832e0df3adddfbac7a4bee"
+    },
+    {
+      "path": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+      "sha256": "9d59f82f9052418d41dbcaaeb1d28763bfd9aeaffe269afb7a06cc6023491f98"
+    },
+    {
+      "path": "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md",
+      "sha256": "97c701a90165ca78d075439eae0e625ce2addd1e257e5fa8ee73942821ab5ba6"
+    },
+    {
+      "path": "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md",
+      "sha256": "cf9b14c8788ac37d1ed1842d926af4b484d20106f12073d415e64e98fb4670fa"
+    },
+    {
+      "path": "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md",
+      "sha256": "33fc5ffb12531d95e758487f7b4d5e823c4bceb86a8d6ab7d82395faced03db5"
+    },
+    {
+      "path": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+      "sha256": "889a1979e7a31209f64b1a83c90f27f9264f492ec68d47a621dbd3ebcf81fec1"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/ak47-multi-agent-mcp-symbiosis/SKILL.md",
+      "sha256": "8de03010fc80d9fe209be77e86abc5769ef0d5b0b94e463be349b05f638abd9a"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md",
+      "sha256": "08348ce71cd77b2eb77227bbd2290f72a75102c71ac1248941da399e556a282c"
+    },
+    {
+      "path": "governance/agents/20261001-1118-skills/gemini-symbiosis/SKILL.md",
+      "sha256": "4821963daefc320b7df61c307f98475adbeaf1064f74a8e8d4f8f38e1ad60696"
+    },
+    {
+      "path": "governance/capability-inventory/skills.toml",
+      "sha256": "18a59897b72981a3b00a42648d254f96a5b261affdb325f2f73289990ffff63f"
+    },
+    {
+      "path": "governance/capability-inventory/superpowers.toml",
+      "sha256": "59b5fc60114e260e17a9ac5124c4e493e944bbf5f088b5e8b5917c4b9a5378b4"
+    },
+    {
+      "path": "governance/capability-inventory/wiki-zk-km.toml",
+      "sha256": "9822c520723975d027ba10957fb75eaa2e7984a5889a14caaa23d373b874e738"
+    },
+    {
+      "path": "governance/planning/20261031-1807-all-agent-symbiosis-preflight-verification.json",
+      "sha256": "a1a29bec9f5e6f87dc3bba1491a4c7f0eeffd28a32e3f2428cb37e5f883abd9a"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md",
+      "sha256": "88efbe8871691eb33c22ebcd8e67796cd477cc821e2e36ec4cd29b843ba0d1d6"
+    }
+  ],
+  "schema": "uos.symbiosis-artifact-bindings.v1",
+  "observed_at": "2026-10-31T18:30:07Z",
+  "scope": "Active canonical adapters only; imported/history/global sources preserved",
+  "agents": [ "claude", "pi", "agy", "codex" ],
+  "admitted_ev_ceiling": 93,
+  "runtime_adoption": "UNVERIFIED",
+  "authority": "NONE",
+  "rule_mirrors_byte_identical": true,
+  "stan_trigger": "NOT_FIRED",
+  "stpa_uca_types": [
+    "not_provided", "provided_unsafe", "wrong_timing", "duration"
+  ]
+}

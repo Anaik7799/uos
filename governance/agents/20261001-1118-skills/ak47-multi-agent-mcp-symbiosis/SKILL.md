@@ -147,3 +147,23 @@ EV ceiling remains 93. EV-94..109 remain NOT_ADMITTED. No new EV number is minte
 </details>
 
 **UOS footer:** document and component evidence do not grant system admission.
+
+
+## 20261031-1807 — All-agent heartbeat, preflight and evolution binding
+
+#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #km-triad #zk-adr #zero-muda
+
+Use the [canonical monitoring SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md) and [SC-SYMBIOSIS-PREFLIGHT-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261031-1807-all-agent-symbiosis-monitoring-contract.md) for Claude, Pi, AGY and Codex. Follow heartbeat/deep cadence, exact per-agent service coverage, source/clock freshness, verified recovery, scoped TPS/RCA, private cost reconciliation and current Sa-plan authority. Typed Rete outputs and Stan posteriors remain advisory; STANAG source admissibility is separate. Production owner/collector/catalog/effect gates are not established by this guidance. Preserve imported/historical originals and global files.
+
+<details><summary>Domain 6 — Provenance extension for this addendum</summary>
+
+EV93 ceiling; EV94..109 / ADR071..086 NOT_ADMITTED. Existing18 core-check obligations remain in force; no blanket pass or new EV identifier.
+
+</details>
+
+
+## 20261031-1807 — Current operator supervision and cost binding
+
+For the active handover/full-symbiosis work, Codex supervises and integrates; Pi executes bounded eligible slices with the cheapest capable currently allowlisted model; Claude provides independent review and independently reviewed disjoint execution; AGY supplies peer/design/sovereign review. This current operator binding supersedes earlier AGY-only supervisor prescriptions for this work while preserving historical observations. An implementer never supplies its own independent acceptance. Local Codex relays must not be labeled native Pi/Claude execution.
+
+Use [SC-SYMBIOSIS-PREFLIGHT-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261031-1807-all-agent-symbiosis-monitoring-contract.md) and the [all-agent SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md). Price/usage must be observed within existing per-request/aggregate bounds. Added credits do not raise daily policy; unknown liabilities remain HOLD. Historical prompt-overhead improvements are scoped measurements, not a current universal speedup guarantee. Periodic monitors, role/rule registration and these addenda confer no runtime enforcement, deployment authority or system admission; EV93 remains the ceiling.

@@ -919,3 +919,11 @@ reference_only = false
 state = "development_guidance_pending_independent_review"
 path = "governance/agents/20261001-1118-skills/ocaml-playwright-control/SKILL.md"
 authority = "Canonical root policy and SC-HARNESS-MCP-001; no runtime admission"
+
+[[workflow_binding]]
+name = "all-agent-symbiosis-preflight"
+source = "uos_local_adapter"
+state = "development_guidance_runtime_adoption_unverified"
+skill = "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md"
+sop = "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md"
+authority = "NONE"
