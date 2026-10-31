@@ -146,3 +146,10 @@ EV93 ceiling; EV94..109/ADR071..086 NOT_ADMITTED. No new EV or blanket admission
 [Previous execution plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Next full-hive specification](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1918-full-hive-service-activation-and-checks.md).
 
 UOS footer: current task projection and acceptance specification; full runtime readiness remains unverified.
+
+
+### 20261031-2108 — Operator authorization and route-grant refusal
+
+[Authorization packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-2102-oi02e-release-authority-preparation.json) · [Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md). Operator-authorized Codex supervisor may issue exact bounded task route grants and serve ReleaseIssuer; required candidate approvals/independent verification and EV93 remain separate. OI02E completion was refused ROUTE_GRANT_REQUIRED with no CLI bypass:16 tasks/5 completed/3 executing/8 available. Trusted private route-grant repair is authorized, not yet executed here; grant file absent/no SHA pin observed at checkpoint. Role AUTHORIZED; cryptographic custody UNKNOWN; production activation NOT_GRANTED. Prior source19/docs7 publication at prefix4679 and three live parity observations are supervisor-reported; earlier PENDING prose is historical. KMS probe missing/static metadata and seed-export signing gaps remain; no private-key operation occurred. This addendum awaits publication.
+
+Operator authorization follow-up: the agent task-grant issuer and release-issuer roles are authorized and recorded in the linked2102 packet. A bounded private E grant/startup binding and read-only sealed MCP probe are recorded; task completion remains HOLD on expired B. E's fresh lease is valid until22:31:31Z. Native packaging source3 remains isolated NOT_READY after real loader exit127. Counts and prerequisite edges above remain unchanged.

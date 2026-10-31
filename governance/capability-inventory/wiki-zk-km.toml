@@ -407,3 +407,13 @@ index = "governance/planning/20261031-2102-oi02e-release-authority-preparation.j
 diagram = "docs/design/20261031-1908-full-hive-outstanding-task-graph.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+# 20261031-2108 — Operator authorization and route-grant refusal; operator role authorization is not a runtime permission.
+operator_authorization_packet = "governance/planning/20261031-2102-oi02e-release-authority-preparation.json"
+operator_authorization_recorded_utc = "2026-10-31T21:52:08Z"
+task_route_grant_issuer_role = "operator_authorized_bounded"
+release_issuer_role = "operator_authorized"
+crypto_custody_configured = "UNKNOWN"
+production_activation = "NOT_GRANTED"
+route_grant_checkpoint = "absent_file_no_sha_pin_repair_authorized_not_yet_executed"
+completion_refusal = "var/harness/20261031-1334-codex-hive/release-authority-completion-refusal.json"

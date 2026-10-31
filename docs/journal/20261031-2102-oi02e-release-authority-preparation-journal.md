@@ -230,3 +230,26 @@ EV93; EV94..109/ADR071..086 NOT_ADMITTED. application_admitted=false; system_adm
 [Previous source journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2048-oi02-cutover-control-and-native-source-build-journal.md) · [Next original plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk).
 
 UOS footer: preparation and source evidence only; production activation and admission remain withheld.
+
+
+### 20261031-2108 — Operator authorization and route-grant refusal
+
+Recorded from actual host 2026-10-31T21:52:08Z. Exact operator instruction:
+
+> allow agent to be task route grant and relase issues. keep records in system
+
+The Codex supervisor may issue narrowly bounded task route grants and serve the ReleaseIssuer role. This authorizes those roles; it does not impersonate Operator/AGY, supply their candidate approvals, bypass independent verification, create a bearer permit, admit EV94..109 or grant production activation. A task grant must bind exact plan/task/worker/attempt/tool/route and expiry within the current owned lease. EV93 ceiling and separate candidate-release approval remain.
+
+The OI02E completion request through the Gleam route was refused: ROUTE_GRANT_REQUIRED. No CLI completion bypass was used. The retained refusal is var/harness/20261031-1334-codex-hive/release-authority-completion-refusal.json; its post-observation remains16 tasks/5 completed/3 executing/8 available. At this checkpoint the expected route-grant file was absent and no SHA pin was observed by the supervisor. Repairing that trusted private configuration is now operator-authorized but has not yet been executed in this record; actual grant reference/outcome remain UNKNOWN. No current global MCP configuration or production service is changed by this addendum.
+
+ReleaseIssuer role: AUTHORIZED. Cryptographic custody configured: UNKNOWN. Production activation: NOT_GRANTED. Actual KMS catalog probe returned OBSERVATION_PROBE_MISSING; the HTTP catalog is static metadata, not a verified key inventory. FerrisKey has source rotation/JWT/JWKS and vault reference paths, but rotation/export exposes seed bytes and no non-exporting release-purpose signing interface or admitted signer was established. No key generation, private-key read/copy/hash or unmanaged repository PEM occurred. Managed custody, candidate-purpose signatures and trusted public roster remain separately required.
+
+The supervisor reports source19/docs7 publication at revision prefix4679 with three live byte-parity observations; this relay freshly recalled/transcluded the published journal and packet through MCP. Earlier PENDING publication statements remain historical checkpoints, not the current claim. This authorization addendum itself awaits publication. Local Codex execution still uses models; no new external OpenRouter/native advisory invocation was made for this record. [Authorization packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-2102-oi02e-release-authority-preparation.json) · [Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md).
+
+Operator-authorized configuration follow-up: a private, owned0600 task-route grant and SHA-pinned startup binding were prepared for E's actual worker, allowing only sa_task_complete with a fifteen-minute lifetime capped by its canonical lease. An isolated sealed MCP initialization/system_health observation passed; no task mutation was executed. The grant record and runtime probe are bound in the packet. This does not update the current global connector or establish target-task enforcement: the public format anchors authority to a task, while the approved caller must constrain the requested target/attempt. E remains executing.
+
+Lease correction: fresh canonical E expiry is22:31:31Z, attempt1; the earlier expiry estimate used an old observation. B alone is expired at21:56:02Z, attempt2. The21:58:17 active check returns HOLD for B, so completion waits for genuine lease recovery; no force-pass or CLI completion bypass. The original16-task projection remains5 completed/3 executing/8 available.
+
+Native packaging follow-up remains NOT_READY in an isolated three-file workspace:241 focused checks ran before actual loader smoke failed exit127;35 legacy package tests passed. No new composite artifact was published and the new-output1152 tests are UNRUN. Retained traces disconfirm the initial static SONAME explanation; dynamic-token/version map behavior still needs a tested repair. This WIP is not part of published source5faf or a production release.
+
+Latest risk observation at 2026-10-31T22:07:33Z: the original plan remains HOLD; both B and parent OI02 now have expired leases. E remains valid until22:31:31Z. All business task/cutover effects stay stopped while recovery evidence is repaired. Fresh read-only MCP health remains healthy on the old loaded BEAM; that does not override the risk HOLD.

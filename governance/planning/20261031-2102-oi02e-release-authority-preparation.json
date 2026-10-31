@@ -54,8 +54,148 @@
       "id": "root_recorded_frontend_scope_accept",
       "path": "var/harness/20261031-1334-codex-hive/release-authority-frontend-review-observation.json",
       "sha256": "1c2a1bf2f28740c4b354211c9785aaf805598e6ce0db41b2d81d82b579e0a522"
+    },
+    {
+      "id": "operator-task-grant-record.json",
+      "path": "var/harness/20261031-1334-codex-hive/operator-task-grant-record.json",
+      "sha256": "3f53f1e7781f390978b55e8cab2eae147beb156f48ec2b143e08c224fbf153d8"
+    },
+    {
+      "id": "operator-task-grant-runtime-probe.json",
+      "path": "var/harness/20261031-1334-codex-hive/operator-task-grant-runtime-probe.json",
+      "sha256": "6ade9ec7229e3964ece5fcb51ac436188fb7f98a34775246203772ee5545c88a"
+    },
+    {
+      "id": "task-issuer-parent-active.json",
+      "path": "var/harness/20261031-1334-codex-hive/task-issuer-parent-active.json",
+      "sha256": "cc1c82b5d36205fe3d3ed4d7623021b74fa47c8910db48c4f675b4e06c7e7627"
+    },
+    {
+      "id": "release-native-package-not-ready-checkpoint.json",
+      "path": "var/harness/20261031-1334-codex-hive/release-native-package-not-ready-checkpoint.json",
+      "sha256": "317ce863aae61002d8c026e103f9f6260e15733007fb3235c493d1ae57c68204"
+    },
+    {
+      "id": "latest_original_plan_hold",
+      "path": "var/harness/20261031-1334-codex-hive/operator-records-risk-hold-frozen.json",
+      "sha256": "f187296dd923631987eac2220f5e04e2a18e23c732635073b516166ae1ec521e"
     }
   ],
+  "operator_authorization": {
+    "latest_risk_observation": {
+      "observed_at": "2026-10-31T22:07:33Z",
+      "status": "HOLD",
+      "findings": [
+        {
+          "rule": "RP-SA-PLAN",
+          "task_id": "OI02B_ALL_AGENT_SYMBIOSIS_PREFLIGHT",
+          "severity": "HOLD",
+          "detail": "executing lease is missing or expired at this observation",
+          "next_check": "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."
+        },
+        {
+          "rule": "RP-SA-PLAN",
+          "task_id": "OI02_ATOMIC_11_TARGET_CAPSULE_CUTOVER",
+          "severity": "HOLD",
+          "detail": "executing lease is missing or expired at this observation",
+          "next_check": "Re-read the canonical plan and refresh its complete assessment; claim only through Sa-plan."
+        }
+      ],
+      "E_lease": "VALID_UNTIL_22:31:31Z",
+      "business_operations": "HELD_NO_FORCE_PASS"
+    },
+    "trusted_route_configuration": {
+      "private_binding_sha_pin_status": "PREPARED_AND_USED_FOR_ISOLATED_READONLY_PROBE",
+      "risk_hold": "OI02B_EXPIRED_LEASE_REQUIRES_RECOVERY; E_LEASE_RENEWAL_IS_VALID_UNTIL_22:31:31Z",
+      "caller_constraint": "Public grant format supplies an authority task, not a target-task allowlist; approved isolated mutation caller must constrain its exact target and attempt",
+      "runtime_target_allowlist_enforced": false,
+      "actual_grant_outcome": "SEALED_MCP_STARTUP_AND_READ_PASS_NO_TASK_MUTATION",
+      "actual_grant_reference": {
+        "path": "var/harness/20261031-1334-codex-hive/operator-task-grant-record.json",
+        "sha256": "3f53f1e7781f390978b55e8cab2eae147beb156f48ec2b143e08c224fbf153d8",
+        "grant_id": "operator-codex-task-1793484034273",
+        "expires_at_ms": 1793484934273
+      },
+      "status": "BOUNDED_PRIVATE_STARTUP_BINDING_PREPARED_READONLY_PROBE_PASS_MUTATION_HELD",
+      "historical_default_grant_file_observation": "ABSENT_SUPERVISOR_OBSERVATION",
+      "historical_global_connector_sha_pin_observation": "NOT_OBSERVED",
+      "production_or_global_configuration_changed": false
+    },
+    "publication_checkpoint": {
+      "full_revision": "4679ccd60d5b67eb0370699c6007ad00d2f53e6a",
+      "source_and_documentation_revision_prefix": "4679",
+      "supervisor_reported_published": true,
+      "supervisor_reported_live_parity_documents": 3,
+      "fresh_mcp_recall": "RELAY_OBSERVED_JOURNAL_AND_PACKET_SEARCH_TRANSCLUSION_READBACK",
+      "earlier_pending_statements": "HISTORICAL_CHECKPOINTS_RESOLVED_BY_REPORTED_PUBLICATION",
+      "this_addendum_publication": "PENDING"
+    },
+    "lease_correction": {
+      "E_worker": "codex-release-authority-20261031",
+      "E_attempt": 1,
+      "E_lease_until_ns": "1793485891208955838",
+      "B_attempt": 2,
+      "B_lease_until_ns": "1793483762282229976",
+      "correction": "Earlier E expiry estimate was stale; fresh canonical record supersedes it. Current HOLD is B only."
+    },
+    "recorded_host_utc": "2026-10-31T21:52:08Z",
+    "verbatim_user_instruction": "allow agent to be task route grant and relase issues. keep records in system",
+    "subject": "CODEX_SUPERVISOR",
+    "role_interpretation": {
+      "bounded_task_route_grant_issuer": "AUTHORIZED_BY_OPERATOR",
+      "release_issuer": "AUTHORIZED_BY_OPERATOR",
+      "interpretation_source": "SUPERVISOR_BOUNDED_INTERPRETATION_OF_USER_INSTRUCTION"
+    },
+    "limits": [
+      "Task grants must bind exact plan/task/worker/attempt/tool/route, bounded expiry and current owned lease.",
+      "Release issuer role is not a candidate-release approval or bearer effect permission.",
+      "Independent candidate verification, separate required Operator/Codex/AGY approval identities and EV93 ceiling remain.",
+      "No impersonation of Operator or AGY; no automatic admission.",
+      "No global MCP configuration or production service change is authorized by this documentation record."
+    ],
+    "task_completion_attempt": {
+      "tool": "sa_task_complete",
+      "task": "OI02E_RELEASE_AUTHORITY_PREPARATION",
+      "result": "REFUSED_ROUTE_GRANT_REQUIRED",
+      "route": "public",
+      "cli_bypass_used": false,
+      "refusal_receipt": {
+        "path": "var/harness/20261031-1334-codex-hive/release-authority-completion-refusal.json",
+        "sha256": "32a788dbb715f4c3c40a1beb7598717ae880a26460aec669745bc724196ae4db"
+      },
+      "post_observation": {
+        "total": 16,
+        "completed": 5,
+        "executing": 3,
+        "available": 8
+      }
+    },
+    "crypto_custody": {
+      "status": "CONFIGURED_UNKNOWN",
+      "admitted_release_signer": "NOT_ESTABLISHED",
+      "kms_catalog_probe": "OBSERVATION_PROBE_MISSING",
+      "http_catalog": "STATIC_METADATA_NOT_KEY_INVENTORY",
+      "ferriskey_interfaces": "SOURCE_ROTATION_JWT_JWKS_AVAILABLE; SEED_EXPORT_EXPOSES_PRIVATE_BYTES; NO_NONEXPORTING_RELEASE_PURPOSE_SIGNING_API_OBSERVED",
+      "reference_path_template": "iam/signing/<alg>/<kid>",
+      "key_generation_performed": false,
+      "private_key_read": false,
+      "private_key_copied": false,
+      "private_key_hashed": false
+    },
+    "release_issuer_role": "AUTHORIZED",
+    "crypto_custody_configured": "UNKNOWN",
+    "production_activation": "NOT_GRANTED",
+    "authority": "OPERATOR_ROLE_AUTHORIZATION_ONLY_NOT_EFFECT_PERMISSION"
+  },
+  "native_package_followup": {
+    "status": "NOT_READY_ISOLATED_UNPUBLISHED_SOURCE3",
+    "focused_checks_before_hold": 241,
+    "legacy_package_tests_passed": 35,
+    "actual_loader_exit": 127,
+    "new_artifact_published": false,
+    "new_output_1152_tests": "UNRUN",
+    "receipt": "var/harness/20261031-1334-codex-hive/release-native-package-not-ready-checkpoint.json"
+  },
   "source_publication": {
     "status": "SOURCE_PUBLISHED_MAIN_EQUALS_ORIGIN",
     "observed_host_utc": "2026-10-31T21:38:04Z",
