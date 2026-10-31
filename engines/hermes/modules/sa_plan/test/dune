@@ -9,6 +9,26 @@
  (modules sa_plan_test)
  (libraries core core_unix sa_plan))
 
+(test
+ (name test_sa_plan_reclaim)
+ (modules test_sa_plan_reclaim reclaim_fixture)
+ (deps ../sa_plan_store.ml reclaim_fixture_extension.ml reclaim_fixture.ml)
+ (preprocess (pps ppx_jane))
+ (libraries core sa_plan sqlite3 unix astring))
+
+; No fixture writer belongs to the production sa_plan library or its MLI.
+; This private module uses exact production implementation bytes, then the
+; test-only extension, with only the wrapper namespace import prepended.
+(rule
+ (target reclaim_fixture.ml)
+ (deps ../sa_plan_store.ml reclaim_fixture_extension.ml)
+ (action
+  (with-stdout-to %{target}
+   (progn
+    (echo "open Sa_plan__\n")
+    (cat ../sa_plan_store.ml)
+    (cat reclaim_fixture_extension.ml)))))
+
 (executable
  (name test_sa_plan_control_plane)
  (modules test_sa_plan_control_plane quint_rt sa_plan_ooda_bridge)

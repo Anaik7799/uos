@@ -583,6 +583,30 @@ val latest_selection :
 val list_task_observations :
   t -> plan_id:string -> (task_observation list, string) Result.t
 
+(** Copied reviewed bounded snapshot prerequisite. Native-internal JSON may
+    exceed a transport frame. LIMIT bounds returned rows, not SQLite resources. *)
+val recovery_snapshot_bounded : t -> plan_id:string -> (Yojson.Basic.t * string,string) Result.t
+
+type reclaim_old = { reclaim_task_id:string; old_worker:string; old_attempt:int; old_lease_until_ns:int64 }
+type reclaim_request = { reclaim_request_id:string; reclaim_plan_id:string;
+  expected_snapshot_sha256:string; expired_tasks:reclaim_old list;
+  reclaim_lease_ns:int64; request_deadline_ns:int64 }
+type reclaim_receipt
+type reclaim_outcome = Reclaim_committed of reclaim_receipt | Reclaim_historical of reclaim_receipt
+type reclaim_error = Reclaim_refused of string | Reclaim_unknown
+
+val reconcile_reclaim : t -> reclaim_request -> (reclaim_receipt option,reclaim_error) Result.t
+val reclaim_receipt_json : reclaim_receipt -> Yojson.Basic.t
+(** Production entrypoint currently refuses unconditionally: authenticated
+    ingress and trusted clock capability are NOT IMPLEMENTED. Raw supplied
+    identity/digests never constitute authorization. The effectful primitive
+    is absent from this production implementation/interface; a test-only
+    extension is compiled in a distinct private executable module.
+    Requires sole ownership and no outer transaction. Ambiguous COMMIT/rollback
+    or postcommit ACK loss is UNKNOWN; reconcile only, never blindly retry.
+    Historical receipt proves an old commit, never a current lease/authority. *)
+val reclaim_three : t -> reclaim_request -> (reclaim_outcome,reclaim_error) Result.t
+
 val enqueue_job :
   t ->
   id:string ->

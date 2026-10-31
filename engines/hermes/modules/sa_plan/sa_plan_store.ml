@@ -3841,3 +3841,142 @@ let add_dependency_observed store (r : dependency_repair) ~observe_now =
            && Option.value_map actual_registered ~default:false ~f:(String.equal registered)
         then let%bind _ = refresh_authority () in Ok receipt
         else Error "dependency repair durable readback mismatch")
+
+(* Snapshot dependency copied verbatim from reviewed source SHA6720eae8...ba0718. *)
+let recovery_snapshot_bounded store ~plan_id =
+  let valid_text maximum s =
+    let size=String.length s in
+    let byte i=Stdlib.Char.code s.[i] in
+    let cont i=i<size && byte i>=0x80 && byte i<=0xbf in
+    let rec utf8 i=i=size ||
+      let c=byte i in
+      if c=0 then false else if c<0x80 then utf8(i+1)
+      else if c>=0xc2 && c<=0xdf then cont(i+1) && utf8(i+2)
+      else if c>=0xe0 && c<=0xef then cont(i+1) && cont(i+2)
+        && (c<>0xe0 || byte(i+1)>=0xa0) && (c<>0xed || byte(i+1)<0xa0) && utf8(i+3)
+      else if c>=0xf0 && c<=0xf4 then cont(i+1) && cont(i+2) && cont(i+3)
+        && (c<>0xf0 || byte(i+1)>=0x90) && (c<>0xf4 || byte(i+1)<0x90) && utf8(i+4)
+      else false in
+    size>0 && size<=maximum && utf8 0
+  in
+  let require b=if not b then failwith "bounded recovery snapshot malformed or oversized"in
+  if not(valid_text 200 plan_id) then Error "invalid recovery snapshot plan"else
+  with_transaction store(fun()->
+    let text stmt column maximum=match Sqlite3.column stmt column with
+      |Sqlite3.Data.TEXT s->require(valid_text maximum s);s
+      |_->failwith "recovery snapshot text type"in
+    let number stmt column=match Sqlite3.column stmt column with
+      |Sqlite3.Data.INT n->n|_->failwith "recovery snapshot integer type"in
+    let optional parse stmt column=match Sqlite3.column stmt column with
+      |Sqlite3.Data.NULL->None|_->Some(parse stmt column)in
+    let rows sql limit parse=with_stmt store.db sql(fun stmt->
+      Result.bind(bind_values_result "bind bounded recovery snapshot" stmt[Sqlite3.Data.TEXT plan_id])~f:(fun()->
+        let rec loop count acc=match Sqlite3.step stmt with
+          |Sqlite3.Rc.DONE->Ok(Stdlib.List.rev acc)
+          |Sqlite3.Rc.ROW->if count>=limit then Error "bounded recovery snapshot count limit"
+            else loop(count+1)(parse stmt::acc)
+          |rc->rc_error "read bounded recovery snapshot" rc in loop 0 []))in
+    let open Result.Let_syntax in
+    (* Byte projection preserves embedded NUL and UTF8 suffixes for rejection.
+       CASE preserves storage-type failures instead of coercing them to text or
+       NULL. Names/caps below are fixed source constants, never request SQL. *)
+    let project name cap="CASE WHEN "^name^" IS NULL THEN NULL WHEN typeof("^name^
+      ")='text' THEN CAST(substr(CAST("^name^" AS BLOB),1,"^Int.to_string cap^
+      ") AS TEXT) ELSE X'00' END"in
+    (* INTEGER affinity alone permits arbitrarily large TEXT/BLOB storage.
+       Reject it in SQLite, before [Sqlite3.column] allocates its contents. *)
+    let project_integer name="CASE WHEN "^name^" IS NULL THEN NULL WHEN typeof("^
+      name^")='integer' THEN "^name^" ELSE X'00' END"in
+    let%bind tasks=rows
+      ("SELECT "^project "id" 201^","^project "state" 65^","^project "worker" 201^
+       ","^project_integer "lease_until_ns"^","^project_integer "attempt"^","^
+       project_integer "completed_at_ns"^
+       ",result IS NOT NULL FROM sa_plan_task WHERE plan_id=? ORDER BY id LIMIT 1001")
+      1000(fun stmt->
+        let id=text stmt 0 200 and state=text stmt 1 64 in
+        let worker=optional(fun s c->text s c 200)stmt 2 in
+        let lease=optional number stmt 3 and attempt=number stmt 4 in
+        let completed=optional number stmt 5 and present=number stmt 6 in
+        require(Int64.(attempt>=0L && attempt<=1000000L && (present=0L || present=1L)));
+        id,state,worker,lease,Int64.to_int_exn attempt,completed,Int64.equal present 1L)in
+    let%bind edges=rows
+      ("SELECT "^project "task_id" 201^","^project "dependency_id" 201^
+       " FROM sa_plan_dependency WHERE plan_id=? ORDER BY task_id,dependency_id LIMIT 10001")
+      10000(fun stmt->text stmt 0 200,text stmt 1 200)in
+    require(not(Stdlib.List.is_empty tasks));
+    let ids=Stdlib.List.map(fun(id,_,_,_,_,_,_)->id)tasks in
+    require(Stdlib.List.for_all(fun(a,b)->Stdlib.List.mem a ids && Stdlib.List.mem b ids)edges);
+    let opt f=function None->`Null|Some value->f value in
+    let json=`List(Stdlib.List.map(fun(id,state,worker,lease,attempt,completed,present)->
+      `Assoc["task_id",`String id;"state",`String state;"worker",opt(fun s->`String s)worker;
+        "lease_until_ns",opt(fun n->`String(Int64.to_string n))lease;"attempt",`Int attempt;
+        "completed_at_ns",opt(fun n->`String(Int64.to_string n))completed;"result_present",`Bool present;
+        "dependencies",`List(Stdlib.List.filter_map(fun(a,b)->if String.equal a id then Some(`String b)else None)edges)])tasks)in
+    let encoded=Yojson.Basic.to_string json in
+    Ok(json,Digestif.SHA256.(to_hex(digest_string encoded))))
+
+(* Development storage primitive. No issuer, scheduler or effect authority. *)
+type reclaim_old = { reclaim_task_id:string; old_worker:string; old_attempt:int; old_lease_until_ns:int64 }
+type reclaim_request = { reclaim_request_id:string; reclaim_plan_id:string;
+  expected_snapshot_sha256:string; expired_tasks:reclaim_old list;
+  reclaim_lease_ns:int64; request_deadline_ns:int64 }
+type reclaim_receipt = Yojson.Basic.t
+type reclaim_outcome = Reclaim_committed of reclaim_receipt | Reclaim_historical of reclaim_receipt
+type reclaim_error = Reclaim_refused of string | Reclaim_unknown
+let reclaim_receipt_json r=r
+let reclaim_schema = [
+ "sa_plan_reclaim_receipt","CREATE TABLE sa_plan_reclaim_receipt (request_id TEXT PRIMARY KEY, request_sha256 TEXT NOT NULL, request_json TEXT NOT NULL, receipt_json TEXT NOT NULL)";
+ "sa_plan_reclaim_no_update","CREATE TRIGGER sa_plan_reclaim_no_update BEFORE UPDATE ON sa_plan_reclaim_receipt BEGIN SELECT RAISE(ABORT,'reclaim receipts are append-only'); END";
+ "sa_plan_reclaim_no_delete","CREATE TRIGGER sa_plan_reclaim_no_delete BEFORE DELETE ON sa_plan_reclaim_receipt BEGIN SELECT RAISE(ABORT,'reclaim receipts are append-only'); END"]
+let reclaim_schema_valid db =
+ with_stmt db "SELECT CAST(substr(CAST(name AS BLOB),1,201) AS TEXT),CAST(substr(CAST(sql AS BLOB),1,8193) AS TEXT) FROM sqlite_schema WHERE name GLOB 'sa_plan_reclaim_*' ORDER BY name LIMIT 4"(fun stmt->
+  let rec loop acc=match Sqlite3.step stmt with
+   | Sqlite3.Rc.DONE->if List.equal (fun(a,b)(c,d)->String.equal a c&&String.equal b d)
+       (List.sort acc ~compare:(fun(a,_)(b,_)->String.compare a b))
+       (List.sort reclaim_schema ~compare:(fun(a,_)(b,_)->String.compare a b))then Ok()else Error "reclaim schema absent or mismatched"
+   | Sqlite3.Rc.ROW when List.length acc<3->loop((Sqlite3.column_text stmt 0,Sqlite3.column_text stmt 1)::acc)
+   | _->Error "reclaim schema absent or mismatched"in loop [])
+let reclaim_token s=String.length s>0 && String.length s<=200 && String.for_all s~f:(fun c->Char.is_alphanum c||Char.equal c '-'||Char.equal c '_'||Char.equal c '/'||Char.equal c '.')
+let reclaim_sha s=String.length s=64&&String.for_all s~f:(fun c->Char.is_digit c||(Char.compare c 'a'>=0&&Char.compare c 'f'<=0))
+let reclaim_old_json t=`Assoc["task",`String t.reclaim_task_id;"worker",`String t.old_worker;"attempt",`Int t.old_attempt;"lease",`String(Int64.to_string t.old_lease_until_ns)]
+let reclaim_sorted r=List.sort r.expired_tasks ~compare:(fun a b->String.compare a.reclaim_task_id b.reclaim_task_id)
+let reclaim_request_json r=`Assoc["domain",`String"uos.sa-plan.reclaim-three.v1";"request_id",`String r.reclaim_request_id;"plan",`String r.reclaim_plan_id;"snapshot",`String r.expected_snapshot_sha256;"old",`List(List.map(reclaim_sorted r)~f:reclaim_old_json);"duration",`String(Int64.to_string r.reclaim_lease_ns);"deadline",`String(Int64.to_string r.request_deadline_ns)]
+let reclaim_request_validate r=
+ if not(reclaim_token r.reclaim_request_id && reclaim_token r.reclaim_plan_id && reclaim_sha r.expected_snapshot_sha256
+  && (match r.expired_tasks with [_;_;_]->true|_->false) && List.for_all r.expired_tasks~f:(fun t->reclaim_token t.reclaim_task_id&&reclaim_token t.old_worker&&t.old_attempt>0&&t.old_attempt<1000000&&Int64.(t.old_lease_until_ns>0L))
+  && Int64.(r.reclaim_lease_ns>0L&&r.reclaim_lease_ns<=3600000000000L&&r.request_deadline_ns>0L)
+  && List.length(List.dedup_and_sort(List.map r.expired_tasks~f:(fun t->t.reclaim_task_id))~compare:String.compare)=3)
+ then Error(Reclaim_refused "invalid bounded reclaim request")else Ok()
+let reclaim_request_bytes r=Yojson.Basic.to_string(reclaim_request_json r)
+let reclaim_digest s=Digestif.SHA256.(to_hex(digest_string s))
+let reclaim_receipt_expected r now final after=
+ `Assoc["domain",`String"uos.sa-plan.reclaim-receipt.v1";"request",reclaim_request_json r;
+ "request_sha256",`String(reclaim_digest(reclaim_request_bytes r));"observed_ns",`String(Int64.to_string now);
+ "precommit_ns",`String(Int64.to_string final);"after_snapshot",`String after;
+ "new",`List(List.map(reclaim_sorted r)~f:(fun t->`Assoc["task",`String t.reclaim_task_id;"worker",`String t.old_worker;"attempt",`Int(t.old_attempt+1);"lease",`String(Int64.to_string(Int64.(now+r.reclaim_lease_ns)))]))]
+let reclaim_lookup db r =
+ let open Result.Let_syntax in
+ let%bind ()=reclaim_schema_valid db in
+ with_stmt db "SELECT CASE WHEN typeof(request_sha256)='text' THEN CAST(substr(CAST(request_sha256 AS BLOB),1,65) AS TEXT) ELSE NULL END,CASE WHEN typeof(request_json)='text' THEN CAST(substr(CAST(request_json AS BLOB),1,8193) AS TEXT) ELSE NULL END,CASE WHEN typeof(receipt_json)='text' THEN CAST(substr(CAST(receipt_json AS BLOB),1,8193) AS TEXT) ELSE NULL END FROM sa_plan_reclaim_receipt WHERE request_id=? LIMIT 2"(fun stmt->
+ let%bind ()=bind_values_result "lookup factual reclaim receipt" stmt[TEXT r.reclaim_request_id]in
+ match Sqlite3.step stmt with
+ | Sqlite3.Rc.DONE->Ok None
+ | Sqlite3.Rc.ROW->
+   let sha=Sqlite3.column_text stmt 0 and request=Sqlite3.column_text stmt 1 and receipt=Sqlite3.column_text stmt 2 in
+   if not(String.equal request(reclaim_request_bytes r)&&String.equal sha(reclaim_digest request)&&String.length receipt<=8192)then Error "reclaim request conflict or corrupt receipt"
+   else (try
+    let json=Yojson.Basic.from_string receipt in let open Yojson.Basic.Util in
+    let now=Int64.of_string(to_string(member"observed_ns"json))and final=Int64.of_string(to_string(member"precommit_ns"json))and after=to_string(member"after_snapshot"json)in
+    if not(reclaim_sha after && Int64.(now>=0L&&now<=final&&final<r.request_deadline_ns&&now<=Int64.max_value-r.reclaim_lease_ns&&final<now+r.reclaim_lease_ns)
+      && String.equal receipt(Yojson.Basic.to_string(reclaim_receipt_expected r now final after)))then Error "malformed reclaim receipt"
+    else (match Sqlite3.step stmt with Sqlite3.Rc.DONE->Ok(Some json)|_->Error "duplicate reclaim receipt")
+   with _->Error "malformed reclaim receipt")
+ | rc->rc_error "read reclaim receipt" rc)
+let reconcile_reclaim store r =
+ match reclaim_request_validate r with Error _ as e->e|Ok()->
+ if store.transaction_active then Error(Reclaim_refused "reconciliation requires sole transaction ownership")else
+ (try Result.map_error (transaction store(fun()->reclaim_lookup store.db r))~f:(fun e->Reclaim_refused e)
+  with _->Error(Reclaim_refused "reclaim read unavailable"))
+let reclaim_three _store _request=
+ Error(Reclaim_refused "authenticated reclaim ingress and trusted clock capability unavailable")
+
