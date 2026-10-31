@@ -470,3 +470,62 @@ Core architectural tomes and governing constitutional rules:
 - `[[wiki:timestamp-mandate]]` ([Mandatory Timestamp Prefix Mandate SC-TIME](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/timestamp-mandate.md))
 - `[[wiki:determinate-nix-mandate]]` ([Determinate Nix & Devenv Toolchain Mandate SC-NIX-DEVENV-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-2142-determinate-nix-devenv-mandate.md))
 
+
+---
+
+## §10.0 October 2026-10 Post-2026-09-17 Artifact Registry (`#km-triad`)
+
+This append-only section registers every post-`2026-09-17` October `2026-10` artifact across `docs/wiki/`, `docs/zk/`, `docs/sop/`, `contracts/rules/`, `docs/design/`, `governance/capability-inventory/` and `docs/journal/`. It does not modify, renumber, or re-admit any existing `ADR-001..ADR-137` row or any `ADR-071..ADR-086` `NOT_ADMITTED` marker. `admitted_ev_ceiling = 93`; zero new EV numbers are minted.
+
+### §10.1 Wiki plane (`docs/wiki/`)
+
+- `[[wiki:20261026-0220-telegram-journeys-guide]]` ([Telegram journey guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0220-telegram-journeys-guide.md))
+- `[[wiki:20261026-0801-telegram-media-pipeline-guide]]` ([Telegram media pipeline guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261026-0801-telegram-media-pipeline-guide.md))
+- `[[wiki:20261030-1058-unified-101-route-mcp-client-guide]]` ([Unified 101-route MCP client guide](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261030-1058-unified-101-route-mcp-client-guide.md))
+- `[[wiki:20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki]]` ([OTP 29 JSON anti-brittle MCP & fractal symbiosis wiki](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261031-1012-uos-otp29-json-anti-brittle-mcp-and-fractal-symbiosis-wiki.md))
+
+### §10.2 Zettelkasten plane (`docs/zk/`)
+
+- `[[zk:20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture]]` ([AK-47 multi-agent 101-route MCP architecture](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261030-1058-adr-ak47-multi-agent-101-route-mcp-architecture.md))
+- `[[zk:20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams]]` ([ADR OTP 29 JSON total quarantine & canonical MCP seams](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261031-1012-adr-otp29-json-total-quarantine-and-canonical-mcp-seams.md))
+
+### §10.3 SOP plane (`docs/sop/`)
+
+- `[[wiki:20261001-1117-uos-agent-symbiosis-operations]]` ([UOS agent symbiosis operations](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261001-1117-uos-agent-symbiosis-operations.md))
+- `[[wiki:20261026-1018-telegram-review-packets]]` ([Telegram review packets](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261026-1018-telegram-review-packets.md))
+- `[[wiki:20261030-1058-uos-fractal-comprehensive-system-prompt]]` ([UOS fractal comprehensive system prompt](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261030-1058-uos-fractal-comprehensive-system-prompt.md))
+- `[[wiki:20261031-1012-uos-canonical-fractal-system-prompt]]` ([Canonical UOS fractal system prompt suite](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md))
+
+### §10.4 Rule plane (`contracts/rules/`)
+
+- `[[wiki:20260930-0800-expired-claim-preflight]]` ([Expired-claim preflight](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260930-0800-expired-claim-preflight.md))
+- `[[wiki:20261026-0220-telegram-journey-acceptance]]` ([Telegram journey acceptance](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261026-0220-telegram-journey-acceptance.md))
+- `[[wiki:20261026-1910-telegram-secret-hygiene-and-browser-verification]]` ([Telegram secret hygiene & browser verification](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261026-1910-telegram-secret-hygiene-and-browser-verification.md))
+- `[[wiki:20261027-0836-core-development-learnings]]` ([Core development learnings](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261027-0836-core-development-learnings.md))
+- `[[wiki:20261027-1758-agent-surface-mirror-projection-contract]]` ([Agent surface mirror projection contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261027-1758-agent-surface-mirror-projection-contract.md))
+- `[[wiki:20261029-0745-critical-code-agentic-resilience-and-mcp-mandate]]` ([Critical-code agentic resilience & MCP mandate](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261029-0745-critical-code-agentic-resilience-and-mcp-mandate.md))
+- `[[wiki:20261030-1058-ak47-multi-agent-mcp-symbiosis-rule]]` ([AK-47 multi-agent MCP symbiosis rule](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md))
+
+### §10.5 Design plane (`docs/design/`)
+
+- [`20260927-0526-system-mcp-agy-implementation-plan.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260927-0526-system-mcp-agy-implementation-plan.md)
+- `[[wiki:20261026-0215-telegram-journey-defence-ha]]` ([Telegram journey defence HA](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-defence-ha.md)) · `[[wiki:20261026-0215-telegram-journey-critical-responder]]` ([critical responder](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-critical-responder.md)) · `[[wiki:20261026-0215-telegram-journey-security-incident]]` ([security incident](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-security-incident.md))
+- `[[wiki:20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases]]` ([Domain A](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-a-foundational-sre-governance-and-km-usecases.md)) · `[[wiki:20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases]]` ([Domain B](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-b-advanced-sre-and-disaster-recovery-usecases.md)) · `[[wiki:20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases]]` ([Domain C](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-c-creative-cybernetics-finops-and-digital-twin-usecases.md)) · `[[wiki:20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases]]` ([Domain D](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-0030-telegram-domain-d-team-collaboration-and-voice-cybernetics-usecases.md))
+- `[[wiki:20261027-1013-typed-planning-intent-design]]` ([Typed planning intent design](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-1013-typed-planning-intent-design.md))
+- `[[wiki:20261027-1920-mcp-critical-interface-formal-checks]]` ([MCP critical interface formal checks](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261027-1920-mcp-critical-interface-formal-checks.md))
+- `[[wiki:20261030-0932-ak47-fractal-thinking-as-is-to-be-architecture]]` ([AK-47 fractal thinking As-Is to To-Be architecture](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261030-0932-ak47-fractal-thinking-as-is-to-be-architecture.md))
+
+### §10.6 Capability inventory plane (`governance/capability-inventory/`)
+
+- [`20261031-1012-mcp-anti-brittle-fractal-km-index.json`](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20261031-1012-mcp-anti-brittle-fractal-km-index.json)
+
+### §10.7 Journal plane (`docs/journal/`)
+
+- [`20261026-2356-agy-telegram-admission-parent-plan-closure.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261026-2356-agy-telegram-admission-parent-plan-closure.md) · [`20261027-0745-mcp-core-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0745-mcp-core-journal.md) · [`20261027-0745-receipt-core-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261027-0745-receipt-core-journal.md)
+- [`20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-1846-mcp-full-101-route-4-agent-symbiosis-closure-journal.md) · [`20261030-2215-formal-math-verification-and-github-checkpoint-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2215-formal-math-verification-and-github-checkpoint-journal.md) · [`20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261030-2330-mcp-resilience-perf-scale-bdd-fractal-journal.md)
+- [`20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-0011-mcp-resilience-otp29-json-formal-market-conformance-journal.md)
+- `20261031-0823-wave2-step1-canonical-gateway-journal.md` is the named Wave 2 step-1 successor artifact; it is not yet materialized on disk in this workspace and carries no clickable link until it is.
+
+### §10.8 Provenance caveat
+
+This registry is report-only. `admitted_ev_ceiling = 93`, `application_admitted = false`, `SYSTEM_ADMITTED = false`; `EV-94..EV-109` and `ADR-071..ADR-086` remain `NOT_ADMITTED`. Registration here is not admission evidence.
