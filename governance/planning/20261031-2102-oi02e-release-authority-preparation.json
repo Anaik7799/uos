@@ -1,0 +1,338 @@
+{
+  "evidence": [
+    {
+      "id": "native_canonical_1152",
+      "path": "var/harness/20261031-1334-codex-hive/release-grants-canonical-tests.log",
+      "sha256": "f03113c0a2e1054023953d70c4f5aab4d61dd84470bc51bdd76d011a056e09a0"
+    },
+    {
+      "id": "combined_canonical_55",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-private/combined-canonical-native-tests.log",
+      "sha256": "e393055062ae4be9cfcf100051bdbb9023088cfa7a64ffe0fb426822f8258ee3"
+    },
+    {
+      "id": "combined_source_binding",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-private/combined-canonical-native-receipt.json",
+      "sha256": "70b03856e0959fd4b70e411e6e59488a9af1c111c4b878ae5f4585db33b678fb"
+    },
+    {
+      "id": "active_scope",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-active-2132.json",
+      "sha256": "9682e97f806b4b4a8f11c7a5ff8850a4fdb3cb9dd4f1139065634e90a1069d2e"
+    },
+    {
+      "id": "full_closure_build",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-full-build/build-verification.json",
+      "sha256": "d5b78f27209d7b59a68d99f15312496288d09d37305e63fa045916f230efc642"
+    },
+    {
+      "id": "full_closure_tests",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-private/full-closure-canonical-native-tests.log",
+      "sha256": "7725a944596d584e91eb606983b4b1277668b201285e50d61ead569ca1fdfd90"
+    },
+    {
+      "id": "full_closure_native_receipt",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-private/full-closure-canonical-native-receipt.json",
+      "sha256": "715404f95e0377f0814d5ead157b8e6ab6e6ee735ddddc916316c2caed3727c5"
+    },
+    {
+      "id": "two_intent_reference",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-proof/20261031-2128-two-intent-cas-reference-receipt.json",
+      "sha256": "fa19fc22451338f285c79156f4542b231d5e4a6006a4969fc35bda8159dff6f3"
+    },
+    {
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-proof/20261031-2132-current-root-tls-receipt.json",
+      "id": "current_root_private_tls",
+      "sha256": "a53d271a61cb5d672a9f33f00bb47a5cf221d0cf9d1bf306f612339d6ba5f388"
+    },
+    {
+      "id": "independent_source_publication_readiness",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-proof/20261031-2137-source-publication-readiness-review.json",
+      "sha256": "ffdea31de090b27ab1a09329e2809587aa30098fdf92246413fb0ca5401006a9"
+    },
+    {
+      "id": "root_recorded_frontend_scope_accept",
+      "path": "var/harness/20261031-1334-codex-hive/release-authority-frontend-review-observation.json",
+      "sha256": "1c2a1bf2f28740c4b354211c9785aaf805598e6ce0db41b2d81d82b579e0a522"
+    }
+  ],
+  "source_publication": {
+    "status": "SOURCE_PUBLISHED_MAIN_EQUALS_ORIGIN",
+    "observed_host_utc": "2026-10-31T21:38:04Z",
+    "source_revision": "5faf91982fd4033023265bdfc6f323b3cd4e8a72",
+    "runtime_activation": false
+  },
+  "schema": "uos.oi02e-release-authority-preparation.v1",
+  "observed_host_utc": "2026-10-31T21:35:02Z",
+  "timestamp_prefix_basis": "Fresh host date command observed 2026-10-31T21:35:02Z and20261031-2102 from the same call; earlier unsupported minute inference corrected before freeze.",
+  "plan": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "task": "OI02E_RELEASE_AUTHORITY_PREPARATION",
+  "worker": "codex-release-authority-20261031",
+  "attempt": 1,
+  "state": "PREPARATION_NOT_ADMITTED",
+  "source_revision": "5faf91982fd4033023265bdfc6f323b3cd4e8a72",
+  "authorship": "LOCAL_CODEX_SUPERVISOR_AND_LOCAL_CODEX_RELAYS",
+  "profile": "EXPLICIT_THREE_OF_THREE_PREPARATION_NOT_ADMITTED",
+  "source_files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/release_identity.gleam",
+      "sha256": "27d0738cf0d927a3767bd07fd2e6111d95a34c18cda2271db6621c4bc2f85143"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/release_intent.gleam",
+      "sha256": "e3a7505bead6d1247ad7b90416b473c45bc31348693c269ee4e1e6e65ef054f5"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/release_approval.gleam",
+      "sha256": "c8a863f089c51cac6200f0a3fb63f775c9deaabf701463396e20f79f8ad1fca8"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/release_store.gleam",
+      "sha256": "c6c72e249c2177efb955411e929e311ee8d9f995525e9783e9184eefc534b16d"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/release_authority.gleam",
+      "sha256": "8c338e973119158ef0e2df6494d395ff3c86ecfe68aec0f5109921dd484af96e"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_release_identity_test.gleam",
+      "sha256": "ff686cff7df91ad7bb114155bc802cc035ef3639d6fbc12bd62fc3280c3db6f6"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_release_intent_test.gleam",
+      "sha256": "c3fb341da9a240da68ae3f75f3694aa39d43f564fb08c7454866b5a403a63058"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_release_approval_test.gleam",
+      "sha256": "845d917e336a59f576f1cc7747ea329cd70c2b209b305f4c0b48a25508fdbf1c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_release_store_test.gleam",
+      "sha256": "d34cfd4859239d271fefc537b52e360c8821db2058798c48c05f3189b962a986"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_release_authority_test.gleam",
+      "sha256": "bcf4440450ca3cf0e8d47244845cbeaaf68edc5294931c59e6e3cc563fc65a37"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/release_mcp.gleam",
+      "sha256": "80e11edfbf59f9bc6bdd5af8d831d1576f689d25ed8d6dfbd6c0bb033cc54d21"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/release_control_service.gleam",
+      "sha256": "b7174a900397fe924ed86d91679e5609cb571affef6b80c8638fdc026b39e2dd"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/test/release_mcp_test.gleam",
+      "sha256": "a6250004ab0d68bd7fcacbf14f2a994f5e2fbfedca616372719ea4aa5ceacf53"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/test/release_control_service_test.gleam",
+      "sha256": "2b7104398938a9b9aafb0c325b99085e4fd91654bb09612357be7c91b8a6771c"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/ecology_release_grants.ml",
+      "sha256": "efbbcc5afa51d10c1b60a3522b152c96f298bdfe31795c74af75d934ec8100b0"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/ecology_release_grants.mli",
+      "sha256": "2ed305f4378da9e90beb14344ddd23b2192b544711876b17e631cb48377a62a4"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/ecology_release_grants_port.ml",
+      "sha256": "9d9172f0146cc01ed9f66fa72b0e1703b8c6819d2302138bc1df3f6eb279d80b"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/test_ecology_release_grants.ml",
+      "sha256": "815636444e67f1d2290e9f96f49dfa4154708bdb3c486403125e959a51cbb8c8"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/dune",
+      "sha256": "4ca0ab2c25865feaf93a9f7330749a6ce5c97da5f21aea1067224c6f2f164f69"
+    }
+  ],
+  "task_projection": {
+    "observation": "2026-10-31T21:30:26Z",
+    "total": 16,
+    "completed": 5,
+    "executing": 3,
+    "available": 8,
+    "remaining": 11,
+    "available_is_dependency_ready": false
+  },
+  "clock": {
+    "active_status": "ACTIVE_OBSERVATION_PASS",
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 4.0026e-05,
+      "uncertainty_seconds": 0.014141645,
+      "reference_age_seconds": 578.7986714839935,
+      "stratum": 3
+    },
+    "document_observation": {
+      "observed_utc": "2026-10-31T21:35:02Z",
+      "source": "date -u and chronyc tracking",
+      "system_to_ntp_seconds_fast": 3.8753e-05,
+      "stratum": 3,
+      "leap_status": "Normal",
+      "reference_utc": "2026-10-31T21:20:48Z",
+      "root_delay_seconds": 0.025040474,
+      "root_dispersion_seconds": 0.001902653
+    },
+    "latest_supervisor_report": {
+      "observed_utc": "2026-10-31T21:33:32Z",
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "source": "SUPERVISOR_MESSAGE_SEPARATE_FROM_RETAINED_2132_RECEIPT"
+    }
+  },
+  "verification": {
+    "native_factual_storage": {
+      "checks": 1152,
+      "status": "PASS",
+      "actual_guardian": true,
+      "worker_sha256": "2f643fd613fc5fda3b571ff9926e72f9d6f78b0c6ceebbf0715b61a163ee28f9",
+      "guardian_sha256": "460dbd208ef6964caaf453ffbe24daacdf2948baa0dced25737ae6410b8b8988"
+    },
+    "combined": {
+      "tests": 55,
+      "status": "PASS",
+      "modules": 7,
+      "source_inputs": 14,
+      "full_closure_rerun": {
+        "tests": 55,
+        "status": "PASS",
+        "private_gleam_overlay": false
+      }
+    },
+    "cryptographic_intent_approval": {
+      "tests": 14,
+      "source_mutants_killed": 2,
+      "scope": "PRIVATE_REAL_SIGNATURE_FIXTURES_NOT_PRODUCTION_APPROVALS"
+    },
+    "identity": { "tests": 5 },
+    "actor": {
+      "tests": 7,
+      "owner_deadline_and_worker_clock_mutants_killed": 2,
+      "prior_weak_deadline_mutant": "SURVIVED_PRESERVED_BEFORE_TEST_STRENGTHENING"
+    },
+    "frontend": {
+      "tests": 15,
+      "mutants_killed": 2,
+      "independent_review": "LOCAL_CODEX_RELAY_CLAUDE_REVIEW_RELAY_SCOPE_ACCEPT_EXACT_C6C72_D34CF"
+    },
+    "ingress": {
+      "tests": 14,
+      "private_tls_probe_observed_utc": "2026-10-31T21:32:40Z",
+      "scope": "CURRENT_FORMATTED_DEPENDENCIES_PRIVATE_TLS_STATUS_ONLY_NO_NATIVE_CALL"
+    },
+    "formal": {
+      "one_intent": {
+        "states": 1856,
+        "edges": 7304,
+        "positive_dispatch_states": 288,
+        "numeric_candidates": 55188,
+        "quint_tests": 8
+      },
+      "two_intent": {
+        "states": 9,
+        "transitions": 54,
+        "wrong_candidate_denials": 24,
+        "positive_controls": 6,
+        "abstract_cas_omission_counterexamples": 3,
+        "quint_tests": 8,
+        "composed_with_one_intent_model": false,
+        "refinement": "UNPROVEN",
+        "abstract_cas_omission_mutants": 1
+      },
+      "refinement": "UNPROVEN"
+    },
+    "full_four_package_build": {
+      "status": "PASS",
+      "production_source_inputs_before_after_stable": 1172,
+      "cached_artifacts_reverified": 875,
+      "application_closure": 36,
+      "required_source_beam_bindings": 13,
+      "descriptor_status": "LOCAL_APP_METADATA_PROJECTION_NOT_OFFICIAL_COMPILER_DESCRIPTOR",
+      "unrelated_warnings": "RETAINED_NOT_ZERO_WARNING_WHOLE_PROJECT",
+      "new_fourteen_input_compile_warnings": 0
+    }
+  },
+  "fixed_counterexamples": [
+    "cross_candidate_owner_alias_requires_expected_intent_digest_CAS_and_unique_owner_registry",
+    "owner_absolute_deadline_independent_of_timeout_mailbox_order",
+    "worker_rechecks_opaque_identity_approval_lower_and_upper_time_bounds",
+    "durable_revoke_can_complete_while_effect_observer_is_blocked",
+    "historical_issue_cannot_rearm_new_owner",
+    "native_forward_capacity_reserves_per_grant_revoke_headroom"
+  ],
+  "native_contract_limits": [
+    "Lookup may initialize SQLite schema/WAL; read-only means no grant/event append, not physical read-only opening.",
+    "Conflicting request IDs are fenced when persisted as events; nonpersisted historical alias IDs are not globally reserved.",
+    "Consume facts are not bearer permits; unknown ACKs cannot authorize automatic mutation resend.",
+    "Revocation after owner handoff SEND cannot undo an existing effect.",
+    "No cross SQLite/filesystem atomicity or full compiler/runtime closure proof.",
+    "Temporary grant worker ELF needs sqlite3/libm/libc/loader without RUNPATH; executable alone is not a self-contained artifact and runtime closure is unpinned."
+  ],
+  "retained_failures": [
+    "stale heartbeat refusal followed by empty workspace creation; no product effect",
+    "late OI02B lease renewal refused and canonical reclaim attempt2",
+    "strict Dune ambiguous MLI docstring and unused test index warnings repaired before canonical1152 rerun",
+    "initial weak deadline assertion survived source mutant; strengthened exact-error/zero-handoff test killed it",
+    "Unsupported minute inference from HHSS-only clock output corrected before freeze using actual date+chrony; no source evidence changed."
+  ],
+  "model_calls": {
+    "new_external_openrouter_or_native_advisory_calls": 0,
+    "local_codex_model_use": true,
+    "local_provider_cost": "UNKNOWN",
+    "historical_wording_correction": "Previous no new model calls means no new external advisory invocations only; historical journal bytes preserved."
+  },
+  "forecasts": {
+    "prior": {
+      "probability": 0.65,
+      "event": "prior documentation publication by2026-10-31T21:15:00Z",
+      "outcome": 1,
+      "brier": 0.1225,
+      "calibration_established": false
+    },
+    "new": {
+      "probability": 0.7,
+      "event": "this source/documentation bundle published with exact source pins by2026-10-31T22:15:00Z",
+      "outcome": null,
+      "brier": null
+    }
+  },
+  "gaps": [
+    "REAL_PRODUCTION_OIDC_ISSUER_AUDIENCE_UNKNOWN",
+    "REAL_APPROVER_ROSTER_AND_SIGNED_PRODUCTION_APPROVALS_UNKNOWN",
+    "FULL_RUNTIME_BOUNDARY_AND_ALL_READER_DRAIN_UNVERIFIED",
+    "CANDIDATE_ENVIRONMENT_AND_AUTHORIZED_PATH_MANIFEST_UNVERIFIED",
+    "PRODUCTION_SERVICE_CONFIGURATION_AND_RUNTIME_ACTIVATION_UNRUN",
+    "WHOLE_GOAL_AND_24H_SOAK_OPEN",
+    "NATIVE_GRANT_WORKER_AND_DYNAMIC_RUNTIME_CLOSURE_UNPACKAGED"
+  ],
+  "loaded_runtime": {
+    "source_status": "OLDER_CAPSULE_UNCHANGED",
+    "beam_sha256": "2673adf74bef1b2b61290cfa0d7a99bf04dfc379b8eb1497a18620527655c3f7"
+  },
+  "risk": {
+    "raw_fmea": { "severity": 5, "occurrence": 3, "detection": 4, "rpn": 60 },
+    "uca_types": [
+      "not_provided", "provided_incorrectly", "wrong_timing_or_order",
+      "too_long_or_stopped_too_soon"
+    ]
+  },
+  "admitted_ev_ceiling": 93,
+  "not_admitted_ev_range": [ 94, 109 ],
+  "authority": "NONE",
+  "application_admitted": false,
+  "system_admitted": false,
+  "links": {
+    "journal": "docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md",
+    "packet": "governance/planning/20261031-2102-oi02e-release-authority-preparation.json",
+    "graph": "docs/design/20261031-1908-full-hive-outstanding-task-graph.md",
+    "plan": "docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md",
+    "wiki": "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md",
+    "moc": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+    "inventory": "governance/capability-inventory/wiki-zk-km.toml"
+  }
+}

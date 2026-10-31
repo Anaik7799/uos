@@ -2,7 +2,7 @@
 
 #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #km-triad #zk-adr #zero-muda
 
-Observed 2026-10-31T20:33:29Z in the read-only active-risk task snapshot. Canonical Sa-plan uos/codex-handover-open-items-fractal-plan/20261031-1240: **15 tasks,5 completed,2 executing,8 available**. Available does not mean dependency-ready. Ten tasks remain. [Self](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1908-full-hive-outstanding-task-graph.md) · [Full hive specification](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1918-full-hive-service-activation-and-checks.md) · [Planning cockpit](http://nas-1.tail55d152.ts.net:4100/planning).
+Observed 2026-10-31T21:30:26Z in the read-only active-risk task snapshot. Canonical Sa-plan uos/codex-handover-open-items-fractal-plan/20261031-1240: **16 tasks,5 completed,3 executing,8 available**. Available does not mean dependency-ready. Eleven tasks remain. [Self](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1908-full-hive-outstanding-task-graph.md) · [Full hive specification](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1918-full-hive-service-activation-and-checks.md) · [Planning cockpit](http://nas-1.tail55d152.ts.net:4100/planning).
 
 ## Dependency view
 
@@ -11,6 +11,7 @@ This is a transitive reduction for readability: omitted direct prerequisites rem
 ```ascii
 [OI01 Done] --> [OI02 Capsule RUN]
 [OI01 Done] --> [OI02B Checks RUN]
+[OI01 Done] --> [OI02E Authority Preparation RUN]
 [OI01 Done] --> [OI02C DAG Repair Done]
 [OI02 Capsule RUN] --> [OI03 Routes WAIT]
 [OI02 Capsule RUN] --> [OI04 Toolchains WAIT]
@@ -31,6 +32,7 @@ This is a transitive reduction for readability: omitted direct prerequisites rem
 flowchart TD
  O1[OI01 Done] --> O2[OI02 Capsule RUN]
  O1 --> B[OI02B Checks RUN]
+ O1 --> E[OI02E Authority Preparation RUN]
  O1 --> C[OI02C DAG Repair Done]
  O2 --> O3[OI03 Routes WAIT]
  O2 --> O4[OI04 Toolchains WAIT]
@@ -51,6 +53,7 @@ flowchart TD
 |---|---|
 | OI02 | Candidate-bound capsule/configuration cutover, complete physical-target audit, reader fencing, independently authorized release and tested rollback |
 | OI02B | All-agent authenticated collectors/catalog, monitor ownership, durable sink integration, effect consumers, cost/dashboard coverage and recovery |
+| OI02E | Explicit signed release preparation, native factual ledger, digest-bound owner/ingress, independent verification and source publication; production integration is separate |
 | OI02C | COMPLETED: tested additive prerequisite API, exact live OI09/full-hive-to-soak edges, durable audit, independent source acceptance and publication; no runtime activation implied |
 | OI03 | Actual 101-route backend fidelity and truthful capability states |
 | OI04 | Repository-pinned offline Nix/Lean4 formal toolchain reservoir and actual invocations |
@@ -68,6 +71,12 @@ Completed: OI01 provenance dossier, OI01A observed scanner, OI01B formal gateway
 [Control/build journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2048-oi02-cutover-control-and-native-source-build-journal.md) · [16-file source packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-2048-oi02-cutover-control-and-native-source-build.json). Source a09044f4136f142c9644be13ce706c4dd9aea62e is published main==origin. A canonical development capsule was staged/verified; separate packaged controller27 and frontend15 test scopes passed. The frontend's canonical Hermes test worker is external to that capsule. Complete compiler/runtime closure, actual release issuer, all-reader drain, operational switch, authenticated full service coverage and production adoption remain UNVERIFIED. OI02/B and the overall nine-task objective remain open.
 
 The full direct dependency sets of the two final stages are: OI02D requires OI02,OI02C,OI03,OI04,OI05,OI06,OI07,OI09; OI08 requires OI02D,OI03,OI04,OI05,OI07,OI09. OI02B runtime acceptance remains open and its components are integrated during the full-hive work; no invented B-to-D execution edge or self-authorizing completion is implied.
+
+
+
+### 20261031-2102 — Release authority preparation and candidate ownership
+
+[Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md) · [19-file source packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-2102-oi02e-release-authority-preparation.json) · [Current task graph](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1908-full-hive-outstanding-task-graph.md). Explicit three-of-three signed preparation, bounded native factual grants, independent ledger/effect workers and mandatory expected-intent CAS. Canonical1152 native checks and55 combined private tests pass in separate scopes; real production identity/approvals, all-reader drain and live activation remain UNVERIFIED. Sixteen canonical tasks:5 completed/3 executing/8 available;11 remain. Local Codex model use continues with provider cost UNKNOWN; no new external native/OpenRouter advisory calls. Prior p0.65 documentation forecast resolves outcome1/Brier0.1225 without calibration claim. EV93 ceiling and NOT_ADMITTED range retained. Reciprocal journal links bind the wiki, ZK, plan and inventory.
 
 ## Work inside full-hive activation
 

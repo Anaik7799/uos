@@ -394,3 +394,16 @@ journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2
 index = "governance/planning/20261031-2048-oi02-cutover-control-and-native-source-build.json"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+[[knowledge_group]]
+id = "OI02E-RELEASE-AUTHORITY-PREPARATION-20261031-2102"
+plan = "uos/codex-handover-open-items-fractal-plan/20261031-1240"
+task = "OI02E_RELEASE_AUTHORITY_PREPARATION"
+state = "development_preparation"
+admitted = false
+journal = "docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md"
+index = "governance/planning/20261031-2102-oi02e-release-authority-preparation.json"
+diagram = "docs/design/20261031-1908-full-hive-outstanding-task-graph.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
