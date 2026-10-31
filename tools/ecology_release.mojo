@@ -14,24 +14,34 @@ def main() raises:
     var root = String(own[byte=0:own.byte_length() - suffix.byte_length()])
     var ocaml = root + "toolchains/opam-ocaml/bin/ocaml"
     var backend = root + "tools/ecology_release.ml"
-    # The finite CLI accepts one command and at most one path. Invalid argc is
+    # The finite CLI accepts one command and at most two paths. Invalid argc is
     # sent to the same core failure path without unbounded argv construction.
     var command = String("__invalid_cli__")
-    if len(args) == 2 or len(args) == 3:
+    if len(args) == 2 or len(args) == 3 or len(args) == 4:
         command = String(args[1])
     var path = String("")
-    if len(args) == 3:
+    if len(args) == 3 or len(args) == 4:
         path = String(args[2])
-    if command.byte_length() > 4096 or path.byte_length() > 4096:
+    var capsule = String("")
+    if len(args) == 4:
+        capsule = String(args[3])
+    if command.byte_length() > 4096 or path.byte_length() > 4096 or capsule.byte_length() > 4096:
         command = "__invalid_cli__"
         path = ""
+        capsule = ""
     var executable_c = ocaml.as_c_string_slice()
     var backend_c = backend.as_c_string_slice()
     var command_c = command.as_c_string_slice()
     var path_c = path.as_c_string_slice()
+    var capsule_c = capsule.as_c_string_slice()
     # execl has two fixed arguments. Int(0) is the null pointer sentinel on the
     # supported Linux x86_64 ABI; all preceding variadic arguments are C strings.
-    if len(args) == 3:
+    if len(args) == 4:
+        _ = external_call["execl", c_int, num_fixed_args=2](
+            executable_c.unsafe_ptr(), executable_c.unsafe_ptr(),
+            backend_c.unsafe_ptr(), command_c.unsafe_ptr(),
+            path_c.unsafe_ptr(), capsule_c.unsafe_ptr(), Int(0))
+    elif len(args) == 3:
         _ = external_call["execl", c_int, num_fixed_args=2](
             executable_c.unsafe_ptr(), executable_c.unsafe_ptr(),
             backend_c.unsafe_ptr(), command_c.unsafe_ptr(),
