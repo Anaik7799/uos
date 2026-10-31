@@ -3551,3 +3551,293 @@ let inspect_cancellation_target_observed store ~mapping_id ~owner ~lease_id
     with
     | Ok (Ok target) -> Ok target
     | Ok (Error _) | Error _ -> Error cancellation_target_refused
+
+(* Additive dependency repair: authored OCaml persistence mechanics, not ingress
+   authentication. Original registered graph_fingerprint is immutable here.
+   Laws: additive-only, exact-set CAS, acyclic current graph, fenced ownership,
+   atomic receipt/readback, and identical replay only under unchanged postgraph. *)
+type dependency_repair = {
+  operation_id : string;
+  plan_id : string;
+  maintenance_task_id : string;
+  worker : string;
+  expected_attempt : int;
+  target_task_id : string;
+  prerequisite_task_id : string;
+  expected_dependencies : string list;
+}
+
+type dependency_repair_receipt = {
+  operation_id : string;
+  plan_id : string;
+  maintenance_task_id : string;
+  worker : string;
+  expected_attempt : int;
+  target_task_id : string;
+  prerequisite_task_id : string;
+  request_sha256 : string;
+  before_dependencies : string list;
+  after_dependencies : string list;
+  before_edges_sha256 : string;
+  after_edges_sha256 : string;
+  registered_graph_fingerprint : string;
+  recorded_at_ns : int64;
+  replayed : bool;
+}
+
+let dependency_repair_objects = [
+  ("sa_plan_dependency_repair", "table",
+   "CREATE TABLE sa_plan_dependency_repair (operation_id TEXT PRIMARY KEY, plan_id TEXT NOT NULL, maintenance_task_id TEXT NOT NULL, worker TEXT NOT NULL, expected_attempt INTEGER NOT NULL CHECK(typeof(expected_attempt)='integer' AND expected_attempt>0), target_task_id TEXT NOT NULL, prerequisite_task_id TEXT NOT NULL, request_sha256 TEXT NOT NULL, before_dependencies TEXT NOT NULL, after_dependencies TEXT NOT NULL, before_edges_sha256 TEXT NOT NULL, after_edges_sha256 TEXT NOT NULL, registered_graph_fingerprint TEXT NOT NULL, recorded_at_ns INTEGER NOT NULL CHECK(typeof(recorded_at_ns)='integer' AND recorded_at_ns>=0), FOREIGN KEY(plan_id,maintenance_task_id) REFERENCES sa_plan_task(plan_id,id), FOREIGN KEY(plan_id,target_task_id) REFERENCES sa_plan_task(plan_id,id), FOREIGN KEY(plan_id,prerequisite_task_id) REFERENCES sa_plan_task(plan_id,id))");
+  ("sa_plan_dependency_repair_no_update", "trigger",
+   "CREATE TRIGGER sa_plan_dependency_repair_no_update BEFORE UPDATE ON sa_plan_dependency_repair BEGIN SELECT RAISE(ABORT,'dependency repair audit is append-only'); END");
+  ("sa_plan_dependency_repair_no_delete", "trigger",
+   "CREATE TRIGGER sa_plan_dependency_repair_no_delete BEFORE DELETE ON sa_plan_dependency_repair BEGIN SELECT RAISE(ABORT,'dependency repair audit is append-only'); END")
+]
+
+let dependency_repair_namespace db =
+  let open Result.Let_syntax in
+  let%bind objects = List.fold dependency_repair_objects ~init:(Ok [])
+    ~f:(fun acc (name,kind,sql) ->
+      let%bind acc = acc in
+      with_stmt db "SELECT type,sql FROM sqlite_master WHERE name=?" (fun stmt ->
+        let%bind () = bind stmt 1 (Sqlite3.Data.TEXT name) in
+        match Sqlite3.step stmt with
+        | Sqlite3.Rc.DONE -> Ok (false::acc)
+        | Sqlite3.Rc.ROW ->
+            if String.equal (Sqlite3.column_text stmt 0) kind
+               && String.equal (Sqlite3.column_text stmt 1) sql then Ok (true::acc)
+            else Error "dependency repair namespace definition mismatch"
+        | rc -> rc_error "inspect dependency repair namespace" rc)) in
+  if List.for_all objects ~f:Fn.id then
+    with_stmt db "SELECT name FROM sqlite_master WHERE type='trigger' AND tbl_name='sa_plan_dependency_repair' ORDER BY name LIMIT 3" (fun stmt ->
+      let rec loop acc = match Sqlite3.step stmt with
+        | Sqlite3.Rc.ROW -> loop (Sqlite3.column_text stmt 0 :: acc)
+        | Sqlite3.Rc.DONE ->
+            if List.equal String.equal (List.rev acc)
+              ["sa_plan_dependency_repair_no_delete";"sa_plan_dependency_repair_no_update"]
+            then Ok `Present else Error "unexpected dependency repair audit trigger"
+        | rc -> rc_error "inspect dependency repair trigger set" rc in loop [])
+  else if List.for_all objects ~f:not then Ok `Absent
+  else Error "incomplete dependency repair namespace"
+
+let ensure_dependency_repair_namespace db =
+  let open Result.Let_syntax in
+  let%bind state = dependency_repair_namespace db in
+  match state with
+  | `Present -> Ok ()
+  | `Absent ->
+      let%bind () = List.fold dependency_repair_objects ~init:(Ok ())
+        ~f:(fun acc (_,_,sql) -> Result.bind acc ~f:(fun () ->
+          exec db "create fenced dependency repair audit" sql)) in
+      let%bind state = dependency_repair_namespace db in
+      match state with `Present -> Ok () | `Absent -> Error "audit creation readback failed"
+
+let dependency_repair_shape (r : dependency_repair) =
+  List.for_all [r.operation_id;r.plan_id;r.maintenance_task_id;r.worker;
+                r.target_task_id;r.prerequisite_task_id] ~f:cancellation_token
+  && r.expected_attempt > 0 && r.expected_attempt <= 2_147_483_647
+  && List.length (List.take r.expected_dependencies 257) <= 256
+  && List.for_all r.expected_dependencies ~f:cancellation_token
+  && List.length (List.dedup_and_sort r.expected_dependencies ~compare:String.compare)
+     = List.length r.expected_dependencies
+  && not (String.equal r.target_task_id r.prerequisite_task_id)
+  && not (String.equal r.maintenance_task_id r.target_task_id)
+
+let repair_string_list values = `List (List.map values ~f:(fun v -> `String v))
+let repair_sha json = Digestif.SHA256.(to_hex (digest_string (Yojson.Safe.to_string json)))
+let dependency_repair_hash (r : dependency_repair) =
+  repair_sha (`List [ `String "uos.sa-plan.add-dependency.v1";
+    `String r.operation_id; `String r.plan_id; `String r.maintenance_task_id;
+    `String r.worker; `Int r.expected_attempt; `String r.target_task_id;
+    `String r.prerequisite_task_id; repair_string_list
+      (List.sort r.expected_dependencies ~compare:String.compare)])
+
+let dependency_graph_db db plan_id =
+  let open Result.Let_syntax in
+  let%bind nodes = with_stmt db
+    "SELECT id FROM sa_plan_task WHERE plan_id=? ORDER BY id LIMIT 4097" (fun stmt ->
+      let%bind () = bind stmt 1 (Sqlite3.Data.TEXT plan_id) in
+      let rec loop acc = match Sqlite3.step stmt with
+        | Sqlite3.Rc.ROW -> loop (Sqlite3.column_text stmt 0 :: acc)
+        | Sqlite3.Rc.DONE -> if List.length acc > 4096 then Error "repair task bound" else Ok (List.rev acc)
+        | rc -> rc_error "read dependency repair nodes" rc in loop []) in
+  let%bind edges = with_stmt db
+    "SELECT task_id,dependency_id FROM sa_plan_dependency WHERE plan_id=? ORDER BY task_id,dependency_id LIMIT 16385" (fun stmt ->
+      let%bind () = bind stmt 1 (Sqlite3.Data.TEXT plan_id) in
+      let rec loop acc = match Sqlite3.step stmt with
+        | Sqlite3.Rc.ROW -> loop ((Sqlite3.column_text stmt 0,Sqlite3.column_text stmt 1)::acc)
+        | Sqlite3.Rc.DONE -> if List.length acc > 16384 then Error "repair edge bound" else Ok (List.rev acc)
+        | rc -> rc_error "read dependency repair edges" rc in loop []) in
+  if List.for_all nodes ~f:cancellation_token then Ok (nodes,edges)
+  else Error "invalid dependency graph identifier"
+
+let repair_edges_sha plan_id edges =
+  repair_sha (`List [`String "uos.sa-plan.exact-edges.v1"; `String plan_id;
+    `List (List.map edges ~f:(fun (a,b) -> `List [`String a;`String b]))])
+
+let repair_acyclic nodes edges =
+  let known = String.Set.of_list nodes in
+  if not (List.for_all edges ~f:(fun (a,b) -> Set.mem known a && Set.mem known b)) then false
+  else
+    let adjacency = Map.of_alist_multi (module String) edges in
+    let colors = String.Table.create () in
+    let rec visit id = match Hashtbl.find colors id with
+      | Some 1 -> false
+      | Some 2 -> true
+      | _ ->
+          Hashtbl.set colors ~key:id ~data:1;
+          let result = List.for_all (Option.value (Map.find adjacency id) ~default:[]) ~f:visit in
+          Hashtbl.set colors ~key:id ~data:2;
+          result in
+    List.for_all nodes ~f:visit
+
+let repair_receipt_of_stmt stmt =
+  let decode_list column = match Yojson.Safe.from_string (Sqlite3.column_text stmt column) with
+    | `List xs -> List.map xs ~f:(function `String v -> v | _ -> failwith "invalid repair audit dependency")
+    | _ -> failwith "invalid repair audit dependency set" in
+  { operation_id=Sqlite3.column_text stmt 0; plan_id=Sqlite3.column_text stmt 1;
+    maintenance_task_id=Sqlite3.column_text stmt 2; worker=Sqlite3.column_text stmt 3;
+    expected_attempt=Sqlite3.column_int stmt 4; target_task_id=Sqlite3.column_text stmt 5;
+    prerequisite_task_id=Sqlite3.column_text stmt 6; request_sha256=Sqlite3.column_text stmt 7;
+    before_dependencies=decode_list 8; after_dependencies=decode_list 9;
+    before_edges_sha256=Sqlite3.column_text stmt 10; after_edges_sha256=Sqlite3.column_text stmt 11;
+    registered_graph_fingerprint=Sqlite3.column_text stmt 12;
+    recorded_at_ns=Sqlite3.column_int64 stmt 13; replayed=false }
+
+let repair_lookup_db db operation_id =
+  with_stmt db "SELECT operation_id,plan_id,maintenance_task_id,worker,expected_attempt,target_task_id,prerequisite_task_id,request_sha256,before_dependencies,after_dependencies,before_edges_sha256,after_edges_sha256,registered_graph_fingerprint,recorded_at_ns FROM sa_plan_dependency_repair WHERE operation_id=?" (fun stmt ->
+    let open Result.Let_syntax in
+    let%bind () = bind stmt 1 (Sqlite3.Data.TEXT operation_id) in
+    match Sqlite3.step stmt with
+    | Sqlite3.Rc.ROW -> Ok (Some (repair_receipt_of_stmt stmt))
+    | Sqlite3.Rc.DONE -> Ok None
+    | rc -> rc_error "read dependency repair receipt" rc)
+
+let repair_receipt_request_matches (r : dependency_repair)
+    (receipt : dependency_repair_receipt) =
+  String.equal r.operation_id receipt.operation_id
+  && String.equal r.plan_id receipt.plan_id
+  && String.equal r.maintenance_task_id receipt.maintenance_task_id
+  && String.equal r.worker receipt.worker
+  && r.expected_attempt = receipt.expected_attempt
+  && String.equal r.target_task_id receipt.target_task_id
+  && String.equal r.prerequisite_task_id receipt.prerequisite_task_id
+  && List.equal String.equal
+       (List.sort r.expected_dependencies ~compare:String.compare)
+       receipt.before_dependencies
+  && List.equal String.equal
+       (List.sort (r.prerequisite_task_id::receipt.before_dependencies) ~compare:String.compare)
+       receipt.after_dependencies
+
+let lookup_dependency_repair store ~operation_id =
+  let open Result.Let_syntax in
+  let%bind () = ensure_open store in
+  if not (cancellation_token operation_id) then Error "invalid repair operation ID"
+  else try
+    let%bind state = dependency_repair_namespace store.db in
+    match state with `Absent -> Ok None | `Present -> repair_lookup_db store.db operation_id
+  with _ -> Error "dependency repair receipt unavailable"
+
+let repair_require_authority db (r : dependency_repair) now_ns =
+  with_stmt db "SELECT 1 FROM sa_plan_task WHERE plan_id=? AND id=? AND state='executing' AND worker=? AND attempt=? AND lease_until_ns>?" (fun stmt ->
+    let open Result.Let_syntax in
+    let%bind () = bind_values_result "bind repair maintenance fence" stmt
+      [TEXT r.plan_id;TEXT r.maintenance_task_id;TEXT r.worker;INT (Int64.of_int r.expected_attempt);INT now_ns] in
+    match Sqlite3.step stmt with
+    | Sqlite3.Rc.ROW -> Ok ()
+    | Sqlite3.Rc.DONE -> Error "repair requires current owned unexpired maintenance attempt"
+    | rc -> rc_error "read repair maintenance fence" rc)
+
+let repair_require_available db (r : dependency_repair) =
+  with_stmt db "SELECT 1 FROM sa_plan_task WHERE plan_id=? AND id=? AND state='available'" (fun stmt ->
+    let open Result.Let_syntax in
+    let%bind () = bind_values_result "bind repair available target" stmt [TEXT r.plan_id;TEXT r.target_task_id] in
+    match Sqlite3.step stmt with
+    | Sqlite3.Rc.ROW -> Ok ()
+    | Sqlite3.Rc.DONE -> Error "repair target must be exact existing available task"
+    | rc -> rc_error "read repair available target" rc)
+
+let add_dependency_observed store (r : dependency_repair) ~observe_now =
+  let open Result.Let_syntax in
+  if store.transaction_active then Error "dependency repair requires its own immediate transaction"
+  else if not (dependency_repair_shape r) then Error "invalid additive dependency repair request"
+  else transaction store (fun () ->
+    let now_ns = observe_now () in
+    let%bind () = validate_completion ~worker:r.worker ~expected_attempt:r.expected_attempt ~now_ns in
+    let%bind () = repair_require_authority store.db r now_ns in
+    let%bind () = repair_require_available store.db r in
+    let%bind registered = query_existing_fingerprint store.db r.plan_id in
+    let%bind registered = match registered with Some value -> Ok value | None -> Error "missing repair plan" in
+    let%bind nodes,edges = dependency_graph_db store.db r.plan_id in
+    let%bind () = if List.mem nodes r.prerequisite_task_id ~equal:String.equal then Ok () else Error "missing repair prerequisite in same plan" in
+    let%bind () = if repair_acyclic nodes edges then Ok () else Error "current dependency graph is invalid or cyclic" in
+    let current = List.filter_map edges ~f:(fun (a,b) -> if String.equal a r.target_task_id then Some b else None) in
+    let current_sha = repair_edges_sha r.plan_id edges in
+    let request_sha = dependency_repair_hash r in
+    let%bind () = ensure_dependency_repair_namespace store.db in
+    let%bind previous = repair_lookup_db store.db r.operation_id in
+    let last_observed_ns = ref now_ns in
+    let refresh_authority () =
+      let fresh = observe_now () in
+      let%bind () = validate_completion ~worker:r.worker ~expected_attempt:r.expected_attempt ~now_ns:fresh in
+      let%bind () = if Int64.(fresh >= !last_observed_ns) then Ok () else Error "repair clock regressed" in
+      let%bind () = repair_require_authority store.db r fresh in
+      last_observed_ns := fresh;
+      Ok fresh in
+    match previous with
+    | Some receipt ->
+        if repair_receipt_request_matches r receipt
+           && String.equal receipt.request_sha256 request_sha
+           && String.equal receipt.after_edges_sha256 current_sha
+           && String.equal receipt.registered_graph_fingerprint registered
+           && List.equal String.equal current receipt.after_dependencies
+        then let%bind _ = refresh_authority () in Ok {receipt with replayed=true}
+        else Error "dependency repair operation conflict or changed postgraph"
+    | None ->
+        let expected = List.sort r.expected_dependencies ~compare:String.compare in
+        let%bind () = if List.equal String.equal current expected then Ok () else Error "dependency repair expected dependency set changed" in
+        let%bind () = if List.mem current r.prerequisite_task_id ~equal:String.equal then Error "dependency already present without matching repair receipt" else Ok () in
+        let after = List.sort ((r.target_task_id,r.prerequisite_task_id)::edges)
+          ~compare:(fun (a,b) (c,d) -> match String.compare a c with 0 -> String.compare b d | n -> n) in
+        let%bind () = if List.length after <= 16384 && repair_acyclic nodes after then Ok () else Error "additive dependency would create cycle or exceed bound" in
+        let after_dependencies = List.sort (r.prerequisite_task_id::current) ~compare:String.compare in
+        let%bind () = if List.length after_dependencies <= 256 then Ok () else Error "resulting dependency set exceeds bound" in
+        let after_edges_sha256 = repair_edges_sha r.plan_id after in
+        let before_dependencies_json = Yojson.Safe.to_string (repair_string_list current) in
+        let after_dependencies_json = Yojson.Safe.to_string (repair_string_list after_dependencies) in
+        (* All graph hashing and payload preparation precede this last prewrite
+           observation. No real-time bound on SQLite or COMMIT is asserted. *)
+        let%bind effect_now = refresh_authority () in
+        let%bind () = insert_dependency store.db ~plan_id:r.plan_id ~task_id:r.target_task_id r.prerequisite_task_id in
+        let receipt : dependency_repair_receipt = {
+          operation_id=r.operation_id;plan_id=r.plan_id;maintenance_task_id=r.maintenance_task_id;
+          worker=r.worker;expected_attempt=r.expected_attempt;target_task_id=r.target_task_id;
+          prerequisite_task_id=r.prerequisite_task_id;request_sha256=request_sha;
+          before_dependencies=current;after_dependencies;before_edges_sha256=current_sha;
+          after_edges_sha256;
+          registered_graph_fingerprint=registered;recorded_at_ns=effect_now;replayed=false } in
+        let%bind () = with_stmt store.db "INSERT INTO sa_plan_dependency_repair VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" (fun stmt ->
+          let%bind () = bind_values_result "bind dependency repair audit" stmt [
+            TEXT receipt.operation_id;TEXT receipt.plan_id;TEXT receipt.maintenance_task_id;TEXT receipt.worker;
+            INT (Int64.of_int receipt.expected_attempt);TEXT receipt.target_task_id;TEXT receipt.prerequisite_task_id;
+            TEXT receipt.request_sha256;TEXT before_dependencies_json;
+            TEXT after_dependencies_json;
+            TEXT receipt.before_edges_sha256;TEXT receipt.after_edges_sha256;
+            TEXT receipt.registered_graph_fingerprint;INT receipt.recorded_at_ns] in
+          step_done "append dependency repair audit" stmt) in
+        let%bind readback = repair_lookup_db store.db r.operation_id in
+        let%bind _,actual_edges = dependency_graph_db store.db r.plan_id in
+        let%bind actual_registered = query_existing_fingerprint store.db r.plan_id in
+        if Option.value_map readback ~default:false ~f:(fun actual ->
+             repair_receipt_request_matches r actual
+             && Int64.equal actual.recorded_at_ns receipt.recorded_at_ns
+             && String.equal actual.registered_graph_fingerprint registered
+             && String.equal actual.request_sha256 receipt.request_sha256
+             && String.equal actual.before_edges_sha256 receipt.before_edges_sha256
+             && String.equal actual.after_edges_sha256 receipt.after_edges_sha256
+             && List.equal String.equal actual.before_dependencies receipt.before_dependencies
+             && List.equal String.equal actual.after_dependencies receipt.after_dependencies)
+           && String.equal (repair_edges_sha r.plan_id actual_edges) receipt.after_edges_sha256
+           && Option.value_map actual_registered ~default:false ~f:(String.equal registered)
+        then let%bind _ = refresh_authority () in Ok receipt
+        else Error "dependency repair durable readback mismatch")

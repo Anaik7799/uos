@@ -121,6 +121,33 @@ fn deepseek() -> decode.Decoder(Native) {
   })
 }
 
+// AGY CLI emits aggregate input/output counters with a final conversation ID.
+// The observed wire sample has zero cache/thinking. Nonzero values remain
+// unsupported until their overlap semantics are independently established;
+// never guess a partition or invent a dollar price from the requested model.
+fn agy() -> decode.Decoder(Native) {
+  decode.at(["usage"], {
+    use i <- decode.field("input_tokens", decode.int)
+    use o <- decode.field("output_tokens", decode.int)
+    use r <- decode.field("cache_read_tokens", decode.int)
+    use thinking <- decode.field("thinking_tokens", decode.int)
+    use t <- decode.field("total_tokens", decode.int)
+    decode.success(Native(
+      case r == 0 && thinking == 0 {
+        True -> i
+        False -> -1
+      },
+      o,
+      0,
+      0,
+      Some(thinking),
+      Some(t),
+      None,
+      False,
+    ))
+  })
+}
+
 pub fn parse(
   format: String,
   provider: String,
@@ -137,6 +164,7 @@ pub fn parse(
     "claude_cli" -> Ok(claude())
     "pi_sdk" -> Ok(pi())
     "deepseek_chat" -> Ok(deepseek())
+    "agy_cli" -> Ok(agy())
     _ -> Error("unsupported_receipt_format")
   })
   use _ <- result.try(case format {
@@ -191,6 +219,18 @@ pub fn parse(
       case json.parse(text, final) {
         Ok(True) -> Ok(Nil)
         _ -> Error("native_invocation_id_or_kind_mismatch")
+      }
+    }
+    "agy_cli" -> {
+      let final = {
+        use actual <- decode.field("conversation_id", decode.string)
+        use status <- decode.field("status", decode.string)
+        use turns <- decode.field("num_turns", decode.int)
+        decode.success(actual == id && status == "SUCCESS" && turns == 1)
+      }
+      case json.parse(text, final) {
+        Ok(True) -> Ok(Nil)
+        _ -> Error("nonfinal_or_mismatched_agy_receipt")
       }
     }
     _ -> Error("unsupported_receipt_format")

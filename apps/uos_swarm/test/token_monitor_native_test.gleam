@@ -101,3 +101,74 @@ pub fn duplicate_keys_and_nonfinite_refuse_test() {
   |> should.equal(Error("invalid_raw_receipt_json"))
   pi("{\"x\":NaN}") |> should.equal(Error("invalid_raw_receipt_json"))
 }
+
+fn agy_receipt(raw: String) {
+  n.parse(
+    "agy_cli",
+    "antigravity",
+    "conversation-1",
+    "agy",
+    "gemini-4-argon-medium",
+    raw,
+  )
+}
+
+fn agy_sample() {
+  "{\"conversation_id\":\"conversation-1\",\"status\":\"SUCCESS\",\"num_turns\":1,\"usage\":{\"input_tokens\":33735,\"output_tokens\":581,\"thinking_tokens\":0,\"cache_read_tokens\":0,\"total_tokens\":34316}}"
+}
+
+pub fn native_agy_observed_usage_has_unknown_cost_test() {
+  let assert Ok(r) = agy_receipt(agy_sample())
+  let assert Some(u) = r.usage
+  u.input_tokens |> should.equal(33_735)
+  u.output_tokens |> should.equal(581)
+  r.reasoning_tokens |> should.equal(Some(0))
+  r.estimated_nanodollars |> should.equal(None)
+  r.failed |> should.equal(False)
+}
+
+pub fn native_agy_identity_and_terminal_controls_test() {
+  agy_receipt(string.replace(agy_sample(), "conversation-1", "other"))
+  |> should.equal(Error("nonfinal_or_mismatched_agy_receipt"))
+  agy_receipt(string.replace(agy_sample(), "SUCCESS", "RUNNING"))
+  |> should.equal(Error("nonfinal_or_mismatched_agy_receipt"))
+  agy_receipt(string.replace(agy_sample(), "\"num_turns\":1", "\"num_turns\":2"))
+  |> should.equal(Error("nonfinal_or_mismatched_agy_receipt"))
+}
+
+pub fn native_agy_duplicate_and_warning_prefix_refused_test() {
+  agy_receipt(string.replace(
+    agy_sample(),
+    "\"status\":\"SUCCESS\"",
+    "\"status\":\"SUCCESS\",\"status\":\"SUCCESS\"",
+  ))
+  |> should.equal(Error("invalid_raw_receipt_json"))
+  agy_receipt("warning: unexpected prefix\n" <> agy_sample())
+  |> should.equal(Error("invalid_raw_receipt_json"))
+}
+
+pub fn native_agy_inconsistent_total_refused_test() {
+  agy_receipt(string.replace(agy_sample(), "34316", "34317"))
+  |> should.equal(Error("inconsistent_total"))
+}
+
+pub fn native_agy_unknown_cache_and_thinking_overlap_not_guessed_test() {
+  let assert Error(_) =
+    agy_receipt(string.replace(
+      agy_sample(),
+      "\"cache_read_tokens\":0",
+      "\"cache_read_tokens\":10",
+    ))
+  let assert Error(_) =
+    agy_receipt(string.replace(
+      agy_sample(),
+      "\"thinking_tokens\":0",
+      "\"thinking_tokens\":10",
+    ))
+}
+
+pub fn native_agy_missing_or_negative_counts_refused_test() {
+  let assert Error(_) =
+    agy_receipt(string.replace(agy_sample(), "\"input_tokens\":33735,", ""))
+  let assert Error(_) = agy_receipt(string.replace(agy_sample(), "33735", "-1"))
+}

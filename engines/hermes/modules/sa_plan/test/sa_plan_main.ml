@@ -74,7 +74,7 @@ let usage () =
 Usage: sa-plan [--format text|json] <noun> <verb> [arguments]
 
   plan      create | show | register | status | list | tree | watch
-  task      create | show | list | rename | claim | renew | complete | select
+  task      create | show | list | rename | claim | renew | complete | select | dependency-add
   job|oban enqueue | claim | complete | list | cancel-once | cancellation-result
   workflow|temporal start | activity | complete | fail | history
   work      path | materialize
@@ -87,7 +87,7 @@ work/plans/zigvm/documentation/sa-plan-unified-manual/manual.md|}
 
 let contextual_help = function
   | "plan" -> print_endline "plan create ID NAME TITLE | show ID_OR_NAME | rename ID_OR_NAME NEW_NAME | register | status | list | tree | watch [SECONDS]"
-  | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER ATTEMPT | renew PLAN TASK WORKER ATTEMPT LEASE_NS | complete PLAN TASK WORKER ATTEMPT RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE"
+  | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER ATTEMPT | renew PLAN TASK WORKER ATTEMPT LEASE_NS | complete PLAN TASK WORKER ATTEMPT RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE | dependency-add (bounded closed JSON stdin; exact maintenance lease and dependency-set CAS)"
   | "job" | "oban" -> print_endline "job|oban enqueue ID NAME QUEUE WORKER ARGS [MAX_ATTEMPTS] | claim QUEUE WORKER [LEASE_NS] | complete ID_OR_NAME WORKER ATTEMPT OK|ERROR RESULT | list [QUEUE] | cancel-once | cancellation-result (bounded JSON stdin, JSON response)"
   | "workflow" | "temporal" -> print_endline "workflow|temporal start ID NAME KIND INPUT | activity WORKFLOW ACTIVITY NAME KEY RESULT | complete WORKFLOW RESULT | fail WORKFLOW ERROR | history WORKFLOW"
   | "work" -> print_endline "work path KIND NAME | materialize KIND ID NAME TITLE CONTENT_FILE"
@@ -503,6 +503,66 @@ let dispatch store format argv cancellation_input =
       emit format [ "selftest", "green"; "dag_tasks", "18" ]
   | value -> fail ("unknown command: " ^ value)
 
+(* Exact bounded local dependency-repair protocol. No clock or DB locator is
+   accepted from stdin; open_existing and the Store own the transaction fence. *)
+let read_dependency_repair_input () : Store.dependency_repair =
+  let chunk = Bytes.create 4096 and buffer = Buffer.create 4096 in
+  let rec read total =
+    let n = Stdlib.input Stdlib.stdin chunk 0 (Bytes.length chunk) in
+    if n = 0 then Buffer.contents buffer
+    else if total + n > 65536 then fail "dependency_repair_input_bound"
+    else (Buffer.add_subbytes buffer chunk ~pos:0 ~len:n; read (total+n)) in
+  let raw = read 0 in
+  let rec lexical i quoted escaped depth =
+    if i = String.length raw then not quoted && depth = 0
+    else let c = raw.[i] in
+      if quoted then
+        if escaped then lexical (i+1) true false depth
+        else if Char.equal c '\\' then lexical (i+1) true true depth
+        else if Char.equal c '"' then lexical (i+1) false false depth
+        else Char.to_int c >= 32 && lexical (i+1) true false depth
+      else match c with
+      | '"' -> lexical (i+1) true false depth
+      | '{' | '[' -> depth < 2 && lexical (i+1) false false (depth+1)
+      | '}' | ']' -> depth > 0 && lexical (i+1) false false (depth-1)
+      | ' ' | '\t' | '\n' | '\r' | ':' | ',' | '-' | '0'..'9' -> lexical (i+1) false false depth
+      | _ -> false in
+  if not (Stdlib.String.is_valid_utf_8 raw && lexical 0 false false 0) then
+    fail "invalid_dependency_repair_json";
+  try
+    let fields = match Yojson.Safe.from_string raw with `Assoc xs -> xs | _ -> failwith "shape" in
+    let keys = List.map fields ~f:fst in
+    let expected = ["operation_id";"plan_id";"maintenance_task_id";"worker";
+                    "expected_attempt";"target_task_id";"prerequisite_task_id";"expected_dependencies"] in
+    if List.length keys <> 8 || List.length (List.dedup_and_sort keys ~compare:String.compare) <> 8
+       || not (List.equal String.equal (List.sort keys ~compare:String.compare)
+                 (List.sort expected ~compare:String.compare)) then failwith "keys";
+    let field key = List.Assoc.find_exn fields key ~equal:String.equal in
+    let text key = match field key with `String value -> value | _ -> failwith "type" in
+    let expected_attempt = match field "expected_attempt" with `Int n -> n | _ -> failwith "attempt" in
+    let expected_dependencies = match field "expected_dependencies" with
+      | `List xs -> List.map xs ~f:(function `String s -> s | _ -> failwith "dependency")
+      | _ -> failwith "dependencies" in
+    {operation_id=text "operation_id";plan_id=text "plan_id";
+     maintenance_task_id=text "maintenance_task_id";worker=text "worker";
+     expected_attempt;target_task_id=text "target_task_id";
+     prerequisite_task_id=text "prerequisite_task_id";expected_dependencies}
+  with _ -> fail "invalid_dependency_repair_request"
+
+let emit_dependency_repair (r : Store.dependency_repair_receipt) =
+  let strings xs = `List (List.map xs ~f:(fun x -> `String x)) in
+  Yojson.Safe.to_string (`Assoc [
+    "schema",`String "uos.sa-plan.add-dependency.receipt.v1";
+    "authority",`String "NATIVE_STORE_CONCURRENCY_FENCE_NOT_AUTHENTICATION";
+    "operation_id",`String r.operation_id;"plan_id",`String r.plan_id;
+    "target_task_id",`String r.target_task_id;"prerequisite_task_id",`String r.prerequisite_task_id;
+    "request_sha256",`String r.request_sha256;
+    "before_dependencies",strings r.before_dependencies;"after_dependencies",strings r.after_dependencies;
+    "before_edges_sha256",`String r.before_edges_sha256;"after_edges_sha256",`String r.after_edges_sha256;
+    "registered_graph_fingerprint",`String r.registered_graph_fingerprint;
+    "recorded_at_ns",`String (Int64.to_string r.recorded_at_ns);"replayed",`Bool r.replayed
+  ]) |> print_endline
+
 let main () =
   let request_started_ns = Pipeline.now_ns () in
   let stages_rev = ref [] in
@@ -517,7 +577,11 @@ let main () =
       let controls = Option.value (Sa_plan_cli.help_request raw) ~default:raw in
       Sa_plan_cli.extract_format controls)
   in
-  let argv = measured "normalize" (fun () -> Sa_plan_cli.normalize without_format) in
+  let argv = measured "normalize" (fun () ->
+    if Array.length without_format = 3 && String.equal without_format.(1) "task"
+       && String.equal without_format.(2) "dependency-add"
+    then [|without_format.(0);"--dependency-add"|]
+    else Sa_plan_cli.normalize without_format) in
   let command = if Array.length argv > 1 then argv.(1) else "missing" in
   let request_id = Printf.sprintf "sa-plan-%Ld" request_started_ns in
   let log_pipeline () =
@@ -525,7 +589,10 @@ let main () =
     Printf.eprintf "sa-plan-pipeline %s\n%!"
       (Pipeline.log_line ~request_id ~command ~total_ns (List.rev !stages_rev))
   in
-  let validation = measured "validate" (fun () -> Sa_plan_cli.validate argv) in
+  let validation = measured "validate" (fun () ->
+    if String.equal command "--dependency-add" then
+      if Array.length argv = 2 then Ok () else Error "dependency-add takes only bounded JSON stdin"
+    else Sa_plan_cli.validate argv) in
   (match validation with
    | Error message ->
        log_pipeline ();
@@ -540,6 +607,18 @@ let main () =
       else emit format
         [ "version", "0.4.0"; "contract", "20260804";
           "store", "sqlite"; "semantics", "at-least-once" ]);
+    log_pipeline ();
+    exit 0
+  end;
+  if String.equal command "--dependency-add" then begin
+    let request = measured "dependency_repair_decode" read_dependency_repair_input in
+    let store = measured "store_open_existing" (fun () ->
+      Store.open_existing (db_path ~create_parent:false ()) |> or_fail) in
+    Exn.protect ~f:(fun () ->
+      let receipt = measured "dependency_repair_transaction" (fun () ->
+        Store.add_dependency_observed store request ~observe_now:now_ns |> or_fail) in
+      emit_dependency_repair receipt)
+      ~finally:(fun () -> Store.close store);
     log_pipeline ();
     exit 0
   end;

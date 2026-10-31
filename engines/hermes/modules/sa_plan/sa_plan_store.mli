@@ -737,3 +737,59 @@ val inspect_cancellation_target_observed :
   target_job_id:string ->
   observe_now:(unit -> int64) ->
   (cancellation_target, string) result
+
+(** Add one prerequisite; never remove an edge or rewrite registered provenance.
+    Explicit maintenance task identity is a concurrency fence, not authentication. *)
+type dependency_repair = {
+  operation_id : string;
+  plan_id : string;
+  maintenance_task_id : string;
+  worker : string;
+  expected_attempt : int;
+  target_task_id : string;
+  prerequisite_task_id : string;
+  expected_dependencies : string list;
+}
+
+type dependency_repair_receipt = {
+  operation_id : string;
+  plan_id : string;
+  maintenance_task_id : string;
+  worker : string;
+  expected_attempt : int;
+  target_task_id : string;
+  prerequisite_task_id : string;
+  request_sha256 : string;
+  before_dependencies : string list;
+  after_dependencies : string list;
+  before_edges_sha256 : string;
+  after_edges_sha256 : string;
+  registered_graph_fingerprint : string;
+  recorded_at_ns : int64;
+  replayed : bool;
+}
+
+(** Owns one BEGIN IMMEDIATE, refuses nesting, then samples [observe_now].
+    Rechecks exact plan/task/worker/attempt and exclusive lease expiry, available
+    target, existing prerequisite, semantic dependency-set CAS and the actual
+    bounded current graph's acyclicity. Maximum4096 tasks/16384 edges/256 expected
+    and resulting dependencies; bounded ASCII identifiers. Unique operation receipts and exact
+    audit-table/append-only-trigger definitions are checked in the same transaction.
+    DDL is lazy and rolls back with any failure; existing v7 registration identity
+    remains unchanged. Graph hashes/payloads precede a fresh prewrite clock/fence
+    check immediately adjacent to INSERT. Receipt/edge/fingerprint readback and
+    another clock/fence check precede the COMMIT request. Physical COMMIT latency
+    or scheduling may cross expiry; no hard real-time expiry-free commit is proved.
+
+    Replay requires the same live authority, available target, semantic request
+    digest and exact recorded whole-edge postgraph. Unrelated graph drift may
+    therefore HOLD; this is not universal retry idempotence. No native filesystem
+    owner authentication, synchronized-clock proof or MCP authority is established. *)
+val add_dependency_observed :
+  t -> dependency_repair -> observe_now:(unit -> int64) ->
+  (dependency_repair_receipt, string) result
+
+(** Historical read only; absent optional audit namespace returns None. Exact
+    existing schema/trigger definitions are required; no DDL or effect authority. *)
+val lookup_dependency_repair :
+  t -> operation_id:string -> (dependency_repair_receipt option, string) result
