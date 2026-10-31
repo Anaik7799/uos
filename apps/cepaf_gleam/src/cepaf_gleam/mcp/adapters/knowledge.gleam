@@ -298,14 +298,21 @@ fn search_as(
     |> list.filter(fn(entry) {
       searchable(corpus, principal_scopes, entry, zk_only)
     })
-    |> list.filter(fn(entry) {
-      let haystack = string.lowercase(entry.rel_path <> " " <> entry.content)
-      case string.starts_with(lowered, "adr-") {
+    |> list.filter_map(fn(entry) {
+      // Normalize each current request's bytes once. Nothing is retained across
+      // requests: disk freshness, scope and link checks still precede ranking.
+      let path = string.lowercase(entry.rel_path)
+      let body = string.lowercase(entry.content)
+      let haystack = path <> " " <> body
+      let matches = case string.starts_with(lowered, "adr-") {
         True -> live_corpus.slug_matches(entry.rel_path, lowered)
         False -> list.all(words, fn(word) { string.contains(haystack, word) })
       }
+      case matches {
+        True -> Ok(#(entry, relevance_score(path, body, lowered, words)))
+        False -> Error(Nil)
+      }
     })
-    |> list.map(fn(entry) { #(entry, relevance_score(entry, lowered, words)) })
     |> list.sort(fn(a, b) {
       case int.compare(b.1, a.1) {
         order.Eq -> string.compare(b.0.rel_path, a.0.rel_path)
@@ -352,12 +359,11 @@ fn utf8_prefix(bytes: BitArray) -> String {
 }
 
 fn relevance_score(
-  entry: CorpusEntry,
+  path: String,
+  body: String,
   lowered: String,
   words: List(String),
 ) -> Int {
-  let path = string.lowercase(entry.rel_path)
-  let body = string.lowercase(entry.content)
   let assert Ok(header_bytes) =
     bit_array.slice(<<body:utf8>>, 0, int.min(400, string.byte_size(body)))
   let header = utf8_prefix(header_bytes)
