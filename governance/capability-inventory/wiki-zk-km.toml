@@ -280,3 +280,18 @@ zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
 zk_transclusion = "[[zk:20260905-1801-moc-uos-unified-master]]"
 journal = "docs/journal/20261031-1151-t01-always-fresh-km-and-verifiers-journal.md"
 sop = "docs/sop/20261031-1012-uos-canonical-fractal-system-prompt.md"
+
+[[knowledge_group]]
+id = "HIVE-CONTROL-MATH-20261031-1432"
+plan = "uos/hive-agent-control-math/20261031-1431"
+state = "development"
+admitted = false
+design = "docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md"
+journal = "docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md"
+index = "governance/planning/20261031-1432-hive-agent-control-math-and-token-observations.json"
+model = "formal/lean/AgentScaleControl.lean"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+

@@ -1,0 +1,573 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-31T15:04:04Z",
+  "status": "SCOPED_DEVELOPMENT_VERIFIED",
+  "authority": "NONE",
+  "plan": "uos/hive-agent-control-math/20261031-1431",
+  "tasks": [
+    "M01_CONTROL_SAFETY",
+    "M02_TOKEN_MONITOR",
+    "M03_METHOD_COVERAGE"
+  ],
+  "source_parent_revision": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+  "source_jj_change": "vnswoztn",
+  "sources": [
+    {
+      "sha256": "ba1d0cae6c1b04e234fbd4832f0f13618067f30dc0e10ebd7a315c583d21760f",
+      "path": "apps/uos_swarm/src/token_monitor_cli.gleam"
+    },
+    {
+      "sha256": "33a0e6021c998038fe9c389501d1fd90b1903676ffc4c3e5be4c3875ef2e77cb",
+      "path": "apps/uos_swarm/src/token_monitor_json_ffi.erl"
+    },
+    {
+      "sha256": "2c86fcceb7918028b9376878813ff331f5d22be9b5bfc844d15200564f09ed17",
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor.gleam"
+    },
+    {
+      "sha256": "674cb5e013938b804cb4a23c48461b99f94fe22bbb3b11fe491befedf1c899bb",
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor_input.gleam"
+    },
+    {
+      "sha256": "9308bb71ea03840656206f24e679d344f2c247a4a762becb2b663478d857561e",
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor_native.gleam"
+    },
+    {
+      "sha256": "425e60125efb9ac3a2a8f2ca7a9b81a61b90a96d5d1219bd24e049735589e329",
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor_manifest.gleam"
+    },
+    {
+      "sha256": "8898ef8fa7a76362c4530829fa6b71080f37eae4877f1bdad6a31ff1a4f258f9",
+      "path": "apps/uos_swarm/test/token_monitor_test.gleam"
+    },
+    {
+      "sha256": "08ab0aeb83de114c1d08aef48833c91d80d3b1130a86607938be08f5862abba7",
+      "path": "apps/uos_swarm/test/token_monitor_native_test.gleam"
+    },
+    {
+      "sha256": "2fa93979058c34701a62410d60e7a505f6e1e388a7a01f4684b922c92a3e1d03",
+      "path": "apps/uos_swarm/test/token_monitor_source_test.erl"
+    },
+    {
+      "sha256": "25b956ecfbd82fb4f8e5da97be58724833dfb2183c893793ca235583f73d2835",
+      "path": "formal/lean/AgentScaleControl.lean"
+    },
+    {
+      "sha256": "f59738336d2dcde65a43ce31cdfe53cb9d529ccedbf2c0a41e8fde0f1a507b9b",
+      "path": "formal/quint/agent_scale_control.qnt"
+    },
+    {
+      "sha256": "dcd84f5b398d85d94acfe7fad368a33ac026edb0fe8d129111f7a6a4deeed3b9",
+      "path": "formal/smt/agent_scale_control.smt2"
+    },
+    {
+      "sha256": "74570c9a0ccf0aaefd261e85a876840b83e3bd008755d550c0f6f74cbce8a5b3",
+      "path": "tools/agent_control_smt_oracle.ml"
+    }
+  ],
+  "lean": {
+    "exit": 0,
+    "named_theorems": 50,
+    "checked_examples": 17,
+    "source_hash": "25b956ecfbd82fb4f8e5da97be58724833dfb2183c893793ca235583f73d2835",
+    "root_independent_kernel": true,
+    "guard_mutants_rejected": [
+      "removed_daily_liability_guard",
+      "removed_one_use_guard"
+    ],
+    "native_gleam_refinement": "UNPROVED",
+    "proof_provenance": "local Codex relay salvage and root check after timed-out native Claude"
+  },
+  "quint": {
+    "source_hash": "f59738336d2dcde65a43ce31cdfe53cb9d529ccedbf2c0a41e8fde0f1a507b9b",
+    "typecheck_exit": 0,
+    "deterministic_tests": 9,
+    "seeded_runs": [
+      {
+        "seed": "0x1",
+        "samples": 1000,
+        "max_steps": 100
+      },
+      {
+        "seed": "0x2",
+        "samples": 1000,
+        "max_steps": 100
+      },
+      {
+        "seed": "0x3",
+        "samples": 200,
+        "max_steps": 100
+      }
+    ],
+    "violations": 0,
+    "negative_controls": [
+      "never_admitted",
+      "unsafe_unknown_release"
+    ],
+    "bounds": "3 fixed worker identities,5 effect IDs,one fixed day,finite clock/generation; not full 40-request exhaustion",
+    "exhaustive": false
+  },
+  "smt": {
+    "theory": "QF_LIA",
+    "query_timeout_ms": 3000,
+    "worker_wall_timeout_s": 12,
+    "statuses": [
+      "unsat",
+      "sat",
+      "sat",
+      "sat"
+    ],
+    "oracle": {
+      "status": "PASS_REPORT_ONLY",
+      "authority": "NONE",
+      "sat_witnesses_evaluated": 3,
+      "finite_refutation_candidates": 246000,
+      "valid_admissions": 16800,
+      "finite_scope_only": true
+    },
+    "negative_oracle_controls": [
+      "unknown_status",
+      "invalid_mutant_witness",
+      "invalid_positive_fixture"
+    ],
+    "control_refusal_exit": 2,
+    "unsat_independent_general_proof": false
+  },
+  "gleam": {
+    "otp": 29,
+    "package_tests_passed": 726,
+    "package_tests_failed": 0,
+    "independent_targeted_tests_passed": 24,
+    "independent_review": "PASS_SCOPED_DEVELOPMENT_RECHECK",
+    "resolved_counterexamples": [
+      "source_alias_double_count",
+      "pi_nonfinal_last_response_as_aggregate"
+    ],
+    "hard_cap_enforced": false,
+    "production_attachment": "UNRUN"
+  },
+  "token_observation": {
+    "observed_at_unix_us": 1793458389680983,
+    "scope": "selected_registered_final_invocations_only",
+    "coverage_complete": false,
+    "supervisor_accounting": "separate_goal_metrics_overlap_unknown_do_not_add",
+    "liability": "read_canonical_daily_ledger_separately_no_refunds",
+    "adapter_errors": [
+      {
+        "provider": "claude",
+        "request_id": "timeout-agent-scale-20261031",
+        "reason": "receipt_empty_or_inflight"
+      }
+    ],
+    "report": {
+      "status": "REPORT_ONLY",
+      "authority": "NONE",
+      "hard_cap_enforced": false,
+      "decision": "HOLD_UNKNOWN_USAGE",
+      "unique_calls": 21,
+      "known_usage_calls": 20,
+      "unknown_usage_calls": 1,
+      "invocations_reporting_error": 1,
+      "accepted_work_outcomes": "UNVERIFIED_SEPARATE_REVIEW_REQUIRED",
+      "input_tokens_uncached": 26313,
+      "output_tokens_including_reasoning": 137300,
+      "cache_read_input_tokens": 1637093,
+      "cache_write_input_tokens": 261006,
+      "known_total_tokens": 2061712,
+      "estimated_nanodollars": 4054055178,
+      "unknown_cost_calls": 1,
+      "billing_basis": "unverified_receipt_sdk_or_list_price_estimates_not_invoice",
+      "known_input_tokens": 1924412,
+      "cache_read_basis_points_of_input": 8506,
+      "max_tokens": 1000000,
+      "max_calls": 40,
+      "optimization_hints": [
+        "Recall top 1-2 fresh canonical documents; keep stable instruction prefixes",
+        "Prefer accepted-work yield and full failed-attempt cost over cheap token price",
+        "Reasoning tokens are included in output; cache counters are distinct input classes",
+        "New calls still require canonical Sa-plan and daily budget admission"
+      ],
+      "calls": [
+        {
+          "provider": "claude",
+          "request_id": "212211bc-3cf0-4026-96e4-b56661dceae6",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 20,
+            "output_tokens_including_reasoning": 11377,
+            "cache_read_input_tokens": 389344,
+            "cache_write_input_tokens": 62680,
+            "total_tokens": 463421
+          },
+          "reasoning_tokens_subset": 2818,
+          "estimated_nanodollars": 806928800
+        },
+        {
+          "provider": "claude",
+          "request_id": "326a7f50-b3fa-4f99-a871-af51c60c0a2c",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 18,
+            "output_tokens_including_reasoning": 8640,
+            "cache_read_input_tokens": 141264,
+            "cache_write_input_tokens": 22522,
+            "total_tokens": 172444
+          },
+          "reasoning_tokens_subset": 2045,
+          "estimated_nanodollars": 190650400
+        },
+        {
+          "provider": "claude",
+          "request_id": "5a916e26-9080-47d5-81e3-4d6e03b4ee54",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 2,
+            "output_tokens_including_reasoning": 16954,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 1577,
+            "total_tokens": 18533
+          },
+          "reasoning_tokens_subset": 11889,
+          "estimated_nanodollars": 175852000
+        },
+        {
+          "provider": "claude",
+          "request_id": "5bbb24c2-ae98-4af0-8021-c0f609f47bb1",
+          "failure_observed": true,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 0,
+            "output_tokens_including_reasoning": 0,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 0
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 1196803600
+        },
+        {
+          "provider": "claude",
+          "request_id": "709f7e00-bb7f-44ba-9913-39ffaeec8a50",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 20,
+            "output_tokens_including_reasoning": 10248,
+            "cache_read_input_tokens": 177608,
+            "cache_write_input_tokens": 28835,
+            "total_tokens": 216711
+          },
+          "reasoning_tokens_subset": 1000,
+          "estimated_nanodollars": 235620800
+        },
+        {
+          "provider": "claude",
+          "request_id": "8b76f8d3-a2ac-4552-bb5e-104b2b813f1d",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 38,
+            "output_tokens_including_reasoning": 29932,
+            "cache_read_input_tokens": 851662,
+            "cache_write_input_tokens": 65488,
+            "total_tokens": 947120
+          },
+          "reasoning_tokens_subset": 10444,
+          "estimated_nanodollars": 646514200
+        },
+        {
+          "provider": "claude",
+          "request_id": "cc846366-e997-4b92-b54b-ff3ea15ee911",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 4,
+            "output_tokens_including_reasoning": 8392,
+            "cache_read_input_tokens": 6475,
+            "cache_write_input_tokens": 17592,
+            "total_tokens": 32463
+          },
+          "reasoning_tokens_subset": 5301,
+          "estimated_nanodollars": 154943500
+        },
+        {
+          "provider": "claude",
+          "request_id": "d1bd6924-af13-48cc-911f-653addb2e608",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 4,
+            "output_tokens_including_reasoning": 12516,
+            "cache_read_input_tokens": 6372,
+            "cache_write_input_tokens": 10435,
+            "total_tokens": 29327
+          },
+          "reasoning_tokens_subset": 7284,
+          "estimated_nanodollars": 167545200
+        },
+        {
+          "provider": "claude",
+          "request_id": "ed73ebe1-fdd1-443c-9828-9222fabcd4a4",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 6,
+            "output_tokens_including_reasoning": 6289,
+            "cache_read_input_tokens": 18727,
+            "cache_write_input_tokens": 20474,
+            "total_tokens": 45496
+          },
+          "reasoning_tokens_subset": 832,
+          "estimated_nanodollars": 146670700
+        },
+        {
+          "provider": "claude",
+          "request_id": "f417c786-8ed6-4bc9-a09c-1436f0ddf7e3",
+          "failure_observed": false,
+          "usage": {
+            "agent": "claude",
+            "model": "mixed-claude-cli",
+            "input_tokens_uncached": 8,
+            "output_tokens_including_reasoning": 16560,
+            "cache_read_input_tokens": 45641,
+            "cache_write_input_tokens": 31403,
+            "total_tokens": 93612
+          },
+          "reasoning_tokens_subset": 4124,
+          "estimated_nanodollars": 295792100
+        },
+        {
+          "provider": "claude",
+          "request_id": "timeout-agent-scale-20261031",
+          "failure_observed": false,
+          "usage": null,
+          "reasoning_tokens_subset": null,
+          "estimated_nanodollars": null
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "final-review-v2:advisory-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 4745,
+            "output_tokens_including_reasoning": 114,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 4859
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 3357420
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "final-review-v2:core-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 4875,
+            "output_tokens_including_reasoning": 21,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 4896
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 3259080
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "final-review:advisory-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 4740,
+            "output_tokens_including_reasoning": 512,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 5252
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 4142160
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "final-review:core-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 4704,
+            "output_tokens_including_reasoning": 394,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 5098
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 3884760
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "pi-relay:oi01-cli-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 596,
+            "output_tokens_including_reasoning": 756,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 1352
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 1890240
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "pi-relay:oi01-pro-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 1016,
+            "output_tokens_including_reasoning": 4096,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 5112
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 8780640
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "pi-relay:oi01-repair-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 1916,
+            "output_tokens_including_reasoning": 1287,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 3203
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 3812820
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "pi-relay:oi01-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-flash-0731",
+            "input_tokens_uncached": 885,
+            "output_tokens_including_reasoning": 3625,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 4510
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 968065
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "pi-relay:speedup-result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-flash-0731",
+            "input_tokens_uncached": 1769,
+            "output_tokens_including_reasoning": 3019,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 4788
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 929033
+        },
+        {
+          "provider": "openrouter",
+          "request_id": "token-monitor:result.json",
+          "failure_observed": false,
+          "usage": {
+            "agent": "pi",
+            "model": "deepseek/deepseek-v4-pro-0813",
+            "input_tokens_uncached": 947,
+            "output_tokens_including_reasoning": 2568,
+            "cache_read_input_tokens": 0,
+            "cache_write_input_tokens": 0,
+            "total_tokens": 3515
+          },
+          "reasoning_tokens_subset": 0,
+          "estimated_nanodollars": 5709660
+        }
+      ]
+    }
+  },
+  "liability": {
+    "utc_day": "2026-10-31",
+    "reservation_count": 10,
+    "daily_reserved_nanodollars": 2500000000,
+    "remaining_nanodollars": 7500000000,
+    "actual_spend_nanodollars": null,
+    "budget_scope": "this_database_only",
+    "refunds_supported": false
+  },
+  "separate_supervisor_goal_observation": {
+    "observed_at": "2026-10-31T14:56:07Z",
+    "aggregate_tokens": 1956815,
+    "elapsed_seconds": 4916,
+    "scope": "whole original nine-task goal and relay population",
+    "overlap_with_native_receipts": "UNKNOWN_DO_NOT_SUM",
+    "billing_cost": "UNKNOWN"
+  },
+  "document_gates": {
+    "journal": "10/10 PASS",
+    "diagrams_verified": 2,
+    "diagrams_unverified": 0
+  },
+  "baseline_link_tracker": {
+    "status": "verified",
+    "total_endpoints": 69,
+    "passed": 69,
+    "failed": 0,
+    "canonical_broken_transclusions": 0,
+    "historical_broken_transclusions": 163,
+    "canonical_chain_intact": true
+  },
+  "integration_status": "PENDING",
+  "live_delivery": "UNRUN",
+  "runtime_release": "NOT_GRANTED",
+  "application_admitted": false,
+  "SYSTEM_ADMITTED": false,
+  "admitted_ev_ceiling": 93,
+  "remaining": [
+    "native refinement",
+    "worker-ID/process injectivity",
+    "authenticated current external readback",
+    "real-time and liveness guarantees",
+    "MCP/Zenoh scale-control activation",
+    "unknown Claude timeout usage/cost",
+    "provider-route pricing reconciliation",
+    "original nine handover tasks"
+  ],
+  "references": {
+    "design": "docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md",
+    "journal": "docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md"
+  }
+}

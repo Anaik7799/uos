@@ -433,3 +433,8 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 - [x] **CHK-18-JJ** — Documentation authored in UOS using its standalone JJ discipline; no native Git mutations in UOS.
 
 </details>
+
+## 20261031-1432 — Agent-control safety model and Gleam token accounting
+
+Development evidence for Sa-plan uos/hive-agent-control-math/20261031-1431: [mathematical contract and public framework review](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md), [13-section journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md), [sanitized observations](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1432-hive-agent-control-math-and-token-observations.json) and [Lean source](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/AgentScaleControl.lean). Reuses Gleam coordinator usage, canonical Sa-plan and existing monetary liability policy. Model proof is abstract; monitor is read-only, unknown-cost-aware and has no dispatch authority. Original nine tasks, runtime binding and admission remain separate. EV ceiling93; EV94..109 NOT_ADMITTED.
+

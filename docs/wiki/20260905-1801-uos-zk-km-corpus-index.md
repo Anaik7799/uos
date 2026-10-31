@@ -539,3 +539,8 @@ This append-only section registers every post-`2026-09-17` October `2026-10` art
 ### §10.8 Provenance caveat
 
 This registry is report-only. `admitted_ev_ceiling = 93`, `application_admitted = false`, `SYSTEM_ADMITTED = false`; `EV-94..EV-109` and `ADR-071..ADR-086` remain `NOT_ADMITTED`. Registration here is not admission evidence.
+
+## 20261031-1432 — Agent-control safety model and Gleam token accounting
+
+Development evidence for Sa-plan uos/hive-agent-control-math/20261031-1431: [mathematical contract and public framework review](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1432-hive-agent-control-formal-check-and-token-monitor.md), [13-section journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1432-hive-agent-control-math-and-token-monitor-journal.md), [sanitized observations](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-1432-hive-agent-control-math-and-token-observations.json) and [Lean source](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/AgentScaleControl.lean). Reuses Gleam coordinator usage, canonical Sa-plan and existing monetary liability policy. Model proof is abstract; monitor is read-only, unknown-cost-aware and has no dispatch authority. Original nine tasks, runtime binding and admission remain separate. EV ceiling93; EV94..109 NOT_ADMITTED.
+
