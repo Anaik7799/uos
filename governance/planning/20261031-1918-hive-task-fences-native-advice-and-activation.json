@@ -1,0 +1,245 @@
+{
+  "schema": "uos.hive-source-and-activation-evidence.v1",
+  "plan": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "dependency_and_usage_code_revision": "a541c7c2701ed971a28b8fbff2356806bff1f3bf",
+  "receipt_sink_code_revision": "281721e3f525c0beac5fcebddbd87ea9ba621770",
+  "source_files": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/token_monitor_native.gleam",
+      "sha256": "0660c569f8806ed214cf49748f8866130061933d896035c13c2fd5f33a03e429"
+    },
+    {
+      "path": "apps/uos_swarm/test/token_monitor_native_test.gleam",
+      "sha256": "d489fc33fe8588ea8710886ac7ba0f33f67fb878dd1ac589c909362c9cad20a4"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+      "sha256": "0bcdd9be8a4d305aca25eb8767f5c3ad88f4e1cf25497bd57ae17f55bd78a8c2"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.mli",
+      "sha256": "515762c8fbce04a631343fbaa71b7ef395d84bdab2b338cc3821f10e5a05fc39"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_main.ml",
+      "sha256": "8c98fdd75dc70c67054448b91dd4b5155f3495a69f688bd9c36c37ecb607643f"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_dependency_repair.ml",
+      "sha256": "caac0725947467049ae1b8472595952b50f4b74b277c623ec7653a1b7ca651b4"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/test/dune",
+      "sha256": "ae2c2ca2def7150b8d06bf2ca3c9e8fefc7f56ffad12239342fae180e8245ab4"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/symbiosis_check_receipts.ml",
+      "sha256": "146387176ca599ba3933620b8363a4d406a8088842e8a597dc4c4c6eb4f001e7"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/symbiosis_check_receipts.mli",
+      "sha256": "449662b7959dc805c131a821740353ddaa294492e85d2eff8d2d3857222ac7cb"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/symbiosis_receipt_port.ml",
+      "sha256": "64e3925c3a2526c9edde2985a598f7f0113f509b99f91078f1bd8330149028d2"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/test_symbiosis_check_receipts.ml",
+      "sha256": "6c4036aaa1c6e023d1c6e5c8c03a9e879d1f762e35b5c3acf40d368dc471ede1"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/dune",
+      "sha256": "c58cff610fb2269dacf90d6da95cf59e7393e7341bb472ff7a8b6e02feee3708"
+    }
+  ],
+  "documents": [
+    {
+      "path": "docs/journal/20261031-1918-hive-task-fences-native-advice-and-activation-journal.md",
+      "sha256": "1729a29e407fd6e490bd02c87a0ff4f6722299ac71609891dc54719cdeb52d77"
+    },
+    {
+      "path": "docs/sop/20261031-1918-full-hive-service-activation-and-checks.md",
+      "sha256": "391a2692a7a360458771f07f7d0b0c64cd6e36c1532b7d2e5dc34b05c7fd6b4f"
+    },
+    {
+      "path": "docs/design/20261031-1908-full-hive-outstanding-task-graph.md",
+      "sha256": "d4c3a3ea615acf6367f4e1668ad7b048f55bc8cf02cd6198b85c04f0dc986e0a"
+    }
+  ],
+  "dependency_repair_receipts": [
+    {
+      "schema": "uos.sa-plan.add-dependency.receipt.v1",
+      "authority": "NATIVE_STORE_CONCURRENCY_FENCE_NOT_AUTHENTICATION",
+      "operation_id": "codex-oi08-requires-oi09-20261031-v1",
+      "plan_id": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+      "target_task_id": "OI08_CHAOS_SOAK_AND_TWO_KEY_DOSSIER",
+      "prerequisite_task_id": "OI09_NATIVE_HERMES_WIKI_AND_KM_SERVICE_UNIFICATION",
+      "request_sha256": "babdd9375c99f211966c8fad6de7ffead3e941ee8c6049dd3906b2236a82e572",
+      "before_dependencies": [
+        "OI03_101_ROUTE_LIVE_DAEMON_FIDELITY",
+        "OI04_OFFLINE_NIX_LEAN4_RESERVOIR",
+        "OI05_HISTORICAL_374_LINK_ALIAS_MAP",
+        "OI07_EFFECT_TIME_KM_RISK_FENCING"
+      ],
+      "after_dependencies": [
+        "OI03_101_ROUTE_LIVE_DAEMON_FIDELITY",
+        "OI04_OFFLINE_NIX_LEAN4_RESERVOIR",
+        "OI05_HISTORICAL_374_LINK_ALIAS_MAP",
+        "OI07_EFFECT_TIME_KM_RISK_FENCING",
+        "OI09_NATIVE_HERMES_WIKI_AND_KM_SERVICE_UNIFICATION"
+      ],
+      "before_edges_sha256": "87d7fa10bfa8204ef171775dc0bee122897f098981f10acb30c76b252c9fea2b",
+      "after_edges_sha256": "36ace3180187216301493e57ec85ab21364c52223976d65c92244cb0162cdf2b",
+      "registered_graph_fingerprint": "dynamic-v1",
+      "recorded_at_ns": "1793474740008433137",
+      "replayed": false
+    },
+    {
+      "schema": "uos.sa-plan.add-dependency.receipt.v1",
+      "authority": "NATIVE_STORE_CONCURRENCY_FENCE_NOT_AUTHENTICATION",
+      "operation_id": "codex-oi08-requires-full-hive-20261031-v1",
+      "plan_id": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+      "target_task_id": "OI08_CHAOS_SOAK_AND_TWO_KEY_DOSSIER",
+      "prerequisite_task_id": "OI02D_FULL_HIVE_HOMEOSTASIS_AND_EVOLUTION_ACTIVATION",
+      "request_sha256": "e18be5131aaff59e9cc0a9f0cb58346467daa9b0bc3cfe0c88690c22dd3ee694",
+      "before_dependencies": [
+        "OI03_101_ROUTE_LIVE_DAEMON_FIDELITY",
+        "OI04_OFFLINE_NIX_LEAN4_RESERVOIR",
+        "OI05_HISTORICAL_374_LINK_ALIAS_MAP",
+        "OI07_EFFECT_TIME_KM_RISK_FENCING",
+        "OI09_NATIVE_HERMES_WIKI_AND_KM_SERVICE_UNIFICATION"
+      ],
+      "after_dependencies": [
+        "OI02D_FULL_HIVE_HOMEOSTASIS_AND_EVOLUTION_ACTIVATION",
+        "OI03_101_ROUTE_LIVE_DAEMON_FIDELITY",
+        "OI04_OFFLINE_NIX_LEAN4_RESERVOIR",
+        "OI05_HISTORICAL_374_LINK_ALIAS_MAP",
+        "OI07_EFFECT_TIME_KM_RISK_FENCING",
+        "OI09_NATIVE_HERMES_WIKI_AND_KM_SERVICE_UNIFICATION"
+      ],
+      "before_edges_sha256": "cc27db1f912f76b5fd371ec931930f8c558b5a9d5b7a7342407fb748c5433f9c",
+      "after_edges_sha256": "b07207bcbca50e983b561d9baaf51fa9da3310b4ce4e3eee71288a060ec237bf",
+      "registered_graph_fingerprint": "dynamic-v1",
+      "recorded_at_ns": "1793475025927029193",
+      "replayed": false
+    }
+  ],
+  "observed_task_counts": {
+    "observed_at": "2026-10-31T19:33:08Z",
+    "source": "live MCP sa_plan_status_for plus candidate-bound risk Store snapshot",
+    "total": 15,
+    "completed": 4,
+    "executing": 3,
+    "available": 8
+  },
+  "supervisor_observed_tests": {
+    "dependency_checks": 759,
+    "native_accounting_eunit": 32,
+    "homeostasis_monitor_eunit": 83,
+    "receipt_worker_checks": 1072,
+    "receipt_existing_guardian": true,
+    "whole_application": "UNRUN",
+    "live_full_hive": "UNVERIFIED"
+  },
+  "formal_observations": {
+    "lean_abstract_model": "kernel invocation PASS; native refinement/authentication/liveness unproved",
+    "quint_scenarios": 9,
+    "quint_traces": 2000,
+    "max_steps": 60,
+    "seeds": [ "0x31", "0x32" ],
+    "admission_witnesses_per_1000": [ 39, 39 ],
+    "false_never_admitted_control": "REJECTED",
+    "smt_guarded_unsafe": "UNSAT",
+    "independently_evaluated_sat_witnesses": 3,
+    "finite_refutation_candidates": 246000,
+    "finite_valid_admissions": 16800,
+    "initial_verbose_simulation_runs": "two guardian output-bound exit125 failures retained; compact reruns passed"
+  },
+  "native_advice": {
+    "shared_prompt_words": 461,
+    "shared_prompt_sha256": "4061307e0c4dafd01cd29dd5227d67b3c68e34f83b544e85a01fa822c0645a66",
+    "agy": {
+      "requested_model": "gemini-4-argon-medium",
+      "resolved_model": null,
+      "turns": 1,
+      "known_tokens": 34316,
+      "dollar_cost": null,
+      "warning": "plan mode has no effect with disabled slash expansion; original output retained and exact prefix only removed for strict parsing"
+    },
+    "claude": {
+      "requested_model": "fable",
+      "resolved_model": "claude-fable-5-1",
+      "turns": 2,
+      "known_tokens": 15041,
+      "list_estimate_usd": 0.192625,
+      "advice_completeness": "PARTIAL",
+      "output_and_budget_bounds": "CLI soft limits, not hard aggregate enforcement"
+    },
+    "authority": "NONE",
+    "summary": [
+      "Repair the canonical final-soak prerequisites",
+      "Connect authentic collectors, exact catalog and a unique monitor owner",
+      "Persist append-only scoped observations without inventing authority",
+      "Measure fresh end-to-end knowledge collection instead of generalizing a ranking microbenchmark",
+      "Keep Rete/Stan advisory, preserve failed/partial results and independently gate activation"
+    ]
+  },
+  "registered_invocation_accounting": {
+    "status": "REPORT_ONLY",
+    "authority": "NONE",
+    "hard_cap_enforced": false,
+    "decision": "HOLD_UNKNOWN_USAGE",
+    "unique_calls": 28,
+    "known_usage_calls": 27,
+    "unknown_usage_calls": 1,
+    "invocations_reporting_error": 3,
+    "accepted_work_outcomes": "UNVERIFIED_SEPARATE_REVIEW_REQUIRED",
+    "input_tokens_uncached": 66640,
+    "output_tokens_including_reasoning": 140774,
+    "cache_read_input_tokens": 1644762,
+    "cache_write_input_tokens": 282335,
+    "known_total_tokens": 2134511,
+    "estimated_nanodollars": 4329924838,
+    "unknown_cost_calls": 2,
+    "billing_basis": "unverified_receipt_sdk_or_list_price_estimates_not_invoice",
+    "known_input_tokens": 1993737,
+    "cache_read_basis_points_of_input": 8249,
+    "max_tokens": 1000000,
+    "max_calls": 40,
+    "optimization_hints": [
+      "Recall top 1-2 fresh canonical documents; keep stable instruction prefixes",
+      "Prefer accepted-work yield and full failed-attempt cost over cheap token price",
+      "Reasoning tokens are included in output; cache counters are distinct input classes",
+      "New calls still require canonical Sa-plan and daily budget admission"
+    ]
+  },
+  "cost_scope": {
+    "claude_sdk_list_nanodollars": 4277969200,
+    "openrouter_sdk_nanodollars": 51955638,
+    "provider_billed_openrouter_nanodollars": 55783730,
+    "daily_reserved_liability_nanodollars": 3500000000,
+    "scope_complete": false,
+    "instruction": "Do not add SDK/provider/liability/supervisor scopes; preserve unknowns and existing daily policy"
+  },
+  "lifetime_adaptation": {
+    "kind": "reuse installed pinned Core.Gc technique without linking colliding Core module",
+    "source": "toolchains/opam-ocaml/lib/core/gc.ml",
+    "source_sha256": "810d5359aaa2388eb5efb0927550298e2e7d4192d05b54eac6a4c2ee0d51133b",
+    "native_gc_controls": "rooted close/finalize and malformed/schema-error initialization under concurrent major GC",
+    "legacy_source_changed": false
+  },
+  "remaining": [
+    "Original OI02 and OI03..OI09",
+    "OI02B authenticated collectors/catalog/unique owner and durable sink frontend",
+    "OI02D full-hive homeostasis/evolution activation and required vetted adaptations",
+    "Mandatory effect consumers and release issuer/reader barrier",
+    "Native knowledge fidelity, truthful dashboard and four-agent functional/performance/operational matrix",
+    "Closed-loop real telemetry and actuator acceptance",
+    "24-hour fault/soak and17-aspect two-key dossier"
+  ],
+  "runtime_activation": false,
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "SYSTEM_ADMITTED": false
+}

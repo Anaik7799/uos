@@ -365,3 +365,18 @@ journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1
 index = "governance/planning/20261031-1807-all-agent-symbiosis-preflight-verification.json"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "HIVE-FULL-ACTIVATION-20261031-1918"
+plan = "uos/codex-handover-open-items-fractal-plan/20261031-1240"
+task = "OI02B_ALL_AGENT_SYMBIOSIS_PREFLIGHT"
+state = "development"
+admitted = false
+sop = "docs/sop/20261031-1918-full-hive-service-activation-and-checks.md"
+diagram = "docs/design/20261031-1908-full-hive-outstanding-task-graph.md"
+journal = "docs/journal/20261031-1918-hive-task-fences-native-advice-and-activation-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-1918-hive-task-fences-native-advice-and-activation-journal.md"
+index = "governance/planning/20261031-1918-hive-task-fences-native-advice-and-activation.json"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
