@@ -4,6 +4,23 @@
  (modules core))
 
 (library
+ (name hermes_symbiosis_check_receipts)
+ (wrapped false)
+ (modules symbiosis_check_receipts)
+ (libraries hermes_harness_evidence digestif yojson sqlite3 unix))
+
+(executable
+ (name symbiosis_receipt_port)
+ (modules symbiosis_receipt_port)
+ (libraries hermes_symbiosis_check_receipts yojson sqlite3 unix))
+
+(test
+ (name test_symbiosis_check_receipts)
+ (modules test_symbiosis_check_receipts)
+ (deps symbiosis_receipt_port.exe)
+ (libraries hermes_symbiosis_check_receipts hermes_harness_evidence yojson sqlite3 unix))
+
+(library
  (name hermes_harness_inventory)
  (wrapped false)
  (modules inventory)
