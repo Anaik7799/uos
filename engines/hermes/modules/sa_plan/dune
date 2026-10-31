@@ -1,5 +1,17 @@
 (library
  (name sa_plan)
  (public_name hermes_workspace.sa_plan)
+ (modules (:standard \ recovery_kernel recovery_port))
  (libraries core digestif sqlite3 yojson)
  (preprocess (pps ppx_jane)))
+
+(library
+ (name recovery_kernel)
+ (wrapped false)
+ (modules recovery_kernel)
+ (libraries digestif yojson mirage-crypto-ec unix mtime.clock ptime.clock))
+
+(executable
+ (name recovery_port)
+ (modules recovery_port)
+ (libraries recovery_kernel yojson))

@@ -9,6 +9,56 @@
  (modules sa_plan_test)
  (libraries core core_unix sa_plan))
 
+; Private actual-clock/capability interpreter: never part of the sa_plan library.
+(library
+ (name recovery_kernel_fixture)
+ (wrapped false)
+ (modules recovery_kernel_fixture)
+ (libraries core sa_plan recovery_kernel sqlite3)
+ (preprocess (pps ppx_jane)))
+
+(rule
+ (target recovery_kernel_fixture.ml)
+ (deps ../sa_plan_store.ml reclaim_fixture_extension.ml recovery_kernel_fixture_extension.ml)
+ (action
+  (with-stdout-to %{target}
+   (progn (echo "open Sa_plan__\n") (cat ../sa_plan_store.ml)
+    (cat reclaim_fixture_extension.ml) (cat recovery_kernel_fixture_extension.ml)))))
+
+(executable
+ (name recovery_kernel_fixture_port)
+ (modules recovery_kernel_fixture_port)
+ (libraries recovery_kernel_fixture recovery_kernel yojson unix))
+
+(rule
+ (target recovery_fixture_guardian.ml)
+ (deps %{workspace_root}/../../tools/telegram_store_transport_guardian.ml)
+ (action (copy %{deps} %{target})))
+
+(executable
+ (name recovery_fixture_guardian)
+ (modules recovery_fixture_guardian)
+ (libraries unix mtime.clock))
+
+(executable
+ (name recovery_fixture_prepare)
+ (modules recovery_fixture_prepare)
+ (libraries recovery_kernel mirage-crypto-ec yojson unix))
+
+(rule
+ (target fixture_launcher.ml)
+ (deps ../sa_plan_store.ml ../recovery_port.exe recovery_kernel_fixture_port.exe recovery_fixture_guardian.exe)
+ (action
+  (with-stdout-to %{target}
+   (run %{exe:recovery_fixture_prepare.exe}
+    %{exe:recovery_kernel_fixture_port.exe} %{exe:recovery_fixture_guardian.exe} ../sa_plan_store.ml))))
+
+(test
+ (name test_recovery_kernel)
+ (modules test_recovery_kernel fixture_launcher)
+ (libraries recovery_kernel_fixture recovery_kernel sa_plan core mirage-crypto-ec yojson sqlite3 unix astring)
+ (deps ../sa_plan_store.mli ../recovery_kernel.mli ../sa_plan_store.ml reclaim_fixture_extension.ml recovery_kernel_fixture_extension.ml recovery_kernel_fixture.ml))
+
 (test
  (name test_sa_plan_reclaim)
  (modules test_sa_plan_reclaim reclaim_fixture)
