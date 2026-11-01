@@ -3915,6 +3915,66 @@ let recovery_snapshot_bounded store ~plan_id =
     let encoded=Yojson.Basic.to_string json in
     Ok(json,Digestif.SHA256.(to_hex(digest_string encoded))))
 
+type recovery_read_observation = {
+  snapshot : Yojson.Basic.t;
+  snapshot_sha256 : string;
+  query_only_observed : bool;
+  sqlite_version : string;
+  transaction_mode : string;
+}
+
+(* Factual reader, NOT a trusted locator or a Store-opening capability. The
+   borrowed local record never escapes. Reuse the canonical byte projection
+   inside an already active DEFERRED read transaction, rather than allowing its
+   usual outer BEGIN IMMEDIATE. Never initialize or migrate a schema. *)
+let recovery_snapshot_readonly ~path ~plan_id =
+  if String.is_empty path || String.length path > 4096
+     || String.contains path '\000' then Error "read-only snapshot path refused"
+  else
+    try
+      let db = Sqlite3.db_open ~mode:`READONLY ~uri:false ~mutex:`FULL
+        ~cache:`PRIVATE path in
+      let active = ref false in
+      let run () =
+        let open Result.Let_syntax in
+        Sqlite3.busy_timeout db 250;
+        let%bind () = exec db "configure read-only snapshot"
+          "PRAGMA query_only=ON;PRAGMA trusted_schema=OFF" in
+        let%bind query_only_observed = with_stmt db "PRAGMA query_only" (fun st ->
+          match Sqlite3.step st with
+          | Sqlite3.Rc.ROW ->
+              let enabled = match Sqlite3.column st 0 with
+                | Sqlite3.Data.INT n -> Int64.equal n 1L
+                | _ -> false in
+              if enabled && Poly.equal (Sqlite3.step st) Sqlite3.Rc.DONE
+              then Ok true else Error "read-only snapshot query_only unavailable"
+          | _ -> Error "read-only snapshot query_only unavailable") in
+        let%bind () = exec db "begin deferred read-only snapshot" "BEGIN" in
+        active := true;
+        let%bind version = read_schema_version db in
+        let%bind () = if version = 7 then Ok ()
+          else Error "read-only snapshot requires existing Sa-plan v7" in
+        let%bind () = audit_v7_shape db in
+        let store = { db; closed=false; transaction_active=true; schema_version=7 } in
+        let%bind snapshot,snapshot_sha256 = recovery_snapshot_bounded store ~plan_id in
+        let%bind () = exec db "complete read-only snapshot" "COMMIT" in
+        active := false;
+        Ok { snapshot; snapshot_sha256; query_only_observed;
+             sqlite_version=Sqlite3.sqlite_version_info();
+             transaction_mode="DEFERRED_READ_ONLY" }
+      in
+      let result = try run () with _ -> Error "read-only snapshot unavailable" in
+      let rollback_confirmed =
+        if !active then
+          try Poly.equal (Sqlite3.exec db "ROLLBACK") Sqlite3.Rc.OK
+          with _ -> false
+        else true in
+      let closed = try close_db db with _ -> false in
+      if not rollback_confirmed || not closed
+      then Error "read-only snapshot cleanup unknown"
+      else result
+    with _ -> Error "read-only snapshot open unavailable"
+
 (* Development storage primitive. No issuer, scheduler or effect authority. *)
 type reclaim_old = { reclaim_task_id:string; old_worker:string; old_attempt:int; old_lease_until_ns:int64 }
 type reclaim_request = { reclaim_request_id:string; reclaim_plan_id:string;

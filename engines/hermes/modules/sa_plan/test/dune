@@ -1,3 +1,8 @@
+(test
+ (name test_recovery_readonly_snapshot)
+ (modules test_recovery_readonly_snapshot)
+ (libraries sa_plan digestif sqlite3 yojson unix))
+
 (executable
  (name sa_plan_main)
  (public_name sa-plan)

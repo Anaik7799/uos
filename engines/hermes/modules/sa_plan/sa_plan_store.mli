@@ -587,6 +587,25 @@ val list_task_observations :
     exceed a transport frame. LIMIT bounds returned rows, not SQLite resources. *)
 val recovery_snapshot_bounded : t -> plan_id:string -> (Yojson.Basic.t * string,string) Result.t
 
+type recovery_read_observation = {
+  snapshot : Yojson.Basic.t;
+  snapshot_sha256 : string;
+  query_only_observed : bool;
+  sqlite_version : string;
+  transaction_mode : string;
+}
+
+(** Factual READONLY/query_only existing-v7 projection in one DEFERRED read
+    transaction, reusing [recovery_snapshot_bounded]. No Store handle, schema
+    initialization, callback, SQL or mutation capability is returned. Native
+    caller path/plan values and this report are DATA, not trusted resource,
+    roster, synchronized time, reviewed selection, grant or task authority.
+    SQLite may coordinate WAL/SHM: this is not whole-filesystem isolation or
+    retained-FD protection. No process-wide CPU/physical deadline guarantee;
+    callers require an independently bounded native process. *)
+val recovery_snapshot_readonly :
+  path:string -> plan_id:string -> (recovery_read_observation,string) Result.t
+
 type reclaim_old = { reclaim_task_id:string; old_worker:string; old_attempt:int; old_lease_until_ns:int64 }
 type reclaim_request = { reclaim_request_id:string; reclaim_plan_id:string;
   expected_snapshot_sha256:string; expired_tasks:reclaim_old list;
