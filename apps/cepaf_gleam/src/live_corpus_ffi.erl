@@ -1,6 +1,6 @@
 %% Bounded filesystem primitives only; routing, allowlists and rendering are Gleam.
 -module(live_corpus_ffi).
--export([read/3, names/1, sha256/1, lstat_raw/1, pmap/2, scan_clean_children/2, walk_trees_bfs/2, count_buckets/1, sort_entries_newest/1, is_url_clean_path/1, encode_catalog_json/9]).
+-export([read/3, names/1, sha256/1, lstat_raw/1, pmap/2, scan_clean_children/2, walk_trees_bfs/2, count_buckets/1, sort_entries_newest/1, top_slice_newest/3, is_url_clean_path/1, encode_catalog_json/9]).
 -include_lib("kernel/include/file.hrl").
 sha256(Bin) -> string:lowercase(binary:encode_hex(crypto:hash(sha256, Bin))).
 
@@ -23,34 +23,74 @@ pmap(Items, Fun) ->
         || {Pid, Ref} <- Workers
     ].
 
+cmp_entry_newest({entry, P1, _, M1, _}, {entry, P2, _, M2, _}) ->
+    M1 > M2 orelse (M1 =:= M2 andalso P1 =< P2).
+
+cap_20k(List) ->
+    cap_20k_check(List, 20000, List).
+
+cap_20k_check([], _Rem, Orig) ->
+    Orig;
+cap_20k_check(_Rest, 0, Orig) ->
+    lists:sublist(Orig, 20000);
+cap_20k_check([_ | Rest], Rem, Orig) ->
+    cap_20k_check(Rest, Rem - 1, Orig).
+
 sort_entries_newest([]) ->
     [];
 sort_entries_newest(Entries) ->
-    Chunks = chunk_list(Entries, 1600),
-    SortedChunks = case Chunks of
-        [Only] ->
-            [lists:sort([{element(4, E), element(2, E), E} || E <- Only])];
-        _ ->
-            pmap(Chunks, fun(Ch) ->
-                lists:sort([{element(4, E), element(2, E), E} || E <- Ch])
-            end)
-    end,
-    MergedAsc = merge_sorted_chunks(SortedChunks),
-    extract_sorted_desc(MergedAsc, []).
+    cap_20k(lists:sort(fun cmp_entry_newest/2, Entries)).
 
-merge_sorted_chunks([]) -> [];
-merge_sorted_chunks([One]) -> One;
-merge_sorted_chunks([A, B | Rest]) ->
-    merge_sorted_chunks([lists:merge(A, B) | merge_pairs(Rest)]).
+worst_in_top([H | T]) ->
+    worst_in_top_loop(T, H).
 
-merge_pairs([]) -> [];
-merge_pairs([One]) -> [One];
-merge_pairs([A, B | Rest]) -> [lists:merge(A, B) | merge_pairs(Rest)].
+worst_in_top_loop([], Worst) ->
+    Worst;
+worst_in_top_loop([H | T], Worst) ->
+    case cmp_entry_newest(Worst, H) of
+        true -> worst_in_top_loop(T, H);
+        false -> worst_in_top_loop(T, Worst)
+    end.
 
-extract_sorted_desc([], Acc) ->
-    Acc;
-extract_sorted_desc([{_, _, E} | Rest], Acc) ->
-    extract_sorted_desc(Rest, [E | Acc]).
+top_k_newest(Entries, K) ->
+    top_k_acc(Entries, K, 0, undefined, []).
+
+top_k_acc([], K, _Len, _Worst, Acc) ->
+    lists:sublist(lists:sort(fun cmp_entry_newest/2, Acc), K);
+top_k_acc([E | Rest], K, Len, _Worst, Acc) when Len < K ->
+    Acc1 = [E | Acc],
+    NewLen = Len + 1,
+    NewWorst = case NewLen =:= K of true -> worst_in_top(Acc1); false -> undefined end,
+    top_k_acc(Rest, K, NewLen, NewWorst, Acc1);
+top_k_acc([E | Rest], K, Len, Worst, Acc) ->
+    case cmp_entry_newest(Worst, E) of
+        true ->
+            top_k_acc(Rest, K, Len, Worst, Acc);
+        false ->
+            Acc1 = [E | Acc],
+            case Len + 1 >= K * 2 of
+                true ->
+                    Trim = lists:sublist(lists:sort(fun cmp_entry_newest/2, Acc1), K),
+                    top_k_acc(Rest, K, K, lists:last(Trim), Trim);
+                false ->
+                    top_k_acc(Rest, K, Len + 1, Worst, Acc1)
+            end
+    end.
+
+top_slice_newest([], _Offset, _Limit) ->
+    [];
+top_slice_newest(_Entries, _Offset, Limit) when Limit =< 0 ->
+    [];
+top_slice_newest(Entries, Offset, Limit) when Offset >= 0, Offset + Limit =< 500 ->
+    Need = Offset + Limit,
+    Top = top_k_newest(Entries, Need),
+    case Offset of
+        0 -> Top;
+        _ -> lists:nthtail(min(Offset, length(Top)), Top)
+    end;
+top_slice_newest(Entries, Offset, Limit) ->
+    Sorted = sort_entries_newest(Entries),
+    lists:sublist(lists:nthtail(min(max(0, Offset), length(Sorted)), Sorted), Limit).
 
 is_url_clean_path(<<>>) ->
     true;

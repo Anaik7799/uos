@@ -144,6 +144,9 @@ fn count_buckets(
 @external(erlang, "live_corpus_ffi", "sort_entries_newest")
 fn sort_entries_newest(entries: List(Entry)) -> List(Entry)
 
+@external(erlang, "live_corpus_ffi", "top_slice_newest")
+fn top_slice_newest(entries: List(Entry), offset: Int, limit: Int) -> List(Entry)
+
 @external(erlang, "live_corpus_ffi", "is_url_clean_path")
 fn is_url_clean_path(path: String) -> Bool
 
@@ -398,7 +401,7 @@ fn within_any_tree(path: String) -> Bool {
   list.any(trees, fn(t) { within(path, t) })
 }
 
-fn catalog_paths(root: String, paths: List(String)) -> List(Entry) {
+fn catalog_paths_unsorted(root: String, paths: List(String)) -> List(Entry) {
   let #(direct_files, tree_dirs, other_dirs) =
     list.fold(paths, #([], [], []), fn(acc, p) {
       let #(files_acc, tree_acc, other_acc) = acc
@@ -426,9 +429,16 @@ fn catalog_paths(root: String, paths: List(String)) -> List(Entry) {
       })
       |> list.flatten
   }
-  list.flatten([direct_files, tree_entries, other_entries])
+  case direct_files, other_entries {
+    [], [] -> tree_entries
+    _, [] -> list.append(direct_files, tree_entries)
+    _, _ -> list.flatten([direct_files, tree_entries, other_entries])
+  }
+}
+
+fn catalog_paths(root: String, paths: List(String)) -> List(Entry) {
+  catalog_paths_unsorted(root, paths)
   |> sort_entries_newest
-  |> list.take(20_000)
 }
 
 fn walk(
@@ -1089,27 +1099,43 @@ fn api(
   path: String,
   query: Option(String),
 ) -> response.Response(String) {
-  let entries = catalog(root)
-  let raw_buckets = count_buckets(entries)
-  let total_entries = raw_buckets.0
+  let unsorted = catalog_paths_unsorted(root, list.append(seeds, trees))
+  let unsorted_buckets = count_buckets(unsorted)
   case path {
     "api/v1/km/catalog"
     | "api/km/catalog"
     | "api/smriti/catalog"
     | "api/v1/knowledge" -> {
       let prefix = parameter(query, "prefix")
-      let #(filtered, filtered_len) = case prefix {
-        "" -> #(entries, total_entries)
-        _ -> {
-          let f =
-            list.filter(entries, fn(e) { string.starts_with(e.path, prefix) })
-          #(f, list.length(f))
-        }
-      }
       let limit = number(query, "limit", 200, 500) |> int.max(1)
       let offset = number(query, "offset", 0, 1_000_000)
-      let page_entries = filtered |> list.drop(offset) |> list.take(limit)
-      let truncated = filtered_len > offset + limit || total_entries >= 20_000
+      let #(raw_buckets, total_entries, page_entries, truncated) = case
+        prefix == "" && unsorted_buckets.0 < 20_000
+      {
+        True -> {
+          let total = unsorted_buckets.0
+          let page = top_slice_newest(unsorted, offset, limit)
+          #(unsorted_buckets, total, page, total > offset + limit)
+        }
+        False -> {
+          let entries = sort_entries_newest(unsorted)
+          let rb = count_buckets(entries)
+          let total = rb.0
+          let #(filtered, filtered_len) = case prefix {
+            "" -> #(entries, total)
+            _ -> {
+              let f =
+                list.filter(entries, fn(e) {
+                  string.starts_with(e.path, prefix)
+                })
+              #(f, list.length(f))
+            }
+          }
+          let page = filtered |> list.drop(offset) |> list.take(limit)
+          let trunc = filtered_len > offset + limit || total >= 20_000
+          #(rb, total, page, trunc)
+        }
+      }
       let body =
         encode_catalog_json(
           root,
@@ -1128,6 +1154,9 @@ fn api(
       |> freshness
     }
     _ -> {
+      let entries = sort_entries_newest(unsorted)
+      let raw_buckets = count_buckets(entries)
+      let total_entries = raw_buckets.0
       let #(_, counts) = count_fields_and_total(entries)
       let common =
         list.append(counts, [
