@@ -3,7 +3,7 @@
 (* ONE ordinary actual native checker observation + DATA binder and actual
    default-refusing gateway. No trusted grant/APPROVE or effect is fabricated. *)
 let root="/home/an/NAS-setup/uos"
-let ws=root^"/.uos-workspaces/codex-reviewed-recovery-admission-20261101"
+let ws=root^"/.uos-workspaces/codex-admission-reviewable-20261101"
 let cached=root^"/.uos-workspaces/codex-recovery-observed-20261101/var/harness/integrated-ordinary-3b82e8/lib"
 let read p=let c=open_in_bin p in Fun.protect~finally:(fun()->close_in c)(fun()->really_input_string c(in_channel_length c))
 let sha b=Cryptokit.hash_string(Cryptokit.Hash.sha256())b|>Cryptokit.transform_string(Cryptokit.Hexa.encode())
@@ -41,7 +41,7 @@ let ()=
  let original=capture(source^"/test/test_recovery_snapshot_checker_integration.ml")in
  let prefix=match Astring.String.cut~sep:" (* Compatibility only:"original with Some(a,_)->a|None->failwith"setup source marker changed"in
  let setup=prefix^" Printf.printf\"ONE_ORDINARY_OBSERVATION_SETUP_PASS checks=%d\\n%!\" !check_count\n"in
- let setup=replace setup"codex-recovery-snapshot-integration-20261101""codex-reviewed-recovery-admission-20261101"|>fun x->replace x"out^\"/synthetic.sqlite3\"""Filename.dirname out^\"/assessment-root/var/sa-plan/uos.sqlite3\""in
+ let setup=replace setup"codex-recovery-snapshot-integration-20261101""codex-admission-reviewable-20261101"|>fun x->replace x"out^\"/synthetic.sqlite3\"""Filename.dirname out^\"/assessment-root/var/sa-plan/uos.sqlite3\""in
  write(project^"/test/ordinary_setup.ml")setup;
  write(project^"/test/dune")"(executable (name ordinary_setup) (libraries sa_plan control_checker core digestif sqlite3 yojson unix mtime.clock.os))\n";
  let validation=ws^"/plugins/uos-risk-prioritization/validation"in
