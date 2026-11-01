@@ -1,5 +1,32 @@
 -module(auth_ingress_test_ffi).
--export([with_oidc_env/1, connection_request/2, with_stalled_connection/1]).
+-export([
+    with_oidc_env/1,
+    connection_request/2,
+    with_stalled_connection/1,
+    required_env/1,
+    make_private_fixture_dir/0
+]).
+
+required_env(NameBin) ->
+    Name = unicode:characters_to_list(NameBin),
+    case os:getenv(Name) of
+        false -> erlang:error({missing_required_test_env, Name});
+        Value -> unicode:characters_to_binary(Value)
+    end.
+
+make_private_fixture_dir() ->
+    Base =
+        case os:getenv("TMPDIR") of
+            false -> "/home/an/NAS-setup/uos/var/tmp_core_evo";
+            "" -> "/home/an/NAS-setup/uos/var/tmp_core_evo";
+            Dir -> Dir
+        end,
+    ok = filelib:ensure_dir(filename:join(Base, "probe")),
+    Rand = integer_to_list(erlang:unique_integer([positive])),
+    Path = filename:join(Base, "release-mcp-actor-" ++ Rand),
+    ok = file:make_dir(Path),
+    ok = file:change_mode(Path, 8#0700),
+    unicode:characters_to_binary(Path).
 
 connection_request(Headers, InitialBody) ->
     Connection = {connection, {initial, InitialBody}, unused_socket, tcp, unused_factory},

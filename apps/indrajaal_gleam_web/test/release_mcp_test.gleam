@@ -9,7 +9,6 @@ import cepaf_gleam/harness/telegram_store_transport as transport
 import cepaf_gleam/mcp/http_auth as auth
 import cepaf_gleam/mcp/transports/http
 import cepaf_gleam/mcp/transports/zenoh
-import ecology_release_authority_test as native_fixture
 import gleam/erlang/process
 import gleam/json
 import gleam/list
@@ -24,6 +23,12 @@ fn public_key(role: String) -> String
 
 @external(erlang, "telegram_approval_test_crypto", "sign")
 fn sign(role: String, payload: String) -> String
+
+@external(erlang, "auth_ingress_test_ffi", "required_env")
+fn required_env(key: String) -> String
+
+@external(erlang, "auth_ingress_test_ffi", "make_private_fixture_dir")
+fn make_private_fixture_dir() -> String
 
 pub const host = "nas-1.tail55d152.ts.net"
 
@@ -596,8 +601,127 @@ pub fn standard_list_initialize_and_config_bounds_test() {
   m.unavailable().status |> should.equal(503)
 }
 
+fn build_native_fixture(lifetime: Int) {
+  let clock = authority.host_clock()
+  let loaded = clock.utc_ms / 1000 * 1000
+  let jwks_str =
+    json.object([
+      #(
+        "keys",
+        json.array(
+          [
+            json.object([
+              #("kty", json.string("OKP")),
+              #("crv", json.string("Ed25519")),
+              #("kid", json.string("operator-key")),
+              #("alg", json.string("EdDSA")),
+              #("x", json.string(public_key("operator"))),
+            ]),
+          ],
+          fn(x) { x },
+        ),
+      ),
+    ])
+    |> json.to_string
+  let assert Ok(id_config) =
+    identity.configure(
+      issuer,
+      "uos-release-control",
+      jwks_str,
+      loaded,
+      300_000,
+      "uos-release-client",
+      ["urn:uos:mfa"],
+      lifetime,
+    )
+  let ss =
+    list.map([approval.Operator, approval.Codex, approval.Agy], fn(role) {
+      let name = approval.role_name(role)
+      approval.Signer(role, name <> "-subject", name <> "-key", public_key(name))
+    })
+  let assert Ok(roster) =
+    approval.new_roster(ss, loaded, loaded + 120_000)
+  let directory = make_private_fixture_dir()
+  let native =
+    transport.reviewed_local_configuration(
+      required_env("UOS_RELEASE_TEST_GUARDIAN"),
+      required_env("UOS_RELEASE_TEST_GUARDIAN_SHA"),
+      required_env("UOS_RELEASE_TEST_WORKER"),
+      required_env("UOS_RELEASE_TEST_WORKER_SHA"),
+      directory <> "/grants.sqlite3",
+    )
+  let assert Ok(req) =
+    intent.new(intent.Proposal(
+      intent.Digests(
+        dg("a"),
+        dg("b"),
+        dg("c"),
+        dg("d"),
+        dg("e"),
+        dg("f"),
+        dg("1"),
+        dg("2"),
+        dg("3"),
+        dg("4"),
+      ),
+      intent.Execution(
+        "/home/an/NAS-setup/uos",
+        "fixture-plan",
+        "fixture-task",
+        "fixture-worker",
+        1,
+      ),
+      host,
+      "boot-fixture",
+      "vm-fixture",
+      "runtime:fixture-only",
+      1,
+      "fixture-nonce",
+      intent.Window(
+        clock.utc_ms,
+        clock.utc_ms + 60_000,
+        clock.mono_ms,
+        clock.mono_ms + 60_000,
+      ),
+    ))
+  let receipts =
+    list.map([approval.Operator, approval.Codex, approval.Agy], fn(role) {
+      let name = approval.role_name(role)
+      let body =
+        json.object([
+          #("version", json.string(intent.approval_purpose)),
+          #("purpose", json.string(intent.approval_purpose)),
+          #("role", json.string(name)),
+          #("subject", json.string(name <> "-subject")),
+          #("decision", json.string("approve")),
+          #("intent_digest", json.string(intent.digest(req))),
+          #("effect_id", json.string(intent.transaction_id(req))),
+          #("iat_ms", json.int(clock.utc_ms)),
+          #("nbf_ms", json.int(clock.utc_ms)),
+          #("exp_ms", json.int(clock.utc_ms + 60_000)),
+          #("roster_digest", json.string(approval.roster_digest(roster))),
+        ])
+        |> json.to_string
+      approval.Receipt(role, sign(name, body))
+    })
+  let token = oidc_token(loaded / 1000, "operator-subject", "operator", "urn:uos:mfa")
+  let config =
+    authority.Configuration(
+      id_config,
+      roster,
+      native,
+      ["operator-subject"],
+      host,
+      "boot-fixture",
+      "vm-fixture",
+      4000,
+      authority.host_clock,
+    )
+  #(config, req, receipts, token, directory)
+}
+
 pub fn actual_native_owner_issue_consume_revoke_via_http_ingress_test() {
-  let #(ac, i, receipts, token, _) = native_fixture.fixture(30_000)
+  let #(ac, i, receipts, token, _) = build_native_fixture(30_000)
   let effects = process.new_subject()
   let assert Ok(owner) =
     authority.start(
@@ -729,7 +853,7 @@ fn different_candidate(i: intent.Intent) -> intent.Intent {
 }
 
 pub fn actual_owner_candidate_binding_survives_registry_reload_test() {
-  let #(ac, a, receipts, token, _) = native_fixture.fixture(30_000)
+  let #(ac, a, receipts, token, _) = build_native_fixture(30_000)
   let b = different_candidate(a)
   let effects = process.new_subject()
   let assert Ok(owner) =

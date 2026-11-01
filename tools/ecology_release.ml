@@ -194,6 +194,35 @@ let build_apps root =
   let web=collect "indrajaal_gleam_web" in
   need(List.mem_assoc "cepaf_gleam" web && List.mem_assoc "indrajaal_gleam_web" web) "missing root application artifacts";
   web
+(* Poka-Yoke: refuse packaging if any workspace Gleam/Erlang source module under
+   apps/<app>/src lacks a compiled BEAM (or has newer mtime than both BEAM and
+   Gleam cache_meta) inside the indrajaal_gleam_web build closure. *)
+let verify_gleam_beam_correspondence root apps =
+  List.iter(fun(app_name,rel_build)->
+    let src_dir=root^"/apps/"^app_name^"/src" in
+    let ebin_dir=root^"/"^rel_build^"/ebin" in
+    let art_dir=root^"/"^rel_build^"/_gleam_artefacts" in
+    if Sys.file_exists src_dir && (lstat src_dir).st_kind=S_DIR then
+      List.iter(fun rel_src->
+        let src_st=regular(src_dir^"/"^rel_src) in
+        let ext=Filename.extension rel_src in
+        if ext=".gleam" then (
+          let stem=String.sub rel_src 0 (String.length rel_src - 6) in
+          let mod_name=String.concat "@" (String.split_on_char '/' stem) in
+          let beam_full=ebin_dir^"/"^mod_name^".beam" in
+          need(Sys.file_exists beam_full)("missing compiled BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src);
+          let beam_st=regular beam_full in
+          let cache_full=art_dir^"/"^mod_name^".cache_meta" in
+          let fresh=(beam_st.st_mtime +. 0.001 >= src_st.st_mtime) ||
+            (Sys.file_exists cache_full && (regular cache_full).st_mtime +. 0.001 >= src_st.st_mtime) in
+          need fresh ("stale compiled BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src))
+        else if ext=".erl" then (
+          let mod_name=Filename.chop_suffix(Filename.basename rel_src)".erl" in
+          let beam_full=ebin_dir^"/"^mod_name^".beam" in
+          need(Sys.file_exists beam_full)("missing compiled FFI BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src);
+          let beam_st=regular beam_full in
+          need(beam_st.st_mtime +. 0.001 >= src_st.st_mtime)("stale compiled FFI BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src)))
+      (files src_dir ""))apps
 let verify_app_closure root erl apps =
   let paths=List.map(fun(name,p)->root^"/"^p^"/ebin/"^name^".app")apps in
   let eval="Ps=init:get_plain_arguments(), A=lists:map(fun(P)->{ok,[{application,N,V}]}=file:consult(P),{N,proplists:get_value(applications,V,[]),[M||M<-proplists:get_value(modules,V,[]),not filelib:is_regular(filename:join(filename:dirname(P),atom_to_list(M)++\".beam\"))]} end,Ps), Ns=[N||{N,_,_}<-A], Missing=lists:usort([D||{_,Ds,_}<-A,D<-Ds,not lists:member(D,Ns),code:lib_dir(D)=:={error,bad_name}]), MissingModules=lists:usort(lists:append([Ms||{_,_,Ms}<-A])),io:put_chars(json:encode(#{applications=>[atom_to_binary(N)||N<-Ns],missing=>[atom_to_binary(N)||N<-Missing],missing_modules=>[atom_to_binary(N)||N<-MissingModules]})),case {Missing,MissingModules} of {[],[]}->halt(0);_->halt(1) end." in
@@ -414,7 +443,8 @@ let stage ?native_id source =
   let erl=dependency root "toolchains/nix-profile/bin/erl" true in
   let exe=erl|>member "path"|>to_string in
   let identity=otp_identity root exe and deps=runtime_dependencies ~snapshot:true root in
-  let apps=build_apps root in let closure=verify_app_closure root exe apps in
+  let apps=build_apps root in verify_gleam_beam_correspondence root apps;
+  let closure=verify_app_closure root exe apps in
   let native_binding,native_copied=match native_id with None->`Null,[]|Some id->native_cutover_inputs root id in
   let copied=payload root apps@native_copied in let inputs=source_inputs root copied in
   let before=source_manifest root inputs in
@@ -633,6 +663,22 @@ let selftest () =
   check "native-coherent-admission-claim-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir(obj["artifact_id",s(digest admitted)])));
   List.iter(fun n->unlink(native^"/"^n))["worker.exe";"guardian.exe";"manifest.json"];
   rmdir native;rmdir(dir^"/native");
+  let g_src=dir^"/apps/cepaf_gleam/src/cepaf_gleam/core_evo" in
+  let g_ebin=dir^"/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin" in
+  mkdir g_src;mkdir g_ebin;
+  write(g_src^"/probe.gleam")"pub fn ok() { 1 }";
+  let fixture_apps=["cepaf_gleam","apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam"] in
+  check "gleam-beam-missing-refused" (fun()->rejects(fun()->verify_gleam_beam_correspondence dir fixture_apps));
+  write(g_ebin^"/cepaf_gleam@core_evo@probe.beam")"BEAM";
+  utimes(g_ebin^"/cepaf_gleam@core_evo@probe.beam")1000.0 1000.0;
+  utimes(g_src^"/probe.gleam")2000.0 2000.0;
+  check "gleam-beam-stale-refused" (fun()->rejects(fun()->verify_gleam_beam_correspondence dir fixture_apps));
+  utimes(g_ebin^"/cepaf_gleam@core_evo@probe.beam")2001.0 2001.0;
+  check "gleam-beam-fresh-accepted" (fun()->verify_gleam_beam_correspondence dir fixture_apps;true);
+  unlink(g_ebin^"/cepaf_gleam@core_evo@probe.beam");unlink(g_src^"/probe.gleam");
+  List.iter rmdir [g_src;dir^"/apps/cepaf_gleam/src/cepaf_gleam";dir^"/apps/cepaf_gleam/src";dir^"/apps/cepaf_gleam";
+    g_ebin;dir^"/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam";dir^"/apps/indrajaal_gleam_web/build/dev/erlang";
+    dir^"/apps/indrajaal_gleam_web/build/dev";dir^"/apps/indrajaal_gleam_web/build";dir^"/apps/indrajaal_gleam_web";dir^"/apps"];
   List.iter(fun p->unlink(dir^"/"^p))(files dir "");
   rmdir dir;
   obj["status",s"PASS";"checks",`Int !count;"scope",s"bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"]
