@@ -41,6 +41,8 @@ PI_ISOLATED_HOME = os.path.join(VAR_CORE, "pi-home")
 QUOTA_DB = os.path.join(VAR_CORE, "quota_ledger.sqlite3")
 TMP_CORE = os.path.join(UOS_ROOT, "var", "tmp_core_evo")
 MCP_STDIO = os.path.join(UOS_ROOT, "tools", "uos-mcp-stdio")
+OTP29_ERL = os.path.join(UOS_ROOT, "toolchains", "nix-profile", "bin", "erl")
+ERL_BIN = OTP29_ERL if os.path.isfile(OTP29_ERL) else "erl"
 ZENOH_TCP_HOST = "127.0.0.1"
 ZENOH_TCP_PORT = 7447
 ZENOH_REST_BASE = os.environ.get("UOS_ZENOH_REST_URL", "http://127.0.0.1:8080")
@@ -277,7 +279,7 @@ def validate_uos_v1_topic(topic: str) -> None:
         raise ValueError(f"ErrLegacySplitBrainTopic: refused legacy c3i topic '{topic}' (I28 fence)")
     parts = topic.split("/")
     if len(parts) < 4 or parts[0] != "uos" or parts[1] != "v1" or parts[2] not in {
-        "quota", "saplan", "rca", "coord", "wave", "core_evo", "hive", "biomorphic", "fractal"
+        "quota", "saplan", "rca", "coord", "wave", "core_evo", "hive", "biomorphic", "fractal", "syseng", "fpp_sysml", "rete_stan"
     }:
         raise ValueError(f"ErrInvalidUosV1Topic: '{topic}'")
 
@@ -829,12 +831,165 @@ def cmd_biomorphic_fractal(args: argparse.Namespace) -> int:
     return 0 if stable and quota["status"] == "ADMITTED" else 2
 
 
+def cmd_systems_engineering(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    conn = init_quota_db()
+    quota = get_quota_snapshot(conn)
+
+    # 1. Execute compiled Gleam/OTP 29 `core_systems_engineering` kernel directly on BEAM
+    ebin_glob = os.path.join(WORKSPACE_ROOT, "apps", "cepaf_gleam", "build", "dev", "erlang")
+    ebins = []
+    if os.path.isdir(ebin_glob):
+        for pkg in os.listdir(ebin_glob):
+            eb = os.path.join(ebin_glob, pkg, "ebin")
+            if os.path.isdir(eb):
+                ebins.append(eb)
+
+    now_ms = int(time.time() * 1000)
+    erl_expr = (
+        f"Q = {{quota_snapshot, {quota['agy_5h_bps']}, {quota['agy_7d_bps']}, "
+        f"{quota['agy_30d_bps']}, {quota['openrouter_24h_nanodollars']}}}, "
+        f"S = cepaf_gleam@ecology@core_systems_engineering:evaluate_unified_systems_engineering(Q, {now_ms}), "
+        f"J = cepaf_gleam@ecology@core_systems_engineering:encode_unified_systems_json(S), "
+        f"io:put_chars(J), io:nl(), halt(0)."
+    )
+    pa_args = []
+    for eb in ebins:
+        pa_args.extend(["-pa", eb])
+
+    beam_snap = {}
+    if pa_args:
+        proc = subprocess.run(
+            [ERL_BIN, "-noshell"] + pa_args + ["-eval", erl_expr],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        if proc.returncode == 0 and proc.stdout.strip():
+            for line in reversed(proc.stdout.strip().splitlines()):
+                if line.strip().startswith("{"):
+                    beam_snap = json.loads(line.strip())
+                    break
+
+    # 2. Probe Gleam MCP systems-engineering routes (`stpa_fmea_hazard`, `rete_rule_conflict`, `ooda_decide`)
+    mcp_stpa = mcp_call_tool("stpa_fmea_hazard", {"component": "uos_core_evo"})
+    mcp_rete = mcp_call_tool("rete_rule_conflict", {"domain": "safety"})
+    mcp_ooda = mcp_call_tool("ooda_decide", {"context": "core_evo_margin_40pct"})
+
+    # 3. Publish signed snapshot to Zenoh `uos/v1/syseng/unified/snapshot`
+    pub = zenoh_publish_signed(
+        topic="uos/v1/syseng/unified/snapshot",
+        plan_id="uos/agy-fractal-issue-resolution-master/20261101-1454",
+        task_id="systems-engineering",
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=int(time.time()),
+        payload_obj={
+            "beam_ok": bool(beam_snap),
+            "sysml_valid": beam_snap.get("sysml_core_valid", False),
+            "fprime_6": beam_snap.get("fprime_6_machines_ready", False),
+            "stan_ok": beam_snap.get("stan_calibrated", False),
+            "bionic_8": beam_snap.get("bionic_8_services_healthy", False),
+        },
+    )
+
+    out = {
+        "schema": "uos.core_evo.systems_engineering_cli.v2",
+        "beam_unified_kernel": beam_snap,
+        "mcp_routes": {
+            "stpa_fmea_hazard_ok": mcp_stpa["ok"],
+            "rete_rule_conflict_ok": mcp_rete["ok"],
+            "ooda_decide_ok": mcp_ooda["ok"],
+        },
+        "zenoh_pub": pub,
+    }
+    print(json.dumps(out, indent=2))
+    ok = (
+        bool(beam_snap)
+        and beam_snap.get("sheaf_h1_vanished") is True
+        and beam_snap.get("trace13_conserved") is True
+        and beam_snap.get("stan_calibrated") is True
+        and beam_snap.get("control_nominal") is True
+        and beam_snap.get("fprime_6_machines_ready") is True
+        and beam_snap.get("sysml_core_valid") is True
+        and beam_snap.get("bionic_8_services_healthy") is True
+    )
+    return 0 if ok else 2
+
+
+def cmd_simulate_verify(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    ebin_glob = os.path.join(WORKSPACE_ROOT, "apps", "cepaf_gleam", "build", "dev", "erlang")
+    ebins = []
+    if os.path.isdir(ebin_glob):
+        for pkg in os.listdir(ebin_glob):
+            eb = os.path.join(ebin_glob, pkg, "ebin")
+            if os.path.isdir(eb):
+                ebins.append(eb)
+
+    erl_expr = (
+        "Sim = cepaf_gleam@ecology@core_fractal_holonic_simulator:simulate_fractal_holarchy(), "
+        "Cert = cepaf_gleam@ecology@core_fractal_holonic_simulator:verify_simulation_correctness(Sim), "
+        "J = cepaf_gleam@ecology@core_fractal_holonic_simulator:encode_holonic_certificate_json(Sim, Cert), "
+        "io:put_chars(J), io:nl(), halt(0)."
+    )
+    pa_args = []
+    for eb in ebins:
+        pa_args.extend(["-pa", eb])
+
+    cert_snap = {}
+    if pa_args:
+        proc = subprocess.run(
+            [ERL_BIN, "-noshell"] + pa_args + ["-eval", erl_expr],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        if proc.returncode == 0 and proc.stdout.strip():
+            for line in reversed(proc.stdout.strip().splitlines()):
+                if line.strip().startswith("{"):
+                    cert_snap = json.loads(line.strip())
+                    break
+
+    mcp_holon = mcp_call_tool("holon_status", {})
+    mcp_lyap = mcp_call_tool("lyapunov_trend_predict", {"series": [360, 240, 120, 0]})
+
+    pub = zenoh_publish_signed(
+        topic="uos/v1/fractal/holonic/certificate",
+        plan_id="uos/agy-fractal-issue-resolution-master/20261101-1454",
+        task_id="simulate-verify",
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=int(time.time()),
+        payload_obj={
+            "all_12_proved": cert_snap.get("all_12_invariants_proved", False),
+            "states_verified": cert_snap.get("total_holon_states_verified", 0),
+            "agy_share_bps": cert_snap.get("agy_token_share_bps", -1),
+            "final_lyap_v": cert_snap.get("final_lyapunov_v", -1),
+        },
+    )
+
+    out = {
+        "schema": "uos.core_evo.simulate_verify_cli.v3",
+        "holonic_simulation_certificate": cert_snap,
+        "mcp_routes": {
+            "holon_status_ok": mcp_holon["ok"],
+            "lyapunov_trend_predict_ok": mcp_lyap["ok"],
+        },
+        "zenoh_pub": pub,
+    }
+    print(json.dumps(out, indent=2))
+    return 0 if cert_snap.get("all_12_invariants_proved") is True else 2
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="UOS-CORE-EVO Zero-Muda Core Dev, Hive, Biomorphic, Fractal & Evolution System")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("preflight", help="Run Zero-Muda MCP + Zenoh + Quota + Conservation preflight")
     sub.add_parser("hive-status", help="Inspect 5-Caste Holonic Hive Heijunka & MCP/Zenoh binding")
+    sub.add_parser("systems-engineering", help="Verify 17-Aspect, Sheaf, Stan, 11-Domain Rete-UL, Kalman/PID/FPP, SysML & 8 Bionic Services")
+    sub.add_parser("simulate-verify", help="Simulate 24 epochs x 170 Fractal Holons (4,080 states) and verify all 12 mathematical invariants")
 
     p_bf = sub.add_parser("biomorphic-fractal", help="Evaluate Metabolic ATP, Lyapunov dV/dt & L0..L9 POODAVR state")
     p_bf.add_argument("--v-prev", type=int, default=600)
@@ -867,6 +1022,10 @@ def main() -> int:
         return cmd_preflight(args)
     if args.cmd == "hive-status":
         return cmd_hive_status(args)
+    if args.cmd == "systems-engineering":
+        return cmd_systems_engineering(args)
+    if args.cmd == "simulate-verify":
+        return cmd_simulate_verify(args)
     if args.cmd == "biomorphic-fractal":
         return cmd_biomorphic_fractal(args)
     if args.cmd == "quota":

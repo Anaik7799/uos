@@ -22,6 +22,15 @@ import cepaf_gleam/ecology/core_hive.{
   QuorumFailClosedHold, SovereignSentinel, TrailCorruptionQuarantine,
   TrailReadyPull,
 }
+import cepaf_gleam/ecology/core_fractal_holonic_simulator
+import cepaf_gleam/ecology/core_systems_engineering.{
+  ErrModeFormalProofOrReteVeto, ErrModeHardwareOrProvenanceBreach,
+  ErrModeLeaseOrHeartbeatExpired, ErrModeQuotaMargin40Breached,
+  ErrModeSplitBrainForeignC3iFrame, ErrModeTransientTestOrBuild,
+  ErrModeWorkspaceOrArtifactCorruption, ErrModeWrongArchitecturalPath,
+  RiskBlockedPrecondition, RiskPrioritized, StanCalibrated, StanDiagnostics,
+  StanTriggerFired, StpaUcaAnalysis, Trace13Vector,
+}
 import cepaf_gleam/zenoh/core_bus.{
   ErrDigestMismatch, ErrLegacySplitBrainTopic, ErrNonMonotonicSeq,
   ErrPayloadTooLarge, ErrProvenanceCeilingExceeded, SignedCoreEnvelope,
@@ -635,4 +644,346 @@ pub fn core_bus_publish_and_fetch_roundtrip_over_zlp_and_ets_test() {
   should.equal(fetched.payload_sha256, env.payload_sha256)
   should.equal(fetched.payload_json, digest)
   should.equal(fetched.ev_ceiling, 93)
+}
+
+// =============================================================================
+// UOS-CORE-EVO v2: Total Systems Engineering, Math, Control, Rete-UL, Stan,
+// Fractal FMEA/STPA, FPP/SysML v2 & 8 Bionic Services Tests
+// =============================================================================
+
+pub fn systems_engineering_sheaf_h1_and_trace13_conservation_test() {
+  should.be_true(core_systems_engineering.verify_sheaf_global_gluing(6, 1.0))
+
+  let t0 = Trace13Vector([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 93], True)
+  let t_drifted =
+    Trace13Vector([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 94], True)
+  let t_untrusted =
+    Trace13Vector([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 93], False)
+
+  should.be_true(core_systems_engineering.verify_trace13_conservation(t0, t0))
+  should.be_false(
+    core_systems_engineering.verify_trace13_conservation(t0, t_drifted),
+  )
+  should.be_false(
+    core_systems_engineering.verify_trace13_conservation(t0, t_untrusted),
+  )
+}
+
+pub fn stan_hmc_bayesian_pareto_and_11_domain_rete_ul_fusion_test() {
+  // 1. Calibrated Stan HMC/NUTS gate + Gaussian/Beta conjugate update
+  case
+    core_systems_engineering.evaluate_stan_bayesian_gate(
+      StanDiagnostics(
+        r_hat: 1.003,
+        effective_sample_size: 920,
+        divergent_transitions: 0,
+        brier_score: 0.09,
+      ),
+      0.92,
+      0.04,
+      0.96,
+      0.02,
+      19.0,
+      1.0,
+      True,
+    )
+  {
+    StanCalibrated(mean, beta_rel, conf) -> {
+      should.be_true(mean >. 0.92)
+      should.be_true(beta_rel >. 0.94)
+      should.be_true(conf >. 0.5)
+    }
+    StanTriggerFired(_) -> should.fail()
+  }
+
+  // 2. Divergent transitions or R_hat > 1.01 fires StanTriggerFired
+  case
+    core_systems_engineering.evaluate_stan_bayesian_gate(
+      StanDiagnostics(1.04, 250, 2, 0.31),
+      0.9,
+      0.04,
+      0.9,
+      0.02,
+      10.0,
+      1.0,
+      True,
+    )
+  {
+    StanTriggerFired(_) -> Nil
+    StanCalibrated(_, _, _) -> should.fail()
+  }
+
+  // 3. Pareto front rejects dominated bloated-MCP solution (4 optimal of 5)
+  should.equal(core_systems_engineering.compute_engine_pareto_front(), 4)
+
+  // 4. 11-Domain Rete-UL forward-chaining salience overrides
+  let #(res_nominal, dom_cnt) =
+    core_systems_engineering.evaluate_11_domain_rete_ul(
+      ev_claimed: 93,
+      max_quota_bps: 1800,
+      openrouter_nd: 900_000_000,
+      foreign_c3i_frame: False,
+      default_at_conserved: True,
+      mcp_zenoh_healthy: True,
+    )
+  should.equal(dom_cnt, 11)
+  should.be_true(res_nominal.salience > 0)
+
+  let #(res_ev94, _) =
+    core_systems_engineering.evaluate_11_domain_rete_ul(
+      ev_claimed: 94,
+      max_quota_bps: 1800,
+      openrouter_nd: 900_000_000,
+      foreign_c3i_frame: False,
+      default_at_conserved: True,
+      mcp_zenoh_healthy: True,
+    )
+  should.equal(res_ev94.decision, "ANDON_HOLD_PROVENANCE_CEILING_93")
+
+  let #(res_c3i, _) =
+    core_systems_engineering.evaluate_11_domain_rete_ul(
+      ev_claimed: 93,
+      max_quota_bps: 1800,
+      openrouter_nd: 900_000_000,
+      foreign_c3i_frame: True,
+      default_at_conserved: True,
+      mcp_zenoh_healthy: True,
+    )
+  should.equal(res_c3i.decision, "DROP_AND_FENCE_SPLIT_BRAIN")
+
+  let #(res_margin, _) =
+    core_systems_engineering.evaluate_11_domain_rete_ul(
+      ev_claimed: 93,
+      max_quota_bps: 6001,
+      openrouter_nd: 900_000_000,
+      foreign_c3i_frame: False,
+      default_at_conserved: True,
+      mcp_zenoh_healthy: True,
+    )
+  should.equal(res_margin.decision, "HOLD_MARGIN_40PCT")
+}
+
+pub fn closed_loop_kalman_pid_shield_and_nasa_fprime_poodavr_fsm_test() {
+  // Nominal closed-loop tick: Kalman nominal, F' traverses all 7 states back to Predicting
+  let ok_rep =
+    core_systems_engineering.run_closed_loop_control_tick(
+      health_measurement: 0.98,
+      action_risk: 0.05,
+      intent_safe: True,
+      breakers_closed: True,
+      trace13_conserved: True,
+    )
+  should.be_true(ok_rep.kalman_nominal)
+  should.be_false(ok_rep.fprime_halted)
+  should.equal(ok_rep.fprime_final_state, "Predicting")
+  should.be_true(ok_rep.shield_safe_rate >=. 0.99)
+
+  // Unsafe intent or broken trace13 trips F' ConstitutionalHalt fail-closed
+  let halt_rep =
+    core_systems_engineering.run_closed_loop_control_tick(
+      health_measurement: 0.55,
+      action_risk: 0.75,
+      intent_safe: False,
+      breakers_closed: True,
+      trace13_conserved: False,
+    )
+  should.be_true(halt_rep.fprime_halted)
+  should.equal(halt_rep.fprime_final_state, "ConstitutionalHalt")
+}
+
+pub fn fractal_fmea_4uca_stpa_stamp_contagion_and_8class_error_handler_test() {
+  let full_uca =
+    StpaUcaAnalysis(
+      not_provided_hazard: "UCA-1: Zenoh fence not applied during cutover",
+      provided_unsafe_hazard: "UCA-2: Unverified artifact promoted to main",
+      wrong_timing_or_order_hazard: "UCA-3: OI-07 executed after OI-02 split-brain",
+      wrong_duration_hazard: "UCA-4: Lease expires mid-build (< 4h TTL)",
+    )
+  let incomplete_uca = StpaUcaAnalysis("UCA-1", "", "UCA-3", "UCA-4")
+
+  // SC-RISK-PRIORITY-001 precondition gates
+  case
+    core_systems_engineering.evaluate_fractal_fmea_stpa_risk(
+      authority_valid: False,
+      deps_ready: True,
+      uca: full_uca,
+      severity: 9,
+      occurrence: 4,
+      detection: 3,
+      criticality: 9,
+      stpa_weight: 8,
+      dependency_weight: 7,
+      impact_weight: 9,
+      violated_constraints: [],
+    )
+  {
+    RiskBlockedPrecondition(r) ->
+      should.equal(r, "authority_or_lease_fence_invalid")
+    _ -> should.fail()
+  }
+
+  case
+    core_systems_engineering.evaluate_fractal_fmea_stpa_risk(
+      authority_valid: True,
+      deps_ready: True,
+      uca: incomplete_uca,
+      severity: 9,
+      occurrence: 4,
+      detection: 3,
+      criticality: 9,
+      stpa_weight: 8,
+      dependency_weight: 7,
+      impact_weight: 9,
+      violated_constraints: [],
+    )
+  {
+    RiskBlockedPrecondition(r) -> should.equal(r, "incomplete_4_uca_stpa_record")
+    _ -> should.fail()
+  }
+
+  // Valid preconditions + 1 STAMP constraint violation propagates contagion to neighbours (3 cells degraded)
+  case
+    core_systems_engineering.evaluate_fractal_fmea_stpa_risk(
+      authority_valid: True,
+      deps_ready: True,
+      uca: full_uca,
+      severity: 9,
+      occurrence: 4,
+      detection: 5,
+      criticality: 8,
+      stpa_weight: 7,
+      dependency_weight: 6,
+      impact_weight: 9,
+      violated_constraints: ["SC-RISK-PRIORITY-001"],
+    )
+  {
+    RiskPrioritized(rpn, _, product, stamp_degraded) -> {
+      should.equal(rpn, 180)
+      should.equal(product, 8 * 7 * 180 * 6 * 9)
+      should.equal(stamp_degraded, 3)
+    }
+    _ -> should.fail()
+  }
+
+  // Verify all 8 error classes map deterministically to clean recovery or Jidoka Andon HOLD
+  let q = QuotaSnapshot(900, 1100, 1300, 800_000_000)
+  let recoverable_modes = [
+    ErrModeTransientTestOrBuild("flaky_io"),
+    ErrModeWorkspaceOrArtifactCorruption("corrupt_ebin"),
+    ErrModeWrongArchitecturalPath("bad_dag_edge"),
+    ErrModeLeaseOrHeartbeatExpired("missed_hb"),
+    ErrModeSplitBrainForeignC3iFrame("c3i_4200"),
+    ErrModeFormalProofOrReteVeto("gospel_postcond"),
+  ]
+  list.each(recoverable_modes, fn(m) {
+    case
+      core_systems_engineering.handle_system_error(
+        task_id: "w1-task",
+        role: ImplRole,
+        next_attempt: 2,
+        err: m,
+        quota: q,
+      )
+    {
+      ExecuteAttempt(attempt: 2, ..) -> Nil
+      _ -> should.fail()
+    }
+  })
+
+  list.each(
+    [
+      ErrModeQuotaMargin40Breached("6005_bps"),
+      ErrModeHardwareOrProvenanceBreach("ev_108_forged"),
+    ],
+    fn(m) {
+      case
+        core_systems_engineering.handle_system_error(
+          task_id: "w1-task",
+          role: ImplRole,
+          next_attempt: 2,
+          err: m,
+          quota: q,
+        )
+      {
+        JidokaAndonHold(..) -> Nil
+        _ -> should.fail()
+      }
+    },
+  )
+}
+
+pub fn full_fpp_6_machines_sysml_v2_packages_and_8_bionic_services_test() {
+  let #(canon_rep, core_rep, fpp_cnt) =
+    core_systems_engineering.validate_all_fpp_sysml_models()
+  should.be_true(canon_rep.valid)
+  should.be_true(core_rep.valid)
+  should.equal(core_rep.satisfaction_ratio, 1.0)
+  should.equal(core_rep.errors, [])
+  should.equal(core_rep.total_parts, 6)
+  should.equal(fpp_cnt, 6)
+
+  let q = QuotaSnapshot(900, 1200, 1500, 750_000_000)
+  let bionic =
+    core_systems_engineering.evaluate_bionic_services_suite(
+      quota: q,
+      cpu_load: 0.28,
+      error_rate: 0.01,
+      mem_pressure: 0.31,
+      stress_event: True,
+    )
+  should.be_true(bionic.holon_active)
+  should.be_true(bionic.membrane_allows_uos_gleam)
+  should.be_true(bionic.membrane_blocks_legacy_c3i)
+  should.be_true(bionic.neuro_spine_delivered)
+  should.be_true(bionic.prajna_breaker_allowed)
+  should.equal(bionic.metabolic_regime, AnabolicParallel)
+  should.equal(bionic.fractal_l0_l9_health, LayerHealthy)
+  should.equal(bionic.bionic_services_online, 8)
+
+  let unified =
+    core_systems_engineering.evaluate_unified_systems_engineering(
+      q,
+      1_793_550_000_000,
+    )
+  should.be_true(unified.sheaf_h1_vanished)
+  should.be_true(unified.trace13_conserved)
+  should.equal(unified.pareto_optimal_engines, 4)
+  should.be_true(unified.stan_calibrated)
+  should.be_true(unified.control_nominal)
+  should.be_true(unified.fprime_6_machines_ready)
+  should.be_true(unified.sysml_core_valid)
+  should.be_true(unified.system_fmea_entries > 0)
+  should.be_true(unified.bionic_8_services_healthy)
+
+  let encoded = core_systems_engineering.encode_unified_systems_json(unified)
+  should.be_true(
+    string.contains(encoded, "uos.core_evo.systems_engineering.v2"),
+  )
+}
+
+pub fn fractal_holonic_10x17_simulation_and_12_invariant_formal_certificate_test() {
+  let sim = core_fractal_holonic_simulator.simulate_fractal_holarchy()
+  should.equal(sim.total_ticks, 24)
+  should.equal(sim.atomic_holons_per_tick, 170)
+  should.equal(sim.layer_macro_holons_per_tick, 10)
+  should.equal(sim.faults_injected, 2)
+  should.equal(sim.faults_self_healed_within_3_attempts, 2)
+  should.equal(sim.attacks_quarantined, 3)
+  should.equal(sim.torpor_holds_enforced, 2)
+  // AGY Thin Conductor share strictly < 2.0% (< 200 bps)
+  should.be_true(sim.agy_token_share_bps > 0 && sim.agy_token_share_bps < 200)
+  should.equal(sim.final_root_holon.lyapunov_v, 0)
+  should.be_true(sim.final_root_holon.trust_indicator)
+
+  let cert = core_fractal_holonic_simulator.verify_simulation_correctness(sim)
+  should.be_true(cert.all_12_invariants_proved)
+  should.equal(cert.proved_count, 12)
+  should.equal(cert.total_invariants, 12)
+  should.equal(cert.total_holon_epoch_states_verified, 4080)
+
+  let cert_json =
+    core_fractal_holonic_simulator.encode_holonic_certificate_json(sim, cert)
+  should.be_true(
+    string.contains(cert_json, "uos.core_evo.fractal_holonic_simulation.v3"),
+  )
 }

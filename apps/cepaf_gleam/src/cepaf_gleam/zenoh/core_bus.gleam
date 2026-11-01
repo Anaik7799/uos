@@ -118,6 +118,9 @@ pub fn validate_topic(topic: String) -> Result(String, CoreBusError) {
                     "hive",
                     "biomorphic",
                     "fractal",
+                    "syseng",
+                    "fpp_sysml",
+                    "rete_stan",
                   ],
                   domain,
                 )
