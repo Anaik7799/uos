@@ -498,3 +498,19 @@ journal = "docs/journal/20261101-1504-agy-full-fractal-coverage-5plane-dependenc
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-codex-r2-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-CORE-EVO-V4-W0-COMPLETION-AND-AGY-RESTART-20261101-1631"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "w0-fenced-hygiene-reclaim"
+state = "development"
+admitted = false
+design = "docs/design/20261101-1543-uos-zero-muda-core-dev-hive-biomorphic-fractal-evolution-system.md"
+design_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1543-uos-zero-muda-core-dev-hive-biomorphic-fractal-evolution-system.md"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+risk_portfolio = "governance/planning/20261101-1626-agy-fractal-master-risk-portfolio.json"
+journal = "docs/journal/20261101-1631-uos-core-evo-v4-w0-completion-and-agy-shutdown-restart-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1631-uos-core-evo-v4-w0-completion-and-agy-shutdown-restart-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
