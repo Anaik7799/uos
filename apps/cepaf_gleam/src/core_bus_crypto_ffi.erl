@@ -14,11 +14,14 @@
     verify_ed25519_hex/3,
     advance_replay_seq_atomic/2,
     reset_session_ed25519_for_test/0,
+    reset_replay_table_for_test/0,
     concurrent_cold_start_unique_pubkeys_for_test/1,
     concurrent_replay_winners_for_test/3
 ]).
 
 -define(SESSION_KEY_SLOT, {core_bus_crypto_ffi, session_ed25519_keypair}).
+-define(REPLAY_TABLE, core_bus_replay_ets).
+-define(REPLAY_OWNER, core_bus_replay_ets_owner).
 
 generate_ed25519_keypair_hex() ->
     {Pub, Priv} = crypto:generate_key(eddsa, ed25519),
@@ -87,6 +90,22 @@ reset_session_ed25519_for_test() ->
     _ = persistent_term:erase(?SESSION_KEY_SLOT),
     nil.
 
+%% Test-only: tear down `core_bus_replay_ets` + owner so cold-start short-lived
+%% worker concurrency is exercised from a completely uninitialized ETS state.
+reset_replay_table_for_test() ->
+    case whereis(?REPLAY_OWNER) of
+        undefined -> ok;
+        Pid ->
+            catch unregister(?REPLAY_OWNER),
+            exit(Pid, kill),
+            timer:sleep(10)
+    end,
+    case ets:whereis(?REPLAY_TABLE) of
+        undefined -> ok;
+        _ -> catch ets:delete(?REPLAY_TABLE)
+    end,
+    nil.
+
 %% Test-only concurrency probe: erase the session slot, spawn `N` processes that
 %% all block on a barrier, release them simultaneously, and require that every
 %% signature verifies against the single final session public key. Returns the
@@ -133,29 +152,75 @@ concurrent_cold_start_unique_pubkeys_for_test(N)
         false -> -1
     end.
 
+%% Dedicated immortal ETS owner for replay high-water marks so that even if the
+%% very first caller is a short-lived spawned request/worker process that exits
+%% immediately after consuming an envelope, `core_bus_replay_ets` survives for
+%% the entire BEAM VM lifetime and remains isolated from general cache eviction.
+ensure_replay_table() ->
+    case ets:whereis(?REPLAY_TABLE) of
+        undefined ->
+            global:trans({?REPLAY_TABLE, self()}, fun() ->
+                case ets:whereis(?REPLAY_TABLE) of
+                    undefined ->
+                        Parent = self(),
+                        Ref = make_ref(),
+                        Owner = spawn(fun() ->
+                            process_flag(trap_exit, true),
+                            HeirOpts =
+                                case whereis(init) of
+                                    undefined -> [];
+                                    InitPid -> [{heir, InitPid, none}]
+                                end,
+                            _ = ets:new(?REPLAY_TABLE, [
+                                named_table,
+                                public,
+                                set,
+                                {read_concurrency, true},
+                                {write_concurrency, true}
+                                | HeirOpts
+                            ]),
+                            try register(?REPLAY_OWNER, self()) catch _:_ -> ok end,
+                            Parent ! {Ref, ready},
+                            replay_owner_loop()
+                        end),
+                        true = is_pid(Owner),
+                        receive
+                            {Ref, ready} -> ?REPLAY_TABLE
+                        after 5000 ->
+                            erlang:error(replay_table_init_timeout)
+                        end;
+                    _Tid ->
+                        ?REPLAY_TABLE
+                end
+            end);
+        _Tid ->
+            ?REPLAY_TABLE
+    end.
+
+replay_owner_loop() ->
+    receive
+        _ -> replay_owner_loop()
+    end.
+
 %% Atomic monotonic high-water check-and-advance per `(signer_pubkey_hex, topic)`.
 %% Serializes concurrent BEAM receivers racing on the same replay key via
-%% `global:trans/2` over the durable `beam_cache_ffi` ETS table so at most ONE
+%% `global:trans/2` over the immortal `core_bus_replay_ets` table so at most ONE
 %% caller ever accepts a given `SeqId`.
 advance_replay_seq_atomic(ReplayKeyBin, SeqId)
   when is_binary(ReplayKeyBin), is_integer(SeqId) ->
-    _ = beam_cache_ffi:ets_init(),
+    Table = ensure_replay_table(),
     global:trans({{core_bus_replay_seq, ReplayKeyBin}, self()}, fun() ->
         HighWater =
-            case beam_cache_ffi:ets_get(ReplayKeyBin) of
-                {ok, RawBin} when is_binary(RawBin) ->
-                    try binary_to_integer(RawBin) catch _:_ -> 0 end;
-                _ ->
-                    0
+            case ets:lookup(Table, ReplayKeyBin) of
+                [{_, PrevSeq}] when is_integer(PrevSeq) -> PrevSeq;
+                _ -> 0
             end,
         case SeqId > HighWater of
             false ->
                 {error, HighWater};
             true ->
-                case beam_cache_ffi:ets_put(ReplayKeyBin, integer_to_binary(SeqId)) of
-                    {ok, nil} -> {ok, SeqId};
-                    _ -> {error, -1}
-                end
+                true = ets:insert(Table, {ReplayKeyBin, SeqId}),
+                {ok, SeqId}
         end
     end).
 

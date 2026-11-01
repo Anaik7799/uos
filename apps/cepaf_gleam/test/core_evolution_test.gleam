@@ -58,6 +58,9 @@ fn ffi_concurrent_replay_winners(
   n: Int,
 ) -> #(Int, Int)
 
+@external(erlang, "core_bus_crypto_ffi", "reset_replay_table_for_test")
+fn ffi_reset_replay_table() -> Nil
+
 pub fn quota_margin_40pct_admits_exact_60pct_boundary_test() {
   let q =
     QuotaSnapshot(
@@ -1324,9 +1327,16 @@ pub fn core_bus_stateful_ets_replay_rejection_test() {
     )
   should.equal(next.envelope.seq_id, 502)
 
-  // 5. 64 concurrent BEAM receivers racing simultaneously on seq_id=503 produce
-  //    at most 1 winner and 63 deterministic ErrNonMonotonicSeq rejections.
+  // 5. Cold-start 64-process short-lived worker race: tear down the replay ETS
+  //    table first so the very first caller is a short-lived spawned worker that
+  //    immediately exits; immortal `core_bus_replay_ets` must survive (`#(1, 63)`).
+  ffi_reset_replay_table()
   let assert Ok(env_503) = build(503)
   let wire_503 = core_bus.encode_authenticated_envelope(env_503)
   should.equal(ffi_concurrent_replay_winners(wire_503, session_pub, 64), #(1, 63))
+  // And subsequent replay after all 64 short-lived workers exited still fails closed!
+  case core_bus.consume_authenticated_envelope_once(wire_503, session_pub) {
+    Error(AuthCoreError(ErrNonMonotonicSeq(503, 503))) -> Nil
+    _ -> should.fail()
+  }
 }
