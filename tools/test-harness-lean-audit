@@ -1,0 +1,287 @@
+#!/usr/bin/env bash
+# Development-only conformance test for the Lean axiom-audit prototype.
+# This script uses fixed trusted fixtures only. Imported untrusted modules can
+# suppress the audit, so this is not a proof gate, MCP route or sandbox.
+set -euo pipefail
+
+task_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$task_root/tools/lib/uos-toolchain.sh"
+task_lean="$(uos_tool lean)"
+task_tmp="$(mktemp -d "${TMPDIR:-/tmp}/uos-lean-audit-test.XXXXXXXX")"
+trap 'rm -rf -- "$task_tmp"' EXIT
+task_passed=0
+
+compile_fixture() {
+  if ! LEAN_PATH="$task_tmp" "$task_lean" --root="$task_tmp" \
+    -o "$task_tmp/$1.olean" "$task_tmp/$1.lean" >"$task_tmp/$1.compile.log" 2>&1; then
+    cat "$task_tmp/$1.compile.log" >&2
+    printf 'FAIL: could not compile fixture %s\n' "$1" >&2
+    exit 1
+  fi
+}
+
+expect_pass() {
+  local name="$1" search_path="${2:-$task_tmp}"
+  if ! LEAN_PATH="$search_path" "$task_lean" "$task_tmp/$name.lean" >"$task_tmp/$name.log" 2>&1; then
+    cat "$task_tmp/$name.log" >&2
+    printf 'FAIL: expected %s to pass\n' "$name" >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: %s\n' "$name"
+}
+
+expect_refusal() {
+  local name="$1" expected="$2"
+  if LEAN_PATH="$task_tmp" "$task_lean" "$task_tmp/$name.lean" >"$task_tmp/$name.log" 2>&1; then
+    printf 'FAIL: expected %s to be refused\n' "$name" >&2
+    exit 1
+  fi
+  if ! rg -q -F -- "$expected" "$task_tmp/$name.log"; then
+    cat "$task_tmp/$name.log" >&2
+    printf 'FAIL: %s failed for an unexpected reason\n' "$name" >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: %s refused\n' "$name"
+}
+
+if ! "$task_lean" --root="$task_root/formal/lean" -o "$task_tmp/HarnessAxiomAudit.olean" \
+  "$task_root/formal/lean/HarnessAxiomAudit.lean" >"$task_tmp/helper.compile.log" 2>&1; then
+  cat "$task_tmp/helper.compile.log" >&2
+  printf 'FAIL: could not compile audit prototype\n' >&2
+  exit 1
+fi
+
+cat >"$task_tmp/Good.lean" <<'LEAN'
+theorem auditGood : True := True.intro
+theorem auditPropext (p q : Prop) (h : p ↔ q) : p = q := propext h
+theorem auditClassical (p : Prop) : p ∨ ¬ p := Classical.em p
+theorem auditQuot (r : Nat → Nat → Prop) (a b : Nat) (h : r a b) :
+    Quot.mk r a = Quot.mk r b := Quot.sound h
+def auditNotTheorem : Nat := 1
+LEAN
+cat >"$task_tmp/CleanOther.lean" <<'LEAN'
+theorem auditOther : True := True.intro
+LEAN
+cat >"$task_tmp/Misleading.lean" <<'LEAN'
+theorem requestedSafetyProperty : True := True.intro
+LEAN
+cat >"$task_tmp/BadAxiom.lean" <<'LEAN'
+axiom auditUnusedAxiom : False
+theorem auditIndependent : True := True.intro
+LEAN
+cat >"$task_tmp/BadPrivateAxiom.lean" <<'LEAN'
+private axiom auditHiddenAxiom : False
+theorem auditPrivateIndependent : True := True.intro
+LEAN
+cat >"$task_tmp/MacroAxiom.lean" <<'LEAN'
+import Lean
+open Lean Elab Command
+elab "#injectAuditAxiom" : command => do
+  liftCoreM <| addDecl <| Declaration.axiomDecl {
+    name := `auditMacroAxiom, levelParams := [], type := mkConst ``False,
+    isUnsafe := false
+  }
+#injectAuditAxiom
+theorem auditMacroIndependent : True := True.intro
+LEAN
+cat >"$task_tmp/BadDependency.lean" <<'LEAN'
+axiom auditImportedAxiom : False
+LEAN
+cat >"$task_tmp/UsesBadDependency.lean" <<'LEAN'
+import BadDependency
+theorem auditImported : False := auditImportedAxiom
+LEAN
+cat >"$task_tmp/HasSorry.lean" <<'LEAN'
+theorem auditSorry : False := by sorry
+LEAN
+cat >"$task_tmp/HasAdmit.lean" <<'LEAN'
+theorem auditAdmit : False := by admit
+LEAN
+cat >"$task_tmp/ForgottenSorry.lean" <<'LEAN'
+def auditForgotten : Nat := by sorry
+theorem auditUnrelated : True := True.intro
+LEAN
+cat >"$task_tmp/ImportedUnsafeHelper.lean" <<'LEAN'
+import BadDependency
+def auditUnsafeHelper : False := auditImportedAxiom
+theorem auditUnrelatedImport : True := True.intro
+LEAN
+cat >"$task_tmp/HasNative.lean" <<'LEAN'
+import Lean
+theorem auditNative : (10 : Nat) = 10 := by native_decide
+LEAN
+cat >"$task_tmp/SpoofOutput.lean" <<'LEAN'
+axiom auditSpoofAxiom : False
+#eval IO.println "AUDIT_PASSED"
+theorem auditSpoof : False := auditSpoofAxiom
+LEAN
+for task_fixture in Good CleanOther Misleading BadAxiom BadPrivateAxiom MacroAxiom BadDependency UsesBadDependency HasSorry HasAdmit ForgottenSorry ImportedUnsafeHelper HasNative SpoofOutput; do
+  compile_fixture "$task_fixture"
+done
+
+cat >"$task_tmp/CheckGood.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+open Lean Elab Command
+run_elab do
+  UOS.HarnessAxiomAudit.check `Good #[`auditGood, `auditPropext, `auditClassical, `auditQuot]
+LEAN
+cat >"$task_tmp/CheckMisleadingName.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Misleading
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `Misleading #[`requestedSafetyProperty]
+LEAN
+cat >"$task_tmp/CheckExpectedStatement.lean" <<'LEAN'
+import Misleading
+example : False := requestedSafetyProperty
+LEAN
+cat >"$task_tmp/CheckUnusedAxiom.lean" <<'LEAN'
+import HarnessAxiomAudit
+import BadAxiom
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `BadAxiom #[`auditIndependent]
+LEAN
+cat >"$task_tmp/CheckPrivateAxiom.lean" <<'LEAN'
+import HarnessAxiomAudit
+import BadPrivateAxiom
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `BadPrivateAxiom #[`auditPrivateIndependent]
+LEAN
+cat >"$task_tmp/CheckMacroAxiom.lean" <<'LEAN'
+import HarnessAxiomAudit
+import MacroAxiom
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `MacroAxiom #[`auditMacroIndependent]
+LEAN
+cat >"$task_tmp/CheckImportedAxiom.lean" <<'LEAN'
+import HarnessAxiomAudit
+import UsesBadDependency
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `UsesBadDependency #[`auditImported]
+LEAN
+cat >"$task_tmp/CheckSorry.lean" <<'LEAN'
+import HarnessAxiomAudit
+import HasSorry
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `HasSorry #[`auditSorry]
+LEAN
+cat >"$task_tmp/CheckAdmit.lean" <<'LEAN'
+import HarnessAxiomAudit
+import HasAdmit
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `HasAdmit #[`auditAdmit]
+LEAN
+cat >"$task_tmp/CheckNative.lean" <<'LEAN'
+import HarnessAxiomAudit
+import HasNative
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `HasNative #[`auditNative]
+LEAN
+cat >"$task_tmp/CheckForgottenSorry.lean" <<'LEAN'
+import HarnessAxiomAudit
+import ForgottenSorry
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `ForgottenSorry #[`auditUnrelated]
+LEAN
+cat >"$task_tmp/CheckImportedUnsafeHelper.lean" <<'LEAN'
+import HarnessAxiomAudit
+import ImportedUnsafeHelper
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `ImportedUnsafeHelper #[`auditUnrelatedImport]
+LEAN
+cat >"$task_tmp/CheckSpoof.lean" <<'LEAN'
+import HarnessAxiomAudit
+import SpoofOutput
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `SpoofOutput #[`auditSpoof]
+LEAN
+cat >"$task_tmp/CheckMissing.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `Good #[`doesNotExist]
+LEAN
+cat >"$task_tmp/CheckNotTheorem.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `Good #[`auditNotTheorem]
+LEAN
+cat >"$task_tmp/CheckForeignTheorem.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+import CleanOther
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `CleanOther #[`auditGood]
+LEAN
+cat >"$task_tmp/CheckEmpty.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `Good #[]
+LEAN
+cat >"$task_tmp/CheckMissingModule.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `MissingModule #[`auditGood]
+LEAN
+cat >"$task_tmp/CheckDuplicate.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Good
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `Good #[`auditGood, `auditGood]
+LEAN
+
+# The checker binds a Lean module name, not the path or bytes that supplied it.
+# Both same-named modules pass; a future harness route must bind source hashes.
+mkdir "$task_tmp/twin-a" "$task_tmp/twin-b"
+cat >"$task_tmp/twin-a/Twin.lean" <<'LEAN'
+theorem auditTwin : True := True.intro
+LEAN
+cat >"$task_tmp/twin-b/Twin.lean" <<'LEAN'
+theorem auditTwin : True := by exact True.intro
+LEAN
+for task_twin in twin-a twin-b; do
+  LEAN_PATH="$task_tmp" "$task_lean" --root="$task_tmp/$task_twin" \
+    -o "$task_tmp/$task_twin/Twin.olean" "$task_tmp/$task_twin/Twin.lean" \
+    >"$task_tmp/$task_twin.compile.log" 2>&1
+done
+if [ "$(sha256sum "$task_tmp/twin-a/Twin.lean" | cut -d' ' -f1)" = \
+     "$(sha256sum "$task_tmp/twin-b/Twin.lean" | cut -d' ' -f1)" ]; then
+  printf 'FAIL: shadow fixture source hashes unexpectedly match\n' >&2
+  exit 1
+fi
+cat >"$task_tmp/CheckTwinFirst.lean" <<'LEAN'
+import HarnessAxiomAudit
+import Twin
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `Twin #[`auditTwin]
+LEAN
+cp "$task_tmp/CheckTwinFirst.lean" "$task_tmp/CheckTwinSecond.lean"
+
+expect_pass CheckGood
+expect_pass CheckTwinFirst "$task_tmp/twin-a:$task_tmp"
+expect_pass CheckTwinSecond "$task_tmp/twin-b:$task_tmp"
+expect_pass CheckMisleadingName
+expect_refusal CheckExpectedStatement 'Type mismatch'
+expect_refusal CheckUnusedAxiom 'target module declares forbidden axiom'
+expect_refusal CheckPrivateAxiom 'target module declares forbidden axiom'
+expect_refusal CheckMacroAxiom 'target module declares forbidden axiom'
+expect_refusal CheckImportedAxiom 'depends on forbidden axiom'
+expect_refusal CheckSorry 'depends on forbidden axiom'
+expect_refusal CheckAdmit 'depends on forbidden axiom'
+expect_refusal CheckForgottenSorry 'depends on forbidden axiom'
+expect_refusal CheckImportedUnsafeHelper 'depends on forbidden axiom'
+expect_refusal CheckNative 'forbidden axiom'
+expect_refusal CheckSpoof 'target module declares forbidden axiom'
+expect_refusal CheckMissing 'audit theorem is missing'
+expect_refusal CheckNotTheorem 'audit target is not a theorem'
+expect_refusal CheckForeignTheorem 'audit theorem is not defined in target module'
+expect_refusal CheckEmpty 'audit requires at least one theorem'
+expect_refusal CheckMissingModule 'audit target module is not imported'
+expect_refusal CheckDuplicate 'audit theorem list contains duplicates'
+printf 'Lean axiom-audit prototype: %s fixed-fixture checks passed; untrusted-module gate remains unsafe\n' "$task_passed"

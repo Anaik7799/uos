@@ -1,0 +1,369 @@
+#!/usr/bin/env bash
+# Development-only native data-import audit tests; no MCP or admission claim.
+set -euo pipefail
+shopt -s nullglob
+
+task_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$task_root/tools/lib/uos-toolchain.sh"
+task_lean="$(uos_tool lean)"
+task_leanc="$(uos_tool leanc)"
+task_sysroot="$(cd "$(dirname "$task_lean")/.." && pwd -P)"
+task_tmp="$(mktemp -d /tmp/uos-lean-data-audit.XXXXXXXX)"
+cleanup() {
+  local task_file task_subdir
+  for task_subdir in shadow builtin-shadow dep-good dep-bad dep-changed mutual-good mutual-bad; do
+    for task_file in "$task_tmp/$task_subdir"/*; do
+      if [ -f "$task_file" ]; then unlink "$task_file"; fi
+    done
+    if [ -d "$task_tmp/$task_subdir" ]; then rmdir "$task_tmp/$task_subdir"; fi
+  done
+  for task_file in "$task_tmp"/*; do
+    if [ -f "$task_file" ]; then unlink "$task_file"; fi
+  done
+  rmdir "$task_tmp"
+}
+trap cleanup EXIT
+task_passed=0
+
+cat >"$task_tmp/Clean.lean" <<'LEAN'
+theorem cleanTheorem : True := True.intro
+theorem polyTheorem.{u} {α : Type u} (x : α) : x = x := rfl
+theorem twoUniverses.{u,v} {α : Type u} {β : Type v} (x : α) (y : β) : x = x ∧ y = y := ⟨rfl, rfl⟩
+LEAN
+cat >"$task_tmp/EarlyExit.lean" <<'LEAN'
+initialize earlyExit : Unit ← do
+  IO.eprintln "INITIALIZER_RAN"
+  IO.Process.exit 0
+theorem benignTheorem : True := True.intro
+LEAN
+cat >"$task_tmp/Hijack.lean" <<'LEAN'
+import Lean
+open Lean Elab Command
+axiom forbiddenAxiom : False
+theorem forbiddenTheorem : False := forbiddenAxiom
+elab_rules : command
+  | `(run_elab do $body:doSeq) => do
+      logInfo "HIJACK_RAN"
+LEAN
+cat >"$task_tmp/HasSorry.lean" <<'LEAN'
+theorem sorryTheorem : False := by sorry
+LEAN
+cat >"$task_tmp/UnusedAxiom.lean" <<'LEAN'
+axiom unusedForbiddenAxiom : False
+theorem innocentTheorem : True := True.intro
+LEAN
+cat >"$task_tmp/BadDependency.lean" <<'LEAN'
+axiom importedForbiddenAxiom : False
+LEAN
+cat >"$task_tmp/UsesBadDependency.lean" <<'LEAN'
+import BadDependency
+theorem importedForbiddenTheorem : False := importedForbiddenAxiom
+LEAN
+cat >"$task_tmp/ForwardBadDependency.lean" <<'LEAN'
+import BadDependency
+theorem forwardedForbiddenTheorem : False := importedForbiddenAxiom
+LEAN
+cat >"$task_tmp/UsesForwardedBadDependency.lean" <<'LEAN'
+import ForwardBadDependency
+theorem transitivelyForbiddenTheorem : False := forwardedForbiddenTheorem
+LEAN
+cat >"$task_tmp/MutualGraph.lean" <<'LEAN'
+namespace MutualGraph
+mutual
+  inductive Left where
+    | empty
+    | link : Right → Left
+  inductive Right where
+    | link : Left → Right
+end
+theorem reflexive (node : Left) : node = node := rfl
+end MutualGraph
+LEAN
+cat >"$task_tmp/ExpectedMutual.lean" <<'LEAN'
+import MutualGraph
+namespace ExpectedMutual
+axiom expected (value : MutualGraph.Left) : value = value
+end ExpectedMutual
+LEAN
+cat >"$task_tmp/ExpectedTrue.lean" <<'LEAN'
+axiom expectedTrue : True
+axiom expectedPoly.{v} {β : Type v} (value : β) : value = value
+axiom expectedTwo.{x,y} {A : Type x} {B : Type y} (a : A) (b : B) : a = a ∧ b = b
+axiom expectedSwap.{x,y} {A : Type y} {B : Type x} (a : A) (b : B) : a = a ∧ b = b
+def notASpec : Nat := 1
+LEAN
+cat >"$task_tmp/ExpectedFalse.lean" <<'LEAN'
+axiom expectedFalse : False
+LEAN
+cat >"$task_tmp/NormalImport.lean" <<'LEAN'
+import EarlyExit
+#eval IO.println "NORMAL_IMPORT_BODY_REACHED"
+LEAN
+
+for task_module in Clean EarlyExit Hijack HasSorry UnusedAxiom BadDependency UsesBadDependency ForwardBadDependency UsesForwardedBadDependency MutualGraph ExpectedMutual ExpectedTrue ExpectedFalse; do
+  if ! LEAN_PATH="$task_tmp" "$task_lean" --root="$task_tmp" \
+    -o "$task_tmp/$task_module.olean" "$task_tmp/$task_module.lean" \
+    >"$task_tmp/$task_module.compile.log" 2>&1; then
+    cat "$task_tmp/$task_module.compile.log" >&2
+    exit 1
+  fi
+done
+"$task_lean" --root="$task_root/formal/lean" \
+  -o "$task_tmp/HarnessAxiomAudit.olean" -c "$task_tmp/HarnessAxiomAudit.c" \
+  "$task_root/formal/lean/HarnessAxiomAudit.lean"
+LEAN_PATH="$task_tmp" "$task_lean" --root="$task_root/formal/lean" \
+  -c "$task_tmp/HarnessDataAudit.c" "$task_root/formal/lean/HarnessDataAudit.lean"
+"$task_leanc" "$task_tmp/HarnessDataAudit.c" "$task_tmp/HarnessAxiomAudit.c" \
+  -o "$task_tmp/HarnessDataAudit" -L"$task_sysroot/lib/lean" -lLean -lInit
+
+expect_pass() {
+  local label="$1" module="$2" theorem="$3" spec_module="$4" spec="$5"
+  local artifact_dir="${6:-$task_tmp}"
+  if ! "$task_tmp/HarnessDataAudit" "$task_sysroot" "$artifact_dir" \
+      "$module" "$theorem" "$spec_module" "$spec" >"$task_tmp/$label.log" 2>&1; then
+    cat "$task_tmp/$label.log" >&2
+    printf 'FAIL: expected %s to pass\n' "$label" >&2
+    exit 1
+  fi
+  if ! rg -q -F 'AXIOM_METADATA_CHECKED_NO_KERNEL_REPLAY' "$task_tmp/$label.log" || \
+      rg -q -e 'INITIALIZER_RAN|HIJACK_RAN' "$task_tmp/$label.log"; then
+    cat "$task_tmp/$label.log" >&2
+    printf 'FAIL: %s did not complete as data-only audit\n' "$label" >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: %s\n' "$label"
+}
+
+expect_refusal() {
+  local label="$1" expected="$2" module="$3" theorem="$4" spec_module="$5" spec="$6"
+  local artifact_dir="${7:-$task_tmp}"
+  if "$task_tmp/HarnessDataAudit" "$task_sysroot" "$artifact_dir" \
+      "$module" "$theorem" "$spec_module" "$spec" >"$task_tmp/$label.log" 2>&1; then
+    printf 'FAIL: expected %s to be refused\n' "$label" >&2
+    exit 1
+  fi
+  if ! rg -q -F -- "$expected" "$task_tmp/$label.log" || \
+      rg -q -e 'AXIOM_METADATA_CHECKED_NO_KERNEL_REPLAY|HIJACK_RAN|INITIALIZER_RAN' "$task_tmp/$label.log"; then
+    cat "$task_tmp/$label.log" >&2
+    printf 'FAIL: %s failed for an unexpected reason\n' "$label" >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: %s refused\n' "$label"
+}
+
+# Confirm that the hostile initializer really runs under ordinary imports.
+LEAN_PATH="$task_tmp" "$task_lean" "$task_tmp/NormalImport.lean" >"$task_tmp/normal.log" 2>&1
+if ! rg -q -F 'INITIALIZER_RAN' "$task_tmp/normal.log" || \
+    rg -q -F 'NORMAL_IMPORT_BODY_REACHED' "$task_tmp/normal.log"; then
+  printf 'FAIL: initializer attack fixture did not reproduce\n' >&2
+  exit 1
+fi
+printf 'PASS: ordinary import fixture reproduced the early-exit attack\n'
+task_passed=$((task_passed + 1))
+
+expect_pass clean Clean cleanTheorem ExpectedTrue expectedTrue
+expect_pass early_exit_loaded_as_data EarlyExit benignTheorem ExpectedTrue expectedTrue
+expect_refusal wrong_statement 'theorem statement mismatch' Clean cleanTheorem ExpectedFalse expectedFalse
+expect_pass alpha_renamed_universe Clean polyTheorem ExpectedTrue expectedPoly
+expect_refusal wrong_universe_arity 'theorem universe arity mismatch' Clean twoUniverses ExpectedTrue expectedPoly
+expect_pass alpha_two_universes Clean twoUniverses ExpectedTrue expectedTwo
+expect_refusal swapped_universes 'theorem statement mismatch' Clean twoUniverses ExpectedTrue expectedSwap
+expect_refusal hijack_axiom 'target module declares forbidden axiom' Hijack forbiddenTheorem ExpectedFalse expectedFalse
+expect_refusal sorry_axiom 'depends on forbidden axiom' HasSorry sorryTheorem ExpectedFalse expectedFalse
+expect_refusal unused_axiom 'target module declares forbidden axiom' UnusedAxiom innocentTheorem ExpectedTrue expectedTrue
+expect_refusal imported_axiom 'depends on forbidden axiom' UsesBadDependency importedForbiddenTheorem ExpectedFalse expectedFalse
+expect_refusal transitively_imported_axiom 'depends on forbidden axiom' UsesForwardedBadDependency transitivelyForbiddenTheorem ExpectedFalse expectedFalse
+expect_pass mutual_inductive MutualGraph MutualGraph.reflexive ExpectedMutual ExpectedMutual.expected
+expect_refusal missing_theorem 'target is not a theorem' Clean missingTheorem ExpectedTrue expectedTrue
+expect_refusal bad_spec_kind 'expected statement is not a spec declaration' Clean cleanTheorem ExpectedTrue notASpec
+
+# Ambient LEAN_PATH must not redirect the explicit artifact directory.
+mkdir "$task_tmp/shadow"
+cat >"$task_tmp/shadow/Clean.lean" <<'LEAN'
+axiom shadowAxiom : False
+theorem cleanTheorem : False := shadowAxiom
+LEAN
+"$task_lean" --root="$task_tmp/shadow" -o "$task_tmp/shadow/Clean.olean" \
+  "$task_tmp/shadow/Clean.lean"
+LEAN_PATH="$task_tmp/shadow" expect_pass ignores_ambient_lean_path Clean cleanTheorem ExpectedTrue expectedTrue
+
+# A forged builtin can otherwise make required declarations disappear while
+# the default axiom collector silently treats unknown names as axiom-free.
+mkdir "$task_tmp/builtin-shadow"
+cat >"$task_tmp/builtin-shadow/Init.lean" <<'LEAN'
+prelude
+axiom poisonedBuiltin : Sort 0
+LEAN
+"$task_lean" --root="$task_tmp/builtin-shadow" -o "$task_tmp/builtin-shadow/Init.olean" \
+  "$task_tmp/builtin-shadow/Init.lean"
+cp "$task_tmp/Clean.olean" "$task_tmp/ExpectedTrue.olean" "$task_tmp/builtin-shadow/"
+expect_refusal builtin_shadow 'reserved module shadow' Clean cleanTheorem ExpectedTrue expectedTrue "$task_tmp/builtin-shadow"
+
+# Compile target/spec against a dependency, then replace that dependency with
+# a module of the same name that omits a referenced constant.
+mkdir "$task_tmp/dep-good" "$task_tmp/dep-bad" "$task_tmp/dep-changed"
+cat >"$task_tmp/dep-good/Dep.lean" <<'LEAN'
+def dependencyValue : Nat := 3
+LEAN
+cat >"$task_tmp/dep-good/UsesDep.lean" <<'LEAN'
+import Dep
+theorem dependencyTheorem : dependencyValue = 3 := rfl
+LEAN
+cat >"$task_tmp/dep-good/ExpectedDep.lean" <<'LEAN'
+import Dep
+axiom expectedDependency : dependencyValue = 3
+LEAN
+for task_module in Dep UsesDep ExpectedDep; do
+  LEAN_PATH="$task_tmp/dep-good" "$task_lean" --root="$task_tmp/dep-good" \
+    -o "$task_tmp/dep-good/$task_module.olean" "$task_tmp/dep-good/$task_module.lean"
+done
+expect_pass good_dependency UsesDep dependencyTheorem ExpectedDep expectedDependency "$task_tmp/dep-good"
+cat >"$task_tmp/dep-bad/Dep.lean" <<'LEAN'
+def wrongDependency : Nat := 3
+LEAN
+"$task_lean" --root="$task_tmp/dep-bad" -o "$task_tmp/dep-bad/Dep.olean" "$task_tmp/dep-bad/Dep.lean"
+cp "$task_tmp/dep-good/UsesDep.olean" "$task_tmp/dep-good/ExpectedDep.olean" "$task_tmp/dep-bad/"
+expect_refusal missing_dependency 'unresolved declaration dependency' UsesDep dependencyTheorem ExpectedDep expectedDependency "$task_tmp/dep-bad"
+
+# A target compiled against one mutual graph must not silently load after the
+# replacement graph removes a constructor referenced by its theorem.
+mkdir "$task_tmp/mutual-good" "$task_tmp/mutual-bad"
+cat >"$task_tmp/mutual-good/GraphDep.lean" <<'LEAN'
+namespace GraphDep
+mutual
+  inductive Left where
+    | empty
+    | link : Right → Left
+  inductive Right where
+    | link : Left → Right
+end
+end GraphDep
+LEAN
+cat >"$task_tmp/mutual-good/GraphTarget.lean" <<'LEAN'
+import GraphDep
+theorem graphTheorem (r : GraphDep.Right) :
+    GraphDep.Left.link r = GraphDep.Left.link r := rfl
+LEAN
+cat >"$task_tmp/mutual-good/GraphExpected.lean" <<'LEAN'
+import GraphDep
+axiom graphExpected (r : GraphDep.Right) :
+    GraphDep.Left.link r = GraphDep.Left.link r
+LEAN
+for task_module in GraphDep GraphTarget GraphExpected; do
+  LEAN_PATH="$task_tmp/mutual-good" "$task_lean" --root="$task_tmp/mutual-good" \
+    -o "$task_tmp/mutual-good/$task_module.olean" "$task_tmp/mutual-good/$task_module.lean"
+done
+expect_pass mutual_dependency GraphTarget graphTheorem GraphExpected graphExpected "$task_tmp/mutual-good"
+cat >"$task_tmp/mutual-bad/GraphDep.lean" <<'LEAN'
+namespace GraphDep
+inductive Left where
+  | empty
+inductive Right where
+  | link : Left → Right
+end GraphDep
+LEAN
+"$task_lean" --root="$task_tmp/mutual-bad" -o "$task_tmp/mutual-bad/GraphDep.olean" "$task_tmp/mutual-bad/GraphDep.lean"
+cp "$task_tmp/mutual-good/GraphTarget.olean" "$task_tmp/mutual-good/GraphExpected.olean" "$task_tmp/mutual-bad/"
+expect_refusal missing_mutual_constructor 'unresolved declaration dependency' GraphTarget graphTheorem GraphExpected graphExpected "$task_tmp/mutual-bad"
+
+# The metadata audit alone cannot notice that an existing dependency changed
+# value. Its non-proof marker is expected; kernel replay must reject the proof.
+cat >"$task_tmp/dep-changed/Dep.lean" <<'LEAN'
+def dependencyValue : Nat := 4
+LEAN
+"$task_lean" --root="$task_tmp/dep-changed" -o "$task_tmp/dep-changed/Dep.olean" "$task_tmp/dep-changed/Dep.lean"
+cp "$task_tmp/dep-good/UsesDep.olean" "$task_tmp/dep-good/ExpectedDep.olean" "$task_tmp/dep-changed/"
+expect_pass metadata_only_changed_dependency UsesDep dependencyTheorem ExpectedDep expectedDependency "$task_tmp/dep-changed"
+if LEAN_SYSROOT="$task_sysroot" LEAN_PATH="$task_tmp/dep-changed" /usr/bin/timeout 20s \
+    "$task_sysroot/bin/leanchecker" -v UsesDep >"$task_tmp/replay-changed-dependency.log" 2>&1; then
+  printf 'FAIL: kernel replay accepted a changed dependency\n' >&2
+  exit 1
+fi
+if ! rg -qi 'type mismatch|kernel' "$task_tmp/replay-changed-dependency.log"; then
+  cat "$task_tmp/replay-changed-dependency.log" >&2
+  printf 'FAIL: changed-dependency replay failed for an unexpected reason\n' >&2
+  exit 1
+fi
+task_passed=$((task_passed + 1))
+printf 'PASS: kernel replay changed dependency refused\n'
+
+if LEAN_SYSROOT="$task_sysroot" LEAN_PATH="$task_tmp/dep-bad" /usr/bin/timeout 20s \
+    "$task_sysroot/bin/leanchecker" -v UsesDep >"$task_tmp/replay-missing-dependency.log" 2>&1; then
+  printf 'FAIL: kernel replay accepted a missing dependency\n' >&2
+  exit 1
+fi
+if ! rg -qi 'unknown constant|unknown declaration' "$task_tmp/replay-missing-dependency.log"; then
+  cat "$task_tmp/replay-missing-dependency.log" >&2
+  printf 'FAIL: missing-dependency replay failed for an unexpected reason\n' >&2
+  exit 1
+fi
+task_passed=$((task_passed + 1))
+printf 'PASS: kernel replay missing dependency refused\n'
+
+# Kernel replay checks the module's declarations, not whether custom axioms
+# are permitted. The separate data-only axiom audit above must still reject.
+for task_module in Clean EarlyExit Hijack; do
+  if ! LEAN_SYSROOT="$task_sysroot" LEAN_PATH="$task_tmp" /usr/bin/timeout 20s \
+      "$task_sysroot/bin/leanchecker" -v "$task_module" >"$task_tmp/replay-$task_module.log" 2>&1; then
+    cat "$task_tmp/replay-$task_module.log" >&2
+    printf 'FAIL: kernel replay for %s\n' "$task_module" >&2
+    exit 1
+  fi
+  if ! rg -q -F "replaying $task_module" "$task_tmp/replay-$task_module.log" || \
+      rg -q -e 'INITIALIZER_RAN|HIJACK_RAN' "$task_tmp/replay-$task_module.log"; then
+    cat "$task_tmp/replay-$task_module.log" >&2
+    printf 'FAIL: unexpected kernel replay output for %s\n' "$task_module" >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: kernel replay %s\n' "$task_module"
+done
+
+# Optional host-specific containment probe for these fixed fixtures. This does
+# not turn the native driver into an admitted proof route or bind its inputs.
+if [ "${UOS_LEAN_DATA_SANDBOX_PROBE:-0}" = 1 ]; then
+  task_unit_prefix="uos-lean-data-audit-$(date -u +%Y%m%d%H%M%S)-$$"
+  sandbox_audit() {
+    local unit_suffix="$1" module="$2" theorem="$3" spec_module="$4" spec="$5"
+    /usr/bin/timeout 20s /usr/bin/systemd-run --user --quiet --wait --collect --pipe \
+      --unit="$task_unit_prefix-$unit_suffix" --property=RuntimeMaxSec=15 \
+      --property=KillMode=control-group --property=MemoryMax=1536M \
+      --property=TasksMax=32 --property=NoNewPrivileges=yes \
+      /usr/bin/bwrap --unshare-user --unshare-pid --unshare-net --die-with-parent \
+      --new-session --clearenv --setenv HOME /tmp \
+      --setenv LD_LIBRARY_PATH /lean/lib/lean:/lean/lib \
+      --ro-bind "$task_sysroot" /lean --ro-bind "$task_tmp" /artifacts \
+      --ro-bind /usr /usr --ro-bind /lib /lib --ro-bind /lib64 /lib64 \
+      --proc /proc --dev /dev --tmpfs /tmp --chdir /artifacts \
+      /artifacts/HarnessDataAudit /lean /artifacts "$module" "$theorem" "$spec_module" "$spec"
+  }
+  if ! sandbox_audit good Clean cleanTheorem ExpectedTrue expectedTrue >"$task_tmp/sandbox-good.log" 2>&1 || \
+      ! rg -q -F 'AXIOM_METADATA_CHECKED_NO_KERNEL_REPLAY' "$task_tmp/sandbox-good.log"; then
+    cat "$task_tmp/sandbox-good.log" >&2
+    printf 'FAIL: bounded data-only audit did not accept the good fixture\n' >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: bounded data-only audit accepted the good fixture\n'
+  if ! sandbox_audit early EarlyExit benignTheorem ExpectedTrue expectedTrue >"$task_tmp/sandbox-early.log" 2>&1 || \
+      ! rg -q -F 'AXIOM_METADATA_CHECKED_NO_KERNEL_REPLAY' "$task_tmp/sandbox-early.log" || \
+      rg -q -e 'HIJACK_RAN|INITIALIZER_RAN' "$task_tmp/sandbox-early.log"; then
+    cat "$task_tmp/sandbox-early.log" >&2
+    printf 'FAIL: bounded data-only audit ran the target initializer\n' >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: bounded data-only audit did not run the target initializer\n'
+  if sandbox_audit hostile Hijack forbiddenTheorem ExpectedFalse expectedFalse >"$task_tmp/sandbox-hostile.log" 2>&1 || \
+      ! rg -q -F 'target module declares forbidden axiom' "$task_tmp/sandbox-hostile.log" || \
+      rg -q -e 'AXIOM_METADATA_CHECKED_NO_KERNEL_REPLAY|HIJACK_RAN|INITIALIZER_RAN' "$task_tmp/sandbox-hostile.log"; then
+    cat "$task_tmp/sandbox-hostile.log" >&2
+    printf 'FAIL: bounded data-only audit did not refuse the hostile fixture\n' >&2
+    exit 1
+  fi
+  task_passed=$((task_passed + 1))
+  printf 'PASS: bounded data-only audit refused the hostile fixture\n'
+fi
+printf 'Lean data-only audit prototype: %s fixed-fixture checks passed; MCP integration remains unverified\n' "$task_passed"

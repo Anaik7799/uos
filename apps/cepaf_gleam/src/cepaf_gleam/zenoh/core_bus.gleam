@@ -101,6 +101,15 @@ fn ffi_sign_with_session_ed25519_hex(
   canonical_msg: String,
 ) -> Result(#(String, String), String)
 
+@external(erlang, "core_bus_crypto_ffi", "reset_session_ed25519_for_test")
+pub fn reset_session_ed25519_for_test() -> Nil
+
+@external(erlang, "core_bus_crypto_ffi", "advance_replay_seq_atomic")
+fn ffi_advance_replay_seq_atomic(
+  replay_key: String,
+  seq_id: Int,
+) -> Result(Int, Int)
+
 @external(erlang, "core_bus_crypto_ffi", "sign_ed25519_hex")
 pub fn sign_ed25519_hex(
   canonical_msg: String,
@@ -796,6 +805,51 @@ pub fn publish_authenticated(
           }
       }
     }
+  }
+}
+
+/// Stateful anti-replay consumption of one Ed25519-authenticated envelope.
+///
+/// Order of trust is strictly fail-closed:
+/// 1. Decode + verify with `last_seq_id = 0` so the RFC 8032 Ed25519 signature,
+///    signer identity, `EV <= 93` provenance ceiling, topic, payload digest and
+///    identifiers are all authenticated BEFORE any unauthenticated field is used.
+/// 2. Derive the replay high-water key from the *authenticated* signer public key
+///    and the *authenticated* envelope topic, then read the durable BEAM ETS high
+///    water mark (`beam_cache`, default `0`).
+/// 3. Require `seq_id > high_water`; a duplicate or older frame is refused with
+///    `ErrNonMonotonicSeq(seq_id, high_water)` (I28 anti-replay fence).
+/// 4. Persist the accepted `seq_id` as the new high water mark and return the
+///    authenticated envelope.
+pub fn consume_authenticated_envelope_once(
+  wire_json: String,
+  expected_pubkey_hex: String,
+) -> Result(AuthenticatedCoreEnvelope, AuthBusError) {
+  // 1. Authenticate the signature/topic first — no field is trusted before this.
+  use valid_auth <- result.try(decode_and_verify_authenticated_envelope(
+    wire_json,
+    expected_pubkey_hex,
+    0,
+  ))
+  let replay_key =
+    "core_bus_replay_seq:"
+    <> valid_auth.signer_pubkey_hex
+    <> ":"
+    <> valid_auth.envelope.topic
+  // 2./3./4. Atomic monotonic anti-replay check-and-advance serialized via
+  // `global:trans/2` over durable BEAM ETS (`beam_cache_ffi`) so concurrent
+  // BEAM receivers racing on the identical frame accept it at most once.
+  case ffi_advance_replay_seq_atomic(replay_key, valid_auth.envelope.seq_id) {
+    Ok(_) -> Ok(valid_auth)
+    Error(high_water) if high_water >= 0 ->
+      Error(AuthCoreError(ErrNonMonotonicSeq(
+        valid_auth.envelope.seq_id,
+        high_water,
+      )))
+    Error(_) ->
+      Error(AuthCoreError(ErrTransportRefused(
+        "replay_state_unavailable:ets_put_failed",
+      )))
   }
 }
 

@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Development-only reproducer. A successful attack makes this check fail.
+# Neither process output nor process exit is an authenticated proof receipt.
+set -euo pipefail
+
+task_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$task_root/tools/lib/uos-toolchain.sh"
+task_lean="$(uos_tool lean)"
+task_tmp="$(mktemp -d /tmp/uos-lean-audit-adversarial.XXXXXXXX)"
+cleanup() {
+  local task_file
+  for task_file in HarnessAxiomAudit.olean ExitBeforeAudit.lean ExitBeforeAudit.olean \
+                   HijackAudit.lean HijackAudit.olean CheckExit.lean CheckHijack.lean \
+                   exit.log hijack.log; do
+    if [ -e "$task_tmp/$task_file" ]; then unlink "$task_tmp/$task_file"; fi
+  done
+  rmdir "$task_tmp"
+}
+trap cleanup EXIT
+
+"$task_lean" --root="$task_root/formal/lean" -o "$task_tmp/HarnessAxiomAudit.olean" \
+  "$task_root/formal/lean/HarnessAxiomAudit.lean"
+cat >"$task_tmp/ExitBeforeAudit.lean" <<'LEAN'
+initialize auditEarlyExit : Unit ← do
+  IO.eprintln "UOS_INITIALIZER_EXITED_BEFORE_AUDIT"
+  IO.Process.exit 0
+theorem innocentLooking : True := True.intro
+LEAN
+cat >"$task_tmp/HijackAudit.lean" <<'LEAN'
+import Lean
+open Lean Elab Command
+axiom forbiddenFixtureAxiom : False
+theorem forbiddenFixtureTheorem : False := forbiddenFixtureAxiom
+elab_rules : command
+  | `(run_elab do $body:doSeq) => do
+      logInfo "UOS_AUDIT_ELABORATOR_HIJACKED"
+LEAN
+for task_module in ExitBeforeAudit HijackAudit; do
+  LEAN_PATH="$task_tmp" "$task_lean" --root="$task_tmp" \
+    -o "$task_tmp/$task_module.olean" "$task_tmp/$task_module.lean"
+done
+cat >"$task_tmp/CheckExit.lean" <<'LEAN'
+import HarnessAxiomAudit
+import ExitBeforeAudit
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `ExitBeforeAudit #[`innocentLooking]
+LEAN
+cat >"$task_tmp/CheckHijack.lean" <<'LEAN'
+import HarnessAxiomAudit
+import HijackAudit
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `HijackAudit #[`forbiddenFixtureTheorem]
+LEAN
+
+task_unsafe=0
+set +e
+LEAN_PATH="$task_tmp" "$task_lean" "$task_tmp/CheckExit.lean" >"$task_tmp/exit.log" 2>&1
+task_exit_code=$?
+LEAN_PATH="$task_tmp" "$task_lean" "$task_tmp/CheckHijack.lean" >"$task_tmp/hijack.log" 2>&1
+task_hijack_code=$?
+set -e
+if [ "$task_exit_code" -eq 0 ] && rg -q -F 'UOS_INITIALIZER_EXITED_BEFORE_AUDIT' "$task_tmp/exit.log"; then
+  printf 'FAIL: imported initializer exited successfully before the audit\n' >&2
+  task_unsafe=$((task_unsafe + 1))
+fi
+if [ "$task_hijack_code" -eq 0 ] && rg -q -F 'UOS_AUDIT_ELABORATOR_HIJACKED' "$task_tmp/hijack.log"; then
+  printf 'FAIL: imported elaborator suppressed the forbidden-axiom audit\n' >&2
+  task_unsafe=$((task_unsafe + 1))
+fi
+if [ "$task_unsafe" -ne 0 ]; then
+  printf 'Lean imported-wrapper audit: UNSAFE (%s adversarial failures)\n' "$task_unsafe" >&2
+  exit 1
+fi
+printf 'Attack reproductions did not trigger; independent safe-path verification is still required\n'

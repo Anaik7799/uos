@@ -37,7 +37,7 @@ import cepaf_gleam/ecology/core_systems_engineering.{
   StanTriggerFired, StpaUcaAnalysis, Trace13Vector,
 }
 import cepaf_gleam/zenoh/core_bus.{
-  ErrDigestMismatch, ErrLegacySplitBrainTopic, ErrNonMonotonicSeq,
+  AuthCoreError, ErrDigestMismatch, ErrLegacySplitBrainTopic, ErrNonMonotonicSeq,
   ErrPayloadTooLarge, ErrProvenanceCeilingExceeded, SignedCoreEnvelope,
 }
 import gleam/erlang/process
@@ -47,6 +47,16 @@ import gleam/string
 import gleeunit/should
 
 const sample_candidate_sha = "8fa6d05c909b8fa6d05c909b8fa6d05c909b8fa6d05c909b8fa6d05c909b0001"
+
+@external(erlang, "core_bus_crypto_ffi", "concurrent_cold_start_unique_pubkeys_for_test")
+fn ffi_concurrent_cold_start_unique_pubkeys(n: Int) -> Int
+
+@external(erlang, "core_bus_crypto_ffi", "concurrent_replay_winners_for_test")
+fn ffi_concurrent_replay_winners(
+  wire_json: String,
+  expected_pubkey_hex: String,
+  n: Int,
+) -> #(Int, Int)
 
 pub fn quota_margin_40pct_admits_exact_60pct_boundary_test() {
   let q =
@@ -1245,4 +1255,78 @@ pub fn ed25519_session_key_signing_keeps_private_key_in_ram_test() {
   let assert Ok(verified) =
     core_bus.decode_and_verify_authenticated_envelope(wire, session_pub, 204)
   should.equal(verified.envelope.seq_id, 205)
+}
+
+pub fn core_bus_session_keypair_64_process_concurrency_test() {
+  core_bus.reset_session_ed25519_for_test()
+  should.equal(string.byte_size(core_bus.session_ed25519_pubkey_hex()), 64)
+
+  // 64 concurrent cold-start signers must converge on exactly 1 identical pubkey.
+  should.equal(ffi_concurrent_cold_start_unique_pubkeys(64), 1)
+
+  // Warm reads stay lock-free O(1) and idempotent.
+  let pub_a = core_bus.session_ed25519_pubkey_hex()
+  let pub_b = core_bus.session_ed25519_pubkey_hex()
+  should.equal(pub_a, pub_b)
+  should.equal(string.byte_size(pub_a), 64)
+}
+
+pub fn core_bus_stateful_ets_replay_rejection_test() {
+  let session_pub = core_bus.session_ed25519_pubkey_hex()
+  // Session-keyed topic keeps the durable ETS high-water mark isolated per VM run.
+  let topic = "uos/v1/hive/w2_replay_probe_" <> session_pub
+  let payload = "{\"replay_probe\":true}"
+  let build = fn(seq_id) {
+    core_bus.build_and_sign_session_ed25519(
+      topic: topic,
+      candidate_sha256: sample_candidate_sha,
+      plan_id: "uos/agy-fractal-issue-resolution-master/20261101-1454",
+      task_id: "w2-recoverable-14target-cutover",
+      worker_id: "agy-core-evo-conductor-20261101",
+      attempt: 1,
+      seq_id: seq_id,
+      ev_ceiling: 93,
+      payload_json: payload,
+    )
+  }
+  let assert Ok(env_501) = build(501)
+  let wire_501 = core_bus.encode_authenticated_envelope(env_501)
+
+  // 1. First delivery of seq_id=501 is accepted and advances the high water mark.
+  let assert Ok(accepted) =
+    core_bus.consume_authenticated_envelope_once(wire_501, session_pub)
+  should.equal(accepted.envelope.seq_id, 501)
+
+  // 2. Exact duplicate delivery of the identical signed wire is refused as replay.
+  case core_bus.consume_authenticated_envelope_once(wire_501, session_pub) {
+    Error(AuthCoreError(ErrNonMonotonicSeq(501, 501))) -> Nil
+    _ -> should.fail()
+  }
+
+  // 3. An older authentically signed frame (seq_id=500) is refused as replay.
+  let assert Ok(env_500) = build(500)
+  case
+    core_bus.consume_authenticated_envelope_once(
+      core_bus.encode_authenticated_envelope(env_500),
+      session_pub,
+    )
+  {
+    Error(AuthCoreError(ErrNonMonotonicSeq(500, 501))) -> Nil
+    _ -> should.fail()
+  }
+
+  // 4. A strictly monotonic successor (seq_id=502) is accepted.
+  let assert Ok(env_502) = build(502)
+  let assert Ok(next) =
+    core_bus.consume_authenticated_envelope_once(
+      core_bus.encode_authenticated_envelope(env_502),
+      session_pub,
+    )
+  should.equal(next.envelope.seq_id, 502)
+
+  // 5. 64 concurrent BEAM receivers racing simultaneously on seq_id=503 produce
+  //    at most 1 winner and 63 deterministic ErrNonMonotonicSeq rejections.
+  let assert Ok(env_503) = build(503)
+  let wire_503 = core_bus.encode_authenticated_envelope(env_503)
+  should.equal(ffi_concurrent_replay_winners(wire_503, session_pub, 64), #(1, 63))
 }

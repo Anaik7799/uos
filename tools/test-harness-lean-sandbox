@@ -1,0 +1,200 @@
+#!/usr/bin/env bash
+# Development bootstrap probe only. Starts uniquely named transient user units.
+# This is not a task-bound MCP operation or a qualified production sandbox.
+set -euo pipefail
+
+task_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$task_root/tools/lib/uos-toolchain.sh"
+task_lean="$(uos_tool lean)"
+task_lean_root="$(cd "$(dirname "$task_lean")/.." && pwd -P)"
+task_tmp="$(mktemp -d /tmp/uos-lean-sandbox-probe.XXXXXXXX)"
+cleanup() {
+  local task_file
+  for task_file in Probe.lean HarnessAxiomAudit.lean GoodAudit.lean BadAudit.lean \
+                   GraphAudit.lean CheckGood.lean CheckBad.lean CheckGraph.lean \
+                   RunAudit.sh; do
+    if [ -e "$task_tmp/$task_file" ]; then unlink "$task_tmp/$task_file"; fi
+  done
+  rmdir "$task_tmp"
+}
+trap cleanup EXIT
+task_prefix="uos-lean-sandbox-probe-$(date -u +%Y%m%d%H%M%S)-$$"
+
+cat >"$task_tmp/Probe.lean" <<'LEAN'
+#eval (show IO Unit from do
+  let homeVisible ← System.FilePath.pathExists ⟨"/home/an"⟩
+  if homeVisible then throw <| IO.userError "host home unexpectedly visible"
+  if (← IO.getEnv "UOS_PROBE_SECRET").isSome then
+    throw <| IO.userError "ambient probe variable unexpectedly visible"
+  let writable ← try
+    IO.FS.writeFile "/work/Probe.lean" "unexpected modification"
+    pure true
+  catch _ => pure false
+  if writable then throw <| IO.userError "source unexpectedly writable")
+theorem sandboxProbe : True := True.intro
+LEAN
+
+task_proof_unit="$task_prefix-proof"
+/usr/bin/timeout 25s /usr/bin/systemd-run --user --quiet --wait --collect --pipe \
+  --unit="$task_proof_unit" --property=RuntimeMaxSec=15 \
+  --property=KillMode=control-group --property=MemoryMax=1536M \
+  --property=TasksMax=32 --property=NoNewPrivileges=yes \
+  --setenv=UOS_PROBE_SECRET=sentinel \
+  /usr/bin/bwrap --unshare-user --unshare-pid --unshare-net --die-with-parent \
+  --new-session --clearenv --setenv HOME /tmp --ro-bind "$task_lean_root" /lean \
+  --ro-bind /lib /lib --ro-bind /lib64 /lib64 --proc /proc --dev /dev \
+  --tmpfs /tmp --dir /work --ro-bind "$task_tmp/Probe.lean" /work/Probe.lean \
+  --chdir /work /lean/bin/lean -M 768 -j 1 --root=/work /work/Probe.lean
+printf 'PASS: pinned Lean hides host home and ambient variable; source write was refused\n'
+
+task_helper="$task_root/formal/lean/HarnessAxiomAudit.lean"
+task_helper_sha="$(sha256sum "$task_helper" | cut -d' ' -f1)"
+cp "$task_helper" "$task_tmp/HarnessAxiomAudit.lean"
+task_snapshot_sha="$(sha256sum "$task_tmp/HarnessAxiomAudit.lean" | cut -d' ' -f1)"
+if [ "$task_helper_sha" != "$task_snapshot_sha" ]; then
+  printf 'FAIL: audit helper snapshot digest mismatch\n' >&2
+  exit 1
+fi
+cat >"$task_tmp/GoodAudit.lean" <<'LEAN'
+theorem sandboxGood : True := True.intro
+LEAN
+cat >"$task_tmp/BadAudit.lean" <<'LEAN'
+theorem sandboxBad : False := by sorry
+LEAN
+cat >"$task_tmp/GraphAudit.lean" <<'LEAN'
+namespace HarnessGraphFixture
+inductive Direction where
+  | input
+  | output
+  deriving DecidableEq
+structure Port where
+  direction : Direction
+  deriving DecidableEq
+structure Edge where
+  source : Option Port
+  target : Option Port
+def valid : Edge → Bool
+  | ⟨some ⟨.output⟩, some ⟨.input⟩⟩ => true
+  | _ => false
+theorem validEndpoints (e : Edge) (h : valid e = true) :
+    e.source = some ⟨.output⟩ ∧ e.target = some ⟨.input⟩ := by
+  cases e with
+  | mk source target =>
+    cases source with
+    | none => simp [valid] at h
+    | some source =>
+      cases target with
+      | none => cases source <;> simp [valid] at h
+      | some target =>
+        cases source with
+        | mk sourceDir =>
+          cases target with
+          | mk targetDir =>
+            cases sourceDir <;> cases targetDir <;> simp_all [valid]
+example : valid ⟨none, some ⟨.input⟩⟩ = false := rfl
+example : valid ⟨some ⟨.input⟩, some ⟨.input⟩⟩ = false := rfl
+end HarnessGraphFixture
+LEAN
+cat >"$task_tmp/CheckGood.lean" <<'LEAN'
+import HarnessAxiomAudit
+import GoodAudit
+open Lean Elab Command
+example : True := sandboxGood
+run_elab do UOS.HarnessAxiomAudit.check `GoodAudit #[`sandboxGood]
+LEAN
+cat >"$task_tmp/CheckBad.lean" <<'LEAN'
+import HarnessAxiomAudit
+import BadAudit
+open Lean Elab Command
+run_elab do UOS.HarnessAxiomAudit.check `BadAudit #[`sandboxBad]
+LEAN
+cat >"$task_tmp/CheckGraph.lean" <<'LEAN'
+import HarnessAxiomAudit
+import GraphAudit
+open Lean Elab Command
+open HarnessGraphFixture
+example (e : Edge) (h : valid e = true) :
+    e.source = some ⟨.output⟩ ∧ e.target = some ⟨.input⟩ := validEndpoints e h
+run_elab do UOS.HarnessAxiomAudit.check `GraphAudit #[`HarnessGraphFixture.validEndpoints]
+LEAN
+cat >"$task_tmp/RunAudit.sh" <<'SH'
+set -euo pipefail
+/lean/bin/lean -M 1024 -j 1 --root=/work -o /out/HarnessAxiomAudit.olean /work/HarnessAxiomAudit.lean
+/lean/bin/lean -M 1024 -j 1 --root=/work -o /out/GoodAudit.olean /work/GoodAudit.lean
+/lean/bin/lean -M 1024 -j 1 --root=/work -o /out/BadAudit.olean /work/BadAudit.lean
+/lean/bin/lean -M 1024 -j 1 --root=/work -o /out/GraphAudit.olean /work/GraphAudit.lean
+/lean/bin/lean -M 1024 -j 1 --root=/work /work/CheckGood.lean
+/lean/bin/lean -M 1024 -j 1 --root=/work /work/CheckGraph.lean
+if /lean/bin/lean -M 1024 -j 1 --root=/work /work/CheckBad.lean >/out/bad-audit.log 2>&1; then
+  printf 'FAIL: sandbox audit accepted an incomplete theorem\n' >&2
+  exit 1
+fi
+if ! /usr/bin/rg -q -F 'forbidden axiom' /out/bad-audit.log; then
+  /usr/bin/cat /out/bad-audit.log >&2
+  printf 'FAIL: sandbox audit failed for an unexpected reason\n' >&2
+  exit 1
+fi
+SH
+task_audit_unit="$task_prefix-audit"
+/usr/bin/timeout 35s /usr/bin/systemd-run --user --quiet --wait --collect --pipe \
+  --unit="$task_audit_unit" --property=RuntimeMaxSec=25 \
+  --property=KillMode=control-group --property=MemoryMax=1536M \
+  --property=TasksMax=32 --property=NoNewPrivileges=yes \
+  /usr/bin/bwrap --unshare-user --unshare-pid --unshare-net --die-with-parent \
+  --new-session --clearenv --setenv HOME /tmp --setenv LEAN_PATH /out \
+  --ro-bind "$task_lean_root" /lean --ro-bind /usr /usr --ro-bind /lib /lib \
+  --ro-bind /lib64 /lib64 --proc /proc --dev /dev --tmpfs /tmp --tmpfs /out \
+  --ro-bind "$task_tmp" /work --chdir /work /usr/bin/bash /work/RunAudit.sh
+if [ "$task_helper_sha" != "$(sha256sum "$task_helper" | cut -d' ' -f1)" ] || \
+   [ "$task_helper_sha" != "$(sha256sum "$task_tmp/HarnessAxiomAudit.lean" | cut -d' ' -f1)" ]; then
+  printf 'FAIL: audit helper changed during sandbox probe\n' >&2
+  exit 1
+fi
+printf 'PASS: fixed-fixture sandbox audit checks a port graph and rejects sorry\n'
+
+task_host_ns="$(/usr/bin/readlink /proc/self/ns/net)"
+task_net_unit="$task_prefix-net"
+task_sandbox_ns="$(/usr/bin/timeout 15s /usr/bin/systemd-run --user --quiet \
+  --wait --collect --pipe --unit="$task_net_unit" --property=RuntimeMaxSec=5 \
+  --property=KillMode=control-group --property=MemoryMax=128M \
+  --property=TasksMax=16 --property=NoNewPrivileges=yes \
+  /usr/bin/bwrap --unshare-user --unshare-pid --unshare-net --die-with-parent \
+  --new-session --clearenv --ro-bind /usr /usr --ro-bind /lib /lib \
+  --ro-bind /lib64 /lib64 --proc /proc --dev /dev --tmpfs /tmp \
+  /usr/bin/readlink /proc/self/ns/net)"
+if [ -z "$task_sandbox_ns" ] || [ "$task_host_ns" = "$task_sandbox_ns" ]; then
+  printf 'FAIL: network namespace was not distinct\n' >&2
+  exit 1
+fi
+printf 'PASS: network namespace differs from host\n'
+
+task_reap_unit="$task_prefix-reap"
+task_marker="uos_lean_reap_$$"
+set +e
+task_output="$(/usr/bin/timeout 15s /usr/bin/systemd-run --user --quiet \
+  --wait --collect --pipe --unit="$task_reap_unit" --property=RuntimeMaxSec=2 \
+  --property=KillMode=control-group --property=MemoryMax=128M \
+  --property=TasksMax=16 --property=NoNewPrivileges=yes \
+  /usr/bin/bwrap --unshare-user --unshare-pid --unshare-net --die-with-parent \
+  --new-session --clearenv --ro-bind /usr /usr --ro-bind /lib /lib \
+  --ro-bind /lib64 /lib64 --proc /proc --dev /dev --tmpfs /tmp \
+  /usr/bin/bash -c 'setsid /usr/bin/bash -c '\''exec -a "$1" /usr/bin/sleep 30'\'' sandbox "$1" & child=$!; /usr/bin/sleep 0.2; kill -0 "$child" && printf "CHILD_STARTED\n"; wait "$child"' \
+  sandbox "$task_marker" 2>&1)"
+task_exit=$?
+set -e
+if [ "$task_exit" -eq 0 ] || [[ "$task_output" != *CHILD_STARTED* ]]; then
+  printf 'FAIL: deadline probe did not start and stop the detached child\n' >&2
+  exit 1
+fi
+if /usr/bin/ps -C sleep -o args= | rg -q "^$task_marker( |$)"; then
+  printf 'FAIL: detached probe child remains after unit exit\n' >&2
+  exit 1
+fi
+task_state="$(/usr/bin/systemctl --user show "$task_reap_unit" --property=LoadState --value)"
+if [ "$task_state" != 'not-found' ]; then
+  printf 'FAIL: transient probe unit %s was not collected (state %s)\n' \
+    "$task_reap_unit" "$task_state" >&2
+  exit 1
+fi
+printf 'PASS: deadline stopped a child that created a new session\n'
+printf 'Lean sandbox prototype: 4 fixed probes passed; untrusted-module audit and task-bound integration remain unverified\n'

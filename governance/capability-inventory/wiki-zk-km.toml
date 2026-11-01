@@ -551,3 +551,33 @@ zk_decision = "docs/zk/20261101-1721-core-evo-zero-muda-holonic-hive-zenoh-mcp-a
 zk_decision_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261101-1721-core-evo-zero-muda-holonic-hive-zenoh-mcp-and-cockpit-decision.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-WAVE2-ED25519-ZENOH-MCP-CAPSULE-14TARGET-REHEARSAL-20261101-1925"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "w2-recoverable-14target-cutover"
+state = "development"
+admitted = false
+cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+risk_portfolio = "governance/planning/20261101-1626-agy-fractal-master-risk-portfolio.json"
+journal = "docs/journal/20261101-1925-wave2-ed25519-zenoh-mcp-capsule-and-14target-rehearsal-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1925-wave2-ed25519-zenoh-mcp-capsule-and-14target-rehearsal-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-WAVE4-PROTECTED28-HARNESS-SUCCESSOR-AND-FPPSYSML-DOSSIER-20261101-1925"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "w4-protected-successor-and-fppsysml"
+state = "development"
+admitted = false
+cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+risk_portfolio = "governance/planning/20261101-1626-agy-fractal-master-risk-portfolio.json"
+journal = "docs/journal/20261101-1925-wave4-protected28-harness-successor-and-fppsysml-dossier-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1925-wave4-protected28-harness-successor-and-fppsysml-dossier-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
