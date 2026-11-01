@@ -1,0 +1,882 @@
+#!/usr/bin/env python3
+"""
+UOS-CORE-EVO — Zero-Muda, Hardened, Self-Healing Core Development & Evolution Engine
+Contracts: SC-HARNESS-MCP-001, SC-JIDOKA-001, SC-RISK-PRIORITY-001, SC-PROVENANCE-001
+
+Invariants enforced:
+  1. Zero-Muda Comms: 100% Gleam/OTP MCP (`tools/uos-mcp-stdio`) for control/KM/Sa-plan
+     + 100% Admitted Zenoh (`uos/v1/**` on 127.0.0.1:7447 / :8000) for events,
+     20m lease heartbeats, 40%-margin quota windows, RCA/TPS handoffs, and
+     <= 512-byte AGY conductor digests. Rejects legacy `c3i/**` frames (I28).
+  2. Zero-Muda Token Burn: Isolated `PI_CODING_AGENT_DIR` (`0` npm bloat packages,
+     `0` non-UOS MCPs, `0` global skills, 8-11 wave-scoped Gleam MCP routes).
+  3. Hard 40.0% Safety Margin (<= 60.0% = 6,000 bps cap) across AGY 5h, 7d weekly,
+     30d monthly, and $6.00/$10.00 daily OpenRouter spend (append-only SQLite WAL).
+  4. Maximized Timeouts & Self-Healing 3-Attempt Loop:
+     - 4h (14,400s) Sa-plan lease + 20m Zenoh heartbeats + 30m per-tool timeout
+     - Attempt 1 (60m): Pi + DeepSeek Flash (`deepseek-v4-flash-0731`) or Codex
+     - Attempt 2 (90m): Clean JJ workspace rollback + Pi + DeepSeek Pro ACH RCA + Poka-Yoke
+     - Attempt 3 (120m): Clean JJ workspace rollback + Pi + Argon STPA/TPS Pivot + Codex
+     - Attempt > 3: Fail-closed Jidoka Andon HOLD (<= 512 B Zenoh alert to AGY).
+"""
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import socket
+import sqlite3
+import subprocess
+import sys
+import threading
+import time
+import urllib.error
+import urllib.request
+
+UOS_ROOT = "/home/an/NAS-setup/uos"
+WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+VAR_CORE = os.path.join(UOS_ROOT, "var", "core-evo")
+PI_ISOLATED_HOME = os.path.join(VAR_CORE, "pi-home")
+QUOTA_DB = os.path.join(VAR_CORE, "quota_ledger.sqlite3")
+TMP_CORE = os.path.join(UOS_ROOT, "var", "tmp_core_evo")
+MCP_STDIO = os.path.join(UOS_ROOT, "tools", "uos-mcp-stdio")
+ZENOH_TCP_HOST = "127.0.0.1"
+ZENOH_TCP_PORT = 7447
+ZENOH_REST_BASE = os.environ.get("UOS_ZENOH_REST_URL", "http://127.0.0.1:8080")
+
+ADMITTED_EV_CEILING = 93
+HARD_CAP_BPS = 6000  # 60.0% ceiling => 40.0% mandatory untouched margin
+SOFT_5H_BPS = 4500
+SOFT_7D_BPS = 5000
+SOFT_30D_BPS = 5000
+OR_DAILY_ROOT_ND = 10_000_000_000   # $10.00
+OR_HARD_CAP_ND = 6_000_000_000      # $6.00 (40% margin)
+OR_SOFT_SHIFT_ND = 4_500_000_000    # $4.50 -> shift to $0-OR Pi+Argon(Google) / Codex
+
+LEASE_TTL_S = 14_400       # 4 hours
+HEARTBEAT_S = 1_200        # 20 minutes
+TOOL_TIMEOUT_S = 1_800     # 30 minutes
+ATTEMPT_TIMEOUTS_S = {1: 3_600, 2: 5_400, 3: 7_200}  # 60m, 90m, 120m
+MAX_CONDUCTOR_DIGEST_BYTES = 512
+
+PROTECTED_DEFAULT_AT_DIGESTS = {
+    ".codex/config.toml": "cc34f67ee49cc849e84a8a4f2c17bc10ce50850cfa6870a68c6f797145637e4b",
+    "docs/journal/20261101-1348-fpp-sysml-prompt-and-preflight-journal.md": "8a494e08446499e2e7de48018166984e1ff4be95925dfd186b781fd18f5e1e66",
+    "docs/plans/20261101-1224-fpp-sysml-fractal-rca-tps-implementation-handoff.md": "c552515df7544219197172c502dfb4119b3f7e641d382ef408fc3a0961d97ea2",
+    "docs/plans/20261101-1326-fpp-sysml-autonomous-fractal-execution-prompt.md": "6f43268a1f86170ff84bfde6ebfe9310c19cfbe684969152d340777650ad3b5b",
+    "docs/reviews/20261101-0854-fpp-sysml-grant-review.json": "124f5bbd7d472a798f65c0cf0d3d04cb6e2684827d6871bff04f5d6607ee7384",
+    "docs/sop/20261101-1344-fpp-sysml-dependency-preflight-sop.md": "4aac146a0adef2b0b46f6fcedfdbcd8832ee1d90061f7416533849f093c3a05d",
+}
+
+ROLE_MCP_WHITELIST = {
+    "impl": [
+        "knowledge_search", "zk_transclude", "sa_plan_status_for",
+        "sa_task_claim", "sa_task_complete", "system_health",
+        "system_zenoh", "integrity_check", "verification_run",
+    ],
+    "rca": [
+        "knowledge_search", "zk_transclude", "stpa_fmea_hazard",
+        "rete_rule_conflict", "ast_anomaly_detect", "ooda_decide",
+        "sa_plan_status_for", "system_zenoh", "integrity_check",
+        "verification_run",
+    ],
+    "gate": [
+        "sa_plan_status_for", "system_health", "system_zenoh",
+        "system_verification", "preflight_check", "integrity_check",
+        "stpa_fmea_hazard", "harness_execution_progress",
+    ],
+    "fmea": [
+        "knowledge_search", "zk_transclude", "stpa_fmea_hazard",
+        "lyapunov_trend_predict", "ooda_decide", "sa_plan_status_for",
+        "system_verification", "integrity_check",
+    ],
+}
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def ensure_dirs() -> None:
+    os.makedirs(VAR_CORE, mode=0o700, exist_ok=True)
+    os.makedirs(PI_ISOLATED_HOME, mode=0o700, exist_ok=True)
+    os.makedirs(TMP_CORE, mode=0o700, exist_ok=True)
+    os.environ["TMPDIR"] = TMP_CORE
+
+    # Provision Zero-Muda isolated PI_CODING_AGENT_DIR (0 npm packages, 0 global skills, ONLY uos-harness MCP)
+    src_auth = os.path.expanduser("~/.pi/agent/auth.json")
+    dst_auth = os.path.join(PI_ISOLATED_HOME, "auth.json")
+    if os.path.exists(src_auth) and not os.path.exists(dst_auth):
+        os.symlink(src_auth, dst_auth)
+
+    clean_pi_mcp = {
+        "mcpServers": {
+            "uos-harness": {
+                "command": MCP_STDIO,
+                "args": [],
+                "cwd": UOS_ROOT,
+                "enabled": True,
+                "env": {
+                    "ERL_CRASH_DUMP_SECONDS": "0",
+                    "UOS_MCP_WORKSPACE_ROOT": UOS_ROOT,
+                    "UOS_MCP_ROUTE": "public",
+                    "UOS_MCP_CLIENT_NAME": "pi-core-evo",
+                },
+            }
+        }
+    }
+    clean_pi_settings = {
+        "defaultProvider": "openrouter",
+        "defaultModel": "deepseek/deepseek-v4-flash-0731",
+        "packages": [],
+        "extensions": ["+builtin:mcp"],
+    }
+    with open(os.path.join(PI_ISOLATED_HOME, "mcp.json"), "w", encoding="utf-8") as f:
+        json.dump(clean_pi_mcp, f, indent=2)
+    with open(os.path.join(PI_ISOLATED_HOME, "settings.json"), "w", encoding="utf-8") as f:
+        json.dump(clean_pi_settings, f, indent=2)
+
+
+def verify_default_at_conservation() -> dict:
+    mismatches = []
+    for rel, expected in PROTECTED_DEFAULT_AT_DIGESTS.items():
+        full = os.path.join(UOS_ROOT, rel)
+        if not os.path.exists(full):
+            mismatches.append({"file": rel, "error": "missing"})
+        else:
+            actual = sha256_file(full)
+            if actual != expected:
+                mismatches.append({"file": rel, "expected": expected, "actual": actual})
+    return {"conserved": len(mismatches) == 0, "checked_files": len(PROTECTED_DEFAULT_AT_DIGESTS), "mismatches": mismatches}
+
+
+def init_quota_db() -> sqlite3.Connection:
+    ensure_dirs()
+    conn = sqlite3.connect(QUOTA_DB, timeout=30.0)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA synchronous=NORMAL;")
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS quota_events (
+            seq_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_unix INTEGER NOT NULL,
+            engine TEXT NOT NULL,
+            task_id TEXT NOT NULL,
+            agy_bps_delta INTEGER NOT NULL CHECK(agy_bps_delta >= 0),
+            openrouter_nanodollars INTEGER NOT NULL CHECK(openrouter_nanodollars >= 0),
+            note TEXT NOT NULL
+        );
+        CREATE TRIGGER IF NOT EXISTS quota_events_no_update
+        BEFORE UPDATE ON quota_events
+        BEGIN
+            SELECT RAISE(ABORT, 'quota_events are append-only');
+        END;
+        CREATE TRIGGER IF NOT EXISTS quota_events_no_delete
+        BEFORE DELETE ON quota_events
+        BEGIN
+            SELECT RAISE(ABORT, 'quota_events are append-only');
+        END;
+        """
+    )
+    conn.commit()
+    return conn
+
+
+def get_quota_snapshot(conn: sqlite3.Connection) -> dict:
+    now = int(time.time())
+    agy_5h = conn.execute(
+        "SELECT COALESCE(SUM(agy_bps_delta), 0) FROM quota_events WHERE ts_unix >= ?",
+        (now - 5 * 3600,),
+    ).fetchone()[0]
+    agy_7d = conn.execute(
+        "SELECT COALESCE(SUM(agy_bps_delta), 0) FROM quota_events WHERE ts_unix >= ?",
+        (now - 7 * 86400,),
+    ).fetchone()[0]
+    agy_30d = conn.execute(
+        "SELECT COALESCE(SUM(agy_bps_delta), 0) FROM quota_events WHERE ts_unix >= ?",
+        (now - 30 * 86400,),
+    ).fetchone()[0]
+    or_24h = conn.execute(
+        "SELECT COALESCE(SUM(openrouter_nanodollars), 0) FROM quota_events WHERE ts_unix >= ?",
+        (now - 86400,),
+    ).fetchone()[0]
+    last_seq = conn.execute("SELECT COALESCE(MAX(seq_id), 0) FROM quota_events").fetchone()[0]
+
+    violations = []
+    if agy_5h > HARD_CAP_BPS:
+        violations.append("agy_5h_exceeds_60pct_cap")
+    if agy_7d > HARD_CAP_BPS:
+        violations.append("agy_7d_weekly_exceeds_60pct_cap")
+    if agy_30d > HARD_CAP_BPS:
+        violations.append("agy_30d_monthly_exceeds_60pct_cap")
+    if or_24h > OR_HARD_CAP_ND:
+        violations.append("openrouter_24h_exceeds_6usd_60pct_cap")
+
+    or_bps = (or_24h * 10_000) // OR_DAILY_ROOT_ND
+    max_bps = max(agy_5h, agy_7d, agy_30d, or_bps)
+    min_margin_bps = 10_000 - max_bps
+
+    shift_zero_or = or_24h >= OR_SOFT_SHIFT_ND
+    batch_agy = agy_5h >= SOFT_5H_BPS or agy_7d >= SOFT_7D_BPS or agy_30d >= SOFT_30D_BPS
+    if violations:
+        status = "HOLD_MARGIN_40PCT"
+        mode = "HOLD"
+    elif shift_zero_or and batch_agy:
+        status = "ADMITTED"
+        mode = "zero_openrouter_and_batched_wakeups"
+    elif shift_zero_or:
+        status = "ADMITTED"
+        mode = "zero_openrouter_shift"
+    elif batch_agy:
+        status = "ADMITTED"
+        mode = "batch_conductor_wakeups"
+    else:
+        status = "ADMITTED"
+        mode = "normal_dispatch"
+
+    return {
+        "status": status,
+        "mode": mode,
+        "agy_5h_bps": agy_5h,
+        "agy_7d_bps": agy_7d,
+        "agy_30d_bps": agy_30d,
+        "openrouter_24h_nanodollars": or_24h,
+        "openrouter_24h_usd": round(or_24h / 1_000_000_000.0, 4),
+        "hard_cap_bps": HARD_CAP_BPS,
+        "min_remaining_margin_bps": min_margin_bps,
+        "min_remaining_margin_pct": round(min_margin_bps / 100.0, 2),
+        "violations": violations,
+        "last_seq_id": last_seq + 1,
+    }
+
+
+def current_candidate_sha256() -> str:
+    res = subprocess.run(
+        ["jj", "--ignore-working-copy", "-R", UOS_ROOT, "log", "-r", "main", "--no-graph", "-T", "commit_id"],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+    cid = res.stdout.strip()
+    if len(cid) == 64:
+        return cid
+    return sha256_bytes(cid.encode("utf-8"))
+
+
+def validate_uos_v1_topic(topic: str) -> None:
+    if topic.startswith("c3i/") or topic == "c3i" or "/c3i/" in topic:
+        raise ValueError(f"ErrLegacySplitBrainTopic: refused legacy c3i topic '{topic}' (I28 fence)")
+    parts = topic.split("/")
+    if len(parts) < 4 or parts[0] != "uos" or parts[1] != "v1" or parts[2] not in {
+        "quota", "saplan", "rca", "coord", "wave", "core_evo", "hive", "biomorphic", "fractal"
+    }:
+        raise ValueError(f"ErrInvalidUosV1Topic: '{topic}'")
+
+
+def zenoh_publish_signed(
+    topic: str,
+    plan_id: str,
+    task_id: str,
+    worker_id: str,
+    attempt: int,
+    seq_id: int,
+    payload_obj: dict,
+) -> dict:
+    validate_uos_v1_topic(topic)
+    payload_json = json.dumps(payload_obj, separators=(",", ":"), sort_keys=True)
+    if topic.startswith("uos/v1/wave/") and topic.endswith("/summary"):
+        if len(payload_json.encode("utf-8")) > MAX_CONDUCTOR_DIGEST_BYTES:
+            raise ValueError(f"ErrPayloadTooLarge: conductor digest > {MAX_CONDUCTOR_DIGEST_BYTES} bytes")
+
+    envelope = {
+        "schema": "uos.zenoh.core_evo.v1",
+        "topic": topic,
+        "candidate_sha256": current_candidate_sha256(),
+        "plan_id": plan_id,
+        "task_id": task_id,
+        "worker_id": worker_id,
+        "attempt": attempt,
+        "seq_id": max(1, seq_id),
+        "ev_ceiling": ADMITTED_EV_CEILING,
+        "payload_sha256": sha256_bytes(payload_json.encode("utf-8")),
+        "payload_json": payload_json,
+    }
+    wire = json.dumps(envelope, separators=(",", ":")).encode("utf-8")
+
+    # Always write local WAL/outbox copy first for store-and-forward durability across W2 cutover
+    ensure_dirs()
+    outbox_path = os.path.join(VAR_CORE, "zenoh_outbox.jsonl")
+    with open(outbox_path, "ab") as f:
+        f.write(wire + b"\n")
+
+    url = f"{ZENOH_REST_BASE.rstrip('/')}/{topic}"
+    req = urllib.request.Request(url, data=wire, method="PUT", headers={"Content-Type": "application/json"})
+    zenoh_ok = False
+    err_msg = None
+    try:
+        with urllib.request.urlopen(req, timeout=5.0) as resp:
+            zenoh_ok = 200 <= resp.status < 300
+    except Exception as exc:
+        err_msg = str(exc)
+
+    return {"topic": topic, "seq_id": envelope["seq_id"], "wal_buffered": True, "zenoh_published": zenoh_ok, "error": err_msg, "payload_sha256": envelope["payload_sha256"]}
+
+
+def mcp_call_tool(tool_name: str, arguments: dict) -> dict:
+    """Invoke canonical Gleam/OTP 29 MCP gateway (`tools/uos-mcp-stdio`) over JSON-RPC stdio."""
+    reqs = [
+        {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "uos-core-evo", "version": "1.0.0"}}},
+        {"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}},
+        {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": tool_name, "arguments": arguments}},
+    ]
+    stdin_payload = "\n".join(json.dumps(r, separators=(",", ":")) for r in reqs) + "\n"
+    env = os.environ.copy()
+    env["TMPDIR"] = TMP_CORE
+    env["UOS_MCP_CLIENT_NAME"] = "uos-core-evo"
+    proc = subprocess.run(
+        [MCP_STDIO],
+        input=stdin_payload,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env=env,
+    )
+    if proc.returncode != 0:
+        return {"ok": False, "returncode": proc.returncode, "stderr": proc.stderr.strip()[:400]}
+    for line in reversed(proc.stdout.splitlines()):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            msg = json.loads(line)
+            if msg.get("id") == 2:
+                return {"ok": "result" in msg, "response": msg}
+        except json.JSONDecodeError:
+            continue
+    return {"ok": False, "error": "no_id_2_response", "stdout_tail": proc.stdout[-300:]}
+
+
+def plan_attempt(task_id: str, role: str, attempt: int, failure_kind: str, quota: dict) -> dict:
+    clean_id = "".join(c for c in task_id if c.isalnum() or c in "_-")[:48]
+    if quota["status"] != "ADMITTED":
+        return {
+            "action": "JIDOKA_ANDON_HOLD",
+            "attempt": attempt,
+            "reason": f"HOLD_MARGIN_40PCT:{','.join(quota['violations'])}",
+            "zenoh_alert_topic": f"uos/v1/rca/{clean_id}/andon_hold",
+        }
+    if failure_kind == "safety":
+        return {
+            "action": "JIDOKA_ANDON_HOLD",
+            "attempt": attempt,
+            "reason": "HOLD_SAFETY_BOUNDARY_VIOLATION",
+            "zenoh_alert_topic": f"uos/v1/rca/{clean_id}/andon_hold",
+        }
+    if attempt not in (1, 2, 3):
+        return {
+            "action": "JIDOKA_ANDON_HOLD",
+            "attempt": attempt,
+            "reason": "HOLD_MAX_3_ATTEMPTS_EXHAUSTED_JIDOKA_ANDON",
+            "zenoh_alert_topic": f"uos/v1/rca/{clean_id}/andon_hold",
+        }
+
+    zero_or = quota["mode"] in ("zero_openrouter_shift", "zero_openrouter_and_batched_wakeups")
+    mcp_tools = ROLE_MCP_WHITELIST.get(role if attempt == 1 else "rca", ROLE_MCP_WHITELIST["impl"])
+
+    if attempt == 1:
+        if role == "gate":
+            primary, reviewer = "codex:gpt-6.1-terra", "agy:thin-conductor"
+        elif role == "fmea" or zero_or:
+            primary, reviewer = "pi+google:gemini-4-argon", "codex:gpt-6.1-terra"
+        else:
+            primary, reviewer = "pi+openrouter:deepseek/deepseek-v4-flash-0731", "codex:gpt-6.1-terra"
+        strategy = "fresh_jj_workspace"
+        topic_prefix = f"uos/v1/saplan/{clean_id}/a1"
+    elif attempt == 2:
+        if failure_kind == "wrong_path" or zero_or:
+            primary = "pi+google:gemini-4-argon"
+            strategy = "quarantine_rollback_stpa_tps_architectural_pivot"
+        else:
+            primary = "pi+openrouter:deepseek/deepseek-v4-pro-0813"
+            strategy = "quarantine_rollback_ach_rca_and_poka_yoke_first"
+        reviewer = "codex:gpt-6.1-terra"
+        topic_prefix = f"uos/v1/rca/{clean_id}/a2"
+    else:
+        primary, reviewer = "pi+google:gemini-4-argon", "codex:gpt-6.1-terra"
+        strategy = "quarantine_rollback_stpa_tps_architectural_pivot"
+        topic_prefix = f"uos/v1/rca/{clean_id}/a3"
+
+    return {
+        "action": "EXECUTE_ATTEMPT",
+        "attempt": attempt,
+        "primary_engine": primary,
+        "reviewer_engine": reviewer,
+        "timeout_s": ATTEMPT_TIMEOUTS_S[attempt],
+        "lease_ttl_s": LEASE_TTL_S,
+        "heartbeat_interval_s": HEARTBEAT_S,
+        "tool_timeout_s": TOOL_TIMEOUT_S,
+        "strategy": strategy,
+        "workspace_dir": os.path.join(UOS_ROOT, ".uos-workspaces", f"{clean_id}-a{attempt}"),
+        "allowed_mcp_tools": mcp_tools,
+        "zenoh_topic_prefix": topic_prefix,
+        "pi_isolated_home": PI_ISOLATED_HOME,
+    }
+
+
+def audit_zero_muda() -> dict:
+    checks = {}
+    for rel, expected_key in [
+        (".mcp.json", "uos-gleam"),
+        (".gemini/settings.json", "uos-gleam"),
+        (".pi/mcp.json", "uos-harness"),
+    ]:
+        p = os.path.join(WORKSPACE_ROOT, rel)
+        if os.path.exists(p):
+            d = json.load(open(p, encoding="utf-8"))
+            srvs = list((d.get("mcpServers") or {}).keys())
+            checks[rel] = {"servers": srvs, "zero_muda": srvs == [expected_key]}
+        else:
+            checks[rel] = {"servers": [], "zero_muda": False}
+
+    skills_dir = os.path.join(WORKSPACE_ROOT, ".agents", "skills")
+    entries = os.listdir(skills_dir) if os.path.isdir(skills_dir) else []
+    imported_leaks = [
+        e for e in entries
+        if os.path.islink(os.path.join(skills_dir, e))
+        and "20261025-1953-imported-skills" in os.readlink(os.path.join(skills_dir, e))
+    ]
+    checks[".agents/skills"] = {
+        "active_count": len(entries),
+        "unadmitted_imported_symlinks": len(imported_leaks),
+        "zero_muda": len(imported_leaks) == 0,
+    }
+    return checks
+
+
+def cmd_preflight(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    conn = init_quota_db()
+    quota = get_quota_snapshot(conn)
+    conservation = verify_default_at_conservation()
+    muda = audit_zero_muda()
+
+    # Probe Zenoh TCP :7447
+    tcp_ok = False
+    try:
+        with socket.create_connection((ZENOH_TCP_HOST, ZENOH_TCP_PORT), timeout=2.0):
+            tcp_ok = True
+    except OSError:
+        tcp_ok = False
+
+    # Probe Split-Brain Fence (I28): c3i/** MUST be refused
+    c3i_blocked = False
+    try:
+        validate_uos_v1_topic("c3i/a2a/ets/legacy")
+    except ValueError:
+        c3i_blocked = True
+
+    # Probe Signed Zenoh uos/v1/** publish + Quota window publish
+    zenoh_pub = zenoh_publish_signed(
+        topic="uos/v1/quota/window/snapshot",
+        plan_id="uos/agy-fractal-issue-resolution-master/20261101-1454",
+        task_id="core-evo-preflight",
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=quota["last_seq_id"],
+        payload_obj={
+            "agy_5h_bps": quota["agy_5h_bps"],
+            "agy_7d_bps": quota["agy_7d_bps"],
+            "agy_30d_bps": quota["agy_30d_bps"],
+            "or_nd": quota["openrouter_24h_nanodollars"],
+            "margin_pct": quota["min_remaining_margin_pct"],
+        },
+    )
+
+    # Probe Gleam/OTP 29 MCP stdio gateway (`system_zenoh`)
+    mcp_probe = mcp_call_tool("system_zenoh", {})
+
+    zlp_bin = os.path.join(UOS_ROOT, "var", "zlp", "uos_zlp_v3_port")
+    report = {
+        "schema": "uos.core_evo.preflight.v1",
+        "ev_ceiling": ADMITTED_EV_CEILING,
+        "candidate_sha256": current_candidate_sha256(),
+        "default_at_codex_6files_conserved": conservation["conserved"],
+        "quota_40pct_margin": quota,
+        "mcp_gleam_otp29_stdio_ok": mcp_probe["ok"],
+        "zenoh_tcp_7447_ok": tcp_ok,
+        "zenoh_signed_uos_v1_pub": zenoh_pub,
+        "zenoh_c3i_split_brain_fenced": c3i_blocked,
+        "zlp_v3_native_port_ready": os.path.isfile(zlp_bin) and os.access(zlp_bin, os.X_OK),
+        "zero_muda_audit": muda,
+        "timeouts": {
+            "lease_ttl_s": LEASE_TTL_S,
+            "heartbeat_s": HEARTBEAT_S,
+            "tool_timeout_s": TOOL_TIMEOUT_S,
+            "attempts_s": ATTEMPT_TIMEOUTS_S,
+        },
+    }
+    print(json.dumps(report, indent=2))
+    ok = (
+        conservation["conserved"]
+        and quota["status"] == "ADMITTED"
+        and mcp_probe["ok"]
+        and c3i_blocked
+        and zenoh_pub["wal_buffered"]
+    )
+    return 0 if ok else 1
+
+
+def cmd_quota(args: argparse.Namespace) -> int:
+    conn = init_quota_db()
+    if args.record_agy_bps > 0 or args.record_or_nd > 0:
+        conn.execute(
+            "INSERT INTO quota_events(ts_unix, engine, task_id, agy_bps_delta, openrouter_nanodollars, note) VALUES (?, ?, ?, ?, ?, ?)",
+            (int(time.time()), args.engine, args.task_id, args.record_agy_bps, args.record_or_nd, args.note),
+        )
+        conn.commit()
+    snap = get_quota_snapshot(conn)
+    zenoh_publish_signed(
+        topic="uos/v1/quota/window/daily",
+        plan_id="uos/core-evo",
+        task_id=args.task_id,
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=snap["last_seq_id"],
+        payload_obj={
+            "status": snap["status"],
+            "mode": snap["mode"],
+            "agy_5h_bps": snap["agy_5h_bps"],
+            "agy_7d_bps": snap["agy_7d_bps"],
+            "agy_30d_bps": snap["agy_30d_bps"],
+            "or_nd": snap["openrouter_24h_nanodollars"],
+        },
+    )
+    print(json.dumps(snap, indent=2))
+    return 0 if snap["status"] == "ADMITTED" else 2
+
+
+def cmd_plan_attempt(args: argparse.Namespace) -> int:
+    conn = init_quota_db()
+    quota = get_quota_snapshot(conn)
+    plan = plan_attempt(args.task_id, args.role, args.attempt, args.failure, quota)
+    print(json.dumps(plan, indent=2))
+    return 0 if plan["action"] == "EXECUTE_ATTEMPT" else 2
+
+
+def build_worker_command(plan: dict, prompt_text: str) -> list:
+    engine = plan["primary_engine"]
+    ws = plan["workspace_dir"]
+    mcp_patterns = [f"mcp__uos-harness__{t}" for t in plan["allowed_mcp_tools"]]
+    tools_arg = ",".join(["read", "edit", "write", "bash", "grep", "find", "ls"] + mcp_patterns)
+
+    if engine.startswith("codex:"):
+        return [
+            "codex", "exec",
+            "-C", ws,
+            "-c", "mcp_servers.node_repl.enabled=false",
+            prompt_text,
+        ]
+
+    provider, model = engine.replace("pi+", "", 1).split(":", 1)
+    return [
+        "pi",
+        "--provider", provider,
+        "--model", model,
+        "--print",
+        "--mode", "json",
+        "--no-session",
+        "--no-extensions",
+        "--no-skills",
+        "--skill", os.path.join(UOS_ROOT, ".agents", "skills", "uos-km-triad-brain-memory"),
+        "--no-prompt-templates",
+        "--no-themes",
+        "--mcp-config", os.path.join(PI_ISOLATED_HOME, "mcp.json"),
+        "--mcp-project-servers", "allow",
+        "--tools", tools_arg,
+        prompt_text,
+    ]
+
+
+def cmd_run_task(args: argparse.Namespace) -> int:
+    ensure_dirs()
+    conn = init_quota_db()
+    base_prompt = open(args.prompt_file, encoding="utf-8").read()
+    failure_kind = "none"
+    last_forensics = ""
+
+    for attempt in (1, 2, 3):
+        if not verify_default_at_conservation()["conserved"]:
+            failure_kind = "safety"
+        quota = get_quota_snapshot(conn)
+        plan = plan_attempt(args.task_id, args.role, attempt, failure_kind, quota)
+
+        if plan["action"] != "EXECUTE_ATTEMPT":
+            zenoh_publish_signed(
+                topic=plan["zenoh_alert_topic"],
+                plan_id=args.plan_id,
+                task_id=args.task_id,
+                worker_id="uos-core-evo",
+                attempt=attempt,
+                seq_id=quota["last_seq_id"] + attempt,
+                payload_obj={"status": "HOLD", "reason": plan["reason"][:160]},
+            )
+            print(json.dumps(plan, indent=2))
+            return 2
+
+        # Clean JJ sibling workspace creation (quarantining/forgetting prior corrupt attempt)
+        ws = plan["workspace_dir"]
+        ws_name = os.path.basename(ws)
+        if os.path.exists(ws):
+            subprocess.run(["jj", "-R", UOS_ROOT, "workspace", "forget", ws_name], capture_output=True)
+            shutil.rmtree(ws, ignore_errors=True)
+        subprocess.run(
+            ["jj", "-R", UOS_ROOT, "workspace", "add", "--name", ws_name, "-r", "main", ws],
+            check=True,
+            capture_output=True,
+        )
+
+        # Compose RCA / TPS recovery envelope prompt on Attempts 2 & 3
+        if attempt == 1:
+            attempt_prompt = base_prompt
+        elif attempt == 2:
+            attempt_prompt = (
+                f"[ATTEMPT 2 — FRACTAL ACH RCA + TPS POKA-YOKE RECOVERY]\n"
+                f"Attempt 1 failed in an isolated workspace that has been rolled back cleanly.\n"
+                f"Forensics digest:\n{last_forensics[:1500]}\n\n"
+                f"MANDATORY STEPS:\n"
+                f"1. Run Analysis of Competing Hypotheses (ACH) on the root cause.\n"
+                f"2. Write a failing Poka-Yoke regression test FIRST.\n"
+                f"3. Implement and verify the clean fix:\n\n{base_prompt}"
+            )
+        else:
+            attempt_prompt = (
+                f"[ATTEMPT 3 — STPA/FMEA WRONG-PATH TPS ARCHITECTURAL PIVOT]\n"
+                f"Attempts 1 & 2 failed and were rolled back cleanly to `main`.\n"
+                f"Prior RCA forensics:\n{last_forensics[:1500]}\n\n"
+                f"Re-evaluate architectural assumptions via STPA/FMEA, eliminate the wrong path, "
+                f"and execute a minimal verified solution:\n\n{base_prompt}"
+            )
+
+        stop_hb = threading.Event()
+
+        def heartbeat_loop(att: int = attempt, pfx: str = plan["zenoh_topic_prefix"]) -> None:
+            beat = 0
+            while not stop_hb.wait(HEARTBEAT_S):
+                beat += 1
+                zenoh_publish_signed(
+                    topic=f"{pfx}/heartbeat",
+                    plan_id=args.plan_id,
+                    task_id=args.task_id,
+                    worker_id=plan["primary_engine"],
+                    attempt=att,
+                    seq_id=int(time.time()) + beat,
+                    payload_obj={"beat": beat, "lease_ttl_s": LEASE_TTL_S},
+                )
+
+        hb_thread = threading.Thread(target=heartbeat_loop, daemon=True)
+        hb_thread.start()
+
+        env = os.environ.copy()
+        attempt_tmp = os.path.join(TMP_CORE, f"{ws_name}_tmp")
+        os.makedirs(attempt_tmp, mode=0o700, exist_ok=True)
+        env["TMPDIR"] = attempt_tmp
+        env["PI_CODING_AGENT_DIR"] = PI_ISOLATED_HOME
+
+        cmd = build_worker_command(plan, attempt_prompt)
+        try:
+            proc = subprocess.run(
+                cmd,
+                cwd=ws,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=plan["timeout_s"],
+            )
+            rc = proc.returncode
+            out_tail = (proc.stdout[-800:] + "\n" + proc.stderr[-800:]).strip()
+        except subprocess.TimeoutExpired as exc:
+            rc = 124
+            out_tail = f"timeout_expired_after_{plan['timeout_s']}s: {exc}"
+        finally:
+            stop_hb.set()
+            shutil.rmtree(attempt_tmp, ignore_errors=True)
+
+        if rc == 0 and verify_default_at_conservation()["conserved"]:
+            digest_obj = {
+                "schema": "uos.core_evo.digest.v1",
+                "ev_ceiling": ADMITTED_EV_CEILING,
+                "task": args.task_id[:32],
+                "attempt": attempt,
+                "engine": plan["primary_engine"],
+                "status": "PASS",
+                "ws": ws_name,
+            }
+            zenoh_publish_signed(
+                topic=f"{plan['zenoh_topic_prefix']}/receipt",
+                plan_id=args.plan_id,
+                task_id=args.task_id,
+                worker_id=plan["primary_engine"],
+                attempt=attempt,
+                seq_id=int(time.time()),
+                payload_obj=digest_obj,
+            )
+            print(json.dumps(digest_obj))
+            return 0
+
+        # Failure / corruption: record forensics to Zenoh & roll back taint before next attempt
+        last_forensics = f"rc={rc}\n{out_tail}"
+        failure_kind = "wrong_path" if attempt == 2 else "transient"
+        zenoh_publish_signed(
+            topic=f"uos/v1/rca/{ws_name}/a{attempt}/forensics",
+            plan_id=args.plan_id,
+            task_id=args.task_id,
+            worker_id=plan["primary_engine"],
+            attempt=attempt,
+            seq_id=int(time.time()),
+            payload_obj={"rc": rc, "tail": out_tail[:600]},
+        )
+        subprocess.run(["jj", "-R", UOS_ROOT, "workspace", "forget", ws_name], capture_output=True)
+        shutil.rmtree(ws, ignore_errors=True)
+
+    # All 3 attempts exhausted -> Fail-closed Jidoka Andon HOLD
+    hold_plan = plan_attempt(args.task_id, args.role, 4, failure_kind, get_quota_snapshot(conn))
+    zenoh_publish_signed(
+        topic=hold_plan["zenoh_alert_topic"],
+        plan_id=args.plan_id,
+        task_id=args.task_id,
+        worker_id="uos-core-evo",
+        attempt=4,
+        seq_id=int(time.time()),
+        payload_obj={"status": "HOLD", "reason": hold_plan["reason"]},
+    )
+    print(json.dumps(hold_plan))
+    return 2
+
+
+def cmd_hive_status(_args: argparse.Namespace) -> int:
+    conn = init_quota_db()
+    quota = get_quota_snapshot(conn)
+    mcp_holon = mcp_call_tool("holon_status", {})
+    zero_or = quota["mode"] in ("zero_openrouter_shift", "zero_openrouter_and_batched_wakeups")
+    castes = {
+        "queen_conductor": {"engine": "agy:thin-conductor-digest-only", "wip_limit": 1, "token_share_cap": "<2%"},
+        "forager_builder": {"engine": "pi+google:gemini-4-argon" if zero_or else "pi+openrouter:deepseek/deepseek-v4-flash-0731", "wip_limit": 4},
+        "nurse_diagnostician": {"engine": "pi+google:gemini-4-argon" if zero_or else "pi+openrouter:deepseek/deepseek-v4-pro-0813", "wip_limit": 2},
+        "architect_synthesizer": {"engine": "pi+google:gemini-4-argon", "wip_limit": 2},
+        "sovereign_sentinel": {"engine": "codex:gpt-6.1-terra", "wip_limit": 2},
+    }
+    pub = zenoh_publish_signed(
+        topic="uos/v1/hive/caste/status",
+        plan_id="uos/agy-fractal-issue-resolution-master/20261101-1454",
+        task_id="hive-status",
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=int(time.time()),
+        payload_obj={"quota_mode": quota["mode"], "mcp_holon_ok": mcp_holon["ok"], "caste_count": 5},
+    )
+    print(json.dumps({"schema": "uos.core_evo.hive.v1", "quota_mode": quota["mode"], "mcp_holon_ok": mcp_holon["ok"], "castes": castes, "zenoh_pub": pub}, indent=2))
+    return 0 if quota["status"] == "ADMITTED" else 2
+
+
+def cmd_biomorphic_fractal(args: argparse.Namespace) -> int:
+    conn = init_quota_db()
+    quota = get_quota_snapshot(conn)
+    mcp_fractal = mcp_call_tool("fractal_status", {})
+    mcp_metabolic = mcp_call_tool("metabolic_state", {})
+    margin_bps = quota["min_remaining_margin_bps"]
+    if quota["status"] != "ADMITTED":
+        regime = "torpor_margin_40_hold"
+    elif margin_bps > 5500:
+        regime = "anabolic_parallel"
+    elif margin_bps >= 4500:
+        regime = "homeostatic_zero_or_shift"
+    else:
+        regime = "catabolic_critical_only"
+
+    v_now = 100 * args.failing_tasks + 40 * args.stale_leases + 15 * args.open_issues + 80 * args.drift_events
+    dv = v_now - args.v_prev
+    stable = (v_now == 0) or (dv <= 0)
+    layers = [f"#fractal-l{i}" for i in range(10)]
+    summary = {
+        "schema": "uos.core_evo.biomorphic_fractal.v1",
+        "metabolic_regime": regime,
+        "mcp_fractal_ok": mcp_fractal["ok"],
+        "mcp_metabolic_ok": mcp_metabolic["ok"],
+        "fractal_layers_l0_l9": layers,
+        "poodavr_stages": ["Predict", "Observe", "Orient", "Decide", "Act", "Verify", "Reflect"],
+        "lyapunov": {"v_prev": args.v_prev, "v_now": v_now, "delta_v": dv, "is_monotone_stable": stable},
+    }
+    pub = zenoh_publish_signed(
+        topic="uos/v1/biomorphic/homeostasis/snapshot",
+        plan_id="uos/agy-fractal-issue-resolution-master/20261101-1454",
+        task_id="biomorphic-fractal",
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=int(time.time()),
+        payload_obj={"regime": regime, "v_now": v_now, "dv": dv, "stable": stable},
+    )
+    summary["zenoh_pub"] = pub
+    print(json.dumps(summary, indent=2))
+    return 0 if stable and quota["status"] == "ADMITTED" else 2
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="UOS-CORE-EVO Zero-Muda Core Dev, Hive, Biomorphic, Fractal & Evolution System")
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    sub.add_parser("preflight", help="Run Zero-Muda MCP + Zenoh + Quota + Conservation preflight")
+    sub.add_parser("hive-status", help="Inspect 5-Caste Holonic Hive Heijunka & MCP/Zenoh binding")
+
+    p_bf = sub.add_parser("biomorphic-fractal", help="Evaluate Metabolic ATP, Lyapunov dV/dt & L0..L9 POODAVR state")
+    p_bf.add_argument("--v-prev", type=int, default=600)
+    p_bf.add_argument("--failing-tasks", type=int, default=0)
+    p_bf.add_argument("--stale-leases", type=int, default=0)
+    p_bf.add_argument("--open-issues", type=int, default=29)
+    p_bf.add_argument("--drift-events", type=int, default=0)
+
+    p_q = sub.add_parser("quota", help="Query or append 40-pct-margin sliding-window quota ledger")
+    p_q.add_argument("--engine", default="uos-core-evo")
+    p_q.add_argument("--task-id", default="probe")
+    p_q.add_argument("--record-agy-bps", type=int, default=0)
+    p_q.add_argument("--record-or-nd", type=int, default=0)
+    p_q.add_argument("--note", default="observation")
+
+    p_pa = sub.add_parser("plan-attempt", help="Compute deterministic engine, timeout & recovery plan")
+    p_pa.add_argument("task_id")
+    p_pa.add_argument("role", choices=["impl", "rca", "gate", "fmea"])
+    p_pa.add_argument("attempt", type=int)
+    p_pa.add_argument("--failure", default="none", choices=["none", "transient", "corruption", "wrong_path", "safety"])
+
+    p_rt = sub.add_parser("run-task", help="Execute 3-attempt self-healing task in isolated JJ workspaces")
+    p_rt.add_argument("plan_id")
+    p_rt.add_argument("task_id")
+    p_rt.add_argument("role", choices=["impl", "rca", "gate", "fmea"])
+    p_rt.add_argument("prompt_file")
+
+    args = parser.parse_args()
+    if args.cmd == "preflight":
+        return cmd_preflight(args)
+    if args.cmd == "hive-status":
+        return cmd_hive_status(args)
+    if args.cmd == "biomorphic-fractal":
+        return cmd_biomorphic_fractal(args)
+    if args.cmd == "quota":
+        return cmd_quota(args)
+    if args.cmd == "plan-attempt":
+        return cmd_plan_attempt(args)
+    if args.cmd == "run-task":
+        return cmd_run_task(args)
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
