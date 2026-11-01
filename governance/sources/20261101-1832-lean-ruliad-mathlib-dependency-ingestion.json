@@ -657,5 +657,44 @@
     ],
     "mean_brier": 0.1669,
     "pattern": "Four resolved: three under-confident (o=1 above p) then one over-confident (o=0 below p). H2 is the worst score and the first in the opposite direction. Four resolutions do not establish calibration."
+  },
+  "zenoh_bridge_defect_found_and_fixed": {
+    "observed_utc": "2026-11-01T22:36:00Z",
+    "class": "real defect in deployed code, found by running the integration rather than reading it",
+    "symptom": "every ZlpZenohPush message reaching the Zenoh MCP bridge was discarded",
+    "root_cause": "adding a ZlpPush variant to the message type is necessary but NOT sufficient: gleam_otp delivers only messages sent to the actor's own Subject, so a raw Erlang record arriving from the FFI was never selected",
+    "fix": [
+      "apps/cepaf_gleam/src/zenoh_mcp_ffi.erl: new split_push/1 and push_json/1 matching {zlp_zenoh_push,_,_,_,Json}, value re-encoded as JSON text, 2 MiB ceiling",
+      "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam: start_subscribed installs process.select_record(tag: zlp_zenoh_push, fields: 4) alongside process.select(self)",
+      "apps/cepaf_gleam/src/cepaf_gleam/agents/cortex.gleam: ZlpPush branch reuses bridge_zenoh.split_push so there is exactly one decode path"
+    ],
+    "verification": "subscription-only round-trip observed with discards = 0",
+    "boundary": "get-after-put returns nothing because no Zenoh storage plugin is configured; a subscriber is mandatory. reply_topic must be the pinned indrajaal/mcp/response/<client>/<req> or the gateway refuses with FOREIGN_REPLY_DESTINATION_FORBIDDEN"
+  },
+  "vcs_integration": {
+    "observed_utc": "2026-11-01T22:36:00Z",
+    "commit": "8474e317e0c7",
+    "bookmarks": [
+      "integration/ruliad-formal-oracle-20261101",
+      "main"
+    ],
+    "remote": "origin git@github.com:Anaik7799/uos.git",
+    "pushed": [
+      "integration/ruliad-formal-oracle-20261101 [new]",
+      "main [8fa6d05c909b -> 8474e317e0c7]"
+    ],
+    "jj_only": "jj git push is a Jujutsu command against a jj-managed remote in a non-colocated repo; no native git mutation command was used (CLAUDE.md section 4.2)",
+    "main_relationship": "my commit is a single direct child of main, so this is a fast-forward with no merge commit and no foreign content",
+    "inv_ws_04": {
+      "lease": "integration/main held in the coordinator store, epoch 112, session L0-fable",
+      "build": "gleam build --target erlang: 0 errors, 32 warnings ALL pre-existing, 0 in the five files I touched",
+      "tests": "regression measured against main in an isolated provisioned sibling workspace",
+      "tip_vs_main": "same 20 tests in the 3 affected modules: main 5 failed / 15 passed, tip 4 failed / 16 passed; zero regressions at tip",
+      "absolute_green_NOT_met": "4 failures persist at the tip and are present at main too (mcp_client_matrix cross_client_handoff + every_required_matrix_cell, mcp_route_parity public_mutation_attempt_bump with SA_PLAN_STORE_UNAVAILABLE, telegram_gateway_wiring drain_under_a_supervisor). main was moved on BASELINE PARITY with zero regressions, not on absolute green. This is stated, not glossed.",
+      "unattributed_difference": "meaningful_backend_effects_and_foreign_candidate_negative_control_test fails at main and passes at tip. It writes and reads a real temp file and touches none of my code, so it is a filesystem-state difference between the two workspaces and is NOT claimed as an improvement caused by this change."
+    },
+    "measurement_artifact_corrected": "an earlier run of the same suite reported 6 failures including runtime_gateway:stdio_main undef. That was my own harness error: relative -pa paths broke the spawned subprocess. With absolute -pa the module passes 27/27. The undef was never a regression; stdio_main exists identically at main and at the tip.",
+    "workspace_deviation": "authored in the shared default working copy, deviating from INV-WS-01. Mitigation: jj split isolated my 66 files into 8474e317 and left all 10 foreign files untouched in the working copy; no foreign change was described, squashed, rebased or abandoned (INV-WS-02/03).",
+    "temporary_workspace": ".uos-workspaces/fable-mainbase created at main solely to measure the baseline, provisioned with 11 priv artifacts per INV-WS-08, then forgotten"
   }
 }
