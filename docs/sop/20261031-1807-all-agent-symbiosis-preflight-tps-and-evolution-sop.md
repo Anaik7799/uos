@@ -183,3 +183,7 @@ UOS footer: development/process scope only; no production admission.
 5. Preserve UNKNOWN/STALE, counterevidence and unresolved cost. Unknown outcomes block blind retry; reconcile against the same operation/idempotency identity. Keep pressure testing marked **UNRUN** until it is performed and reviewed under an authorized scope.
 
 This addendum is process guidance and does not establish that MCP routes, native collectors, identities, mandatory effect gates, recovery, or all-agent service coverage are active. EV-93 remains the admitted ceiling; no new EV number or admission is created.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Apply the proposed [Lean model/code synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md) and [bounded coverage inventory — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0752-model-code-sync-sop-coverage-inventory.md) to agent/controller changes and applicable checks. This candidate cross-reference does not install authenticated MCP/Gleam enforcement, prove complete source-to-model refinement, or admit any capability. Unmapped or stale controller/effect paths remain `UNKNOWN`/`HOLD`; preserve the existing Sa-plan, runtime ownership and independent review boundaries. This note is proposed text in an isolated workspace and does not change live policy or runtime behavior.

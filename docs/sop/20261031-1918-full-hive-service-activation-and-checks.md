@@ -156,3 +156,7 @@ EV93 ceiling. EV94..109 and ADR071..086 NOT_ADMITTED. No new EV, inferred author
 [Previous monitoring SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Next execution plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md).
 
 UOS footer: activation specification and development evidence; full hive runtime acceptance remains open.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Before treating any service check as activation evidence, map the service, owning process, control/effect paths, model constraints, build/runtime identities, independent checks and recovery evidence to the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). This note does not activate services or make current runtime/coverage claims; unknown or unbound rows remain `HOLD`.

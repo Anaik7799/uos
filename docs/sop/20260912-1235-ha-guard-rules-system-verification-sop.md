@@ -154,3 +154,7 @@ bash tools/verify_guard_rules_sop.sh
 It mechanically evaluates all 18 checkpoints across the 5 domains and outputs a formatted, color-coded execution report.
 
 - **2026-10-29 Fast-OODA, Critical Code Resilience & Multi-Agent MCP Alignment (`SC-AGENTIC-RESILIENCE-001`)**: Supervised by `gemini-4-argon` (`pi-agy`) with `codex` (`gpt-6-luna`) and `claude` (`claude-opus-5`) execution/review lanes; enforces 5-layer defense-in-depth over the 28 BEAM control modules (`admission.control_modules`), 44 harness source files, `tools/ecology_process.ml`, and immutable host Nix CLI (`/nix/store/mmycwn1v7bvpjgl0hxvbazxrqwjwn335-uos-sa-plan-main-cfe06ec3`), 3-scope lease renewal (`--task-renew`), 15-tool successor harness dispatch completeness, and 184/184 EUnit verification before each serialized `integration/main` merge.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Map each guard, hazard constraint and incident action to its controller/effect implementation, formal invariant, independent check and fresh runtime evidence under the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). Missing guard-path mapping, stale observation or unverified recovery is `UNKNOWN`/`HOLD`; this note does not enable monitoring, stop lines or effect-time enforcement.
