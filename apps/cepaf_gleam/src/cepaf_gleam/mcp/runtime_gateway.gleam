@@ -17,6 +17,7 @@ import cepaf_gleam/mcp/adapters/features
 import cepaf_gleam/mcp/adapters/knowledge
 import cepaf_gleam/mcp/adapters/planning_read
 import cepaf_gleam/mcp/adapters/planning_write
+import cepaf_gleam/mcp/adapters/recovery_control
 import cepaf_gleam/mcp/adapters/system_observation
 import cepaf_gleam/mcp/adapters/vault_backend
 import cepaf_gleam/mcp/adapters/vault_metadata
@@ -1498,8 +1499,7 @@ fn handle_dispatch(
         list.fold(
           extra_entries,
           case prefetched_doc {
-            Some(#(path, entry)) ->
-              apply_document(call_knowledge, path, entry)
+            Some(#(path, entry)) -> apply_document(call_knowledge, path, entry)
             None -> call_knowledge
           },
           fn(corpus, entry) { knowledge.with_entry(corpus, entry) },
@@ -1761,7 +1761,10 @@ fn dispatch_public_actor_prefetched(
         _ -> None
       }
       let prefetched_plan = case registry.lookup(route, tool) {
-        Ok(spec) if spec.family == "planning_read" ->
+        Ok(spec)
+          if spec.family == "planning_read"
+          || spec.family == "recovery_control_readiness"
+        ->
           Some(load_planning(
             root,
             argument(args, "plan_id", argument(args, "plan", "")),
@@ -4294,7 +4297,12 @@ fn refresh_live_read_receipt(
   let live_read =
     call.spec.effect_class == types.ReadOnly
     && list.contains(
-      ["vault_metadata", "feature_evidence", "planning_read"],
+      [
+        "vault_metadata",
+        "feature_evidence",
+        "planning_read",
+        "recovery_control_readiness",
+      ],
       call.spec.family,
     )
   case cached {
@@ -4343,6 +4351,13 @@ fn refresh_live_read_receipt(
                   // Match the normalized outcome stored by mark_complete,
                   // without re-entering the authenticated execution path.
                   let live_outcome = case call.spec.family {
+                    "recovery_control_readiness" ->
+                      recovery_control.observe(
+                        state.backends.planning_read,
+                        state.pool.ledger.candidate,
+                        now_ms(),
+                        call.arguments,
+                      )
                     "feature_evidence" ->
                       features.execute(
                         state.backends.features,

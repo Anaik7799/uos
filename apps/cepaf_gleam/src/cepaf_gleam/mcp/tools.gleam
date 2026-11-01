@@ -86,6 +86,33 @@ pub fn catalog_json() -> json.Json {
 
 pub fn get_tool_definitions() -> List(ToolDefinition) {
   [
+    ToolDefinition(
+      name: "recovery_control_status",
+      description: "Read RECOVERY_CONTROL readiness and production refusal gates for the canonical plan; never signs or mutates tasks",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "plan_id",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "enum",
+                  json.array(
+                    ["uos/codex-handover-open-items-fractal-plan/20261031-1240"],
+                    json.string,
+                  ),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["plan_id"], json.string)),
+        #("additionalProperties", json.bool(False)),
+      ]),
+    ),
     // -- Planning tools (NIF-backed, authoritative SQLite) --
     ToolDefinition(
       name: "plan_status",

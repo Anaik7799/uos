@@ -103,6 +103,16 @@ fn unavailable() -> Adapter {
   )
 }
 
+/// Actual production startup choice, not actor liveness or supplied trust data.
+/// No Available constructor or caller-controlled production binding exists.
+pub type ProductionBinding {
+  ProductionUnconfigured
+}
+
+pub fn production_binding() -> ProductionBinding {
+  ProductionUnconfigured
+}
+
 fn closed(value: v.Value, keys: List(String)) -> Result(Nil, String) {
   case value {
     v.Object(fs) ->
@@ -934,7 +944,9 @@ fn start_internal(
 /// No public boundary constructor or flag enables task dispatch. An actual
 /// trusted production issuer/owner/worker integration is deliberately absent.
 pub fn start(c: ConfigurationData) -> actor.StartResult(Subject(Message)) {
-  start_internal(c, unavailable())
+  case production_binding() {
+    ProductionUnconfigured -> start_internal(c, unavailable())
+  }
 }
 
 pub fn child_spec(

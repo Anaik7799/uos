@@ -4,7 +4,7 @@
  (name recovery_resource_signer)
  (wrapped false)
  (modules recovery_resource_signer)
- (libraries recovery_kernel recovery_resource digestif yojson mirage-crypto-ec unix))
+ (libraries recovery_kernel recovery_resource digestif yojson mirage-crypto-ec unix mtime.clock.os))
 (executable
  (name recovery_resource_signer_port)
  (modules recovery_resource_signer_port)

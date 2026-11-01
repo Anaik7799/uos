@@ -1,5 +1,8 @@
-(** Exact native detached-signature PREPARATION. No managed custody or effect
-    authority is established. No key/path/raw-payload provider is exported. *)
+(** Exact native detached-signature PREPARATION. Client holds no private key;
+    managed custody and authenticated startup provider remain unavailable.
+    A separately bound local provider must reconstruct the fixed four purposes.
+    No key/path/raw-payload/transport constructor or callback is exported.
+    Production remains Unavailable. Signature facts are not effect authority. *)
 type request
 type signature_fact
 val request_of_json : string -> (request,string) result

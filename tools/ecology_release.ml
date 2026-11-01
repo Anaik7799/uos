@@ -232,9 +232,11 @@ let recovery_source_inputs root =
     |> fun native -> native @ ["tools/recovery_development_capsule.ml";
       "tools/validation/recovery_capsule_fixture.ml";
       "tools/validation/recovery_native_signer_bundle_fixture.ml";
+      "tools/validation/recovery_integrated_fixture.ml";
       "native/ocaml/recovery_resource_signer/recovery_resource_signer.ml";
       "native/ocaml/recovery_resource_signer/recovery_resource_signer.mli";
       "native/ocaml/recovery_resource_signer/recovery_resource_signer_port.ml";
+      "native/ocaml/recovery_resource_signer/test/recovery_external_provider_fixture.ml.inc";
       "native/ocaml/recovery_resource_signer/dune"]
   else []
 let source_inputs root payload =
