@@ -57,3 +57,31 @@ let to_json t =
     "dependencies",`List (List.map (fun s->`String s) t.dependencies)]
 let digest ts = Bounded.sha256 (Yojson.Basic.to_string (`List (List.map to_json ts)))
 
+(* Pure bridge from the canonical Store projection. No new database reader or
+   fallback: consumers must separately establish the observation's provenance.
+   Exact key order/types and round-trip bytes prevent normalization from silently
+   changing the snapshot that was hashed by Store.recovery_snapshot_readonly. *)
+let of_snapshot snapshot =
+  let optional parse = function `Null -> None | v -> Some(parse v) in
+  let string maximum = function
+    | `String s when String.length s>0 && String.length s<=maximum && not(String.contains s '\000')->s
+    | _ ->raise(Invalid "canonical snapshot string") in
+  let decimal = function
+    | `String s ->(try let n=Int64.of_string s in require(Int64.to_string n=s)"canonical snapshot decimal";n
+       with _->raise(Invalid "canonical snapshot decimal"))
+    | _ ->raise(Invalid "canonical snapshot decimal") in
+  let tasks=match snapshot with
+    | `List rows when rows<>[] && List.length rows<=1000 ->
+      List.map(function
+        | `Assoc["task_id",id;"state",state;"worker",worker;"lease_until_ns",lease;
+            "attempt",`Int attempt;"completed_at_ns",completed;"result_present",`Bool result_present;
+            "dependencies",`List deps] ->
+          require(attempt>=0 && attempt<=1000000 && List.length deps<=10000)"canonical snapshot bounds";
+          {id=string 200 id;state=string 64 state;worker=optional(string 200)worker;
+           lease=optional decimal lease;attempt;completed=optional decimal completed;
+           result_present;dependencies=List.map(string 200)deps}
+        | _ ->raise(Invalid "canonical snapshot object"))rows
+    | _ ->raise(Invalid "canonical snapshot rows") in
+  require(`List(List.map to_json tasks)=snapshot)"canonical snapshot roundtrip";
+  tasks
+
