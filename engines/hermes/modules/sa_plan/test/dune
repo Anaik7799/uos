@@ -1,3 +1,14 @@
+(rule
+ (target recovery_migration_v1_helpers.ml)
+ (deps recovery_migration_fixture.ml)
+ (action (copy %{deps} %{target})))
+
+(test
+ (name test_recovery_schema_migration_v2)
+ (modules test_recovery_schema_migration_v2 recovery_migration_v2_fixture recovery_migration_v1_helpers)
+ (libraries recovery_schema_migration_v2 recovery_schema_migration recovery_kernel_fixture recovery_kernel core digestif sqlite3 yojson unix)
+ (action (run %{test} %{workspace_root}/../.. %{env:UOS_REVIEWED_ADAPTER_SCHEMA_SOURCE=UNCONFIGURED})))
+
 (executable
  (name sa_plan_main)
  (public_name sa-plan)

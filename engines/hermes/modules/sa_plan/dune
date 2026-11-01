@@ -1,9 +1,15 @@
 (library
  (name sa_plan)
  (public_name hermes_workspace.sa_plan)
- (modules (:standard \ recovery_kernel recovery_port recovery_owner_journal recovery_owner_journal_port recovery_schema_migration))
+ (modules (:standard \ recovery_kernel recovery_port recovery_owner_journal recovery_owner_journal_port recovery_schema_migration recovery_schema_migration_v2))
  (libraries core digestif sqlite3 yojson)
  (preprocess (pps ppx_jane)))
+
+(library
+ (name recovery_schema_migration_v2)
+ (wrapped false)
+ (modules recovery_schema_migration_v2)
+ (libraries recovery_schema_migration yojson))
 
 (library
  (name recovery_schema_migration)
