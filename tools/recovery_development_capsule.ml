@@ -82,12 +82,18 @@ end = struct
    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_owner.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_owner_store.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_factual_reply.gleam";
+   "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_native_signature_facts.gleam";
    "apps/cepaf_gleam/test/fixtures/recovery_owner_fixture_extension.gleam.inc";
    "apps/cepaf_gleam/src/cepaf_gleam/harness/native_launch.gleam";
    "apps/cepaf_gleam/src/telegram_store_transport_ffi.erl";
    "native/c/finite_environment_launch.c";
    "tools/telegram_store_transport_guardian.ml";"tools/ecology_release.ml";
-   "tools/recovery_development_capsule.ml";"tools/validation/recovery_capsule_fixture.ml"]
+   "tools/recovery_development_capsule.ml";"tools/validation/recovery_capsule_fixture.ml";
+   "tools/validation/recovery_native_signer_bundle_fixture.ml";
+   "native/ocaml/recovery_resource_signer/recovery_resource_signer.ml";
+   "native/ocaml/recovery_resource_signer/recovery_resource_signer.mli";
+   "native/ocaml/recovery_resource_signer/recovery_resource_signer_port.ml";
+   "native/ocaml/recovery_resource_signer/dune"]
   |>List.sort_uniq String.compare
  let source_entries root=
   let names=source_catalog root in need(List.length names<=1024)"source count";

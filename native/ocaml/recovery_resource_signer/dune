@@ -1,0 +1,11 @@
+; Uninstalled production signer remains unconfigured/Unavailable.
+; Canonical standalone projection supplies the exact reviewed K/R libraries.
+(library
+ (name recovery_resource_signer)
+ (wrapped false)
+ (modules recovery_resource_signer)
+ (libraries recovery_kernel recovery_resource digestif yojson mirage-crypto-ec unix))
+(executable
+ (name recovery_resource_signer_port)
+ (modules recovery_resource_signer_port)
+ (libraries recovery_resource_signer))

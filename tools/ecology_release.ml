@@ -230,7 +230,12 @@ let recovery_source_inputs root =
       List.mem(Filename.basename p)["dune";"dune-project";"reviewed-dependencies.sha256"])
     |> List.map(fun p->base^"/"^p)
     |> fun native -> native @ ["tools/recovery_development_capsule.ml";
-      "tools/validation/recovery_capsule_fixture.ml"]
+      "tools/validation/recovery_capsule_fixture.ml";
+      "tools/validation/recovery_native_signer_bundle_fixture.ml";
+      "native/ocaml/recovery_resource_signer/recovery_resource_signer.ml";
+      "native/ocaml/recovery_resource_signer/recovery_resource_signer.mli";
+      "native/ocaml/recovery_resource_signer/recovery_resource_signer_port.ml";
+      "native/ocaml/recovery_resource_signer/dune"]
   else []
 let source_inputs root payload =
   let app_sources=List.concat_map(fun app -> let base="apps/"^app in
