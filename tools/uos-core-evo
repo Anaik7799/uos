@@ -18,11 +18,12 @@ ZENOH_JOURNAL="${STATE_DIR}/zenoh-uos-v1-journal.jsonl"
 MCP_STDIO="${CANONICAL_UOS}/tools/uos-mcp-stdio"
 OTP29_ERL="/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl"
 TAILNET_BASE="http://nas-1.tail55d152.ts.net:4100"
-ZENOH_HTTP_BASE="http://nas-1.tail55d152.ts.net:8000"
+ZENOH_HTTP_BASE="http://nas-1.tail55d152.ts.net:8080"
 ADMITTED_EV_CEILING=93
 
 if [[ ! -x "${OTP29_ERL}" ]]; then
-  OTP29_ERL="$(command -v erl)"
+  echo "ANDON_HOLD: pinned Nix Erlang/OTP 29.0.5 binary missing: ${OTP29_ERL}" >&2
+  exit 1
 fi
 
 resolve_ebin_glob() {

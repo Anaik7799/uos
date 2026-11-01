@@ -5,7 +5,9 @@
     register_live_fpp_actor/2,
     lookup_live_fpp_actor/1,
     ensure_live_fpp_mesh_supervisor/1,
-    live_fpp_supervisor_status/0
+    live_fpp_supervisor_status/0,
+    live_fpp_supervisor_pid/0,
+    kill_live_fpp_supervisor_for_test/0
 ]).
 
 -define(LIVE_FPP_TABLE, uos_live_fpp_actor_registry).
@@ -131,8 +133,8 @@ hash_workspace_mesh_source(AppDir) ->
     CrypSrc = <<AppsParent/binary, "/cepaf_gleam/src/core_bus_crypto_ffi.erl">>,
     case {file:read_file(MeshSrc), file:read_file(CandSrc), file:read_file(CrypSrc)} of
         {{ok, SrcBytes}, {ok, CandBytes}, {ok, CrypBytes}}
-          when byte_size(CandBytes) > 0, byte_size(CrypBytes) > 0 ->
-            lower_sha256(SrcBytes);
+          when byte_size(SrcBytes) > 0, byte_size(CandBytes) > 0, byte_size(CrypBytes) > 0 ->
+            lower_sha256(<<SrcBytes/binary, 0, CandBytes/binary, 0, CrypBytes/binary>>);
         _ ->
             <<>>
     end.
@@ -146,6 +148,7 @@ verify_capsule_and_extract_mesh_sha(CapDir, LoadedBeamSha, LoadedSelfSha, Loaded
             RelMap = json:decode(RelBytes),
             SchemaOk = maps:get(<<"schema">>, RelMap, <<>>) =:= <<"uos.ecology-release-manifest.v1">>,
             NotAdmitted = maps:get(<<"application_admitted">>, RelMap, true) =:= false,
+            CandSha = maps:get(<<"candidate_sha256">>, RelMap, <<>>),
             SrcManifestSha = lower_sha256(SrcBytes),
             SrcBound = maps:get(<<"source_sha256">>, RelMap, <<>>) =:= SrcManifestSha,
             RelFiles = maps:get(<<"files">>, RelMap, []),
@@ -161,7 +164,7 @@ verify_capsule_and_extract_mesh_sha(CapDir, LoadedBeamSha, LoadedSelfSha, Loaded
                 RelFiles,
                 <<"apps/cepaf_gleam/ebin/core_bus_crypto_ffi.beam">>
             ) =:= {ok, LoadedCrypSha},
-            case SchemaOk andalso NotAdmitted andalso SrcBound andalso
+            case SchemaOk andalso NotAdmitted andalso is_lower_hex64(CandSha) andalso SrcBound andalso
                 MeshBeamBound andalso SelfBeamBound andalso CrypBeamBound of
                 true ->
                     SrcMap = json:decode(SrcBytes),
@@ -183,7 +186,7 @@ verify_capsule_and_extract_mesh_sha(CapDir, LoadedBeamSha, LoadedSelfSha, Loaded
                             case is_lower_hex64(MeshSha) andalso
                                 is_lower_hex64(SelfSrcSha) andalso
                                 is_lower_hex64(CrypSrcSha) of
-                                true -> MeshSha;
+                                true -> CandSha;
                                 false -> <<>>
                             end;
                         _ ->
@@ -272,12 +275,39 @@ lookup_live_fpp_actor(ActorIdx) when is_integer(ActorIdx) ->
             {error, nil}
     end.
 
+live_fpp_supervisor_pid() ->
+    Table = ensure_live_fpp_table(),
+    case ets:lookup(Table, supervisor_pid) of
+        [{supervisor_pid, SupPid}] when is_pid(SupPid) ->
+            case is_process_alive(SupPid) of
+                true -> {ok, SupPid};
+                false -> {error, nil}
+            end;
+        _ ->
+            {error, nil}
+    end.
+
+kill_live_fpp_supervisor_for_test() ->
+    case live_fpp_supervisor_pid() of
+        {ok, SupPid} ->
+            exit(SupPid, kill),
+            true;
+        _ ->
+            false
+    end.
+
 live_fpp_supervisor_status() ->
-    SupAlive =
+    GuardianAlive =
         case whereis(?LIVE_FPP_GUARDIAN) of
             Pid when is_pid(Pid) -> is_process_alive(Pid);
             _ -> false
         end,
+    SupPidAlive =
+        case live_fpp_supervisor_pid() of
+            {ok, _} -> true;
+            _ -> false
+        end,
+    SupAlive = GuardianAlive andalso SupPidAlive,
     AliveCount = length([
         ok
      || Idx <- lists:seq(0, ?ACTOR_COUNT - 1),
@@ -310,7 +340,7 @@ ensure_live_fpp_mesh_supervisor(NowMs) when is_integer(NowMs) ->
                     Pid when is_pid(Pid) ->
                         case is_process_alive(Pid) of
                             true ->
-                                case wait_all_40_alive(25) of
+                                case wait_all_40_alive(60) of
                                     {true, ?ACTOR_COUNT} ->
                                         {ok, ?ACTOR_COUNT};
                                     {_, Count} ->
@@ -327,25 +357,48 @@ ensure_live_fpp_mesh_supervisor(NowMs) when is_integer(NowMs) ->
             end)
     end.
 
+extract_started_pid(StartedSup) when is_tuple(StartedSup), tuple_size(StartedSup) >= 2 ->
+    case element(2, StartedSup) of
+        Pid when is_pid(Pid) -> {ok, Pid};
+        _ -> error
+    end;
+extract_started_pid(_) ->
+    error.
+
+start_and_record_supervisor(NowMs) ->
+    Table = ensure_live_fpp_table(),
+    MeshMod = 'cepaf_gleam@ecology@core_fpp_actor_twin_mesh',
+    case MeshMod:start_supervised_all_40_fpp_actors(NowMs) of
+        {ok, StartedSup} ->
+            case extract_started_pid(StartedSup) of
+                {ok, SupPid} ->
+                    true = ets:insert(Table, {supervisor_pid, SupPid}),
+                    {ok, SupPid};
+                error ->
+                    {error, invalid_started_supervisor_tuple}
+            end;
+        Err ->
+            {error, Err}
+    end.
+
 start_guardian_supervisor(NowMs) ->
     Parent = self(),
     Ref = make_ref(),
     _Guardian = spawn(fun() ->
         process_flag(trap_exit, true),
         try register(?LIVE_FPP_GUARDIAN, self()) catch _:_ -> ok end,
-        MeshMod = 'cepaf_gleam@ecology@core_fpp_actor_twin_mesh',
-        case MeshMod:start_supervised_all_40_fpp_actors(NowMs) of
-            {ok, _StartedSup} ->
+        case start_and_record_supervisor(NowMs) of
+            {ok, SupPid} ->
                 Parent ! {Ref, ok},
-                guardian_loop();
-            Err ->
-                catch unregister(?LIVE_FPP_GUARDIAN),
+                guardian_loop(SupPid);
+            {error, Err} ->
+                try unregister(?LIVE_FPP_GUARDIAN) catch _:_ -> ok end,
                 Parent ! {Ref, {error, Err}}
         end
     end),
     receive
         {Ref, ok} ->
-            case wait_all_40_alive(25) of
+            case wait_all_40_alive(60) of
                 {true, ?ACTOR_COUNT} ->
                     {ok, ?ACTOR_COUNT};
                 {_, Count} ->
@@ -359,12 +412,21 @@ start_guardian_supervisor(NowMs) ->
         {error, <<"live_fpp_static_supervisor_start_timeout">>}
     end.
 
-guardian_loop() ->
+guardian_loop(SupPid) ->
     receive
-        {'EXIT', _From, _Reason} ->
-            guardian_loop();
+        {'EXIT', SupPid, _Reason} ->
+            case start_and_record_supervisor(erlang:system_time(millisecond)) of
+                {ok, NewSupPid} ->
+                    guardian_loop(NewSupPid);
+                {error, _} ->
+                    timer:sleep(50),
+                    self() ! {'EXIT', SupPid, retry_supervisor_boot},
+                    guardian_loop(SupPid)
+            end;
+        {'EXIT', _OtherPid, _Reason} ->
+            guardian_loop(SupPid);
         _ ->
-            guardian_loop()
+            guardian_loop(SupPid)
     end.
 
 %% ============================================================================

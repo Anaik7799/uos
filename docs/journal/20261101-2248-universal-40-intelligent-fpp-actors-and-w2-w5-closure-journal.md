@@ -97,11 +97,11 @@ NATO STANAG 2017 Admiralty admissibility gate (`Engine 2`, all items `>= B2`, co
 
 | Check / Modality | Command / Harness | Observed Result | Grade | Evidence Receipt |
 |---|---|---|---|---|
-| **OTP 29.0.5 EUnit (`29/29`)** | `erl -eval 'eunit:test([core_evolution_test, core_evo_cockpit_test])'` | **`29 / 29` PASS** (`0` failures) | **A1** | Compiled OTP `29.0.5` (`ERTS 17.0.5`) |
-| **40-Actor Mesh Live Spawn & Reflexes** | `python3 ./tools/uos-core-evo fpp-actor-mesh` | **`40/40` spawned & accepted**, PID + Self-Heal + Breaker + Ed25519 + Vetoes `true` | **A1** | [`20261101-universal-40-fpp-actor-mesh-cli-receipt.json`](http://nas-1.tail55d152.ts.net:4100/files/var/evidence/20261101-universal-40-fpp-actor-mesh-cli-receipt.json) |
+| **OTP 29.0.5 EUnit (`30/30`)** | `erl -eval 'eunit:test([core_evolution_test, core_evo_cockpit_test])'` | **`30 / 30` PASS** (`0` failures) | **A1** | Compiled OTP `29.0.5` (`ERTS 17.0.5`) |
+| **40-Actor Mesh Live Spawn & Reflexes** | `./tools/uos-core-evo fpp-actor-mesh` | **`40/40` spawned & accepted**, PID + Self-Heal + Breaker + Ed25519 + Vetoes `true` | **A1** | [`20261101-universal-40-fpp-actor-mesh-cli-receipt.json`](http://nas-1.tail55d152.ts.net:4100/files/var/evidence/20261101-universal-40-fpp-actor-mesh-cli-receipt.json) |
 | **Parallel `$0` `Pi+Argon` Matrix Audit** | `pi --no-session --no-tools` + OTP 29 BEAM JSON | **`PASS`** (`10/10/10/10` domains, `4x10` layers, `17/17` aspects, `EV-93`) | **A1** | [`20261101-fpp2-pi-argon-40-actor-coverage-audit.json`](http://nas-1.tail55d152.ts.net:4100/files/var/evidence/20261101-fpp2-pi-argon-40-actor-coverage-audit.json) |
 | **Wave 2 Live Tailnet `69/69` & `N=420` `p99`** | `tools/link_tracker_verifier.exe` + 12-route benchmark | **`69 / 69` HTTP 200** (`0` broken transclusions), Core-Evo/KM `p99 < 20 ms` | **A1** | [`20261101-link-tracker-live-4100-post-cutover.json`](http://nas-1.tail55d152.ts.net:4100/files/var/evidence/20261101-link-tracker-live-4100-post-cutover.json) |
-| **Full `#km-triad` `1,921`-File Semantic Audit** | `km_triad_full_semantic_scanner.py` + `km-gate --gate` | **`0` broken triad links**, `0` anchor/ADR/EV mismatches across `14,545` links | **A1** | [`20261101-km-triad-full-semantic-link-audit.json`](http://nas-1.tail55d152.ts.net:4100/files/var/evidence/20261101-km-triad-full-semantic-link-audit.json) |
+| **Full `#km-triad` Semantic Audit** | `uos_km_link_scanner:run_scan` + `km-gate --gate` | **`0` broken triad links**, `0` anchor/ADR/EV mismatches across `14,500+` links | **A1** | [`20261101-km-triad-full-semantic-link-audit.json`](http://nas-1.tail55d152.ts.net:4100/files/var/evidence/20261101-km-triad-full-semantic-link-audit.json) |
 | **`uos_sup.gleam` Census Pin Integrity** | `sha256sum apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam` | **`0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef`** | **A1** | Exact byte conservation |
 
 ---

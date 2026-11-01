@@ -1458,4 +1458,22 @@ pub fn supervised_live_40_fpp_actor_mesh_and_one_for_one_self_healing_test() {
   should.equal(st_after.spec.actor_index, 17)
   should.be_true(st_after.intents_accepted >= 1)
   should.be_true(st_after.last_ed25519_verified)
+
+  // Verify immortal guardian auto-restart when the static_supervisor itself terminates:
+  // kill SupPid directly and confirm guardian restarts a fresh SupPid + all 40 actors!
+  let assert Ok(sup_pid_before) = ffi_live_fpp_supervisor_pid()
+  should.be_true(ffi_kill_live_fpp_supervisor_for_test())
+  process.sleep(250)
+  let #(sup_recovered, alive_recovered) =
+    core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status()
+  should.be_true(sup_recovered)
+  should.equal(alive_recovered, 40)
+  let assert Ok(sup_pid_after) = ffi_live_fpp_supervisor_pid()
+  should.not_equal(sup_pid_before, sup_pid_after)
 }
+
+@external(erlang, "core_fpp_candidate_ffi", "live_fpp_supervisor_pid")
+fn ffi_live_fpp_supervisor_pid() -> Result(process.Pid, Nil)
+
+@external(erlang, "core_fpp_candidate_ffi", "kill_live_fpp_supervisor_for_test")
+fn ffi_kill_live_fpp_supervisor_for_test() -> Bool
