@@ -2,6 +2,7 @@
 //// All task mutations use canonical Sa-plan through admission/operations.
 
 import cepaf_gleam/harness/admission as a
+import cepaf_gleam/harness/review_dispatch
 import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
@@ -248,6 +249,7 @@ fn status(state: State) -> Result(json.Json, String) {
       #("grant_id", json.string(state.grant.id)),
       #("active", active),
       #("unresolved_operation", json.bool(state.unresolved)),
+      #("completion_review", review_dispatch.availability_json()),
       #("plans", json.array(observations, fn(x) { x })),
       #("scope", json.string("local_development_only")),
       #("all_features_complete", json.bool(False)),
@@ -555,7 +557,7 @@ fn active_call_dispatch(
           Error(e),
         )
       }
-    "harness_write_file" | "harness_build" | "harness_test" | "harness_client_mcp_config" ->
+    "harness_write_file" | "harness_build" | "harness_test" | "harness_client_mcp_config" | "harness_agent_review" ->
       case state.unresolved {
         True -> #(state, Error("unresolved_operation_stop_line"))
         False -> {

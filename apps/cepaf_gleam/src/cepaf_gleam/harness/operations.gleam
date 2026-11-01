@@ -2,6 +2,7 @@
 //// Sa-plan remains the task authority. Receipts are evidence, never grants.
 
 import cepaf_gleam/harness/admission as a
+import cepaf_gleam/harness/review_dispatch
 import cepaf_gleam/harness/client_mcp
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
@@ -42,6 +43,7 @@ pub fn submit_planning_outcome(
 pub fn fields(name: String) -> List(String) {
   case name {
     "harness_claim" | "harness_attach" -> ["plan", "task", "intent_id"]
+    "harness_agent_review" -> ["intent_id", "backend", "prompt", "max_tokens"]
     "harness_recovery_prepare" -> [
       "plan",
       "task",
@@ -78,6 +80,7 @@ pub fn fields(name: String) -> List(String) {
 }
 
 pub const names = [
+  "harness_agent_review",
   "harness_recovery_prepare",
   "harness_plan_intent",
   "harness_status",
@@ -364,6 +367,7 @@ fn perform(
   timeout: Int,
 ) -> Result(String, String) {
   case name {
+    "harness_agent_review" -> review_dispatch.perform(execution, args)
     "harness_client_mcp_config" -> client_mcp.perform(execution, args, timeout)
     "harness_write_file" -> {
       use path <- result.try(text(args, "path"))
@@ -608,11 +612,21 @@ pub fn record_quarantine(
   Ok(record)
 }
 
+/// Known unavailability is checked BEFORE durable intent/index writes. This
+/// predicate supplies no authority; ordinary task/risk/effect fences follow.
+pub fn effect_readiness(name: String) -> Result(Nil,String) {
+  case name {
+    "harness_agent_review" -> review_dispatch.readiness()
+    _ -> Ok(Nil)
+  }
+}
+
 pub fn effect(
   execution: a.Execution,
   name: String,
   args: value.Value,
 ) -> Result(json.Json, String) {
+  use _ <- result.try(effect_readiness(name))
   use intent <- result.try(text(args, "intent_id"))
   // Shared durable parent-task Andon: one uncertain planning outcome
   // stops every mutation for that parent task, across process, grant
