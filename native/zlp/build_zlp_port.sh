@@ -36,7 +36,9 @@ ZIG_SRC="$ZLP_DIR/uos_zlp_port.zig"
 OUT_DIR="${UOS_ZLP_OUT_DIR:-$WS_ROOT/var/zlp}"
 OUT_BIN="$OUT_DIR/uos_zlp_v3_port"
 
-BUILD_TMP="$(mktemp -d "${TMPDIR:-/tmp}/uos-zlp-v3-build.XXXXXX")"
+TMP_BASE="${TMPDIR:-$OUT_DIR/.tmp}"
+mkdir -p "$TMP_BASE"
+BUILD_TMP="$(mktemp -d "$TMP_BASE/uos-zlp-v3-build.XXXXXX")"
 trap 'rm -rf -- "$BUILD_TMP"' EXIT
 
 echo "[1/3] Mechanically verifying 20 Lean 4.33.0 theorems (0 sorryAx) & generating C IR..."
