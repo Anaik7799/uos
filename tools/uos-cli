@@ -10,9 +10,13 @@
 #   bash tools/uos-cli gate <name> | verify-all
 set -euo pipefail
 uos_repo="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-if [ -f "$uos_repo/tools/lib/uos-toolchain.sh" ]; then
+if [ -d "$uos_repo/toolchains/nix-profile/bin" ] && [ -f "$uos_repo/tools/lib/uos-toolchain.sh" ]; then
   # shellcheck source=/dev/null
   source "$uos_repo/tools/lib/uos-toolchain.sh"
+  uos_env
+elif [ -f "/home/an/NAS-setup/uos/tools/lib/uos-toolchain.sh" ]; then
+  # shellcheck source=/dev/null
+  source "/home/an/NAS-setup/uos/tools/lib/uos-toolchain.sh"
   uos_env
 fi
 command -v gleam >/dev/null || { echo "Missing toolchain dependency: gleam" >&2; exit 2; }

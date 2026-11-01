@@ -131,21 +131,30 @@ pub fn main() {
     }
     Error(_) -> io.println("  ❌ Error listing containers")
   }
-  // 3. Bounded OTP Zenoh REST publication/query; subscriptions stay explicit.
+  // 3. Supervised UOS-ZLP-v3 OTP 29 Zenoh hyperplane (with graceful REST fallback).
   io.println("\n📡 ZENOH IPC INTEGRATION:")
-  case zenoh.open("{}") {
+  case zenoh.open_prefer_zlp("{}") {
     Ok(session) -> {
       io.println("  [zenoh] Reachable backend: " <> zenoh.backend(session))
       case zenoh.put(session, "indrajaal/cepaf/gleam/status", "online") {
         Ok(Nil) ->
           io.println(
-            "  [zenoh] Status publication acknowledged by REST endpoint",
+            "  [zenoh] Status publication acknowledged ("
+            <> zenoh.backend(session)
+            <> ")",
           )
         Error(e) -> io.println("  [zenoh] Status publication FAILED: " <> e)
       }
-      io.println(
-        "  [zenoh] Native subscriptions unavailable; REST publication/query only",
-      )
+      case zenoh.supports_subscriptions(session) {
+        True ->
+          io.println(
+            "  [zenoh] Supervised UOS-ZLP-v3 OTP 29 port SSE subscriptions active (Dual-ETS auto-replay)",
+          )
+        False ->
+          io.println(
+            "  [zenoh] Native subscriptions unavailable; REST publication/query only",
+          )
+      }
     }
     Error(e) -> io.println("  [zenoh] Backend unavailable: " <> e)
   }

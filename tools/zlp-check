@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# UOS-ZLP-v3 Two-Key Formal + 9-Modality Runtime Verification Gate (G-ZLP)
+# SC-HARNESS-MCP-001 | SC-PROVENANCE-001 | SC-CHECKLIST-001
+#
+# Executes live verification (never static file-presence-only):
+#   1. Lean 4.33.0 formal proof check on formal/lean/UosZlpHyperplane.lean (20 theorems, 0 sorryAx)
+#   2. Native Zig 0.16.0 + Perceus C port binary build verification (var/zlp/uos_zlp_v3_port)
+#   3. OTP 29 9-modality + project integration EUnit suite (zlp_hyperplane_test + mcp_transport_test)
+#   4. 5-document #km-triad artifact presence check (spec, wiki, unnumbered zk decision, sop, journals)
+#
+# Provenance boundary: admitted_ev_ceiling = 93; application_admitted = false; system_admitted = false.
+
+set -euo pipefail
+
+uos_repo="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+if [ -d "$uos_repo/toolchains/nix-profile/bin" ] && [ -f "$uos_repo/tools/lib/uos-toolchain.sh" ]; then
+  # shellcheck source=/dev/null
+  source "$uos_repo/tools/lib/uos-toolchain.sh"
+  uos_env
+elif [ -f "/home/an/NAS-setup/uos/tools/lib/uos-toolchain.sh" ]; then
+  # Sibling JJ workspaces (.uos-workspaces/*) share canonical root toolchains
+  # shellcheck source=/dev/null
+  source "/home/an/NAS-setup/uos/tools/lib/uos-toolchain.sh"
+  uos_env
+fi
+
+cd "$uos_repo"
+
+echo "=== [G-ZLP] 1/4 Lean 4.33.0 Zero-Sorry Formal Verification ==="
+if [ -x "$uos_repo/toolchains/lean-4.33.0/bin/lean" ] && [ -x "$uos_repo/tools/lean" ]; then
+  lean_bin="$uos_repo/tools/lean"
+elif [ -x "/home/an/NAS-setup/uos/tools/lean" ]; then
+  lean_bin="/home/an/NAS-setup/uos/tools/lean"
+else
+  lean_bin="$(command -v lean)"
+fi
+lean_direct_out="$("$lean_bin" "$uos_repo/formal/lean/UosZlpHyperplane.lean" 2>&1)"
+if [ -n "$lean_direct_out" ]; then
+  if printf '%s\n' "$lean_direct_out" | grep -qiE "sorry|error|warning"; then
+    echo "[FAIL] Lean diagnostic detected in formal/lean/UosZlpHyperplane.lean" >&2
+    printf '%s\n' "$lean_direct_out" >&2
+    exit 1
+  fi
+fi
+lean_out="$({
+  cat "$uos_repo/formal/lean/UosZlpHyperplane.lean"
+  awk '/^theorem [A-Za-z0-9_]+/ { print "#print axioms UosZlpHyperplane." $2 }' "$uos_repo/formal/lean/UosZlpHyperplane.lean"
+} | "$lean_bin" --stdin 2>&1)"
+if printf '%s\n' "$lean_out" | grep -q "sorryAx"; then
+  echo "[FAIL] sorryAx detected in formal/lean/UosZlpHyperplane.lean" >&2
+  printf '%s\n' "$lean_out" >&2
+  exit 1
+fi
+axiom_checks="$(printf '%s\n' "$lean_out" | grep -cE "depends on axioms:|does not depend on any axioms" || true)"
+if [ "$axiom_checks" -lt 20 ]; then
+  echo "[FAIL] Expected >= 20 #print axioms checks, observed $axiom_checks" >&2
+  printf '%s\n' "$lean_out" >&2
+  exit 1
+fi
+echo "  [OK] Lean 4.33.0 verified ($axiom_checks axiom checks, 0 sorryAx)"
+
+echo "=== [G-ZLP] 2/4 Native Zig 0.16.0 + Perceus C Port Binary ==="
+if [ ! -x "$uos_repo/var/zlp/uos_zlp_v3_port" ]; then
+  bash "$uos_repo/native/zlp/build_zlp_port.sh"
+fi
+if [ ! -x "$uos_repo/var/zlp/uos_zlp_v3_port" ]; then
+  echo "[FAIL] Missing executable var/zlp/uos_zlp_v3_port" >&2
+  exit 1
+fi
+echo "  [OK] var/zlp/uos_zlp_v3_port ready"
+
+echo "=== [G-ZLP] 3/4 OTP 29 9-Modality + Project Integration EUnit Suite ==="
+(
+  cd "$uos_repo/apps/cepaf_gleam"
+  gleam build
+  erl -noshell -pa build/dev/erlang/*/ebin -eval '
+    case eunit:test([zlp_hyperplane_test, mcp_transport_test], [verbose]) of
+      ok -> halt(0);
+      _ -> halt(1)
+    end.'
+)
+echo "  [OK] zlp_hyperplane_test + mcp_transport_test passed"
+
+echo "=== [G-ZLP] 4/4 #km-triad 5-Document Suite Verification ==="
+required_docs=(
+  "docs/design/20261101-1225-uos-zlp-v3-lean4-zig-otp29-zenoh-hyperplane-spec.md"
+  "docs/wiki/20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane.md"
+  "docs/zk/20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision.md"
+  "docs/sop/20261101-1248-uos-zlp-v3-hyperplane-operations-and-verification-sop.md"
+  "docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md"
+  "docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md"
+)
+for doc in "${required_docs[@]}"; do
+  if [ ! -f "$uos_repo/$doc" ]; then
+    echo "[FAIL] Missing #km-triad document: $doc" >&2
+    exit 1
+  fi
+done
+echo "  [OK] All 6 UOS-ZLP-v3 #km-triad documents verified present"
+
+echo '{"status":"PASS","gate":"G-ZLP","admitted_ev_ceiling":93,"lean_theorems":20,"axiom_checks":'"$axiom_checks"',"zero_sorry_ax":true,"application_admitted":false,"system_admitted":false}'
+echo "[PASS] UOS-ZLP-v3 Two-Key Formal + 9-Modality Runtime Gate (G-ZLP)"

@@ -4,6 +4,9 @@
 //// (no subscriptions) is refused because it cannot host an MCP request stream.
 
 import cepaf_gleam/mcp/principal
+import cepaf_gleam/mcp/transports/zlp_hyperplane.{
+  type ZlpReceipt, type ZlpRefusal,
+}
 import cepaf_gleam/mcp/types.{
   type Outcome, type ProtocolProfile, type ToolError, ClientProfile,
   NonRetryable, ToolError,
@@ -11,6 +14,7 @@ import cepaf_gleam/mcp/types.{
 import cepaf_gleam/mcp/wire
 import gleam/bit_array
 import gleam/crypto
+import gleam/erlang/process
 import gleam/int
 import gleam/list
 import gleam/option.{type Option}
@@ -332,4 +336,118 @@ fn topic_error() -> ToolError {
     "Topic must be indrajaal/mcp/request/{ascii-token}/{ascii-token}",
     NonRetryable,
   )
+}
+
+/// Evaluate an authenticated `SignedZenohEnvelope` through BOTH Gleam's HMAC +
+/// reply-destination authority checks (`SC-HARNESS-MCP-001`) AND the supervised
+/// `UOS-ZLP-v3` Lean 4.33 + Zig 0.16 AVX-512 64-window anti-replay gate (`T04`, `T10`).
+pub fn handle_envelope_with_zlp(
+  shared_secret shared_secret: String,
+  profile profile: ProtocolProfile,
+  expected_client_id expected_client_id: String,
+  seq_id seq_id: Int,
+  envelope envelope: SignedZenohEnvelope,
+  handler handler: fn(principal.Principal, wire.NormalizedMessage) -> Outcome,
+) -> Result(#(ZlpReceipt, Option(#(String, String))), ToolError) {
+  use _ <- result.try(case zlp_hyperplane.is_running() {
+    True -> Ok(Nil)
+    False ->
+      Error(ToolError(
+        "ZENOH_SUBSCRIPTIONS_UNSUPPORTED",
+        "Supervised UOS-ZLP-v3 hyperplane port pool is not running",
+        NonRetryable,
+      ))
+  })
+  use reply_opt <- result.try(handle_envelope(
+    shared_secret,
+    True,
+    profile,
+    expected_client_id,
+    envelope,
+    handler,
+  ))
+  case zlp_hyperplane.verify_frame(seq_id, True, envelope.payload) {
+    Ok(receipt) -> Ok(#(receipt, reply_opt))
+    Error(refusal) -> Error(map_zlp_refusal(refusal))
+  }
+}
+
+/// Subscribe a BEAM actor to live Zenoh SSE push frames for a pinned client
+/// request wildcard `indrajaal/mcp/request/{client_id}/*` via `UOS-ZLP-v3`.
+pub fn subscribe_client_requests_via_zlp(
+  client_id client_id: String,
+  subscriber subscriber: process.Pid,
+) -> Result(#(Int, ZlpReceipt), ToolError) {
+  case valid_token(client_id) {
+    False -> Error(topic_error())
+    True -> {
+      let wildcard = request_prefix <> client_id <> "/*"
+      case zlp_hyperplane.zenoh_subscribe(wildcard, subscriber) {
+        Ok(res) -> Ok(res)
+        Error(refusal) -> Error(map_zlp_refusal(refusal))
+      }
+    }
+  }
+}
+
+/// Publish a pinned MCP response frame back onto Zenoh via `UOS-ZLP-v3`.
+pub fn publish_pinned_reply_via_zlp(
+  expected_client_id expected_client_id: String,
+  expected_request_id expected_request_id: String,
+  reply_topic reply_topic: String,
+  json_body json_body: String,
+) -> Result(ZlpReceipt, ToolError) {
+  use _ <- result.try(
+    case valid_token(expected_client_id) && valid_token(expected_request_id) {
+      True -> Ok(Nil)
+      False -> Error(topic_error())
+    },
+  )
+  use _ <- result.try(check_reply_destination(
+    expected_client_id,
+    expected_request_id,
+    reply_topic,
+  ))
+  case zlp_hyperplane.zenoh_publish(reply_topic, json_body) {
+    Ok(receipt) -> Ok(receipt)
+    Error(refusal) -> Error(map_zlp_refusal(refusal))
+  }
+}
+
+fn map_zlp_refusal(refusal: ZlpRefusal) -> ToolError {
+  case refusal.status_code {
+    2 ->
+      ToolError(
+        "ZENOH_NUL_BYTE_FORBIDDEN",
+        "ZLP AVX-512 trapped forbidden NUL byte",
+        NonRetryable,
+      )
+    3 ->
+      ToolError(
+        "ZENOH_JSON_DEPTH_EXCEEDED",
+        "ZLP gatekeeper trapped JSON depth > 32",
+        NonRetryable,
+      )
+    4 ->
+      ToolError(
+        "ZENOH_REPLAY_OR_EXPIRED_SEQ",
+        "ZLP Lean 4 64-window anti-replay rejected duplicate or expired seq_id",
+        NonRetryable,
+      )
+    5 ->
+      ToolError(
+        "ZENOH_ZLP_POLICY_REFUSED",
+        "ZLP Lean 4 topic/frame confinement guard refused payload",
+        NonRetryable,
+      )
+    _ ->
+      ToolError(
+        "ZENOH_ZLP_PORT_ERROR",
+        "ZLP port status="
+          <> int.to_string(refusal.status_code)
+          <> " detail="
+          <> refusal.detail,
+        NonRetryable,
+      )
+  }
 }

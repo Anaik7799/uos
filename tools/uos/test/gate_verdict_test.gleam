@@ -1,7 +1,7 @@
 import gate_fixture
 import gleeunit/should
 import main.{
-  Checklist, Selfcheck15Cycles, SelfcheckInference, SelfcheckMirage,
+  Checklist, Gate, Selfcheck15Cycles, SelfcheckInference, SelfcheckMirage,
   SelfcheckMirageMigration, SelfcheckMirageProd, SelfcheckMirageTenders,
   SelfcheckSaPlan, SelfcheckVfs, SelfcheckWave3Cycles, SelfcheckWave4Cycles,
   count_ok_lines, count_pass_lines, count_passed, execute, exit_for,
@@ -220,6 +220,7 @@ pub fn mirage_gates_refuse_missing_execution_in_isolated_repository_test() {
     execute(SelfcheckMirageMigration) |> should.equal(1)
     execute(SelfcheckMirageProd) |> should.equal(1)
     execute(SelfcheckMirageTenders) |> should.equal(1)
+    execute(Gate("G-ZLP")) |> should.equal(1)
   })
 }
 

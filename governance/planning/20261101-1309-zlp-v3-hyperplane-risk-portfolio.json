@@ -1,0 +1,457 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "zlp-v3-hyperplane-impl-20261101-1309",
+    "plan_id": "uos/zlp-v3-supervised-hyperplane/20261101-1309",
+    "task_id": "T01_ZLP_V3_HYPERPLANE_IMPL",
+    "actor": "agy-zlp-v3-20261101",
+    "scope": "Implement UosZlpHyperplane.lean (20 zero-sorry theorems + 8 exported C-ABI kernels), Zig 0.16 + Lean 4.33 Two-Lane Zen 5 AVX-512 supervised OTP 29 port worker, Dual-ETS shard supervisor with auto-replayed Zenoh SSE push streaming, non-protected Gleam MCP Zenoh bridge integration, 9-modality verification suite, and KM triad writeback inside isolated JJ workspace agy-zlp-v3-20261101.",
+    "phase": "review",
+    "fractal_layer": 3,
+    "observed_at": "2026-11-01T12:33:30Z",
+    "valid_until": "2026-11-02T12:33:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-01T12:09:10Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace agy-zlp-v3-20261101 bookmark feature/zlp-v3-hyperplane; candidate source digests bound.",
+      "evidence": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945",
+          "observed_at": "2026-11-01T12:33:30Z"
+        },
+        {
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff",
+          "observed_at": "2026-11-01T12:33:30Z"
+        },
+        {
+          "path": "formal/lean/UosZlpHyperplane.lean",
+          "sha256": "4674a9afc3391948001fb60c5708e176211660d751b5a84753ab9747c50ff5d3",
+          "observed_at": "2026-11-01T12:33:30Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+          "sha256": "e8f275e5a1a8b337c2ae95d904aa8ae02c97130d017088a77b22459b8d98a67d",
+          "observed_at": "2026-11-01T12:33:30Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam",
+          "sha256": "a9e651c1d0e9a05285834ac630bab6c2541cef6272f123ca2b9ad0fdb6575a30",
+          "observed_at": "2026-11-01T12:33:30Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+          "sha256": "e715daa9d13ba5fb5bce9a1494cf77163eb5f1183fbc2d7d4ce10e6a69a1fe83",
+          "observed_at": "2026-11-01T12:33:30Z"
+        },
+        {
+          "path": "formal/lean/Traceability.lean",
+          "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c",
+          "observed_at": "2026-11-01T12:33:30Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "indrajaal_native_zenoh.erl currently faults with nif_not_loaded on get/2 and subscribe/3; replacing NIF crash risk with an OS-isolated supervised OTP 29 port unlocks live Zenoh SSE streaming while protecting BEAM VM integrity.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Gleam/OTP must retain sole policy and effect authority per SC-HARNESS-MCP-001 while native Lean+Zig port workers operate behind strict frame, replay, risk, and topic-confinement theorems.",
+        "evidence_refs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36: port worker crash, HoL blocking, or silent Zenoh subscription loss after SIGKILL can drop live MCP/mesh telemetry unless mitigated by Dual-ETS auto-replay and Two-Lane dispatch.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/supervisor.gleam",
+          "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Self-contained non-protected transport and formal Lean 4 hyperplane package with zero edits to the 28 protected harness modules.",
+        "evidence_refs": [
+          "AGENTS.md",
+          "formal/lean/Traceability.lean"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Delivers 20 zero-sorry Lean 4.33 theorems compiled directly to C-ABI kernels inside a Zig 0.16 Zen 5 AVX-512 supervised OTP 29 port with live Zenoh SSE push.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam",
+          "formal/lean/Traceability.lean"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-ZLP-BEAM-CRASH-OR-ORPHAN",
+        "cause": "In-process NIF fault crashes beam.smp or orphaned port child leaks sockets after BEAM exit",
+        "effect": "Total supervision tree loss or zombie Zenoh TCP connections",
+        "controls": "OS-isolated OTP 29 open_port ({packet,4}, {parallelism,true}) + Linux PR_SET_PDEATHSIG(SIGTERM) + EOF-on-fd0 deterministic teardown",
+        "s": 4,
+        "o": 2,
+        "det": 2,
+        "rpn": 16,
+        "band": 4
+      },
+      {
+        "id": "FM-ZLP-SSE-LOSS-ON-SIGKILL",
+        "cause": "External SIGKILL terminates a port shard holding active Zenoh SSE subscriptions and in-flight RPC callers",
+        "effect": "Silent subscription blackout or hung gen_server:call callers",
+        "controls": "Supervisor-owned ETS subscription table replayed automatically in init/1 on restart + immediate {error, port_crashed} drain of pending ETS RPC map",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      },
+      {
+        "id": "FM-ZLP-HOL-STARVATION-AND-AUTHORITY",
+        "cause": "Long-running heavy job starves sub-10us fast control gates, or native port attempts unauthorized side-effects",
+        "effect": "Control-loop latency spike or SC-HARNESS-MCP-001 boundary violation",
+        "controls": "Two-Lane pthread + lean_initialize_thread() + eventfd completion notification; native port restricted to pure Lean verification and Zenoh key transport behind Gleam HMAC/topic policy",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Gleam/OTP MCP supervisor and uos_zlp_sup shard controller",
+      "control_action": "Dispatch theorem-verified MCP/Zenoh frames and manage live Zenoh SSE subscriptions through OS-isolated Lean 4 + Zig port shards",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT",
+        "L-BEAM-VM-UNAVAILABILITY"
+      ],
+      "hazards": [
+        "H-NATIVE-FAULT-PROPAGATION",
+        "H-STALE-OR-REPLAYED-ZENOH-ENVELOPE",
+        "H-SILENT-SUBSCRIPTION-DROP"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Zenoh SSE subscription is not re-established after port worker crash or restart",
+          "hazard_ids": [
+            "H-SILENT-SUBSCRIPTION-DROP"
+          ],
+          "constraint": "Persist active topic subscriptions in supervisor-owned ETS and replay automatically on shard init"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Payload with embedded NUL, JSON depth > 32, forged reply topic, invalid HMAC, or replayed seq enters MCP handler",
+          "hazard_ids": [
+            "H-STALE-OR-REPLAYED-ZENOH-ENVELOPE"
+          ],
+          "constraint": "Enforce Zig AVX-512 NUL/depth scan, Lean 4 64-slot anti-replay window theorem T08, and Gleam SignedZenohEnvelope HMAC + reply-topic pinning"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Heavy proof/reduction job blocks fast 5us control RPCs or reply arrives after caller timeout/restart",
+          "hazard_ids": [
+            "H-NATIVE-FAULT-PROPAGATION"
+          ],
+          "constraint": "Offload OP_HEAVY_PROVE to lean_initialize_thread() worker pool with eventfd wakeup and correlate every frame by 64-bit req_id"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Port process outlives BEAM parent or accumulates unbounded memory across Perceus/Zig cycles",
+          "hazard_ids": [
+            "H-NATIVE-FAULT-PROPAGATION"
+          ],
+          "constraint": "Enforce PR_SET_PDEATHSIG(SIGTERM), stdin EOF exit, bounded 1 MiB frame ceiling, and Perceus lean_is_exclusive zero-alloc slab reuse"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Implement UOS-ZLP-v3 supervised Lean 4.33 + Zig 0.16 + OTP 29 + MCP + Zenoh hyperplane in isolated JJ workspace agy-zlp-v3-20261101.",
+      "alternatives": [
+        "Supervised OS-isolated OTP 29 port with Lean 4 C-ABI + Zig 0.16 AVX-512 + Dual-ETS shard pool: selected for crash isolation, zero-sorry formal guarantees, and zero LOCK XADD contention.",
+        "In-process Erlang NIF linking libleanshared.so: rejected because Lean panic or allocator fault crashes beam.smp and dirty-NIF contention degrades above 16 cores.",
+        "Leaving indrajaal_native_zenoh.erl as nif_not_loaded stub: rejected because subscribe/3 and get/2 crash callers."
+      ],
+      "counterevidence": [
+        "Development workspace verification and 9-modality passing tests do not constitute production cutover or global system admission.",
+        "EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.",
+        "Zero protected harness/* modules or mcp/tools.gleam digests are touched."
+      ],
+      "assumptions": [
+        "Local c3i-zenoh-router-1 REST/SSE endpoint on 127.0.0.1:8080 is available for live system integration tests; unit tests degrade gracefully if port binary or router is absent."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "All 20 Lean 4.33 theorems compile with zero sorryAx, Zig 0.16 Zen 5 port passes 9/9 test modalities, and gleam test passes with zero warnings.",
+      "falsifier": "Any sorryAx in Lean 4, compiler warning under gleam build --warnings-as-errors, failure in 9-modality chaos/BDD/property tests, or drift in protected harness digests.",
+      "acceptance": [
+        "20/20 zero-sorryAx Lean 4.33 theorems verified via ./tools/lean formal/lean/UosZlpHyperplane.lean",
+        "Zig 0.16 + Lean 4.33 native port compiled cleanly to untracked var/zlp/uos_zlp_v3_port",
+        "gleam build --warnings-as-errors and gleam test 100% green including 9-modality zlp_hyperplane_test",
+        "km-gate, diagram-check, journal-check, and preflight all exit 0"
+      ],
+      "rollback": "Abandon or revert isolated JJ workspace agy-zlp-v3-20261101 without affecting main bc09f5d5 or active peer workspaces.",
+      "reviewer": "Independent Codex sovereign review required prior to main admission.",
+      "budget": "Pinned local Lean 4.33.0, Zig 0.16.0, Gleam, and OTP 29.0.5 toolchains; 1h Sa-plan task lease; zero external API cost.",
+      "residuals": [
+        "Full fleet-wide production cutover requires independent Codex review and immutable release authority.",
+        "Cross-node Tailnet Zenoh router mTLS remains governed by infrastructure transport policy outside local 127.0.0.1:8080 loopback."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "zlp-v3-full-project-integration-20261101-1241",
+    "plan_id": "uos/zlp-v3-supervised-hyperplane/20261101-1309",
+    "task_id": "T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS",
+    "actor": "agy-zlp-v3-20261101",
+    "scope": "Integrate UOS-ZLP-v3 across zenoh/client.gleam, otp_app.gleam, cepaf_gleam.gleam, Wisp /api/v1/zlp/status, tools/zlp-check + tools/uos-cli G-ZLP, author full 5-document KM triad corpus (design spec, dedicated wiki article, unnumbered ZK decision note, operations SOP, 13-section integration journal), and save cleanly to canonical /home/an/NAS-setup/uos.",
+    "phase": "review",
+    "fractal_layer": 4,
+    "observed_at": "2026-11-01T13:04:10Z",
+    "valid_until": "2026-11-02T13:04:10Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-01T12:41:16Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Workspace agy-zlp-v3-20261101 on feature/zlp-v3-hyperplane; post-integration candidate digests bound.",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+          "sha256": "31b7c4987a5c30ab8427d55edaa50d8876a298bbd4c180f0cc7493f3bf7d691a",
+          "observed_at": "2026-11-01T12:59:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/otp_app.gleam",
+          "sha256": "7c65cea4776292122c53710f6c1a9b8b5732327c0e1d212d5ddd479e3c2c2a13",
+          "observed_at": "2026-11-01T12:59:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+          "sha256": "626c521b7df65d06ba712ea5fa666dd0b15c4b76ce3a8d93c3868faba156b397",
+          "observed_at": "2026-11-01T12:59:45Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "0f6d53f340f57750433afb8f9674ac4190070cb9c101e5eae295e3fce083d0f2",
+          "observed_at": "2026-11-01T12:59:45Z"
+        },
+        {
+          "path": "tools/uos/src/main.gleam",
+          "sha256": "ff2a40262448fa3512063edbc020c117ac7e1d097332dde4beede983616521a7",
+          "observed_at": "2026-11-01T12:59:45Z"
+        },
+        {
+          "path": "tools/zlp-check",
+          "sha256": "1f3efa2283e20a46846f7ee98a173b8c3b0afb85bf21e29083018216c9313b30",
+          "observed_at": "2026-11-01T13:02:50Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "zenoh/client.gleam is imported by 19 subsystems and otp_app.gleam drives OTP boot; backward compatibility and zero SHA-256-pinned file drift are mandatory.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/otp_app.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Project-wide Zenoh client, Wisp HTTP observability, CLI gate G-ZLP, and canonical JJ save must preserve peer edits and SC-HARNESS-MCP-001 authority boundaries.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "tools/uos/src/main.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O2 Det2 RPN16: regression risk if open/1 changes behavior or if numbered ADR filename breaks 137-ADR contiguity or peer working copy files are overwritten.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Depends directly on completed T01_ZLP_V3_HYPERPLANE_IMPL and touches zero SHA-256-pinned census files.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/otp_app.gleam",
+          "tools/uos/src/main.gleam"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Unifies UOS-ZLP-v3 across Zenoh client, OTP boot, Wisp API, uos-cli G-ZLP two-key gate, complete 5-doc KM triad, and canonical repository main bookmark.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "tools/uos/src/main.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-ZLP-INT-CLIENT-REGRESSION",
+        "cause": "Changing zenoh/client.open/1 return semantics or mutating SHA-256-pinned census modules breaks existing callers or census tests",
+        "effect": "Existing metabolic/Wisp/census tests fail",
+        "controls": "Preserve open/1 RestSession behavior intact, add explicit open_zlp/1 and open_prefer_zlp/1 variants, and touch zero SHA-256-pinned census files",
+        "s": 4,
+        "o": 2,
+        "det": 2,
+        "rpn": 16,
+        "band": 4
+      },
+      {
+        "id": "FM-ZLP-INT-KM-ADR-OR-PEER-CONFLICT",
+        "cause": "Minting numbered ADR filename breaks 137-ADR contiguity or canonical JJ integration disturbs uncommitted peer files in root workspace",
+        "effect": "km-gate failure or peer workspace data loss",
+        "controls": "Use unnumbered ZK decision filename (no adr-NNN substring), claim integration/main cleanly, advance main bookmark, and preserve root peer working copy files byte-for-byte",
+        "s": 4,
+        "o": 2,
+        "det": 2,
+        "rpn": 16,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "AGY integration workflow under Sa-plan T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS",
+      "control_action": "Wire UOS-ZLP-v3 into Zenoh client, OTP app boot, Wisp API, uos-cli G-ZLP, 5-doc KM triad, and canonical main bookmark",
+      "losses": [
+        "L-REGRESSION-OR-PEER-DATA-LOSS",
+        "L-FALSE-ADMISSION-CLAIM"
+      ],
+      "hazards": [
+        "H-BREAKING-ZENOH-CLIENT-CONTRACT",
+        "H-PEER-WORKING-COPY-OVERWRITE",
+        "H-UNVERIFIED-STATIC-CLI-GATE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "CLI gate G-ZLP checks file presence without running real Lean 4 and 9-modality runtime verification",
+          "hazard_ids": [
+            "H-UNVERIFIED-STATIC-CLI-GATE"
+          ],
+          "constraint": "Execute tools/zlp-check running actual Lean 4 proof check and EUnit runtime suite before returning exit 0"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Canonical JJ save overwrites peer .codex/config.toml or review JSON in root workspace or claims production system admission",
+          "hazard_ids": [
+            "H-PEER-WORKING-COPY-OVERWRITE"
+          ],
+          "constraint": "Preserve disjoint peer working-copy files byte-for-byte via JJ rebase and retain admitted_ev_ceiling=93, application_admitted=false, system_admitted=false"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "otp_app.start/0 attempts to spawn ZLP port pool before native binary exists in isolated test environments",
+          "hazard_ids": [
+            "H-BREAKING-ZENOH-CLIENT-CONTRACT"
+          ],
+          "constraint": "Check zlp_hyperplane.is_binary_available() first and record binary_unbuilt gracefully in beam_cache when absent"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "integration/main coordinator claim held indefinitely after canonical JJ bookmark update completes",
+          "hazard_ids": [
+            "H-PEER-WORKING-COPY-OVERWRITE"
+          ],
+          "constraint": "Release integration/main claim immediately after JJ main update and post-merge gate verification"
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "T01_ZLP_V3_HYPERPLANE_IMPL"
+    ],
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "decision": {
+      "summary": "Execute full project-wide code, API, CLI, 5-doc KM triad integration, and durable canonical repository save for UOS-ZLP-v3.",
+      "alternatives": [
+        "Additive backward-compatible zenoh/client + otp_app + Wisp /api/v1/zlp/status + executable uos-cli G-ZLP + 5-doc KM triad + clean JJ main advance: selected.",
+        "Mutating SHA-256-pinned uos_sup.gleam or mcp/tools.gleam: rejected to preserve census pins and protected harness boundaries."
+      ],
+      "counterevidence": [
+        "Canonical source integration and live :4100 file serving do not hot-swap the running production BEAM binary or confer system_admitted=true.",
+        "EV-93 ceiling remains fixed; zero new EV or numbered ADR identifiers minted."
+      ],
+      "assumptions": [
+        "Root working-copy peer edits (.codex/config.toml and docs/reviews/20261101-0854-fpp-sysml-grant-review.json) are path-disjoint from all UOS-ZLP-v3 files."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "All project integration tests, uos-cli zlp-check, km-gate, diagram-check, journal_linter, and live :4100 Tailnet HTTP doc checks exit 0.",
+      "falsifier": "Any regression in existing tests, km-gate ADR contiguity failure, diagram-check mismatch, or byte change in peer-owned root files.",
+      "acceptance": [
+        "zenoh/client, otp_app, cepaf_gleam, and Wisp /api/v1/zlp/status compile and pass automated integration tests",
+        "bash tools/uos-cli zlp-check executes two-key Lean 4 + 9-modality EUnit verification and exits 0",
+        "Complete 5-doc KM triad (spec, wiki, zk decision, sop, 13-section journal) passes journal_linter, diagram-check, and km-gate",
+        "Canonical /home/an/NAS-setup/uos main bookmark updated with peer root edits preserved byte-for-byte and :4100 HTTP serving verified"
+      ],
+      "rollback": "Restore main bookmark to bc09f5d5 via jj bookmark set main -r bc09f5d5 if any canonical verification gate fails.",
+      "reviewer": "Independent Codex sovereign review required for runtime cutover and system admission.",
+      "budget": "Local pinned toolchains; 1h Sa-plan task lease; zero external API calls.",
+      "residuals": [
+        "Running :4100 BEAM process continues serving existing loaded BEAM bytecode for new Wisp JSON routes until an operator-authorized runtime restart, while /files/* serves new markdown documents immediately from disk."
+      ],
+      "supersedes": null
+    }
+  }
+]

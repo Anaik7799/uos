@@ -67,6 +67,7 @@ import cepaf_gleam/ha/request_guard
 import cepaf_gleam/ha/sentinel
 import cepaf_gleam/ha/zenoh_federation
 import cepaf_gleam/mcp/runtime_gateway
+import cepaf_gleam/mcp/transports/zlp_hyperplane
 import cepaf_gleam/prajna/bio
 import cepaf_gleam/prajna/circuit_breaker
 import cepaf_gleam/prajna/immune_system as prajna_immune
@@ -144,6 +145,32 @@ pub fn start() -> AppState {
     False -> beam_cache.set_config("mcp:unified_gateway", "degraded")
   }
   io.println("[C3I] Unified 101-route MCP OTP gateway initialised")
+  let _ = case zlp_hyperplane.is_binary_available() {
+    True ->
+      case zlp_hyperplane.ensure_started(shards: 4) {
+        Ok(n) -> {
+          let _ = beam_cache.set_config("zlp:hyperplane_pool", "running")
+          let _ =
+            beam_cache.set_config("zlp:hyperplane_shards", int.to_string(n))
+          io.println(
+            "[C3I] UOS-ZLP-v3 Lean 4.33 + Zig 0.16 OTP 29 port hyperplane started ("
+            <> int.to_string(n)
+            <> " shards)",
+          )
+        }
+        Error(reason) -> {
+          let _ =
+            beam_cache.set_config("zlp:hyperplane_pool", "degraded:" <> reason)
+          io.println("[C3I] UOS-ZLP-v3 hyperplane degraded: " <> reason)
+        }
+      }
+    False -> {
+      let _ = beam_cache.set_config("zlp:hyperplane_pool", "binary_unbuilt")
+      io.println(
+        "[C3I] UOS-ZLP-v3 port binary not yet built (run native/zlp/build_zlp_port.sh)",
+      )
+    }
+  }
   io.println("[C3I] ETS cache initialised")
 
   // 2. Freshness actor — first check cycle runs inside init/0.

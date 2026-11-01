@@ -53,3 +53,10 @@ pub fn parse_help_test() {
   parse_args(["unknown"])
   |> should.equal(Help)
 }
+
+pub fn parse_zlp_check_test() {
+  parse_args(["zlp-check"])
+  |> should.equal(Gate("G-ZLP"))
+  parse_args(["zlp"])
+  |> should.equal(Gate("G-ZLP"))
+}

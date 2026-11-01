@@ -11,6 +11,21 @@ Tags: `#fractal-l0`, `#fractal-l1`, `#fractal-l2`, `#fractal-l3`, `#fractal-l4`,
 
 ## §1.0 Living Knowledge Graph Topology
 
+### Supervised Lean 4 + Zig + OTP 29 Zenoh MCP hyperplane (UOS-ZLP-v3) — 20261101-1248
+
+Full project-wide source integration (`zenoh/client.gleam`, `otp_app.gleam`, `cepaf_gleam.gleam`, Wisp `GET /api/v1/zlp/status`, executable two-key CLI gate `bash tools/uos-cli zlp-check` / `G-ZLP`) and 9-modality verification under `uos/zlp-v3-supervised-hyperplane/20261101-1309` (`T01_ZLP_V3_HYPERPLANE_IMPL` & `T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS`); `20/20` zero-`sorryAx` `Lean 4.33.0` theorems, `Zig 0.16.0` Zen 5 AVX-512 Two-Lane `{packet, 4}` port pool, Dual-ETS post-`SIGKILL` Zenoh `:8080` SSE auto-replay, and lock-free `persistent_term` shard routing behind Gleam/OTP (`SC-HARNESS-MCP-001`). Production cutover and whole-system admission remain `NOT_ADMITTED` (`admitted_ev_ceiling = 93`, `0` new EV/ADR minted).
+[Specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1225-uos-zlp-v3-lean4-zig-otp29-zenoh-hyperplane-spec.md) ·
+[Architecture Wiki](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane.md) ·
+[ZK Decision Note](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision.md) ·
+[Operations & Verification SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-1248-uos-zlp-v3-hyperplane-operations-and-verification-sop.md) ·
+[Lean 4 formal kernel](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/UosZlpHyperplane.lean) ·
+[T01 implementation journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md) ·
+[T02 integration journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md) ·
+[Risk portfolio](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261101-1309-zlp-v3-hyperplane-risk-portfolio.json) ·
+[ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260905-1801-moc-uos-unified-master.md).
+
+`[[zk:20260905-1801-moc-uos-unified-master]]` · `[[wiki:20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane]]` · `[[zk:20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision]]` · `[[wiki:20261101-1225-uos-zlp-v3-hyperplane-implementation-journal]]` · `[[wiki:20261101-1248-uos-zlp-v3-full-project-integration-journal]]`
+
 ### Shared agentic ecology — 20260909-0249
 
 Task-local implementation and scoped verification under `uos/ecology/20260909-0146`; whole-system admission remains NOT_ADMITTED.

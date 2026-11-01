@@ -124,6 +124,7 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["preflight"] | ["preflight-check"] | ["toolchain-check"] ->
       Gate("G-PREFLIGHT")
     ["atlas-check"] | ["atlas"] -> Gate("G-ATLAS")
+    ["zlp-check"] | ["zlp"] -> Gate("G-ZLP")
     ["selfcheck-vfs"] | ["--selfcheck-vfs"] | ["vfs-check"] -> SelfcheckVfs
     ["selfcheck-sa-plan"] | ["--selfcheck-sa-plan"] | ["sa-plan-check"] | ["sa-plan"] ->
       SelfcheckSaPlan
@@ -262,6 +263,29 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("  [FAIL] Algebraic atlas conformance failed")
+              io.println("         " <> string.slice(out, 0, 600))
+              1
+            }
+          }
+        }
+        "G-ZLP" | "zlp" -> {
+          let #(code, out) = case file_exists("tools/zlp-check") {
+            True -> run_command("bash", ["tools/zlp-check"], 180_000)
+            False -> #(127, "tools/zlp-check is absent")
+          }
+          case code == 0 && string.contains(out, "\"status\":\"PASS\"") {
+            True -> {
+              io.println(
+                "  [PASS] UOS-ZLP-v3 Two-Key Gate executed: Lean 4.33.0 (20 zero-sorryAx theorems) + Zig 0.16.0 OTP 29 9-modality & project integration green (EV-93 ceiling preserved; system_admitted=false)",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "  [FAIL] UOS-ZLP-v3 Two-Key Gate failed [exit "
+                <> int.to_string(code)
+                <> "]",
+              )
               io.println("         " <> string.slice(out, 0, 600))
               1
             }
@@ -3551,7 +3575,7 @@ pub fn execute(cmd: UosCommand) -> Int {
     }
     Help -> {
       io.println(
-        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links|checklist|rocha-check|selfcheck-vfs|selfcheck-sa-plan|selfcheck-hermes-bionic|selfcheck-omni-matrix|selfcheck-15-cycles|selfcheck-c3i-knowledge|selfcheck-wave3-cycles|selfcheck-wave4-cycles|selfcheck-vertical-slice|selfcheck-zigvm-add|selfcheck-raga|selfcheck-mirage|selfcheck-mirage-migration|selfcheck-mirage-prod|selfcheck-forecast|selfcheck-inference|cortex-check|webui-browser-check|verify-all>",
+        "Usage: uos <status|gate <name>|zlp-check|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links|checklist|rocha-check|selfcheck-vfs|selfcheck-sa-plan|selfcheck-hermes-bionic|selfcheck-omni-matrix|selfcheck-15-cycles|selfcheck-c3i-knowledge|selfcheck-wave3-cycles|selfcheck-wave4-cycles|selfcheck-vertical-slice|selfcheck-zigvm-add|selfcheck-raga|selfcheck-mirage|selfcheck-mirage-migration|selfcheck-mirage-prod|selfcheck-forecast|selfcheck-inference|cortex-check|webui-browser-check|verify-all>",
       )
       0
     }

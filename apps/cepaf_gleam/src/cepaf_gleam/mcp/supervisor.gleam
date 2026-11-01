@@ -3,6 +3,7 @@
 
 import cepaf_gleam/mcp/candidate_id
 import cepaf_gleam/mcp/receipts.{type ReceiptLedger}
+import cepaf_gleam/mcp/transports/zlp_hyperplane
 import gleam/erlang/process
 import gleam/otp/actor
 import gleam/otp/static_supervisor as sup
@@ -168,4 +169,21 @@ pub fn replace_poisoned_worker(pool: WorkerPool) -> WorkerPool {
     active_generation: pool.active_generation + 1,
     poisoned_count: pool.poisoned_count + 1,
   )
+}
+
+/// Ensure the supervised `UOS-ZLP-v3` (`uos_zlp_sup`) OTP 29 port shard pool is
+/// started when the compiled Lean 4 + Zig port binary is present.
+pub fn ensure_zlp_hyperplane_pool(shards shards: Int) -> Result(Int, String) {
+  case shards >= 1 && shards <= 64 {
+    False -> Error("zlp_shard_count_must_be_1_to_64")
+    True ->
+      case zlp_hyperplane.is_binary_available() {
+        False -> Error("zlp_port_binary_not_built")
+        True -> zlp_hyperplane.ensure_started(shards)
+      }
+  }
+}
+
+pub fn is_zlp_hyperplane_running() -> Bool {
+  zlp_hyperplane.is_running()
 }
