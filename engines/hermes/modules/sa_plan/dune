@@ -1,7 +1,7 @@
 (library
  (name sa_plan)
  (public_name hermes_workspace.sa_plan)
- (modules (:standard \ recovery_kernel recovery_port))
+ (modules (:standard \ recovery_kernel recovery_port recovery_owner_journal recovery_owner_journal_port))
  (libraries core digestif sqlite3 yojson)
  (preprocess (pps ppx_jane)))
 
@@ -15,3 +15,14 @@
  (name recovery_port)
  (modules recovery_port)
  (libraries recovery_kernel yojson))
+
+(library
+ (name recovery_owner_journal)
+ (wrapped false)
+ (modules recovery_owner_journal)
+ (libraries core digestif yojson sqlite3 unix))
+
+(executable
+ (name recovery_owner_journal_port)
+ (modules recovery_owner_journal_port)
+ (libraries recovery_owner_journal))

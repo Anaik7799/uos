@@ -9,6 +9,22 @@
  (modules sa_plan_test)
  (libraries core core_unix sa_plan))
 
+(test
+ (name test_recovery_owner_journal)
+ (modules test_recovery_owner_journal)
+ (libraries recovery_owner_journal core digestif sqlite3 yojson unix))
+
+(executable
+ (name recovery_owner_fixture_wrapper)
+ (modules recovery_owner_fixture_wrapper)
+ (libraries yojson unix))
+
+(executable
+ (name recovery_owner_fixture)
+ (modules recovery_owner_fixture)
+ (libraries recovery_owner_journal recovery_kernel_fixture recovery_kernel core mirage-crypto-ec yojson sqlite3 unix)
+ (link_deps recovery_owner_fixture_wrapper.exe recovery_kernel_fixture_port.exe recovery_fixture_guardian.exe ../recovery_owner_journal_port.exe ../sa_plan_store.ml))
+
 ; Private actual-clock/capability interpreter: never part of the sa_plan library.
 (library
  (name recovery_kernel_fixture)
