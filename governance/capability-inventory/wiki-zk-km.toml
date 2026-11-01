@@ -469,3 +469,17 @@ journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1
 index = "governance/planning/20261101-1309-zlp-v3-hyperplane-risk-portfolio.json"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "AGY-FRACTAL-ISSUE-RESOLUTION-PLAN-20261101-1454"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "W0_FENCED_HYGIENE_RECLAIM"
+state = "planning"
+admitted = false
+design = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+design_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+journal = "docs/journal/20261101-1454-agy-fractal-check-codex-advice-and-master-plan-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1454-agy-fractal-check-codex-advice-and-master-plan-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
