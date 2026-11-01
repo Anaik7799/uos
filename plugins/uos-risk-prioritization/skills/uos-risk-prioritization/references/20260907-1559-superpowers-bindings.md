@@ -137,3 +137,18 @@ Use the [canonical monitoring SOP](http://nas-1.tail55d152.ts.net:4100/files/doc
 EV93 ceiling; EV94..109 / ADR071..086 NOT_ADMITTED. Existing18 core-check obligations remain in force; no blanket pass or new EV identifier.
 
 </details>
+
+
+## 20261101-0621 — Four-agent ontology and controller-intent lifecycle binding
+
+#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #zero-muda
+
+**Status: isolated development draft / NOT_ADMITTED.** For this scope, apply the existing risk-prioritization and checker contracts without treating this binding as a runtime gate:
+
+- **Brainstorming / system-engineering-sop / stpa-safety-protocol:** identify controller, losses, hazards, constraints, capability boundaries, four UCA types and raw FMEA; explicitly mark unsupported observations and uncalibrated ratings UNKNOWN.
+- **Writing-plans / executing-plans:** bind work to Sa-plan, dependency edges, scope, candidate and the required MCP/Gleam route. A direct operator-authorized provider review is allowed only while its needed MCP interface is unavailable. The provider call itself is an external, potentially billable effect authorized for that bounded review only; it grants no separate task, runtime-effect, release or deployment authority. Hold task effects without their admitted fenced route.
+- **Dispatching-parallel-agents / subagent-driven-development:** honor current role assignment and disjoint file/task ownership; record actual provider identity and unknown cost. Do not treat relay attribution, role labels, or review ACK as independent acceptance.
+- **TDD / verification-before-completion / requesting-code-review / receiving-code-review:** applicable pressure and behavior testing is **UNRUN** in this draft. Do not convert this documentation change into a passing behavior claim; arrange authorized pressure testing and independent candidate-bound review as follow-up evidence.
+- **Journal / KM writeback:** after authorized implementation, preserve the 13-section journal, candidate-bound evidence, residual FMEA/STPA, unknowns and reciprocal knowledge updates. No writeback or admission is claimed here.
+
+This update records lifecycle guidance only. Mandatory controls must be enforced and observed at authenticated Gleam/MCP ingress and effect boundaries; plugin/Superpowers guidance alone cannot establish enforcement. EV-93 ceiling remains in force.
