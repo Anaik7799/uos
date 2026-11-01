@@ -1,6 +1,10 @@
 open Mirage_metrics
 
-let require message condition = if not condition then failwith message
+let passed = ref 0
+let failed = ref 0
+let require message condition =
+  if condition then incr passed
+  else (incr failed; failwith message)
 let unwrap = function Ok value -> value | Error message -> failwith message
 
 let probe ?(at = 12_000_000_000L) name health =
@@ -54,7 +58,7 @@ let run_bridge_with_open_pipe bridge frame =
       let _, status = Unix.waitpid [] pid in
       status, read_file output_path))
 
-let () =
+let main () =
   let original = sample [probe "zeta" Unknown; probe "alpha" Healthy;
                          probe ~at:11_000_000_000L "db" Failed] in
   let encoded = encode_console original in
@@ -142,3 +146,18 @@ let () =
   require "MM-18 bridge applies one monotonic input deadline"
     (timeout_status = Unix.WEXITED 2 && contains timeout_text "console input timed out");
   print_endline "Mirage metrics MM-01..18 PASS: strict boot snapshot, raw GC observations, no current-freshness claim, restart identity, bounded timed host bridge"
+
+
+(* Counts come from every executed require, including property-loop iterations.
+   Exceptions during setup/CLI/decoding fail the suite and emit a failed receipt. *)
+let () =
+  let finish () =
+    let observation = Suite_telemetry.observe ~suite:"test_mirage_metrics"
+      ~passed:!passed ~failed:!failed ~skipped:0 in
+    print_string (Suite_telemetry.emit observation ~targets:[]);
+    exit (Suite_telemetry.exit_code observation) in
+  try main (); finish ()
+  with exn ->
+    if !failed = 0 then incr failed;
+    prerr_endline (Printexc.to_string exn);
+    finish ()

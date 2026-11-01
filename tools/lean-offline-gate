@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Offline Lean 4.33.0 zero-sorry formal proof gate (OI04).
+# Zero Python (AGENTS.md §5.4): pure POSIX/Bash + Lean 4.33.0 + sha256sum + jq.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+LEAN="$ROOT/tools/lean"
+TARGETS=(
+  "formal/lean/Traceability.lean"
+  "formal/lean/TwoLattice_STM.lean"
+  "formal/lean/UosZlpHyperplane.lean"
+  "formal/lean/ProvenanceAdjudication.lean"
+)
+
+if [[ ! -x "$LEAN" ]]; then
+  echo '{"schema":"uos.w1c.lean_offline_gate.v1","all_passed_zero_sorry":false,"error":"tools/lean missing"}'
+  exit 1
+fi
+
+LEAN_VER="$("$LEAN" --version | head -n 1)"
+NOW_UTC="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+ALL_OK=true
+TARGETS_JSON="[]"
+
+for rel in "${TARGETS[@]}"; do
+  ap="$ROOT/$rel"
+  sha="$(sha256sum "$ap" | awk '{print $1}')"
+  if grep -Eq 'sorry|admit|Admitted' "$ap"; then
+    has_raw_sub=true
+  else
+    has_raw_sub=false
+  fi
+  t0_ns="$(date +%s%N)"
+  set +e
+  out="$("$LEAN" "$ap" 2>&1)"
+  rc=$?
+  set -e
+  t1_ns="$(date +%s%N)"
+  dt_ms="$(awk -v a="$t0_ns" -v b="$t1_ns" 'BEGIN { printf "%.2f", (b - a) / 1000000.0 }')"
+
+  if [[ "$out" == *"declaration uses 'sorry'"* ]]; then
+    zero_sorry=false
+  else
+    zero_sorry=true
+  fi
+
+  if [[ "$rc" -ne 0 || "$zero_sorry" != "true" ]]; then
+    ALL_OK=false
+  fi
+
+  tail_out="${out: -200}"
+  TARGETS_JSON="$(jq -cn \
+    --argjson arr "$TARGETS_JSON" \
+    --arg file "$rel" \
+    --arg sha "$sha" \
+    --argjson rc "$rc" \
+    --argjson zs "$zero_sorry" \
+    --argjson raw "$has_raw_sub" \
+    --argjson dt "$dt_ms" \
+    --arg tail "$tail_out" \
+    '$arr + [{file:$file,sha256:$sha,exit_code:$rc,zero_sorry_verified:$zs,has_raw_sorry_substring:$raw,duration_ms:$dt,stderr_tail:$tail}]')"
+done
+
+jq -n \
+  --arg schema "uos.w1c.lean_offline_gate.v1" \
+  --arg obs "$NOW_UTC" \
+  --arg ver "$LEAN_VER" \
+  --argjson ok "$ALL_OK" \
+  --argjson targets "$TARGETS_JSON" \
+  '{schema:$schema,observed_at:$obs,lean_version:$ver,all_passed_zero_sorry:$ok,targets:$targets}'
+
+[[ "$ALL_OK" == "true" ]]

@@ -158,7 +158,7 @@ fn verify_source(root: String, worker: String) -> run.Source {
     // root from the app directory instead of walking up with "..".
     guardian: executor.Guardian(
       string.drop_end(cwd, string.length("/apps/cepaf_gleam"))
-        <> "/tools/validation/verify_guardian.exe",
+        <> "/tools/validation/_build/verify_guardian.exe",
       verify_guardian_sha,
     ),
     reservation_dir: "reservations",

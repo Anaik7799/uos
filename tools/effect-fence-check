@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+# Read-only Sa-plan effect-time authority & 14-target state-machine contract checker (OI07 + I21 + I29).
+# Zero Python (AGENTS.md §5.4): executes compiled Gleam/OTP 29 cepaf_gleam@ecology@core_effect_fence BEAM module directly.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+DB_PATH="${UOS_SA_PLAN_DB:-$ROOT/var/sa-plan/uos.sqlite3}"
+
+CTX_MODE=false
+CTX_ARGS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --selftest) shift ;;
+    --db) DB_PATH="$2"; shift 2 ;;
+    --check-context)
+      if [[ $# -lt 13 ]]; then
+        echo "Usage: effect-fence-check --check-context PLAN TASK WORKER ATTEMPT LEASE_NS NOW_NS EXPECTED_SHA ACTUAL_SHA AGE_S MAX_AGE_S WRITER OI07_BOOL" >&2
+        exit 2
+      fi
+      CTX_MODE=true
+      CTX_ARGS=("${@:2:12}")
+      shift 13
+      ;;
+    *) echo "Usage: effect-fence-check [--selftest] [--db PATH] [--check-context ...]" >&2; exit 2 ;;
+  esac
+done
+
+ERL_BIN="$ROOT/toolchains/nix-profile/bin/erl"
+if [[ ! -x "$ERL_BIN" ]]; then
+  ERL_BIN="$(command -v erl)"
+fi
+
+EBIN_DIRS=()
+for d in "$ROOT"/apps/cepaf_gleam/build/dev/erlang/*/ebin; do
+  if [[ -d "$d" ]]; then
+    EBIN_DIRS+=("-pa" "$d")
+  fi
+done
+
+if [[ ${#EBIN_DIRS[@]} -eq 0 ]]; then
+  echo '{"ok":false,"error":"cepaf_gleam BEAM ebin not built"}'
+  exit 1
+fi
+
+DB_PRESENT=false
+TABLES_JSON="[]"
+if [[ -f "$DB_PATH" ]] && command -v sqlite3 >/dev/null 2>&1; then
+  DB_PRESENT=true
+  TABLES_JSON="$(sqlite3 -readonly "$DB_PATH" "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name LIMIT 32;" 2>/dev/null | jq -R -s 'split("\n") | map(select(length > 0))')"
+fi
+
+if [[ "$CTX_MODE" == "true" ]]; then
+  BEAM_CTX="$("$ERL_BIN" +S 2:2 -noshell "${EBIN_DIRS[@]}" -eval '
+    [Plan, Task, Worker, AttemptS, LeaseS, NowS, ExpSha, ActSha, AgeS, MaxAgeS, Writer, Oi07S] = init:get_plain_arguments(),
+    B = fun(S) -> unicode:characters_to_binary(S) end,
+    I = fun(S) -> list_to_integer(S) end,
+    Oi07 = (Oi07S =:= "true"),
+    Ctx = {effect_context, B(Plan), B(Task), B(Worker), I(AttemptS), I(LeaseS), I(NowS), B(ExpSha), B(ActSha), I(AgeS), I(MaxAgeS), B(Writer), [<<"uos/mcp-canonical-completion/20261031-0327">>], Oi07},
+    case '\''cepaf_gleam@ecology@core_effect_fence'\'':evaluate_effect_fence(Ctx) of
+      {ok, _} ->
+        io:put_chars(json:encode(#{ok => true, granted => true, task_id => B(Task), candidate_sha256 => B(ActSha)})),
+        halt(0);
+      {error, Reasons} ->
+        io:put_chars(json:encode(#{ok => false, granted => false, reasons => Reasons})),
+        halt(0)
+    end.
+  ' -- "${CTX_ARGS[@]}")"
+  echo "$BEAM_CTX"
+  [[ "$(echo "$BEAM_CTX" | jq -r '.ok')" == "true" ]]
+  exit $?
+fi
+
+BEAM_JSON="$("$ERL_BIN" +S 2:2 -noshell "${EBIN_DIRS[@]}" -eval '
+  Mod = '\''cepaf_gleam@ecology@core_effect_fence'\'',
+  Sup = [<<"uos/mcp-canonical-completion/20261031-0327">>],
+  Base = {effect_context,
+    <<"uos/agy-fractal-issue-resolution-master/20261101-1454">>,
+    <<"oi07-effect-time-authority">>,
+    <<"worker-w1b-oi07">>,
+    1, 2000000000, 1000000000,
+    <<"sha256:aaaa1111bbbb2222">>,
+    <<"sha256:aaaa1111bbbb2222">>,
+    10, 300,
+    <<"uos-gleam-ecology-authority:4100">>,
+    Sup, true},
+  IsOk = fun({ok, _}) -> true; ({error, _}) -> false end,
+  IsErr = fun({error, _}) -> true; ({ok, _}) -> false end,
+  ValidGrant = IsOk(Mod:evaluate_effect_fence(Base)),
+  ExpiredHold = IsErr(Mod:evaluate_effect_fence(setelement(7, Base, 2000000000))),
+  SupersededHold = IsErr(Mod:evaluate_effect_fence(setelement(2, Base, <<"uos/mcp-canonical-completion/20261031-0327">>))),
+  RogueHold = IsErr(Mod:evaluate_effect_fence(setelement(12, Base, <<"c3i-legacy:4200">>))),
+  Oi02Hold = IsErr(Mod:evaluate_effect_fence(setelement(14, setelement(3, Base, <<"oi02-live-cutover">>), false)))
+    andalso IsErr(Mod:evaluate_effect_fence(setelement(14, setelement(3, Base, <<"oi02-live-cutover-oi02e">>), false))),
+  W2TaskHold = IsErr(Mod:evaluate_effect_fence(setelement(14, setelement(3, Base, <<"w2-recoverable-14target-cutover">>), false)))
+    andalso IsErr(Mod:evaluate_effect_fence(setelement(14, setelement(3, Base, <<"w2-capsule-activation-and-14-target-cutover">>), false))),
+  DriftHold = IsErr(Mod:evaluate_effect_fence(setelement(9, Base, <<"sha256:different">>))),
+  RollbacksOk = lists:all(fun(Step) ->
+    {recovery_receipt, _Old, _New, Step, 14, true, Committed, RolledBack, MixedCount, ActiveSha, TargetStates} =
+      Mod:simulate_14target_crash_recovery(<<"sha256:old">>, <<"sha256:new">>, Step),
+    (Committed =:= false) andalso (RolledBack =:= true) andalso (MixedCount =:= 0) andalso (ActiveSha =:= <<"sha256:old">>) andalso (length(TargetStates) =:= 14)
+  end, lists:seq(1, 13)),
+  {recovery_receipt, _COld, _CNew, 0, 14, true, CCommitted, CRolledBack, CMixedCount, CActiveSha, CTargetStates} =
+    Mod:simulate_14target_crash_recovery(<<"sha256:old">>, <<"sha256:new">>, 0),
+  CommitOk = (CCommitted =:= true) andalso (CRolledBack =:= false) andalso (CMixedCount =:= 0) andalso (CActiveSha =:= <<"sha256:new">>) andalso (length(CTargetStates) =:= 14),
+  AllOk = ValidGrant andalso ExpiredHold andalso SupersededHold andalso RogueHold andalso Oi02Hold andalso W2TaskHold andalso DriftHold andalso RollbacksOk andalso CommitOk,
+  io:put_chars(json:encode(#{
+    ok => AllOk,
+    scope => <<"pure_otp29_beam_fence_and_14target_state_machine_spec">>,
+    checks => #{
+      valid_grant => ValidGrant,
+      expired_lease_hold => ExpiredHold,
+      superseded_0327_hold => SupersededHold,
+      rogue_4200_c3i_hold => RogueHold,
+      oi02_before_oi07_i29_hold => Oi02Hold,
+      w2_task_id_before_oi07_hold => W2TaskHold,
+      candidate_drift_hold => DriftHold,
+      crash_steps_1_13_rollback_14_targets => RollbacksOk,
+      step_0_commit_14_targets => CommitOk
+    }
+  })),
+  halt(0).
+')"
+
+OUT="$(jq -n \
+  --argjson beam "$BEAM_JSON" \
+  --arg db_path "$DB_PATH" \
+  --argjson db_present "$DB_PRESENT" \
+  --argjson tables "$TABLES_JSON" \
+  '$beam + {wave:"1B",items:["OI07","I21","I29"],sa_plan_readonly:{db_present:$db_present,db_path:$db_path,tables:$tables}}')"
+
+echo "$OUT"
+[[ "$(echo "$OUT" | jq -r '.ok')" == "true" ]]

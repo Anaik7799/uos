@@ -13,7 +13,7 @@ const guardian_sha256 = "d1dc2995fe52915e9c2a7b39309f23a8197cfb273d025f3453ebd90
 fn guardian() -> executor.Guardian {
   let assert Ok(cwd) = simplifile.current_directory()
   executor.Guardian(
-    cwd <> "/../../tools/validation/verify_guardian.exe",
+    cwd <> "/../../tools/validation/_build/verify_guardian.exe",
     guardian_sha256,
   )
 }

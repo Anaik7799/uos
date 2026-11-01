@@ -602,11 +602,36 @@ let scan_knowledge_transclusions root_dir =
   let corpus_index_full = Filename.concat root_dir "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md" in
   let moc_full = Filename.concat root_dir "docs/zk/20260905-1801-moc-uos-unified-master.md" in
 
-  let canonical_source full = List.mem full canonical_sources in
+  let has_timestamp_prefix value =
+    let re = Str.regexp "^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]-" in
+    Str.string_match re value 0
+  in
+  let is_post_cutoff_canonical_doc full =
+    let base = String.lowercase_ascii (Filename.basename full) in
+    String.starts_with ~prefix:"2026103" base ||
+    String.starts_with ~prefix:"202611" base ||
+    String.starts_with ~prefix:"202612" base ||
+    String.starts_with ~prefix:"2027" base
+  in
+  let is_post_cutoff_target id =
+    has_timestamp_prefix id ||
+    contains_text id "2026103" ||
+    contains_text id "202611" ||
+    contains_text id "202612" ||
+    contains_text id "2027"
+  in
+  let agents_full = Filename.concat root_dir "AGENTS.md" in
+  let gemini_full = Filename.concat root_dir "GEMINI.md" in
+  let canonical_source full =
+    full = agents_full ||
+    full = gemini_full ||
+    List.mem full canonical_sources ||
+    is_post_cutoff_canonical_doc full
+  in
   let broken_at full id message =
     let canonical_context =
       canonical_source full ||
-      ((full = corpus_index_full || full = moc_full) && contains_text id "2026103")
+      ((full = corpus_index_full || full = moc_full) && is_post_cutoff_target id)
     in
     (if canonical_context then "canonical-triad:" else "") ^ message
   in
@@ -663,6 +688,58 @@ let scan_knowledge_transclusions root_dir =
   let lower_basename full = String.lowercase_ascii (Filename.basename full) in
   let is_md_file full = Filename.check_suffix (lower_basename full) ".md" in
 
+  (* Historical KM aliases are read-only evidence. No historical document is
+     rewritten; legacy pre-timestamp slugs are mapped to their current path. *)
+  let historical_aliases =
+    let path = Filename.concat root_dir "governance/capability-inventory/historical-km-aliases.json" in
+    if not (Sys.file_exists path) then []
+    else (
+      let ic = open_in path in
+      let re = Str.regexp "^[ \t]*\"\\([^\"]+\\)\"[ \t]*:[ \t]*\"\\([^\"]+\\)\"" in
+      let acc = ref [] in
+      (try
+        while true do
+          let line = input_line ic in
+          if Str.string_match re line 0 then (
+            let key = Str.matched_group 1 line in
+            let target = Str.matched_group 2 line in
+            if key <> "schema" && key <> "description" then
+              acc := (key, target) :: !acc
+          )
+        done
+      with End_of_file -> close_in ic);
+      !acc
+    )
+  in
+  let alias_target id = List.assoc_opt id historical_aliases in
+  let alias_path_exists id =
+    match alias_target id with
+    | Some rel -> regular (Filename.concat root_dir rel)
+    | None -> false
+  in
+  let strip_timestamp_prefix value =
+    let re = Str.regexp "^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]-" in
+    if Str.string_match re value 0 then Str.replace_first re "" value else value
+  in
+  let historical_slug_matches files id =
+    let core = String.lowercase_ascii (strip_timestamp_prefix id) in
+    if String.length core < 4 then []
+    else
+      List.filter (fun full ->
+        let lower = lower_basename full in
+        let base =
+          if Filename.check_suffix lower ".md" then
+            String.sub lower 0 (String.length lower - 3)
+          else lower
+        in
+        let base_core = strip_timestamp_prefix base in
+        is_md_file full &&
+        (base_core = core ||
+         Filename.check_suffix base_core ("-" ^ core) ||
+         contains_text base_core core)
+      ) files
+  in
+
   let note_exists dir id =
     let segments = String.split_on_char '/' id in
     let safe =
@@ -692,6 +769,7 @@ let scan_knowledge_transclusions root_dir =
         else
           let exact_corpus_matches = exact_matches corpus_files in
           if List.length exact_corpus_matches = 1 then true
+          else if alias_path_exists id then true
           else if String.contains id '/' then false
           else
             let token = String.lowercase_ascii id in
@@ -709,11 +787,61 @@ let scan_knowledge_transclusions root_dir =
             let dir_sub_matches = substring_matches dir_files in
             if List.length dir_sub_matches = 1 then true
             else if List.length dir_sub_matches > 1 then false
-            else List.length (substring_matches (List.filter is_md_file corpus_files)) = 1
+            else if List.length (substring_matches (List.filter is_md_file corpus_files)) = 1 then true
+            else
+              let dir_hist_matches = historical_slug_matches dir_files id in
+              if List.length dir_hist_matches = 1 then true
+              else if List.length dir_hist_matches > 1 then false
+              else
+                List.length
+                  (historical_slug_matches (List.filter is_md_file corpus_files) id) = 1
   in
 
   let wiki_exists id = note_exists wiki_dir id in
   let zk_exists id = note_exists zk_dir id || note_exists (Filename.concat zk_dir "adr") id in
+
+  let scan_md_file full =
+    try
+      let ic = open_in full in
+      (try
+        while true do
+          let line = input_line ic in
+          (* Extract [[wiki:ID]] *)
+          let rec parse_prefix prefix is_wiki pos =
+            let plen = String.length prefix in
+            let llen = String.length line in
+            let rec find p =
+              if p + plen > llen then None
+              else if String.sub line p plen = prefix then Some (p + plen)
+              else find (p + 1)
+            in
+            match find pos with
+            | Some vstart ->
+              (match String.index_from_opt line vstart ']' with
+               | Some vend when vend + 1 < llen && line.[vend + 1] = ']' ->
+                 let id = String.sub line vstart (vend - vstart) |> String.split_on_char '|' |> List.hd |> String.trim in
+                 let placeholder = String.starts_with ~prefix:"<" id && String.ends_with ~suffix:">" id in
+                 if String.length id > 0 && id <> "..." && not placeholder then (
+                   if is_wiki then (
+                     incr wiki_count;
+                     if wiki_exists id then incr wiki_resolved
+                     else broken := broken_at full id (sprintf "wiki:%s (in %s)" id full) :: !broken
+                   ) else (
+                     incr zk_count;
+                     if zk_exists id then incr zk_resolved
+                     else broken := broken_at full id (sprintf "zk:%s (in %s)" id full) :: !broken
+                   )
+                 );
+                 parse_prefix prefix is_wiki (vend + 2)
+               | _ -> ())
+            | None -> ()
+          in
+          parse_prefix "[[wiki:" true 0;
+          parse_prefix "[[zk:" false 0;
+        done
+      with End_of_file -> close_in ic)
+    with _ -> ()
+  in
 
   let rec walk_files dir =
     if Sys.file_exists dir && Sys.is_directory dir then (
@@ -724,48 +852,8 @@ let scan_knowledge_transclusions root_dir =
         if kind = Unix.S_DIR then (
           if e <> ".jj" && e <> "_build" && e <> "build" && e <> ".git" && e <> "node_modules" then
             walk_files full
-        ) else if kind = Unix.S_REG && Filename.check_suffix e ".md" then (
-          try
-            let ic = open_in full in
-            (try
-              while true do
-                let line = input_line ic in
-                (* Extract [[wiki:ID]] *)
-                let rec parse_prefix prefix is_wiki pos =
-                  let plen = String.length prefix in
-                  let llen = String.length line in
-                  let rec find p =
-                    if p + plen > llen then None
-                    else if String.sub line p plen = prefix then Some (p + plen)
-                    else find (p + 1)
-                  in
-                  match find pos with
-                  | Some vstart ->
-                    (match String.index_from_opt line vstart ']' with
-                     | Some vend when vend + 1 < llen && line.[vend + 1] = ']' ->
-                       let id = String.sub line vstart (vend - vstart) |> String.split_on_char '|' |> List.hd |> String.trim in
-                       let placeholder = String.starts_with ~prefix:"<" id && String.ends_with ~suffix:">" id in
-                       if String.length id > 0 && id <> "..." && not placeholder then (
-                         if is_wiki then (
-                           incr wiki_count;
-                           if wiki_exists id then incr wiki_resolved
-                           else broken := broken_at full id (sprintf "wiki:%s (in %s)" id full) :: !broken
-                         ) else (
-                           incr zk_count;
-                           if zk_exists id then incr zk_resolved
-                           else broken := broken_at full id (sprintf "zk:%s (in %s)" id full) :: !broken
-                         )
-                       );
-                       parse_prefix prefix is_wiki (vend + 2)
-                     | _ -> ())
-                  | None -> ()
-                in
-                parse_prefix "[[wiki:" true 0;
-                parse_prefix "[[zk:" false 0;
-              done
-            with End_of_file -> close_in ic)
-          with _ -> ()
-        )
+        ) else if kind = Unix.S_REG && Filename.check_suffix e ".md" then
+          scan_md_file full
       ) entries
     )
   in
@@ -778,6 +866,10 @@ let scan_knowledge_transclusions root_dir =
      "docs/zk/20260905-1801-moc-uos-unified-master.md";
      "governance/capability-inventory/wiki-zk-km.toml"];
 
+  List.iter (fun rel ->
+    let p = Filename.concat root_dir rel in
+    if (try (Unix.lstat p).Unix.st_kind = Unix.S_REG with _ -> false) then scan_md_file p
+  ) ["AGENTS.md"; "GEMINI.md"];
   walk_files (Filename.concat root_dir "docs");
   walk_files (Filename.concat root_dir "contracts");
 
@@ -1018,6 +1110,8 @@ let main () =
     printf "  \"broken_transclusions\": %d,\n" (List.length km_audit.broken_transclusions);
     printf "  \"canonical_broken_transclusions\": %d,\n" km_audit.canonical_broken_transclusions;
     printf "  \"historical_broken_transclusions\": %d,\n" km_audit.historical_broken_transclusions;
+    let canonical_details = List.filter (String.starts_with ~prefix:"canonical-triad:") km_audit.broken_transclusions in
+    printf "  \"canonical_broken_details\": [%s],\n" (String.concat ", " (List.map json_quote canonical_details));
     printf "  \"a2ui_components\": %d,\n" a2ui_audit.total_components;
     printf "  \"a2ui_valid\": %b,\n" a2ui_audit.catalog_valid;
     printf "  \"pagerank_top\": [\n";

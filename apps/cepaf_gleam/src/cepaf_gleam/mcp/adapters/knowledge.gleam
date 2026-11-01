@@ -292,12 +292,14 @@ fn search_as(
     |> string.replace("]]", "")
   let lowered = string.lowercase(string.trim(normalized))
   let words = query_words(lowered)
-  let matches =
+  let eligible =
     corpus.entries
     |> dict.values
     |> list.filter(fn(entry) {
       searchable(corpus, principal_scopes, entry, zk_only)
     })
+  let strict_matches =
+    eligible
     |> list.filter_map(fn(entry) {
       // Normalize each current request's bytes once. Nothing is retained across
       // requests: disk freshness, scope and link checks still precede ranking.
@@ -313,6 +315,12 @@ fn search_as(
         False -> Error(Nil)
       }
     })
+  let scored = case strict_matches {
+    [] -> fallback_matches(eligible, lowered, words)
+    strict -> strict
+  }
+  let matches =
+    scored
     |> list.sort(fn(a, b) {
       case int.compare(b.1, a.1) {
         order.Eq -> string.compare(b.0.rel_path, a.0.rel_path)
@@ -344,6 +352,46 @@ fn search_as(
 
 fn query_words(lowered: String) -> List(String) {
   string.split(lowered, " ") |> list.filter(fn(word) { word != "" })
+}
+
+fn matched_query_words(
+  entry: CorpusEntry,
+  words: List(String),
+) -> List(String) {
+  let haystack =
+    string.lowercase(entry.rel_path) <> " " <> string.lowercase(entry.content)
+  list.filter(words, fn(word) { string.contains(haystack, word) })
+}
+
+// Multi-token queries are strict (AND) by default so path/heading relevance
+// stays predictable. If no document satisfies every word, degrade to ranked
+// token-OR: at least two matched words, or one non-trivial word (>= 4 chars)
+// when the query is only two words. The 40-point boost per matched word keeps
+// the most relevant historical documents at the head instead of returning [].
+fn fallback_matches(
+  entries: List(CorpusEntry),
+  lowered: String,
+  words: List(String),
+) -> List(#(CorpusEntry, Int)) {
+  let total = list.length(words)
+  list.filter_map(entries, fn(entry) {
+    let matched = matched_query_words(entry, words)
+    let count = list.length(matched)
+    let eligible = case total {
+      2 ->
+        count >= 1
+        && list.any(matched, fn(word) { string.length(word) >= 4 })
+      _ -> total >= 3 && count >= 2
+    }
+    case eligible {
+      True -> {
+        let path = string.lowercase(entry.rel_path)
+        let body = string.lowercase(entry.content)
+        Ok(#(entry, relevance_score(path, body, lowered, words) + 40 * count))
+      }
+      False -> Error(Nil)
+    }
+  })
 }
 
 // A byte-bound header may end inside a UTF-8 codepoint. Drop only that suffix.

@@ -82,12 +82,14 @@ import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
 import cepaf_gleam/ui/lustre/sciviz_test_dashboard
 import cepaf_gleam/ui/lustre/testing_page
 import cepaf_gleam/ui/lustre/triad_matrix_view
+import cepaf_gleam/ui/lustre/core_evo_cockpit
 import cepaf_gleam/ui/lustre/zlp_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/agui_sse_api
 import cepaf_gleam/ui/wisp/auth
+import cepaf_gleam/ui/wisp/core_evo_api
 import cepaf_gleam/ui/wisp/federation_api
 import cepaf_gleam/ui/wisp/homeostasis_api
 import cepaf_gleam/ui/wisp/inference_api
@@ -332,6 +334,24 @@ fn route_internal(path: String) -> String {
       module_guard.unwrap(module_guard.guard_json(
         json.to_string(zlp_api.lanes_json()),
         "zlp/lanes",
+        "plane",
+      ))
+    "/api/v1/core-evo/status" | "/api/core-evo/health" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.status_json()),
+        "core-evo/status",
+        "backend",
+      ))
+    "/api/v1/core-evo/hive" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.hive_json()),
+        "core-evo/hive",
+        "plane",
+      ))
+    "/api/v1/core-evo/services" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.services_json()),
+        "core-evo/services",
         "plane",
       ))
     "/api/v1/verification" | "/api/verification/status" ->
@@ -3320,6 +3340,7 @@ fn handle_legacy_get(path: String) -> HttpResponse(String) {
     "/api/v1/ai/status" -> json_response(ai_status_json(), 200)
     "/mirage" -> html_response(mirage_cockpit.view())
     "/zlp" -> html_response(zlp_cockpit.view())
+    "/core-evo" -> html_response(core_evo_cockpit.view())
     "/api/v1/mirage/candidates" ->
       json_response(
         json.to_string(
@@ -3551,6 +3572,7 @@ fn route_html(path: String) -> String {
   case path {
     "/mirage" -> mirage_cockpit.view()
     "/zlp" -> zlp_cockpit.view()
+    "/core-evo" -> core_evo_cockpit.view()
     "/" | "/dashboard" ->
       shell.render_page(
         "Dashboard",

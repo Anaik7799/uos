@@ -604,12 +604,12 @@ pub const canonical_guardian_sha256 =
 pub const canonical_systemctl_exe = "/usr/bin/systemctl"
 
 pub const canonical_systemctl_sha256 =
-  "6394f5e8df92878184de9d4dfb7ac242471cb09daf89d23be4e81ae17e9c03b2"
+  "639bce3ce5c06b605079ea56f74e3f08216ddffcfa76e11f62073aa775180082"
 
 pub const canonical_systemd_run_exe = "/usr/bin/systemd-run"
 
 pub const canonical_systemd_run_sha256 =
-  "03a68bafb0ebc0f5eff41cbdf3cbbdf126a3bb87e21140f9147bf78edce36d88"
+  "6eaf6650fc3bc07ba2fb51242d9d286e56770a2abd7306678aa22050ddf9f935"
 
 pub const canonical_repo_root = "/home/an/NAS-setup/uos"
 

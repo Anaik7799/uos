@@ -514,3 +514,40 @@ journal = "docs/journal/20261101-1631-uos-core-evo-v4-w0-completion-and-agy-shut
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1631-uos-core-evo-v4-w0-completion-and-agy-shutdown-restart-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "WAVE1-AND-GATE-W15-FRACTAL-INTEGRATION-20261101-1710"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "w15-serialized-integration-effect-authority-gate"
+state = "development"
+admitted = false
+design = "docs/design/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-as-is-to-be-analysis.md"
+design_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-as-is-to-be-analysis.md"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+risk_portfolio = "governance/planning/20261101-1626-agy-fractal-master-risk-portfolio.json"
+journal = "docs/journal/20261101-1710-wave1-and-gate-w15-fractal-integration-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1710-wave1-and-gate-w15-fractal-integration-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-CORE-EVO-BENEFITS-FEATURES-MCP-ZENOH-HIVE-SERVICES-20261101-1711"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "w15-serialized-integration-effect-authority-gate"
+state = "development"
+admitted = false
+cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+design = "docs/design/20261101-1543-uos-zero-muda-core-dev-hive-biomorphic-fractal-evolution-system.md"
+design_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1543-uos-zero-muda-core-dev-hive-biomorphic-fractal-evolution-system.md"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+risk_portfolio = "governance/planning/20261101-1626-agy-fractal-master-risk-portfolio.json"
+journal = "docs/journal/20261101-1711-uos-core-evo-benefits-features-mcp-zenoh-hive-services-master-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1711-uos-core-evo-benefits-features-mcp-zenoh-hive-services-master-journal.md"
+wiki_article = "docs/wiki/20261101-1721-uos-core-evo-mcp-zenoh-hive-bionic-services-and-dashboard-wiki.md"
+wiki_article_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-1721-uos-core-evo-mcp-zenoh-hive-bionic-services-and-dashboard-wiki.md"
+zk_decision = "docs/zk/20261101-1721-core-evo-zero-muda-holonic-hive-zenoh-mcp-and-cockpit-decision.md"
+zk_decision_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261101-1721-core-evo-zero-muda-holonic-hive-zenoh-mcp-and-cockpit-decision.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

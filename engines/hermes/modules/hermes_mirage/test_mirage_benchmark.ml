@@ -1,5 +1,9 @@
 open Mirage_benchmark
-let require message condition = if not condition then failwith message
+let passed = ref 0
+let failed = ref 0
+let require message condition =
+  if condition then incr passed
+  else (incr failed; failwith message)
 let unwrap = function Ok value -> value | Error message -> failwith message
 let make n = unwrap (config ~roundtrips:n)
 let workloads = [Block_roundtrip; Kv_roundtrip]
@@ -43,7 +47,7 @@ let run_cli runner arguments =
       (fun () -> really_input_string channel (in_channel_length channel)) in
     status, output)
 
-let () =
+let main () =
   List.iter (fun n -> require "MB-01 invalid config rejected"
     (Result.is_error (config ~roundtrips:n))) [min_int; -1; 0; 10001; max_int];
   require "MB-01 valid config observed" (roundtrips (make 10000) = 10000);
@@ -132,3 +136,18 @@ let () =
     (Json.(candidate |> member "status" |> to_string) = "NOT_VERIFIED"))
     Json.(json |> member "candidates" |> to_list);
   print_endline "Mirage benchmark MB-01..10 PASS: oracle/native laws, twin seeds 87+20260907/89, max 10000, clock negatives, 12 CLI probes"
+
+
+(* Counts come from every executed require, including property-loop iterations.
+   Exceptions during setup/CLI/decoding fail the suite and emit a failed receipt. *)
+let () =
+  let finish () =
+    let observation = Suite_telemetry.observe ~suite:"test_mirage_benchmark"
+      ~passed:!passed ~failed:!failed ~skipped:0 in
+    print_string (Suite_telemetry.emit observation ~targets:[]);
+    exit (Suite_telemetry.exit_code observation) in
+  try main (); finish ()
+  with exn ->
+    if !failed = 0 then incr failed;
+    prerr_endline (Printexc.to_string exn);
+    finish ()

@@ -29,12 +29,12 @@
 (executable
  (name test_mirage_benchmark)
  (modules test_mirage_benchmark)
- (libraries hermes_mirage unix yojson))
+ (libraries hermes_mirage unix yojson hermes_harness_suite_telemetry))
 
 (executable
  (name test_mirage_metrics)
  (modules test_mirage_metrics)
- (libraries hermes_mirage unix))
+ (libraries hermes_mirage unix hermes_harness_suite_telemetry))
 
 (executable
  (name mirage_metrics_bridge)
