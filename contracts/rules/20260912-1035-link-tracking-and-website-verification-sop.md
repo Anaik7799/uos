@@ -3,7 +3,7 @@
 #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #zk-adr #zero-muda #tailscale-web #checklist-nav
 
 **UOS / Contracts / Rules / SOP** · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Links](http://nas-1.tail55d152.ts.net:4100/links)  
-**Live Canonical Link:** [http://nas-1.tail55d152.ts.net:4100/docs/rules/20260912-1035-link-tracking-and-website-verification-sop.md](http://nas-1.tail55d152.ts.net:4100/docs/rules/20260912-1035-link-tracking-and-website-verification-sop.md)  
+**Live Canonical Link:** [http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260912-1035-link-tracking-and-website-verification-sop.md](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260912-1035-link-tracking-and-website-verification-sop.md)  
 **Permanent ZK Anchor:** `[[zk:20260912-1035-sop-link-tracking-website-verification]]`  
 **Execution Authority:** `sa-plan` (`tools/sa-plan`, `var/sa-plan/uos.sqlite3`, `SC-JIDOKA-001`, `SC-SA-PLAN-001`, `SC-RISK-PRIORITY-001`)
 

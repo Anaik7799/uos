@@ -154,6 +154,6 @@ In compliance with `contracts/rules/20260907-0653-tri-agent-coordination.md`, du
 ## 7. References
 
 - Lean 4 Formal Specification: [`formal/lean/Universal_Categorical_Composability.lean`](file:///home/an/NAS-setup/uos/formal/lean/Universal_Categorical_Composability.lean)
-- Triad Matrix Specification: [`docs/design/20260913-1200-uos-fractal-triad-matrix-and-claude-verification-spec.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260913-1200-uos-fractal-triad-matrix-and-claude-verification-spec.md)
+- Triad Matrix Specification: [`docs/design/20260913-1200-uos-fractal-triad-matrix-and-claude-verification-spec.md`](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md)
 - Tri-Agent Coordination Contract: [`contracts/rules/20260907-0653-tri-agent-coordination.md`](file:///home/an/NAS-setup/uos/contracts/rules/20260907-0653-tri-agent-coordination.md)
 - Checklist Mandate: [`contracts/rules/comprehensive-checklist-contract.md`](file:///home/an/NAS-setup/uos/contracts/rules/comprehensive-checklist-contract.md)

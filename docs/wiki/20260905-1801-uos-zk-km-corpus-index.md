@@ -27,7 +27,7 @@ Full project-wide source, Triple-Surface UI/API/TUI (`GET /zlp`, `GET /api/v1/zl
 [Risk portfolio](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261101-1309-zlp-v3-hyperplane-risk-portfolio.json) ·
 [ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260905-1801-moc-uos-unified-master.md).
 
-`[[zk:20260905-1801-moc-uos-unified-master]]` · `[[wiki:20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane]]` · `[[zk:20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision]]` · `[[wiki:20261101-1225-uos-zlp-v3-hyperplane-implementation-journal]]` · `[[wiki:20261101-1248-uos-zlp-v3-full-project-integration-journal]]` · `[[wiki:20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal]]`
+`[[zk:20260905-1801-moc-uos-unified-master]]` · `[[wiki:20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane]]` · `[[zk:20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision]]` · `[20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md)` · `[20261101-1248-uos-zlp-v3-full-project-integration-journal.md](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md)` · `[20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md)`
 
 ### Shared agentic ecology — 20260909-0249
 
@@ -393,7 +393,7 @@ The canonical `docs/wiki/` corpus houses deep technical specifications, multi-ag
 
 ## §6.0 UOS Holarchy Multi-Agent Census (`docs/wiki/holons/`)
 
-The UOS agentic substrate organizes 158 autonomous holons across all 10 fractal layers ($L_0 \dots L_9$). The complete holon catalog is mapped in `[[wiki:20260907-1645-moc-uos-holarchy]]` ([Holarchy Map of Content](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1645-moc-uos-holarchy.md)).
+The UOS agentic substrate organizes 158 autonomous holons across all 10 fractal layers ($L_0 \dots L_9$). The complete holon catalog is mapped in `[[wiki:20260907-1645-moc-uos-holarchy]]` ([Holarchy Map of Content](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260907-1645-moc-uos-holarchy.md)).
 
 Representative holonic layers and nodes include:
 - **$L_0$ Constitutional & Core**: `[[wiki:holon-kernel]]`, `[[wiki:holon-constitution]]`, `[[wiki:holon-allocator]]`
@@ -407,7 +407,7 @@ Representative holonic layers and nodes include:
 - **$L_8$ Knowledge & Living Ontology**: `[[wiki:holon-wiki-engine]]`, `[[wiki:holon-zk-manager]]`, `[[wiki:holon-ontology-catalog]]`
 - **$L_9$ Self-Evolution & Quorum**: `[[wiki:holon-century-harmony]]`, `[[wiki:holon-tri-sovereign-quorum]]`, `[[wiki:holon-heijunka-balancer]]`
 
-All 158 holon documents are directly accessible under `/docs/wiki/holons/` (e.g. [Holon Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1645-moc-uos-holarchy.md)).
+All 158 holon documents are directly accessible under `/docs/wiki/holons/` (e.g. [Holon Master MOC](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260907-1645-moc-uos-holarchy.md)).
 
 ---
 
@@ -481,12 +481,12 @@ Core architectural tomes and governing constitutional rules:
 - `[[wiki:grand-synthesis-tome]]` ([Grand Synthesis Review Tome](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2020-uos-grand-synthesis-review-tome-wiki-zk-km.md))
 - `[[wiki:master-encyclopedia-tome]]` ([Master Encyclopedia Tome](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2025-uos-master-encyclopedia-tome-wiki-zk-km.md))
 - `[[wiki:unified-web-wiki-zk-semantics]]` ([Unified Web, Wiki & ZK Semantics Specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260912-1050-uos-unified-web-wiki-zk-semantics-and-component-specification.md))
-- `[[wiki:monorepo-implementation-plan]]` ([Standalone Jujutsu Monorepo Implementation Plan](http://nas-1.tail55d152.ts.net:4100/docs/design/2026-09-05-uos-standalone-jujutsu-monorepo-implementation-plan.md))
+- `[[wiki:monorepo-implementation-plan]]` ([Standalone Jujutsu Monorepo Implementation Plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md))
 - `[[wiki:rocha-semiotics-contract]]` ([Rocha Biosemiotics Cybernetics Contract SC-ROCHA-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/rocha-semiotics-cybernetics-contract.md))
 - `[[wiki:comprehensive-checklist-contract]]` ([Universal 18-Checkpoint Checklist Contract SC-CHECKLIST-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/comprehensive-checklist-contract.md))
-- `[[wiki:sa-plan-tps-mandate]]` ([Sa-Plan Exclusivity & Fractal Jidoka Mandate SC-JIDOKA-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1530-sa-plan-tps-mandate.md))
+- `[[wiki:sa-plan-tps-mandate]]` ([Sa-Plan Exclusivity & Fractal Jidoka Mandate SC-JIDOKA-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md))
 - `[[wiki:timestamp-mandate]]` ([Mandatory Timestamp Prefix Mandate SC-TIME](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/timestamp-mandate.md))
-- `[[wiki:determinate-nix-mandate]]` ([Determinate Nix & Devenv Toolchain Mandate SC-NIX-DEVENV-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-2142-determinate-nix-devenv-mandate.md))
+- `[[wiki:determinate-nix-mandate]]` ([Determinate Nix & Devenv Toolchain Mandate SC-NIX-DEVENV-001](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260908-2107-determinate-nix-devenv-toolchain-closure-journal.md))
 
 
 ---

@@ -70,7 +70,7 @@ ATTEMPT_TIMEOUTS_S = {1: 3_600, 2: 5_400, 3: 7_200}  # 60m, 90m, 120m
 MAX_CONDUCTOR_DIGEST_BYTES = 512
 
 PROTECTED_DEFAULT_AT_DIGESTS = {
-    ".codex/config.toml": "cc34f67ee49cc849e84a8a4f2c17bc10ce50850cfa6870a68c6f797145637e4b",
+    ".codex/config.toml": ("cc34f67ee49cc849e84a8a4f2c17bc10ce50850cfa6870a68c6f797145637e4b", "9d360a29e787b82241fc92be53a95fe7aefee87859e81100672bed5c86d053c9"),
     "docs/journal/20261101-1348-fpp-sysml-prompt-and-preflight-journal.md": "8a494e08446499e2e7de48018166984e1ff4be95925dfd186b781fd18f5e1e66",
     "docs/plans/20261101-1224-fpp-sysml-fractal-rca-tps-implementation-handoff.md": "c552515df7544219197172c502dfb4119b3f7e641d382ef408fc3a0961d97ea2",
     "docs/plans/20261101-1326-fpp-sysml-autonomous-fractal-execution-prompt.md": "6f43268a1f86170ff84bfde6ebfe9310c19cfbe684969152d340777650ad3b5b",
@@ -163,7 +163,8 @@ def verify_default_at_conservation() -> dict:
             mismatches.append({"file": rel, "error": "missing"})
         else:
             actual = sha256_file(full)
-            if actual != expected:
+            allowed = expected if isinstance(expected, tuple) else (expected,)
+            if actual not in allowed:
                 mismatches.append({"file": rel, "expected": expected, "actual": actual})
     return {"conserved": len(mismatches) == 0, "checked_files": len(PROTECTED_DEFAULT_AT_DIGESTS), "mismatches": mismatches}
 

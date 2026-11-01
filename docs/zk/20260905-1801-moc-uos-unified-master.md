@@ -97,8 +97,8 @@ graph TD
    - Server-side typed TyXML rendering without client JavaScript.
 2. **ZigVM Zettelkasten** (`docs/zk/`):
    - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-099`](file:///home/an/NAS-setup/uos/docs/zk/20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing.md)); 99 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
-   - Core Maps of Content ([`MOC-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150212-moc-001-living-architecture-and-multi-agent-system-governance.md) through [`MOC-007`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150849-moc-007-formal-verification-and-correctness-guarantees.md));
-   - Topological Invariant Records ([`INV-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150854-inv-001-two-party-cryptographic-signing-ceremony-and-tamper-evidence.md) through [`INV-006`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150919-inv-006-zero-warning-and-zero-muda-compilation-gate.md)).
+   - Core Maps of Content ([`MOC-001`](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260907-1645-moc-uos-holarchy.md) through [`MOC-007`](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260725-zk-wiki-system-architecture.md));
+   - Topological Invariant Records ([`INV-001`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-provenance-integrity-contract.md) through [`INV-006`](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260908-1715-uos-constitutional-invariants-and-directives-guide.md)).
    - **Contiguity**: 99/99 ADRs present, strictly contiguous, no gaps.
    - **Traceability**: All 99 ADRs link to their respective authority.
 3. **C3I Living Ontology & Evidence Plane** (`docs/wiki/`, `governance/`):

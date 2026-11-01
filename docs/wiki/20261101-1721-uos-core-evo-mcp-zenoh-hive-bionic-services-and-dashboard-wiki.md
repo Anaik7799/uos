@@ -104,23 +104,23 @@ flowchart TD
 
 | Module Path | Layer | LOC | Primary Responsibility & Exported Algebra |
 |---|---|---|---|
-| [ecology/core_evolution.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_evolution.gleam) | `L0..L4` | `512` | `QuotaWindow`, `6,000 bps` (`40%` margin) gate, `$6/$10` OpenRouter shift, `60m/90m/120m` 3-attempt escalation |
-| [ecology/core_hive.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam) | `L4..L7` | `548` | 5-caste holonic hive (`QueenConductor`..`SovereignSentinel`), integer half-life pheromone decay, Heijunka & `2oo3` quorum |
-| [ecology/core_biomorphic_fractal.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_biomorphic_fractal.gleam) | `L0..L9` | `642` | 4 ATP metabolic regimes, Self/Non-Self immune reflex, Prajna breaker, discrete Lyapunov $V(t)$, `70/70` POODAVR |
-| [ecology/core_systems_engineering.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_systems_engineering.gleam) | `L0..L9` | `914` | 17-aspect gate, Čech sheaf $H^1=0$, Stan HMC, 11-domain Rete-UL, Kalman/PID/Shield, STPA/FMEA, SysML v2 & 8 Bionic services |
-| [ecology/core_fractal_holonic_simulator.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fractal_holonic_simulator.gleam) | `L2..L8` | `698` | Closed-loop 10-layer holonic simulator, perturbation injection, Lyapunov trajectory verification |
-| [ecology/core_fpp_actor_twin_mesh.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam) | `L3..L7` | `736` | 6 NASA F-Prime (`FPP`) state machines, OTP 29 actor supervision twins, digital-twin shadow state sync |
-| [ecology/core_effect_fence.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_effect_fence.gleam) | `L0..L5` | `482` | Epoch lease fencing, pairwise file-disjointness verifier, immutable 6-file MCP core SHA-256 guard |
-| [ui/wisp/core_evo_api.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/core_evo_api.gleam) | `L7` | Shared | Pure Gleam snapshot builder & JSON serializer for `/api/v1/core-evo/{status,hive,services}` |
-| [ui/lustre/core_evo_cockpit.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/core_evo_cockpit.gleam) | `L7` | Web UI | Mobile-first `#0a0e17` Lustre SSR cockpit (`GET /core-evo`) with XSS escaping & `CHK-01..18` accordion |
-| [ui/tui/core_evo_view.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/tui/core_evo_view.gleam) | `L7` | TUI | 80-column ANSI terminal projection consuming `core_evo_api` snapshots |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_evolution.gleam` | `L0..L4` | `512` | `QuotaWindow`, `6,000 bps` (`40%` margin) gate, `$6/$10` OpenRouter shift, `60m/90m/120m` 3-attempt escalation |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam` | `L4..L7` | `548` | 5-caste holonic hive (`QueenConductor`..`SovereignSentinel`), integer half-life pheromone decay, Heijunka & `2oo3` quorum |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_biomorphic_fractal.gleam` | `L0..L9` | `642` | 4 ATP metabolic regimes, Self/Non-Self immune reflex, Prajna breaker, discrete Lyapunov $V(t)$, `70/70` POODAVR |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_systems_engineering.gleam` | `L0..L9` | `914` | 17-aspect gate, Čech sheaf $H^1=0$, Stan HMC, 11-domain Rete-UL, Kalman/PID/Shield, STPA/FMEA, SysML v2 & 8 Bionic services |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fractal_holonic_simulator.gleam` | `L2..L8` | `698` | Closed-loop 10-layer holonic simulator, perturbation injection, Lyapunov trajectory verification |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam` | `L3..L7` | `736` | 6 NASA F-Prime (`FPP`) state machines, OTP 29 actor supervision twins, digital-twin shadow state sync |
+| `apps/cepaf_gleam/src/cepaf_gleam/ecology/core_effect_fence.gleam` | `L0..L5` | `482` | Epoch lease fencing, pairwise file-disjointness verifier, immutable 6-file MCP core SHA-256 guard |
+| `apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/core_evo_api.gleam` | `L7` | Shared | Pure Gleam snapshot builder & JSON serializer for `/api/v1/core-evo/{status,hive,services}` |
+| `apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/core_evo_cockpit.gleam` | `L7` | Web UI | Mobile-first `#0a0e17` Lustre SSR cockpit (`GET /core-evo`) with XSS escaping & `CHK-01..18` accordion |
+| `apps/cepaf_gleam/src/cepaf_gleam/ui/tui/core_evo_view.gleam` | `L7` | TUI | 80-column ANSI terminal projection consuming `core_evo_api` snapshots |
 
 ### (c) 13 `./tools/uos-core-evo` CLI Commands, `uos-gleam` MCP & 12 Signed Zenoh `uos/v1/**` Topics
 
 | Surface | Count | Canonical Identifiers & Operational Semantics |
 |---|---|---|
 | **`./tools/uos-core-evo` CLI** | `13` commands | `preflight`, `hive-status`, `biomorphic-fractal`, `systems-engineering`, `simulate-verify`, `fpp-actor-mesh`, `effect-fence`, `quota`, `plan-attempt`, `run-task`, `zenoh-topics`, `mcp-slice`, `status-json` |
-| **`uos-gleam` MCP Server** | `53` lazy / `101` routes | Canonical [`tools/uos-mcp-stdio`](http://nas-1.tail55d152.ts.net:4100/files/tools/uos-mcp-stdio) (`SC-HARNESS-MCP-001`): exposes `53` lazy-loaded tool schemas fronting all `101` typed Gleam/OTP 29 routes; workers receive `8–10` role-scoped routes (`ImplRole`, `RcaTpsRole`, `SovereignGateRole`, `FmeaFormalRole`, `ConductorRole`) |
+| **`uos-gleam` MCP Server** | `53` lazy / `101` routes | Canonical `tools/uos-mcp-stdio` (`SC-HARNESS-MCP-001`): exposes `53` lazy-loaded tool schemas fronting all `101` typed Gleam/OTP 29 routes; workers receive `8–10` role-scoped routes (`ImplRole`, `RcaTpsRole`, `SovereignGateRole`, `FmeaFormalRole`, `ConductorRole`) |
 | **Signed Zenoh `uos/v1/**` Bus** | `12` topics | `uos/v1/hive/queen/directive`, `uos/v1/hive/pheromone/task`, `uos/v1/hive/caste/heartbeat`, `uos/v1/hive/quorum/vote`, `uos/v1/evo/quota/ledger`, `uos/v1/evo/attempt/escalation`, `uos/v1/biomorphic/atp/regime`, `uos/v1/biomorphic/immune/reflex`, `uos/v1/fractal/poodavr/rollup`, `uos/v1/syseng/fpp/transition`, `uos/v1/bionic/services/telemetry`, `uos/v1/fence/effect/receipt` (HMAC-SHA256 + 64-window `seq_id`; legacy `c3i/**` barred) |
 
 ### (d) 5-Caste Holonic Hive (`1.01%` AGY Share, `40%` Margin) & 8 Bionic/FPP/SysML/Digital Twin Services

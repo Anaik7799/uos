@@ -13,7 +13,7 @@
 · [ZigVM ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/zk)  
 · [Peer Runtime Node (VM-1)](http://vm-1.tail55d152.ts.net:8088)  
 
-**Canonical Document Link:** [http://nas-1.tail55d152.ts.net:4100/docs/rules/20260912-1238-comprehensive-capability-and-website-sop.md](http://nas-1.tail55d152.ts.net:4100/docs/rules/20260912-1238-comprehensive-capability-and-website-sop.md)  
+**Canonical Document Link:** [http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260912-1238-comprehensive-capability-and-website-sop.md](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260912-1238-comprehensive-capability-and-website-sop.md)  
 **Permanent ZK Anchor:** `[[zk:20260912-1238-sop-comprehensive-capability-website-verification]]`  
 **Execution Authority:** `sa-plan` (`tools/sa-plan`, `var/sa-plan/uos.sqlite3`, `SC-JIDOKA-001`, `SC-SA-PLAN-001`, `SC-RISK-PRIORITY-001`)
 

@@ -5,7 +5,7 @@
 - **Context Tag**: `#zk-adr`, `#fractal-l0`, `#fractal-l1`, `#fractal-l4`, `#fractal-l7`, `#zero-muda`, `#defense-cybernetics`, `#samvid-vajravyuha`, `#kendrikrita-vyuha`
 - **Tailscale Reference**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260911-1000-adr-114-centralized-code-distributed-run.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260911-1000-adr-114-centralized-code-distributed-run.md)
 - **Master MOC**: [http://nas-1.tail55d152.ts.net:4100/zk](http://nas-1.tail55d152.ts.net:4100/zk)
-- **Specification**: [http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260911-1000-centralized-code-distributed-run-spec.md](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260911-1000-centralized-code-distributed-run-spec.md)
+- **Specification**: [http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260911-1015-centralized-code-distributed-run-journal.md](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260911-1015-centralized-code-distributed-run-journal.md)
 
 ---
 

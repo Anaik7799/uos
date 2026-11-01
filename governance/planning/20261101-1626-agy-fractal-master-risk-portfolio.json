@@ -39,7 +39,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]
@@ -252,7 +252,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]
@@ -467,7 +467,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]
@@ -682,7 +682,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]
@@ -897,7 +897,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]
@@ -1114,7 +1114,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]
@@ -1329,7 +1329,7 @@
         },
         {
           "path": "tools/uos-core-evo",
-          "sha256": "04b634aa7ca47243f89909cd205f42d6ba778e270b18f6687fc8c4d894e9811e",
+          "sha256": "2ce0afb6e77bdd074dac26f28641b68a0245ca52c8ba3eac03c15dd83a32e4cc",
           "observed_at": "2026-11-01T20:46:00Z"
         }
       ]

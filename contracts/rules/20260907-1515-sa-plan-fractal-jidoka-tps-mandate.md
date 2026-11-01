@@ -226,4 +226,4 @@ Every web screen, document view, and system test verifying this contract display
 - **Master Knowledge Corpus Index**: `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
 - **Living Ontology & STAMP Safety Lattice**: `[[wiki:20260905-1801-c3i-living-ontology-hub]]`
 - **Preceding Mandate**: [20260907-0811-hive-decision-forecast-kpi-mandate.md](file:///home/an/NAS-setup/uos/contracts/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md)
-- **Review Tome**: [20260905-1801-review-tome-consolidation-and-verification.md](file:///home/an/NAS-setup/uos/docs/handover/20260905-1801-review-tome-consolidation-and-verification.md)
+- **Review Tome**: [20260905-1801-review-tome-consolidation-and-verification.md](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)
