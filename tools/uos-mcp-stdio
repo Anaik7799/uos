@@ -89,22 +89,15 @@ if [ -n "${CAPSULE}" ]; then
     exit 1
   fi
   BOOT_ID="$(cat /proc/sys/kernel/random/boot_id)"
+  CACHE_CANDIDATES=()
   if [ -n "${XDG_RUNTIME_DIR:-}" ]; then
-    CACHE_ROOT="${XDG_RUNTIME_DIR}/uos-mcp-verified"
-  elif [ -d "/run/user/$(id -u)" ]; then
-    CACHE_ROOT="/run/user/$(id -u)/uos-mcp-verified"
-  else
-    CACHE_ROOT="${HOME}/.cache/uos-mcp-verified-$(id -u)"
+    CACHE_CANDIDATES+=("${XDG_RUNTIME_DIR}/uos-mcp-verified")
   fi
-  if [ -L "${CACHE_ROOT}" ]; then
-    echo "uos-mcp-stdio: unsafe verification cache" >&2; exit 1
+  if [ -d "/run/user/$(id -u)" ]; then
+    CACHE_CANDIDATES+=("/run/user/$(id -u)/uos-mcp-verified")
   fi
-  (umask 077; mkdir -p -- "${CACHE_ROOT}")
-  if [ "$(stat -c '%u:%a' -- "${CACHE_ROOT}")" != "$(id -u):700" ]; then
-    echo "uos-mcp-stdio: verification cache must be user-owned mode 0700" >&2; exit 1
-  fi
+  CACHE_CANDIDATES+=("${UOS_ROOT}/var/run/uos-mcp-verified" "${HOME}/.cache/uos-mcp-verified-$(id -u)")
   SEAL_KEY="$(printf '%s' "${CAPSULE}" | sha256sum | cut -d ' ' -f 1)"
-  SEAL_FILE="${CACHE_ROOT}/${SEAL_KEY}"
   SEAL="$(
     {
       printf '%s\n' "${BOOT_ID}" "${CAPSULE}" "${ACTUAL_PAYLOAD_SHA}"
@@ -114,9 +107,18 @@ if [ -n "${CAPSULE}" ]; then
     } | sha256sum | cut -d ' ' -f 1
   )"
   CACHE_HIT=0
-  if [ -f "${SEAL_FILE}" ] && [ ! -L "${SEAL_FILE}" ] && [ "$(stat -c '%u:%a' -- "${SEAL_FILE}")" = "$(id -u):600" ] && [ "$(cat "${SEAL_FILE}")" = "${SEAL}" ]; then
-    CACHE_HIT=1
-  fi
+  for CAND_ROOT in "${CACHE_CANDIDATES[@]}"; do
+    if [ -L "${CAND_ROOT}" ]; then
+      echo "uos-mcp-stdio: unsafe verification cache" >&2; exit 1
+    fi
+    CAND_FILE="${CAND_ROOT}/${SEAL_KEY}"
+    if [ -d "${CAND_ROOT}" ] && [ "$(stat -c '%u:%a' -- "${CAND_ROOT}")" = "$(id -u):700" ] && \
+       [ -f "${CAND_FILE}" ] && [ ! -L "${CAND_FILE}" ] && [ "$(stat -c '%u:%a' -- "${CAND_FILE}")" = "$(id -u):600" ] && \
+       [ "$(cat "${CAND_FILE}")" = "${SEAL}" ]; then
+      CACHE_HIT=1
+      break
+    fi
+  done
   if [ "${CACHE_HIT}" != 1 ] || [ "${UOS_MCP_FORCE_FULL_VERIFY:-0}" = 1 ]; then
     VERIFY_OUT=""
     if ! VERIFY_OUT="$("${OCAML_BIN}" "${UOS_ROOT}/tools/ecology_release.ml" verify "${CAPSULE}")" || ! printf '%s' "${VERIFY_OUT}" | jq -e '.status == "PASS"' >/dev/null; then
@@ -127,10 +129,16 @@ if [ -n "${CAPSULE}" ]; then
     if [ "${VERIFIED_PAYLOAD_SHA}" != "${ACTUAL_PAYLOAD_SHA}" ]; then
       echo "uos-mcp-stdio: verified payload mismatch" >&2; exit 1
     fi
-    SEAL_TMP="$(mktemp "${CACHE_ROOT}/.seal.XXXXXXXX")"
-    chmod 600 "${SEAL_TMP}"
-    printf '%s\n' "${SEAL}" > "${SEAL_TMP}"
-    mv -f -- "${SEAL_TMP}" "${SEAL_FILE}"
+    for CAND_ROOT in "${CACHE_CANDIDATES[@]}"; do
+      if [ ! -L "${CAND_ROOT}" ] && (umask 077; mkdir -p -- "${CAND_ROOT}") 2>/dev/null && \
+         [ "$(stat -c '%u:%a' -- "${CAND_ROOT}")" = "$(id -u):700" ]; then
+        if SEAL_TMP="$(mktemp "${CAND_ROOT}/.seal.XXXXXXXX" 2>/dev/null)"; then
+          chmod 600 "${SEAL_TMP}"
+          printf '%s\n' "${SEAL}" > "${SEAL_TMP}"
+          mv -f -- "${SEAL_TMP}" "${CAND_ROOT}/${SEAL_KEY}"
+        fi
+      fi
+    done
   fi
 
   UOS_MCP_EBIN_GLOB="${CAPSULE}/apps/*/ebin"

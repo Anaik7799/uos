@@ -666,8 +666,7 @@ def build_worker_command(plan: dict, prompt_text: str) -> list:
         "--skill", os.path.join(UOS_ROOT, ".agents", "skills", "uos-km-triad-brain-memory"),
         "--no-prompt-templates",
         "--no-themes",
-        "--mcp-config", os.path.join(PI_ISOLATED_HOME, "mcp.json"),
-        "--mcp-project-servers", "allow",
+        "--approve",
         "--tools", tools_arg,
         prompt_text,
     ]

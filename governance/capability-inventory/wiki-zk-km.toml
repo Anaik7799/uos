@@ -581,3 +581,18 @@ journal = "docs/journal/20261101-1925-wave4-protected28-harness-successor-and-fp
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1925-wave4-protected28-harness-successor-and-fppsysml-dossier-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-CORE-EVO-W0-W4-POODAVR-IMMORTAL-ETS-AND-SUB25MS-KM-20261101-2102"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "w2-recoverable-14target-cutover"
+state = "development"
+admitted = false
+cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+risk_portfolio = "governance/planning/20261101-1626-agy-fractal-master-risk-portfolio.json"
+journal = "docs/journal/20261101-2102-uos-core-evo-w0-w4-execution-immortal-ets-and-sub25ms-km-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-2102-uos-core-evo-w0-w4-execution-immortal-ets-and-sub25ms-km-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

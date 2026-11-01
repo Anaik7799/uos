@@ -332,6 +332,18 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
                 #("description", json.string("Search query")),
               ]),
             ),
+            #(
+              "limit",
+              json.object([
+                #("type", json.string("integer")),
+                #(
+                  "description",
+                  json.string(
+                    "Maximum ranked results to return (1-20, default 5)",
+                  ),
+                ),
+              ]),
+            ),
           ]),
         ),
         #("required", json.array([json.string("query")], of: fn(x) { x })),

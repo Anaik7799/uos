@@ -7,9 +7,9 @@ sha256(Bin) -> string:lowercase(binary:encode_hex(crypto:hash(sha256, Bin))).
 pmap(Items, Fun) ->
     Parent = self(),
     Workers = [
-        spawn_monitor(fun() ->
+        spawn_opt(fun() ->
             Parent ! {self(), Fun(Item)}
-        end)
+        end, [monitor, {min_heap_size, 2048}])
         || Item <- Items
     ],
     [
@@ -23,9 +23,29 @@ pmap(Items, Fun) ->
         || {Pid, Ref} <- Workers
     ].
 
+sort_entries_newest([]) ->
+    [];
 sort_entries_newest(Entries) ->
-    Keyed = [{element(4, E), element(2, E), E} || E <- Entries],
-    extract_sorted_desc(lists:sort(Keyed), []).
+    Chunks = chunk_list(Entries, 1600),
+    SortedChunks = case Chunks of
+        [Only] ->
+            [lists:sort([{element(4, E), element(2, E), E} || E <- Only])];
+        _ ->
+            pmap(Chunks, fun(Ch) ->
+                lists:sort([{element(4, E), element(2, E), E} || E <- Ch])
+            end)
+    end,
+    MergedAsc = merge_sorted_chunks(SortedChunks),
+    extract_sorted_desc(MergedAsc, []).
+
+merge_sorted_chunks([]) -> [];
+merge_sorted_chunks([One]) -> One;
+merge_sorted_chunks([A, B | Rest]) ->
+    merge_sorted_chunks([lists:merge(A, B) | merge_pairs(Rest)]).
+
+merge_pairs([]) -> [];
+merge_pairs([One]) -> [One];
+merge_pairs([A, B | Rest]) -> [lists:merge(A, B) | merge_pairs(Rest)].
 
 extract_sorted_desc([], Acc) ->
     Acc;
@@ -114,12 +134,16 @@ to_utf8_bin(_) -> error.
 
 chunk_list([], _Size) -> [];
 chunk_list(List, Size) ->
-    case length(List) =< Size of
-        true -> [List];
-        false ->
-            {Head, Tail} = lists:split(Size, List),
-            [Head | chunk_list(Tail, Size)]
-    end.
+    chunk_list_acc(List, Size, Size, [], []).
+
+chunk_list_acc([], _Size, _Rem, [], ChunksAcc) ->
+    lists:reverse(ChunksAcc);
+chunk_list_acc([], _Size, _Rem, CurAcc, ChunksAcc) ->
+    lists:reverse([lists:reverse(CurAcc) | ChunksAcc]);
+chunk_list_acc([H | T], Size, 1, CurAcc, ChunksAcc) ->
+    chunk_list_acc(T, Size, Size, [], [lists:reverse([H | CurAcc]) | ChunksAcc]);
+chunk_list_acc([H | T], Size, Rem, CurAcc, ChunksAcc) ->
+    chunk_list_acc(T, Size, Rem - 1, [H | CurAcc], ChunksAcc).
 
 scan_chunk(RawChunk, DirRel, FsDir, Cp) ->
     lists:filtermap(fun(RawN) ->
@@ -266,50 +290,45 @@ norm_segment_fallback(RawN) ->
         error -> error
     end.
 
-list_one_dir_names([], _DirRelSlash, _FsDirSlash, _Cp, Acc) ->
-    Acc;
-list_one_dir_names([RawN | Rest], DirRelSlash, FsDirSlash, Cp, Acc) ->
+scan_raw_chunk([], _DirRelSlash, _FsDirSlash, _CollectDirs, _Cp, DirAcc, EntryAcc) ->
+    {DirAcc, EntryAcc};
+scan_raw_chunk([RawN | Rest], DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, EntryAcc) ->
     case norm_segment(RawN) of
         {ok, NameBin, Lower} ->
             case (not is_barred_cache_segment(Lower)) andalso (binary:match(Lower, Cp) =:= nomatch) of
                 false ->
-                    list_one_dir_names(Rest, DirRelSlash, FsDirSlash, Cp, Acc);
+                    scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, EntryAcc);
                 true ->
-                    ChildRel = <<DirRelSlash/binary, NameBin/binary>>,
                     ChildFs = <<FsDirSlash/binary, NameBin/binary>>,
-                    list_one_dir_names(Rest, DirRelSlash, FsDirSlash, Cp, [{ChildRel, ChildFs, NameBin, Lower} | Acc])
+                    case prim_file:read_link_info(ChildFs, [{time, posix}]) of
+                        {ok, #file_info{type = directory, size = Size, mtime = Mtime}}
+                          when is_integer(Size), is_integer(Mtime) ->
+                            case CollectDirs of
+                                true ->
+                                    ChildRel = <<DirRelSlash/binary, NameBin/binary>>,
+                                    scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, [ChildRel | DirAcc], EntryAcc);
+                                false ->
+                                    scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, EntryAcc)
+                            end;
+                        {ok, #file_info{type = regular, links = 1, size = Size, mtime = Mtime}}
+                          when is_integer(Size), is_integer(Mtime) ->
+                            ChildRel = <<DirRelSlash/binary, NameBin/binary>>,
+                            case allowed_tree_file_bin(ChildRel, NameBin, Lower) of
+                                true ->
+                                    scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, [{entry, ChildRel, Size, Mtime, false} | EntryAcc]);
+                                false ->
+                                    scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, EntryAcc)
+                            end;
+                        _ ->
+                            scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, EntryAcc)
+                    end
             end;
         _ ->
-            list_one_dir_names(Rest, DirRelSlash, FsDirSlash, Cp, Acc)
-    end.
-
-stat_candidates_chunk([], _CollectDirs, DirAcc, EntryAcc) ->
-    {DirAcc, EntryAcc};
-stat_candidates_chunk([{ChildRel, ChildFs, NameBin, Lower} | Rest], CollectDirs, DirAcc, EntryAcc) ->
-    case prim_file:read_link_info(ChildFs, [{time, posix}]) of
-        {ok, #file_info{type = directory, size = Size, mtime = Mtime}}
-          when is_integer(Size), is_integer(Mtime) ->
-            case CollectDirs of
-                true ->
-                    stat_candidates_chunk(Rest, CollectDirs, [ChildRel | DirAcc], EntryAcc);
-                false ->
-                    stat_candidates_chunk(Rest, CollectDirs, DirAcc, EntryAcc)
-            end;
-        {ok, #file_info{type = regular, links = 1, size = Size, mtime = Mtime}}
-          when is_integer(Size), is_integer(Mtime) ->
-            case allowed_tree_file_bin(ChildRel, NameBin, Lower) of
-                true ->
-                    stat_candidates_chunk(Rest, CollectDirs, DirAcc, [{entry, ChildRel, Size, Mtime, false} | EntryAcc]);
-                false ->
-                    stat_candidates_chunk(Rest, CollectDirs, DirAcc, EntryAcc)
-            end;
-        _ ->
-            stat_candidates_chunk(Rest, CollectDirs, DirAcc, EntryAcc)
+            scan_raw_chunk(Rest, DirRelSlash, FsDirSlash, CollectDirs, Cp, DirAcc, EntryAcc)
     end.
 
 scan_raw_chunk(RawChunk, DirRelSlash, FsDirSlash, CollectDirs, Cp) ->
-    Cands = list_one_dir_names(RawChunk, DirRelSlash, FsDirSlash, Cp, []),
-    stat_candidates_chunk(Cands, CollectDirs, [], []).
+    scan_raw_chunk(RawChunk, DirRelSlash, FsDirSlash, CollectDirs, Cp, [], []).
 
 walk_tree_async(_Root, _DirRel, Depth, _Cp) when Depth >= 16 ->
     [];
@@ -323,17 +342,21 @@ walk_tree_async(Root, DirRel, Depth, Cp) ->
     case prim_file:list_dir(FsDir) of
         {ok, RawNames} ->
             CollectDirs = (Depth + 1 < 16),
-            ChunkSz = case Depth =< 1 of true -> 160; false -> 256 end,
-            {SubRels, Entries} = case length(RawNames) > ChunkSz of
-                false ->
-                    scan_raw_chunk(RawNames, DirRelSlash, FsDirSlash, CollectDirs, Cp);
-                true ->
-                    Chunks = chunk_list(RawNames, ChunkSz),
-                    Pairs = pmap(Chunks, fun(RCh) ->
-                        scan_raw_chunk(RCh, DirRelSlash, FsDirSlash, CollectDirs, Cp)
-                    end),
-                    {DLs, ELs} = lists:unzip(Pairs),
-                    {lists:append(DLs), lists:append(ELs)}
+            ChunkSz = case Depth =< 1 of true -> 220; false -> 320 end,
+            {SubRels, Entries} = case RawNames of
+                [] ->
+                    {[], []};
+                _ ->
+                    case chunk_list(RawNames, ChunkSz) of
+                        [OnlyChunk] ->
+                            scan_raw_chunk(OnlyChunk, DirRelSlash, FsDirSlash, CollectDirs, Cp);
+                        Chunks ->
+                            Pairs = pmap(Chunks, fun(RCh) ->
+                                scan_raw_chunk(RCh, DirRelSlash, FsDirSlash, CollectDirs, Cp)
+                            end),
+                            {DLs, ELs} = lists:unzip(Pairs),
+                            {lists:append(DLs), lists:append(ELs)}
+                    end
             end,
             Nested = case SubRels of
                 [] ->
@@ -414,23 +437,42 @@ encode_url_path_bin(Path) ->
     end.
 
 entry_json_iolist({entry, Path, Bytes, Mtime, _}) ->
-    EncPath = encode_url_path_bin(Path),
-    Url = <<"/files/", EncPath/binary>>,
-    Route = case Path of
-        <<"docs/wiki/", Name/binary>> -> [<<"/wiki/">>, pct_encode_seg(Name)];
-        <<"docs/zk/", Name/binary>> -> [<<"/zk/">>, pct_encode_seg(Name)];
-        _ -> Url
-    end,
-    [
-        <<"{\"path\":">>, json:encode_binary(Path),
-        <<",\"url\":">>, json:encode_binary(Url),
-        <<",\"raw_url\":">>, json:encode_binary(<<Url/binary, "?raw=1">>),
-        <<",\"tailscale_url\":">>, json:encode_binary(<<"http://nas-1.tail55d152.ts.net:4100", Url/binary>>),
-        <<",\"document_url\":">>, json:encode_binary(iolist_to_binary([<<"http://nas-1.tail55d152.ts.net:4100">>, Route])),
-        <<",\"bytes\":">>, integer_to_binary(Bytes),
-        <<",\"mtime_seconds\":">>, integer_to_binary(Mtime),
-        <<"}">>
-    ].
+    case is_url_clean_path(Path) of
+        true ->
+            DocRoute = case Path of
+                <<"docs/wiki/", Name/binary>> -> [<<"/wiki/">>, Name];
+                <<"docs/zk/", Name/binary>> -> [<<"/zk/">>, Name];
+                _ -> [<<"/files/">>, Path]
+            end,
+            [
+                <<"{\"path\":\"">>, Path,
+                <<"\",\"url\":\"/files/">>, Path,
+                <<"\",\"raw_url\":\"/files/">>, Path, <<"?raw=1\"">>,
+                <<",\"tailscale_url\":\"http://nas-1.tail55d152.ts.net:4100/files/">>, Path,
+                <<"\",\"document_url\":\"http://nas-1.tail55d152.ts.net:4100">>, DocRoute,
+                <<"\",\"bytes\":">>, integer_to_binary(Bytes),
+                <<",\"mtime_seconds\":">>, integer_to_binary(Mtime),
+                <<"}">>
+            ];
+        false ->
+            EncPath = encode_url_path_bin(Path),
+            Url = <<"/files/", EncPath/binary>>,
+            Route = case Path of
+                <<"docs/wiki/", Name/binary>> -> [<<"/wiki/">>, pct_encode_seg(Name)];
+                <<"docs/zk/", Name/binary>> -> [<<"/zk/">>, pct_encode_seg(Name)];
+                _ -> Url
+            end,
+            [
+                <<"{\"path\":">>, json:encode_binary(Path),
+                <<",\"url\":">>, json:encode_binary(Url),
+                <<",\"raw_url\":">>, json:encode_binary(<<Url/binary, "?raw=1">>),
+                <<",\"tailscale_url\":">>, json:encode_binary(<<"http://nas-1.tail55d152.ts.net:4100", Url/binary>>),
+                <<",\"document_url\":">>, json:encode_binary(iolist_to_binary([<<"http://nas-1.tail55d152.ts.net:4100">>, Route])),
+                <<",\"bytes\":">>, integer_to_binary(Bytes),
+                <<",\"mtime_seconds\":">>, integer_to_binary(Mtime),
+                <<"}">>
+            ]
+    end.
 
 encode_catalog_json(Root, {Total, Wiki, Zk, Sop, Journal, Design, Handover, Contracts}, PageEntries, TotalEntries, Limit, Offset, Truncated, _BaseUrl, _Unused) ->
     EntriesIo = lists:join(<<",">>, [entry_json_iolist(E) || E <- PageEntries]),
