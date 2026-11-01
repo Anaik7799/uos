@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# Offline Lean 4.33.0 zero-sorry formal proof gate (OI04).
-# Zero Python (AGENTS.md §5.4): pure POSIX/Bash + Lean 4.33.0 + sha256sum + jq.
+# Offline zero-sorry formal proof gate (OI04).
+# Toolchain: tools/lean, observed 4.33.0. The Lake package at formal/lean/ruliad
+# pins 4.35.0 with Mathlib SEPARATELY; these two toolchains are deliberately not
+# the same, and every target here must compile Mathlib-free under tools/lean.
+# The gate reports the version it observed rather than asserting one.
+# Zero Python (AGENTS.md §5.4): pure POSIX/Bash + Lean + sha256sum + jq.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
@@ -11,6 +15,7 @@ TARGETS=(
   "formal/lean/UosZlpHyperplane.lean"
   "formal/lean/ProvenanceAdjudication.lean"
   "formal/lean/Ruliad.lean"
+  "formal/lean/Substrate_Categorical_Mechanics.lean"
 )
 
 if [[ ! -x "$LEAN" ]]; then

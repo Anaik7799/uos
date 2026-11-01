@@ -66,20 +66,96 @@ theorem rete_beta_join_activation (f1 f2 : ReteFact)
    3. The Ruliad: Multiway Rewriting & Causal Invariance (Confluence)
    ========================================================================= -/
 
+/-- A ruliad state carries two independent counters so that the two rewrite
+branches below are genuinely different functions.
+
+**Repair note (20261101-2331).** Until this revision `RuliadState` held a single
+`token` field, `branch_left` and `branch_right` were both
+`{ token := s.token + 1 }`, and `ruliad_causal_confluence` read
+`branch_left s = branch_right s := rfl`. That statement is true of *any* single
+function applied twice and says nothing whatsoever about confluence; the two
+branches were identical, so there was no divergence to join. The defect was
+recorded in `docs/journal/20261101-2236-ruliad-poodavr-integration-and-main-merge-journal.md`
+and is repaired here rather than merely reported.
+
+No gate could have caught it: `rfl` on identical functions type-checks
+correctly, and `G-SUBSTRATE-CAT` is an explicitly `[INVENTORY]`-labelled
+file-existence predicate. The guard that *can* catch it is
+`ruliad_branches_genuinely_diverge` below, which fails to compile if the two
+branches are ever collapsed again. -/
 structure RuliadState where
-  token : Nat
+  left_token : Nat
+  right_token : Nat
   deriving DecidableEq, Repr
 
+/-- The left rewrite advances only the left counter. -/
 def branch_left (s : RuliadState) : RuliadState :=
-  { token := s.token + 1 }
+  { s with left_token := s.left_token + 1 }
 
+/-- The right rewrite advances only the right counter. -/
 def branch_right (s : RuliadState) : RuliadState :=
-  { token := s.token + 1 }
+  { s with right_token := s.right_token + 1 }
 
-/-- THEOREM 3: Symmetrical branches in the Ruliad multiway graph achieve causal confluence. -/
-theorem ruliad_causal_confluence (s : RuliadState) :
-    branch_left s = branch_right s :=
-  rfl
+/-- One step of the multiway rewrite relation: either branch may fire. -/
+inductive RuliadStep : RuliadState → RuliadState → Prop
+  | left  (s : RuliadState) : RuliadStep s (branch_left s)
+  | right (s : RuliadState) : RuliadStep s (branch_right s)
+
+/-- Two states are joinable when a common successor is reachable from both in at
+most one step. This is the conclusion that makes confluence a real claim: the
+divergent pair must be *brought back together*. -/
+def RuliadJoinable (x y : RuliadState) : Prop :=
+  ∃ z : RuliadState, (x = z ∨ RuliadStep x z) ∧ (y = z ∨ RuliadStep y z)
+
+/-- **THE NON-TRIVIALITY GUARD.** The two branches are not the same function.
+
+This is the poka-yoke for the defect described above. If anyone collapses
+`branch_left` and `branch_right` back into one function, this theorem stops
+compiling, and `tools/lean-offline-gate` — which now compiles this file — goes
+red. A confluence theorem over identical branches cannot silently return. -/
+theorem ruliad_branches_genuinely_diverge :
+    ∃ s : RuliadState, branch_left s ≠ branch_right s := by
+  refine ⟨{ left_token := 0, right_token := 0 }, ?_⟩
+  intro h
+  have : (1 : Nat) = 0 := congrArg RuliadState.left_token h
+  exact Nat.succ_ne_zero 0 this
+
+/-- The diamond closes: firing the other branch afterwards reaches one common
+state regardless of which branch fired first. -/
+theorem ruliad_diamond (s : RuliadState) :
+    branch_right (branch_left s) = branch_left (branch_right s) := rfl
+
+/-- THEOREM 3: Causal invariance of the ruliad multiway graph, stated as **local
+confluence**: any two one-step divergences from a common state are joinable.
+
+Unlike the `rfl` statement this replaces, the proof must actually produce the
+joining state, and in the two genuinely divergent cases it is the diamond above
+that supplies it. The general lifting from local confluence to global confluence
+for a terminating relation is Newman's lemma, proved over Mathlib in
+`formal/lean/ruliad/Ruliad/Core.lean`; this file stays Mathlib-free so that
+`tools/lean-offline-gate` can compile it with the bare toolchain. -/
+theorem ruliad_causal_confluence {s x y : RuliadState}
+    (hx : RuliadStep s x) (hy : RuliadStep s y) : RuliadJoinable x y := by
+  cases hx with
+  | left =>
+    cases hy with
+    | left => exact ⟨branch_left s, Or.inl rfl, Or.inl rfl⟩
+    | right =>
+      refine ⟨branch_right (branch_left s), Or.inr (RuliadStep.right _), Or.inr ?_⟩
+      exact ruliad_diamond s ▸ RuliadStep.left (branch_right s)
+  | right =>
+    cases hy with
+    | left =>
+      refine ⟨branch_right (branch_left s), Or.inr ?_, Or.inr (RuliadStep.right _)⟩
+      exact ruliad_diamond s ▸ RuliadStep.left (branch_right s)
+    | right => exact ⟨branch_right s, Or.inl rfl, Or.inl rfl⟩
+
+/-- Joinability is symmetric, so the orientation of the divergent pair in
+`ruliad_causal_confluence` carries no hidden assumption. -/
+theorem ruliad_joinable_symm {x y : RuliadState} (h : RuliadJoinable x y) :
+    RuliadJoinable y x := by
+  obtain ⟨z, hx, hy⟩ := h
+  exact ⟨z, hy, hx⟩
 
 
 /- =========================================================================

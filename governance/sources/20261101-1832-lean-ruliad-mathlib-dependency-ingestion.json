@@ -696,5 +696,33 @@
     "measurement_artifact_corrected": "an earlier run of the same suite reported 6 failures including runtime_gateway:stdio_main undef. That was my own harness error: relative -pa paths broke the spawned subprocess. With absolute -pa the module passes 27/27. The undef was never a regression; stdio_main exists identically at main and at the tip.",
     "workspace_deviation": "authored in the shared default working copy, deviating from INV-WS-01. Mitigation: jj split isolated my 66 files into 8474e317 and left all 10 foreign files untouched in the working copy; no foreign change was described, squashed, rebased or abandoned (INV-WS-02/03).",
     "temporary_workspace": ".uos-workspaces/fable-mainbase created at main solely to measure the baseline, provisioned with 11 priv artifacts per INV-WS-08, then forgotten"
+  },
+  "confluence_repair": {
+    "observed_utc": "2026-11-01T23:26:00Z",
+    "sa_plan": "uos/ruliad-confluence-repair/20261101-2331",
+    "journal": "docs/journal/20261101-2326-ruliad-confluence-repair-journal.md",
+    "target": "formal/lean/Substrate_Categorical_Mechanics.lean",
+    "defect": "ruliad_causal_confluence proved branch_left s = branch_right s by rfl while both functions were literally { token := s.token + 1 }; the name claimed confluence and the body asserted reflexivity of one function",
+    "root_cause": "vacuity is not a type error. A proof assistant checks that a proof establishes its statement, never that the statement is worth establishing. No gate category can detect this; only an explicit non-triviality obligation sited next to the claim converts it into a compile error.",
+    "repair": [
+      "RuliadState carries left_token and right_token; the two branches advance different counters",
+      "RuliadStep is an inductive one-step relation; RuliadJoinable demands a common successor reachable from both sides",
+      "ruliad_causal_confluence now proves local confluence by case analysis, the diamond supplying the join in the two genuinely divergent cases",
+      "ruliad_branches_genuinely_diverge is the poka-yoke guard",
+      "ruliad_joinable_symm shows the orientation of the divergent pair hides no assumption",
+      "the vacuous original is recorded in a source docstring so the history travels with the code"
+    ],
+    "falsifier_executed": "collapsing branch_right into branch_left in a throwaway copy yields 'error: Type mismatch' inside ruliad_branches_genuinely_diverge, so the guard mechanically detects the exact regression it exists to prevent",
+    "gate_wiring": "the file was added to tools/lean-offline-gate, 5 targets to 6; before this no gate compiled it at all. Result 6/6 exit 0, all zero_sorry_verified, 421ms for the repaired file",
+    "toolchain_correction": "my first comment edit to lean-offline-gate asserted 4.35.0. The gate receipt reports tools/lean as 4.33.0 and the 4.35.0 pin belongs to the separate Lake package; the false claim was corrected in the same task. Consequence: the repair is verified Mathlib-free under BOTH toolchains, stronger than intended.",
+    "not_claimed": [
+      "Newman's lemma is NOT in this file; it is in formal/lean/ruliad/Ruliad/Core.lean over Mathlib",
+      "local confluence here is one-step over a two-counter relation, deliberately modest in depth",
+      "ruliad_diamond closes by rfl, which is honest for a definitional join but is not a deep exercise of the relation",
+      "G-SUBSTRATE-CAT remains an [INVENTORY] file-existence predicate; its semantics were NOT changed, and that is handed to Codex for independent review rather than altered unilaterally"
+    ],
+    "observed_pre_existing_nonconformance": "tools/run_tri_sovereign_substrate_review.py is Python inside a G-SUBSTRATE-CAT predicate, against the OCaml/Mojo-only rule. Recorded, out of scope for this cycle.",
+    "historical_preservation": "ADR-124 and three descriptive documents still describe the old theorem and were left byte-for-byte; the correction is additive in source",
+    "admission": "NOT_ADMITTED; EV ceiling 93; no EV number minted; CHK-17-SOV outstanding"
   }
 }
