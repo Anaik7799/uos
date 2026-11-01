@@ -506,10 +506,29 @@ def cmd_preflight(_args: argparse.Namespace) -> int:
     # Probe Gleam/OTP 29 MCP stdio gateway (`system_zenoh`)
     mcp_probe = mcp_call_tool("system_zenoh", {})
 
+    # Probe Default System `erl` in PATH AND Pinned OTP 29 Runtime
+    sys_erl_proc = subprocess.run(
+        ["erl", "-noshell", "-eval", "io:format(\"~s|~s\", [erlang:system_info(otp_release), erlang:system_info(version)]), halt(0)."],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    sys_otp_parts = sys_erl_proc.stdout.strip().split("|") if sys_erl_proc.returncode == 0 else ["unknown", "unknown"]
+    sys_otp_rel = sys_otp_parts[0]
+    sys_erts_ver = sys_otp_parts[1] if len(sys_otp_parts) > 1 else "unknown"
+    otp29_ok = sys_otp_rel == "29" or sys_otp_rel.startswith("29.")
+
     zlp_bin = os.path.join(UOS_ROOT, "var", "zlp", "uos_zlp_v3_port")
     report = {
-        "schema": "uos.core_evo.preflight.v1",
+        "schema": "uos.core_evo.preflight.v2",
         "ev_ceiling": ADMITTED_EV_CEILING,
+        "system_erlang_otp": {
+            "erl_in_path": shutil.which("erl"),
+            "erlc_in_path": shutil.which("erlc"),
+            "otp_release": sys_otp_rel,
+            "erts_version": sys_erts_ver,
+            "otp_29_verified": otp29_ok,
+        },
         "candidate_sha256": current_candidate_sha256(),
         "default_at_codex_6files_conserved": conservation["conserved"],
         "quota_40pct_margin": quota,
@@ -528,7 +547,8 @@ def cmd_preflight(_args: argparse.Namespace) -> int:
     }
     print(json.dumps(report, indent=2))
     ok = (
-        conservation["conserved"]
+        otp29_ok
+        and conservation["conserved"]
         and quota["status"] == "ADMITTED"
         and mcp_probe["ok"]
         and c3i_blocked
@@ -982,14 +1002,98 @@ def cmd_simulate_verify(_args: argparse.Namespace) -> int:
     return 0 if cert_snap.get("all_12_invariants_proved") is True else 2
 
 
+def cmd_fpp_actor_mesh(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    conn = init_quota_db()
+    quota = get_quota_snapshot(conn)
+
+    ebin_glob = os.path.join(WORKSPACE_ROOT, "apps", "cepaf_gleam", "build", "dev", "erlang")
+    ebins = []
+    if os.path.isdir(ebin_glob):
+        for pkg in os.listdir(ebin_glob):
+            eb = os.path.join(ebin_glob, pkg, "ebin")
+            if os.path.isdir(eb):
+                ebins.append(eb)
+
+    now_ms = int(time.time() * 1000)
+    erl_expr = (
+        f"Q = {{quota_snapshot, {quota['agy_5h_bps']}, {quota['agy_7d_bps']}, "
+        f"{quota['agy_30d_bps']}, {quota['openrouter_24h_nanodollars']}}}, "
+        f"{{ok, S}} = cepaf_gleam@ecology@core_fpp_actor_twin_mesh:execute_and_verify_otp29_fpp_actor_mesh(Q, {now_ms}), "
+        f"J = cepaf_gleam@ecology@core_fpp_actor_twin_mesh:encode_mesh_summary_json(S), "
+        f"io:put_chars(J), io:nl(), halt(0)."
+    )
+    pa_args = []
+    for eb in ebins:
+        pa_args.extend(["-pa", eb])
+
+    mesh_snap = {}
+    if pa_args:
+        proc = subprocess.run(
+            [ERL_BIN, "-noshell"] + pa_args + ["-eval", erl_expr],
+            capture_output=True,
+            text=True,
+            timeout=25,
+        )
+        if proc.returncode == 0 and proc.stdout.strip():
+            for line in reversed(proc.stdout.strip().splitlines()):
+                if line.strip().startswith("{"):
+                    mesh_snap = json.loads(line.strip())
+                    break
+
+    mcp_hier = mcp_call_tool("agent_hierarchy", {})
+    mcp_topo = mcp_call_tool("mesh_topology", {})
+
+    pub = zenoh_publish_signed(
+        topic="uos/v1/core_evo/fpp_actor_mesh/status",
+        plan_id="uos/agy-fractal-issue-resolution-master/20261101-1454",
+        task_id="fpp-actor-mesh",
+        worker_id="uos-core-evo",
+        attempt=1,
+        seq_id=int(time.time()),
+        payload_obj={
+            "otp_is_29": mesh_snap.get("otp_is_29", False),
+            "actors": mesh_snap.get("actors_spawned", 0),
+            "accepted": mesh_snap.get("intents_accepted_across_l0_l9", 0),
+            "twins_ok": mesh_snap.get("all_twins_converged", False),
+            "sheaf_ok": mesh_snap.get("sheaf_gluing_valid", False),
+        },
+    )
+
+    out = {
+        "schema": "uos.core_evo.fpp_actor_mesh_cli.v4",
+        "otp29_fpp_actor_mesh": mesh_snap,
+        "mcp_routes": {
+            "agent_hierarchy_ok": mcp_hier["ok"],
+            "mesh_topology_ok": mcp_topo["ok"],
+        },
+        "zenoh_pub": pub,
+    }
+    print(json.dumps(out, indent=2))
+    ok = (
+        mesh_snap.get("otp_is_29") is True
+        and mesh_snap.get("actors_spawned") == 10
+        and mesh_snap.get("intents_accepted_across_l0_l9") == 10
+        and mesh_snap.get("cocycle_chain_valid") is True
+        and mesh_snap.get("sheaf_gluing_valid") is True
+        and mesh_snap.get("all_17_aspects_aligned") is True
+        and mesh_snap.get("all_twins_converged") is True
+        and mesh_snap.get("openrouter_secret_redacted") is True
+        and mesh_snap.get("vetoed_os_nvme_halt_verified") is True
+        and mesh_snap.get("vetoed_ev_above_93_halt_verified") is True
+    )
+    return 0 if ok else 2
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="UOS-CORE-EVO Zero-Muda Core Dev, Hive, Biomorphic, Fractal & Evolution System")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    sub.add_parser("preflight", help="Run Zero-Muda MCP + Zenoh + Quota + Conservation preflight")
+    sub.add_parser("preflight", help="Run Zero-Muda OTP 29 + MCP + Zenoh + Quota + Conservation preflight")
     sub.add_parser("hive-status", help="Inspect 5-Caste Holonic Hive Heijunka & MCP/Zenoh binding")
     sub.add_parser("systems-engineering", help="Verify 17-Aspect, Sheaf, Stan, 11-Domain Rete-UL, Kalman/PID/FPP, SysML & 8 Bionic Services")
     sub.add_parser("simulate-verify", help="Simulate 24 epochs x 170 Fractal Holons (4,080 states) and verify all 12 mathematical invariants")
+    sub.add_parser("fpp-actor-mesh", help="Spawn & verify all 10 OTP 29 FPP actors with MCP, Zenoh, OTel, Twins, OpenRouter & Denotational Intents")
 
     p_bf = sub.add_parser("biomorphic-fractal", help="Evaluate Metabolic ATP, Lyapunov dV/dt & L0..L9 POODAVR state")
     p_bf.add_argument("--v-prev", type=int, default=600)
@@ -1026,6 +1130,8 @@ def main() -> int:
         return cmd_systems_engineering(args)
     if args.cmd == "simulate-verify":
         return cmd_simulate_verify(args)
+    if args.cmd == "fpp-actor-mesh":
+        return cmd_fpp_actor_mesh(args)
     if args.cmd == "biomorphic-fractal":
         return cmd_biomorphic_fractal(args)
     if args.cmd == "quota":

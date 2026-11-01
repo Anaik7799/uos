@@ -60,8 +60,8 @@ pub type WallClockMeasurements =
 pub type Metadata =
   Dict(String, String)
 
-// Erlang FFI: telemetry:execute(EventName, Measurements, Metadata)
-@external(erlang, "telemetry", "execute")
+// Erlang FFI: safe telemetry:execute(EventName, Measurements, Metadata)
+@external(erlang, "cepaf_gleam_ffi", "safe_telemetry_execute")
 fn erl_telemetry_execute(
   event_name: List(dynamic.Dynamic),
   measurements: dynamic.Dynamic,
@@ -185,11 +185,6 @@ fn build_event_name(base: List(String), suffix: String) -> List(Dynamic) {
   |> list.map(string_to_atom_dynamic)
 }
 
-// Wrapper to simplify the 2-arity Erlang BIF call
-fn string_to_atom_dynamic(s: String) -> Dynamic {
-  // Using utf8 encoding
-  string_to_atom_dynamic_impl(s, "utf8")
-}
-
+// 1-arity erlang:binary_to_atom/1 defaults to UTF-8 in OTP 20..29 (passing Gleam "utf8" binary to /2 threw badarg)
 @external(erlang, "erlang", "binary_to_atom")
-fn string_to_atom_dynamic_impl(s: String, encoding: String) -> Dynamic
+fn string_to_atom_dynamic(s: String) -> Dynamic

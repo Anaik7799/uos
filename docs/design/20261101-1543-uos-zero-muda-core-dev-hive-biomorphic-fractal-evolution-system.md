@@ -61,7 +61,7 @@ flowchart TD
 4. **Hardened `uos/v1/**` Signed Zenoh & ZLP-v3 Bus** ([`core_bus.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/zenoh/core_bus.gleam)):
    - Backed by supervised **UOS-ZLP-v3** ([`zlp_hyperplane.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zlp_hyperplane.gleam): Lean 4.33.0 zero-sorry `verify_frame` anti-replay `seq_id` + Zig 0.16.0 Zen 5 AVX-512 `:7447`/`:8000` shards) and BEAM ETS + SQLite WAL store-and-forward across `:4100` capsule swaps.
 5. **Executable Zero-Muda Core Orchestrator CLI** ([`tools/uos-core-evo`](http://nas-1.tail55d152.ts.net:4100/files/tools/uos-core-evo)):
-   - Subcommands: `preflight`, `hive-status`, `biomorphic-fractal`, `systems-engineering`, `simulate-verify`, `quota`, `plan-attempt`, `run-task`.
+   - Subcommands: `preflight`, `hive-status`, `biomorphic-fractal`, `systems-engineering`, `simulate-verify`, `fpp-actor-mesh`, `quota`, `plan-attempt`, `run-task`.
 
 ---
 
@@ -131,6 +131,34 @@ flowchart TD
    - Simulates coupled discrete-time state equations across **6 operational & adversarial regimes**: (1) Nominal Anabolic Parallel Wave, (2) Workspace Corruption -> clean JJ rollback + Attempt 2 (`90m`, `Pi + DeepSeek Pro` ACH RCA + Poka-Yoke), (3) Wrong Architectural Path -> clean JJ rollback + Attempt 3 (`120m`, `Pi + Argon` STPA/TPS pivot + `Codex`), (4) `$4.65` OpenRouter surge -> automatic `$0`-OpenRouter shift, (5) Foreign `:4200` `c3i/**` + forged `EV-108` attack -> quarantined at Bio Membrane & 11-Domain Rete-UL, and (6) `6,050 bps` (`> 60%`) quota burst -> 0-burn `TorporMargin40Hold` followed by sliding-window decay and steady-state convergence $V(24) = 0$.
 3. **12-Invariant Machine Verification Certificate (`INV-HOLON-01` .. `INV-HOLON-12`)**:
    - Proves `12/12` formal invariants across all `4,080` simulated holon states (`AGY` token share `< 1.1%` vs `< 2.0%` cap, `100%` `40%`-margin enforcement, `2/2` faults healed in `<= 3` attempts, `3/3` attacks quarantined, $V(24) = 0$, Čech $H^1 = 0$, $\Delta \vec{\mathcal{T}}_{13} = \mathbf{0}$, Stan + Beta growth, `6/6` F' FSMs + SysML `1.0`, and monotonic ZLP-v3 `seq_id`).
+
+---
+
+## 6. `UOS-CORE-EVO v4`: System-Wide Erlang/OTP 29 & Universal 10-Layer FPP Actor Twin Mesh
+
+Implemented in [`core_fpp_actor_twin_mesh.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam):
+
+```ascii
+[Declarative Intent + Algebraic Atlas] --> [OTP 29 FPP Holon Actor L0..L9]
+[OTP 29 FPP Holon Actor L0..L9] --> [Gleam MCP Whitelist + Signed Zenoh uos/v1]
+[Gleam MCP Whitelist + Signed Zenoh uos/v1] --> [W3C 128-Bit OTel + Fractal JSON Logger]
+[W3C 128-Bit OTel + Fractal JSON Logger] --> [Coupled Kalman-Beta-Lyapunov Digital Twin]
+[Coupled Kalman-Beta-Lyapunov Digital Twin] --> [Redacted Margin-40 Embedded OpenRouter Port]
+```
+
+```mermaid
+flowchart TD
+  M1["Declarative Intent + Algebraic Atlas"] --> M2["OTP 29 FPP Holon Actor L0..L9"]
+  M2 --> M3["Gleam MCP Whitelist + Signed Zenoh uos/v1"]
+  M3 --> M4["W3C 128-Bit OTel + Fractal JSON Logger"]
+  M4 --> M5["Coupled Kalman-Beta-Lyapunov Digital Twin"]
+  M5 --> M6["Redacted Margin-40 Embedded OpenRouter Port"]
+```
+
+1. **System-Wide Erlang/OTP 29 Pinning (`29.0.5` / `ERTS 17.0.5`)**:
+   - Active user Nix profile (`~/.nix-profile/bin/{erl,erlc}`) and repository toolchain (`toolchains/nix-profile/bin/{erl,erlc}`) are both pinned to already-realized Determinate Nix `erlang-29.0.5`, verified at runtime via `cepaf_gleam_ffi:otp_runtime_info/0` and `uos-core-evo preflight` (`otp_29_verified: true`).
+2. **Universal FPP-Governed OTP 29 Actor Contract (`10` Live Actors $L_0 \dots L_9$)**:
+   - Every actor (`gleam/otp/actor`) runs dual NASA JPL F' state machines (`poodavr_lifecycle_fprime` + layer `homeostasis_fprime`), accepts mutations **only** as Denotational & Algebraic Atlas Intents (`[[ I ]](sigma)` via [`denotational.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/intent/denotational.gleam) and [`algebraic_atlas.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam) with cocycle composition $\phi_{j,k} \circ \phi_{i,j} = \phi_{i,k}$ and sheaf gluing), enforces role-whitelisted Gleam MCP routes + signed Zenoh `uos/v1/**` envelopes, propagates W3C `00-{32-hex}-{16-hex}-01` `traceparent` spans + OTel structured fractal JSON logs ([`trace_context.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam), [`correlated_log.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ha/correlated_log.gleam), [`otel.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/telemetry/otel.gleam)), updates a coupled Mathematical Digital Twin ([`digital_twin.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ha/digital_twin.gleam) + Kalman/Beta/Lyapunov residual & drift convergence), and routes embedded OpenRouter requests through [`egress_redactor.gleam`](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/harness/egress_redactor.gleam) + `40%`-margin free-first model gating.
 
 ---
 

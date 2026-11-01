@@ -11,7 +11,7 @@
 -export([to_string/1, to_int/1, to_float/1, to_bool/1]).
 -export([system_time_seconds/0, base64_decode/1, url_encode/1, get_env/1]).
 -export([pi_port_open/3, pi_port_send/2, pi_port_close/1]).
--export([http_get/1, http_put/3, http_delete/1, http_post/5, spawn_task/1, get_preference/1]).
+-export([http_get/1, http_put/3, http_delete/1, http_post/5, spawn_task/1, get_preference/1, otp_runtime_info/0, safe_telemetry_execute/3]).
 
 %% @doc Execute a REST request over Podman Unix Domain Socket
 podman_uds_request(Path, Method, Endpoint, Body) ->
@@ -650,6 +650,22 @@ find_in_sqlite([DbPath | Rest], KeyBinary) ->
             end;
         false ->
             find_in_sqlite(Rest, KeyBinary)
+    end.
+
+otp_runtime_info() ->
+    {list_to_binary(erlang:system_info(otp_release)),
+     list_to_binary(erlang:system_info(version))}.
+
+safe_telemetry_execute(EventName, Measurements, Metadata) ->
+    case code:ensure_loaded(telemetry) of
+        {module, telemetry} ->
+            try telemetry:execute(EventName, Measurements, Metadata) of
+                _ -> nil
+            catch
+                _:_ -> nil
+            end;
+        _ ->
+            nil
     end.
 
 

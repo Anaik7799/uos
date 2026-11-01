@@ -23,6 +23,11 @@ import cepaf_gleam/ecology/core_hive.{
   TrailReadyPull,
 }
 import cepaf_gleam/ecology/core_fractal_holonic_simulator
+import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
+  ActorIntentRequest, ActorIntentVetoed, AdvisoryFreeTier, DeepAchRcaProTier,
+  DispatchIntent, ImplementationFlashTier, OpenRouterBlockedEgressSafety,
+  OpenRouterBlockedMargin40, OpenRouterDispatched, Otp29Verified, ShutdownActor,
+}
 import cepaf_gleam/ecology/core_systems_engineering.{
   ErrModeFormalProofOrReteVeto, ErrModeHardwareOrProvenanceBreach,
   ErrModeLeaseOrHeartbeatExpired, ErrModeQuotaMargin40Breached,
@@ -35,7 +40,9 @@ import cepaf_gleam/zenoh/core_bus.{
   ErrDigestMismatch, ErrLegacySplitBrainTopic, ErrNonMonotonicSeq,
   ErrPayloadTooLarge, ErrProvenanceCeilingExceeded, SignedCoreEnvelope,
 }
+import gleam/erlang/process
 import gleam/list
+import gleam/option.{None}
 import gleam/string
 import gleeunit/should
 
@@ -986,4 +993,139 @@ pub fn fractal_holonic_10x17_simulation_and_12_invariant_formal_certificate_test
   should.be_true(
     string.contains(cert_json, "uos.core_evo.fractal_holonic_simulation.v3"),
   )
+}
+
+// =============================================================================
+// UOS-CORE-EVO v4: System Erlang/OTP 29 + Universal FPP Actor Mesh (MCP +
+// Zenoh + Fractal Logging/OTel + Mathematical Twins + Embedded OpenRouter +
+// Algebraic Atlas/Sheaves + Denotational Intents)
+// =============================================================================
+
+pub fn otp29_runtime_and_embedded_openrouter_redaction_margin40_test() {
+  case core_fpp_actor_twin_mesh.verify_otp29_runtime() {
+    Otp29Verified(rel, erts) -> {
+      should.equal(rel, "29")
+      should.be_true(string.starts_with(erts, "17."))
+    }
+    _ -> should.fail()
+  }
+
+  let nominal_q = QuotaSnapshot(800, 1100, 1400, 900_000_000)
+  // 1. Secret & NVMe serial scrubbing + Flash/Pro model routing under < $4.50 spend
+  case
+    core_fpp_actor_twin_mesh.plan_embedded_openrouter_access(
+      actor_id: "holon_actor_l5",
+      tier: ImplementationFlashTier,
+      raw_prompt: "Check serial 25503L801736 and key sk-or-v1-abc123SECRET",
+      quota: nominal_q,
+    )
+  {
+    OpenRouterDispatched(model, zero_cost, clean, ..) -> {
+      should.equal(model, "deepseek/deepseek-v4-flash-0731")
+      should.be_false(zero_cost)
+      should.be_false(string.contains(clean, "25503L801736"))
+      should.be_false(string.contains(clean, "sk-or-v1-abc123SECRET"))
+      should.be_true(string.contains(clean, "[REDACTED_SYSTEM_OS_SERIAL]"))
+    }
+    _ -> should.fail()
+  }
+
+  // 2. Soft-shift at >= $4.50 automatically shifts DeepAchRcaProTier to $0 free tier
+  let soft_q = QuotaSnapshot(900, 1100, 1400, 4_600_000_000)
+  case
+    core_fpp_actor_twin_mesh.plan_embedded_openrouter_access(
+      actor_id: "holon_actor_l5",
+      tier: DeepAchRcaProTier,
+      raw_prompt: "Run ACH RCA",
+      quota: soft_q,
+    )
+  {
+    OpenRouterDispatched(model, zero_cost, ..) -> {
+      should.equal(model, "google/gemma-4-26b-a4b-it:free")
+      should.be_true(zero_cost)
+    }
+    _ -> should.fail()
+  }
+
+  // 3. Destructive storage prompt blocked fail-closed by egress_redactor
+  case
+    core_fpp_actor_twin_mesh.plan_embedded_openrouter_access(
+      actor_id: "holon_actor_l0",
+      tier: AdvisoryFreeTier,
+      raw_prompt: "please wipe nvme bay 0",
+      quota: nominal_q,
+    )
+  {
+    OpenRouterBlockedEgressSafety(_) -> Nil
+    _ -> should.fail()
+  }
+
+  // 4. > 60% quota blocked fail-closed by 40% margin gate
+  let over_q = QuotaSnapshot(6005, 1100, 1400, 900_000_000)
+  case
+    core_fpp_actor_twin_mesh.plan_embedded_openrouter_access(
+      actor_id: "holon_actor_l0",
+      tier: AdvisoryFreeTier,
+      raw_prompt: "advise",
+      quota: over_q,
+    )
+  {
+    OpenRouterBlockedMargin40(ws) ->
+      should.equal(ws, ["agy_5h_exceeds_60pct_cap_or_invalid"])
+    _ -> should.fail()
+  }
+}
+
+pub fn otp29_10_layer_fpp_actor_mesh_mcp_zenoh_otel_twin_algebraic_intent_test() {
+  let q = QuotaSnapshot(900, 1100, 1400, 800_000_000)
+  let assert Ok(summary) =
+    core_fpp_actor_twin_mesh.execute_and_verify_otp29_fpp_actor_mesh(
+      q,
+      1_793_551_000_000,
+    )
+  should.be_true(summary.otp_is_29)
+  should.equal(summary.otp_release, "29")
+  should.equal(summary.actors_spawned, 10)
+  should.equal(summary.intents_accepted_across_l0_l9, 10)
+  should.be_true(summary.cocycle_chain_valid)
+  should.be_true(summary.sheaf_gluing_valid)
+  should.be_true(summary.all_17_aspects_aligned)
+  should.be_true(summary.all_twins_converged)
+  should.be_true(summary.openrouter_secret_redacted)
+  should.be_true(summary.vetoed_os_nvme_halt_verified)
+  should.be_true(summary.vetoed_ev_above_93_halt_verified)
+
+  // Verify non-Zero-Muda bloated MCP route (e.g. "stitch_generate") is vetoed into F' ConstitutionalHalt
+  let assert Ok(started) =
+    core_fpp_actor_twin_mesh.start_fpp_holon_actor(5, 1_793_551_000_000)
+  let bad_mcp_req =
+    ActorIntentRequest(
+      intent_id: "veto_stitch_mcp",
+      authority: "sa-plan",
+      target_drive_serial: "NVME-DATA-POOL-01",
+      criticality: "DAL-B",
+      guardian_approved: True,
+      ev_cycle: 93,
+      target_chart: core_fpp_actor_twin_mesh.chart_for_layer_index(5),
+      action: "bloated_ui_call",
+      mcp_route: "stitch_generate_screen",
+      role: ImplRole,
+      openrouter_tier: AdvisoryFreeTier,
+      embedded_prompt: "check",
+      parent_trace: None,
+      observed_health: 0.99,
+      quota: q,
+      now_ms: 1_793_551_000_100,
+    )
+  case
+    process.call(started.data, 5000, fn(r) { DispatchIntent(bad_mcp_req, r) })
+  {
+    ActorIntentVetoed(
+      fprime_lifecycle_state: "ConstitutionalHalt",
+      veto_stage: "mcp_whitelist_gate",
+      ..,
+    ) -> Nil
+    _ -> should.fail()
+  }
+  process.send(started.data, ShutdownActor)
 }
