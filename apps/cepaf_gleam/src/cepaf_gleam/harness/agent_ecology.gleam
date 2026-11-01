@@ -17,9 +17,13 @@
 //// =============================================================================
 
 import cepaf_gleam/harness/agent_capabilities
+import cepaf_gleam/harness/agent_preflight_map
 import gleam/int
 import gleam/list
+import gleam/option.{type Option}
+import gleam/result
 import gleam/string
+import uos_swarm/symbiosis_preflight
 
 pub const andon_halt_unauthorized_code: Int = -32_002
 
@@ -256,6 +260,16 @@ pub fn validate_aspect_completeness(aspects: List(SystemAspect)) -> Bool {
 /// flags cannot create an authenticated capability, TaskFence or effect grant.
 pub fn agent_capability_registry() -> List(agent_capabilities.Registration) {
   agent_capabilities.registry()
+}
+
+/// Existing policy snapshot only; injected collector DATA is not admission.
+pub fn format_agent_preflight(
+  state: Option(symbiosis_preflight.State),
+  ontology_sha256: Option(String),
+  monotonic_ms: Int,
+) -> Result(String, String) {
+  agent_preflight_map.project(state, ontology_sha256, monotonic_ms)
+  |> result.map(agent_preflight_map.format_snapshot)
 }
 
 // -----------------------------------------------------------------------------
@@ -825,6 +839,8 @@ pub fn format_ecology_summary() -> String {
   <> "   • *Aspects:* A09 | *Capabilities:* 3 | *2oo3 Required:* False\n\n"
   <> "Send `/ecology <agent_id>` to view detailed capability lattices and tool allowlists.\n\n"
   <> agent_capabilities.format_registry()
+  <> "\n\n"
+  <> agent_preflight_map.format_summary()
 }
 
 /// Formats detailed specifications for a single agent profile.
