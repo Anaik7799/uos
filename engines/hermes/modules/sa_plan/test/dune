@@ -10,6 +10,12 @@
  (libraries core core_unix sa_plan))
 
 (test
+ (name test_recovery_resource)
+ (modules test_recovery_resource)
+ (libraries recovery_resource recovery_kernel digestif mirage-crypto-ec yojson sqlite3 unix)
+ (deps ../recovery_kernel.ml ../recovery_resource.ml))
+
+(test
  (name test_recovery_owner_journal)
  (modules test_recovery_owner_journal)
  (libraries recovery_owner_journal core digestif sqlite3 yojson unix))
