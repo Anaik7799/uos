@@ -3,7 +3,8 @@
 (* Ordinary pure policy/projection tests only. No watchdog/collector startup,
    live database, provider, task, credential, solver or fault scenario. *)
 let root="/home/an/NAS-setup/uos"
-let ws=root^"/.uos-workspaces/codex-agent-preflight-ontology-20261101"
+(* Run and bind this exact workspace's sources, not the author's sibling. *)
+let ws=Sys.getcwd()
 let cached=root^"/.uos-workspaces/codex-recovery-observed-20261101/var/harness/integrated-ordinary-3b82e8/lib"
 let require b m=if not b then failwith m
 let read p=let c=open_in_bin p in Fun.protect~finally:(fun()->close_in c)(fun()->let n=in_channel_length c in require(n<=1048576)"source bound";really_input_string c n)
