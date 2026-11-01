@@ -1,7 +1,7 @@
 (library
  (name sa_plan)
  (public_name hermes_workspace.sa_plan)
- (modules (:standard \ recovery_kernel recovery_port recovery_owner_journal recovery_owner_journal_port recovery_resource))
+ (modules (:standard \ recovery_kernel recovery_port recovery_owner_journal recovery_owner_journal_port recovery_resource sqlite_main_mapping))
  (libraries core digestif sqlite3 yojson)
  (preprocess (pps ppx_jane)))
 
@@ -32,3 +32,15 @@
  (wrapped false)
  (modules recovery_resource)
  (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
+
+; No-effect SQL observation kernel only, never a BEAM NIF or task mutator.
+(library
+ (name sqlite_main_mapping)
+ (wrapped false)
+ (modules sqlite_main_mapping)
+ (libraries core digestif sqlite3 unix threads)
+ (foreign_stubs
+  (language c)
+  (names sqlite_main_mapping_stubs)
+  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
+ (c_library_flags -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -lsqlite3 -ldl))

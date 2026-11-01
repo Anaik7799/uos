@@ -184,3 +184,13 @@
  (name test_sa_plan_dependency_repair)
  (modules test_sa_plan_dependency_repair)
  (libraries core core_unix sa_plan sqlite3 yojson))
+(test
+ (name test_sqlite_main_mapping)
+ (modules test_sqlite_main_mapping)
+ (libraries sqlite_main_mapping core sqlite3 unix bos)
+ (deps ../sqlite_main_mapping_stubs.c)
+ (link_flags (:standard
+  -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
+
