@@ -84,7 +84,7 @@ let canonical x =
     | `List xs -> `List(List.map sort xs) | v -> v in
   Yojson.Safe.to_string(sort x)
 let same a b = canonical a=canonical b
-let run root exe args =
+let run ?(expected_exit=0) root exe args =
   need(not(Filename.is_relative exe)) "absolute executable required";
   let ocaml=if Sys.file_exists(root^"/.uos-ecology-release") then
     read(root^"/runtime-dependencies.json") |> Yojson.Safe.from_string
@@ -94,7 +94,10 @@ let run root exe args =
     "20000"::"1048576"::"merged"::exe::args) in
   let env=Astring.String.Map.of_list ["PATH",root^"/toolchains/nix-profile/bin:/usr/bin:/bin";
     "LANG","C.UTF-8";"ERL_CRASH_DUMP","/dev/null"] in
-  get(Bos.OS.Cmd.run_out ~env command |> Bos.OS.Cmd.out_string |> Bos.OS.Cmd.success)
+  match Bos.OS.Cmd.run_out ~env command |> Bos.OS.Cmd.out_string with
+  |Ok(text,(_,`Exited code))when code=expected_exit->text
+  |Ok _->failwith "bounded command did not produce expected exit status"
+  |Error(`Msg message)->failwith message
 let dependency root rel executable =
   need(safe_relative rel && String.starts_with ~prefix:"toolchains/" rel) "toolchain locator must be repository-owned";
   let path=realpath(root^"/"^rel) in
@@ -230,6 +233,7 @@ let source_inputs root payload =
      "tools/ecology_release.mojo";"tools/ecology_pin_audit.ml";"tools/ecology_pin_audit_cli.ml";
      "tools/ecology_pin_edit.ml";"tools/km_provenance/km_adjudication.ml";
      "tools/ecology_native_build.ml";"tools/ecology_file_transaction.ml";
+     "native/c/finite_environment_launch.c";
      "tools/ecology_file_transaction_port.ml";"tools/telegram_store_transport_guardian.ml";
      "services/inference/max/pixi.toml";"services/inference/max/pixi.lock"]
   |> List.sort_uniq String.compare
@@ -251,9 +255,65 @@ let disk_preflight root needed =
   need(List.length fields>=6) "disk observation unknown";
   let available=int_of_string(List.nth fields 3) in
   need(available>=needed+needed/5 && available-needed>=512*1024*1024) "disk headroom or 512MiB floor unavailable"
+let native_loader="/nix/store/n51dhmdbik1kfrsm62j5knavmigwrl1a-glibc-2.42-84/lib/ld-linux-x86-64.so.2"
+let native_loader_sha="0e470f96e41ddd98ac964b3b729df0becfa7562c8ba78ab3cab1822fa5498d23"
+let native_patchelf="/nix/store/fpig164lz7fcipbndn61sfd2y2yq363n-patchelf-0.15.2/bin/patchelf"
+let native_readelf="/nix/store/5pa1282x1sasbwhmnah6bny1g9pc2lj1-binutils-2.46/bin/readelf"
+let native_runtime_names=["libc.so.6";"libgmp.so.10";"libm.so.6";"libpthread.so.0";"librt.so.1";"libsqlite3.so.0";"libz.so.1"]
+let native_executables=["worker.exe";"guardian.exe";"release_grants_worker.exe"]
+let native_runtime_paths=List.map(fun n->"runtime/"^n)native_runtime_names
+let verify_native_elf root dir =
+  need(realpath native_patchelf=native_patchelf && sha native_patchelf="dddb7afe3bc9a35e9646042964956f49e62972c96ccee15cec7b3c48faab9acd") "pinned ELF inspector unavailable";
+  need(realpath native_readelf=native_readelf && sha native_readelf="f5a29c8f253ab3b56b4bf7a643def9cf33430bec5d1f56399fccd9c97d292d05") "pinned version inspector unavailable";
+  let inspect args=run root native_patchelf args |> String.trim in
+  List.iter(fun rel->let path=dir^"/"^rel and executable=List.mem rel native_executables in
+    need(inspect["--print-rpath";path]=(if executable then "$ORIGIN/runtime"else "$ORIGIN")) "native runtime RUNPATH mismatch";
+    let dynamic=run root native_readelf["--dynamic";"--wide";path]in
+    need(Astring.String.is_infix ~affix:"NODEFLIB" dynamic && Astring.String.is_infix ~affix:"(RUNPATH)" dynamic &&
+      not(Astring.String.is_infix ~affix:"(RPATH)" dynamic)) "native NODEFLIB/RUNPATH guard missing";
+    if not executable then need(inspect["--print-soname";path]=Filename.basename path) "native runtime SONAME binding";
+    if executable then need(inspect["--print-interpreter";path]=native_loader) "native loader mismatch";
+    let ns=String.split_on_char '\n'(inspect["--print-needed";path])in
+    let allowed=native_loader::native_runtime_names in
+    need(ns<>[] && List.length ns<=8 && List.for_all(fun n->List.mem n allowed)ns) "native dependency outside closed SONAME inventory";
+    let versions=run root native_readelf["--version-info";"--wide";path]in
+    List.iter(fun line->match Astring.String.cut ~sep:"File: " line with None->()|Some(_,rest)->
+      let names=String.split_on_char ' ' rest|>List.filter((<>)"")in
+      match names with name::_->need(List.mem name ns) "native version-needed mapping mismatch"|[]->failwith "native version-needed missing")
+      (String.split_on_char '\n' versions);
+    if rel="release_grants_worker.exe"then need(List.mem "libsqlite3.so.0" ns) "native SQLite closure missing"
+  )(native_executables@native_runtime_paths);
+  (* Metadata is insufficient: check actual initialization through the same
+     fixed Nix interpreter, with empty argv and no DB/configuration input.
+     Direct loader invocation also works for a private pre-freeze stage. *)
+  List.iter(fun name->let raw=run ~expected_exit:(if name="guardian.exe"then 125 else 0)
+      root native_loader ["--inhibit-cache";dir^"/"^name]in
+    if name<>"guardian.exe"then(
+      need(String.length raw>=4) "native runtime smoke frame missing";
+      let n=ref 0 in for k=0 to 3 do n:=(!n lsl 8)lor Char.code raw.[k]done;
+      need(!n=String.length raw-4) "native runtime smoke frame mismatch";
+      let body=Yojson.Safe.from_string(String.sub raw 4 !n)in
+      need(member "status"body=`String"hold") "native runtime smoke not observed")
+  )native_executables
 (* The independently retained build ID binds actual native outputs and the
    captured input set. It does not prove a complete transitive compiler closure
    or confer release authority. Packaged verification needs no mutable build tree. *)
+let verify_static_launcher path =
+  let text=read path in let len=String.length text in
+  let u off count=need(off>=0 && off<=len-count) "static launcher ELF bounds";
+    let x=ref 0 in for k=count-1 downto 0 do
+      need(!x<=max_int lsr 8) "static launcher ELF integer";
+      x:=(!x lsl 8)lor Char.code text.[off+k]done;!x in
+  need(len>=64 && String.sub text 0 7="\127ELF\002\001\001" && u 16 2=2 && u 18 2=62) "static launcher Linux x86_64 ELF";
+  let offset=u 32 8 and count=u 56 2 and entry=u 24 8 in
+  need(u 54 2=56 && count>0 && count<=64 && offset<=len-count*56) "static launcher program headers";
+  let executable_entry=ref false in
+  for j=0 to count-1 do let p=offset+j*56 in let kind=u p 4 in
+    need(kind<>2 && kind<>3) "static launcher cannot have PT_DYNAMIC/PT_INTERP";
+    if kind=1 then(let fileoff=u(p+8)8 and va=u(p+16)8 and bytes=u(p+32)8 in
+      need(fileoff<=len-bytes) "static launcher segment bounds";
+      if u(p+4)4 land 1<>0 && entry>=va && entry-va<bytes then executable_entry:=true)
+  done;need !executable_entry "static launcher executable entry"
 let verify_native_cutover ~staging root binding =
   let id=binding|>member "artifact_id"|>to_string in
   need(hex 64 id) "native artifact identity";
@@ -262,12 +322,18 @@ let verify_native_cutover ~staging root binding =
   need(String.length encoded<=1048576 && digest encoded=id) "native manifest identity";
   let m=Yojson.Safe.from_string encoded in
   need(encoded=canonical m) "native manifest canonical encoding";
+  let version=m|>member "schema"|>to_string in
+  let finite=version="uos.native-build.v3" in
+  let composite=finite || version="uos.native-build.v2" in
   need(m|>to_assoc|>List.map fst|>List.sort String.compare =
-       ["admitted";"authority";"inputs";"outputs";"recipe";"schema"]) "native manifest fields";
-  need(m|>member "schema"|>to_string="uos.native-build.v1") "native manifest schema";
+       (if composite then ["admitted";"authority";"inputs";"outputs";"recipe";"runtime";"schema"]else ["admitted";"authority";"inputs";"outputs";"recipe";"schema"])) "native manifest fields";
+  need(composite || m|>member "schema"|>to_string="uos.native-build.v1") "native manifest schema";
   need(m|>member "admitted"|>to_bool=false && m|>member "authority"|>to_string="NONE") "native build cannot grant authority";
   let inputs=member "inputs" m and recipe=member "recipe" m in
-  need(inputs|>member "schema"|>to_string="uos.native-build-inputs.v1") "native captured inputs schema";
+  need(inputs|>member "schema"|>to_string=(if finite then "uos.native-build-inputs.v3"else if composite then "uos.native-build-inputs.v2"else "uos.native-build-inputs.v1")) "native captured inputs schema";
+  if finite then need(recipe|>member "architecture"|>to_string="linux-x86_64" &&
+    recipe|>member "launch_profile"|>to_string="native-storage-v1" &&
+    recipe|>member "finite_environment"=arr(List.map(fun(k,v)->arr[s k;s v])["PATH","/nonexistent";"LANG","C";"LC_ALL","C";"TZ","UTC"])) "native closed finite profile";
   need(List.length(to_assoc recipe)>0 && digest(canonical recipe)=(inputs|>member "recipe_sha256"|>to_string)) "native recipe binding";
   List.iter(fun key->let rows=inputs|>member key|>to_list in
     need(rows<>[] && List.length rows<=2048) "native captured input inventory";
@@ -275,13 +341,29 @@ let verify_native_cutover ~staging root binding =
       hex 64(row|>member "sha256"|>to_string) && row|>member "bytes"|>to_int>=0) "native captured input binding")rows)["sources";"toolchain"];
   let outputs=m|>member "outputs"|>to_list in
   let names=List.map(fun x->member "path" x|>to_string)outputs in
-  need(List.sort String.compare names=["guardian.exe";"worker.exe"]) "native output inventory";
+  let executables=if finite then native_executables@["finite_launcher.exe"]else if composite then native_executables else ["worker.exe";"guardian.exe"] in
+  need(List.sort String.compare names=List.sort String.compare executables) "native output inventory";
   List.iter(fun row->
     let name=row|>member "path"|>to_string in
     let path=dir^"/"^name in let st=regular path in
     need(st.st_size=(row|>member "bytes"|>to_int) && sha path=(row|>member "sha256"|>to_string)) "native output changed";
     if not staging then need(st.st_perm=0o555) "native executable permissions")outputs;
-  need(Sys.readdir dir|>Array.to_list|>List.sort String.compare=["guardian.exe";"manifest.json";"worker.exe"]) "native directory inventory";
+  if composite then (
+    let runtime=member "runtime" m in
+    need(runtime|>to_assoc|>List.map fst|>List.sort String.compare=["activation";"external_loader";"files"]) "native runtime fields";
+    let loader_binding=member "external_loader" runtime in
+    need(loader_binding|>member "path"|>to_string=native_loader && loader_binding|>member "sha256"|>to_string=native_loader_sha) "external Nix loader binding";
+    let st=regular native_loader in need(realpath native_loader=native_loader && st.st_uid=0 && st.st_perm land 0o222=0 && sha native_loader=native_loader_sha && st.st_size=(loader_binding|>member "bytes"|>to_int)) "external Nix loader unavailable";
+    let rows=runtime|>member "files"|>to_list in
+    need(List.sort String.compare(List.map(fun r->r|>member "path"|>to_string)rows)=List.sort String.compare native_runtime_paths) "native runtime inventory";
+    List.iter(fun row->let path=dir^"/"^(row|>member "path"|>to_string)in let st=regular path in
+      need(st.st_size=(row|>member "bytes"|>to_int) && sha path=(row|>member "sha256"|>to_string)) "native runtime byte mismatch";
+      if not staging then need(st.st_perm=0o444) "native runtime permissions")rows;
+    need(Sys.readdir(dir^"/runtime")|>Array.to_list|>List.sort String.compare=native_runtime_names) "unexpected native runtime file";
+    if not staging then need((lstat(dir^"/runtime")).st_perm=0o555) "native runtime directory permissions";
+    verify_native_elf root dir);
+  if finite then verify_static_launcher(dir^"/finite_launcher.exe");
+  need(Sys.readdir dir|>Array.to_list|>List.sort String.compare=List.sort String.compare(executables@["manifest.json"]@(if composite then ["runtime"]else []))) "native directory inventory";
   if not staging then need((lstat(dir^"/manifest.json")).st_perm=0o444) "native manifest permissions"
 let native_cutover_inputs root id =
   need(hex 64 id) "native artifact identity";
@@ -291,8 +373,11 @@ let native_cutover_inputs root id =
   need(checked|>member "status"|>to_string="BUILT_OR_VERIFIED" &&
        checked|>member "artifact_id"|>to_string=id) "native artifact verification failed";
   let base="var/ecology/native-builds/cas/"^id in
-  let copied=List.map(fun name->base^"/"^name,"native/cutover/"^name)["worker.exe";"guardian.exe";"manifest.json"] in
-  obj["artifact_id",s id;"scope",s"Captured build inputs and actual output bytes; complete transitive toolchain correspondence unproven; no authority"],copied
+  let payload=(if checked|>member "launch_profile"=`String"native-storage-v1"then
+    native_executables@["finite_launcher.exe"]else native_executables)@["manifest.json"]@native_runtime_paths in
+  need(List.sort String.compare(checked|>member "payload_files"|>to_list|>List.map to_string)=List.sort String.compare payload) "composite native payload required";
+  let copied=List.map(fun name->base^"/"^name,"native/cutover/"^name)payload in
+  obj["artifact_id",s id;"scope",s"Source-built native inventory; optional v3 finite launcher is explicitly selected, legacy paths remain distinct. Runtime activation HOLD pending immutable owner paths, trusted BEAM startup and independently managed external Nix loader retention; compiler closure unproven; no authority"],copied
 let verify ?(staging=false) ?(dependency_recovery=false) release =
   let root=realpath release in need(read(root^"/.uos-ecology-release")=marker) "release marker";
   let encoded=read(root^"/release-manifest.json") in let m=Yojson.Safe.from_string encoded in
@@ -328,7 +413,7 @@ let verify ?(staging=false) ?(dependency_recovery=false) release =
   need(same(verify_app_closure root executable apps)(m|>member "application_closure")) "packaged application closure changed";
   m
 let freeze root =
-  List.iter(fun p->chmod(root^"/"^p)(if List.mem p ["native/cutover/worker.exe";"native/cutover/guardian.exe"] then 0o555 else 0o444))(files root "");
+  List.iter(fun p->chmod(root^"/"^p)(if List.mem p(List.map(fun n->"native/cutover/"^n)native_executables) then 0o555 else 0o444))(files root "");
   let rec dirs p=Array.iter(fun n->let q=p^"/"^n in if(lstat q).st_kind=S_DIR then dirs q)(Sys.readdir p);chmod p 0o555 in dirs root
 let stage ?native_id source =
   let root=realpath source in need(Sys.file_exists(root^"/.jj")) "standalone UOS root required";

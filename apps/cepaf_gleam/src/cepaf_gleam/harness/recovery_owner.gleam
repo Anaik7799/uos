@@ -8,6 +8,7 @@
 //// not spawn untracked children. Clock/issuer/custody/revocation remain external.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/native_launch
 import cepaf_gleam/harness/recovery_owner_store as store
 import cepaf_gleam/harness/recovery_wire as wire
 import cepaf_gleam/harness/telegram_store_transport as transport
@@ -36,7 +37,7 @@ pub fn monotonic_ms() -> Int {
 
 pub opaque type ConfigurationData {
   ConfigurationData(
-    journal: transport.LocalConfiguration,
+    journal: store.ConnectionData,
     binding: store.Binding,
     commit_body: String,
     inspect_body: String,
@@ -150,6 +151,48 @@ pub fn configuration_data(
   commit_body: String,
   inspect_body: String,
   journal: transport.LocalConfiguration,
+  timeout_ms: Int,
+) -> Result(ConfigurationData, String) {
+  configured_data(
+    owner_id,
+    request,
+    context_sha256,
+    commit_body,
+    inspect_body,
+    store.legacy_connection_data(journal),
+    timeout_ms,
+  )
+}
+
+/// Opt-in transport data only. Public start still uses unavailable(), and this
+/// constructor authenticates neither artifact ownership nor signed DB identity.
+pub fn finite_configuration_data(
+  owner_id: String,
+  request: wire.FactualRequest,
+  context_sha256: String,
+  commit_body: String,
+  inspect_body: String,
+  journal: native_launch.Configuration,
+  timeout_ms: Int,
+) -> Result(ConfigurationData, String) {
+  configured_data(
+    owner_id,
+    request,
+    context_sha256,
+    commit_body,
+    inspect_body,
+    store.finite_connection_data(journal),
+    timeout_ms,
+  )
+}
+
+fn configured_data(
+  owner_id: String,
+  request: wire.FactualRequest,
+  context_sha256: String,
+  commit_body: String,
+  inspect_body: String,
+  journal: store.ConnectionData,
   timeout_ms: Int,
 ) -> Result(ConfigurationData, String) {
   use commit <- result.try(prepared(commit_body, "commit"))
@@ -301,7 +344,7 @@ fn live(
 
 fn latest(c: ConfigurationData, deadline: Int) -> store.Exchange {
   case fresh(deadline) {
-    Ok(_) -> store.exchange(c.journal, c.binding, None, None)
+    Ok(_) -> store.exchange_connection_data(c.journal, c.binding, None, None)
     Error(code) -> store.Exchange(Error(code), store.Unconfirmed)
   }
 }
@@ -319,7 +362,7 @@ fn append(
   }
   case fresh(deadline) {
     Ok(_) ->
-      store.exchange(
+      store.exchange_connection_data(
         c.journal,
         c.binding,
         Some(#(sequence, p, digest)),

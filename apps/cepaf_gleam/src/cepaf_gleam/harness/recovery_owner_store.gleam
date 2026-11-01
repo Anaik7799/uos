@@ -3,6 +3,7 @@
 //// guardian cleanup is retained; missing cleanup never becomes a successful IO.
 
 import cepaf_gleam/harness/files
+import cepaf_gleam/harness/native_launch
 import cepaf_gleam/harness/telegram_store_transport as transport
 import cepaf_gleam/harness/value as v
 import cepaf_gleam/mcp/json_guard
@@ -54,6 +55,26 @@ pub type Reply {
 
 pub type Exchange {
   Exchange(reply: Result(Reply, String), cleanup: Cleanup)
+}
+
+/// Explicit transport DATA, never an owner/issuer/resource authority. Legacy
+/// callers retain their existing constructor/API; finite refusal never falls
+/// back to legacy. Trusted caller separately binds manifest and resource scope.
+pub opaque type ConnectionData {
+  LegacyConnection(transport.LocalConfiguration)
+  FiniteConnection(native_launch.Configuration)
+}
+
+pub fn legacy_connection_data(
+  c: transport.LocalConfiguration,
+) -> ConnectionData {
+  LegacyConnection(c)
+}
+
+pub fn finite_connection_data(
+  c: native_launch.Configuration,
+) -> ConnectionData {
+  FiniteConnection(c)
 }
 
 @external(erlang, "telegram_store_transport_ffi", "request_config_with_cleanup")
@@ -187,6 +208,43 @@ pub fn raw_exchange(
       }
       RawExchange(result, cleanup)
     }
+  }
+}
+
+pub fn raw_exchange_finite(
+  config: native_launch.Configuration,
+  body: String,
+) -> RawExchange {
+  case string.byte_size(body) > 0 && string.byte_size(body) <= 65_536 {
+    False -> RawExchange(Error("INPUT_BOUND"), Unconfirmed)
+    True -> {
+      let #(reply, witness) = native_launch.exchange_with_cleanup(config, body)
+      let result =
+        result.map_error(reply, fn(code) {
+          case code {
+            transport.InputBound -> "transport_input_bound"
+            transport.ConfigurationOrSpawn -> "transport_configuration_or_spawn"
+            transport.Uncertain -> "transport_uncertain"
+            transport.CleanupUnknown -> "transport_cleanup_unknown"
+          }
+        })
+      let cleanup = case witness {
+        Some(#(exit, utc))
+          if { exit == 0 || exit == 124 || exit == 125 }
+          && utc > 0
+          && utc <= 9_000_000_000_000_000
+        -> Reaped(exit, utc)
+        _ -> Unconfirmed
+      }
+      RawExchange(result, cleanup)
+    }
+  }
+}
+
+fn raw_connection(config: ConnectionData, body: String) -> RawExchange {
+  case config {
+    LegacyConnection(c) -> raw_exchange(c, body)
+    FiniteConnection(c) -> raw_exchange_finite(c, body)
   }
 }
 
@@ -332,10 +390,19 @@ pub fn exchange(
   event: Option(#(Int, Phase, Option(String))),
   previous: Option(String),
 ) -> Exchange {
+  exchange_connection_data(legacy_connection_data(config), b, event, previous)
+}
+
+pub fn exchange_connection_data(
+  config: ConnectionData,
+  b: Binding,
+  event: Option(#(Int, Phase, Option(String))),
+  previous: Option(String),
+) -> Exchange {
   case body(b, event, previous) {
     Error(code) -> Exchange(Error(code), Unconfirmed)
     Ok(body) -> {
-      let raw = raw_exchange(config, body)
+      let raw = raw_connection(config, body)
       let reply = case successful(raw.cleanup) {
         True -> {
           use reply <- result.try(
