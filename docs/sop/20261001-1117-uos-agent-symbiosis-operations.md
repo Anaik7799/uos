@@ -185,3 +185,7 @@ Use the [canonical monitoring SOP](http://nas-1.tail55d152.ts.net:4100/files/doc
 EV93 ceiling; EV94..109 / ADR071..086 NOT_ADMITTED. Existing18 core-check obligations remain in force; no blanket pass or new EV identifier.
 
 </details>
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+For agent ingress, delegation, task authority and downstream effects, bind each claimed policy to the corresponding Gleam/MCP/Sa-plan path, model invariant, candidate check and runtime evidence per the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). Guidance text and model responses grant no authority; uncovered paths remain `UNKNOWN`/`HOLD`, and this note does not establish harness enforcement.

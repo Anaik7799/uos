@@ -481,3 +481,13 @@ Development evidence for Sa-plan uos/hive-agent-control-math/20261031-1431: [mat
 ### 20261031-2108 — Operator authorization and route-grant refusal
 
 [Authorization packet](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261031-2102-oi02e-release-authority-preparation.json) · [Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261031-2102-oi02e-release-authority-preparation-journal.md). Operator-authorized Codex supervisor may issue exact bounded task route grants and serve ReleaseIssuer; required candidate approvals/independent verification and EV93 remain separate. OI02E completion was refused ROUTE_GRANT_REQUIRED with no CLI bypass:16 tasks/5 completed/3 executing/8 available. Trusted private route-grant repair is authorized, not yet executed here; grant file absent/no SHA pin observed at checkpoint. Role AUTHORIZED; cryptographic custody UNKNOWN; production activation NOT_GRANTED. Prior source19/docs7 publication at prefix4679 and three live parity observations are supervisor-reported; earlier PENDING prose is historical. KMS probe missing/static metadata and seed-export signing gaps remain; no private-key operation occurred. This addendum awaits publication.
+
+
+### 20261101-0616 — Four-agent ontology/meta-harness journal (candidate)
+
+[Development journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-0615-four-agent-ontology-meta-harness-journal.md) · [Ontology and algebraic intent design](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-0502-uos-four-agent-capability-ontology-intent-spec.md). Candidate reciprocal reference; local-only, publication unverified, and no system admission implied.
+
+
+### 20261101-0723 — Model/code synchronization documentation (candidate)
+
+[Proposed model/code synchronization SOP](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md) · [Coverage inventory](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0752-model-code-sync-sop-coverage-inventory.md) · [Development journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-0615-four-agent-ontology-meta-harness-journal.md). Intended Tailnet URLs; live serving is unverified. Local candidate references only; no publication, admission, or runtime enforcement is implied.

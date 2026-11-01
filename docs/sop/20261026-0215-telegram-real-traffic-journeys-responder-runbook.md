@@ -279,3 +279,7 @@ EV ceiling remains 93. EV-94..109 remain NOT_ADMITTED. No new EV number is minte
 [Previous: journey specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-critical-responder.md) · [Contract](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0210-telegram-operator-journey-contract.md)
 
 UOS footer: `nas-1.tail55d152.ts.net:4100` · document evidence grants no system admission. Sa-plan remains the sole execution authority.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+For each responder decision, bind preview/denial/effect semantics to the exact command handler, model constraints, backend capability and observed evidence under the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). Missing backends or unobserved behavior remain unavailable/`UNKNOWN`; this note does not authorize incident actions or task changes.

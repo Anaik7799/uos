@@ -220,3 +220,7 @@ Immediately after the laptop reboots, the following automated checks run from `n
    `ssh an@razr15-wsl2 "uptime && nvidia-smi"`
 4. **WSL2 Dual-Port Fallback SSH**:
    `ssh -p 2222 an@100.114.9.28 "uptime"`
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Bind each deployment/reboot step to an authorized task, exact host/config/build identity, formal preconditions and actual postcondition/recovery evidence per the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). A missing runtime identity or refinement obligation holds the scoped action; this appendix is guidance only and grants no host, deployment or restart authority.

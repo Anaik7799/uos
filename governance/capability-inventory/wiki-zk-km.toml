@@ -417,3 +417,15 @@ crypto_custody_configured = "UNKNOWN"
 production_activation = "NOT_GRANTED"
 route_grant_checkpoint = "absent_file_no_sha_pin_repair_authorized_not_yet_executed"
 completion_refusal = "var/harness/20261031-1334-codex-hive/release-authority-completion-refusal.json"
+
+
+[[knowledge_group]]
+id = "ONTOLOGY-META-HARNESS-JOURNAL-20261101-0615"
+state = "development_draft"
+admitted = false
+journal = "docs/journal/20261101-0615-four-agent-ontology-meta-harness-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-0615-four-agent-ontology-meta-harness-journal.md"
+specification = "docs/design/20261101-0502-uos-four-agent-capability-ontology-intent-spec.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-0502-uos-four-agent-capability-ontology-intent-spec.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

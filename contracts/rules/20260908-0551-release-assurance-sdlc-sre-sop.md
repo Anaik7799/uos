@@ -48,3 +48,7 @@ The native browser command resolves the provisioned profile to the Nix store and
 
 No row grants a passing global checklist. Consult the revision-bound verification receipt.
 </details>
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Apply the proposed [Lean model/code synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md) and its [bounded coverage inventory — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0752-model-code-sync-sop-coverage-inventory.md) to release changes. This candidate note does not install a release gate, runtime collector, source/model refinement checker or drift monitor. Unmapped, stale, unsupported or `UNKNOWN` release obligations remain `HOLD`; release validation binds source/package and validation-runtime pins. A production-loaded artifact identity is recorded only after separately authorized startup and is not a precondition for authorizing initial startup. Earlier stages with no build explicitly record `NOT_YET_BUILT`. This note is not admitted and confers no release authority.
