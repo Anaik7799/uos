@@ -134,6 +134,7 @@ fn successor_spec(def: ToolDefinition) -> ToolSpec {
 fn classify_harness_effect(name: String) -> EffectClass {
   case name {
     "harness_status"
+    | "harness_recovery_prepare"
     | "harness_clock"
     | "harness_read_file"
     | "harness_peers"

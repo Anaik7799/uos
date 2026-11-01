@@ -2,10 +2,10 @@
 //// All task mutations use canonical Sa-plan through admission/operations.
 
 import cepaf_gleam/harness/admission as a
-import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/mcp
+import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/operations as ops
 import cepaf_gleam/harness/planning_intents as planning
 import cepaf_gleam/harness/value
@@ -275,6 +275,36 @@ fn dispatch(
 ) -> #(State, Result(json.Json, String)) {
   case name {
     "harness_status" -> #(state, status(state))
+    "harness_recovery_prepare" -> {
+      let outcome = case state.unresolved {
+        True -> Error("unresolved_operation_stop_line")
+        False -> {
+          use plan <- result.try(ops.text(args, "plan"))
+          use task <- result.try(ops.text(args, "task"))
+          use intent <- result.try(ops.text(args, "intent_id"))
+          use path <- result.try(ops.text(args, "review_path"))
+          use digest <- result.try(ops.text(args, "review_sha256"))
+          use scope <- result.try(a.lookup(state.grant, plan, task))
+          use pending <- result.try(ops.assessment_pending(scope))
+          use _ <- result.try(a.require(
+            !pending,
+            "assessment_prepared_stop_line",
+          ))
+          a.prepare_reviewed_recovery(
+            state.grant,
+            plan,
+            task,
+            intent,
+            path,
+            digest,
+          )
+          |> result.map(a.prepared_recovery_json)
+        }
+      }
+      // Observation preparation never installs an Execution, clears unknown
+      // cleanup, dispatches a claim or turns an expired TaskFence into a live one.
+      #(state, outcome)
+    }
     // The 14th private tool. It deliberately does NOT route through the
     // generic grant+intent effect wrapper: that outer path keys receipts by
     // grant id and includes attempt in the signature, so wrapping it would
@@ -283,11 +313,12 @@ fn dispatch(
     "harness_plan_intent" -> {
       let outcome = case state.unresolved, state.execution {
         True, _ -> Error("unresolved_operation_stop_line")
-        False, Some(execution) -> case ops.assessment_pending(execution.scope) {
-          Error(reason) -> Error("assessment_guard_unavailable:" <> reason)
-          Ok(True) -> Error("assessment_prepared_stop_line")
-          Ok(False) -> planning.submit(execution, args)
-        }
+        False, Some(execution) ->
+          case ops.assessment_pending(execution.scope) {
+            Error(reason) -> Error("assessment_guard_unavailable:" <> reason)
+            Ok(True) -> Error("assessment_prepared_stop_line")
+            Ok(False) -> planning.submit(execution, args)
+          }
         False, None -> Error("current_task_required")
       }
       let unresolved = case outcome {
@@ -308,9 +339,10 @@ fn dispatch(
         use intent <- result.try(ops.text(args, "intent_id"))
         case state.unresolved, state.execution {
           True, Some(execution) -> {
-            use pending <- result.try(
-              ops.reconciliation_intent_is_pending(execution, intent),
-            )
+            use pending <- result.try(ops.reconciliation_intent_is_pending(
+              execution,
+              intent,
+            ))
             use _ <- result.try(a.require(
               pending,
               "reconciliation_intent_mismatch",
@@ -319,9 +351,10 @@ fn dispatch(
           }
           True, None -> Error("reconciliation_context_missing")
           False, Some(execution) -> {
-            use pending <- result.try(
-              ops.reconciliation_intent_is_pending(execution, intent),
-            )
+            use pending <- result.try(ops.reconciliation_intent_is_pending(
+              execution,
+              intent,
+            ))
             use _ <- result.try(a.require(
               pending,
               "reconciliation_intent_mismatch",
@@ -332,16 +365,17 @@ fn dispatch(
         }
       }
       case outcome {
-        Ok(receipt) -> case state.unresolved {
-          False -> #(state, Ok(receipt))
-          True -> {
-            let next_state = case planning_resolution_receipt(receipt) {
-              True -> State(..state, unresolved: False)
-              False -> State(..state, execution: None, unresolved: False)
+        Ok(receipt) ->
+          case state.unresolved {
+            False -> #(state, Ok(receipt))
+            True -> {
+              let next_state = case planning_resolution_receipt(receipt) {
+                True -> State(..state, unresolved: False)
+                False -> State(..state, execution: None, unresolved: False)
+              }
+              #(next_state, Ok(receipt))
             }
-            #(next_state, Ok(receipt))
           }
-        }
         Error(e) -> #(
           State(..state, unresolved: state.unresolved || a.outcome_unknown(e)),
           Error(e),
@@ -367,7 +401,10 @@ fn dispatch(
               ]),
             )
             use sa_plan_renewal <- result.try(sa.renew_sa_task(
-              e.binding.plan, e.binding.task, e.binding.worker, e.binding.attempt,
+              e.binding.plan,
+              e.binding.task,
+              e.binding.worker,
+              e.binding.attempt,
               3_600_000_000_000,
             ))
             use after_fence <- result.try(a.fence(e, 0))
@@ -379,10 +416,7 @@ fn dispatch(
                   "sa_plan_lease_until_ns",
                   json.string(int_string(after_fence.lease_until_ns)),
                 ),
-                #(
-                  "sa_plan_renewal",
-                  json.string(sa_plan_renewal),
-                ),
+                #("sa_plan_renewal", json.string(sa_plan_renewal)),
               ]),
             )
           }
@@ -404,7 +438,10 @@ fn dispatch(
             use intent <- result.try(ops.text(args, "intent_id"))
             use scope <- result.try(a.lookup(state.grant, plan, task))
             use pending <- result.try(ops.assessment_pending(scope))
-            use _ <- result.try(a.require(!pending, "assessment_prepared_stop_line"))
+            use _ <- result.try(a.require(
+              !pending,
+              "assessment_prepared_stop_line",
+            ))
             case name {
               "harness_claim" -> a.claim(state.grant, scope, intent)
               _ -> a.attach(state.grant, scope, intent)
@@ -461,19 +498,20 @@ fn active_call(
   args: value.Value,
 ) -> #(State, Result(json.Json, String)) {
   case state.unresolved, name {
-    True, "harness_finish" ->
-      #(state, Error("unresolved_operation_stop_line"))
-    _, _ -> case assessment_guard_required(name) {
-      False -> active_call_dispatch(state, execution, name, args)
-      True -> case ops.assessment_pending(execution.scope) {
-        Error(reason) -> #(
-          state,
-          Error("assessment_guard_unavailable:" <> reason),
-        )
-        Ok(True) -> #(state, Error("assessment_prepared_stop_line"))
-        Ok(False) -> active_call_dispatch(state, execution, name, args)
+    True, "harness_finish" -> #(state, Error("unresolved_operation_stop_line"))
+    _, _ ->
+      case assessment_guard_required(name) {
+        False -> active_call_dispatch(state, execution, name, args)
+        True ->
+          case ops.assessment_pending(execution.scope) {
+            Error(reason) -> #(
+              state,
+              Error("assessment_guard_unavailable:" <> reason),
+            )
+            Ok(True) -> #(state, Error("assessment_prepared_stop_line"))
+            Ok(False) -> active_call_dispatch(state, execution, name, args)
+          }
       }
-    }
   }
 }
 
@@ -525,7 +563,10 @@ fn active_call_dispatch(
           Error(e),
         )
       }
-    "harness_write_file" | "harness_build" | "harness_test" | "harness_client_mcp_config" ->
+    "harness_write_file"
+    | "harness_build"
+    | "harness_test"
+    | "harness_client_mcp_config" ->
       case state.unresolved {
         True -> #(state, Error("unresolved_operation_stop_line"))
         False -> {

@@ -211,7 +211,20 @@ fn verify_route_grant_fence(
 ) -> Result(Nil, ToolError) {
   case context.task_fence {
     None ->
-      case is_private_route(spec.route) {
+      // Only this exact successor ReadOnly preparation may lack a task lease.
+      // Route/tool ticket, revocation, scope, deadline and workspace checks
+      // above still run; admit then checks the transport principal workspace.
+      // The trusted successor resolver separately checks the real grant/worker,
+      // exact target/read delegation and canonical review before preparation.
+      // This exception grants no TaskFence and cannot reach a mutator.
+      case
+        is_private_route(spec.route)
+        && !{
+          spec.route == "successor"
+          && spec.name == "harness_recovery_prepare"
+          && spec.effect_class == ReadOnly
+        }
+      {
         True ->
           Error(route_grant_error(
             "MISSING_TASK_FENCE",

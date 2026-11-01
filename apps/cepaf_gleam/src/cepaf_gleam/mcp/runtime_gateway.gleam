@@ -2756,8 +2756,17 @@ fn successor_binding(
 ) -> Result(PrivateBinding, String) {
   use root <- result.try(harness_admission.source_root(grant))
   let ticket = successor_ticket(grant, root)
-  use fence <- result.try(case state.execution {
-    Some(execution) -> {
+  use fence <- result.try(case tool, state.execution {
+    "harness_recovery_prepare", _ -> {
+      // This tool performs observation preparation only. It must not turn an
+      // expired controlling execution into a live TaskFence. The actual grant,
+      // exact target/read scope and dedicated review are checked by admission.
+      use plan <- result.try(ops.text(args, "plan"))
+      use task <- result.try(ops.text(args, "task"))
+      use _ <- result.try(harness_admission.lookup(grant, plan, task))
+      Ok(None)
+    }
+    _, Some(execution) -> {
       use proof <- result.try(harness_admission.fence(execution, 0))
       Ok(
         Some(admission.TaskFence(
@@ -2771,7 +2780,7 @@ fn successor_binding(
         )),
       )
     }
-    None ->
+    _, None ->
       case preattach_tool(tool) {
         False -> Ok(None)
         True -> {
@@ -2821,6 +2830,7 @@ fn preattach_tool(tool: String) -> Bool {
   list.contains(
     [
       "harness_status",
+      "harness_recovery_prepare",
       "harness_clock",
       "harness_heartbeat",
       "harness_claim",
@@ -2905,7 +2915,12 @@ pub fn observe_preattach_scope(
     Error(_), Error(_) ->
       case
         list.contains(
-          ["harness_claim", "harness_attach", "harness_assess"],
+          [
+            "harness_claim",
+            "harness_attach",
+            "harness_assess",
+            "harness_recovery_prepare",
+          ],
           tool,
         )
       {
