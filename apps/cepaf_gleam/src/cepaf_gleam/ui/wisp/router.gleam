@@ -44,7 +44,6 @@ import cepaf_gleam/ha/invariant_gate
 import cepaf_gleam/ha/module_guard
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/ha/slo_tracker
-import cepaf_gleam/mcp/transports/zlp_hyperplane
 import cepaf_gleam/moz/client as moz_client
 import cepaf_gleam/planning/execution_observer
 import cepaf_gleam/rules/dispatcher as rule_dispatcher
@@ -83,6 +82,7 @@ import cepaf_gleam/ui/lustre/sciviz_extensions_dashboard
 import cepaf_gleam/ui/lustre/sciviz_test_dashboard
 import cepaf_gleam/ui/lustre/testing_page
 import cepaf_gleam/ui/lustre/triad_matrix_view
+import cepaf_gleam/ui/lustre/zlp_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/web/shell
@@ -94,6 +94,7 @@ import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/mini_app_routes
 import cepaf_gleam/ui/wisp/mirage_api
 import cepaf_gleam/ui/wisp/podman_api
+import cepaf_gleam/ui/wisp/zlp_api
 import cepaf_gleam/verification/fractal_triad_matrix_engine
 import cepaf_gleam/zenoh/ets_zenoh_bridge
 import gleam/bit_array
@@ -317,9 +318,21 @@ fn route_internal(path: String) -> String {
       module_guard.unwrap(module_guard.guard_nif_object(zenoh_json(), "zenoh"))
     "/api/v1/zlp/status" | "/api/zlp/health" ->
       module_guard.unwrap(module_guard.guard_json(
-        zlp_status_json(),
+        json.to_string(zlp_api.status_json()),
         "zlp/status",
         "backend",
+      ))
+    "/api/v1/zlp/theorems" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(zlp_api.theorems_json()),
+        "zlp/theorems",
+        "plane",
+      ))
+    "/api/v1/zlp/lanes" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(zlp_api.lanes_json()),
+        "zlp/lanes",
+        "plane",
       ))
     "/api/v1/verification" | "/api/verification/status" ->
       module_guard.unwrap(module_guard.guard_json(
@@ -1333,57 +1346,6 @@ fn knowledge_json() -> String {
 /// Zenoh mesh health endpoint — NIF-backed live data (SC-GLM-UI-003).
 fn zenoh_json() -> String {
   c3i_nif.system_zenoh()
-}
-
-/// Supervised UOS-ZLP-v3 Lean 4.33.0 + Zig 0.16.0 + OTP 29 Port Hyperplane
-/// telemetry endpoint (`SC-HARNESS-MCP-001`, `SC-PROVENANCE-001`, `SC-GLM-UI-003`).
-/// Pure read-only probe: inspects running shard pool without mutating state.
-fn zlp_status_json() -> String {
-  let binary_available = zlp_hyperplane.is_binary_available()
-  let pool_running = zlp_hyperplane.is_running()
-  let status = case pool_running, binary_available {
-    True, _ -> "healthy"
-    False, True -> "standby"
-    False, False -> "binary_unbuilt"
-  }
-  let shards = case pool_running {
-    False -> []
-    True ->
-      list.filter_map([0, 1, 2, 3], fn(shard_id) {
-        case zlp_hyperplane.shard_health(shard_id: shard_id) {
-          Ok(h) ->
-            Ok(
-              json.object([
-                #("shard_id", json.int(shard_id)),
-                #("status", json.string("online")),
-                #("os_pid", json.int(h.os_pid)),
-                #("active_subs", json.int(h.active_subs)),
-                #("in_flight_heavy", json.int(h.in_flight_heavy)),
-                #("perceus_exclusive", json.bool(h.excl == 1)),
-              ]),
-            )
-          Error(_) -> Error(Nil)
-        }
-      })
-  }
-  json.object([
-    #("status", json.string(status)),
-    #("backend", json.string("uos_zlp_v3_otp29_port")),
-    #("pool_running", json.bool(pool_running)),
-    #("binary_available", json.bool(binary_available)),
-    #("lean_version", json.string("4.33.0")),
-    #("zig_version", json.string("0.16.0")),
-    #("otp_release", json.string("29")),
-    #("lean_theorems_proved", json.int(20)),
-    #("exported_c_abi_kernels", json.int(8)),
-    #("zero_sorry_ax", json.bool(True)),
-    #("supports_zenoh_sse_subscriptions", json.bool(True)),
-    #("admitted_ev_ceiling", json.int(zlp_hyperplane.admitted_ev_ceiling)),
-    #("application_admitted", json.bool(False)),
-    #("system_admitted", json.bool(zlp_hyperplane.system_admitted)),
-    #("shards", json.array(shards, fn(x) { x })),
-  ])
-  |> json.to_string()
 }
 
 /// Verification status endpoint — NIF-backed live data (SC-GLM-UI-003)
@@ -3357,6 +3319,7 @@ fn handle_legacy_get(path: String) -> HttpResponse(String) {
     // AI agent status + Gemma 4 availability
     "/api/v1/ai/status" -> json_response(ai_status_json(), 200)
     "/mirage" -> html_response(mirage_cockpit.view())
+    "/zlp" -> html_response(zlp_cockpit.view())
     "/api/v1/mirage/candidates" ->
       json_response(
         json.to_string(
@@ -3587,6 +3550,7 @@ fn route_html(path: String) -> String {
   }
   case path {
     "/mirage" -> mirage_cockpit.view()
+    "/zlp" -> zlp_cockpit.view()
     "/" | "/dashboard" ->
       shell.render_page(
         "Dashboard",

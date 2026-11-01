@@ -245,8 +245,8 @@
     "scope": "Integrate UOS-ZLP-v3 across zenoh/client.gleam, otp_app.gleam, cepaf_gleam.gleam, Wisp /api/v1/zlp/status, tools/zlp-check + tools/uos-cli G-ZLP, author full 5-document KM triad corpus (design spec, dedicated wiki article, unnumbered ZK decision note, operations SOP, 13-section integration journal), and save cleanly to canonical /home/an/NAS-setup/uos.",
     "phase": "review",
     "fractal_layer": 4,
-    "observed_at": "2026-11-01T13:04:10Z",
-    "valid_until": "2026-11-02T13:04:10Z",
+    "observed_at": "2026-11-01T13:21:47Z",
+    "valid_until": "2026-11-02T13:21:47Z",
     "task_state": "completed",
     "ready_since": "2026-11-01T12:41:16Z",
     "snapshot": {
@@ -270,18 +270,18 @@
         },
         {
           "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
-          "sha256": "0f6d53f340f57750433afb8f9674ac4190070cb9c101e5eae295e3fce083d0f2",
-          "observed_at": "2026-11-01T12:59:45Z"
+          "sha256": "ddd3e7b09275e4724edb9af89fca69b17e9da0325de57e7f71b3b9e77eb1ac1e",
+          "observed_at": "2026-11-01T13:21:47Z"
         },
         {
           "path": "tools/uos/src/main.gleam",
-          "sha256": "ff2a40262448fa3512063edbc020c117ac7e1d097332dde4beede983616521a7",
-          "observed_at": "2026-11-01T12:59:45Z"
+          "sha256": "5c3b2f014a688a8daebb8cdaadca53d7e8683c5b3447ea0cc2e18279da66d631",
+          "observed_at": "2026-11-01T13:21:47Z"
         },
         {
           "path": "tools/zlp-check",
-          "sha256": "1f3efa2283e20a46846f7ee98a173b8c3b0afb85bf21e29083018216c9313b30",
-          "observed_at": "2026-11-01T13:02:50Z"
+          "sha256": "e179ab4ca019c3a2c8e16db0063b000aa24c64178e2350481a36a11b5dd71958",
+          "observed_at": "2026-11-01T13:21:47Z"
         }
       ]
     },
@@ -450,6 +450,238 @@
       "budget": "Local pinned toolchains; 1h Sa-plan task lease; zero external API calls.",
       "residuals": [
         "Running :4100 BEAM process continues serving existing loaded BEAM bytecode for new Wisp JSON routes until an operator-authorized runtime restart, while /files/* serves new markdown documents immediately from disk."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "zlp-v3-triple-surface-skill-contract-closure-20261101-1312",
+    "plan_id": "uos/zlp-v3-supervised-hyperplane/20261101-1309",
+    "task_id": "T03_ZLP_V3_TRIPLE_SURFACE_SKILL_CONTRACT_CLOSURE",
+    "actor": "agy-zlp-v3-20261101",
+    "scope": "Complete UOS-ZLP-v3 Triple-Surface UI/TUI/API integration (Lustre /zlp cockpit, Wisp zlp_api, TUI zlp_view, zlp_cockpit_test), SC-ZLP-PORT-001 constitutional contract, uos-zlp-hyperplane agent skill, uos-cli web-links integration, 13-section closure journal, reciprocal KM triad registration, and canonical JJ main save.",
+    "phase": "review",
+    "fractal_layer": 5,
+    "observed_at": "2026-11-01T13:21:47Z",
+    "valid_until": "2026-11-02T13:21:47Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-01T13:12:15Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Workspace agy-zlp-v3-20261101 on feature/zlp-v3-hyperplane; post-edit triple-surface, contract, and skill digests bound.",
+      "evidence": [
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "sha256": "ddd3e7b09275e4724edb9af89fca69b17e9da0325de57e7f71b3b9e77eb1ac1e",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zlp_api.gleam",
+          "sha256": "e601ce2f9a2dd0fc109bc4d563bcb518373392692f10c9dcf14b9ed0bd87c550",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zlp_cockpit.gleam",
+          "sha256": "41086f3b1ce1f51dd0adf35fcfcacaf518d99e48847d97df258834ca1eb06ddb",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/zlp_view.gleam",
+          "sha256": "3f7a726c6c85e5b697e70990e902cbd676b7648fa9d318df773087f11441bfc8",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "tools/uos/src/main.gleam",
+          "sha256": "5c3b2f014a688a8daebb8cdaadca53d7e8683c5b3447ea0cc2e18279da66d631",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "tools/zlp-check",
+          "sha256": "e179ab4ca019c3a2c8e16db0063b000aa24c64178e2350481a36a11b5dd71958",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md",
+          "sha256": "68250c31f3aace811241096e8cfe0c3e4aaa510d495c1efe620a596e82cc72d6",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": ".agents/skills/uos-zlp-hyperplane/SKILL.md",
+          "sha256": "af53f0b7906a6bac9fbf02bd0d8907f268baaccb4bafb216ec6ff06712ab5700",
+          "observed_at": "2026-11-01T13:21:47Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zlp_hyperplane.gleam",
+          "sha256": "f5915a60b7710758a7cc93eee199703531c21b8af4d61935fb84ab3c551f7c3c",
+          "observed_at": "2026-11-01T13:21:47Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Triple-surface Cockpit UI, Wisp REST API, TUI dashboard, SC-ZLP-PORT-001 contract, and uos-zlp-hyperplane skill complete operator and agent observability across UOS without touching protected harness or census-pinned files.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zlp_hyperplane.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "UI/API/TUI surfaces must stay strictly read-only, escape HTML against XSS, label admission boundaries honestly (EV-93 ceiling, system_admitted=false), and preserve all 381 UI regression invariants.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "tools/uos/src/main.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "S3 O2 Det2 RPN12: unescaped HTML in cockpit view, false admission claims, or modifying 24-page shell enum could introduce XSS, provenance drift, or UI regression failures.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "tools/zlp-check"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Depends on completed T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS and builds additively on zlp_hyperplane.gleam.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zlp_hyperplane.gleam",
+          "tools/zlp-check"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Provides full Triple-Surface (Browser Lustre /zlp + Wisp /api/v1/zlp/* + ANSI TUI), SC-ZLP-PORT-001 rule contract, and uos-zlp-hyperplane agent skill parity across UOS.",
+        "evidence_refs": [
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+          "tools/uos/src/main.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-ZLP-UI-XSS-OR-FALSE-ADMISSION",
+        "cause": "Rendering unescaped dynamic strings in /zlp HTML or displaying blanket ADMITTED badges on development cockpit",
+        "effect": "Reflected/stored HTML injection or SC-PROVENANCE-001 violation",
+        "controls": "Escape all dynamic HTML fields via escape_html, keep 18 checklist items labeled as obligations pending fleet verification, and pin admitted_ev_ceiling=93 / system_admitted=false",
+        "s": 3,
+        "o": 2,
+        "det": 2,
+        "rpn": 12,
+        "band": 3
+      },
+      {
+        "id": "FM-ZLP-UI-REGRESSION-OR-PEER-DRIFT",
+        "cause": "Mutating domain.Page 24-page enum or overwriting peer root working-copy files during canonical JJ save",
+        "effect": "comprehensive_ui_regression_test failure or peer file corruption",
+        "controls": "Mount /zlp as self-contained dark cockpit route matching /mirage pattern and verify SHA-256 conservation of all peer root working-copy files before and after JJ rebase",
+        "s": 3,
+        "o": 2,
+        "det": 2,
+        "rpn": 12,
+        "band": 3
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "AGY triple-surface and governance integration workflow under T03_ZLP_V3_TRIPLE_SURFACE_SKILL_CONTRACT_CLOSURE",
+      "control_action": "Expose read-only UOS-ZLP-v3 Lustre HTML, Wisp JSON, and TUI observability plus SC-ZLP-PORT-001 contract and uos-zlp-hyperplane skill",
+      "losses": [
+        "L-REGRESSION-OR-PEER-DATA-LOSS",
+        "L-FALSE-ADMISSION-CLAIM"
+      ],
+      "hazards": [
+        "H-UNESCAPED-HTML-OR-FALSE-GREEN-UI",
+        "H-PEER-WORKING-COPY-OVERWRITE"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Triple-surface zlp_cockpit_test is omitted from executable G-ZLP CLI gate",
+          "hazard_ids": [
+            "H-UNESCAPED-HTML-OR-FALSE-GREEN-UI"
+          ],
+          "constraint": "Include zlp_cockpit_test in tools/zlp-check EUnit execution list alongside zlp_hyperplane_test and mcp_transport_test"
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Cockpit UI claims global system admission or renders raw unescaped strings",
+          "hazard_ids": [
+            "H-UNESCAPED-HTML-OR-FALSE-GREEN-UI"
+          ],
+          "constraint": "Enforce escape_html with dedicated XSS unit test and display system_admitted=false and EV-93 ceiling explicitly"
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Cockpit or TUI queries shard health when ZLP supervisor pool is not started in unit-test VMs",
+          "hazard_ids": [
+            "H-UNESCAPED-HTML-OR-FALSE-GREEN-UI"
+          ],
+          "constraint": "Gracefully report pool_stopped / binary_unbuilt observation state without spawning or crashing"
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Temporary symlinks or build directories remain in workspace when sealing JJ commit",
+          "hazard_ids": [
+            "H-PEER-WORKING-COPY-OVERWRITE"
+          ],
+          "constraint": "Clean var/sa-plan and var/tmp in sibling workspace and verify clean jj status prior to bookmark advance"
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS"
+    ],
+    "score": 432,
+    "score_interval": [
+      432,
+      432
+    ],
+    "decision": {
+      "summary": "Deliver UOS-ZLP-v3 Triple-Surface UI/API/TUI, SC-ZLP-PORT-001 contract, uos-zlp-hyperplane skill, CLI web-links, and KM triad closure.",
+      "alternatives": [
+        "Self-contained /zlp Lustre dark cockpit + zlp_api + zlp_view + SC-ZLP-PORT-001 + uos-zlp-hyperplane skill matching /mirage triple-surface pattern: selected.",
+        "Leaving UOS-ZLP-v3 without Browser/TUI cockpit, rule contract, or local agent skill: rejected as incomplete project integration."
+      ],
+      "counterevidence": [
+        "Triple-surface UI/API/TUI and contract/skill registration do not confer production runtime cutover or global system admission.",
+        "Live :4100 BEAM process continues serving loaded bytecode for new Wisp routes until an operator-authorized restart, while /files/* serves new contract, skill, and markdown docs immediately."
+      ],
+      "assumptions": [
+        "Self-contained /zlp HTML route preserves all 24-page shell regression tests in comprehensive_ui_regression_test."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "zlp_cockpit_test, comprehensive_ui_regression_test, uos-cli zlp-check, km-gate, diagram-check, journal_linter, and live MCP/Tailnet checks all exit 0.",
+      "falsifier": "Any XSS escape failure, UI regression failure, diagram/journal/km-gate failure, or byte drift in peer root files.",
+      "acceptance": [
+        "zlp_cockpit.gleam, zlp_api.gleam, zlp_view.gleam, and router.gleam pass zlp_cockpit_test and comprehensive_ui_regression_test",
+        "SC-ZLP-PORT-001 contract, uos-zlp-hyperplane skill, and T03 13-section journal pass diagram-check, journal_linter, and km-gate",
+        "bash tools/uos-cli zlp-check and web-links pass and canonical /home/an/NAS-setup/uos main bookmark is updated cleanly"
+      ],
+      "rollback": "Restore main bookmark to 80e5ec1d via jj bookmark set main -r 80e5ec1d if any canonical gate fails.",
+      "reviewer": "Independent Codex sovereign review required for runtime cutover and system admission.",
+      "budget": "Local pinned toolchains; 1h Sa-plan task lease; zero external API cost.",
+      "residuals": [
+        "Activating GET /zlp and GET /api/v1/zlp/* on the running :4100 BEAM process awaits an operator-authorized runtime restart."
       ],
       "supersedes": null
     }

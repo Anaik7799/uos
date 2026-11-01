@@ -2202,6 +2202,9 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println(
         "  - MirageOS Unikernel Cockpit: http://nas-1.tail55d152.ts.net:4100/mirage",
       )
+      io.println(
+        "  - UOS-ZLP-v3 Hyperplane Cockpit: http://nas-1.tail55d152.ts.net:4100/zlp",
+      )
       io.println("")
       io.println("Testing & Verification Specifications:")
       io.println(
@@ -2264,6 +2267,15 @@ pub fn execute(cmd: UosCommand) -> Int {
       )
       io.println(
         "  - Mirage Hypervisors API: http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/hypervisors",
+      )
+      io.println(
+        "  - ZLP-v3 Hyperplane Status: http://nas-1.tail55d152.ts.net:4100/api/v1/zlp/status",
+      )
+      io.println(
+        "  - ZLP-v3 Theorems Catalog:  http://nas-1.tail55d152.ts.net:4100/api/v1/zlp/theorems",
+      )
+      io.println(
+        "  - ZLP-v3 Two-Lane Specs:    http://nas-1.tail55d152.ts.net:4100/api/v1/zlp/lanes",
       )
       io.println(
         "  - Comprehensive Checklist: http://nas-1.tail55d152.ts.net:4100/checklist",

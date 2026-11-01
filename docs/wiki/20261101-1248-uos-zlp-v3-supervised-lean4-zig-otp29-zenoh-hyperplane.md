@@ -2,13 +2,15 @@
 
 - **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane.md](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane.md)
 - **Observed Clock (`SC-TIME`)**: `2026-11-01T12:48:00Z` (`chrony` stratum `3`, system offset `+0.000201s` fast of NTP time, nominal `< 2s` drift band)
-- **Sa-plan Authority (`SC-SA-PLAN-001`)**: Plan `uos/zlp-v3-supervised-hyperplane/20261101-1309` · Tasks `T01_ZLP_V3_HYPERPLANE_IMPL` & `T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS`
+- **Sa-plan Authority (`SC-SA-PLAN-001`)**: Plan `uos/zlp-v3-supervised-hyperplane/20261101-1309` · Tasks `T01_ZLP_V3_HYPERPLANE_IMPL`, `T02_ZLP_V3_FULL_PROJECT_INTEGRATION_AND_DOCS`, `T03_ZLP_V3_TRIPLE_SURFACE_SKILL_CONTRACT_CLOSURE`
 - **Canonical `#km-triad` Cross-Links**:
+  - **Constitutional Port Contract (`SC-ZLP-PORT-001`)**: [contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md)
+  - **UOS-Local Agent Skill**: [.agents/skills/uos-zlp-hyperplane/SKILL.md](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-zlp-hyperplane/SKILL.md)
   - **Design & Math Specification**: [docs/design/20261101-1225-uos-zlp-v3-lean4-zig-otp29-zenoh-hyperplane-spec.md](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1225-uos-zlp-v3-lean4-zig-otp29-zenoh-hyperplane-spec.md)
   - **Zettelkasten Decision Note**: [docs/zk/20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision.md](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision.md)
   - **Operations & Verification SOP**: [docs/sop/20261101-1248-uos-zlp-v3-hyperplane-operations-and-verification-sop.md](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-1248-uos-zlp-v3-hyperplane-operations-and-verification-sop.md)
   - **Formal Lean 4 Proof Kernel**: [formal/lean/UosZlpHyperplane.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/UosZlpHyperplane.lean)
-  - **Implementation & Integration Journals**: [20261101-1225 Implementation Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md) · [20261101-1248 Integration Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md)
+  - **Implementation, Integration & Closure Journals**: [20261101-1225 T01 Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md) · [20261101-1248 T02 Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md) · [20261101-1410 T03 Closure Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md)
 - **Fractal Tags**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5` `#fractal-l6` `#fractal-l7` `#fractal-l8` `#fractal-l9` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
 - **Transclusions**: `[[wiki:20260905-1801-uos-zk-km-corpus-index]]` · `[[zk:20260905-1801-moc-uos-unified-master]]` · `[[zk:20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision]]`
 - **Provenance Boundary (`SC-PROVENANCE-001`)**: `admitted_ev_ceiling = 93`; `EV-94..EV-109` and `ADR-071..ADR-086` remain `NOT_ADMITTED`; `0` new EV or numbered ADR minted; `application_admitted = false`; `system_admitted = false`.
@@ -93,21 +95,23 @@ flowchart TD
 - [apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/mcp/transports/zenoh.gleam) exposes `handle_envelope_with_zlp` (combining Gleam HMAC-SHA256 + pinned reply topic checks with Lean 4 64-window stateful anti-replay and Zig AVX-512 framing), `subscribe_client_requests_via_zlp`, and `publish_pinned_reply_via_zlp`.
 - [apps/cepaf_gleam/src/indrajaal_native_zenoh.erl](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/indrajaal_native_zenoh.erl) delegates `open_session/1`, `put/3`, `get/2`, and `subscribe/3` directly to `uos_zlp_router`, eliminating the legacy `erlang:nif_error(nif_not_loaded)` fault without introducing in-process NIF crash risk.
 
-### 3.4 Wisp HTTP Cockpit Telemetry (`GET /api/v1/zlp/status` & `/api/zlp/health`)
+### 3.4 Triple-Surface Cockpit UI, Wisp REST API & ANSI TUI (`SC-GLM-UI-001`)
 
-[apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam) serves a read-only typed JSON telemetry object at `/api/v1/zlp/status` and `/api/zlp/health` reporting:
-- `status` (`"healthy"`, `"standby"`, or `"binary_unbuilt"`), `backend` (`"uos_zlp_v3_otp29_port"`), `pool_running`, `binary_available`
-- Toolchain & formal invariants: `lean_version: "4.33.0"`, `zig_version: "0.16.0"`, `otp_release: "29"`, `lean_theorems_proved: 20`, `exported_c_abi_kernels: 8`, `zero_sorry_ax: true`
-- Constitutional provenance boundaries: `admitted_ev_ceiling: 93`, `application_admitted: false`, `system_admitted: false`
-- Live per-shard health array (`shard_id`, `status`, `os_pid`, `active_subs`, `in_flight_heavy`, `perceus_exclusive`) when the pool is running.
+`UOS-ZLP-v3` exposes three read-only observability projections sharing one pure Gleam data core ([ui/wisp/zlp_api.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zlp_api.gleam)):
+1. **Browser Lustre Dark Cockpit (`GET /zlp`)**: [ui/lustre/zlp_cockpit.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zlp_cockpit.gleam) renders a `#0a0e17` mobile-first dark cockpit with XSS-escaped (`escape_html/1`) shard health cards, 21-theorem + 8 C-ABI kernel tables, Two-Lane architecture metrics, 6-domain `CHK-01..18` expandable checklist, and Tailnet navigation.
+2. **Wisp JSON REST Telemetry**: [ui/wisp/router.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam) & [ui/wisp/zlp_api.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zlp_api.gleam) serve:
+   - `GET /api/v1/zlp/status` & `GET /api/zlp/health`: Pool status (`"healthy"`, `"standby"`, or `"binary_unbuilt"`), toolchain invariants (`Lean 4.33.0`, `Zig 0.16.0`, `OTP 29`), provenance boundaries (`admitted_ev_ceiling: 93`, `application_admitted: false`, `system_admitted: false`), and per-shard health (`os_pid`, `active_subs`, `in_flight_heavy`, `perceus_exclusive`).
+   - `GET /api/v1/zlp/theorems`: Full 21-theorem zero-`sorryAx` catalog and 8 `@[export]` C-ABI functions.
+   - `GET /api/v1/zlp/lanes`: Fast-Lane (`< 10 us` Zen 5 AVX-512 + Perceus `48 KiB` $L_{1d}$ slab) vs Heavy-Lane (`pthread` + `lean_initialize_thread()` + `eventfd`) and Dual-ETS SSE auto-replay descriptors.
+3. **ANSI Terminal Dashboard (`zlp_view`)**: [ui/tui/zlp_view.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ui/tui/zlp_view.gleam) (`render/0`, `render_snapshot/3`) renders the terminal hyperplane cockpit.
 
-### 3.5 Executable Two-Key CLI Gate (`bash tools/uos-cli zlp-check` / `gate G-ZLP`)
+### 3.5 Executable Two-Key CLI Gate (`G-ZLP`), `web-links`, Contract (`SC-ZLP-PORT-001`) & Skill
 
-[tools/zlp-check](http://nas-1.tail55d152.ts.net:4100/files/tools/zlp-check) and [tools/uos/src/main.gleam](http://nas-1.tail55d152.ts.net:4100/files/tools/uos/src/main.gleam) implement `G-ZLP`, executing:
-1. Live `Lean 4.33.0` proof and `#print axioms` verification (`>= 20` axiom checks, `0 sorryAx`) on `formal/lean/UosZlpHyperplane.lean`.
-2. Native Zig 0.16.0 + Perceus C port binary build check (`var/zlp/uos_zlp_v3_port`).
-3. Live OTP 29 9-modality + project integration EUnit execution (`zlp_hyperplane_test` + `mcp_transport_test`).
-4. Complete `#km-triad` documentation suite verification.
+- **Two-Key CLI Gate (`bash tools/uos-cli zlp-check` / `gate G-ZLP`) & `web-links`**: [tools/zlp-check](http://nas-1.tail55d152.ts.net:4100/files/tools/zlp-check) and [tools/uos/src/main.gleam](http://nas-1.tail55d152.ts.net:4100/files/tools/uos/src/main.gleam) execute:
+  1. Live `Lean 4.33.0` proof and `#print axioms` verification (`21` axiom checks, `0 sorryAx`) on `formal/lean/UosZlpHyperplane.lean`.
+  2. Native Zig 0.16.0 + Perceus C port binary build check (`var/zlp/uos_zlp_v3_port`).
+  3. Live OTP 29 EUnit execution (`zlp_hyperplane_test` + `zlp_cockpit_test` + `mcp_transport_test`).
+  4. Complete 9-document `#km-triad`, contract ([contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md)), and agent skill ([.agents/skills/uos-zlp-hyperplane/SKILL.md](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-zlp-hyperplane/SKILL.md)) verification.
 
 ---
 

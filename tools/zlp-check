@@ -69,34 +69,37 @@ if [ ! -x "$uos_repo/var/zlp/uos_zlp_v3_port" ]; then
 fi
 echo "  [OK] var/zlp/uos_zlp_v3_port ready"
 
-echo "=== [G-ZLP] 3/4 OTP 29 9-Modality + Project Integration EUnit Suite ==="
+echo "=== [G-ZLP] 3/4 OTP 29 9-Modality + Triple-Surface + Project Integration EUnit Suite ==="
 (
   cd "$uos_repo/apps/cepaf_gleam"
   gleam build
   erl -noshell -pa build/dev/erlang/*/ebin -eval '
-    case eunit:test([zlp_hyperplane_test, mcp_transport_test], [verbose]) of
+    case eunit:test([zlp_hyperplane_test, zlp_cockpit_test, mcp_transport_test], [verbose]) of
       ok -> halt(0);
       _ -> halt(1)
     end.'
 )
-echo "  [OK] zlp_hyperplane_test + mcp_transport_test passed"
+echo "  [OK] zlp_hyperplane_test + zlp_cockpit_test + mcp_transport_test passed"
 
-echo "=== [G-ZLP] 4/4 #km-triad 5-Document Suite Verification ==="
+echo "=== [G-ZLP] 4/4 #km-triad, Contract SC-ZLP-PORT-001 & Skill Suite Verification ==="
 required_docs=(
+  "contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md"
+  ".agents/skills/uos-zlp-hyperplane/SKILL.md"
   "docs/design/20261101-1225-uos-zlp-v3-lean4-zig-otp29-zenoh-hyperplane-spec.md"
   "docs/wiki/20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane.md"
   "docs/zk/20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision.md"
   "docs/sop/20261101-1248-uos-zlp-v3-hyperplane-operations-and-verification-sop.md"
   "docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md"
   "docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md"
+  "docs/journal/20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md"
 )
 for doc in "${required_docs[@]}"; do
   if [ ! -f "$uos_repo/$doc" ]; then
-    echo "[FAIL] Missing #km-triad document: $doc" >&2
+    echo "[FAIL] Missing #km-triad / contract / skill document: $doc" >&2
     exit 1
   fi
 done
-echo "  [OK] All 6 UOS-ZLP-v3 #km-triad documents verified present"
+echo "  [OK] All 9 UOS-ZLP-v3 #km-triad, contract, and skill documents verified present"
 
 echo '{"status":"PASS","gate":"G-ZLP","admitted_ev_ceiling":93,"lean_theorems":20,"axiom_checks":'"$axiom_checks"',"zero_sorry_ax":true,"application_admitted":false,"system_admitted":false}'
 echo "[PASS] UOS-ZLP-v3 Two-Key Formal + 9-Modality Runtime Gate (G-ZLP)"

@@ -449,3 +449,23 @@ journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1
 index = "governance/planning/20261101-1309-zlp-v3-hyperplane-risk-portfolio.json"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+[[knowledge_group]]
+id = "UOS-ZLP-V3-TRIPLE-SURFACE-CLOSURE-20261101-1410"
+plan = "uos/zlp-v3-supervised-hyperplane/20261101-1309"
+task = "T03_ZLP_V3_TRIPLE_SURFACE_SKILL_CONTRACT_CLOSURE"
+state = "development"
+admitted = false
+contract = "contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md"
+contract_url = "http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md"
+skill = ".agents/skills/uos-zlp-hyperplane/SKILL.md"
+skill_url = "http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-zlp-hyperplane/SKILL.md"
+cockpit = "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zlp_cockpit.gleam"
+api = "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zlp_api.gleam"
+tui = "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/zlp_view.gleam"
+gate = "tools/zlp-check"
+journal = "docs/journal/20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md"
+index = "governance/planning/20261101-1309-zlp-v3-hyperplane-risk-portfolio.json"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

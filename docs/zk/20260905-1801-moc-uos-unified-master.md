@@ -5,8 +5,10 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 
 ## §1.0 Executive Architecture & Corpus Triad
 
-### 20261101-1248 — Supervised Lean 4 + Zig + OTP 29 Zenoh MCP hyperplane (UOS-ZLP-v3)
+### 20261101-1410 — Supervised Lean 4 + Zig + OTP 29 Zenoh MCP hyperplane (UOS-ZLP-v3)
 
+[Port Contract (`SC-ZLP-PORT-001`)](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20261101-1410-zlp-hyperplane-port-contract.md) ·
+[Agent Skill (`uos-zlp-hyperplane`)](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-zlp-hyperplane/SKILL.md) ·
 [Hyperplane specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1225-uos-zlp-v3-lean4-zig-otp29-zenoh-hyperplane-spec.md) ·
 [Architecture Wiki](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane.md) ·
 [Unnumbered ZK decision note](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision.md) ·
@@ -14,9 +16,10 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 [Lean 4 formal kernel](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/UosZlpHyperplane.lean) ·
 [13-section T01 implementation journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1225-uos-zlp-v3-hyperplane-implementation-journal.md) ·
 [13-section T02 integration journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1248-uos-zlp-v3-full-project-integration-journal.md) ·
+[13-section T03 triple-surface closure journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal.md) ·
 [Risk portfolio](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20261101-1309-zlp-v3-hyperplane-risk-portfolio.json) ·
 [Wiki corpus index](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md).
-Reciprocal `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`, `[[wiki:20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane]]`, `[[zk:20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision]]`, `[[wiki:20261101-1225-uos-zlp-v3-hyperplane-implementation-journal]]`, and `[[wiki:20261101-1248-uos-zlp-v3-full-project-integration-journal]]` record the `uos/zlp-v3-supervised-hyperplane/20261101-1309` (`T01` + `T02`) OS-isolated OTP 29 port pool (`20/20` zero-`sorryAx` `Lean 4.33.0` theorems, `Zig 0.16.0` Zen 5 AVX-512 gatekeeper, Dual-ETS post-`SIGKILL` Zenoh `:8080` SSE auto-replay, `zenoh/client.gleam`, `otp_app.gleam`, Wisp `/api/v1/zlp/status`, two-key CLI gate `G-ZLP`, and 9/9 testing modalities). `admitted_ev_ceiling = 93` retained; `0` new EV/ADR number or production system admission is asserted.
+Reciprocal `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`, `[[wiki:20261101-1248-uos-zlp-v3-supervised-lean4-zig-otp29-zenoh-hyperplane]]`, `[[zk:20261101-1248-zlp-v3-supervised-otp29-port-hyperplane-decision]]`, `[[wiki:20261101-1225-uos-zlp-v3-hyperplane-implementation-journal]]`, `[[wiki:20261101-1248-uos-zlp-v3-full-project-integration-journal]]`, and `[[wiki:20261101-1410-uos-zlp-v3-triple-surface-skill-contract-closure-journal]]` record the `uos/zlp-v3-supervised-hyperplane/20261101-1309` (`T01` + `T02` + `T03`) OS-isolated OTP 29 port pool (`21` zero-`sorryAx` `Lean 4.33.0` theorem axiom checks, `Zig 0.16.0` Zen 5 AVX-512 gatekeeper, Dual-ETS post-`SIGKILL` Zenoh `:8080` SSE auto-replay, `zenoh/client.gleam`, `otp_app.gleam`, Triple-Surface `/zlp` + `/api/v1/zlp/{status,theorems,lanes}` + `zlp_view`, `SC-ZLP-PORT-001`, `uos-zlp-hyperplane` skill, two-key CLI gate `G-ZLP`, and `413/413` EUnit tests). `admitted_ev_ceiling = 93` retained; `0` new EV/ADR number or production system admission is asserted.
 
 ### 20261031-1127 — Mandatory MCP brain-memory binding
 
