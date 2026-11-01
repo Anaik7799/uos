@@ -17,6 +17,7 @@
 //// =============================================================================
 
 import cepaf_gleam/harness/agent_capabilities
+import cepaf_gleam/harness/agent_meta_policy
 import cepaf_gleam/harness/agent_preflight_map
 import gleam/int
 import gleam/list
@@ -270,6 +271,33 @@ pub fn format_agent_preflight(
 ) -> Result(String, String) {
   agent_preflight_map.project(state, ontology_sha256, monotonic_ms)
   |> result.map(agent_preflight_map.format_snapshot)
+}
+
+/// Reuses the ecology view. Pure meta state is caller DATA, never authenticated
+/// runtime ownership or legacy evaluate_agent_intent advisory admission flags.
+pub fn format_agent_meta(state: Option(agent_meta_policy.State)) -> String {
+  case state {
+    option.None -> agent_meta_policy.summary()
+    option.Some(value) -> agent_meta_policy.format_state(value)
+  }
+}
+
+/// Explicit L-only conversion; no H role is inferred from a fractal coordinate.
+pub fn meta_layer(
+  layer: FractalLayer,
+) -> Result(agent_meta_policy.Layer, String) {
+  agent_meta_policy.layer(case layer {
+    L0Constitutional -> 0
+    L1Atomic -> 1
+    L2ComponentState -> 2
+    L3TransactionHistory -> 3
+    L4SystemRuntime -> 4
+    L5CognitiveReasoning -> 5
+    L6SwarmEcosystem -> 6
+    L7FederationEgress -> 7
+    L8LivingKnowledge -> 8
+    L9SREHomeostasis -> 9
+  })
 }
 
 // -----------------------------------------------------------------------------
@@ -841,6 +869,8 @@ pub fn format_ecology_summary() -> String {
   <> agent_capabilities.format_registry()
   <> "\n\n"
   <> agent_preflight_map.format_summary()
+  <> "\n\n"
+  <> agent_meta_policy.summary()
 }
 
 /// Formats detailed specifications for a single agent profile.
