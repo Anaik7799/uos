@@ -354,6 +354,12 @@ fn route_internal(path: String) -> String {
         "core-evo/services",
         "plane",
       ))
+    "/api/v1/core-evo/fpp-actors" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.fpp_actors_json()),
+        "core-evo/fpp-actors",
+        "plane",
+      ))
     "/api/v1/verification" | "/api/verification/status" ->
       module_guard.unwrap(module_guard.guard_json(
         verification_json(),

@@ -5,6 +5,7 @@
 %% exclusively in BEAM RAM (`persistent_term`), while deterministic keypair
 %% helpers support offline/unit verification of RFC 8032 Ed25519 signatures.
 -module(core_bus_crypto_ffi).
+-on_load(init_crypto_lock/0).
 
 -export([
     generate_ed25519_keypair_hex/0,
@@ -31,11 +32,91 @@ session_ed25519_pubkey_hex() ->
     {PubHex, _PrivHex} = ensure_session_keypair(),
     PubHex.
 
+init_crypto_lock() ->
+    _ = code:stick_mod(?MODULE),
+    MeshMod = 'cepaf_gleam@ecology@core_fpp_actor_twin_mesh',
+    CandMod = core_fpp_candidate_ffi,
+    case code:is_loaded(MeshMod) of
+        {file, _} -> _ = code:stick_mod(MeshMod);
+        false -> ok
+    end,
+    case code:is_loaded(CandMod) of
+        {file, _} -> _ = code:stick_mod(CandMod);
+        false -> ok
+    end,
+    ok.
+
 sign_with_session_ed25519_hex(MsgBin) when is_binary(MsgBin) ->
-    {PubHex, PrivHex} = ensure_session_keypair(),
-    case sign_ed25519_hex(MsgBin, PrivHex) of
-        {ok, SigHex} -> {ok, {PubHex, SigHex}};
-        {error, Reason} -> {error, Reason}
+    case verify_fpp_mesh_candidate_frame(MsgBin) of
+        false ->
+            {error, <<"candidate_integrity_violation">>};
+        true ->
+            {PubHex, PrivHex} = ensure_session_keypair(),
+            case sign_ed25519_hex(MsgBin, PrivHex) of
+                {ok, SigHex} -> {ok, {PubHex, SigHex}};
+                {error, Reason} -> {error, Reason}
+            end
+    end.
+
+verify_fpp_mesh_candidate_frame(MsgBin) ->
+    case binary:split(MsgBin, <<"|">>, [global]) of
+        [<<"uos.zenoh.core_evo.v1">>, _Topic, CandidateSha, <<"uos/universal-intelligent-fpp-actor-mesh/20261101-2232">> | _] ->
+            MeshMod = 'cepaf_gleam@ecology@core_fpp_actor_twin_mesh',
+            CandMod = core_fpp_candidate_ffi,
+            _ = code:ensure_loaded(MeshMod),
+            _ = code:ensure_loaded(CandMod),
+            _ = code:stick_mod(?MODULE),
+            _ = code:stick_mod(MeshMod),
+            _ = code:stick_mod(CandMod),
+            same_ebin_dir(?MODULE, CandMod, MeshMod) andalso
+                disk_md5_matches(?MODULE) andalso
+                disk_md5_matches(CandMod) andalso
+                disk_md5_matches(MeshMod) andalso
+                CandidateSha =/= <<>> andalso
+                CandidateSha =:= CandMod:verified_candidate_sha256();
+        _ ->
+            true
+    end.
+
+same_ebin_dir(ModA, ModB, ModC) ->
+    case {resolved_beam_dir(ModA), resolved_beam_dir(ModB), resolved_beam_dir(ModC)} of
+        {{ok, Dir}, {ok, Dir}, {ok, Dir}} -> true;
+        _ -> false
+    end.
+
+resolved_beam_dir(Mod) ->
+    try
+        case code:which(Mod) of
+            Path when is_list(Path), Path =/= "" ->
+                {ok, filename:dirname(filename:absname(Path))};
+            _ ->
+                error
+        end
+    catch
+        _:_ -> error
+    end.
+
+disk_md5_matches(Mod) ->
+    try
+        case code:which(Mod) of
+            Path when is_list(Path), Path =/= "" ->
+                Abs = filename:absname(Path),
+                case file:read_file(Abs) of
+                    {ok, Bytes} ->
+                        case beam_lib:md5(Bytes) of
+                            {ok, {Mod, DiskMd5}} ->
+                                erlang:get_module_info(Mod, md5) =:= DiskMd5;
+                            _ ->
+                                false
+                        end;
+                    _ ->
+                        false
+                end;
+            _ ->
+                false
+        end
+    catch
+        _:_ -> false
     end.
 
 sign_ed25519_hex(MsgBin, PrivHex) when is_binary(MsgBin), is_binary(PrivHex) ->

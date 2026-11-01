@@ -5,10 +5,15 @@
 
 import cepaf_gleam/ecology/core_effect_fence
 import cepaf_gleam/ecology/core_evolution
+import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
+  type SubsystemFppActorSpec,
+}
 import gleam/json
 import gleam/list
 
 const cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+
+const fpp_actors_url = "http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/fpp-actors"
 
 const spec_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1543-uos-zero-muda-core-dev-hive-biomorphic-fractal-evolution-system.md"
 
@@ -125,10 +130,10 @@ pub fn get_benefits() -> List(CoreEvoBenefit) {
     ),
     CoreEvoBenefit(
       id: "BEN-08",
-      dimension: "Live OTP 29 NASA FPP Actor & Digital Twin Mesh",
-      before_state: "Unverified actor lifecycles and 2-arity binary_to_atom OTel badarg crashes",
-      after_state: "10 live OTP 29 actors (L0..L9) with dual F' HSMs, Kalman-Beta twins, and crash-proof W3C OTel",
-      quantitative_delta: "10 live OTP 29 NASA FPP Actor & Digital Twin Holons L0..L9 (10/10 converged)",
+      dimension: "Universal 40-Subsystem OTP 29 Intelligent NASA FPP Actor Mesh",
+      before_state: "Unverified actor lifecycles, layer-only granularity, and 2-arity OTel badarg crashes",
+      after_state: "40 live OTP 29 intelligent FPP actors (4 uos_sup domains x L0..L9) with dual F' HSMs, Kalman-PID-Beta twins, autonomous self-healing, and Ed25519 Zenoh",
+      quantitative_delta: "40 live OTP 29 Intelligent NASA FPP Actors (4 Domains x L0..L9, 40/40 converged & self-healing)",
     ),
     CoreEvoBenefit(
       id: "BEN-09",
@@ -181,8 +186,8 @@ pub fn get_modules() -> List(CoreEvoModuleRecord) {
       id: "MOD-06",
       module_name: "core_fpp_actor_twin_mesh",
       path: "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
-      layers: "L0..L9",
-      invariants_and_capabilities: "10 live OTP 29 FPP Actor & Digital Twin Holons (L0..L9) with Denotational/Atlas Intents, W3C OTel, signed Zenoh uos/v1/**, and redacted OpenRouter",
+      layers: "4 Domains x L0..L9",
+      invariants_and_capabilities: "40 live OTP 29 Intelligent FPP Actors (Apps, Engines, Services, Intelligence x L0..L9) with Autonomous Reflexes, Kalman-PID-Beta Twins, W3C OTel, Ed25519 Zenoh uos/v1/** & redacted OpenRouter",
     ),
     CoreEvoModuleRecord(
       id: "MOD-07",
@@ -290,10 +295,10 @@ pub fn get_bionic_services() -> List(CoreEvoServiceRecord) {
     ),
     CoreEvoServiceRecord(
       id: "S7",
-      name: "S7 10 Live OTP 29 FPP Actor & Digital Twin Holons L0..L9",
+      name: "S7 40 Live OTP 29 Intelligent NASA FPP Actors & Digital Twins (4 Domains x L0..L9)",
       layer: "L0..L9",
-      substrate: "ecology/core_fpp_actor_twin_mesh + ha/digital_twin + intent/denotational + telemetry/otel",
-      protection_and_capability: "Spawns 10 supervised OTP 29 actors with coupled Kalman-Beta-Lyapunov digital twins, Algebraic Atlas cocycles, W3C OTel, and redacted OpenRouter",
+      substrate: "ecology/core_fpp_actor_twin_mesh + uos_sup + ha/digital_twin + intent/denotational + telemetry/otel",
+      protection_and_capability: "Spawns 40 supervised OTP 29 subsystem FPP actors with Autonomous Cybernetic Reflexes (PID damping, autonomous self-heal, breaker quarantine), Ed25519 Zenoh & redacted OpenRouter",
     ),
     CoreEvoServiceRecord(
       id: "S8",
@@ -344,10 +349,10 @@ pub fn get_commands() -> List(CoreEvoCommandRecord) {
     ),
     CoreEvoCommandRecord(
       id: "CMD-06",
-      surface: "CLI (./tools/uos-core-evo)",
-      invocation: "./tools/uos-core-evo fpp-actor-mesh",
-      role_or_topic: "uos/v1/core_evo/fpp_actor_mesh/status",
-      description: "Spawn & verify all 10 live OTP 29 FPP Actor & Digital Twin Holons (L0..L9) with MCP, signed Zenoh, W3C OTel, and Denotational Intents",
+      surface: "CLI & Wisp API (./tools/uos-core-evo)",
+      invocation: "./tools/uos-core-evo fpp-actor-mesh | GET /api/v1/core-evo/fpp-actors",
+      role_or_topic: "uos/v1/core_evo/fpp_{apps,engines,services,intelligence}/**",
+      description: "Spawn & verify all 40 live OTP 29 Intelligent Subsystem FPP Actors (4 Domains x L0..L9) with Autonomous Self-Healing Reflexes, Ed25519 Zenoh, W3C OTel & Digital Twins",
     ),
     CoreEvoCommandRecord(
       id: "CMD-07",
@@ -435,11 +440,25 @@ pub fn status_json() -> json.Json {
     #("epochs_simulated", json.int(24)),
     #("states_verified", json.int(4080)),
     #("invariants_proved", json.int(12)),
-    #("fpp_holon_actors", json.int(10)),
+    #(
+      "fpp_holon_actors",
+      json.int(core_fpp_actor_twin_mesh.universal_fpp_actor_count),
+    ),
+    #(
+      "fpp_supervisor_running",
+      json.bool({ core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status() }.0),
+    ),
+    #(
+      "fpp_live_actors_alive",
+      json.int({ core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status() }.1),
+    ),
+    #("fpp_supervision_domains", json.int(4)),
+    #("fpp_fractal_layers", json.int(10)),
     #("admitted_ev_ceiling", json.int(core_evolution.admitted_ev_ceiling)),
     #("application_admitted", json.bool(False)),
     #("system_admitted", json.bool(False)),
     #("cockpit_url", json.string(cockpit_url)),
+    #("fpp_actors_url", json.string(fpp_actors_url)),
     #("spec_url", json.string(spec_url)),
     #("wiki_url", json.string(wiki_url)),
     #("zk_url", json.string(zk_url)),
@@ -482,7 +501,11 @@ pub fn services_json() -> json.Json {
     #("services", json.array(services, service_to_json)),
     #("modules", json.array(modules, module_to_json)),
     #("commands", json.array(commands, command_to_json)),
-    #("fpp_holon_actors", json.int(10)),
+    #(
+      "fpp_holon_actors",
+      json.int(core_fpp_actor_twin_mesh.universal_fpp_actor_count),
+    ),
+    #("fpp_actors_url", json.string(fpp_actors_url)),
     #(
       "cutover_targets",
       json.array(core_effect_fence.canonical_14_targets, json.string),
@@ -549,5 +572,54 @@ pub fn command_to_json(c: CoreEvoCommandRecord) -> json.Json {
     #("invocation", json.string(c.invocation)),
     #("role_or_topic", json.string(c.role_or_topic)),
     #("description", json.string(c.description)),
+  ])
+}
+
+pub fn get_fpp_actors() -> List(SubsystemFppActorSpec) {
+  core_fpp_actor_twin_mesh.all_40_subsystem_fpp_actor_specs()
+}
+
+pub fn fpp_actors_json() -> json.Json {
+  let live_actors = core_fpp_actor_twin_mesh.inspect_live_40_fpp_actors()
+  let #(sup_running, _) =
+    core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status()
+  let alive_cnt = list.count(live_actors, fn(entry) { entry.2 })
+  json.object([
+    #("plane", json.string("uos_core_evo")),
+    #("schema", json.string("uos.core_evo.universal_40_fpp_actors_catalog.v5")),
+    #("otp_release", json.string("29")),
+    #("erts_version", json.string("17.0.5")),
+    #("supervisor_running", json.bool(sup_running)),
+    #(
+      "supervisor_strategy",
+      json.string("otp29_static_supervisor_one_for_one"),
+    ),
+    #("actor_count", json.int(list.length(live_actors))),
+    #("live_actors_alive", json.int(alive_cnt)),
+    #("domains_covered", json.int(4)),
+    #("layers_covered", json.int(10)),
+    #("aspects_covered", json.int(17)),
+    #(
+      "reflex_modes",
+      json.array(
+        [
+          "NOMINAL_CONTINUE",
+          "PID_DAMPING_TUNE",
+          "AUTONOMOUS_SELF_HEAL",
+          "QUARANTINE_CIRCUIT_BREAK",
+          "JIDOKA_CONSTITUTIONAL_HALT",
+        ],
+        json.string,
+      ),
+    ),
+    #("zenoh_auth", json.string("rfc8032_ed25519_ram_session_key")),
+    #("admitted_ev_ceiling", json.int(core_evolution.admitted_ev_ceiling)),
+    #("system_admitted", json.bool(False)),
+    #("cockpit_url", json.string(cockpit_url)),
+    #("fpp_actors_url", json.string(fpp_actors_url)),
+    #(
+      "actors",
+      json.array(live_actors, core_fpp_actor_twin_mesh.encode_live_actor_json),
+    ),
   ])
 }

@@ -135,11 +135,46 @@ pub fn wisp_core_evo_api_and_router_endpoints_return_expected_contracts_test() {
   let services_str = core_evo_api.services_json() |> json.to_string()
   string.contains(services_str, "\"service_count\":8") |> should.be_true()
   string.contains(services_str, "\"module_count\":7") |> should.be_true()
-  string.contains(services_str, "\"fpp_holon_actors\":10") |> should.be_true()
+  string.contains(services_str, "\"fpp_holon_actors\":40") |> should.be_true()
+
+  let fpp_str = core_evo_api.fpp_actors_json() |> json.to_string()
+  string.contains(fpp_str, "\"actor_count\":40") |> should.be_true()
+  string.contains(fpp_str, "\"domains_covered\":4") |> should.be_true()
+  string.contains(fpp_str, "\"layers_covered\":10") |> should.be_true()
+  string.contains(fpp_str, "l1_intel_zlp_v3_lean_zig_hyperplane")
+  |> should.be_true()
+  string.contains(fpp_str, "l9_intel_tri_sovereign_release_authority")
+  |> should.be_true()
 
   let page_resp = get_path("/core-evo")
   page_resp.status |> should.equal(200)
   string.contains(page_resp.body, "uos-core-evo-cockpit") |> should.be_true()
+  string.contains(
+    page_resp.body,
+    "40 Intelligent NASA FPP Actors &amp; Digital Twins",
+  )
+  |> should.be_true()
+  string.contains(page_resp.body, "l0_apps_iam_guardian_gate")
+  |> should.be_true()
+  string.contains(page_resp.body, "l9_intel_tri_sovereign_release_authority")
+  |> should.be_true()
+
+  let fpp_resp = get_path("/api/v1/core-evo/fpp-actors")
+  fpp_resp.status |> should.equal(200)
+  string.contains(fpp_resp.body, "\"actor_count\":40") |> should.be_true()
+  string.contains(fpp_resp.body, "\"AUTONOMOUS_SELF_HEAL\"") |> should.be_true()
+
+  // Verify live_corpus Poka-Yoke for /wiki/holons and [[wiki:...]] / [[zk:...]] syntax examples
+  let holons_resp = get_path("/wiki/holons")
+  holons_resp.status |> should.equal(200)
+  let wiki_dots_resp = get_path("/wiki/...")
+  wiki_dots_resp.status |> should.equal(200)
+  let zk_dots_resp = get_path("/zk/...")
+  zk_dots_resp.status |> should.equal(200)
+  let agents_resp = get_path("/files/AGENTS.md")
+  agents_resp.status |> should.equal(200)
+  string.contains(agents_resp.body, "href=\"/wiki/...\"") |> should.be_false()
+  string.contains(agents_resp.body, "href=\"/zk/...\"") |> should.be_false()
 
   let status_resp = get_path("/api/v1/core-evo/status")
   status_resp.status |> should.equal(200)

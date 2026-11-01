@@ -596,3 +596,22 @@ journal = "docs/journal/20261101-2102-uos-core-evo-w0-w4-execution-immortal-ets-
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-2102-uos-core-evo-w0-w4-execution-immortal-ets-and-sub25ms-km-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-UNIVERSAL-40-SUBSYSTEM-INTELLIGENT-FPP-ACTOR-MESH-20261101-2248"
+plan = "uos/universal-intelligent-fpp-actor-mesh/20261101-2232"
+task = "fpp1-universal-40-actor-mesh-and-reflex-engine"
+state = "implemented"
+admitted = false
+cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+fpp_actors_api_url = "http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/fpp-actors"
+risk_portfolio = "governance/planning/20261101-2232-universal-intelligent-fpp-actor-mesh-risk-portfolio.json"
+wiki_article = "docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md"
+wiki_article_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md"
+zk_decision = "docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md"
+zk_decision_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md"
+journal = "docs/journal/20261101-2248-universal-40-intelligent-fpp-actors-and-w2-w5-closure-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-2248-universal-40-intelligent-fpp-actors-and-w2-w5-closure-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

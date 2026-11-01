@@ -24,9 +24,13 @@ import cepaf_gleam/ecology/core_hive.{
 }
 import cepaf_gleam/ecology/core_fractal_holonic_simulator
 import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
-  ActorIntentRequest, ActorIntentVetoed, AdvisoryFreeTier, DeepAchRcaProTier,
-  DispatchIntent, ImplementationFlashTier, OpenRouterBlockedEgressSafety,
-  OpenRouterBlockedMargin40, OpenRouterDispatched, Otp29Verified, ShutdownActor,
+  ActorIntentAccepted, ActorIntentRequest, ActorIntentVetoed, AdvisoryFreeTier,
+  DeepAchRcaProTier, DispatchIntent, ImplementationFlashTier, InspectActor,
+  OpenRouterBlockedEgressSafety, OpenRouterBlockedMargin40, OpenRouterDispatched,
+  Otp29Verified, ReflexAutonomousSelfHeal, ShutdownActor,
+}
+import cepaf_gleam/uos_sup.{
+  AppsDomain, EnginesDomain, IntelligenceDomain, ServicesDomain,
 }
 import cepaf_gleam/ecology/core_systems_engineering.{
   ErrModeFormalProofOrReteVeto, ErrModeHardwareOrProvenanceBreach,
@@ -42,7 +46,7 @@ import cepaf_gleam/zenoh/core_bus.{
 }
 import gleam/erlang/process
 import gleam/list
-import gleam/option.{None}
+import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
 
@@ -1089,7 +1093,7 @@ pub fn otp29_runtime_and_embedded_openrouter_redaction_margin40_test() {
   }
 }
 
-pub fn otp29_10_layer_fpp_actor_mesh_mcp_zenoh_otel_twin_algebraic_intent_test() {
+pub fn otp29_universal_40_subsystem_fpp_actor_mesh_reflex_mcp_zenoh_otel_twin_test() {
   let q = QuotaSnapshot(900, 1100, 1400, 800_000_000)
   let assert Ok(summary) =
     core_fpp_actor_twin_mesh.execute_and_verify_otp29_fpp_actor_mesh(
@@ -1098,8 +1102,14 @@ pub fn otp29_10_layer_fpp_actor_mesh_mcp_zenoh_otel_twin_algebraic_intent_test()
     )
   should.be_true(summary.otp_is_29)
   should.equal(summary.otp_release, "29")
-  should.equal(summary.actors_spawned, 10)
-  should.equal(summary.intents_accepted_across_l0_l9, 10)
+  should.equal(summary.actors_spawned, 40)
+  should.equal(summary.domains_covered, 4)
+  should.equal(summary.layers_covered, 10)
+  should.equal(summary.intents_accepted_across_l0_l9, 40)
+  should.be_true(summary.autonomous_self_heal_verified)
+  should.be_true(summary.pid_damping_reflex_verified)
+  should.be_true(summary.quarantine_breaker_reflex_verified)
+  should.be_true(summary.ed25519_zenoh_signatures_verified)
   should.be_true(summary.cocycle_chain_valid)
   should.be_true(summary.sheaf_gluing_valid)
   should.be_true(summary.all_17_aspects_aligned)
@@ -1107,6 +1117,72 @@ pub fn otp29_10_layer_fpp_actor_mesh_mcp_zenoh_otel_twin_algebraic_intent_test()
   should.be_true(summary.openrouter_secret_redacted)
   should.be_true(summary.vetoed_os_nvme_halt_verified)
   should.be_true(summary.vetoed_ev_above_93_halt_verified)
+
+  // Verify 4-Domain Root Supervisor 10x4 = 40 subsystem mapping & unique IDs
+  should.equal(core_fpp_actor_twin_mesh.total_intelligent_fpp_actors(), 40)
+  list.each(
+    [AppsDomain, EnginesDomain, ServicesDomain, IntelligenceDomain],
+    fn(dom) {
+      should.equal(
+        list.length(core_fpp_actor_twin_mesh.fpp_actors_for_root_domain(dom)),
+        10,
+      )
+    },
+  )
+
+  // Verify named subsystem actor startup, degraded-health autonomous self-heal, and unknown rejection
+  case
+    core_fpp_actor_twin_mesh.start_named_subsystem_fpp_actor(
+      "nonexistent_actor_xyz",
+      1_793_551_000_000,
+    )
+  {
+    Error(msg) ->
+      should.be_true(string.starts_with(msg, "UNKNOWN_SUBSYSTEM_FPP_ACTOR:"))
+    Ok(_) -> should.fail()
+  }
+
+  let assert Ok(zlp_actor) =
+    core_fpp_actor_twin_mesh.start_named_subsystem_fpp_actor(
+      "l1_intel_zlp_v3_lean_zig_hyperplane",
+      1_793_551_000_000,
+    )
+  let heal_probe =
+    ActorIntentRequest(
+      intent_id: "zlp_self_heal_probe",
+      authority: "sa-plan",
+      target_drive_serial: "NVME-DATA-POOL-01",
+      criticality: "DAL-B",
+      guardian_approved: True,
+      ev_cycle: 93,
+      target_chart: core_fpp_actor_twin_mesh.chart_for_layer_index(2),
+      action: "verify_zlp_two_lane_port",
+      mcp_route: "system_verification",
+      role: ImplRole,
+      openrouter_tier: AdvisoryFreeTier,
+      embedded_prompt: "advise zlp port pool",
+      parent_trace: None,
+      observed_health: 0.72,
+      quota: q,
+      now_ms: 1_793_551_000_050,
+    )
+  case
+    process.call(zlp_actor.data, 5000, fn(r) { DispatchIntent(heal_probe, r) })
+  {
+    ActorIntentAccepted(
+      actor_id: "l1_intel_zlp_v3_lean_zig_hyperplane",
+      fprime_lifecycle_state: "Predicting",
+      twin_health: 1.0,
+      ..,
+    ) -> Nil
+    _ -> should.fail()
+  }
+  let zlp_st = process.call(zlp_actor.data, 5000, InspectActor)
+  case zlp_st.last_reflex_action {
+    ReflexAutonomousSelfHeal(_, _) -> should.equal(zlp_st.autonomous_heals, 1)
+    _ -> should.fail()
+  }
+  process.send(zlp_actor.data, ShutdownActor)
 
   // Verify non-Zero-Muda bloated MCP route (e.g. "stitch_generate") is vetoed into F' ConstitutionalHalt
   let assert Ok(started) =
@@ -1339,4 +1415,47 @@ pub fn core_bus_stateful_ets_replay_rejection_test() {
     Error(AuthCoreError(ErrNonMonotonicSeq(503, 503))) -> Nil
     _ -> should.fail()
   }
+}
+
+pub fn supervised_live_40_fpp_actor_mesh_and_one_for_one_self_healing_test() {
+  let assert Ok(started_cnt) =
+    core_fpp_actor_twin_mesh.ensure_live_40_fpp_actor_mesh_started()
+  should.equal(started_cnt, 40)
+
+  let #(sup_running, alive_cnt) =
+    core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status()
+  should.be_true(sup_running)
+  should.equal(alive_cnt, 40)
+
+  let inspected = core_fpp_actor_twin_mesh.inspect_live_40_fpp_actors()
+  should.equal(list.length(inspected), 40)
+  should.be_true(
+    list.all(inspected, fn(entry) {
+      let #(_spec, st_opt, is_alive) = entry
+      case is_alive, st_opt {
+        True, Some(st) ->
+          st.intents_accepted >= 1
+          && st.last_ed25519_verified
+          && st.math_twin.twin_health == 1.0
+        _, _ -> False
+      }
+    }),
+  )
+
+  // Verify OTP OneForOne self-healing: stop actor #17 and confirm static_supervisor
+  // automatically restarts & re-registers a live Ed25519-verified actor #17!
+  let assert Ok(subj_before) =
+    core_fpp_actor_twin_mesh.lookup_live_subsystem_fpp_actor(17)
+  process.send(subj_before, ShutdownActor)
+  process.sleep(120)
+  let #(sup_after, alive_after) =
+    core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status()
+  should.be_true(sup_after)
+  should.equal(alive_after, 40)
+  let assert Ok(subj_after) =
+    core_fpp_actor_twin_mesh.lookup_live_subsystem_fpp_actor(17)
+  let st_after = process.call(subj_after, 2000, InspectActor)
+  should.equal(st_after.spec.actor_index, 17)
+  should.be_true(st_after.intents_accepted >= 1)
+  should.be_true(st_after.last_ed25519_verified)
 }

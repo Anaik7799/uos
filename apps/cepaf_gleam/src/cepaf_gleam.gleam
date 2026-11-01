@@ -24,6 +24,7 @@
 //// =============================================================================
 
 import cepaf_gleam/agents/cybernetic
+import cepaf_gleam/ecology/core_fpp_actor_twin_mesh
 import cepaf_gleam/planning/cli
 import cepaf_gleam/podman/containers
 import cepaf_gleam/podman/domain.{PodmanClientConfig, Rootless}
@@ -68,6 +69,17 @@ pub fn main() {
       )
       let assert Ok(_) = uos_sup.start_root_supervisor()
         as "Root supervision must start before autonomous serving"
+      io.println(
+        "  [fpp-mesh] Starting supervised 40-subsystem OTP 29 NASA FPP actor & digital twin mesh...",
+      )
+      let assert Ok(live_fpp_cnt) =
+        core_fpp_actor_twin_mesh.ensure_live_40_fpp_actor_mesh_started()
+        as "Supervised 40-subsystem OTP 29 FPP actor mesh must start cleanly"
+      io.println(
+        "  [fpp-mesh] Supervised live OTP 29 FPP actors online: "
+        <> int.to_string(live_fpp_cnt)
+        <> "/40",
+      )
       Nil
     }
     False -> Nil

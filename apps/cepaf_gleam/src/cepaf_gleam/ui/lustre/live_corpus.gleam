@@ -824,8 +824,10 @@ fn inline(text: String, budget: Int) -> List(Element(Nil)) {
                   let caption =
                     list.first(list.drop(parts, 1)) |> result.unwrap(target)
                   let route = case string.split_once(target, ":") {
-                    Ok(#("wiki", t)) -> Some(#("/wiki/", t))
-                    Ok(#("zk", t)) -> Some(#("/zk/", t))
+                    Ok(#("wiki", t)) if t != "" && t != "..." ->
+                      Some(#("/wiki/", t))
+                    Ok(#("zk", t)) if t != "" && t != "..." ->
+                      Some(#("/zk/", t))
                     _ -> None
                   }
                   list.append(
@@ -1339,7 +1341,7 @@ pub fn handle(
     Error(code) -> failure(code, raw_path)
     Ok(path) ->
       case path {
-        "wiki" ->
+        "wiki" | "wiki/..." ->
           root_index(
             root,
             "docs/wiki",
@@ -1348,7 +1350,16 @@ pub fn handle(
             "Hermes Wiki — Live Corpus",
             True,
           )
-        "zk" ->
+        "wiki/holons" ->
+          listing(
+            root,
+            "docs/wiki/holons",
+            "/wiki/holons",
+            query,
+            "Hermes Wiki — Holons Corpus",
+            False,
+          )
+        "zk" | "zk/..." ->
           root_index(
             root,
             "docs/zk",

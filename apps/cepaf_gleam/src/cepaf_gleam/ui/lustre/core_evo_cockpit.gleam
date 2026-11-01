@@ -5,12 +5,17 @@
 
 import cepaf_gleam/ecology/core_effect_fence
 import cepaf_gleam/ecology/core_evolution
+import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
+  type FppHolonActorState, type SubsystemFppActorSpec,
+}
 import cepaf_gleam/ui/wisp/core_evo_api.{
   type CoreEvoBenefit, type CoreEvoCasteRecord, type CoreEvoCommandRecord,
   type CoreEvoModuleRecord, type CoreEvoServiceRecord,
 }
+import gleam/float
 import gleam/int
 import gleam/list
+import gleam/option.{type Option, Some}
 import gleam/string
 
 const spec_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1543-uos-zero-muda-core-dev-hive-biomorphic-fractal-evolution-system.md"
@@ -29,6 +34,7 @@ pub fn view() -> String {
   let services = core_evo_api.get_bionic_services()
   let modules = core_evo_api.get_modules()
   let commands = core_evo_api.get_commands()
+  let live_fpp_actors = core_fpp_actor_twin_mesh.inspect_live_40_fpp_actors()
 
   "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>UOS-CORE-EVO Holonic Hive &amp; Bionic Services Cockpit</title></head><body style=\"margin:0;background:#0a0e17;color:#e0e6ed;font-family:system-ui,-apple-system,sans-serif\">"
   <> "<div class=\"uos-core-evo-cockpit\" style=\"box-sizing:border-box;width:100%;max-width:100%;overflow-x:auto;padding:1.5rem;background:#0a0e17;color:#e0e6ed\">"
@@ -45,7 +51,7 @@ pub fn view() -> String {
   <> "\">KM Catalog</a> &middot; "
   <> "<strong><code>http://nas-1.tail55d152.ts.net:4100/core-evo</code></strong></nav>"
   <> "<header><h1 style=\"color:#00d4aa\">UOS-CORE-EVO Zero-Muda Holonic Hive, Bionic Services &amp; OTP 29 FPP Actor Cockpit</h1>"
-  <> "<p>Pure functional <code>Erlang/OTP 29.0.5 (ERTS 17.0.5)</code> core development &amp; evolution plane unifying single-gateway <code>uos-gleam</code> MCP (<code>-82.9%</code> schema overhead), signed Zenoh <code>uos/v1/**</code>, 5-Caste Holonic Hive (<code>1.01%</code> AGY share, <code>40.0% / 4000 bps</code> untouched safety margin), 8 Bionic Services, <code>170 x 24 = 4080</code> Janus Holon states (<code>12/12</code> invariants), 10 live OTP 29 FPP Actor Digital Twins (<code>L0..L9</code>), and <code>OI07</code> 14-target reader-drain crash rollback.</p>"
+  <> "<p>Pure functional <code>Erlang/OTP 29.0.5 (ERTS 17.0.5)</code> core development &amp; evolution plane unifying single-gateway <code>uos-gleam</code> MCP (<code>-82.9%</code> schema overhead), Ed25519-signed Zenoh <code>uos/v1/**</code>, 5-Caste Holonic Hive (<code>1.01%</code> AGY share, <code>40.0% / 4000 bps</code> untouched safety margin), 8 Bionic Services, <code>170 x 24 = 4080</code> Janus Holon states (<code>12/12</code> invariants), 40 live OTP 29 Intelligent NASA FPP Actors &amp; Digital Twins (<code>4 Supervision Domains x L0..L9</code>), and <code>OI07</code> 14-target reader-drain crash rollback.</p>"
   <> "<p><strong>Evidence scope:</strong> candidate_development_observation &middot; <strong>Admitted EV ceiling:</strong> <code>EV-"
   <> int.to_string(core_evolution.admitted_ev_ceiling)
   <> "</code> (<code>EV-94..109 NOT_ADMITTED</code>) &middot; <strong>System admission:</strong> <code>NOT_GRANTED (system_admitted=false)</code></p></header>"
@@ -54,6 +60,7 @@ pub fn view() -> String {
   <> "<p><a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/status\">Core-Evo Status JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/hive\">5-Caste Holonic Hive &amp; 9 Benefits JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/services\">8 Bionic Services, 7 Modules &amp; 13 Commands JSON</a> &middot; "
+  <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/fpp-actors\">40 Intelligent NASA FPP Actors JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/core-evo/health\">Health Probe JSON</a></p>"
   <> "<p><a href=\""
   <> spec_url
@@ -91,6 +98,11 @@ pub fn view() -> String {
   <> "</tr></thead><tbody>"
   <> render_command_rows(commands)
   <> "</tbody></table></section>"
+  <> "<section><h2>40 Intelligent NASA FPP Actors &amp; Digital Twins (4 Supervision Domains &times; L0..L9)</h2><table><thead><tr>"
+  <> "<th>#</th><th>Layer</th><th>Domain Supervisor</th><th>Actor ID</th><th>Subsystem Covered</th><th>Companion F&prime; FSM</th><th>Live OTP &amp; F&prime; State</th><th>Primary MCP Route</th><th>Autonomous Intelligence &amp; Reflex Focus</th>"
+  <> "</tr></thead><tbody>"
+  <> render_live_fpp_actor_rows(live_fpp_actors)
+  <> "</tbody></table></section>"
   <> render_checklist()
   <> "<section style=\"border:1px solid #ff6b6b;padding:1rem;margin-top:1rem\"><h2>Non-Negotiable Constitutional Boundaries</h2>"
   <> "<p>Gleam/OTP retains sole policy and effect authority (<code>SC-HARNESS-MCP-001</code>, <code>SC-JIDOKA-001</code>). Effect-time gate <code>OI07</code> blocks <code>oi02</code> until verified and guarantees 0 mixed-capsule readers across all 14 targets. Root NVMe <code>[REDACTED_SYSTEM_OS_SERIAL]</code>, standalone Jujutsu (<code>.jj/</code>), and <code>EV-93</code> ceiling (<code>EV-94..109 NOT_ADMITTED</code>) remain strictly enforced.</p></section>"
@@ -100,6 +112,12 @@ pub fn view() -> String {
 
 fn render_runtime_summary() -> String {
   let target_count = list.length(core_effect_fence.canonical_14_targets)
+  let #(sup_running, live_cnt) =
+    core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status()
+  let sup_badge = case sup_running {
+    True -> "OneForOne Supervisor RUNNING"
+    False -> "Supervisor STOPPED"
+  }
   "<section style=\"border:1px solid #34435b;padding:1rem;margin:1rem 0\">"
   <> "<h2>Runtime &amp;Quota Safety Envelope</h2><ul>"
   <> "<li>Runtime: <code>Erlang/OTP 29.0.5 (ERTS 17.0.5)</code> &middot; Status: <code>candidate_under_review</code></li>"
@@ -109,7 +127,11 @@ fn render_runtime_summary() -> String {
   <> int.to_string(core_evolution.hard_ceiling_bps)
   <> " bps (60.0%)</code> &middot; OpenRouter 24h Cap: <code>$6.00 / $10.00</code></li>"
   <> "<li>Janus Holonic Lattice: <code>170 Holons (10x17) x 24 Epochs = 4080 States</code> &middot; Invariants Proved: <code>12/12 (INV-HOLON-01..12)</code></li>"
-  <> "<li>Live OTP 29 NASA FPP Actor &amp; Digital Twin Mesh: <code>10/10 Actors (L0..L9)</code> &middot; OI07 Recoverable Cutover Targets: <code>"
+  <> "<li>Live OTP 29 Intelligent NASA FPP Actor &amp; Digital Twin Mesh: <code>"
+  <> int.to_string(live_cnt)
+  <> "/40 Live OTP Processes ("
+  <> sup_badge
+  <> ", 4 Supervision Domains x L0..L9)</code> &middot; OI07 Recoverable Cutover Targets: <code>"
   <> int.to_string(target_count)
   <> " targets (0 mixed readers)</code></li>"
   <> "</ul></section>"
@@ -204,6 +226,71 @@ pub fn render_command_rows(commands: List(CoreEvoCommandRecord)) -> String {
     <> escape_html(c.role_or_topic)
     <> "</code></td><td>"
     <> escape_html(c.description)
+    <> "</td></tr>"
+  })
+  |> string.join("")
+}
+
+pub fn render_live_fpp_actor_rows(
+  actors: List(#(SubsystemFppActorSpec, Option(FppHolonActorState), Bool)),
+) -> String {
+  actors
+  |> list.map(fn(entry) {
+    let #(a, st_opt, alive) = entry
+    let live_summary = case alive, st_opt {
+      True, Some(st) ->
+        "ALIVE &middot; "
+        <> escape_html(st.lifecycle_fpp_state.current)
+        <> " / "
+        <> escape_html(st.companion_fpp_state.current)
+        <> " &middot; twin="
+        <> float.to_string(st.math_twin.twin_health)
+        <> " &middot; seq="
+        <> int.to_string(st.zenoh_seq_id)
+      _, _ -> "OFFLINE"
+    }
+    "<tr><td><code>"
+    <> int.to_string(a.actor_index + 1)
+    <> "</code></td><td><code>"
+    <> escape_html(a.layer_short)
+    <> "</code></td><td><code>"
+    <> escape_html(a.domain_name)
+    <> "</code></td><td><code>"
+    <> escape_html(a.actor_id)
+    <> "</code></td><td>"
+    <> escape_html(a.subsystem_name)
+    <> "</td><td><code>"
+    <> escape_html(a.companion_fpp_name)
+    <> "</code></td><td><code>"
+    <> live_summary
+    <> "</code></td><td><code>"
+    <> escape_html(a.primary_mcp_tool)
+    <> "</code></td><td>"
+    <> escape_html(a.intelligence_focus)
+    <> "</td></tr>"
+  })
+  |> string.join("")
+}
+
+pub fn render_fpp_actor_rows(actors: List(SubsystemFppActorSpec)) -> String {
+  actors
+  |> list.map(fn(a) {
+    "<tr><td><code>"
+    <> int.to_string(a.actor_index + 1)
+    <> "</code></td><td><code>"
+    <> escape_html(a.layer_short)
+    <> "</code></td><td><code>"
+    <> escape_html(a.domain_name)
+    <> "</code></td><td><code>"
+    <> escape_html(a.actor_id)
+    <> "</code></td><td>"
+    <> escape_html(a.subsystem_name)
+    <> "</td><td><code>"
+    <> escape_html(a.companion_fpp_name)
+    <> "</code></td><td><code>"
+    <> escape_html(a.primary_mcp_tool)
+    <> "</code></td><td>"
+    <> escape_html(a.intelligence_focus)
     <> "</td></tr>"
   })
   |> string.join("")
