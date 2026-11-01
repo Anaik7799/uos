@@ -781,3 +781,25 @@ pub fn brain_reference_expansion_stops_at_three_levels_test() {
     list.any(recalled, fn(e) { e.rel_path == "docs/wiki/chain-4.md" }) |> should.be_false
   })
 }
+
+pub fn compiler_cache_directories_lake_and_pycache_excluded_from_catalog_and_files_test() {
+  fixture(fn(root) {
+    let real_lean = "formal/lean/ruliad/Ruliad.lean"
+    let lake_cache = "formal/lean/ruliad/.lake/packages/mathlib/Mathlib.lean"
+    let pycache_doc = "docs/wiki/__pycache__/cached.md"
+    let dune_build = "docs/wiki/_build/generated.md"
+    put(root, real_lean, "theorem ruliad_ok : True := trivial")
+    put(root, lake_cache, "SHOULD_NEVER_INDEX_LAKE_CACHE")
+    put(root, pycache_doc, "SHOULD_NEVER_INDEX_PYCACHE")
+    put(root, dune_build, "SHOULD_NEVER_INDEX_DUNE_BUILD")
+    let cat_paths = live.catalog(root) |> list.map(fn(e) { e.path })
+    let brain_paths = live.brain_catalog(root) |> list.map(fn(e) { e.path })
+    list.contains(cat_paths, real_lean) |> should.be_true
+    list.contains(brain_paths, real_lean) |> should.be_true
+    list.each([lake_cache, pycache_doc, dune_build], fn(barred) {
+      list.contains(cat_paths, barred) |> should.be_false
+      list.contains(brain_paths, barred) |> should.be_false
+      get("/files/" <> barred).status |> should.equal(403)
+    })
+  })
+}

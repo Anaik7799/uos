@@ -102,6 +102,16 @@ const markers = [
   "-shm",
 ]
 
+const barred_cache_segments = [
+  ".lake",
+  "__pycache__",
+  "_build",
+  "node_modules",
+  ".cache",
+  ".git",
+  ".jj",
+]
+
 @external(erlang, "cepaf_gleam_ffi", "get_env")
 fn env(name: String) -> Result(String, Nil)
 
@@ -110,6 +120,45 @@ fn descriptor_read(root: String, path: String, cap: Int) -> Result(String, Int)
 
 @external(erlang, "live_corpus_ffi", "names")
 fn names(path: String) -> List(String)
+
+@external(erlang, "live_corpus_ffi", "lstat_raw")
+fn lstat_raw(path: String) -> Result(#(Bool, Int, Int), Int)
+
+@external(erlang, "live_corpus_ffi", "pmap")
+fn pmap(items: List(a), fun: fn(a) -> b) -> List(b)
+
+@external(erlang, "live_corpus_ffi", "scan_clean_children")
+fn scan_clean_children(
+  root: String,
+  dir_rel: String,
+) -> List(#(String, String, Bool, Int, Int))
+
+@external(erlang, "live_corpus_ffi", "walk_trees_bfs")
+fn walk_trees_bfs(root: String, tree_rels: List(String)) -> List(Entry)
+
+@external(erlang, "live_corpus_ffi", "count_buckets")
+fn count_buckets(
+  entries: List(Entry),
+) -> #(Int, Int, Int, Int, Int, Int, Int, Int)
+
+@external(erlang, "live_corpus_ffi", "sort_entries_newest")
+fn sort_entries_newest(entries: List(Entry)) -> List(Entry)
+
+@external(erlang, "live_corpus_ffi", "is_url_clean_path")
+fn is_url_clean_path(path: String) -> Bool
+
+@external(erlang, "live_corpus_ffi", "encode_catalog_json")
+fn encode_catalog_json(
+  root: String,
+  buckets: #(Int, Int, Int, Int, Int, Int, Int, Int),
+  page_entries: List(Entry),
+  total_entries: Int,
+  limit: Int,
+  offset: Int,
+  truncated: Bool,
+  base_url: String,
+  unused: Int,
+) -> String
 
 @external(erlang, "live_corpus_ffi", "sha256")
 pub fn sha256(content: String) -> String
@@ -140,6 +189,7 @@ fn safe_segment(s: String) -> Bool {
   s != ""
   && s != "."
   && s != ".."
+  && !list.contains(barred_cache_segments, string.lowercase(s))
   && !list.any(["/", "\\", "%"], fn(c) { string.contains(s, c) })
   && {
     case bit_array.to_string(bit_array.from_string(s)) {
@@ -224,31 +274,28 @@ pub fn brain_file(path: String) -> Bool {
 fn prefix_stat(
   root: String,
   parts: List(String),
-) -> Result(simplifile.FileInfo, Int) {
+) -> Result(#(Bool, Int, Int), Int) {
   case parts {
-    [] -> simplifile.link_info(root) |> result.map_error(fn(_) { 404 })
+    [] ->
+      case lstat_raw(root) {
+        Ok(#(True, size, mtime)) -> Ok(#(True, size, mtime))
+        Ok(#(False, _, _)) -> Error(403)
+        Error(code) -> Error(code)
+      }
     [p, ..rest] -> {
       let next = root <> "/" <> p
-      use info <- result.try(
-        simplifile.link_info(next) |> result.map_error(fn(_) { 404 }),
-      )
-      case simplifile.file_info_type(info) {
-        simplifile.Symlink -> Error(403)
-        simplifile.Directory ->
+      use info <- result.try(lstat_raw(next))
+      case info.0 {
+        True ->
           case rest {
             [] -> Ok(info)
             _ -> prefix_stat(next, rest)
           }
-        simplifile.File ->
+        False ->
           case rest {
-            [] ->
-              case info.nlinks > 1 {
-                True -> Error(403)
-                False -> Ok(info)
-              }
+            [] -> Ok(info)
             _ -> Error(403)
           }
-        _ -> Error(403)
       }
     }
   }
@@ -265,11 +312,11 @@ pub fn stat(root: String, path: String) -> Result(Entry, Int) {
       _ -> string.split(path, "/")
     }),
   )
-  let directory = simplifile.file_info_type(info) == simplifile.Directory
+  let #(directory, size, mtime) = info
   case
     { directory && allowed_directory(path) || !directory && allowed_file(path) }
   {
-    True -> Ok(Entry(path, info.size, info.mtime_seconds, directory))
+    True -> Ok(Entry(path, size, mtime, directory))
     False -> Error(403)
   }
 }
@@ -325,21 +372,63 @@ pub fn catalog(root: String) -> List(Entry) {
 /// Brain Memory inspects only its thirteen roots and the canonical local skill.
 /// Every call observes disk metadata afresh; no catalog is retained.
 pub fn brain_catalog(root: String) -> List(Entry) {
-  catalog_paths(root, list.flatten([
-    seeds,
-    [".agents/skills/uos-km-triad-brain-memory/SKILL.md"],
-    brain_roots,
-  ]))
+  catalog_paths(
+    root,
+    list.flatten([
+      seeds,
+      [".agents/skills/uos-km-triad-brain-memory/SKILL.md"],
+      brain_roots,
+    ]),
+  )
   |> list.filter(fn(e) { brain_file(e.path) })
 }
 
+fn allowed_tree_file(child_path: String, segment_name: String) -> Bool {
+  let lowered_name = string.lowercase(segment_name)
+  list.any(extensions, fn(e) { string.ends_with(lowered_name, e) })
+  && {
+    !string.starts_with(child_path, "plugins/")
+    || string.contains(child_path, "/references/")
+    || string.ends_with(segment_name, ".md")
+    || string.ends_with(segment_name, ".json")
+  }
+}
+
+fn within_any_tree(path: String) -> Bool {
+  list.any(trees, fn(t) { within(path, t) })
+}
+
 fn catalog_paths(root: String, paths: List(String)) -> List(Entry) {
-  let #(rev_entries, _) = list.fold(paths, #([], 20_000), fn(state, p) {
-    walk(root, p, 0, state)
-  })
-  rev_entries
-  |> list.reverse
-  |> list.sort(newest)
+  let #(direct_files, tree_dirs, other_dirs) =
+    list.fold(paths, #([], [], []), fn(acc, p) {
+      let #(files_acc, tree_acc, other_acc) = acc
+      case stat(root, p) {
+        Error(_) -> acc
+        Ok(e) if !e.directory -> #([e, ..files_acc], tree_acc, other_acc)
+        Ok(e) ->
+          case within_any_tree(p) {
+            True -> #(files_acc, [e.path, ..tree_acc], other_acc)
+            False -> #(files_acc, tree_acc, [e.path, ..other_acc])
+          }
+      }
+    })
+  let tree_entries = case tree_dirs {
+    [] -> []
+    _ -> walk_trees_bfs(root, list.reverse(tree_dirs))
+  }
+  let other_entries = case other_dirs {
+    [] -> []
+    _ ->
+      pmap(list.reverse(other_dirs), fn(dir_path) {
+        let #(rev_entries, _) =
+          walk_verified_dir(root, dir_path, 0, False, #([], 20_000))
+        rev_entries
+      })
+      |> list.flatten
+  }
+  list.flatten([direct_files, tree_entries, other_entries])
+  |> sort_entries_newest
+  |> list.take(20_000)
 }
 
 fn walk(
@@ -356,17 +445,57 @@ fn walk(
         Error(_) -> state
         Ok(e) if !e.directory -> #([e, ..rev_entries], remaining - 1)
         Ok(_) ->
-          list.fold(children(root, path), state, fn(acc, child) {
-            let #(rev_acc, remaining) = acc
-            case remaining <= 0 || depth >= 16 {
-              True -> acc
-              False -> case child.directory {
-                False -> #([child, ..rev_acc], remaining - 1)
-                True -> walk(root, child.path, depth + 1, acc)
-              }
-            }
-          })
+          walk_verified_dir(root, path, depth, within_any_tree(path), state)
       }
+  }
+}
+
+fn walk_verified_dir(
+  root: String,
+  dir_path: String,
+  depth: Int,
+  in_tree: Bool,
+  state: #(List(Entry), Int),
+) -> #(List(Entry), Int) {
+  let #(_, remaining) = state
+  case remaining <= 0 || depth >= 16 {
+    True -> state
+    False ->
+      scan_clean_children(root, dir_path)
+      |> list.fold(state, fn(acc, c) {
+        let #(rev_acc, rem) = acc
+        case rem <= 0 {
+          True -> acc
+          False -> {
+            let #(child_path, n, is_dir, bytes, mtime) = c
+            case is_dir {
+              True ->
+                case in_tree || allowed_directory(child_path) {
+                  True ->
+                    walk_verified_dir(
+                      root,
+                      child_path,
+                      depth + 1,
+                      in_tree || within_any_tree(child_path),
+                      acc,
+                    )
+                  False -> acc
+                }
+              False ->
+                case
+                  { in_tree && allowed_tree_file(child_path, n) }
+                  || { !in_tree && allowed_file(child_path) }
+                {
+                  True -> #(
+                    [Entry(child_path, bytes, mtime, False), ..rev_acc],
+                    rem - 1,
+                  )
+                  False -> acc
+                }
+            }
+          }
+        }
+      })
   }
 }
 
@@ -434,7 +563,13 @@ pub fn file_url(path: String) -> String {
 }
 
 fn encode_path(path: String) -> String {
-  string.split(path, "/") |> list.map(uri.percent_encode) |> string.join("/")
+  case is_url_clean_path(path) {
+    True -> path
+    False ->
+      string.split(path, "/")
+      |> list.map(uri.percent_encode)
+      |> string.join("/")
+  }
 }
 
 fn entry_links(e: Entry) -> Element(Nil) {
@@ -555,13 +690,13 @@ pub fn slug_matches(path: String, raw: String) -> Bool {
 
 fn normalize_token(raw: String) -> String {
   raw
-    |> string.split("|")
-    |> list.first
-    |> result.unwrap(raw)
-    |> string.replace("[[wiki:", "")
-    |> string.replace("[[zk:", "")
-    |> string.replace("]]", "")
-    |> string.lowercase
+  |> string.split("|")
+  |> list.first
+  |> result.unwrap(raw)
+  |> string.replace("[[wiki:", "")
+  |> string.replace("[[zk:", "")
+  |> string.replace("]]", "")
+  |> string.lowercase
 }
 
 fn slug_matcher(token: String) -> fn(String) -> Bool {
@@ -933,21 +1068,20 @@ fn json_response(
   |> freshness
 }
 
-fn count_fields(entries: List(Entry)) -> List(#(String, json.Json)) {
-  list.map(
-    [
-      #("wiki_count", "docs/wiki"),
-      #("zk_count", "docs/zk"),
-      #("sop_count", "docs/sop"),
-      #("journal_count", "docs/journal"),
-      #("design_count", "docs/design"),
-      #("handover_count", "docs/handover"),
-      #("contracts_count", "contracts"),
-    ],
-    fn(pair) {
-      #(pair.0, json.int(list.count(entries, fn(e) { within(e.path, pair.1) })))
-    },
-  )
+fn count_fields_and_total(
+  entries: List(Entry),
+) -> #(Int, List(#(String, json.Json))) {
+  let #(total, wiki, zk, sop, journal, design, handover, contracts) =
+    count_buckets(entries)
+  #(total, [
+    #("wiki_count", json.int(wiki)),
+    #("zk_count", json.int(zk)),
+    #("sop_count", json.int(sop)),
+    #("journal_count", json.int(journal)),
+    #("design_count", json.int(design)),
+    #("handover_count", json.int(handover)),
+    #("contracts_count", json.int(contracts)),
+  ])
 }
 
 fn api(
@@ -956,177 +1090,192 @@ fn api(
   query: Option(String),
 ) -> response.Response(String) {
   let entries = catalog(root)
-  let common =
-    list.append(count_fields(entries), [
-      #("workspace_root", json.string(root)),
-      #("total_allowlisted_files", json.int(list.length(entries))),
-    ])
+  let raw_buckets = count_buckets(entries)
+  let total_entries = raw_buckets.0
   case path {
-    "api/v1/km/verify" -> {
-      let checks =
-        list.append(
-          ["AGENTS.md", wiki_index, zk_index, triad_manifest],
-          canonical_artifacts,
-        )
-      let missing =
-        list.filter(checks, fn(p) {
-          case stat(root, p) {
-            Ok(e) -> e.directory
-            Error(_) -> True
-          }
-        })
-      let unreadable =
-        list.filter(
-          [
-            "docs/wiki",
-            "docs/zk",
-            "docs/sop",
-            "docs/design",
-            "docs/journal",
-            "docs/handover",
-            "contracts/rules",
-            "governance/capability-inventory",
-            "governance/planning",
-          ],
-          fn(p) {
-            case stat(root, p), simplifile.read_directory(root <> "/" <> p) {
-              Ok(e), Ok(_) -> !e.directory
-              _, _ -> True
-            }
-          },
-        )
-      let artifacts =
-        entries
-        |> list.filter(fn(e) { string.contains(e.path, "/20261031-1012-") })
-      let tagged =
-        list.all(canonical_artifacts, fn(p) {
-          case read(root, p, 1_048_576) {
-            Ok(text) ->
-              case string.ends_with(p, ".md") {
-                True -> string.contains(text, "#km-triad")
-                False ->
-                  json.parse(text, decode.at(["schema"], decode.string))
-                  == Ok("uos.mcp-anti-brittle-fractal-km-index.v1")
-              }
-            Error(_) -> False
-          }
-        })
-      let intact = missing == [] && unreadable == [] && tagged
-      json_response(
-        case intact {
-          True -> 200
-          False -> 503
-        },
-        list.append(common, [
-          #(
-            "status",
-            json.string(case intact {
-              True -> "verified"
-              False -> "degraded"
-            }),
-          ),
-          #("missing", json.array(missing, json.string)),
-          #("unreadable", json.array(unreadable, json.string)),
-          #("triad_artifacts", json.array(artifacts, entry_json)),
-        ]),
-      )
-    }
     "api/v1/km/catalog"
     | "api/km/catalog"
     | "api/smriti/catalog"
     | "api/v1/knowledge" -> {
-      let filtered =
-        list.filter(entries, fn(e) {
-          string.starts_with(e.path, parameter(query, "prefix"))
-        })
+      let prefix = parameter(query, "prefix")
+      let #(filtered, filtered_len) = case prefix {
+        "" -> #(entries, total_entries)
+        _ -> {
+          let f =
+            list.filter(entries, fn(e) { string.starts_with(e.path, prefix) })
+          #(f, list.length(f))
+        }
+      }
       let limit = number(query, "limit", 200, 500) |> int.max(1)
       let offset = number(query, "offset", 0, 1_000_000)
-      json_response(
-        200,
-        list.append(common, [
-          #(
-            "entries",
-            json.array(
-              filtered |> list.drop(offset) |> list.take(limit),
-              entry_json,
-            ),
-          ),
-          #("node_count", json.int(list.length(entries))),
-          #("limit", json.int(limit)),
-          #("offset", json.int(offset)),
-          #(
-            "truncated",
-            json.bool(
-              list.length(filtered) > offset + limit
-              || list.length(entries) >= 20_000,
-            ),
-          ),
-        ]),
-      )
+      let page_entries = filtered |> list.drop(offset) |> list.take(limit)
+      let truncated = filtered_len > offset + limit || total_entries >= 20_000
+      let body =
+        encode_catalog_json(
+          root,
+          raw_buckets,
+          page_entries,
+          total_entries,
+          limit,
+          offset,
+          truncated,
+          base_url,
+          0,
+        )
+      response.new(200)
+      |> response.set_body(body)
+      |> response.set_header("content-type", "application/json")
+      |> freshness
     }
     _ -> {
-      let q = parameter(query, "q")
-      let candidates =
-        entries
-        |> list.filter(fn(e) {
-          list.any(
-            [
-              "docs/wiki",
-              "docs/zk",
-              "docs/sop",
-              "docs/handover",
-              "docs/design",
-              "docs/journal",
-              "contracts/rules",
-            ],
-            fn(r) { within(e.path, r) },
+      let #(_, counts) = count_fields_and_total(entries)
+      let common =
+        list.append(counts, [
+          #("workspace_root", json.string(root)),
+          #("total_allowlisted_files", json.int(total_entries)),
+        ])
+      case path {
+        "api/v1/km/verify" -> {
+          let checks =
+            list.append(
+              ["AGENTS.md", wiki_index, zk_index, triad_manifest],
+              canonical_artifacts,
+            )
+          let missing =
+            list.filter(checks, fn(p) {
+              case stat(root, p) {
+                Ok(e) -> e.directory
+                Error(_) -> True
+              }
+            })
+          let unreadable =
+            list.filter(
+              [
+                "docs/wiki",
+                "docs/zk",
+                "docs/sop",
+                "docs/design",
+                "docs/journal",
+                "docs/handover",
+                "contracts/rules",
+                "governance/capability-inventory",
+                "governance/planning",
+              ],
+              fn(p) {
+                case
+                  stat(root, p),
+                  simplifile.read_directory(root <> "/" <> p)
+                {
+                  Ok(e), Ok(_) -> !e.directory
+                  _, _ -> True
+                }
+              },
+            )
+          let artifacts =
+            entries
+            |> list.filter(fn(e) { string.contains(e.path, "/20261031-1012-") })
+          let tagged =
+            list.all(canonical_artifacts, fn(p) {
+              case read(root, p, 1_048_576) {
+                Ok(text) ->
+                  case string.ends_with(p, ".md") {
+                    True -> string.contains(text, "#km-triad")
+                    False ->
+                      json.parse(text, decode.at(["schema"], decode.string))
+                      == Ok("uos.mcp-anti-brittle-fractal-km-index.v1")
+                  }
+                Error(_) -> False
+              }
+            })
+          let intact = missing == [] && unreadable == [] && tagged
+          json_response(
+            case intact {
+              True -> 200
+              False -> 503
+            },
+            list.append(common, [
+              #(
+                "status",
+                json.string(case intact {
+                  True -> "verified"
+                  False -> "degraded"
+                }),
+              ),
+              #("missing", json.array(missing, json.string)),
+              #("unreadable", json.array(unreadable, json.string)),
+              #("triad_artifacts", json.array(artifacts, entry_json)),
+            ]),
           )
-          && string.ends_with(e.path, ".md")
-        })
-      let direct = list.filter(candidates, fn(e) { slug_matches(e.path, q) })
-      let scan =
-        candidates
-        |> list.filter(fn(e) { !list.contains(direct, e) })
-        |> list.take(int.max(0, 120 - list.length(direct)))
-      let found =
-        list.append(
-          direct,
-          list.filter(scan, fn(e) {
-            case read(root, e.path, 1_048_576) {
-              Ok(text) ->
-                q != ""
-                && string.contains(string.lowercase(text), string.lowercase(q))
-              _ -> False
-            }
-          }),
-        )
-        |> list.take(120)
-      let found = case path {
-        "api/v1/inference/zk-transclude" if q == "" ->
-          candidates
-          |> list.filter(fn(e) {
-            within(e.path, "docs/zk") || within(e.path, "docs/wiki")
-          })
-          |> list.take(120)
-        _ -> found
-      }
-      json_response(
-        200,
-        list.append(common, [
-          #("query", json.string(q)),
-          #(
-            "total_corpus_notes",
-            json.int(
-              list.count(entries, fn(e) {
-                within(e.path, "docs/zk") || within(e.path, "docs/wiki")
+        }
+        _ -> {
+          let q = parameter(query, "q")
+          let candidates =
+            entries
+            |> list.filter(fn(e) {
+              list.any(
+                [
+                  "docs/wiki",
+                  "docs/zk",
+                  "docs/sop",
+                  "docs/handover",
+                  "docs/design",
+                  "docs/journal",
+                  "contracts/rules",
+                ],
+                fn(r) { within(e.path, r) },
+              )
+              && string.ends_with(e.path, ".md")
+            })
+          let direct =
+            list.filter(candidates, fn(e) { slug_matches(e.path, q) })
+          let scan =
+            candidates
+            |> list.filter(fn(e) { !list.contains(direct, e) })
+            |> list.take(int.max(0, 120 - list.length(direct)))
+          let found =
+            list.append(
+              direct,
+              list.filter(scan, fn(e) {
+                case read(root, e.path, 1_048_576) {
+                  Ok(text) ->
+                    q != ""
+                    && string.contains(
+                      string.lowercase(text),
+                      string.lowercase(q),
+                    )
+                  _ -> False
+                }
               }),
-            ),
-          ),
-          #("results", json.array(found, entry_json)),
-          #("content_scan_limit", json.int(120)),
-          #("truncated", json.bool(list.length(candidates) > 120)),
-        ]),
-      )
+            )
+            |> list.take(120)
+          let found = case path {
+            "api/v1/inference/zk-transclude" if q == "" ->
+              candidates
+              |> list.filter(fn(e) {
+                within(e.path, "docs/zk") || within(e.path, "docs/wiki")
+              })
+              |> list.take(120)
+            _ -> found
+          }
+          json_response(
+            200,
+            list.append(common, [
+              #("query", json.string(q)),
+              #(
+                "total_corpus_notes",
+                json.int(
+                  list.count(entries, fn(e) {
+                    within(e.path, "docs/zk") || within(e.path, "docs/wiki")
+                  }),
+                ),
+              ),
+              #("results", json.array(found, entry_json)),
+              #("content_scan_limit", json.int(120)),
+              #("truncated", json.bool(list.length(candidates) > 120)),
+            ]),
+          )
+        }
+      }
     }
   }
 }
