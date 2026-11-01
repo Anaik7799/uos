@@ -1129,3 +1129,120 @@ pub fn otp29_10_layer_fpp_actor_mesh_mcp_zenoh_otel_twin_algebraic_intent_test()
   }
   process.send(started.data, ShutdownActor)
 }
+
+pub fn ed25519_authenticated_core_envelope_roundtrip_and_publish_test() {
+  let #(pub_hex, priv_hex) = core_bus.generate_ed25519_keypair_hex()
+  should.equal(string.byte_size(pub_hex), 64)
+  should.equal(string.byte_size(priv_hex), 64)
+
+  let assert Ok(auth_env) =
+    core_bus.build_and_sign_ed25519(
+      topic: "uos/v1/wave/w2/summary",
+      candidate_sha256: sample_candidate_sha,
+      plan_id: "uos/agy-fractal-issue-resolution-master/20261101-1454",
+      task_id: "w2-recoverable-14target-cutover",
+      worker_id: "agy-core-evo-conductor-20261101",
+      attempt: 1,
+      seq_id: 77,
+      ev_ceiling: 93,
+      payload_json: "{\"wave\":\"W2\",\"auth\":\"ed25519\",\"ev_ceiling\":93}",
+      pubkey_hex: pub_hex,
+      privkey_hex: priv_hex,
+    )
+  should.equal(auth_env.auth_alg, "ed25519")
+  should.equal(auth_env.signer_pubkey_hex, pub_hex)
+  should.equal(string.byte_size(auth_env.signature_hex), 128)
+
+  let wire = core_bus.encode_authenticated_envelope(auth_env)
+  let assert Ok(decoded) =
+    core_bus.decode_and_verify_authenticated_envelope(wire, pub_hex, 76)
+  should.equal(decoded, auth_env)
+
+  let assert Ok(rcpt) = core_bus.publish_authenticated(auth_env, pub_hex)
+  should.be_true(rcpt.ets_buffered)
+  let assert Ok(fetched) =
+    core_bus.fetch_authenticated("uos/v1/wave/w2/summary", pub_hex, 76)
+  should.equal(fetched.signature_hex, auth_env.signature_hex)
+}
+
+pub fn ed25519_authenticated_envelope_rejects_tamper_and_wrong_signer_fail_closed_test() {
+  let #(pub_a, priv_a) = core_bus.generate_ed25519_keypair_hex()
+  let #(pub_b, _priv_b) = core_bus.generate_ed25519_keypair_hex()
+
+  let assert Ok(auth_env) =
+    core_bus.build_and_sign_ed25519(
+      topic: "uos/v1/hive/conductor/w2_auth_probe",
+      candidate_sha256: sample_candidate_sha,
+      plan_id: "uos/agy-fractal-issue-resolution-master/20261101-1454",
+      task_id: "w2-recoverable-14target-cutover",
+      worker_id: "agy-core-evo-conductor-20261101",
+      attempt: 1,
+      seq_id: 101,
+      ev_ceiling: 93,
+      payload_json: "{\"status\":\"authentic\"}",
+      pubkey_hex: pub_a,
+      privkey_hex: priv_a,
+    )
+
+  // 1. Wrong expected signer public key rejected fail-closed
+  case core_bus.verify_authenticated_envelope(auth_env, pub_b, 100) {
+    Error(core_bus.ErrSignerMismatch(expected, actual)) -> {
+      should.equal(expected, pub_b)
+      should.equal(actual, pub_a)
+    }
+    _ -> should.fail()
+  }
+
+  // 2. Forged seq_id (keeping valid payload_sha256) rejected by Ed25519 verify
+  let forged_seq_env =
+    core_bus.AuthenticatedCoreEnvelope(
+      ..auth_env,
+      envelope: SignedCoreEnvelope(..auth_env.envelope, seq_id: 102),
+    )
+  case core_bus.verify_authenticated_envelope(forged_seq_env, pub_a, 100) {
+    Error(core_bus.ErrInvalidSignature(_)) -> Nil
+    _ -> should.fail()
+  }
+
+  // 3. Pipe delimiter injection in worker_id rejected fail-closed
+  case
+    core_bus.build_and_sign_ed25519(
+      topic: "uos/v1/hive/conductor/w2_auth_probe",
+      candidate_sha256: sample_candidate_sha,
+      plan_id: "plan-ok",
+      task_id: "task-ok",
+      worker_id: "bad|worker",
+      attempt: 1,
+      seq_id: 103,
+      ev_ceiling: 93,
+      payload_json: "{}",
+      pubkey_hex: pub_a,
+      privkey_hex: priv_a,
+    )
+  {
+    Error(core_bus.ErrDelimiterInIdentifier("worker_id")) -> Nil
+    _ -> should.fail()
+  }
+}
+
+pub fn ed25519_session_key_signing_keeps_private_key_in_ram_test() {
+  let session_pub = core_bus.session_ed25519_pubkey_hex()
+  should.equal(string.byte_size(session_pub), 64)
+  let assert Ok(auth_env) =
+    core_bus.build_and_sign_session_ed25519(
+      topic: "uos/v1/saplan/w2_cutover/session_key_test",
+      candidate_sha256: sample_candidate_sha,
+      plan_id: "uos/agy-fractal-issue-resolution-master/20261101-1454",
+      task_id: "w2-recoverable-14target-cutover",
+      worker_id: "agy-core-evo-conductor-20261101",
+      attempt: 1,
+      seq_id: 205,
+      ev_ceiling: 93,
+      payload_json: "{\"ram_only_ed25519\":true}",
+    )
+  should.equal(auth_env.signer_pubkey_hex, session_pub)
+  let wire = core_bus.encode_authenticated_envelope(auth_env)
+  let assert Ok(verified) =
+    core_bus.decode_and_verify_authenticated_envelope(wire, session_pub, 204)
+  should.equal(verified.envelope.seq_id, 205)
+}

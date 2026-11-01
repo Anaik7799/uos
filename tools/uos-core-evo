@@ -33,6 +33,13 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
+
+_SESSION_ED25519_PRIV = Ed25519PrivateKey.generate()
+_SESSION_ED25519_PUB_HEX = _SESSION_ED25519_PRIV.public_key().public_bytes_raw().hex()
 
 UOS_ROOT = "/home/an/NAS-setup/uos"
 WORKSPACE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -284,6 +291,26 @@ def validate_uos_v1_topic(topic: str) -> None:
         raise ValueError(f"ErrInvalidUosV1Topic: '{topic}'")
 
 
+def canonical_zenoh_signing_input(env: dict) -> bytes:
+    for field in ("plan_id", "task_id", "worker_id"):
+        val = str(env.get(field, ""))
+        if not val or "|" in val:
+            raise ValueError(f"ErrDelimiterInIdentifier: '{field}'")
+    parts = [
+        env["schema"],
+        env["topic"],
+        env["candidate_sha256"],
+        env["plan_id"],
+        env["task_id"],
+        env["worker_id"],
+        str(env["attempt"]),
+        str(env["seq_id"]),
+        str(env["ev_ceiling"]),
+        env["payload_sha256"],
+    ]
+    return "|".join(parts).encode("utf-8")
+
+
 def zenoh_publish_signed(
     topic: str,
     plan_id: str,
@@ -312,6 +339,14 @@ def zenoh_publish_signed(
         "payload_sha256": sha256_bytes(payload_json.encode("utf-8")),
         "payload_json": payload_json,
     }
+    signing_msg = canonical_zenoh_signing_input(envelope)
+    sig_hex = _SESSION_ED25519_PRIV.sign(signing_msg).hex()
+    Ed25519PublicKey.from_public_bytes(bytes.fromhex(_SESSION_ED25519_PUB_HEX)).verify(
+        bytes.fromhex(sig_hex), signing_msg
+    )
+    envelope["auth_alg"] = "ed25519"
+    envelope["signer_pubkey_hex"] = _SESSION_ED25519_PUB_HEX
+    envelope["signature_hex"] = sig_hex
     wire = json.dumps(envelope, separators=(",", ":")).encode("utf-8")
 
     # Always write local WAL/outbox copy first for store-and-forward durability across W2 cutover
@@ -330,7 +365,17 @@ def zenoh_publish_signed(
     except Exception as exc:
         err_msg = str(exc)
 
-    return {"topic": topic, "seq_id": envelope["seq_id"], "wal_buffered": True, "zenoh_published": zenoh_ok, "error": err_msg, "payload_sha256": envelope["payload_sha256"]}
+    return {
+        "topic": topic,
+        "seq_id": envelope["seq_id"],
+        "auth_alg": "ed25519",
+        "signer_pubkey_hex": _SESSION_ED25519_PUB_HEX,
+        "signature_hex": sig_hex,
+        "wal_buffered": True,
+        "zenoh_published": zenoh_ok,
+        "error": err_msg,
+        "payload_sha256": envelope["payload_sha256"],
+    }
 
 
 def mcp_call_tool(tool_name: str, arguments: dict) -> dict:
