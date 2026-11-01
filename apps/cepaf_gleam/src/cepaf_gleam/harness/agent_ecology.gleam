@@ -16,6 +16,7 @@
 //// </c3i-module>
 //// =============================================================================
 
+import cepaf_gleam/harness/agent_capabilities
 import gleam/int
 import gleam/list
 import gleam/string
@@ -215,6 +216,9 @@ pub fn can_invoke_tool(profile: AgentProfile, tool_name: String) -> Bool {
 }
 
 /// Evaluates an agent's intent to execute a tool under Sa-Plan lease & 2oo3 quorum constraints.
+/// Historical advisory evaluator: caller-supplied booleans and the PERMITTED
+/// string are not admission evidence. Runtime effects still require the actual
+/// harness grant/task/intent/clock checks; the ontology does not upgrade this API.
 pub fn evaluate_agent_intent(
   profile: AgentProfile,
   tool_name: String,
@@ -244,6 +248,14 @@ pub fn evaluate_agent_intent(
 pub fn validate_aspect_completeness(aspects: List(SystemAspect)) -> Bool {
   let all = all_system_aspects()
   list.all(all, fn(expected) { list.contains(aspects, expected) })
+}
+
+/// Typed source-level four-agent capability coordinates. Declaration/source
+/// presence does not establish loaded operation, fresh evidence or authority.
+/// The legacy evaluate_agent_intent helper above is advisory only; its caller
+/// flags cannot create an authenticated capability, TaskFence or effect grant.
+pub fn agent_capability_registry() -> List(agent_capabilities.Registration) {
+  agent_capabilities.registry()
 }
 
 // -----------------------------------------------------------------------------
@@ -811,7 +823,8 @@ pub fn format_ecology_summary() -> String {
   <> "7. ⚡ `quarantined_inference_worker` [L5 Cognitive Reasoning]\n"
   <> "   • *Role:* Quarantined AI Inference Worker\n"
   <> "   • *Aspects:* A09 | *Capabilities:* 3 | *2oo3 Required:* False\n\n"
-  <> "Send `/ecology <agent_id>` to view detailed capability lattices and tool allowlists."
+  <> "Send `/ecology <agent_id>` to view detailed capability lattices and tool allowlists.\n\n"
+  <> agent_capabilities.format_registry()
 }
 
 /// Formats detailed specifications for a single agent profile.
