@@ -9,6 +9,7 @@
 
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/native_launch
+import cepaf_gleam/harness/recovery_factual_reply
 import cepaf_gleam/harness/recovery_owner_store as store
 import cepaf_gleam/harness/recovery_wire as wire
 import cepaf_gleam/harness/telegram_store_transport as transport
@@ -415,30 +416,7 @@ fn receipt(c: ConfigurationData, raw: String) -> Result(String, String) {
     True -> Ok(Nil)
     False -> Error("NATIVE_REPLY_BOUND")
   })
-  use value <- result.try(
-    json_guard.native_inspect(raw, 12)
-    |> result.map_error(fn(_) { "INVALID_JSON" }),
-  )
-  use _ <- result.try(closed(value, ["status", "code", "authority", "receipt"]))
-  use status <- result.try(store.text(value, "status"))
-  use code <- result.try(store.text(value, "code"))
-  use authority <- result.try(store.text(value, "authority"))
-  use _ <- result.try(
-    case
-      authority == "FIXTURE_ONLY_NONE_IN_PRODUCTION"
-      && {
-        { status == "COMMITTED" && code == "FIXTURE_COMMIT" }
-        || {
-          status == "HISTORICAL"
-          && list.contains(["COMMITTED_FACT_ONLY", "NO_NEW_PERMISSION"], code)
-        }
-      }
-    {
-      True -> Ok(Nil)
-      False -> Error("NATIVE_NOT_COMMITTED")
-    },
-  )
-  use r <- result.try(v.get(value, "receipt"))
+  use r <- result.try(recovery_factual_reply.committed_receipt(raw))
   use _ <- result.try(
     closed(r, ["domain", "evidence_sha256", "capability_sha256", "factual"]),
   )

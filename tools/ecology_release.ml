@@ -219,6 +219,19 @@ let payload root apps =
   List.map(fun n->List.assoc "lustre" apps^"/priv/static/"^n,"apps/lustre/priv/static/"^n)
     ["lustre-server-component.mjs";"lustre-server-component.min.mjs"] @
   List.map(fun p->p,p)["tools/ecology_process.ml";"services/inference/max/ecology_max_worker.py"]
+(* Source catalog only. These development components are NOT native payload
+   roles or admitted production endpoints. Existing roots without the adapter
+   retain their original catalog; partial present trees fail normal capture. *)
+let recovery_source_inputs root =
+  let base="engines/hermes/modules/sa_plan" in
+  if Sys.file_exists(root^"/"^base^"/development/dune") then
+    files(root^"/"^base)"" |> List.filter(fun p ->
+      List.mem(Filename.extension p)[".ml";".mli";".inc";".c";".h";".gospel"] ||
+      List.mem(Filename.basename p)["dune";"dune-project";"reviewed-dependencies.sha256"])
+    |> List.map(fun p->base^"/"^p)
+    |> fun native -> native @ ["tools/recovery_development_capsule.ml";
+      "tools/validation/recovery_capsule_fixture.ml"]
+  else []
 let source_inputs root payload =
   let app_sources=List.concat_map(fun app -> let base="apps/"^app in
     if Sys.file_exists(root^"/"^base^"/src") then
@@ -228,7 +241,7 @@ let source_inputs root payload =
         else []) ["src";"test"]) @
       [base^"/gleam.toml";base^"/manifest.toml"] else [])
     ["cepaf_gleam";"indrajaal_gleam_web";"uos_swarm";"uos_tui"] in
-  List.map fst payload @ app_sources @
+  List.map fst payload @ app_sources @ recovery_source_inputs root @
     ["flake.nix";"flake.lock";"devenv.nix";"tools/ecology_release.ml";
      "tools/ecology_release.mojo";"tools/ecology_pin_audit.ml";"tools/ecology_pin_audit_cli.ml";
      "tools/ecology_pin_edit.ml";"tools/km_provenance/km_adjudication.ml";

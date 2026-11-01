@@ -7,7 +7,6 @@
 module K=Recovery_kernel
 module R=Recovery_resource
 module S=Recovery_adapter_store
-external fixture_persist : unit -> bool = "caml_uos_control_fixture_persist"
 external retained_identity : Unix.file_descr -> (int64*int64)option = "caml_uos_main_mapping_retained_identity"
 let need b s=if not b then failwith s
 let ok=function Ok x->x|Error _->failwith"fixture validation refused"

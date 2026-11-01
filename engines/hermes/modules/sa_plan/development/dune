@@ -27,3 +27,12 @@
   (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
  (c_library_flags -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
   -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -lsqlite3 -ldl -lpthread))
+
+; Uninstalled development DATA endpoint. No initializer/fixture trust linked.
+(executable
+ (name recovery_adapter_data_port)
+ (modules recovery_adapter_data_port)
+ (libraries recovery_adapter_development yojson sqlite3 unix)
+ (link_flags (:standard -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
