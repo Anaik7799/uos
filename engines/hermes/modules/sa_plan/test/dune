@@ -4,6 +4,12 @@
  (modules sa_plan_main sa_plan_cli sa_plan_work sa_plan_manual journal_markdown_html)
  (libraries bos core core_unix time_now yojson sa_plan))
 
+; Effectful migration interpreter is private test code, NEVER a production port.
+(test
+ (name test_recovery_schema_migration)
+ (modules test_recovery_schema_migration recovery_migration_fixture)
+ (libraries recovery_schema_migration recovery_kernel_fixture recovery_kernel recovery_owner_journal core digestif sqlite3 yojson unix))
+
 (executable
  (name sa_plan_test)
  (modules sa_plan_test)

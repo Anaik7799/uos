@@ -2,7 +2,9 @@
     production initializer, automatic migration or effect authorization. The
     local locator and process lifecycle must be owned by an admitted launcher;
     caller strings/metadata alone establish no such trust. *)
-(** Pure schema specification; tests initialize EMPTY PRIVATE databases only. *)
+(** Legacy three-object schema specification. Validator also accepts ONLY the
+    exact six-object v2 layout with recovery migration receipt table/triggers.
+    This module never creates, upgrades or normalizes either layout. *)
 val schema_statements : string list
 
 (** One strict bounded canonical request. Existing exact schema and WAL/FULL

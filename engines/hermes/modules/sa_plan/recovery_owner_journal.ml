@@ -43,11 +43,12 @@ let record binding sequence phase receipt previous=
   "receipt_sha256",opt receipt;"previous_sha256",opt previous]in
  `Assoc["sequence",`Int sequence;"phase",s phase;"receipt_sha256",opt receipt;"previous_sha256",opt previous;"sha256",s(sha(Yojson.Basic.to_string body))]
 let schema db=
- stmt db"SELECT CAST(substr(CAST(name AS BLOB),1,201) AS TEXT),CAST(substr(CAST(sql AS BLOB),1,8193) AS TEXT) FROM sqlite_schema WHERE sql IS NOT NULL ORDER BY name LIMIT 4"[] (fun st->
-  let expected=List.sort compare(List.combine names schema_statements)in
+ stmt db"SELECT CAST(substr(CAST(name AS BLOB),1,201) AS TEXT),CAST(substr(CAST(sql AS BLOB),1,8193) AS TEXT) FROM sqlite_schema WHERE sql IS NOT NULL ORDER BY name LIMIT 7"[] (fun st->
+  let legacy=List.sort compare(List.combine names schema_statements)in
+  let version2=List.sort compare(legacy@Recovery_schema_migration.receipt_schema Recovery_schema_migration.Owner_journal)in
   let rec read count acc=match Sqlite3.step st with
-   |Sqlite3.Rc.DONE->require(List.sort compare acc=expected)"SCHEMA_MISMATCH"
-   |Sqlite3.Rc.ROW when count<3->(match Sqlite3.column st 0,Sqlite3.column st 1 with
+   |Sqlite3.Rc.DONE->let actual=List.sort compare acc in require(actual=legacy||actual=version2)"SCHEMA_MISMATCH"
+   |Sqlite3.Rc.ROW when count<6->(match Sqlite3.column st 0,Sqlite3.column st 1 with
      |Sqlite3.Data.TEXT a,Sqlite3.Data.TEXT b->read(count+1)((a,b)::acc)|_->Error"SCHEMA_TYPE")
    |_->Error"SCHEMA_MISMATCH"in read 0 [])
 let page_bound db=let read pragma=stmt db pragma[](fun st->match Sqlite3.step st with Sqlite3.Rc.ROW->(match Sqlite3.column st 0 with Sqlite3.Data.INT n when n>=0L->Ok n|_->Error"PAGE_BOUND")|_->Error"PAGE_BOUND")in
