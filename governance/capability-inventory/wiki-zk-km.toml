@@ -615,3 +615,20 @@ journal = "docs/journal/20261101-2248-universal-40-intelligent-fpp-actors-and-w2
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-2248-universal-40-intelligent-fpp-actors-and-w2-w5-closure-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "UOS-CORE-EVO-FPP4-FPP5-MAIN-MERGE-CLOSURE-20261102-2025"
+plan = "uos/universal-intelligent-fpp-actor-mesh/20261101-2232"
+task = "fpp5-sealed-capsule-14target-cutover-and-sovereign-closure"
+state = "verified"
+admitted = false
+cockpit_url = "http://nas-1.tail55d152.ts.net:4100/core-evo"
+fpp_actors_api_url = "http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/fpp-actors"
+risk_portfolio = "governance/planning/20261101-2232-universal-intelligent-fpp-actor-mesh-risk-portfolio.json"
+handover = "docs/handover/20261102-2025-uos-core-evo-fpp4-fpp5-main-merge-and-closure.md"
+handover_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/handover/20261102-2025-uos-core-evo-fpp4-fpp5-main-merge-and-closure.md"
+journal = "docs/journal/20261102-1930-fpp4-sovereign-gate-v11-and-pi-fractal-token-optimization-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261102-1930-fpp4-sovereign-gate-v11-and-pi-fractal-token-optimization-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"

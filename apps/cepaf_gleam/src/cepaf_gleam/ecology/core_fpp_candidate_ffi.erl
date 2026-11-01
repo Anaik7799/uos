@@ -7,13 +7,19 @@
     ensure_live_fpp_mesh_supervisor/1,
     live_fpp_supervisor_status/0,
     live_fpp_supervisor_pid/0,
-    kill_live_fpp_supervisor_for_test/0
+    kill_live_fpp_supervisor_for_test/0,
+    verify_capsule_and_extract_mesh_sha/4,
+    is_canonical_capsule_location/3,
+    expected_payload_env_matches/1,
+    set_expected_payload_env_for_test/1
 ]).
 
 -define(LIVE_FPP_TABLE, uos_live_fpp_actor_registry).
 -define(LIVE_FPP_OWNER, uos_live_fpp_actor_registry_owner).
 -define(LIVE_FPP_GUARDIAN, uos_live_fpp_actor_sup_guardian).
 -define(ACTOR_COUNT, 40).
+-define(PINNED_MESH_GLEAM_SHA256, <<"e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1">>).
+-define(PINNED_CRYPTO_ERL_SHA256, <<"08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f">>).
 
 init_candidate_lock() ->
     _ = code:stick_mod(?MODULE),
@@ -149,9 +155,26 @@ verify_capsule_and_extract_mesh_sha(CapDir, LoadedBeamSha, LoadedSelfSha, Loaded
             SchemaOk = maps:get(<<"schema">>, RelMap, <<>>) =:= <<"uos.ecology-release-manifest.v1">>,
             NotAdmitted = maps:get(<<"application_admitted">>, RelMap, true) =:= false,
             CandSha = maps:get(<<"candidate_sha256">>, RelMap, <<>>),
-            SrcManifestSha = lower_sha256(SrcBytes),
-            SrcBound = maps:get(<<"source_sha256">>, RelMap, <<>>) =:= SrcManifestSha,
+            PayloadSha = maps:get(<<"payload_sha256">>, RelMap, <<>>),
             RelFiles = maps:get(<<"files">>, RelMap, []),
+            RecomputedCandSha = lower_sha256(canonical_json_bytes(maps:remove(<<"candidate_sha256">>, RelMap))),
+            RecomputedPayloadSha = lower_sha256(canonical_json_bytes(RelFiles)),
+            CandCryptographicallyBound =
+                is_lower_hex64(CandSha) andalso
+                CandSha =:= RecomputedCandSha andalso
+                capsule_dir_matches_candidate(CapDir, CandSha) andalso
+                is_readonly_entry(CapDir) andalso
+                is_readonly_entry(RelPath) andalso
+                is_readonly_entry(SrcPath),
+            PayloadCryptographicallyBound =
+                is_lower_hex64(PayloadSha) andalso
+                PayloadSha =:= RecomputedPayloadSha andalso
+                expected_payload_env_matches(PayloadSha),
+            SrcManifestSha = lower_sha256(SrcBytes),
+            SrcBound =
+                maps:get(<<"source_sha256">>, RelMap, <<>>) =:= SrcManifestSha andalso
+                find_sha_and_bytes_by_path(RelFiles, <<"source-manifest.json">>) =:=
+                    {ok, SrcManifestSha, byte_size(SrcBytes)},
             MeshBeamBound = find_sha_by_path(
                 RelFiles,
                 <<"apps/cepaf_gleam/ebin/cepaf_gleam@ecology@core_fpp_actor_twin_mesh.beam">>
@@ -164,28 +187,43 @@ verify_capsule_and_extract_mesh_sha(CapDir, LoadedBeamSha, LoadedSelfSha, Loaded
                 RelFiles,
                 <<"apps/cepaf_gleam/ebin/core_bus_crypto_ffi.beam">>
             ) =:= {ok, LoadedCrypSha},
-            case SchemaOk andalso NotAdmitted andalso is_lower_hex64(CandSha) andalso SrcBound andalso
+            case SchemaOk andalso NotAdmitted andalso CandCryptographicallyBound andalso
+                PayloadCryptographicallyBound andalso SrcBound andalso
                 MeshBeamBound andalso SelfBeamBound andalso CrypBeamBound of
                 true ->
                     SrcMap = json:decode(SrcBytes),
+                    SrcSchemaOk = maps:get(<<"schema">>, SrcMap, <<>>) =:= <<"uos.ecology-source-manifest.v1">>,
+                    SrcRoot = maps:get(<<"source_root">>, SrcMap, <<>>),
+                    CanonicalRootOk = is_canonical_capsule_location(CapDir, SrcRoot, CandSha),
                     Inputs = maps:get(<<"inputs">>, SrcMap, []),
-                    MeshSrcRes = find_sha_by_path(
+                    MeshSrcOk = find_sha_by_path(
                         Inputs,
                         <<"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam">>
-                    ),
-                    SelfSrcRes = find_sha_by_path(
+                    ) =:= {ok, ?PINNED_MESH_GLEAM_SHA256},
+                    CrypSrcOk = find_sha_by_path(
+                        Inputs,
+                        <<"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl">>
+                    ) =:= {ok, ?PINNED_CRYPTO_ERL_SHA256},
+                    SelfSrcRes = find_sha_and_bytes_by_path(
                         Inputs,
                         <<"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl">>
                     ),
-                    CrypSrcRes = find_sha_by_path(
+                    SrcMeshBeamOk = find_sha_by_path(
                         Inputs,
-                        <<"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl">>
-                    ),
-                    case {MeshSrcRes, SelfSrcRes, CrypSrcRes} of
-                        {{ok, MeshSha}, {ok, SelfSrcSha}, {ok, CrypSrcSha}} ->
-                            case is_lower_hex64(MeshSha) andalso
-                                is_lower_hex64(SelfSrcSha) andalso
-                                is_lower_hex64(CrypSrcSha) of
+                        <<"apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/cepaf_gleam@ecology@core_fpp_actor_twin_mesh.beam">>
+                    ) =:= {ok, LoadedBeamSha},
+                    SrcSelfBeamOk = find_sha_by_path(
+                        Inputs,
+                        <<"apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/core_fpp_candidate_ffi.beam">>
+                    ) =:= {ok, LoadedSelfSha},
+                    SrcCrypBeamOk = find_sha_by_path(
+                        Inputs,
+                        <<"apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin/core_bus_crypto_ffi.beam">>
+                    ) =:= {ok, LoadedCrypSha},
+                    case {SrcSchemaOk andalso CanonicalRootOk andalso MeshSrcOk andalso CrypSrcOk andalso
+                          SrcMeshBeamOk andalso SrcSelfBeamOk andalso SrcCrypBeamOk, SelfSrcRes} of
+                        {true, {ok, SelfSrcSha, SelfBytes}} when SelfBytes > 0 ->
+                            case is_lower_hex64(SelfSrcSha) of
                                 true -> CandSha;
                                 false -> <<>>
                             end;
@@ -340,7 +378,7 @@ ensure_live_fpp_mesh_supervisor(NowMs) when is_integer(NowMs) ->
                     Pid when is_pid(Pid) ->
                         case is_process_alive(Pid) of
                             true ->
-                                case wait_all_40_alive(60) of
+                                case wait_all_40_alive(240) of
                                     {true, ?ACTOR_COUNT} ->
                                         {ok, ?ACTOR_COUNT};
                                     {_, Count} ->
@@ -398,7 +436,7 @@ start_guardian_supervisor(NowMs) ->
     end),
     receive
         {Ref, ok} ->
-            case wait_all_40_alive(60) of
+            case wait_all_40_alive(240) of
                 {true, ?ACTOR_COUNT} ->
                     {ok, ?ACTOR_COUNT};
                 {_, Count} ->
@@ -448,6 +486,146 @@ find_sha_by_path([Entry | Rest], TargetPath) when is_map(Entry) ->
 find_sha_by_path([_ | Rest], TargetPath) ->
     find_sha_by_path(Rest, TargetPath).
 
+find_sha_and_bytes_by_path([], _TargetPath) ->
+    error;
+find_sha_and_bytes_by_path([Entry | Rest], TargetPath) when is_map(Entry) ->
+    case maps:get(<<"path">>, Entry, <<>>) =:= TargetPath of
+        true ->
+            case {maps:find(<<"sha256">>, Entry), maps:find(<<"bytes">>, Entry)} of
+                {{ok, Sha}, {ok, Bytes}} when is_binary(Sha), is_integer(Bytes), Bytes >= 0 ->
+                    {ok, Sha, Bytes};
+                _ ->
+                    error
+            end;
+        false ->
+            find_sha_and_bytes_by_path(Rest, TargetPath)
+    end;
+find_sha_and_bytes_by_path([_ | Rest], TargetPath) ->
+    find_sha_and_bytes_by_path(Rest, TargetPath).
+
+canonical_json_bytes(Term) ->
+    iolist_to_binary(canonical_json_iolist(Term)).
+
+canonical_json_iolist(M) when is_map(M) ->
+    KVs = lists:sort(maps:to_list(M)),
+    [
+        <<"{">>,
+        lists:join(<<",">>, [
+            [json:encode_binary(K), <<":">>, canonical_json_iolist(V)]
+         || {K, V} <- KVs
+        ]),
+        <<"}">>
+    ];
+canonical_json_iolist(L) when is_list(L) ->
+    [<<"[">>, lists:join(<<",">>, [canonical_json_iolist(E) || E <- L]), <<"]">>];
+canonical_json_iolist(B) when is_binary(B) ->
+    json:encode_binary(B);
+canonical_json_iolist(I) when is_integer(I) ->
+    integer_to_binary(I);
+canonical_json_iolist(F) when is_float(F) ->
+    json:encode_float(F);
+canonical_json_iolist(true) ->
+    <<"true">>;
+canonical_json_iolist(false) ->
+    <<"false">>;
+canonical_json_iolist(null) ->
+    <<"null">>.
+
+capsule_dir_matches_candidate(CapDir, CandSha) ->
+    Base = filename:basename(CapDir),
+    Suffix = <<"-", CandSha/binary>>,
+    case strip_suffix(Base, Suffix) of
+        {ok, Stamp} -> byte_size(Stamp) =:= 13;
+        error -> false
+    end.
+
+is_canonical_capsule_location(CapDir, SrcRoot, CandSha) ->
+    AllowedRoot =
+        SrcRoot =:= <<"/home/an/NAS-setup/uos">> orelse
+        is_single_sibling_workspace_root(SrcRoot),
+    ExpectedParent = <<SrcRoot/binary, "/var/releases/ecology">>,
+    AllowedRoot andalso
+        filename:dirname(CapDir) =:= ExpectedParent andalso
+        capsule_dir_matches_candidate(CapDir, CandSha) andalso
+        no_dot_or_symlink_components(CapDir) andalso
+        no_dot_or_symlink_components(SrcRoot) andalso
+        filelib:is_dir(binary_to_list(<<SrcRoot/binary, "/.jj">>)).
+
+is_single_sibling_workspace_root(SrcRoot) when is_binary(SrcRoot) ->
+    Prefix = <<"/home/an/NAS-setup/uos/.uos-workspaces/">>,
+    case binary:match(SrcRoot, Prefix) =:= {0, 39} of
+        false ->
+            false;
+        true ->
+            Rest = binary:part(SrcRoot, 39, byte_size(SrcRoot) - 39),
+            byte_size(Rest) > 0 andalso
+                binary:match(Rest, <<"/">>) =:= nomatch andalso
+                Rest =/= <<".">> andalso
+                Rest =/= <<"..">>
+    end;
+is_single_sibling_workspace_root(_) ->
+    false.
+
+no_dot_or_symlink_components(AbsPathBin) ->
+    Parts = [P || P <- binary:split(AbsPathBin, <<"/">>, [global]), P =/= <<>>],
+    lists:all(
+        fun(P) ->
+            P =/= <<".">> andalso P =/= <<"..">> andalso is_valid_segment_chars(P)
+        end,
+        Parts
+    ) andalso check_no_symlinks(<<>>, Parts).
+
+is_valid_segment_chars(P) when is_binary(P), byte_size(P) > 0 ->
+    lists:all(
+        fun(C) ->
+            (C >= $a andalso C =< $z) orelse
+                (C >= $A andalso C =< $Z) orelse
+                (C >= $0 andalso C =< $9) orelse
+                C =:= $. orelse
+                C =:= $- orelse
+                C =:= $_
+        end,
+        binary_to_list(P)
+    );
+is_valid_segment_chars(_) ->
+    false.
+
+check_no_symlinks(_Prefix, []) ->
+    true;
+check_no_symlinks(Prefix, [Part | Rest]) ->
+    Cur = <<Prefix/binary, "/", Part/binary>>,
+    case file:read_link_info(binary_to_list(Cur)) of
+        {ok, Info} ->
+            case element(3, Info) of
+                symlink -> false;
+                _ -> check_no_symlinks(Cur, Rest)
+            end;
+        _ ->
+            false
+    end.
+
+is_readonly_entry(PathBin) ->
+    case file:read_link_info(binary_to_list(PathBin)) of
+        {ok, Info} ->
+            Type = element(3, Info),
+            Mode = element(8, Info),
+            (Type =:= regular orelse Type =:= directory) andalso
+                is_integer(Mode) andalso
+                (Mode band 8#222) =:= 0;
+        _ ->
+            false
+    end.
+
+expected_payload_env_matches(PayloadSha) ->
+    case os:getenv("UOS_MCP_EXPECTED_PAYLOAD_SHA256") of
+        false ->
+            false;
+        "" ->
+            false;
+        Raw ->
+            string:trim(unicode:characters_to_binary(Raw)) =:= PayloadSha
+    end.
+
 strip_suffix(Bin, Suffix) ->
     BinLen = byte_size(Bin),
     SufLen = byte_size(Suffix),
@@ -473,3 +651,6 @@ is_lower_hex64(Bin) when is_binary(Bin), byte_size(Bin) =:= 64 ->
     );
 is_lower_hex64(_) ->
     false.
+
+set_expected_payload_env_for_test(<<>>) -> os:unsetenv("UOS_MCP_EXPECTED_PAYLOAD_SHA256"), nil;
+set_expected_payload_env_for_test(ValBin) when is_binary(ValBin) -> os:putenv("UOS_MCP_EXPECTED_PAYLOAD_SHA256", binary_to_list(ValBin)), nil.

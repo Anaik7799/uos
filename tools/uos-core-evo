@@ -18,7 +18,7 @@ ZENOH_JOURNAL="${STATE_DIR}/zenoh-uos-v1-journal.jsonl"
 MCP_STDIO="${CANONICAL_UOS}/tools/uos-mcp-stdio"
 OTP29_ERL="/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl"
 TAILNET_BASE="http://nas-1.tail55d152.ts.net:4100"
-ZENOH_HTTP_BASE="http://nas-1.tail55d152.ts.net:8080"
+ZENOH_HTTP_BASE="${UOS_CORE_EVO_ZENOH_HTTP_BASE:-http://nas-1.tail55d152.ts.net:8080}"
 ADMITTED_EV_CEILING=93
 
 if [[ ! -x "${OTP29_ERL}" ]]; then
@@ -203,6 +203,9 @@ cmd_fpp_actor_mesh() {
           maps:get(<<\"openrouter_secret_redacted\">>, MeshMap, false) =:= true andalso
           maps:get(<<\"vetoed_os_nvme_halt_verified\">>, MeshMap, false) =:= true andalso
           maps:get(<<\"vetoed_ev_above_93_halt_verified\">>, MeshMap, false) =:= true andalso
+          LivePut =:= true andalso
+          ${mcp_hier_ok} =:= true andalso
+          ${mcp_topo_ok} =:= true andalso
           byte_size(CandSha) =:= 64 andalso
           byte_size(SigHex) =:= 128,
         case AllOk of

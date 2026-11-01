@@ -1463,7 +1463,8 @@ pub fn supervised_live_40_fpp_actor_mesh_and_one_for_one_self_healing_test() {
   // kill SupPid directly and confirm guardian restarts a fresh SupPid + all 40 actors!
   let assert Ok(sup_pid_before) = ffi_live_fpp_supervisor_pid()
   should.be_true(ffi_kill_live_fpp_supervisor_for_test())
-  process.sleep(250)
+  let assert Ok(40) =
+    core_fpp_actor_twin_mesh.ensure_live_40_fpp_actor_mesh_started()
   let #(sup_recovered, alive_recovered) =
     core_fpp_actor_twin_mesh.live_40_fpp_supervisor_status()
   should.be_true(sup_recovered)
@@ -1477,3 +1478,61 @@ fn ffi_live_fpp_supervisor_pid() -> Result(process.Pid, Nil)
 
 @external(erlang, "core_fpp_candidate_ffi", "kill_live_fpp_supervisor_for_test")
 fn ffi_kill_live_fpp_supervisor_for_test() -> Bool
+
+pub fn capsule_manifest_binding_sibling_prefix_and_payload_anchor_test() {
+  should.be_true(ffi_is_canonical_capsule_location(
+    "/home/an/NAS-setup/uos/var/releases/ecology/20261102-1625-251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+    "/home/an/NAS-setup/uos",
+    "251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+  ))
+
+  should.be_false(ffi_is_canonical_capsule_location(
+    "/home/an/NAS-setup/uos/var/releases/ecology/20261102-1625-251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+    "/tmp/evil",
+    "251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+  ))
+
+  should.be_false(ffi_is_canonical_capsule_location(
+    "/home/an/NAS-setup/uos/var/releases/ecology/20261102-1625-251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+    "/home/an/NAS-setup/uos/.uos-workspaces/..",
+    "251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+  ))
+
+  should.be_false(ffi_is_canonical_capsule_location(
+    "/home/an/NAS-setup/uos/var/releases/ecology/20261102-1625-251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+    "/home/an/NAS-setup/uos/.uos-workspaces/a/b",
+    "251aed109760094edb053439ef539550a3519b85acc5a99bb1201cd77c1acb56",
+  ))
+
+  ffi_set_expected_payload_env_for_test("")
+  should.be_false(ffi_expected_payload_env_matches(
+    "fdb9ed6e8c17a15983a5a36b136057e575c614dec87d7e61e0d9dfec675560a1",
+  ))
+
+  ffi_set_expected_payload_env_for_test(
+    "0000000000000000000000000000000000000000000000000000000000000000",
+  )
+  should.be_false(ffi_expected_payload_env_matches(
+    "fdb9ed6e8c17a15983a5a36b136057e575c614dec87d7e61e0d9dfec675560a1",
+  ))
+
+  ffi_set_expected_payload_env_for_test(
+    "fdb9ed6e8c17a15983a5a36b136057e575c614dec87d7e61e0d9dfec675560a1",
+  )
+  should.be_true(ffi_expected_payload_env_matches(
+    "fdb9ed6e8c17a15983a5a36b136057e575c614dec87d7e61e0d9dfec675560a1",
+  ))
+}
+
+@external(erlang, "core_fpp_candidate_ffi", "is_canonical_capsule_location")
+fn ffi_is_canonical_capsule_location(
+  cap_dir: String,
+  src_root: String,
+  cand_sha: String,
+) -> Bool
+
+@external(erlang, "core_fpp_candidate_ffi", "expected_payload_env_matches")
+fn ffi_expected_payload_env_matches(payload_sha: String) -> Bool
+
+@external(erlang, "core_fpp_candidate_ffi", "set_expected_payload_env_for_test")
+fn ffi_set_expected_payload_env_for_test(val: String) -> Nil

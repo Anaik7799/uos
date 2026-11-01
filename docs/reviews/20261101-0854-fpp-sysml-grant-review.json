@@ -1,0 +1,30 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "observed_at": "2026-11-01T09:03:05Z",
+  "reviewer": {
+    "plan_id": "uos/fpp-sysml-integration/20261101-0852",
+    "task_id": "REVIEW",
+    "worker": "codex-independent-fpp-review",
+    "attempt": 2,
+    "session_id": "codex-route-recovery-fpp-review",
+    "actual_agent": "/root/route_recovery"
+  },
+  "grant_proposal": {
+    "path": "var/harness/20261101-0852-fpp-sysml-grant-proposal-v3.json",
+    "sha256": "67160733364128a099be934f8615b90137566316cd3521597927fcc6c82f51b7",
+    "grant_id": "20261101-fpp-sysml-dev",
+    "target_session": "codex-fpp-sysml-20261101",
+    "target_worker": "codex-fpp-sysml-20261101"
+  },
+  "findings": [
+    "V3 resolves prior findings: the registered starting JJ candidate and declared source hashes are bound; write scope excludes harness admission/operations controls and harness tests; the two allowed test modules have declared files; task and portfolio scope is limited to the FPP/SysML first slice.",
+    "The starting-workspace hashes for all ten declared source paths were independently recomputed and matched the proposal. The sealed authority capsule release-manifest and source-manifest hashes match the on-disk manifests.",
+    "No excessive write or test access was found. The task scope explicitly defers durable persistence, Lean changes, messaging, model integration, and production effects."
+  ],
+  "limits": [
+    "Candidate revision and capsule metadata are review evidence, not runtime enforcement. Approval is limited to this task-scoped development slice.",
+    "Final candidate source hashes and build/test receipts are required after edits; this review does not establish runtime behavior, formal conformance, persistence durability, or production admission.",
+    "The active risk check is a point-in-time observation and does not replace effect-time lease/grant checks."
+  ]
+}

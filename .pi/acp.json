@@ -1,0 +1,36 @@
+{
+  "delegate": {
+    "enabled": true,
+    "forceEnable": true,
+    "displayUsage": "separate",
+    "maxDepth": 2,
+    "syncTimeoutMinutes": 5,
+    "idleTimeoutMinutes": 5,
+    "asyncTimeoutMinutes": 30,
+    "maxConcurrent": 4,
+    "thinkingLevel": "low",
+    "notifyIfRead": "skip",
+    "agents": {
+      "worker": {
+        "model": "openrouter/deepseek/deepseek-v3.2",
+        "thinkingLevel": "low"
+      },
+      "researcher": {
+        "model": "openrouter/google/gemini-3.1-flash-lite",
+        "thinkingLevel": "low"
+      },
+      "reviewer": {
+        "model": "openrouter/qwen/qwen3-coder-next",
+        "thinkingLevel": "medium"
+      },
+      "planner": {
+        "model": "openrouter/deepseek/deepseek-v3.2",
+        "thinkingLevel": "medium"
+      },
+      "oracle": {
+        "model": "openrouter/deepseek/deepseek-v3.2",
+        "thinkingLevel": "medium"
+      }
+    }
+  }
+}

@@ -1,1 +1,1160 @@
-[{"actor":"agy-core-evo-conductor-20261101","assessment_id":"universal-fpp-mesh-fpp1-universal-40-actor-mesh-and-reflex-engine-20261101-2232","blockers":[],"class":"P1","decision":{"acceptance":["tools/preflight 31/31 PASS under scoped TMPDIR","Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim","Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup","Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"],"alternatives":["Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.","Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.","Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."],"assumptions":["Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."],"budget":"40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.","confidence":"analyst_estimate","counterevidence":["Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.","EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.","Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."],"falsifier":"Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.","forecast":"w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.","residuals":["Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."],"reviewer":"Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.","rollback":"Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.","summary":"Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.","supersedes":null},"dependencies":[],"factors":{"criticality":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":5,"low":5,"rationale":"Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.","value":5},"dependency":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.","value":4},"fmea":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.","value":4},"impact":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":5,"low":5,"rationale":"Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.","value":5},"stpa":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.","value":4}},"fmea_modes":[{"band":4,"cause":"Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture","controls":"Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed","det":3,"effect":"Concurrent workspace corruption or loss of transient unit failure diagnostics","id":"FM-W0-FENCE-LEASE-OR-FORENSIC","o":3,"rpn":36,"s":4},{"band":4,"cause":"Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion","controls":"Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate","det":2,"effect":"40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds","id":"FM-W0-FENCE-COST-OR-TMPFS","o":2,"rpn":16,"s":4}],"fractal_layer":6,"observed_at":"2026-11-01T23:25:04Z","phase":"review","plan_id":"uos/universal-intelligent-fpp-actor-mesh/20261101-2232","policy":"SC-RISK-PRIORITY-001","readiness":"ready","ready_since":"2026-11-01T21:32:09Z","schema_version":1,"scope":"Wave FPP-1: Implement 40-subsystem intelligent OTP 29.0.5 NASA FPP actors (4 uos_sup domains x L0..L9), Autonomous Cybernetic Reflex Engine, Wisp /api/v1/core-evo/fpp-actors, Lustre /core-evo, TUI, CLI & 100% HTML href Poka-Yoke","score":1600,"score_interval":[1600,1600],"snapshot":{"evidence":[{"observed_at":"2026-11-01T23:25:04Z","path":"AGENTS.md","sha256":"82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"},{"observed_at":"2026-11-01T23:25:04Z","path":"contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md","sha256":"f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam","sha256":"e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl","sha256":"b636d83bbf01f6bfa5ddef5a766c62f1e4ab67e2efb6a49061bd97402080cd6f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl","sha256":"08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam.gleam","sha256":"912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam","sha256":"0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"},{"observed_at":"2026-11-01T23:25:04Z","path":"tools/uos-core-evo","sha256":"75f88a20c1755dfa8ae077e5ddd7d01bc9a5821cdc5b2fc16f905a1a5e2f578a"}],"kind":"working_tree","reference":"Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."},"stpa_analysis":{"control_action":"Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry","controller":"AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo","hazards":["H-UNFENCED-LEASE-RECLAIM","H-UNSCOPED-SUPERSEDED-CLAIM","H-PAID-MODEL-DRIFT"],"losses":["L-SPLIT-BRAIN-CORRUPTION","L-QUOTA-MARGIN-BREACH","L-FORENSIC-EVIDENCE-LOSS"],"ucas":[{"applicability":"applicable","constraint":"Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed","context":"Forensic unit snapshot or active PID check omitted before hygiene/reclaim","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"not_provided"},{"applicability":"applicable","constraint":"Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched","context":"Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace","hazard_ids":["H-UNSCOPED-SUPERSEDED-CLAIM"],"type":"provided_unsafe"},{"applicability":"applicable","constraint":"Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence","context":"Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"wrong_timing"},{"applicability":"applicable","constraint":"Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold","context":"Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota","hazard_ids":["H-PAID-MODEL-DRIFT"],"type":"duration"}]},"task_id":"fpp1-universal-40-actor-mesh-and-reflex-engine","task_state":"completed","valid_until":"2026-11-02T04:32:09Z"},{"actor":"agy-core-evo-conductor-20261101","assessment_id":"universal-fpp-mesh-fpp2-9modality-eunit-and-parallel-hive-verification-20261101-2232","blockers":[],"class":"P1","decision":{"acceptance":["tools/preflight 31/31 PASS under scoped TMPDIR","Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim","Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup","Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"],"alternatives":["Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.","Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.","Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."],"assumptions":["Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."],"budget":"40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.","confidence":"analyst_estimate","counterevidence":["Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.","EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.","Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."],"falsifier":"Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.","forecast":"w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.","residuals":["Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."],"reviewer":"Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.","rollback":"Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.","summary":"Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.","supersedes":null},"dependencies":["fpp1-universal-40-actor-mesh-and-reflex-engine"],"factors":{"criticality":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.","value":4},"dependency":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":3,"low":3,"rationale":"Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.","value":3},"fmea":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.","value":4},"impact":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.","value":4},"stpa":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.","value":4}},"fmea_modes":[{"band":4,"cause":"Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture","controls":"Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed","det":3,"effect":"Concurrent workspace corruption or loss of transient unit failure diagnostics","id":"FM-W0-FENCE-LEASE-OR-FORENSIC","o":3,"rpn":36,"s":4},{"band":4,"cause":"Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion","controls":"Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate","det":2,"effect":"40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds","id":"FM-W0-FENCE-COST-OR-TMPFS","o":2,"rpn":16,"s":4}],"fractal_layer":6,"observed_at":"2026-11-01T23:25:04Z","phase":"review","plan_id":"uos/universal-intelligent-fpp-actor-mesh/20261101-2232","policy":"SC-RISK-PRIORITY-001","readiness":"ready","ready_since":"2026-11-01T21:32:09Z","schema_version":1,"scope":"Wave FPP-2: Execute OTP 29.0.5 EUnit suite, 40-actor spawn/fault-injection/self-healing/veto tests, CLI fpp-actor-mesh & parallel Pi+Argon ($0) verification","score":768,"score_interval":[768,768],"snapshot":{"evidence":[{"observed_at":"2026-11-01T23:25:04Z","path":"AGENTS.md","sha256":"82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"},{"observed_at":"2026-11-01T23:25:04Z","path":"contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md","sha256":"f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam","sha256":"e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl","sha256":"b636d83bbf01f6bfa5ddef5a766c62f1e4ab67e2efb6a49061bd97402080cd6f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl","sha256":"08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam.gleam","sha256":"912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam","sha256":"0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"},{"observed_at":"2026-11-01T23:25:04Z","path":"tools/uos-core-evo","sha256":"75f88a20c1755dfa8ae077e5ddd7d01bc9a5821cdc5b2fc16f905a1a5e2f578a"}],"kind":"working_tree","reference":"Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."},"stpa_analysis":{"control_action":"Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry","controller":"AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo","hazards":["H-UNFENCED-LEASE-RECLAIM","H-UNSCOPED-SUPERSEDED-CLAIM","H-PAID-MODEL-DRIFT"],"losses":["L-SPLIT-BRAIN-CORRUPTION","L-QUOTA-MARGIN-BREACH","L-FORENSIC-EVIDENCE-LOSS"],"ucas":[{"applicability":"applicable","constraint":"Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed","context":"Forensic unit snapshot or active PID check omitted before hygiene/reclaim","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"not_provided"},{"applicability":"applicable","constraint":"Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched","context":"Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace","hazard_ids":["H-UNSCOPED-SUPERSEDED-CLAIM"],"type":"provided_unsafe"},{"applicability":"applicable","constraint":"Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence","context":"Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"wrong_timing"},{"applicability":"applicable","constraint":"Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold","context":"Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota","hazard_ids":["H-PAID-MODEL-DRIFT"],"type":"duration"}]},"task_id":"fpp2-9modality-eunit-and-parallel-hive-verification","task_state":"completed","valid_until":"2026-11-02T04:32:09Z"},{"actor":"agy-core-evo-conductor-20261101","assessment_id":"universal-fpp-mesh-fpp3-km-triad-writeback-and-semantic-audit-20261101-2232","blockers":[],"class":"P1","decision":{"acceptance":["tools/preflight 31/31 PASS under scoped TMPDIR","Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim","Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup","Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"],"alternatives":["Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.","Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.","Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."],"assumptions":["Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."],"budget":"40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.","confidence":"analyst_estimate","counterevidence":["Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.","EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.","Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."],"falsifier":"Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.","forecast":"w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.","residuals":["Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."],"reviewer":"Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.","rollback":"Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.","summary":"Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.","supersedes":null},"dependencies":["fpp2-9modality-eunit-and-parallel-hive-verification"],"factors":{"criticality":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.","value":4},"dependency":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":2,"low":2,"rationale":"Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.","value":2},"fmea":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.","value":4},"impact":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.","value":4},"stpa":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.","value":4}},"fmea_modes":[{"band":4,"cause":"Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture","controls":"Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed","det":3,"effect":"Concurrent workspace corruption or loss of transient unit failure diagnostics","id":"FM-W0-FENCE-LEASE-OR-FORENSIC","o":3,"rpn":36,"s":4},{"band":4,"cause":"Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion","controls":"Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate","det":2,"effect":"40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds","id":"FM-W0-FENCE-COST-OR-TMPFS","o":2,"rpn":16,"s":4}],"fractal_layer":6,"observed_at":"2026-11-01T23:25:04Z","phase":"review","plan_id":"uos/universal-intelligent-fpp-actor-mesh/20261101-2232","policy":"SC-RISK-PRIORITY-001","readiness":"ready","ready_since":"2026-11-01T21:32:09Z","schema_version":1,"scope":"Wave FPP-3: Author reciprocal #km-triad Wiki, ZK & 13-section SC-JOURNAL-v3 ledger with paired ASCII/Mermaid diagrams passing km-gate, diagram-check & journal-check","score":512,"score_interval":[512,512],"snapshot":{"evidence":[{"observed_at":"2026-11-01T23:25:04Z","path":"AGENTS.md","sha256":"82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"},{"observed_at":"2026-11-01T23:25:04Z","path":"contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md","sha256":"f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam","sha256":"e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl","sha256":"b636d83bbf01f6bfa5ddef5a766c62f1e4ab67e2efb6a49061bd97402080cd6f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl","sha256":"08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam.gleam","sha256":"912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam","sha256":"0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"},{"observed_at":"2026-11-01T23:25:04Z","path":"tools/uos-core-evo","sha256":"75f88a20c1755dfa8ae077e5ddd7d01bc9a5821cdc5b2fc16f905a1a5e2f578a"}],"kind":"working_tree","reference":"Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."},"stpa_analysis":{"control_action":"Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry","controller":"AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo","hazards":["H-UNFENCED-LEASE-RECLAIM","H-UNSCOPED-SUPERSEDED-CLAIM","H-PAID-MODEL-DRIFT"],"losses":["L-SPLIT-BRAIN-CORRUPTION","L-QUOTA-MARGIN-BREACH","L-FORENSIC-EVIDENCE-LOSS"],"ucas":[{"applicability":"applicable","constraint":"Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed","context":"Forensic unit snapshot or active PID check omitted before hygiene/reclaim","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"not_provided"},{"applicability":"applicable","constraint":"Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched","context":"Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace","hazard_ids":["H-UNSCOPED-SUPERSEDED-CLAIM"],"type":"provided_unsafe"},{"applicability":"applicable","constraint":"Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence","context":"Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"wrong_timing"},{"applicability":"applicable","constraint":"Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold","context":"Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota","hazard_ids":["H-PAID-MODEL-DRIFT"],"type":"duration"}]},"task_id":"fpp3-km-triad-writeback-and-semantic-audit","task_state":"completed","valid_until":"2026-11-02T04:32:09Z"},{"actor":"agy-core-evo-conductor-20261101","assessment_id":"universal-fpp-mesh-fpp4-sovereign-codex-gate-and-capsule-build-20261101-2232","blockers":[],"class":"P1","decision":{"acceptance":["tools/preflight 31/31 PASS under scoped TMPDIR","Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim","Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup","Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"],"alternatives":["Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.","Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.","Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."],"assumptions":["Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."],"budget":"40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.","confidence":"analyst_estimate","counterevidence":["Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.","EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.","Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."],"falsifier":"Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.","forecast":"w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.","residuals":["Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."],"reviewer":"Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.","rollback":"Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.","summary":"Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.","supersedes":null},"dependencies":["fpp3-km-triad-writeback-and-semantic-audit"],"factors":{"criticality":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.","value":4},"dependency":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":2,"low":2,"rationale":"Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.","value":2},"fmea":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.","value":4},"impact":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.","value":4},"stpa":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.","value":4}},"fmea_modes":[{"band":4,"cause":"Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture","controls":"Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed","det":3,"effect":"Concurrent workspace corruption or loss of transient unit failure diagnostics","id":"FM-W0-FENCE-LEASE-OR-FORENSIC","o":3,"rpn":36,"s":4},{"band":4,"cause":"Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion","controls":"Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate","det":2,"effect":"40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds","id":"FM-W0-FENCE-COST-OR-TMPFS","o":2,"rpn":16,"s":4}],"fractal_layer":6,"observed_at":"2026-11-01T23:25:04Z","phase":"review","plan_id":"uos/universal-intelligent-fpp-actor-mesh/20261101-2232","policy":"SC-RISK-PRIORITY-001","readiness":"ready","ready_since":"2026-11-01T21:32:09Z","schema_version":1,"scope":"Wave FPP-4: Sovereign read-only Codex audit, main promotion, immutable OTP 29.0.5 capsule packaging & pre-sealed MCP verification","score":512,"score_interval":[512,512],"snapshot":{"evidence":[{"observed_at":"2026-11-01T23:25:04Z","path":"AGENTS.md","sha256":"82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"},{"observed_at":"2026-11-01T23:25:04Z","path":"contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md","sha256":"f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam","sha256":"e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl","sha256":"b636d83bbf01f6bfa5ddef5a766c62f1e4ab67e2efb6a49061bd97402080cd6f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl","sha256":"08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam.gleam","sha256":"912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam","sha256":"0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"},{"observed_at":"2026-11-01T23:25:04Z","path":"tools/uos-core-evo","sha256":"75f88a20c1755dfa8ae077e5ddd7d01bc9a5821cdc5b2fc16f905a1a5e2f578a"}],"kind":"working_tree","reference":"Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."},"stpa_analysis":{"control_action":"Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry","controller":"AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo","hazards":["H-UNFENCED-LEASE-RECLAIM","H-UNSCOPED-SUPERSEDED-CLAIM","H-PAID-MODEL-DRIFT"],"losses":["L-SPLIT-BRAIN-CORRUPTION","L-QUOTA-MARGIN-BREACH","L-FORENSIC-EVIDENCE-LOSS"],"ucas":[{"applicability":"applicable","constraint":"Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed","context":"Forensic unit snapshot or active PID check omitted before hygiene/reclaim","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"not_provided"},{"applicability":"applicable","constraint":"Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched","context":"Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace","hazard_ids":["H-UNSCOPED-SUPERSEDED-CLAIM"],"type":"provided_unsafe"},{"applicability":"applicable","constraint":"Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence","context":"Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"wrong_timing"},{"applicability":"applicable","constraint":"Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold","context":"Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota","hazard_ids":["H-PAID-MODEL-DRIFT"],"type":"duration"}]},"task_id":"fpp4-sovereign-codex-gate-and-capsule-build","task_state":"executing","valid_until":"2026-11-02T04:32:09Z"},{"actor":"agy-core-evo-conductor-20261101","assessment_id":"universal-fpp-mesh-fpp5-authorized-14target-live-cutover-and-tailnet-proof-20261101-2232","blockers":[],"class":"P1","decision":{"acceptance":["tools/preflight 31/31 PASS under scoped TMPDIR","Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim","Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup","Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"],"alternatives":["Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.","Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.","Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."],"assumptions":["Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."],"budget":"40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.","confidence":"analyst_estimate","counterevidence":["Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.","EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.","Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."],"falsifier":"Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.","forecast":"w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.","residuals":["Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."],"reviewer":"Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.","rollback":"Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.","summary":"Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.","supersedes":null},"dependencies":["fpp4-sovereign-codex-gate-and-capsule-build"],"factors":{"criticality":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.","value":4},"dependency":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":2,"low":2,"rationale":"Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.","value":2},"fmea":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.","value":4},"impact":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.","value":4},"stpa":{"evidence_refs":["AGENTS.md","apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"],"high":4,"low":4,"rationale":"Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.","value":4}},"fmea_modes":[{"band":4,"cause":"Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture","controls":"Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed","det":3,"effect":"Concurrent workspace corruption or loss of transient unit failure diagnostics","id":"FM-W0-FENCE-LEASE-OR-FORENSIC","o":3,"rpn":36,"s":4},{"band":4,"cause":"Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion","controls":"Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate","det":2,"effect":"40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds","id":"FM-W0-FENCE-COST-OR-TMPFS","o":2,"rpn":16,"s":4}],"fractal_layer":6,"observed_at":"2026-11-01T23:25:04Z","phase":"review","plan_id":"uos/universal-intelligent-fpp-actor-mesh/20261101-2232","policy":"SC-RISK-PRIORITY-001","readiness":"ready","ready_since":"2026-11-01T21:32:09Z","schema_version":1,"scope":"Wave FPP-5: Operator-authorized atomic 14-target live cutover to :4100 & :4110 + 70/70 link_tracker_verifier + 100% live HTML href HTTP 200 Tailnet proof","score":512,"score_interval":[512,512],"snapshot":{"evidence":[{"observed_at":"2026-11-01T23:25:04Z","path":"AGENTS.md","sha256":"82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"},{"observed_at":"2026-11-01T23:25:04Z","path":"contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md","sha256":"f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam","sha256":"e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl","sha256":"b636d83bbf01f6bfa5ddef5a766c62f1e4ab67e2efb6a49061bd97402080cd6f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/core_bus_crypto_ffi.erl","sha256":"08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam.gleam","sha256":"912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"},{"observed_at":"2026-11-01T23:25:04Z","path":"apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam","sha256":"0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"},{"observed_at":"2026-11-01T23:25:04Z","path":"tools/uos-core-evo","sha256":"75f88a20c1755dfa8ae077e5ddd7d01bc9a5821cdc5b2fc16f905a1a5e2f578a"}],"kind":"working_tree","reference":"Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."},"stpa_analysis":{"control_action":"Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry","controller":"AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo","hazards":["H-UNFENCED-LEASE-RECLAIM","H-UNSCOPED-SUPERSEDED-CLAIM","H-PAID-MODEL-DRIFT"],"losses":["L-SPLIT-BRAIN-CORRUPTION","L-QUOTA-MARGIN-BREACH","L-FORENSIC-EVIDENCE-LOSS"],"ucas":[{"applicability":"applicable","constraint":"Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed","context":"Forensic unit snapshot or active PID check omitted before hygiene/reclaim","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"not_provided"},{"applicability":"applicable","constraint":"Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched","context":"Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace","hazard_ids":["H-UNSCOPED-SUPERSEDED-CLAIM"],"type":"provided_unsafe"},{"applicability":"applicable","constraint":"Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence","context":"Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass","hazard_ids":["H-UNFENCED-LEASE-RECLAIM"],"type":"wrong_timing"},{"applicability":"applicable","constraint":"Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold","context":"Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota","hazard_ids":["H-PAID-MODEL-DRIFT"],"type":"duration"}]},"task_id":"fpp5-authorized-14target-live-cutover-and-tailnet-proof","task_state":"available","valid_until":"2026-11-02T04:32:09Z"}]
+[
+  {
+    "actor": "agy-core-evo-conductor-20261101",
+    "assessment_id": "universal-fpp-mesh-fpp1-universal-40-actor-mesh-and-reflex-engine-20261101-2232",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "tools/preflight 31/31 PASS under scoped TMPDIR",
+        "Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim",
+        "Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup",
+        "Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"
+      ],
+      "alternatives": [
+        "Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.",
+        "Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.",
+        "Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."
+      ],
+      "assumptions": [
+        "Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."
+      ],
+      "budget": "40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.",
+        "EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.",
+        "Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."
+      ],
+      "falsifier": "Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.",
+      "forecast": "w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.",
+      "residuals": [
+        "Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."
+      ],
+      "reviewer": "Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.",
+      "rollback": "Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.",
+      "summary": "Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.",
+      "supersedes": null
+    },
+    "dependencies": [],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 5,
+        "low": 5,
+        "rationale": "Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.",
+        "value": 5
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.",
+        "value": 4
+      },
+      "fmea": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 5,
+        "low": 5,
+        "rationale": "Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.",
+        "value": 5
+      },
+      "stpa": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture",
+        "controls": "Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed",
+        "det": 3,
+        "effect": "Concurrent workspace corruption or loss of transient unit failure diagnostics",
+        "id": "FM-W0-FENCE-LEASE-OR-FORENSIC",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion",
+        "controls": "Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate",
+        "det": 2,
+        "effect": "40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds",
+        "id": "FM-W0-FENCE-COST-OR-TMPFS",
+        "o": 2,
+        "rpn": 16,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 6,
+    "observed_at": "2026-11-02T19:10:24Z",
+    "phase": "review",
+    "plan_id": "uos/universal-intelligent-fpp-actor-mesh/20261101-2232",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-11-01T21:32:09Z",
+    "schema_version": 1,
+    "scope": "Wave FPP-1: Implement 40-subsystem intelligent OTP 29.0.5 NASA FPP actors (4 uos_sup domains x L0..L9), Autonomous Cybernetic Reflex Engine, Wisp /api/v1/core-evo/fpp-actors, Lustre /core-evo, TUI, CLI & 100% HTML href Poka-Yoke",
+    "score": 1600,
+    "score_interval": [
+      1600,
+      1600
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "AGENTS.md",
+          "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+          "sha256": "e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl",
+          "sha256": "80ba120691a71ea815a9dbf52476f4edd8fbc6df7ebc9946a190f0a0f18403ce"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/core_bus_crypto_ffi.erl",
+          "sha256": "08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+          "sha256": "912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+          "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "tools/uos-core-evo",
+          "sha256": "cce8e21033c47b9d054f88771a0e87ee372984ae93ede11849ed593d16abe4fd"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."
+    },
+    "stpa_analysis": {
+      "control_action": "Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry",
+      "controller": "AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo",
+      "hazards": [
+        "H-UNFENCED-LEASE-RECLAIM",
+        "H-UNSCOPED-SUPERSEDED-CLAIM",
+        "H-PAID-MODEL-DRIFT"
+      ],
+      "losses": [
+        "L-SPLIT-BRAIN-CORRUPTION",
+        "L-QUOTA-MARGIN-BREACH",
+        "L-FORENSIC-EVIDENCE-LOSS"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed",
+          "context": "Forensic unit snapshot or active PID check omitted before hygiene/reclaim",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched",
+          "context": "Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace",
+          "hazard_ids": [
+            "H-UNSCOPED-SUPERSEDED-CLAIM"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence",
+          "context": "Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold",
+          "context": "Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota",
+          "hazard_ids": [
+            "H-PAID-MODEL-DRIFT"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "fpp1-universal-40-actor-mesh-and-reflex-engine",
+    "task_state": "completed",
+    "valid_until": "2026-11-02T23:10:24Z"
+  },
+  {
+    "actor": "agy-core-evo-conductor-20261101",
+    "assessment_id": "universal-fpp-mesh-fpp2-9modality-eunit-and-parallel-hive-verification-20261101-2232",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "tools/preflight 31/31 PASS under scoped TMPDIR",
+        "Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim",
+        "Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup",
+        "Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"
+      ],
+      "alternatives": [
+        "Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.",
+        "Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.",
+        "Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."
+      ],
+      "assumptions": [
+        "Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."
+      ],
+      "budget": "40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.",
+        "EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.",
+        "Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."
+      ],
+      "falsifier": "Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.",
+      "forecast": "w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.",
+      "residuals": [
+        "Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."
+      ],
+      "reviewer": "Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.",
+      "rollback": "Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.",
+      "summary": "Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "fpp1-universal-40-actor-mesh-and-reflex-engine"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 3,
+        "low": 3,
+        "rationale": "Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.",
+        "value": 3
+      },
+      "fmea": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.",
+        "value": 4
+      },
+      "stpa": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture",
+        "controls": "Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed",
+        "det": 3,
+        "effect": "Concurrent workspace corruption or loss of transient unit failure diagnostics",
+        "id": "FM-W0-FENCE-LEASE-OR-FORENSIC",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion",
+        "controls": "Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate",
+        "det": 2,
+        "effect": "40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds",
+        "id": "FM-W0-FENCE-COST-OR-TMPFS",
+        "o": 2,
+        "rpn": 16,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 6,
+    "observed_at": "2026-11-02T19:10:24Z",
+    "phase": "review",
+    "plan_id": "uos/universal-intelligent-fpp-actor-mesh/20261101-2232",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-11-01T21:32:09Z",
+    "schema_version": 1,
+    "scope": "Wave FPP-2: Execute OTP 29.0.5 EUnit suite, 40-actor spawn/fault-injection/self-healing/veto tests, CLI fpp-actor-mesh & parallel Pi+Argon ($0) verification",
+    "score": 768,
+    "score_interval": [
+      768,
+      768
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "AGENTS.md",
+          "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+          "sha256": "e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl",
+          "sha256": "80ba120691a71ea815a9dbf52476f4edd8fbc6df7ebc9946a190f0a0f18403ce"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/core_bus_crypto_ffi.erl",
+          "sha256": "08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+          "sha256": "912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+          "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "tools/uos-core-evo",
+          "sha256": "cce8e21033c47b9d054f88771a0e87ee372984ae93ede11849ed593d16abe4fd"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."
+    },
+    "stpa_analysis": {
+      "control_action": "Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry",
+      "controller": "AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo",
+      "hazards": [
+        "H-UNFENCED-LEASE-RECLAIM",
+        "H-UNSCOPED-SUPERSEDED-CLAIM",
+        "H-PAID-MODEL-DRIFT"
+      ],
+      "losses": [
+        "L-SPLIT-BRAIN-CORRUPTION",
+        "L-QUOTA-MARGIN-BREACH",
+        "L-FORENSIC-EVIDENCE-LOSS"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed",
+          "context": "Forensic unit snapshot or active PID check omitted before hygiene/reclaim",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched",
+          "context": "Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace",
+          "hazard_ids": [
+            "H-UNSCOPED-SUPERSEDED-CLAIM"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence",
+          "context": "Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold",
+          "context": "Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota",
+          "hazard_ids": [
+            "H-PAID-MODEL-DRIFT"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "fpp2-9modality-eunit-and-parallel-hive-verification",
+    "task_state": "completed",
+    "valid_until": "2026-11-02T23:10:24Z"
+  },
+  {
+    "actor": "agy-core-evo-conductor-20261101",
+    "assessment_id": "universal-fpp-mesh-fpp3-km-triad-writeback-and-semantic-audit-20261101-2232",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "tools/preflight 31/31 PASS under scoped TMPDIR",
+        "Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim",
+        "Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup",
+        "Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"
+      ],
+      "alternatives": [
+        "Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.",
+        "Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.",
+        "Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."
+      ],
+      "assumptions": [
+        "Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."
+      ],
+      "budget": "40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.",
+        "EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.",
+        "Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."
+      ],
+      "falsifier": "Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.",
+      "forecast": "w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.",
+      "residuals": [
+        "Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."
+      ],
+      "reviewer": "Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.",
+      "rollback": "Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.",
+      "summary": "Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "fpp2-9modality-eunit-and-parallel-hive-verification"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 2,
+        "low": 2,
+        "rationale": "Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.",
+        "value": 2
+      },
+      "fmea": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.",
+        "value": 4
+      },
+      "stpa": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture",
+        "controls": "Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed",
+        "det": 3,
+        "effect": "Concurrent workspace corruption or loss of transient unit failure diagnostics",
+        "id": "FM-W0-FENCE-LEASE-OR-FORENSIC",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion",
+        "controls": "Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate",
+        "det": 2,
+        "effect": "40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds",
+        "id": "FM-W0-FENCE-COST-OR-TMPFS",
+        "o": 2,
+        "rpn": 16,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 6,
+    "observed_at": "2026-11-02T19:10:24Z",
+    "phase": "review",
+    "plan_id": "uos/universal-intelligent-fpp-actor-mesh/20261101-2232",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-11-01T21:32:09Z",
+    "schema_version": 1,
+    "scope": "Wave FPP-3: Author reciprocal #km-triad Wiki, ZK & 13-section SC-JOURNAL-v3 ledger with paired ASCII/Mermaid diagrams passing km-gate, diagram-check & journal-check",
+    "score": 512,
+    "score_interval": [
+      512,
+      512
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "AGENTS.md",
+          "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+          "sha256": "e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl",
+          "sha256": "80ba120691a71ea815a9dbf52476f4edd8fbc6df7ebc9946a190f0a0f18403ce"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/core_bus_crypto_ffi.erl",
+          "sha256": "08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+          "sha256": "912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+          "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "tools/uos-core-evo",
+          "sha256": "cce8e21033c47b9d054f88771a0e87ee372984ae93ede11849ed593d16abe4fd"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."
+    },
+    "stpa_analysis": {
+      "control_action": "Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry",
+      "controller": "AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo",
+      "hazards": [
+        "H-UNFENCED-LEASE-RECLAIM",
+        "H-UNSCOPED-SUPERSEDED-CLAIM",
+        "H-PAID-MODEL-DRIFT"
+      ],
+      "losses": [
+        "L-SPLIT-BRAIN-CORRUPTION",
+        "L-QUOTA-MARGIN-BREACH",
+        "L-FORENSIC-EVIDENCE-LOSS"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed",
+          "context": "Forensic unit snapshot or active PID check omitted before hygiene/reclaim",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched",
+          "context": "Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace",
+          "hazard_ids": [
+            "H-UNSCOPED-SUPERSEDED-CLAIM"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence",
+          "context": "Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold",
+          "context": "Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota",
+          "hazard_ids": [
+            "H-PAID-MODEL-DRIFT"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "fpp3-km-triad-writeback-and-semantic-audit",
+    "task_state": "completed",
+    "valid_until": "2026-11-02T23:10:24Z"
+  },
+  {
+    "actor": "pi-argon-fpp4-20261102",
+    "assessment_id": "universal-fpp-mesh-fpp4-sovereign-codex-gate-and-capsule-build-20261101-2232",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "tools/preflight 31/31 PASS under scoped TMPDIR",
+        "Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim",
+        "Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup",
+        "Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"
+      ],
+      "alternatives": [
+        "Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.",
+        "Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.",
+        "Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."
+      ],
+      "assumptions": [
+        "Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."
+      ],
+      "budget": "40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.",
+        "EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.",
+        "Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."
+      ],
+      "falsifier": "Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.",
+      "forecast": "w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.",
+      "residuals": [
+        "Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."
+      ],
+      "reviewer": "Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.",
+      "rollback": "Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.",
+      "summary": "Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "fpp3-km-triad-writeback-and-semantic-audit"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 2,
+        "low": 2,
+        "rationale": "Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.",
+        "value": 2
+      },
+      "fmea": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.",
+        "value": 4
+      },
+      "stpa": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture",
+        "controls": "Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed",
+        "det": 3,
+        "effect": "Concurrent workspace corruption or loss of transient unit failure diagnostics",
+        "id": "FM-W0-FENCE-LEASE-OR-FORENSIC",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion",
+        "controls": "Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate",
+        "det": 2,
+        "effect": "40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds",
+        "id": "FM-W0-FENCE-COST-OR-TMPFS",
+        "o": 2,
+        "rpn": 16,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 6,
+    "observed_at": "2026-11-02T19:10:24Z",
+    "phase": "review",
+    "plan_id": "uos/universal-intelligent-fpp-actor-mesh/20261101-2232",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-11-01T21:32:09Z",
+    "schema_version": 1,
+    "scope": "Wave FPP-4: Sovereign read-only Codex audit, main promotion, immutable OTP 29.0.5 capsule packaging & pre-sealed MCP verification",
+    "score": 512,
+    "score_interval": [
+      512,
+      512
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "AGENTS.md",
+          "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+          "sha256": "e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl",
+          "sha256": "80ba120691a71ea815a9dbf52476f4edd8fbc6df7ebc9946a190f0a0f18403ce"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/core_bus_crypto_ffi.erl",
+          "sha256": "08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+          "sha256": "912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+          "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "tools/uos-core-evo",
+          "sha256": "cce8e21033c47b9d054f88771a0e87ee372984ae93ede11849ed593d16abe4fd"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."
+    },
+    "stpa_analysis": {
+      "control_action": "Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry",
+      "controller": "AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo",
+      "hazards": [
+        "H-UNFENCED-LEASE-RECLAIM",
+        "H-UNSCOPED-SUPERSEDED-CLAIM",
+        "H-PAID-MODEL-DRIFT"
+      ],
+      "losses": [
+        "L-SPLIT-BRAIN-CORRUPTION",
+        "L-QUOTA-MARGIN-BREACH",
+        "L-FORENSIC-EVIDENCE-LOSS"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed",
+          "context": "Forensic unit snapshot or active PID check omitted before hygiene/reclaim",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched",
+          "context": "Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace",
+          "hazard_ids": [
+            "H-UNSCOPED-SUPERSEDED-CLAIM"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence",
+          "context": "Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold",
+          "context": "Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota",
+          "hazard_ids": [
+            "H-PAID-MODEL-DRIFT"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "fpp4-sovereign-codex-gate-and-capsule-build",
+    "task_state": "completed",
+    "valid_until": "2026-11-02T23:10:24Z"
+  },
+  {
+    "actor": "pi-argon-fpp5-20261102",
+    "assessment_id": "universal-fpp-mesh-fpp5-authorized-14target-live-cutover-and-tailnet-proof-20261101-2232",
+    "blockers": [],
+    "class": "P1",
+    "decision": {
+      "acceptance": [
+        "tools/preflight 31/31 PASS under scoped TMPDIR",
+        "Forensic unit/lease JSON archived with SHA-256 before scoped hygiene & reclaim",
+        "Pi global & core-evo settings locked to Zero-Muda 0-npm-package config with reversible backup",
+        "Superseded 0327 v1 plan reconciled against 0327-v2 receipts in Sa-plan"
+      ],
+      "alternatives": [
+        "Zero-Muda Tier-0 + Pi+DeepSeek/Pi+Argon/Codex behind Gleam OTP 29 MCP & 40%-margin gate: selected for <2% AGY token burn and deterministic recovery.",
+        "Direct AGY subagent execution without Pi/Tier-0 offload: rejected due to AGY 5h/weekly/monthly token burn.",
+        "Unfenced force-cleanup of leases and systemd units: rejected per Codex I22/I23 forensic hazards."
+      ],
+      "assumptions": [
+        "Gleam OTP 29 MCP stdio gateway and Zenoh 127.0.0.1:7447/:8080 remain reachable as verified by uos-core-evo preflight."
+      ],
+      "budget": "40% untouched margin enforced (<=6000 bps AGY 5h/7d/30d, <=$6.00/24h OR); Tier-0 $0 local execution for W0.",
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Risk checker preflight is report-only observation and confers no runtime enforcement or system admission.",
+        "EV-93 ceiling remains fixed; EV-94..109 and ADR-071..086 remain NOT_ADMITTED and zero new EV numbers are minted.",
+        "Codex interactive TUI PID 4031329 in Default@ is conserved undisturbed."
+      ],
+      "falsifier": "Any Default@ SHA-256 drift, unarchived forensic reset, tools/preflight regression below 31/31, or quota usage >6000 bps.",
+      "forecast": "w0-fenced-hygiene-reclaim completes with 0 data loss, 100% conserved Default@ digests, and <2% AGY token share.",
+      "residuals": [
+        "Effect-time runtime risk enforcement (OI07) and capsule ELF loader (OI02E) remain scheduled in Wave 1 + Gate W1.5 prior to Wave 2 cutover."
+      ],
+      "reviewer": "Independent Codex sovereign gate required at Gate W1.5 and Wave 2 cutover.",
+      "rollback": "Restore ~/.pi/agent/settings.json from var/backups/zero-muda-20261101/ and revert isolated JJ workspace agy-zlp-v3-20261101.",
+      "summary": "Execute w0-fenced-hygiene-reclaim in isolated workspace agy-zlp-v3-20261101 via Tier-0 + Pi/Codex + Gleam MCP + signed Zenoh uos/v1/**.",
+      "supersedes": null
+    },
+    "dependencies": [
+      "fpp4-sovereign-codex-gate-and-capsule-build"
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Guards Sa-plan lease integrity, 40% token margin, and OTP 29 capsule cutover prerequisites.",
+        "value": 4
+      },
+      "dependency": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 2,
+        "low": 2,
+        "rationale": "Root DAG prerequisite in uos/agy-fractal-issue-resolution-master/20261101-1454.",
+        "value": 2
+      },
+      "fmea": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "S4 O3 Det3 RPN36: expired leases, global Pi paid-model defaults, or /tmp quota saturation can stall or corrupt swarm execution.",
+        "value": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Unblocks deterministic zero-muda Pi+DeepSeek, Pi+Argon, and Codex wave execution under 40% margin.",
+        "value": 4
+      },
+      "stpa": {
+        "evidence_refs": [
+          "AGENTS.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam"
+        ],
+        "high": 4,
+        "low": 4,
+        "rationale": "Prevents split-brain lease hijack, unarchived forensic loss, and unfenced release mutation.",
+        "value": 4
+      }
+    },
+    "fmea_modes": [
+      {
+        "band": 4,
+        "cause": "Reclaiming expired lease while worker PID is still writing, or resetting transient systemd units before forensic capture",
+        "controls": "Verify PID absence via /proc & ps, conserve active/paused Default@ workspace, archive full JSON unit forensics + SHA-256 to var/evidence/ before scoped reset-failed",
+        "det": 3,
+        "effect": "Concurrent workspace corruption or loss of transient unit failure diagnostics",
+        "id": "FM-W0-FENCE-LEASE-OR-FORENSIC",
+        "o": 3,
+        "rpn": 36,
+        "s": 4
+      },
+      {
+        "band": 4,
+        "cause": "Global ~/.pi/agent/settings.json paid model + 11 npm plugins or /tmp tmpfs 81% quota exhaustion",
+        "controls": "Scoped TMPDIR=/home/an/NAS-setup/uos/var/tmp_core_evo, zero-muda Pi settings backup+lockdown, and uos-core-evo 6000-bps hard margin gate",
+        "det": 2,
+        "effect": "40% quota margin breach or mktemp ENOSPC/EDQUOT failure during builds",
+        "id": "FM-W0-FENCE-COST-OR-TMPFS",
+        "o": 2,
+        "rpn": 16,
+        "s": 4
+      }
+    ],
+    "fractal_layer": 6,
+    "observed_at": "2026-11-02T19:10:24Z",
+    "phase": "review",
+    "plan_id": "uos/universal-intelligent-fpp-actor-mesh/20261101-2232",
+    "policy": "SC-RISK-PRIORITY-001",
+    "readiness": "ready",
+    "ready_since": "2026-11-01T21:32:09Z",
+    "schema_version": 1,
+    "scope": "Wave FPP-5: Operator-authorized atomic 14-target live cutover to :4100 & :4110 + 70/70 link_tracker_verifier + 100% live HTML href HTTP 200 Tailnet proof",
+    "score": 512,
+    "score_interval": [
+      512,
+      512
+    ],
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "AGENTS.md",
+          "sha256": "82ee68e09b6548b1b3552d64ca1338aba559ff808116900697fe5f213a8b2945"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "sha256": "f4f09f323abc8aaba5a5a1d6bf02a4084387e06fedc8eb024c8b0bcd9ff7adff"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+          "sha256": "e6456d869e06b804d88b5d98735e4ebaa902454f26bfe2e21a2413330ad8fab1"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_candidate_ffi.erl",
+          "sha256": "80ba120691a71ea815a9dbf52476f4edd8fbc6df7ebc9946a190f0a0f18403ce"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/core_bus_crypto_ffi.erl",
+          "sha256": "08470b66e8d505dbea20a4692c4d0a68b6049e8b1ab2844a456d9c069466688f"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam.gleam",
+          "sha256": "912f299a0c27f0fbde6353361e709834009cf1fdd6c22e8540bd272062ad39d4"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+          "sha256": "0cc6b9a8e90b9b0b8cf053d01c5f4e7d42a14051418e36a708ca9025a2d239ef"
+        },
+        {
+          "observed_at": "2026-11-02T19:10:24Z",
+          "path": "tools/uos-core-evo",
+          "sha256": "cce8e21033c47b9d054f88771a0e87ee372984ae93ede11849ed593d16abe4fd"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace agy-zlp-v3-20261101 on main 69cc6dac; Default@ peer files conserved."
+    },
+    "stpa_analysis": {
+      "control_action": "Execute w0-fenced-hygiene-reclaim under fenced Sa-plan lease, 40% quota margin, and signed Zenoh uos/v1/** telemetry",
+      "controller": "AGY QueenConductor via Gleam OTP 29 MCP (uos-gleam) + Sa-plan + uos-core-evo",
+      "hazards": [
+        "H-UNFENCED-LEASE-RECLAIM",
+        "H-UNSCOPED-SUPERSEDED-CLAIM",
+        "H-PAID-MODEL-DRIFT"
+      ],
+      "losses": [
+        "L-SPLIT-BRAIN-CORRUPTION",
+        "L-QUOTA-MARGIN-BREACH",
+        "L-FORENSIC-EVIDENCE-LOSS"
+      ],
+      "ucas": [
+        {
+          "applicability": "applicable",
+          "constraint": "Capture SHA-256 forensic JSON in var/evidence/ and verify /proc PID absence before any reclaim or reset-failed",
+          "context": "Forensic unit snapshot or active PID check omitted before hygiene/reclaim",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "not_provided"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Close superseded 0327 v1 tasks with audited -v2 parity receipts and conserve Default@ 6 files untouched",
+          "context": "Unscoped worker claims superseded 0327 v1 tasks or disturbs paused Default@ Codex workspace",
+          "hazard_ids": [
+            "H-UNSCOPED-SUPERSEDED-CLAIM"
+          ],
+          "type": "provided_unsafe"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Enforce strict W0 -> W1 -> Gate W1.5 -> W2 topological sequence",
+          "context": "Production 14-target capsule cutover attempted before OI07 fence and Gate W1.5 pass",
+          "hazard_ids": [
+            "H-UNFENCED-LEASE-RECLAIM"
+          ],
+          "type": "wrong_timing"
+        },
+        {
+          "applicability": "applicable",
+          "constraint": "Use 4h lease, 60m->90m->120m 3-attempt clean JJ rollback, and hard 6000-bps (40% margin) Torpor hold",
+          "context": "Short timeout aborts legitimate build/RCA or runaway retry burns >60% quota",
+          "hazard_ids": [
+            "H-PAID-MODEL-DRIFT"
+          ],
+          "type": "duration"
+        }
+      ]
+    },
+    "task_id": "fpp5-authorized-14target-live-cutover-and-tailnet-proof",
+    "task_state": "completed",
+    "valid_until": "2026-11-02T23:10:24Z"
+  }
+]
