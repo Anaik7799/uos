@@ -12,7 +12,7 @@ pub fn listed_tool_has_dispatch_schema_and_owner_test() {
   let listed = tools.get_tool_definitions()
   let registered =
     registry.definitions(types.Legacy20241105, types.DeclaredCatalogView)
-  list.length(registered) |> should.equal(65)
+  list.length(registered) |> should.equal(66)
   list.each(listed, fn(def) {
     let assert Ok(spec) = registry.lookup("public", def.name)
     spec.name |> should.equal(def.name)
@@ -63,10 +63,7 @@ pub fn recursive_local_ref_is_bounded_test() {
       #(
         "$defs",
         json.object([
-          #(
-            "loop",
-            json.object([#("$ref", json.string("#/$defs/loop"))]),
-          ),
+          #("loop", json.object([#("$ref", json.string("#/$defs/loop"))])),
         ]),
       ),
     ])
