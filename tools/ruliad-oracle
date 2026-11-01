@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+# Model-to-source differential oracle gate for the Ruliad formal library.
+#
+# Runs BOTH engines over three corpora and fails on any divergence that is not
+# in the documented allowlist. Thin wrapper in the established tools/ gate
+# style (cf. tools/lean-offline-gate, tools/journal-check): all logic lives in
+# the Lean executables, the Erlang harnesses and the OCaml classifier.
+#
+#   tools/ruliad-oracle [--cases N] [--seed S]
+#
+# Exit 0 only if every corpus agrees up to list order and the allowlist.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+PKG="$ROOT/formal/lean/ruliad"
+DIFF="$PKG/diff"
+EBIN=("$ROOT"/apps/cepaf_gleam/build/dev/erlang/*/ebin)
+CASES=10000
+SEED=20261101
+MAX_AGE=""
+NO_BUILD=false
+RECEIPT_DIR="$ROOT/var/ruliad-oracle"
+RECEIPT="$RECEIPT_DIR/latest.json"
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --cases)    CASES="$2";   shift 2 ;;
+    --seed)     SEED="$2";    shift 2 ;;
+    --max-age)  MAX_AGE="$2"; shift 2 ;;
+    --no-build) NO_BUILD=true;  shift 1 ;;
+    *) echo "unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+
+# Cached fast path, mirroring tools/preflight --max-age: a recent receipt is
+# reused instead of re-running. A receipt is only honoured if the checker and
+# the classifier are byte-identical to the ones that wrote it, so an edit to
+# either invalidates every prior receipt rather than letting a --max-age caller
+# inherit confidence from a run that never examined the current code.
+self_digest() {
+  cat "$ROOT/tools/ruliad-oracle" "$DIFF/compare.ml" "$DIFF/gen_corpus.ml" 2>/dev/null \
+    | sha256sum | awk '{print $1}'
+}
+
+if [ -n "$MAX_AGE" ] && [ -f "$RECEIPT" ]; then
+  age=$(( $(date +%s) - $(stat -c %Y "$RECEIPT") ))
+  cached_digest="$(jq -r '.checker_sha256 // ""' "$RECEIPT" 2>/dev/null || echo "")"
+  cached_cases="$(jq -r '.generated_cases // 0' "$RECEIPT" 2>/dev/null || echo 0)"
+  # A cached receipt is only reusable if it covered AT LEAST as many generated
+  # cases as this caller asked for. Otherwise a --cases 100000 request could be
+  # satisfied by a stored --cases 10 run, which would silently weaken the check.
+  if [ "$age" -le "$MAX_AGE" ] \
+     && [ "$cached_digest" = "$(self_digest)" ] \
+     && [ "$cached_cases" -ge "$CASES" ]; then
+    jq --argjson age "$age" '. + {cached: true, receipt_age_s: $age}' "$RECEIPT"
+    jq -e '.all_passed' "$RECEIPT" >/dev/null || exit 1
+    exit 0
+  fi
+fi
+
+# uos_env prepends the in-project toolchains, including lean-4.33.0, so the
+# 4.35.0 bin that this Lake package requires must be prepended AFTER it.
+# shellcheck source=/dev/null
+source "$ROOT/tools/lib/uos-toolchain.sh"
+uos_env
+export PATH="$ROOT/toolchains/lean-4.35.0/bin:$PATH"
+
+cd "$PKG"
+# ecology_capability_ffi caps a bounded command at 60s, so a cold `lake build`
+# (minutes) must never be attempted from inside an MCP call. --no-build refuses
+# instead of blocking, and refuses rather than passing: an absent prerequisite
+# is reported as a failure, never as a silent success.
+if [ "$NO_BUILD" = true ]; then
+  for exe in ruliaddiff servicediff; do
+    if [ ! -x ".lake/build/bin/$exe" ]; then
+      jq -n --arg schema "uos.ruliad_oracle.v1" --arg exe "$exe" \
+        '{schema:$schema, all_passed:false, status:"PREREQUISITES_ABSENT",
+          missing:$exe,
+          note:"Lean executable not built. Run tools/ruliad-oracle without --no-build, outside a bounded call. Reported as a failure, not a pass."}'
+      exit 1
+    fi
+  done
+else
+  lake build ruliaddiff servicediff >/dev/null \
+    || { echo "ruliad-oracle: lake build failed" >&2; exit 2; }
+fi
+
+cd "$DIFF"
+for src in gen_corpus compare; do
+  [ -x "./$src" ] || ocamlfind ocamlopt -package str -linkpkg "$src.ml" -o "$src" >/dev/null
+done
+for m in ruliad_diff service_diff; do
+  [ -f "./$m.beam" ] || erlc -o . "$m.erl"
+done
+
+NOW_UTC="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+ALL_OK=true
+ARMS="[]"
+
+run_arm() {
+  local name="$1" corpus="$2" lean_exe="$3" erl_mod="$4" extra="${5:-}"
+  "$PKG/.lake/build/bin/$lean_exe" "$corpus" > "arm-$name-lean.txt"
+  erl -noshell -pa . -pa "${EBIN[@]}" -s "$erl_mod" run "$corpus" > "arm-$name-gleam.txt"
+  set +e
+  local out rc
+  out="$(./compare "arm-$name-lean.txt" "arm-$name-gleam.txt" --quiet $extra 2>&1)"
+  rc=$?
+  set -e
+  local summary
+  summary="$(printf '%s' "$out" | tail -n 1)"
+  [ "$rc" -eq 0 ] || ALL_OK=false
+  ARMS="$(jq -cn --argjson arr "$ARMS" --arg name "$name" --arg corpus "$(basename "$corpus")" \
+    --argjson rc "$rc" --arg summary "$summary" \
+    --arg divergent "$(printf '%s' "$out" | grep -c '^DIVERGENT' || true)" \
+    '$arr + [{arm:$name, corpus:$corpus, exit_code:$rc, divergent:($divergent|tonumber), summary:$summary}]')"
+  printf '  %-10s rc=%d  %s\n' "$name" "$rc" "$summary" >&2
+}
+
+./gen_corpus "$SEED" "$CASES" > corpus-gen.tsv
+
+echo "ruliad-oracle: three arms" >&2
+run_arm "multiway"  "corpus.tsv"         "ruliaddiff"  "ruliad_diff"  "--allow allow.txt"
+run_arm "generated" "corpus-gen.tsv"     "ruliaddiff"  "ruliad_diff"  "--allow allow.txt"
+run_arm "service"   "service_corpus.tsv" "servicediff" "service_diff" ""
+
+mkdir -p "$RECEIPT_DIR"
+jq -n \
+  --arg schema "uos.ruliad_oracle.v1" \
+  --arg checker_sha256 "$(self_digest)" \
+  --arg observed_utc "$NOW_UTC" \
+  --argjson all_passed "$([ "$ALL_OK" = true ] && echo true || echo false)" \
+  --argjson generated_cases "$CASES" \
+  --argjson seed "$SEED" \
+  --arg allow_sha256 "$(sha256sum allow.txt | awk '{print $1}')" \
+  --argjson arms "$ARMS" \
+  '{schema:$schema, observed_utc:$observed_utc, all_passed:$all_passed,
+    generated_cases:$generated_cases, seed:$seed, allow_sha256:$allow_sha256,
+    checker_sha256:$checker_sha256, cached:false, arms:$arms,
+    note:"A passing oracle is a measurement that the model and the deployed engine agree up to list order, the offset class and the documented allowlist, on these corpora. It is an empirical observation, not a formal proof, not a correspondence proof, and not admission authority."}' \
+  | tee "$RECEIPT"
+
+[ "$ALL_OK" = true ] || exit 1

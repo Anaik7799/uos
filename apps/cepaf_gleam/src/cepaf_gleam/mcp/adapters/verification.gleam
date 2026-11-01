@@ -2,6 +2,11 @@
 //// run_gate, preflight_check. Uses a closed CheckId allowlist so arbitrary
 //// command strings are rejected fail-closed; missing provers stay formally
 //// unrun and output/exit disagreement can never be reported as Complete.
+////
+//// `ruliad_oracle` is bound here rather than as a new MCP tool on purpose: it
+//// then inherits the existing admission, authz, bounded-command and
+//// fail-closed machinery, and becomes reachable over every transport the MCP
+//// server already serves (stdio, Streamable HTTP, Zenoh) with no new ingress.
 
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/value
@@ -24,6 +29,7 @@ pub type CheckId {
   GateChecklist
   PreflightToolchain
   BoundedZ3Control
+  RuliadOracle
 }
 
 pub type CheckRunnerResult {
@@ -124,6 +130,7 @@ pub fn parse_check_id(raw: String) -> Result(CheckId, ToolError) {
     "gate_checklist" -> Ok(GateChecklist)
     "preflight_toolchain" -> Ok(PreflightToolchain)
     "bounded_z3_control" -> Ok(BoundedZ3Control)
+    "ruliad_oracle" -> Ok(RuliadOracle)
     other ->
       Error(ToolError(
         "DISALLOWED_CHECK_ID",
@@ -266,12 +273,20 @@ fn check_id_name(check_id: CheckId) -> String {
     GateChecklist -> "gate_checklist"
     PreflightToolchain -> "preflight_toolchain"
     BoundedZ3Control -> "bounded_z3_control"
+    RuliadOracle -> "ruliad_oracle"
   }
 }
 
 fn formal_state_for(check_id: CheckId) -> String {
   case check_id {
     BoundedZ3Control -> "verified"
+    // RuliadOracle deliberately falls through to "unrun". It is a differential
+    // measurement between a Lean model and the deployed Gleam engine, not a
+    // formal proof: it can show the two agree on a corpus, never that they
+    // agree on all inputs. Reporting it as "verified" would promote an
+    // empirical observation to formal evidence, which SC-PROVENANCE-001's
+    // two-key rule forbids. The Lean proofs themselves are verified by
+    // tools/lean-offline-gate, which is a different check.
     _ -> "unrun"
   }
 }

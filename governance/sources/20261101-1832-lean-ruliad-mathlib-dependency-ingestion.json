@@ -1,0 +1,661 @@
+{
+  "manifest_id": "20261101-1832-lean-ruliad-mathlib-dependency-ingestion",
+  "contract": "SC-NIX-DEVENV-001",
+  "companion_contracts": [
+    "SC-TOOLCHAIN-INPROJECT-001",
+    "SC-RELEASE-ASSURANCE-001"
+  ],
+  "observed_utc": "2026-11-01T18:48:32Z",
+  "authority": "Operator directive, this session: \"get all the lean librariers that can be used from the internet. search and identify the code that can be used and will be useful\".",
+  "policy_deviation_recorded": {
+    "rule": "SC-NIX-DEVENV-001 requires new toolchain/dependency provisioning through pinned Determinate Nix or devenv inputs; SC-RELEASE-ASSURANCE-001 clause 13 prefers an operator-supplied Tailnet package mirror over public-registry access.",
+    "what_was_done": "Lean dependencies were fetched over the public internet (github.com for sources, lakecache.blob.core.windows.net for the Mathlib olean cache) via the in-project pinned lake at toolchains/lean-4.33.0/bin/lake.",
+    "mitigation": "Every dependency revision is pinned in formal/lean/ruliad/lake-manifest.json (digested below). No floating refs. The fetch is reproducible from these revisions. No Nix input was modified and no host package was installed.",
+    "status": "RECORDED_DEVIATION, not a waiver. A Nix/devenv or Tailnet-mirror route for Lean packages remains unimplemented."
+  },
+  "toolchain": {
+    "lean": "4.33.0",
+    "lean_path": "toolchains/lean-4.33.0/bin/lean",
+    "lake_path": "toolchains/lean-4.33.0/bin/lake",
+    "mathlib_tag_matches_toolchain": true,
+    "mathlib_lean_toolchain": "leanprover/lean4:v4.33.0"
+  },
+  "in_project_pins": {
+    "lakefile.toml": {
+      "path": "formal/lean/ruliad/lakefile.toml",
+      "sha256": "aa93fa086e54567ad81ba295ebbb99701a3303f8e656e0af81f1281a85951d43"
+    },
+    "lake-manifest.json": {
+      "path": "formal/lean/ruliad/lake-manifest.json",
+      "sha256": "a4d5d050cb35853d48b329fd8cb15252f106afe28e20ad59d9968dd2fb141115"
+    },
+    "lean-toolchain": {
+      "path": "formal/lean/ruliad/lean-toolchain",
+      "sha256": "302cd63c54178885b89e669f33b38f12f4dd7ae7e5cac537b3203e3768d8fb2b"
+    }
+  },
+  "packages": [
+    {
+      "name": "mathlib",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/mathlib4",
+      "rev": "db584cd6d46c92f209a44c0f1c829460d327499d",
+      "input_rev": "v4.33.0",
+      "local_path": "formal/lean/ruliad/.lake/packages/mathlib"
+    },
+    {
+      "name": "plausible",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/plausible",
+      "rev": "b7eb3304aeae834b12dda98993a37f6a41f6f0bb",
+      "input_rev": "main",
+      "local_path": "formal/lean/ruliad/.lake/packages/plausible"
+    },
+    {
+      "name": "LeanSearchClient",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/LeanSearchClient",
+      "rev": "5f4d51b81cbd3f6b32b156bfad9056621a040404",
+      "input_rev": "main",
+      "local_path": "formal/lean/ruliad/.lake/packages/LeanSearchClient"
+    },
+    {
+      "name": "importGraph",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/import-graph",
+      "rev": "16f02aa7642864af59f1ff0e384a015994db9118",
+      "input_rev": "main",
+      "local_path": "formal/lean/ruliad/.lake/packages/importGraph"
+    },
+    {
+      "name": "proofwidgets",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/ProofWidgets4",
+      "rev": "4be2e3d5087eeb272cf5a8853b8f9dd025ef5957",
+      "input_rev": "main",
+      "local_path": "formal/lean/ruliad/.lake/packages/proofwidgets"
+    },
+    {
+      "name": "aesop",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/aesop",
+      "rev": "3448c0bcc5ce01b2d1546e483ec3620e32df3d0e",
+      "input_rev": "master",
+      "local_path": "formal/lean/ruliad/.lake/packages/aesop"
+    },
+    {
+      "name": "Qq",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/quote4",
+      "rev": "92c15be17b7caf78c2ad767ec40f89052d908d81",
+      "input_rev": "master",
+      "local_path": "formal/lean/ruliad/.lake/packages/Qq"
+    },
+    {
+      "name": "batteries",
+      "scope": "leanprover-community",
+      "git_url": "https://github.com/leanprover-community/batteries",
+      "rev": "4488d40d070b9700d4d5a6aa342f0d40c31b2a2d",
+      "input_rev": "main",
+      "local_path": "formal/lean/ruliad/.lake/packages/batteries"
+    },
+    {
+      "name": "Cli",
+      "scope": "leanprover",
+      "git_url": "https://github.com/leanprover/lean4-cli",
+      "rev": "6130a47896ce867c6a4a55373441e59e565bad0f",
+      "input_rev": "v4.33.0",
+      "local_path": "formal/lean/ruliad/.lake/packages/Cli"
+    }
+  ],
+  "artifact_store": {
+    "path": "formal/lean/ruliad/.lake",
+    "tracked": false,
+    "gitignore_entry": ".lake/",
+    "note": "Host-provisioned olean cache (~7.5 GB). Untracked by design, exactly like toolchains/. Reproducible from the pinned revisions via `lake exe cache get`."
+  },
+  "third_party_read_only_evidence": [
+    {
+      "repo": "https://github.com/Arthur742Ramos/Metatheory",
+      "licence": "MIT",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "relevance": "Mathlib-free Lean 4 abstract-rewriting framework: Rewriting/Basic, Rewriting/Newman, Rewriting/DecreasingDiagrams, Rewriting/HindleyRosen, StringRewriting/*, TRS/FirstOrder/{CriticalPairs,LPO}.",
+      "disposition": "READ_ONLY_REFERENCE. Not vendored, not required, not compiled. Toolchain is nine releases behind the pinned 4.33.0 and compiling downloaded third-party Lean was refused by the session sandbox. Attribution recorded in formal/lean/Ruliad.lean and Ruliad/Core.lean."
+    },
+    {
+      "repo": "https://github.com/svkampen/msc-thesis",
+      "licence": "NONE_FOUND",
+      "lean_toolchain": "leanprover/lean4:v4.14.0",
+      "relevance": "MSc thesis 'Abstract Rewriting Formalized in Lean': three proofs of Newman's lemma, DCR/DCR2 completeness.",
+      "disposition": "READ_ONLY_REFERENCE. No LICENSE file was found, so default all-rights-reserved is assumed and no code may be copied or adapted."
+    }
+  ],
+  "produced": [
+    "formal/lean/Ruliad.lean",
+    "formal/lean/ruliad/Ruliad.lean",
+    "formal/lean/ruliad/Ruliad/Core.lean",
+    "formal/lean/ruliad/Ruliad/Diagrams.lean",
+    "formal/lean/ruliad/Ruliad/Rulial.lean",
+    "formal/lean/ruliad/Ruliad/Multiway.lean",
+    "formal/lean/ruliad/Ruliad/Hypergraph.lean",
+    "formal/lean/ruliad/Ruliad/Branchial.lean",
+    "formal/lean/ruliad/Ruliad/Causal.lean",
+    "formal/lean/ruliad/Ruliad/Entropy.lean",
+    "formal/lean/ruliad/Ruliad/CausalInvariance.lean",
+    "formal/lean/ruliad/Ruliad/Vision.lean",
+    "formal/lean/ruliad/Ruliad/Irreducibility.lean",
+    "formal/lean/ruliad/Ruliad/Service.lean",
+    "formal/lean/ruliad/Ruliad/Bridge.lean",
+    "formal/lean/ruliad/Ruliad/Render.lean",
+    "formal/lean/ruliad/Ruliad/ListDiff.lean",
+    "formal/lean/ruliad/Ruliad/CausalGraph.lean",
+    "formal/lean/ruliad/RuliadDiff.lean",
+    "formal/lean/ruliad/diff/corpus.tsv",
+    "formal/lean/ruliad/diff/ruliad_diff.erl",
+    "formal/lean/ruliad/diff/compare.ml",
+    "formal/lean/ruliad/diff/README.md",
+    "docs/journal/20261101-1911-ruliad-formal-library-journal.md",
+    "docs/journal/20261101-2031-ruliad-differential-oracle-journal.md",
+    "tools/ruliad-oracle",
+    "formal/lean/ruliad/ServiceDiff.lean",
+    "formal/lean/ruliad/diff/gen_corpus.ml",
+    "formal/lean/ruliad/diff/service_corpus.tsv",
+    "formal/lean/ruliad/diff/service_diff.erl",
+    "formal/lean/ruliad/diff/allow.txt",
+    "docs/journal/20261101-2100-ruliad-oracle-scale-gate-journal.md",
+    "formal/lean/ruliad/diff/gen_unicode_corpus.ml",
+    "var/ruliad-oracle/latest.json"
+  ],
+  "admission": {
+    "system_admission": "NOT_ADMITTED",
+    "admitted_ev_ceiling": 93,
+    "ev_minted": null,
+    "note": "Formal model only. Not runtime evidence; grants no effect or deployment authority."
+  },
+  "survey": {
+    "method": "Lean Reservoir registry probe (API path unavailable at this revision), GitHub repository search across language:lean with keywords rewriting / confluence / hypergraph / graph theory / automata / semantics, plus direct lean-toolchain and LICENSE fetches per candidate.",
+    "finding": "No Lean formalization of the ruliad, Wolfram models, or multiway hypergraph systems exists publicly. Every relevant rewriting/confluence library pins a different Lean toolchain than this repository's 4.33.0, and a Lake workspace has exactly one toolchain, so none can be added as a dependency without bumping Lean for all 80+ files under formal/lean/ and re-verifying them. That is an operator decision; it was not taken.",
+    "candidates": [
+      {
+        "repo": "leanprover/cslib",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "v4.36.0-rc2",
+        "useful": "Foundations/Relation/Confluence.lean — full confluence lattice INCLUDING Newman (LocallyConfluent.terminating_toConfluent), Commute/SemiCommute/DiamondCommute, Normalizing, Convergent. Foundations/Semantics/LTS/* — labelled transition systems with bisimulation, which is the right abstraction for rulial emulation.",
+        "disposition": "READ_ONLY_REFERENCE. Vocabulary adopted deliberately in Ruliad/Diagrams.lean so a future require can replace it. Toolchain 3 releases ahead."
+      },
+      {
+        "repo": "Arthur742Ramos/Metatheory",
+        "licence": "MIT",
+        "lean_toolchain": "v4.24.0",
+        "useful": "Mathlib-free ARS framework: Rewriting/{Basic,Newman,Diamond,DecreasingDiagrams,HindleyRosen}, StringRewriting/*, TRS/FirstOrder/{CriticalPairs,LPO}, Termination.",
+        "disposition": "READ_ONLY_REFERENCE. Not vendored. Compiling downloaded third-party Lean was additionally refused by the session sandbox."
+      },
+      {
+        "repo": "codyroux/traat-lean",
+        "licence": "MIT",
+        "lean_toolchain": "v4.30.0-rc1",
+        "useful": "Selected lemmas from Baader & Nipkow, Term Rewriting and All That — the source text for the ARS development here; includes criticalpairs.lean.",
+        "disposition": "READ_ONLY_REFERENCE."
+      },
+      {
+        "repo": "nomeata/lean-simplc",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "nightly-2024-08-25",
+        "useful": "An actual local-confluence CHECKER for simp lemmas — a decision procedure, not just a theory. Technique of interest for mechanising the LocallyConfluent hypothesis rather than assuming it.",
+        "disposition": "READ_ONLY_REFERENCE. Nightly toolchain."
+      },
+      {
+        "repo": "VCA-EPFL/graphiti",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "v4.34.1",
+        "useful": "Verified GRAPH rewriting for dataflow circuits — closer to hypergraph rewriting than string rewriting.",
+        "disposition": "READ_ONLY_REFERENCE."
+      },
+      {
+        "repo": "Timeroot/IsoGraph",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "v4.34.0-rc2",
+        "useful": "Graphs up to isomorphism — directly relevant to the hypergraph state-identity problem recorded in Ruliad/Hypergraph.lean (stepRel_equivariant).",
+        "disposition": "READ_ONLY_REFERENCE."
+      },
+      {
+        "repo": "cslib-community/complexitylib",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "v4.36.0-rc2",
+        "useful": "Computational complexity on top of CSLib — the route to a real computational-irreducibility statement, which Ruliad/Irreducibility.lean explicitly does NOT claim.",
+        "disposition": "READ_ONLY_REFERENCE."
+      },
+      {
+        "repo": "ctchou/AutomataTheory",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "v4.24.0-rc1",
+        "useful": "Automata theory.",
+        "disposition": "READ_ONLY_REFERENCE."
+      },
+      {
+        "repo": "objectionary/proof",
+        "licence": "MIT",
+        "lean_toolchain": "v4.30.0",
+        "useful": "phi-calculus confluence, a worked confluence proof for a concrete calculus.",
+        "disposition": "READ_ONLY_REFERENCE."
+      },
+      {
+        "repo": "hediet/lean-cellular-automata",
+        "licence": "NONE_FOUND",
+        "lean_toolchain": "v4.26.0-rc2",
+        "useful": "Cellular automata, on-theme for ruliology.",
+        "disposition": "READ_ONLY_REFERENCE; no licence file, so nothing may be copied."
+      },
+      {
+        "repo": "svkampen/msc-thesis",
+        "licence": "NONE_FOUND",
+        "lean_toolchain": "v4.14.0",
+        "useful": "MSc thesis 'Abstract Rewriting Formalized in Lean': three proofs of Newman, DCR/DCR2 completeness.",
+        "disposition": "READ_ONLY_REFERENCE; no licence file."
+      },
+      {
+        "repo": "leanprover-community/duper",
+        "licence": "Apache-2.0",
+        "lean_toolchain": "v4.34.1",
+        "useful": "Superposition theorem prover as a Lean tactic.",
+        "disposition": "NOT_USED; toolchain mismatch."
+      },
+      {
+        "repo": "marcusrossel/lean-egg",
+        "licence": "see repo",
+        "lean_toolchain": "v4.30.0-rc2",
+        "useful": "Equality saturation / e-graphs as a Lean tactic — the closest tooling analogue to multiway rewriting.",
+        "disposition": "NOT_USED; toolchain mismatch."
+      }
+    ],
+    "maths_and_graphics": {
+      "graphics": [
+        {
+          "repo": "leanprover-community/ProofWidgets4",
+          "licence": "Apache-2.0",
+          "lean": "4.36.0-rc2 on main; v4.35.0-compatible rev df72b022 used",
+          "disposition": "USED (transitively via Mathlib) in Ruliad/Render.lean",
+          "useful": "SVG primitives, force-directed graph display, Graphviz display, Penrose diagrams, interactive SVG, HTML/JSX in the infoview."
+        },
+        {
+          "repo": "leanprover/verso",
+          "licence": "Apache-2.0",
+          "lean": "4.36.0-rc2",
+          "disposition": "NOT_USED",
+          "useful": "HTML documentation generation; the route to rendering the KM wiki from Lean sources."
+        },
+        {
+          "repo": "leanprover/LeanInk",
+          "licence": "Apache-2.0",
+          "lean": "4.6.0-rc1",
+          "disposition": "NOT_USED — 29 releases behind.",
+          "useful": "Lean source to annotated HTML."
+        },
+        {
+          "finding": "No Lean plotting/charting library exists. ProofWidgets SVG is the substrate; anything chart-shaped is built on it by hand."
+        }
+      ],
+      "maths": [
+        {
+          "repo": "leanprover-community/mathlib4",
+          "licence": "Apache-2.0",
+          "lean": "v4.35.0",
+          "disposition": "USED",
+          "useful": "Relation closures, Real/log/logb, negMulLog + concavity, inner product spaces, metric spaces, Finset, List.Perm, Subperm, Cantor."
+        },
+        {
+          "repo": "leanprover/cslib",
+          "licence": "Apache-2.0",
+          "lean": "v4.35.0 at 0b1e3680",
+          "disposition": "USED",
+          "useful": "Confluence lattice incl. Newman; LTS/simulation/bisimulation/weak bisimulation; Computability (Automata, Machines, URM, Circuit, Distributed, Languages)."
+        },
+        {
+          "repo": "ufmg-smite/lean-smt",
+          "licence": "Apache-2.0",
+          "lean": "v4.34.0",
+          "disposition": "NOT_USED — one minor version behind 4.35.0, untested.",
+          "useful": "cvc5/SMT as a Lean tactic. Directly relevant: Hermes already runs bounded Z3, so this would let Lean discharge the same obligations."
+        },
+        {
+          "repo": "lecopivo/SciLean",
+          "licence": "Apache-2.0",
+          "lean": "v4.28.0-rc1",
+          "disposition": "NOT_USED — 7 releases behind.",
+          "useful": "Scientific computing, automatic differentiation, tensors."
+        },
+        {
+          "repo": "teorth/equational_theories",
+          "licence": "Apache-2.0",
+          "lean": "v4.29.1",
+          "disposition": "NOT_USED — 6 releases behind.",
+          "useful": "Large-scale equational/rewriting infrastructure over magma laws."
+        },
+        {
+          "repo": "cslib-community/complexitylib",
+          "licence": "Apache-2.0",
+          "lean": "v4.36.0-rc2",
+          "disposition": "NOT_USED — ahead of the chosen stable pin.",
+          "useful": "Complexity theory on CSLib; the route to a real computational-irreducibility claim that Ruliad/Irreducibility.lean explicitly declines to make."
+        },
+        {
+          "repo": "opencompl/lean-mlir",
+          "licence": "NOASSERTION",
+          "lean": "nightly",
+          "disposition": "NOT_USED — nightly toolchain, unclear licence."
+        },
+        {
+          "finding": "PhysLean / HEPLean could not be located: the HEPLean/HEPLean path 301-redirects and no successor repository was resolvable from the API. Recorded as not found rather than guessed at."
+        }
+      ]
+    }
+  },
+  "correction_to_earlier_claim": "An earlier statement in this session that Newman's lemma is absent from every Lean library was too strong. It is absent from Mathlib; leanprover/cslib has it. Recorded rather than silently amended.",
+  "toolchain_bump": {
+    "observed_utc": "2026-11-01T20:4xZ",
+    "authority": "Operator directive, this session: \"bump it. check all maths and grapgics libraries\".",
+    "from": "leanprover/lean4:v4.33.0",
+    "to": "leanprover/lean4:v4.35.0",
+    "why": "cslib could not be a dependency at 4.33.0 and a Lake workspace has exactly one toolchain. 4.35.0 is the latest STABLE Lean (4.36.0 is still rc2); cslib main had moved to 4.36.0-rc2, so cslib is pinned at 0b1e3680 — the newest commit still on 4.35.0 — whose own lakefile requires mathlib v4.35.0, matching this package.",
+    "scope": "formal/lean/ruliad/ ONLY. The 80 standalone files under formal/lean/, including Ruliad.lean, remain on 4.33.0; tools/lean and tools/lean-offline-gate are unchanged.",
+    "two_toolchains_in_project": {
+      "note": "There are now TWO Lean toolchains under toolchains/. SC-NIX-DEVENV-001 lists Lean 4.33.0 as a materialised exception pinned because formal/lean/*.lean are verified to check at that version. That pin is intact; 4.35.0 is additive and used only by the Lake package. A future consolidation onto one Lean requires re-verifying all 80 files and is an operator decision.",
+      "lean-4.33.0": {
+        "path": "toolchains/lean-4.33.0",
+        "used_by": "tools/lean, tools/lean-offline-gate, formal/lean/*.lean"
+      },
+      "lean-4.35.0": {
+        "path": "toolchains/lean-4.35.0",
+        "used_by": "formal/lean/ruliad/ Lake package only"
+      }
+    },
+    "artifact": {
+      "url": "https://github.com/leanprover/lean4/releases/download/v4.35.0/lean-4.35.0-linux.tar.zst",
+      "bytes": 594481375,
+      "sha256": "7289597a44543246c9227b8cae501767e095ce17f6d448b95fc4a8dc97268f6d",
+      "extracted_size": "3.0G",
+      "lean_commit": "eb6cafb7290e8bd5f2937522d8d804f58f02bafc",
+      "lake_version": "5.0.0-src+eb6cafb"
+    },
+    "dual_version_check": "formal/lean/Ruliad.lean (the Mathlib-free gate file) checks exit 0 under BOTH 4.33.0 and 4.35.0.",
+    "api_drift_fixed": "Only `if_neg` -> `ite_eq_right` (deprecated in 4.35.0), in Multiway/Branchial/Service. No proof broke."
+  },
+  "dependencies_now_real": {
+    "cslib": {
+      "rev": "0b1e3680b43ad9cd482a66f183764f33fc8a4e8f",
+      "licence": "Apache-2.0",
+      "used_for": "Ruliad/Bridge.lean — definitional bridges, an independent second proof of Newman (Relation.LocallyConfluent.terminating_toConfluent), the re-exported two-relation commute_of_terminating_sup, and the LTS/IsSimulation route for rulial emulation.",
+      "gap_closed": "Hindley-Rosen, terminating case (Ruliad.Bridge.confluent_union_of_terminating). The non-terminating classical form remains open."
+    },
+    "proofwidgets": {
+      "rev": "df72b022e558978a1c50264cfc4d7fec86fa8e04",
+      "licence": "Apache-2.0",
+      "used_for": "Ruliad/Render.lean — ForceGraphDisplay and Svg. Arrives transitively with Mathlib; no extra require.",
+      "note": "This is the ONLY graphics stack in the Lean ecosystem: Data/Svg.lean, Component/{ForceGraphDisplay,GraphvizDisplay,PenroseDiagram,InteractiveSvg,HtmlDisplay}. There is no Lean plotting library."
+    }
+  },
+  "gaps_closed_after_bump": {
+    "length_diff_for_subperm": "Ruliad/ListDiff.lean — `l.Subperm g → (g.diff l).length = g.length - l.length`. Absent from Mathlib and Batteries at v4.35.0. Must be stated over [BEq α] [LawfulBEq α], not [DecidableEq α]: that is the typeclass List.diff actually takes, and a DecidableEq-stated version builds a different BEq instance so `rw` silently fails to match.",
+    "exact_edge_count": "Ruliad/Hypergraph.lean `length_fire` — |fire| = |g| - |lhs| + |rhs| on a genuine match, plus `length_fire_eq_of_balanced`. Previously only a bound.",
+    "rulial_metric": "Ruliad/Rulial.lean `rulialDistFinset_triangle` + `rulialDistFinset_isMetric` — rulial distance is a genuine metric on rule SETS, via symmDiff_triangle and Finset.card_union_le. The multiset (List) triangle inequality remains open.",
+    "hindley_rosen_terminating": "Ruliad/Bridge.lean `confluent_union_of_terminating`. Classical non-terminating form still open.",
+    "event_level_causal_graph": "Ruliad/CausalGraph.lean — tokenized hyperedges, so an event names exactly what it consumed and produced. `causal_forward` proves no event consumes a token produced by a later event: the causal graph is a DAG oriented with the update order. Also `causal_irrefl`, `produced_not_mem`, `mkTokens_nodup`, `applyEvent_wf`, `Run.split`."
+  },
+  "still_open": [
+    "Classical Hindley-Rosen without termination.",
+    "Causal-graph invariance under reordering (the deep Wolfram claim): needs a transposition theorem up to token renaming, since token numbering is order-sensitive by construction.",
+    "Multiset triangle inequality for rulialDist on Lists (needs per-element count arithmetic).",
+    "Strong computational irreducibility (undecidability / no-polynomial-shortcut) for any concrete rule set: needs a universality construction. cslib's Computability/Machines + cslib-community/complexitylib are the route.",
+    "Weak-simulation bridge from Ruliad.Rulial.Emulation to cslib's HasTau weak bisimulation."
+  ],
+  "differential_oracle": {
+    "observed_utc": "2026-11-01T20:31Z",
+    "purpose": "Raise journal claim V13 (Lean models mirror deployed source) from Admiralty C3 toward B2 by measurement rather than assertion.",
+    "design": "One shared corpus (diff/corpus.tsv) read by both sides. Lean side: lean_exe ruliaddiff over Ruliad.Multiway.explore. Gleam side: Erlang harness calling the DEPLOYED 'cepaf_gleam@ecology@multiway':explore/3 on the BEAM from existing build output - no reimplementation. Classifier: OCaml (compare.ml), exits 1 on divergence. Three languages chosen by where each subject lives; no shell/Python/Node logic.",
+    "result_before_fix": {
+      "cases": 23,
+      "identical": 11,
+      "order_only": 9,
+      "divergent": 3
+    },
+    "result_after_fix": {
+      "cases": 23,
+      "identical": 13,
+      "order_only": 9,
+      "divergent": 1
+    },
+    "divergence_classes": [
+      {
+        "class": "input bounds: UTF-8 bytes vs characters",
+        "cases": 2,
+        "finding": "multiway.gleam guards on string.byte_size; the model used character length. On a 70-character/140-byte seed the model returned OK where the deployed engine refuses with its bounds error.",
+        "status": "FIXED - Multiway.byteSize + BoundsOk; both cases agree on re-run"
+      },
+      {
+        "class": "list order",
+        "cases": 9,
+        "finding": "Gleam's occurrences prepends (descending offsets); the model's filterMap over List.range is ascending. Edge and state SETS agree.",
+        "status": "ACCEPTED - no theorem depends on order; recorded in the module header"
+      },
+      {
+        "class": "Edge.offset coordinate system",
+        "cases": 1,
+        "finding": "Gleam walks with pop_grapheme (grapheme indices); the model indexes List Char (Unicode scalars). On e+U+0301 they read 1 vs 2. Precomposed characters and astral-plane emoji agree, since there one grapheme is one scalar. This class was NOT covered by the module's previous header note.",
+        "status": "NOT FIXED, RECORDED - matching would require Unicode grapheme-cluster segmentation in Lean"
+      }
+    ],
+    "root_cause": "multiway.gleam measures its input guard in UTF-8 bytes and scans for matches in graphemes; those coincide only on ASCII. The model had used a third notion (Unicode scalars) for both roles, producing two independent divergence classes.",
+    "forecast_resolved": {
+      "id": "F2",
+      "source_journal": "docs/journal/20261101-1911-ruliad-formal-library-journal.md",
+      "statement": "Differential testing will find >= 1 disagreement, from the byte-vs-grapheme length boundary.",
+      "p": 0.6,
+      "outcome": 1,
+      "brier": 0.16,
+      "qualification": "Right about existence; partly right about cause. The forecast named one mechanism and there were two - the Edge.offset grapheme/scalar class was not anticipated. p=0.60 was under-confident given the header already admitted a known mismatch."
+    },
+    "scope_limits": "Raises V13 to B2 for Ruliad.Multiway ONLY, and only on this 23-case corpus. Hypergraph, Branchial, Service and the Mojo kernel have no oracle and remain C3. No property-based generation. The oracle is not wired into any gate, though compare exits 1 on divergence.",
+    "scale_and_gate": {
+      "observed_utc": "2026-11-01T21:00Z",
+      "arms": 3,
+      "generated": {
+        "cases": 100000,
+        "seeds": [
+          7,
+          1337,
+          20261101,
+          999331,
+          424242
+        ],
+        "per_seed": 20000,
+        "divergent": 0,
+        "order_only_rate": "~35.7%"
+      },
+      "service_arm": {
+        "cases": 19,
+        "identical": 19,
+        "divergent": 0,
+        "method": "Drives deployed inference_api:evaluate_ruliad_branch/4 and max_inference_daemon:is_ruliad_mergeable/1. Compares DECISIONS not raw numbers: the deployed record carries Float and the model carries Rat, the same values in different representations."
+      },
+      "generator": {
+        "file": "formal/lean/ruliad/diff/gen_corpus.ml",
+        "language": "OCaml",
+        "deterministic": true,
+        "defects_found_in_own_work": [
+          "LCG low bits are degenerate: `next () mod 4` produced a CONSTANT steps across the whole corpus. Fixed by shifting high bits down. Caught by printing the distribution, not by eyeballing samples.",
+          "First generator emitted only VALID inputs, so the input guard's five rejection paths were never exercised at scale. Fixed: ~1 malformed input in 8. Measured coverage BEFORE claiming G1, which is why the gap was found."
+        ],
+        "coverage_per_10000": {
+          "ok": 8688,
+          "bounds_rejections": 1164,
+          "budget_rejections": 148,
+          "states_per_ok_case": {
+            "mean": 4.7,
+            "median": 2,
+            "max": 64
+          }
+        }
+      },
+      "gate": {
+        "tool": "tools/ruliad-oracle",
+        "receipt_schema": "uos.ruliad_oracle.v1",
+        "allowlist": "formal/lean/ruliad/diff/allow.txt, keyed by case with reasons; its sha256 is recorded in every receipt so silent widening is visible",
+        "negative_control": "PERFORMED - with allow.txt emptied the gate exits 1, reports all_passed:false, and names the diverging arm",
+        "not_wired": "No aggregator calls it. tools/uos-cli verify-all does not include it."
+      },
+      "forecasts_resolved": [
+        {
+          "id": "G1",
+          "statement": "Generation over >=10,000 random ASCII cases finds no divergence beyond list order",
+          "p": 0.75,
+          "outcome": 1,
+          "brier": 0.0625
+        },
+        {
+          "id": "G2",
+          "statement": "An oracle for Service.classify finds 0 divergences",
+          "p": 0.85,
+          "outcome": 1,
+          "brier": 0.0225
+        }
+      ],
+      "calibration": {
+        "resolved": 3,
+        "briers": [
+          0.16,
+          0.0625,
+          0.0225
+        ],
+        "mean_brier": 0.0817,
+        "pattern": "All three resolved at o=1, i.e. on the side the probability was BELOW. These estimates were under-confident, not over-confident. Three resolutions do not establish calibration."
+      },
+      "v13_status": {
+        "B2": [
+          "Ruliad.Multiway (ASCII)",
+          "Ruliad.Service"
+        ],
+        "C3": [
+          "Ruliad.Hypergraph",
+          "Ruliad.Branchial",
+          "Mojo distance kernel",
+          "Unicode at scale"
+        ]
+      },
+      "limits": [
+        "Generator is ASCII only; Unicode covered by 5 hand cases.",
+        "Generated corpus skews shallow: median 2 states, mean 4.7.",
+        "No shrinking: a future divergence reports at full size with no minimal counterexample.",
+        "Gate exists and passes but nothing invokes it."
+      ]
+    }
+  },
+  "unicode_oracle": {
+    "observed_utc": "2026-11-01T21:1xZ",
+    "generator": "formal/lean/ruliad/diff/gen_unicode_corpus.ml - samples units from six NAMED categories (ascii, precomposed, combining, astral, regional, zwj) with their scalar/grapheme counts, answering the recorded design question 'what does it sample?' by letting the oracle report per category rather than picking one notion up front.",
+    "result": {
+      "cases": 20000,
+      "identical": 10492,
+      "order_only": 4479,
+      "offset_only": 5029,
+      "divergent": 0
+    },
+    "finding": "All 5,029 Unicode divergences are the ALREADY DOCUMENTED offset-coordinate class (grapheme index vs Unicode scalar index). Zero genuine content divergences: state sets, frontier sets and which rule fired all agree, including on ZWJ family sequences (5 scalars / 1 grapheme) and regional-indicator flags (2 scalars / 1 grapheme).",
+    "classifier_change": "compare.ml gained an OFFSET_ONLY class that strips an edge's :offset suffix while RETAINING @rule, so a disagreement about which rule fired is still content, not coordinates. This recognises the known class structurally and made the per-case allowlist redundant for Unicode.",
+    "forecast_resolved": {
+      "id": "H2",
+      "statement": "A Unicode-aware generator finds >= 1 further divergence BEYOND the known offset class",
+      "p": 0.65,
+      "outcome": 0,
+      "brier": 0.4225,
+      "note": "Resolved AGAINST the forecast. The falsifier was explicit: 'such a generator runs >= 10,000 Unicode cases and finds only the known class'. That is exactly what happened. This is the first over-confident forecast after three under-confident ones."
+    }
+  },
+  "runtime_integration": {
+    "observed_utc": "2026-11-01T21:24:44Z",
+    "principle": "The Lean library is compile-time evidence; proofs are discharged by lake build and tools/lean-offline-gate and nothing calls a theorem at runtime. What the running system consumes is the oracle RECEIPT, through the seam Gleam already owns (SC-HARNESS-MCP-001).",
+    "binding": "Added 'ruliad_oracle' to the CLOSED CheckId allowlist in mcp/adapters/verification.gleam, so the existing run_gate tool runs it. Not a new MCP tool: this inherits the existing admission, authz, bounded-command and fail-closed machinery. parse_check_id(\"rm -rf /\") still returns DISALLOWED_CHECK_ID.",
+    "three_transports_one_binding": "bridge/zenoh_mcp.gleam subscribes to indrajaal/mcp/request/** and dispatches into the SAME runtime_gateway.handle_zenoh_raw used by stdio and Streamable HTTP, so no Zenoh-specific work was needed. Shared dispatch confirmed by code; a live Zenoh round-trip for this check is NOT exercised (needs zenohd plus the supervised bridge).",
+    "end_to_end_observed": {
+      "transport": "stdio",
+      "tool": "run_gate",
+      "check_id": "ruliad_oracle",
+      "exit_code": 0,
+      "duration_ms": 112,
+      "result": "full uos.ruliad_oracle.v1 receipt returned as the tool result"
+    },
+    "bounds_discovered_by_testing": [
+      "Prefetch reads the argument 'check_id', not 'check'. A malformed first attempt returned PROVER_UNRUN_MISSING_TOOL rather than silently passing.",
+      "ecology_capability_ffi:run_bounded_cd hard-caps a bounded command at TimeoutMs =< 60000. A 180s budget was rejected as invalid_resource_bound. The FFI cap was LEFT ALONE - widening a safety bound to fit a new tool is the wrong direction. The binding now uses 55s plus --no-build.",
+      "--no-build refuses with PREREQUISITES_ABSENT and exit 1 when the Lean executables are missing, so an absent prerequisite is a failure and never a silent pass."
+    ],
+    "receipt_cache": "var/ruliad-oracle/latest.json, mirroring tools/preflight --max-age. A receipt is honoured only if the checker+classifier+generator digest matches AND the cached generated_cases >= the requested --cases, so a --cases 100000 request cannot be satisfied by a stored --cases 10 run. Both directions verified.",
+    "formal_state": "RuliadOracle deliberately maps to formal_state=unrun, not verified. Differential testing is an empirical measurement; promoting it to 'verified' would turn an observation into formal evidence against the two-key rule of SC-PROVENANCE-001.",
+    "regression_baseline": "46 mcp_*/gateway_* EUnit modules: 566 passed / 10 failed BOTH with and without this change. The 10 failures are pre-existing and unrelated (client-matrix, cross-client handoff, HTTP actor matching, resilience BDD; one subprocess cannot resolve stdio_main). Proven by reverse-patching to a baseline, rebuilding and re-running - not assumed.",
+    "boundary": "A check id bound in an adapter is a development-level capability. Not runtime enforcement, not deployment authority, not admission. Nothing blocks on it and tools/uos-cli verify-all still does not call it.",
+    "zenoh_verified_live": {
+      "observed_utc": "2026-11-01T21:39:55Z",
+      "router": "c3i-zenoh-router-1 (zenohd pid 9963, tcp/7447)",
+      "session": "UOS-ZLP-v3 OTP29 port hyperplane (var/zlp/uos_zlp_v3_port); backend=zlp_v3_otp29_port, supports_subscriptions=true. NOTE: subscription capability comes from the ZLP port program, NOT from zenoh_nif; a RestSession reports supports_subscriptions=false.",
+      "round_trip": "Request published on indrajaal/mcp/request/oracle-probe/1 with a uos-mcp-zenoh-v1 HMAC envelope; the real bridge/zenoh_mcp actor dispatched to the gateway; the oracle ran (exit_code 0, duration_ms 1155, three arms, 0 DIVERGENT, all_passed true); the reply was observed OFF THE WIRE on the pinned key indrajaal/mcp/response/oracle-probe/1.",
+      "negative_controls": [
+        "Forged signature (one hex digit) -> silently dropped, no reply.",
+        "Topic outside indrajaal/mcp/request/** -> refused, no reply.",
+        "Caller-chosen reply_topic -> FOREIGN_REPLY_DESTINATION_FORBIDDEN. The reply destination is pinned from the request key, so a signed envelope cannot redirect its own answer."
+      ],
+      "mechanics_recorded": [
+        "The reply must be observed by SUBSCRIBING to the response key: this zenohd has no storage plugin for the keyexpr, so get-after-put returns nothing.",
+        "zenoh_nif.so was absent (gitignored, host-provisioned). Rebuilt from tracked source native/nifs/rust/zenoh_nif with the recorded recipe (cargo build --release --offline --locked) and reproduced sha256 9c931535ae127b380d8a3212c731ee3e2ffee76ca365fa31a6ce3318121e0eee BIT-FOR-BIT identical to apps/cepaf_gleam/priv/zenoh_nif.sha256."
+      ],
+      "probes": [
+        "formal/lean/ruliad/diff/zenoh_probe.erl",
+        "formal/lean/ruliad/diff/zenoh_live.erl"
+      ]
+    },
+    "defect_found_in_deployed_code": {
+      "component": "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam",
+      "criticality": "Level 2 (HIGH); MCP transport family is T2 critical code under SC-AGENTIC-RESILIENCE-001",
+      "finding": "The actor's Message type declares only ZenohMessage(topic, payload), but the ZLP hyperplane subscription delivers ZlpZenohPush(shard, seq, hash, json) carrying {\"key\":...,\"value\":...}. The actor logs 'Actor discarding unexpected message: ZlpZenohPush(...)' and DROPS the request.",
+      "consequence": "Inbound MCP-over-Zenoh requests arriving through the ZLP subscription are currently dropped. The reply path is unaffected and works. The verified round-trip completed only because the probe also hands the envelope to receive_zenoh_message/3 in the declared shape.",
+      "evidence": "Observed twice in diff/zenoh_live.erl runs, with the full discarded payload printed; the second push on the response key shows the reply was published correctly.",
+      "disposition": "REPORTED, NOT PATCHED. The fix is small (add a push variant, decode key/value) but it is a control-plane change to a HIGH-criticality transport and requires a reviewed grant plus the full test gate under SC-AGENTIC-RESILIENCE-001.",
+      "found_by": "Running it. Code inspection had previously been used to claim this path worked."
+    },
+    "verify_all_decision": {
+      "decision": "NOT added to tools/uos-cli verify-all.",
+      "reason": "verify-all is a global aggregator; the oracle depends on the 4.35.0 toolchain, a 7.8 GB .lake tree, built Lean executables and built Gleam beams, so on a fresh checkout it would report PREREQUISITES_ABSENT and make verify-all red for reasons unrelated to the code under test.",
+      "observation_about_existing_gates": "The sibling gates in tools/uos/src/main.gleam (e.g. G-JOURNAL, G-BURST-BENCH) return the same value on both branches and print '[INVENTORY] ... runtime/formal verification UNRUN'. They are inventory reports, not pass/fail blockers. Adding a gate there would therefore not have made anything enforcing.",
+      "available_instead": "tools/ruliad-oracle directly, and MCP run_gate with check_id=ruliad_oracle over stdio, Streamable HTTP or Zenoh."
+    }
+  },
+  "calibration_running": {
+    "resolved": 5,
+    "table": [
+      {
+        "id": "F2",
+        "p": 0.6,
+        "o": 1,
+        "brier": 0.16
+      },
+      {
+        "id": "G1",
+        "p": 0.75,
+        "o": 1,
+        "brier": 0.0625
+      },
+      {
+        "id": "G2",
+        "p": 0.85,
+        "o": 1,
+        "brier": 0.0225
+      },
+      {
+        "id": "H2",
+        "p": 0.65,
+        "o": 0,
+        "brier": 0.4225
+      }
+    ],
+    "mean_brier": 0.1669,
+    "pattern": "Four resolved: three under-confident (o=1 above p) then one over-confident (o=0 below p). H2 is the worst score and the first in the opposite direction. Four resolutions do not establish calibration."
+  }
+}

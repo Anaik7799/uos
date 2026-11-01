@@ -10,6 +10,7 @@ TARGETS=(
   "formal/lean/TwoLattice_STM.lean"
   "formal/lean/UosZlpHyperplane.lean"
   "formal/lean/ProvenanceAdjudication.lean"
+  "formal/lean/Ruliad.lean"
 )
 
 if [[ ! -x "$LEAN" ]]; then

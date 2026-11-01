@@ -1,0 +1,41 @@
+# UOS Ruliad formal library. Pinned, in-project Lake package.
+#
+# Toolchain: Lean 4.35.0 (toolchains/lean-4.35.0), bumped from 4.33.0 under
+# operator directive so that leanprover/cslib can be a real dependency rather
+# than read-only reference material. 4.35.0 is the latest STABLE Lean; cslib
+# main had moved to 4.36.0-rc2, so cslib is pinned at 0b1e3680, the newest
+# commit still on 4.35.0. Its own lakefile requires mathlib v4.35.0, which is
+# what this file requires, so the workspace resolves one consistent Mathlib.
+#
+# formal/lean/*.lean (the 80 standalone files, including Ruliad.lean) remain on
+# the 4.33.0 toolchain and are unaffected: tools/lean still resolves 4.33.0.
+name = "ruliad"
+defaultTargets = ["Ruliad"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+# The Lean Computer Science Library. Apache-2.0. Supplies the confluence
+# lattice (including its own Newman), labelled transition systems with
+# bisimulation, and multi-tape Turing machines.
+[[require]]
+name = "cslib"
+git = "https://github.com/leanprover/cslib"
+rev = "0b1e3680b43ad9cd482a66f183764f33fc8a4e8f"
+
+[[lean_lib]]
+name = "Ruliad"
+# Mathlib and cslib set requiresModuleSystem; these files do not use it.
+allowNonModules = true
+
+# Lean side of the model-to-source differential oracle (see RuliadDiff.lean).
+[[lean_exe]]
+name = "ruliaddiff"
+root = "RuliadDiff"
+
+# Second arm of the oracle: the deployed merge classifier (see ServiceDiff.lean).
+[[lean_exe]]
+name = "servicediff"
+root = "ServiceDiff"

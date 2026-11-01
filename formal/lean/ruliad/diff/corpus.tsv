@@ -1,0 +1,23 @@
+aa	aa>aba	2
+aa	aa>aba	1
+aa	aa>aba	4
+ab	a>b	1
+aaa	aa>b	2
+aaa	aa>b	1
+abc	a>b,b>c,c>a	2
+a	a>aa	3
+ab	ab>,b>a	2
+xyz	q>r	1
+aab	aa>b,ab>ba	2
+abab	ab>ba	3
+aa	aa>aba	0
+aa	aa>aba	5
+	a>b	1
+aa		1
+aa	>b	1
+ää	ä>b	1
+ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää	ä>b	1
+éé	é>x	1
+😀😀	😀>b	1
+ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää	q>r	1
+éé	é>x	1

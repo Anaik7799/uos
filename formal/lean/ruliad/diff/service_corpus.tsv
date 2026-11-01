@@ -1,0 +1,19 @@
+main	dev	add a test	claude
+main	dev	big refactor here	claude
+main	dev	breaking change	codex
+main	dev	refactor	agy
+main	dev	REFACTOR	agy
+main	dev	Refactoring the module	agy
+main	dev	prerefactoring	agy
+main	dev	refactorbreaking	agy
+main	dev	break	agy
+main	dev	a breaking	agy
+main	dev	breaking	agy
+main	dev		agy
+a	b	docs|tidy|add a test	claude|codex
+a	b	docs|big refactor|tidy	claude
+a	b	docs|tidy|breaking api	claude
+a	b	refactor|breaking	claude|codex|agy
+x	y	ä refactor ä	claude
+x	y	äää	claude
+long-source-branch	long-target	rename a field	claude

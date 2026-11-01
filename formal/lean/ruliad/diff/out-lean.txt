@@ -1,0 +1,23 @@
+aa	aa>aba	2	OK states=[aa,aba] edges=[aa>aba@0:0] frontier=[] steps=2
+aa	aa>aba	1	OK states=[aa,aba] edges=[aa>aba@0:0] frontier=[aba] steps=1
+aa	aa>aba	4	OK states=[aa,aba] edges=[aa>aba@0:0] frontier=[] steps=2
+ab	a>b	1	OK states=[ab,bb] edges=[ab>bb@0:0] frontier=[bb] steps=1
+aaa	aa>b	2	OK states=[aaa,ba,ab] edges=[aaa>ba@0:0,aaa>ab@0:1] frontier=[] steps=2
+aaa	aa>b	1	OK states=[aaa,ba,ab] edges=[aaa>ba@0:0,aaa>ab@0:1] frontier=[ba,ab] steps=1
+abc	a>b,b>c,c>a	2	OK states=[abc,bbc,acc,aba,cbc,bcc,aac,bba,abb,aca] edges=[abc>bbc@0:0,abc>acc@1:1,abc>aba@2:2,bbc>cbc@1:0,bbc>bcc@1:1,bbc>bba@2:2,acc>bcc@0:0,acc>aac@2:1,acc>aca@2:2,aba>bba@0:0,aba>abb@0:2,aba>aca@1:1] frontier=[cbc,bcc,aac,bba,abb,aca] steps=2
+a	a>aa	3	OK states=[a,aa,aaa,aaaa] edges=[a>aa@0:0,aa>aaa@0:0,aa>aaa@0:1,aaa>aaaa@0:0,aaa>aaaa@0:1,aaa>aaaa@0:2] frontier=[aaaa] steps=3
+ab	ab>,b>a	2	OK states=[ab,,aa] edges=[ab>@0:0,ab>aa@1:1] frontier=[] steps=2
+xyz	q>r	1	OK states=[xyz] edges=[] frontier=[] steps=1
+aab	aa>b,ab>ba	2	OK states=[aab,bb,aba,baa] edges=[aab>bb@0:0,aab>aba@1:1,aba>baa@1:0] frontier=[baa] steps=2
+abab	ab>ba	3	OK states=[abab,baab,abba,baba,bbaa] edges=[abab>baab@0:0,abab>abba@0:2,baab>baba@0:2,abba>baba@0:0,baba>bbaa@0:1] frontier=[bbaa] steps=3
+aa	aa>aba	0	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+aa	aa>aba	5	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+	a>b	1	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+aa		1	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+aa	>b	1	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+ää	ä>b	1	OK states=[ää,bä,äb] edges=[ää>bä@0:0,ää>äb@0:1] frontier=[bä,äb] steps=1
+ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää	ä>b	1	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+éé	é>x	1	OK states=[éé,xé,éx] edges=[éé>xé@0:0,éé>éx@0:2] frontier=[xé,éx] steps=1
+😀😀	😀>b	1	OK states=[😀😀,b😀,😀b] edges=[😀😀>b😀@0:0,😀😀>😀b@0:1] frontier=[b😀,😀b] steps=1
+ääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää	q>r	1	ERR rewrite bounds: nonempty seed <=128 bytes, 1..8 nonempty rules <=32 bytes, 1..4 steps
+éé	é>x	1	OK states=[éé,xé] edges=[éé>xé@0:0] frontier=[xé] steps=1

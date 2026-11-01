@@ -1,0 +1,19 @@
+main	dev	add a test	claude	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-main path=review_diff/run_eunit/fast_forward_merge agents=claude
+main	dev	big refactor here	claude	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=claude
+main	dev	breaking change	codex	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=codex
+main	dev	refactor	agy	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=agy
+main	dev	REFACTOR	agy	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-main path=review_diff/run_eunit/fast_forward_merge agents=agy
+main	dev	Refactoring the module	agy	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-main path=review_diff/run_eunit/fast_forward_merge agents=agy
+main	dev	prerefactoring	agy	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=agy
+main	dev	refactorbreaking	agy	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=agy
+main	dev	break	agy	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-main path=review_diff/run_eunit/fast_forward_merge agents=agy
+main	dev	a breaking	agy	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=agy
+main	dev	breaking	agy	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-main path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=agy
+main	dev		agy	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-main path=review_diff/run_eunit/fast_forward_merge agents=agy
+a	b	docs|tidy|add a test	claude|codex	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-a path=review_diff/run_eunit/fast_forward_merge agents=claude/codex
+a	b	docs|big refactor|tidy	claude	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-a path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=claude
+a	b	docs|tidy|breaking api	claude	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-a path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=claude
+a	b	refactor|breaking	claude|codex|agy	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-a path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=claude/codex/agy
+x	y	ä refactor ä	claude	status=HIGH_DIVERGENCE_REBASE_REQUIRED mergeable=false entropy_lt_gate=true id=ruliad-x path=quiesce_agents/two_key_review/rebase_clean/merge_gate agents=claude
+x	y	äää	claude	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-x path=review_diff/run_eunit/fast_forward_merge agents=claude
+long-source-branch	long-target	rename a field	claude	status=NOMINAL_MERGE_READY mergeable=true entropy_lt_gate=true id=ruliad-long-source-branch path=review_diff/run_eunit/fast_forward_merge agents=claude

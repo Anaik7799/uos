@@ -1,0 +1,9 @@
+# Known, documented divergences. Each line is a case key from compare's output.
+#
+# Edge.offset coordinate system: the deployed engine walks the string with
+# string.pop_grapheme, so its offsets are grapheme indices, while
+# Ruliad.Multiway indexes List Char, i.e. Unicode scalars. On a combining
+# sequence (e + U+0301) they read 1 and 2 respectively. Recorded in the
+# Multiway module header and in docs/journal/20261101-2031-*.md; not fixed,
+# because matching would require Unicode grapheme-cluster segmentation in Lean.
+éé | é>x | 1

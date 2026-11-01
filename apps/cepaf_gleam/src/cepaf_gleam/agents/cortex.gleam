@@ -664,5 +664,13 @@ pub fn dispatch_bridge_message(
   case msg {
     bridge_zenoh.ZenohMessage(_topic, payload) ->
       bridge_commands.dispatch_json(payload)
+    // A ZLP hyperplane subscription push carries the payload inside its JSON
+    // body. Decoded through the bridge's own `split_push` so there is exactly
+    // one decode path for a signed envelope.
+    bridge_zenoh.ZlpPush(json) ->
+      case bridge_zenoh.split_push(json) {
+        Ok(#(_topic, payload)) -> bridge_commands.dispatch_json(payload)
+        Error(_) -> Error("zlp_push_undecodable")
+      }
   }
 }

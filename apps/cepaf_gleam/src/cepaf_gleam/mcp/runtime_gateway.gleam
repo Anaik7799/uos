@@ -3063,6 +3063,20 @@ fn run_verification_check(
         ],
         5000,
       ))
+    // Differential oracle between the Lean model of ecology/multiway.gleam and
+    // the deployed engine itself. --max-age reuses a recent receipt from
+    // var/ruliad-oracle/latest.json, so the warm path is milliseconds.
+    // --no-build is mandatory here: ecology_capability_ffi caps a bounded
+    // command at 60s and a cold Lean build takes minutes, so the oracle
+    // refuses with PREREQUISITES_ABSENT rather than blocking or passing.
+    verification.RuliadOracle ->
+      Some(#(
+        [
+          "tools/ruliad-oracle", "--max-age", "900", "--cases", "10000",
+          "--no-build",
+        ],
+        55_000,
+      ))
     _ -> None
   }
   case command {

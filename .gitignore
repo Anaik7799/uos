@@ -143,3 +143,25 @@ ops/nodes/*/*.tar.gz
 
 # Built validation executables are regenerated from reviewed source.
 /tools/validation/*.exe
+
+# Lake-provisioned Lean dependency store (Mathlib et al). Pinned by
+# formal/lean/ruliad/lake-manifest.json; artifacts are host-provisioned.
+.lake/
+
+# Differential-oracle generated artifacts and host-built helper binaries.
+# The corpora that are INPUTS (corpus.tsv, service_corpus.tsv, allow.txt) and
+# the sources (*.ml, *.erl) are tracked; everything a run produces is not.
+formal/lean/ruliad/diff/compare
+formal/lean/ruliad/diff/gen_corpus
+formal/lean/ruliad/diff/gen_unicode_corpus
+formal/lean/ruliad/diff/*.beam
+formal/lean/ruliad/diff/*.cmi
+formal/lean/ruliad/diff/*.cmx
+formal/lean/ruliad/diff/*.o
+formal/lean/ruliad/diff/corpus-gen.tsv
+formal/lean/ruliad/diff/uni.tsv
+formal/lean/ruliad/diff/out-*.txt
+formal/lean/ruliad/diff/gen-*.txt
+formal/lean/ruliad/diff/svc-*.txt
+formal/lean/ruliad/diff/uni-*.txt
+formal/lean/ruliad/diff/arm-*.txt
