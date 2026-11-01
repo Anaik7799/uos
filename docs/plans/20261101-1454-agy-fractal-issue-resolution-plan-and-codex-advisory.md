@@ -4,16 +4,18 @@
 - **Document Prefix**: `20261101-1454-` (`SC-TIME`, [`timestamp-mandate.md`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/timestamp-mandate.md))
 - **Candidate Baseline**: `main == main@origin == uyoxsptx 724cc662ddb5` (peer working copy `default@ = lxyzwuzr 53c565bd` preserved byte-for-byte)
 - **Umbrella Sa-Plan ID**: `uos/agy-fractal-issue-resolution-master/20261101-1454` (orchestrating canonical portfolios `uos/codex-handover-open-items-fractal-plan/20261031-1240`, `uos/harness-build-recovery/20261101-0913`, `uos/fpp-sysml-integration/20261101-0852`, `uos/hive-10x-speedup/20261031-1351`, and `uos/zlp-v3-supervised-hyperplane/20261101-1309`)
-- **Independent Peer Review**: Codex (`OpenAI Codex v0.166.0`, `gpt-6.1-terra`, read-only ephemeral session `01a19761-90d8-7153-b95e-a2e7fb853475`, `exit 0`)
+- **Independent Peer Review**:
+  - Round 1: Codex (`OpenAI Codex v0.166.0`, `gpt-6.1-terra`, read-only session `01a19761-90d8-7153-b95e-a2e7fb853475`, `exit 0`)
+  - Round 2: Codex (`OpenAI Codex v0.166.0`, `gpt-6.1-terra`, read-only session `01a1976a-e60b-7ea1-a82e-091a42b3f0b2`, `exit 0`, **Conditional HOLD on cutover until `Gate W1.5` Serialized Integration-and-Effect Authority Gate passes**)
 - **Provenance Boundary (`SC-PROVENANCE-001`)**: `admitted_ev_ceiling = 93`; `EV-94..EV-109` and `ADR-071..ADR-086` remain `NOT_ADMITTED`; `0` new EV numbers minted; `application_admitted = false`; `SYSTEM_ADMITTED = false`
 - **Fractal Tags**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5` `#fractal-l6` `#fractal-l7` `#fractal-l8` `#fractal-l9` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web` `#checklist-nav`
-- **Reciprocal `#km-triad` Links**: `[[wiki:20260905-1801-uos-zk-km-corpus-index]]` ([Wiki Master Index](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md)) · `[[zk:20260905-1801-moc-uos-unified-master]]` ([ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260905-1801-moc-uos-unified-master.md)) · [Completion Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1454-agy-fractal-check-codex-advice-and-master-plan-journal.md) · [Capability Inventory](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/wiki-zk-km.toml)
+- **Reciprocal `#km-triad` Links**: `[[wiki:20260905-1801-uos-zk-km-corpus-index]]` ([Wiki Master Index](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md)) · `[[zk:20260905-1801-moc-uos-unified-master]]` ([ZK Master MOC](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260905-1801-moc-uos-unified-master.md)) · [Full `10 × 17` Fractal & 5-Plane Dependency Analysis](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-as-is-to-be-analysis.md) · [Round-1 Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1454-agy-fractal-check-codex-advice-and-master-plan-journal.md) · [Round-2 Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-codex-r2-journal.md) · [Capability Inventory](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/wiki-zk-km.toml)
 
 ---
 
-## 1. Executive Objective & Supervision Authority
+## 1. Executive Objective & Updated Implementation Approach (`v2`)
 
-`AGY` assumes active orchestration responsibility to ensure **all 25 open issues (`I01..I25`) identified across UOS fractal layers `L0..L9`, live runtime services, `Sa-plan` portfolios, and 6 unmerged Jujutsu sibling workspace lineages (`~28,700+` LOC) are systematically resolved and verified**, using the **cheapest deterministic and zero-cost agent tiers** at maximum dependency-safe parallelism while preserving full SIL-6 constitutional safety, effect-time fencing, and peer work integrity (`SYNC-02`).
+`AGY` assumes active orchestration responsibility to ensure **all 29 open issues (`I01..I29`) identified across UOS fractal layers `L0..L9`, all 17 Release-Assurance Aspects (`A01..A17`), 5 Dependency Planes, live runtime services, `Sa-plan` portfolios, and 6 unmerged Jujutsu sibling workspace lineages (`~28,700+` LOC) are systematically resolved and verified**, using the **cheapest deterministic and zero-cost agent tiers** under **mathematically verified file-disjoint `Wave 1` parallelism** followed by Codex Round-2's **`Gate W1.5` (`SERIALIZED_INTEGRATION_AND_EFFECT_AUTHORITY_GATE`)** prior to `Wave 2` production cutover. See [the companion Full `10 × 17` Fractal Coverage, 5-Plane Dependency & As-Is/To-Be Analysis](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-as-is-to-be-analysis.md) for the complete `10 × 17` aspect table, As-Is vs To-Be diagrams, and 7-pillar proof of why this approach succeeds.
 
 > **Scope Caveat**: Saving this plan, executing read-only fractal probes, and incorporating Codex peer advice confer **no** production release authority, route grant, or global admission (`admitted_ev_ceiling = 93`). All task claims and side effects remain governed by `tools/sa-plan`, `SC-RISK-PRIORITY-001`, `SC-RISK-CHECK-001`, and `SC-HARNESS-MCP-001`.
 
@@ -64,8 +66,12 @@
 | **I21** | $L_3, L_5$ | **Codex Hazard**: 14-target sequential update is recoverable, not group-atomic (mixed-state reader risk) | `OI07` (`W1`) -> `OI02` (`W2`) | Sovereign + Tier 0 crash harness | Define commit point, reader drain/barrier, step-level crash recovery, and rollback capsule digest before `W2` |
 | **I22** | $L_4, L_6$ | **Codex Hazard**: Lease expiry != worker death; timestamp-only risk refresh masks stale state | `W0-FENCE-RECLAIM` | `AGY` Supervisor | Fence prior `(worker, attempt)` at effect boundary + verify zero in-flight processes before reclaim |
 | **I23** | $L_1, L_7$ | **Codex Hazard**: Host hygiene (`.cmi`, failed units, `:8090`) can erase forensic evidence; tmpfs inode check needed | `W0-HYGIENE` | Tier 0 (`$0` CLI) | Capture unit/file provenance snapshot before cleanup; monitor both `df -h /tmp` (`81%`) and `df -i /tmp` (`26%`) |
-| **I24** | $L_5, L_8$ | **Codex Hazard**: `69` endpoint means (`57.77 ms`) != `p99`; release identity must bind 6-tuple | `OI02` (`W2`) & `OI09` (`W3`) | Tier 0 benchmark runner | Bind `(source_rev, capsule_sha, loaded_beam_sha, otp_erts, unit_cfg, grant_sha)` + sample-based `p99 < 25ms` |
-| **I25** | $L_8$ | **Codex Hazard**: `uos-gleam` `knowledge_search` schema lacks `limit` parameter & >5-token AND returns `[]` | `OI05`/`OI09` (`W1`/`W3`) | Tier 1A (`AGY flash`) | Add optional `limit` parameter + ranked token-OR fallback matching `SC-MCP-KM-BRAIN-001` |
+| **I24** | $L_5, L_8$ | **Codex R1 Hazard**: `69` endpoint means (`57.77 ms`) != `p99`; release identity must bind 6-tuple | `OI02` (`W2`) & `OI09` (`W3`) | Tier 0 benchmark runner | Bind `(source_rev, capsule_sha, loaded_beam_sha, otp_erts, unit_cfg, grant_sha)` + sample-based `p99 < 25ms` |
+| **I25** | $L_8$ | **Codex R1 Hazard**: `uos-gleam` `knowledge_search` schema lacks `limit` parameter & >5-token AND returns `[]` | `OI05`/`OI09` (`W1`/`W3`) | Tier 1A (`AGY flash`) | Add optional `limit` parameter + ranked token-OR fallback matching `SC-MCP-KM-BRAIN-001` |
+| **I26** | $L_4, L_6$ | **Plane-1 Dependency Trap**: Superseded `0327` `v1` plan still exposes `2` `ready_available` tasks (`c01`, `p01`) to unscoped claims | `W0` + `Gate W1.5` | Tier 0 + Server-side fence | Enforce server-side superseded-plan rejection & mandatory `(plan_id, task_id)` claim scope |
+| **I27** | $L_3, L_5$ | **Plane-3 Pin Coupling + Codex R2**: `ecology_native_build.ml` (`e7fc4ae0`) hard-pins `4` input `.ml` SHA-256 digests (`Hold Source_mismatch`) | `W1A` -> `Gate W1.5` | Tier 0 + Sovereign receipt | Verify `4` hashes on **final integrated candidate**, bind ELF receipt, run 1-byte tamper negative test |
+| **I28** | $L_4, L_7$ | **Plane-5 Socket Forensics + Codex R2**: Legacy `:4200` `sa-plan-daemon` (`PID 9040`, `/home/an/NAS-setup/c3i`) shares `tcp/127.0.0.1:7447` `zenohd` | `Gate W1.5` & `W3C` (`OI02D`) | Sovereign + Gleam ingress | Fence active writer identities + enforce `uos/*` Zenoh topic & candidate/signer envelope verification |
+| **I29** | $L_4, L_6$ | **Plane-1 Edge Inversion**: `20261031-1240` SQLite table holds `oi07 <- oi02` edge, conflicting with Codex `OI07 -> OI02` cutover safety rule | `W1B` -> `Gate W1.5` | `AGY` Supervisor + `sa-plan` | Build fence under `W1B`, repair `1240` dependency via audited `sa-plan` interface prior to `W2` |
 
 ---
 
@@ -86,9 +92,9 @@ Per our `~::main & ~empty()` Jujutsu audit and Codex's sovereign assessment (`se
 
 ## 4. Fractal Dependency Architecture (`SC-DIAGRAM-001`)
 
-### 4.1 Codex-Refined 6-Wave Execution & Dependency DAG (`Wave 0` -> `Wave 5`)
+### 4.1 Codex Round-1 & Round-2 Hardened Execution & Dependency DAG (`W0 -> W1 -> Gate W1.5 -> W2..W5`)
 
-Per Codex's primary architectural correction, **effect-time fencing and 14-target recovery proof (`OI07` / `I21`) are elevated into `Wave 1` ahead of `Wave 2` (`OI02` / `OI02B`) production cutover**, ensuring live service promotion is guarded by both an immutable ELF-verified capsule (`OI02E`) and an enforced release-effect fence.
+Per Codex Round 1 (`01a19761`) and Round 2 (`01a1976a`), **effect-time fencing and 14-target recovery proof (`OI07` / `I21`) execute in `Wave 1B`** across **pairwise file-disjoint tracks `W1A..W1E` (`Plane 2` proven `0` shared files)**, and **all `Wave 1` outputs MUST pass the serialized `Gate W1.5` (`SERIALIZED_INTEGRATION_AND_EFFECT_AUTHORITY_GATE`)** before `Wave 2` (`OI02` / `OI02B`) production cutover or `Wave 4` successor review begins.
 
 ```ascii
 [W0 Fenced Hygiene Reclaim Cost Reconciliation] --> [W1A OI02E Capsule Loader Scoped Grants]
@@ -96,21 +102,22 @@ Per Codex's primary architectural correction, **effect-time fencing and 14-targe
 [W0 Fenced Hygiene Reclaim Cost Reconciliation] --> [W1C OI04 Lean4 Nix Dependency Audit]
 [W0 Fenced Hygiene Reclaim Cost Reconciliation] --> [W1D OI05 Historical Aliases KM Search Limit]
 [W0 Fenced Hygiene Reclaim Cost Reconciliation] --> [W1E OI06 Isolated Telegram Mirage Triage]
-[W1A OI02E Capsule Loader Scoped Grants] --> [W2 OI02 OI02B Fenced 14 Target Cutover]
-[W1B OI07 Effect Time Fence Recovery Proof] --> [W2 OI02 OI02B Fenced 14 Target Cutover]
-[W1C OI04 Lean4 Nix Dependency Audit] --> [W2 OI02 OI02B Fenced 14 Target Cutover]
+[W1A OI02E Capsule Loader Scoped Grants] --> [W15 Serialized Integration Effect Authority Gate]
+[W1B OI07 Effect Time Fence Recovery Proof] --> [W15 Serialized Integration Effect Authority Gate]
+[W1C OI04 Lean4 Nix Dependency Audit] --> [W15 Serialized Integration Effect Authority Gate]
+[W1D OI05 Historical Aliases KM Search Limit] --> [W15 Serialized Integration Effect Authority Gate]
+[W1E OI06 Isolated Telegram Mirage Triage] --> [W15 Serialized Integration Effect Authority Gate]
+[W15 Serialized Integration Effect Authority Gate] --> [W2 OI02 OI02B Fenced 14 Target Cutover]
 [W2 OI02 OI02B Fenced 14 Target Cutover] --> [W3A OI03 101 Route Live Fidelity]
 [W2 OI02 OI02B Fenced 14 Target Cutover] --> [W3B OI09 Sub25ms p99 Retire 8090]
 [W2 OI02 OI02B Fenced 14 Target Cutover] --> [W3C OI02D Zenoh Hive Homeostasis]
-[W1C OI04 Lean4 Nix Dependency Audit] --> [W4A Protected28 Harness Successor Slice Review]
+[W15 Serialized Integration Effect Authority Gate] --> [W4A Protected28 Harness Successor Slice Review]
 [W4A Protected28 Harness Successor Slice Review] --> [W4B Operator Gated FPP SysML Integration]
 [W3A OI03 101 Route Live Fidelity] --> [W5 OI08 Chaos Soak EV93 Disposition]
 [W3B OI09 Sub25ms p99 Retire 8090] --> [W5 OI08 Chaos Soak EV93 Disposition]
 [W3C OI02D Zenoh Hive Homeostasis] --> [W5 OI08 Chaos Soak EV93 Disposition]
 [W4A Protected28 Harness Successor Slice Review] --> [W5 OI08 Chaos Soak EV93 Disposition]
 [W4B Operator Gated FPP SysML Integration] --> [W5 OI08 Chaos Soak EV93 Disposition]
-[W1D OI05 Historical Aliases KM Search Limit] --> [W5 OI08 Chaos Soak EV93 Disposition]
-[W1E OI06 Isolated Telegram Mirage Triage] --> [W5 OI08 Chaos Soak EV93 Disposition]
 ```
 
 ```mermaid
@@ -121,6 +128,7 @@ flowchart TD
   W1C["W1C OI04 Lean4 Nix Dependency Audit"]
   W1D["W1D OI05 Historical Aliases KM Search Limit"]
   W1E["W1E OI06 Isolated Telegram Mirage Triage"]
+  W15["W15 Serialized Integration Effect Authority Gate"]
   W2["W2 OI02 OI02B Fenced 14 Target Cutover"]
   W3A["W3A OI03 101 Route Live Fidelity"]
   W3B["W3B OI09 Sub25ms p99 Retire 8090"]
@@ -134,21 +142,22 @@ flowchart TD
   W0 --> W1C
   W0 --> W1D
   W0 --> W1E
-  W1A --> W2
-  W1B --> W2
-  W1C --> W2
+  W1A --> W15
+  W1B --> W15
+  W1C --> W15
+  W1D --> W15
+  W1E --> W15
+  W15 --> W2
   W2 --> W3A
   W2 --> W3B
   W2 --> W3C
-  W1C --> W4A
+  W15 --> W4A
   W4A --> W4B
   W3A --> W5
   W3B --> W5
   W3C --> W5
   W4A --> W5
   W4B --> W5
-  W1D --> W5
-  W1E --> W5
 ```
 
 ### 4.2 `L0..L9` Vertical Fractal Layer Coupling Topology
@@ -215,8 +224,11 @@ Read-only peer consultation executed via `/usr/local/bin/codex exec --sandbox re
    - *Codex Critique*: `e7fc4ae0` (`L-C`) and `ff4efd74` (`L-F`) are bounded reuse candidates after review; `887d367b` (`L-A`) is research/proof; `f7df78c6`/`ef791aa5` (`L-B`) must be quarantined from wholesale merge; `30ada734` (`L-D`) requires protected-28 successor review; `094de771`+`53c565bd` (`L-E`) stays paused.
    - *Plan Action*: Codified verbatim in Section 3 and `Waves 1..4`.
 4. **True Sample-Based `p99` Latency & `knowledge_search` `limit` Contract Fix (`Adopted -> I24, I25`)**:
-   - *Codex Critique*: `69` endpoint means (`57.77 ms`) do not measure `p99`, and `uos-gleam` `knowledge_search` lacks a `limit` parameter.
+   - *Codex Round-1 Critique*: `69` endpoint means (`57.77 ms`) do not measure `p99`, and `uos-gleam` `knowledge_search` lacks a `limit` parameter.
    - *Plan Action*: Added `I24` (per-request sample `p99 < 25.0 ms` bound to 6-tuple release identity) and `I25` (`knowledge_search` `limit` + ranked multi-token recall).
+5. **Serialized Integration-and-Effect Authority Gate (`Gate W1.5`, Codex Round-2 `session 01a1976a-e60b-7ea1-a82e-091a42b3f0b2`, `Adopted`)**:
+   - *Codex Round-2 Critique*: **Conditional HOLD on cutover** — file disjointness across `W1A..W1E` does not by itself prove shared authority over effects, matching `4`-file input SHA-256 pins on the merged tree (`I27`), server-side rejection of superseded `0327` `v1` tasks (`I26`), or isolation from external `:4200` `sa-plan-daemon` (`I28`).
+   - *Plan Action*: Inserted **`Gate W1.5`** between `Wave 1` and `Wave 2` binding `(final_rev, 4_input_hashes + 1_byte_tamper_negative_test, built_elf_digest, 14_target_manifest, current_plan_task_worker_attempt_lease, active_writer_identities, reader_barrier_protocol, tested_crash_recovery_receipts)` and revalidating at every effect (`HOLD` on any drift or unknown writer).
 
 ---
 

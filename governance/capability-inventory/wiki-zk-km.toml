@@ -483,3 +483,18 @@ journal = "docs/journal/20261101-1454-agy-fractal-check-codex-advice-and-master-
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1454-agy-fractal-check-codex-advice-and-master-plan-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "AGY-FULL-FRACTAL-5PLANE-DEPENDENCY-ANALYSIS-20261101-1504"
+plan = "uos/agy-fractal-issue-resolution-master/20261101-1454"
+task = "W15_SERIALIZED_INTEGRATION_EFFECT_AUTHORITY_GATE"
+state = "planning"
+admitted = false
+design = "docs/design/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-as-is-to-be-analysis.md"
+design_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-as-is-to-be-analysis.md"
+plan_doc = "docs/plans/20261101-1454-agy-fractal-issue-resolution-plan-and-codex-advisory.md"
+journal = "docs/journal/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-codex-r2-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-1504-agy-full-fractal-coverage-5plane-dependency-and-codex-r2-journal.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
