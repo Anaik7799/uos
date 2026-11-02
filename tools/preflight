@@ -156,11 +156,18 @@ cat > "$PF_TMP/pf.escript" <<'ESC'
 main(_) -> io:format("escript-ok~n").
 ESC
 printf '(assert true)\n(check-sat)\n' > "$PF_TMP/pf.smt2"
+printf '#include <stdio.h>\n#include <stdlib.h>\nint main(void) { return puts("cc-probe") < 0 || getenv("PATH") == NULL; }\n' > "$PF_TMP/pf_c.c"
 
 pf_probe erl out     "$(uos_tool_path erl)"     -noshell -eval 'io:format("OTP ~s erts ~s",[erlang:system_info(otp_release),erlang:system_info(version)]),halt().'
 pf_probe erlc silent    "$(uos_tool_path erlc)"    -o "$PF_TMP" "$PF_TMP/pf_mod.erl"
 pf_probe escript out "$(uos_tool_path escript)" "$PF_TMP/pf.escript"
 pf_probe rebar3 out  "$(uos_tool_path rebar3)"  --version
+pf_probe cc silent   "$(uos_tool_path cc)" -o "$PF_TMP/pf_c" "$PF_TMP/pf_c.c"
+if [ -x "$PF_TMP/pf_c" ] && "$PF_TMP/pf_c" > "$PF_TMP/pf_c.out" && [ "$(cat "$PF_TMP/pf_c.out")" = "cc-probe" ]; then
+  row useable cc-artifact PASS "compiled C program ran"
+else
+  row useable cc-artifact FAIL "compiled C program missing or failed"
+fi
 pf_probe gleam out   "$(uos_tool_path gleam)"   --version
 pf_probe zig out     "$(uos_tool_path zig)"     version
 pf_probe z3 out      "$(uos_tool_path z3)"      "$PF_TMP/pf.smt2"

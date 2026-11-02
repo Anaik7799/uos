@@ -71,10 +71,8 @@ pub fn handle_message(
     }
 
     SaveParams(reply_to) -> {
-      let count = dict.size(state.params)
-      let new_saves = state.save_count + 1
-      process.send(reply_to, Ok(count))
-      actor.continue(PrmDbState(..state, save_count: new_saves))
+      process.send(reply_to, Error("parameter_persistence_unavailable"))
+      actor.continue(state)
     }
 
     DumpAll(reply_to) -> {

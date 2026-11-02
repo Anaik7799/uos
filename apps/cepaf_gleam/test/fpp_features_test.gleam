@@ -1,8 +1,8 @@
 //// =============================================================================
 //// [UOS-FPP-FEATURES-TEST] NASA JPL F Prime Full Features Test Suite in Gleam
 //// =============================================================================
-//// Tests the complete F Prime feature set implemented in BEAM/Gleam:
-//// 1. Parameter Database Actor (Svc::PrmDb) lifecycle & persistence
+//// Tests selected F Prime-inspired features implemented in BEAM/Gleam:
+//// 1. Parameter Database Actor (Svc::PrmDb) lifecycle & fail-closed save
 //// 2. Telemetry Packetizer packing & JSON downlink serialization
 //// 3. Subtopology composition and exported boundary port interfaces
 //// 4. NASA JPL Ground Dictionary JSON specification emission
@@ -58,7 +58,7 @@ pub fn prm_db_actor_lifecycle_test() {
 
   // Save parameters
   let save_res = process.call(client, 1000, fn(reply) { SaveParams(reply) })
-  save_res |> should.equal(Ok(2))
+  save_res |> should.equal(Error("parameter_persistence_unavailable"))
 
   // Shutdown cleanly
   process.send(client, Shutdown)

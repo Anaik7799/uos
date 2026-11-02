@@ -1,11 +1,14 @@
 import cepaf_gleam/mcp/admission
+import cepaf_gleam/mcp/dispatch
 import cepaf_gleam/mcp/principal
 import cepaf_gleam/mcp/registry
+import cepaf_gleam/mcp/supervisor
 import cepaf_gleam/mcp/types.{
-  ClientProfile, ControlMutation, NonRetryable, TaskScopedMutation,
+  ClientProfile, ControlMutation, NonRetryable, Refused, TaskScopedMutation,
 }
 import gleam/dict
-import gleam/option.{type Option, Some}
+import gleam/list
+import gleam/option.{type Option, None, Some}
 import gleeunit/should
 
 pub fn payload_actor_cannot_change_principal_test() {
@@ -288,4 +291,193 @@ pub fn live_fence_reader_observes_midflight_revocation_test() {
       err.code |> should.equal("GRANT_REVOKED_AT_EFFECT_TIME")
     }
   }
+}
+
+pub fn effect_time_cannot_rebind_admitted_mutation_to_another_identity_test() {
+  let assert Ok(spec) = registry.lookup("public", "control_loop")
+  let p =
+    principal.from_launcher_env(
+      actor: "worker-a",
+      client: ClientProfile("codex"),
+      workspace_root: "/home/an/NAS-setup/uos",
+      session_id: "session-a",
+    )
+  let grant =
+    admission.GrantTicket(
+      grant_id: "grant-a",
+      scope: ControlMutation,
+      revoked: False,
+      expires_at_ms: 5_000_000,
+      workspace_root: "/home/an/NAS-setup/uos",
+    )
+  let fence =
+    admission.TaskFence(
+      plan_id: "plan-a",
+      task_id: "task-a",
+      worker_id: "worker-a",
+      attempt: 1,
+      task_state: admission.TaskExecuting,
+      lease_until_ms: 5_000_000,
+      grant: Some(grant),
+    )
+  let initial =
+    admission.AdmissionContext(
+      principal: p,
+      mode: admission.EnforcedMode,
+      now_ms: 1_000_000,
+      workspace_root: "/home/an/NAS-setup/uos",
+      task_fence: Some(fence),
+    )
+  let assert Ok(call) =
+    admission.admit(initial, spec, dict.from_list([#("mode", "step")]))
+  admission.verify_at_effect_time(initial, call) |> should.be_ok
+  let changed_session =
+    principal.from_launcher_env(
+      actor: "worker-a",
+      client: ClientProfile("codex"),
+      workspace_root: "/home/an/NAS-setup/uos",
+      session_id: "session-b",
+    )
+  let changed_client =
+    principal.from_launcher_env(
+      actor: "worker-a",
+      client: ClientProfile("claude"),
+      workspace_root: "/home/an/NAS-setup/uos",
+      session_id: "session-a",
+    )
+  let changed_transport =
+    principal.from_signed_zenoh_envelope(
+      actor: "worker-a",
+      client: ClientProfile("codex"),
+      workspace_root: "/home/an/NAS-setup/uos",
+      session_id: "session-a",
+    )
+  let changed_worker =
+    principal.from_launcher_env(
+      actor: "worker-b",
+      client: ClientProfile("codex"),
+      workspace_root: "/home/an/NAS-setup/uos",
+      session_id: "session-a",
+    )
+  let changes = [
+    #(
+      "plan",
+      admission.AdmissionContext(
+        ..initial,
+        task_fence: Some(admission.TaskFence(..fence, plan_id: "plan-b")),
+      ),
+    ),
+    #(
+      "task",
+      admission.AdmissionContext(
+        ..initial,
+        task_fence: Some(admission.TaskFence(..fence, task_id: "task-b")),
+      ),
+    ),
+    #(
+      "attempt",
+      admission.AdmissionContext(
+        ..initial,
+        task_fence: Some(admission.TaskFence(..fence, attempt: 2)),
+      ),
+    ),
+    #(
+      "grant",
+      admission.AdmissionContext(
+        ..initial,
+        task_fence: Some(
+          admission.TaskFence(
+            ..fence,
+            grant: Some(admission.GrantTicket(..grant, grant_id: "grant-b")),
+          ),
+        ),
+      ),
+    ),
+    #(
+      "session",
+      admission.AdmissionContext(..initial, principal: changed_session),
+    ),
+    #(
+      "client",
+      admission.AdmissionContext(..initial, principal: changed_client),
+    ),
+    #(
+      "transport",
+      admission.AdmissionContext(..initial, principal: changed_transport),
+    ),
+    #(
+      "worker",
+      admission.AdmissionContext(
+        ..initial,
+        principal: changed_worker,
+        task_fence: Some(admission.TaskFence(..fence, worker_id: "worker-b")),
+      ),
+    ),
+  ]
+  list.each(changes, fn(change) {
+    case admission.verify_at_effect_time(change.1, call) {
+      Ok(_) -> should.fail()
+      Error(err) -> {
+        err.retryability |> should.equal(NonRetryable)
+        case change.0 {
+          "plan" | "task" | "attempt" | "grant" ->
+            err.code |> should.equal("CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME")
+          _ -> err.code |> should.equal("CALL_PRINCIPAL_CHANGED_AT_EFFECT_TIME")
+        }
+      }
+    }
+  })
+
+  // An extended lease for the same authority is valid; a new attempt is not.
+  let renewed = admission.TaskFence(..fence, lease_until_ms: 7_000_000)
+  admission.verify_at_effect_time_live(
+    initial,
+    call,
+    fn() { Some(renewed) },
+    fn() { 1_000_100 },
+  )
+  |> should.be_ok
+  let changed_attempt = admission.TaskFence(..fence, attempt: 2)
+  let assert Error(live_error) =
+    admission.verify_at_effect_time_live(
+      initial,
+      call,
+      fn() { Some(changed_attempt) },
+      fn() { 1_000_100 },
+    )
+  live_error.code |> should.equal("CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME")
+
+  // The actual dispatch helper must refuse before invoking the worker handler.
+  let changed_context =
+    admission.AdmissionContext(
+      ..initial,
+      task_fence: Some(admission.TaskFence(..fence, task_id: "task-b")),
+    )
+  let assert Ok(pool) =
+    supervisor.start_worker_pool_for_candidate(
+      size: 1,
+      candidate: "effect-binding-test-candidate",
+    )
+  let #(outcome, _) =
+    dispatch.dispatch_validated(pool, changed_context, call, fn(_) {
+      Ok("handler-ran")
+    })
+  case outcome {
+    Refused(err) ->
+      err.code |> should.equal("CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME")
+    _ -> should.fail()
+  }
+
+  // Read-only calls are also not silently rebound to a different task.
+  let assert Ok(read_spec) = registry.lookup("public", "plan_status")
+  let assert Ok(read_call) = admission.admit(initial, read_spec, dict.new())
+  let assert Error(read_error) =
+    admission.verify_at_effect_time(changed_context, read_call)
+  read_error.code |> should.equal("CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME")
+  let detached = admission.AdmissionContext(..initial, task_fence: None)
+  let assert Ok(detached_call) =
+    admission.admit(detached, read_spec, dict.new())
+  let assert Error(attach_error) =
+    admission.verify_at_effect_time(initial, detached_call)
+  attach_error.code |> should.equal("CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME")
 }

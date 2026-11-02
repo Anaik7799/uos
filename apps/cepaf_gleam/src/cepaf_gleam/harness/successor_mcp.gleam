@@ -332,15 +332,9 @@ fn dispatch(
         }
       }
       case outcome {
-        Ok(receipt) -> case state.unresolved {
-          False -> #(state, Ok(receipt))
-          True -> {
-            let next_state = case planning_resolution_receipt(receipt) {
-              True -> State(..state, unresolved: False)
-              False -> State(..state, execution: None, unresolved: False)
-            }
-            #(next_state, Ok(receipt))
-          }
+        Ok(receipt) -> case reconciled_state_with(state, receipt, ops.assessment_pending) {
+          Ok(next_state) -> #(next_state, Ok(receipt))
+          Error(e) -> #(state, Error(e))
         }
         Error(e) -> #(
           State(..state, unresolved: state.unresolved || a.outcome_unknown(e)),
@@ -448,6 +442,32 @@ pub fn planning_resolution_receipt(receipt: json.Json) -> Bool {
     Ok(parsed) ->
       value.get(parsed, "kind") == Ok(value.Text("planning_resolution"))
     _ -> False
+  }
+}
+
+/// A successful per-intent reconciliation is insufficient to clear a task
+/// stop. Re-scan all task intents; missing scan evidence keeps the old state.
+pub fn reconciled_state_with(
+  state: State,
+  receipt: json.Json,
+  pending: fn(a.Scope) -> Result(Bool, String),
+) -> Result(State, String) {
+  case state.unresolved, state.execution {
+    False, _ -> Ok(state)
+    True, None -> Error("reconciliation_context_missing")
+    True, Some(execution) -> {
+      use remains <- result.try(
+        pending(execution.scope)
+          |> result.map_error(fn(e) { "post_reconciliation_pending_unknown:" <> e }),
+      )
+      case remains {
+        True -> Ok(state)
+        False -> case planning_resolution_receipt(receipt) {
+          True -> Ok(State(..state, unresolved: False))
+          False -> Ok(State(..state, execution: None, unresolved: False))
+        }
+      }
+    }
   }
 }
 

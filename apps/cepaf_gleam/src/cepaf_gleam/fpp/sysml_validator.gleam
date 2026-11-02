@@ -121,11 +121,73 @@ pub type ValidationReport {
   )
 }
 
+fn has_duplicates(items: List(String)) -> List(String) {
+  let #(_, dups) =
+    list.fold(items, #([], []), fn(acc, item) {
+      let #(seen, d) = acc
+      case list.contains(seen, item) {
+        True -> #(seen, [item, ..d])
+        False -> #([item, ..seen], d)
+      }
+    })
+  list.reverse(dups)
+}
+
+fn directions_compatible(from_dir: PortDirection, to_dir: PortDirection) -> Bool {
+  case from_dir, to_dir {
+    OutPort, InPort -> True
+    InOutPort, InPort -> True
+    OutPort, InOutPort -> True
+    InOutPort, InOutPort -> True
+    _, _ -> False
+  }
+}
+
 /// Validate SysML package model integrity.
 pub fn validate_package(pkg: SysMLPackage) -> ValidationReport {
   let part_ids = list.map(pkg.parts, fn(p) { p.id })
+  let req_ids = list.map(pkg.requirements, fn(r) { r.id })
+  let conn_ids = list.map(pkg.connections, fn(c) { c.id })
 
-  // Check dangling connections
+  // Check duplicate part IDs
+  let dup_part_errors: List(ValidationError) =
+    has_duplicates(part_ids)
+    |> list.map(fn(id) { DanglingPartRef("duplicate_part_id", id) })
+
+  // Check duplicate requirement IDs
+  let dup_req_errors: List(ValidationError) =
+    has_duplicates(req_ids)
+    |> list.map(fn(id) { UnsatisfiedRequirement(id, "duplicate_requirement_id") })
+
+  // Check duplicate connection IDs
+  let dup_conn_errors: List(ValidationError) =
+    has_duplicates(conn_ids)
+    |> list.map(fn(id) {
+      PortMismatch(id, "duplicate", "duplicate", "Duplicate connection ID")
+    })
+
+  // Check duplicate port names, dangling sub_parts, and dangling part.requirements
+  let part_struct_errors: List(ValidationError) =
+    pkg.parts
+    |> list.flat_map(fn(p) {
+      let port_names = list.map(p.ports, fn(pt) { pt.name })
+      let dup_ports =
+        has_duplicates(port_names)
+        |> list.map(fn(pname) {
+          PortMismatch(p.id, pname, pname, "Duplicate port name on part")
+        })
+      let dangling_subs =
+        p.sub_parts
+        |> list.filter(fn(sub) { !list.contains(part_ids, sub) })
+        |> list.map(fn(sub) { DanglingPartRef(p.id, sub) })
+      let dangling_part_reqs =
+        p.requirements
+        |> list.filter(fn(rid) { !list.contains(req_ids, rid) })
+        |> list.map(fn(rid) { UnsatisfiedRequirement(rid, p.id) })
+      list.flatten([dup_ports, dangling_subs, dangling_part_reqs])
+    })
+
+  // Check dangling connections, port existence, type equality, and port direction
   let conn_errors: List(ValidationError) =
     pkg.connections
     |> list.filter_map(fn(c) {
@@ -144,7 +206,6 @@ pub fn validate_package(pkg: SysMLPackage) -> ValidationReport {
               case port1, port2 {
                 Ok(pt1), Ok(pt2) -> {
                   case pt1.type_name == pt2.type_name {
-                    True -> Error(Nil)
                     False ->
                       Ok(PortMismatch(
                         c.id,
@@ -152,6 +213,17 @@ pub fn validate_package(pkg: SysMLPackage) -> ValidationReport {
                         pt2.type_name,
                         "Type divergence",
                       ))
+                    True ->
+                      case directions_compatible(pt1.direction, pt2.direction) {
+                        True -> Error(Nil)
+                        False ->
+                          Ok(PortMismatch(
+                            c.id,
+                            port_dir_to_string(pt1.direction),
+                            port_dir_to_string(pt2.direction),
+                            "Incompatible port direction",
+                          ))
+                      }
                   }
                 }
                 _, _ ->
@@ -169,17 +241,29 @@ pub fn validate_package(pkg: SysMLPackage) -> ValidationReport {
       }
     })
 
-  // Check requirement satisfaction & verification
+  // Check requirement satisfaction (all satisfied_by part IDs must exist) & verification
   let req_errors: List(ValidationError) =
     pkg.requirements
     |> list.filter_map(fn(r) {
-      case r.satisfied_by == [] || r.verified_by == [] {
-        True -> Ok(UnsatisfiedRequirement(r.id, r.name))
-        False -> Error(Nil)
+      let all_satisfied_exist =
+        r.satisfied_by != []
+        && list.all(r.satisfied_by, fn(pid) { list.contains(part_ids, pid) })
+      let has_verified = r.verified_by != []
+      case all_satisfied_exist && has_verified {
+        True -> Error(Nil)
+        False -> Ok(UnsatisfiedRequirement(r.id, r.name))
       }
     })
 
-  let all_errors = list.append(conn_errors, req_errors)
+  let all_errors =
+    list.flatten([
+      dup_part_errors,
+      dup_req_errors,
+      dup_conn_errors,
+      part_struct_errors,
+      conn_errors,
+      req_errors,
+    ])
   let total_reqs = list.length(pkg.requirements)
   let satisfied_count = total_reqs - list.length(req_errors)
 
@@ -211,7 +295,7 @@ pub fn canonical_uos_sysml_package() -> SysMLPackage {
         SysMLPort("command_in", InPort, "SystemCommand", "[1..*]"),
         SysMLPort("rpc_out", OutPort, "LengthDelimitedRpc", "[1..*]"),
       ],
-      sub_parts: ["part-max-inference", "part-hermes-engine", "part-zigvm-vfs"],
+      sub_parts: ["part-max-inference", "part-hermes-engine"],
       requirements: ["REQ-OTP29-ROOT", "REQ-ZERO-MUDA"],
     )
 

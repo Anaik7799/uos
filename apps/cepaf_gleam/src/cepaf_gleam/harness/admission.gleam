@@ -142,7 +142,7 @@ pub fn public_path(path: String) -> Bool {
   && !string.ends_with(path, ".sqlite3")
   && !string.ends_with(path, ".db")
   && {
-    path == "AGENTS.md"
+    list.contains(["AGENTS.md", "flake.nix", "flake.lock", "devenv.nix", "devenv.lock"], path)
     || list.any(
       ["apps/", "docs/", "formal/", "contracts/", "governance/", "tools/", "engines/"],
       fn(p) { string.starts_with(path, p) },
@@ -150,15 +150,51 @@ pub fn public_path(path: String) -> Bool {
   }
 }
 
+fn policy_source_path(path: String) -> Bool {
+  list.any(["AGENTS.md", "CLAUDE.md", "GEMINI.md", "SKILL.md"], fn(name) {
+    path == name || string.ends_with(path, "/" <> name)
+  })
+  || {
+    { string.ends_with(path, ".md") || string.ends_with(path, ".json") }
+    && {
+      string.starts_with(path, "contracts/")
+      || string.starts_with(path, "docs/sop/")
+      || string.starts_with(path, "governance/agents/policy/")
+    }
+  }
+}
+
 fn source_code_path(path: String) -> Bool {
-  string.ends_with(path, ".gleam")
+  policy_source_path(path)
+  || string.ends_with(path, ".gleam")
   || string.ends_with(path, ".erl")
+  || {
+    string.starts_with(path, "formal/lean/")
+    && string.ends_with(path, ".lean")
+  }
+  || list.contains(
+    [
+      "flake.nix", "devenv.nix", "tools/preflight",
+      "tools/lib/uos-toolchain.sh", "tools/release_process.ml",
+    ],
+    path,
+  )
   || {
     case string.starts_with(path, "engines/") {
       True -> string.ends_with(path, ".ml") || string.ends_with(path, ".mli")
       False -> False
     }
   }
+}
+
+/// Agent instruction, skill, contract, policy and SOP documents may only be
+/// written into a separately registered candidate workspace. Empty-root
+/// legacy grants cannot mutate these canonical policy files.
+pub fn policy_workspace_valid(workspace: String, scopes: List(Scope)) -> Bool {
+  workspace != ""
+  || !list.any(scopes, fn(scope) {
+    list.any(scope.writes, policy_source_path)
+  })
 }
 
 pub fn risk_path(path: String) -> Bool {
@@ -300,6 +336,7 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
     )
       == list.length(fields.8)
       && workspace_locator_valid(fields.9)
+      && policy_workspace_valid(fields.9, fields.8)
       && public_path(fields.10)
       && digest_valid(fields.11)
       && risk_path(path),

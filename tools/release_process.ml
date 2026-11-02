@@ -38,7 +38,7 @@ let toolchains = uos_root^"/toolchains"
 (* The table. Mirrors tools/lib/uos-toolchain.sh entry for entry; tool_table_parity
    below proves the mirror, so the duplication cannot drift silently. *)
 let tool_path = function
- | "erl"|"erlc"|"escript"|"rebar3"|"zig"|"z3"|"quint"|"jj"|"node"|"npm" as n -> Some(toolchains^"/nix-profile/bin/"^n)
+ | "erl"|"erlc"|"escript"|"rebar3"|"cc"|"zig"|"z3"|"quint"|"jj"|"node"|"npm" as n -> Some(toolchains^"/nix-profile/bin/"^n)
  | "gleam" -> Some(toolchains^"/gleam-1.16.0/bin/gleam")
  | "ocaml"|"ocamlfind"|"dune" as n -> Some(toolchains^"/opam-ocaml/bin/"^n)
  | "lean"|"lake"|"leanc" as n -> Some(toolchains^"/lean-4.33.0/bin/"^n)
@@ -109,12 +109,20 @@ let beam_pin_check () =
   ("erl resolves into a barred tree: "^real))
   ["/usr/";"/opt/";"/home/an/dev/ver/"];
  real
-let env extra =
+let env_with_getenv getenv extra =
+ (* The only current caller override is the finite OTP-reporting negative test.
+    An allowlist prevents loader, compiler or duplicate environment overrides. *)
+ require (List.length extra <= 1 &&
+  List.for_all (fun entry -> entry = "UOS_OTP_RELEASE=99") extra)
+  "unapproved environment override refused";
  let base=["PATH="^otp^":"^toolchains^"/gleam-1.16.0/bin:"^toolchains^"/opam-ocaml/bin:"^toolchains^"/cargo/bin:/usr/bin:/bin";
- "LANG=C.UTF-8";"ERL_FLAGS=+S 2:2 +A 2";"ERL_CRASH_DUMP=/dev/null";"CC=/usr/bin/cc"] in
- let inherited=List.filter_map(fun k->Option.map(fun v->k^"="^v)(Sys.getenv_opt k))
- ["HOME";"XDG_RUNTIME_DIR";"DBUS_SESSION_BUS_ADDRESS";"OPAM_SWITCH_PREFIX";"OCAMLPATH"] in
+ "LANG=C.UTF-8";"ERL_FLAGS=+S 2:2 +A 2";"ERL_CRASH_DUMP=/dev/null";
+ "CC="^tool "cc";"OPAM_SWITCH_PREFIX="^toolchains^"/opam-ocaml"] in
+ (* Do not pass the caller's OCaml library path or switch to child processes. *)
+ let inherited=List.filter_map(fun k->Option.map(fun v->k^"="^v)(getenv k))
+ ["HOME";"XDG_RUNTIME_DIR";"DBUS_SESSION_BUS_ADDRESS"] in
  Array.of_list(extra @ base @ inherited)
+let env extra = env_with_getenv Sys.getenv_opt extra
 type execution={code:int;output:string;elapsed:float}
 let run ?(seconds=30.) ?(limit=4194304) ?(extra=[]) exe args =
  require(seconds>0. && seconds<=240.) "invalid deadline";
@@ -313,6 +321,21 @@ let packet p rev =
 let selftest()=
  let n=ref 0 in let check label f=f();incr n;emit label "PASS" [] in
  let rejects f=try f();false with _->true in
+ check "pinned_toolchain_env" (fun()->
+  require(rejects(fun()->ignore(env ["CC=/usr/bin/cc"]))) "CC override accepted";
+  require(rejects(fun()->ignore(env ["PATH=/usr/bin"]))) "PATH override accepted";
+  List.iter(fun assignment ->
+   require(rejects(fun()->ignore(env [assignment]))) ("unsafe override accepted: "^assignment))
+   ["LD_PRELOAD=/tmp/x.so";"CFLAGS=-include /tmp/x.h";"HOME=/tmp";"CXX=/usr/bin/c++"];
+  require(rejects(fun()->ignore(env ["UOS_OTP_RELEASE=99";"UOS_OTP_RELEASE=99"]))) "duplicate override accepted";
+  let poisoned = env_with_getenv (fun key ->
+    if key="OPAM_SWITCH_PREFIX" || key="OCAMLPATH" then Some "/tmp/untrusted"
+    else None) [] |> Array.to_list in
+  require(List.mem ("OPAM_SWITCH_PREFIX="^toolchains^"/opam-ocaml") poisoned)
+   "OPAM prefix is not pinned";
+  require(not(List.exists(fun v->String.starts_with ~prefix:"OCAMLPATH=" v) poisoned))
+   "inherited OCAMLPATH accepted";
+  ignore(env ["UOS_OTP_RELEASE=99"]));
  check "argv_no_shell"(fun()->let r=run (os_util "printf") ["%s";"$(id);literal"] in require(r.code=0 && r.output="$(id);literal") "argv interpreted");
  check "nonzero_preserved"(fun()->require((run (os_util "false") []).code=1) "exit lost");
  check "timeout_reaped"(fun()->require(rejects(fun()->ignore(run ~seconds:0.05 (os_util "sleep") ["2"]))) "timeout accepted");

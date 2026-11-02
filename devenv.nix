@@ -18,6 +18,7 @@ let
   # unpinned one. That precise gap let /nix/store/...-erlang-29.0.6 into
   # tools/release_process.ml while every release-number check stayed green.
   pinnedErl = "${otp29}/lib/erlang/bin/erl";
+  pinnedCC = "${pkgs.stdenv.cc.out}/bin/cc";
 in
 {
   name = "uos";
@@ -25,6 +26,7 @@ in
   packages = [
     otp29                               # 29.0.5 -- the sole admitted BEAM
     pkgs.beam29Packages.rebar3          # built against OTP 29, not 27
+    pkgs.stdenv.cc.out                  # pinned C compiler for BEAM port drivers
     pkgs.zig                            # 0.16.0 -- engines/zigvm README pin
     pkgs.z3                             # 4.16.0 -- bounded solver workers only
     pkgs.quint                          # 0.32.0 -- .qnt front-end compiler
@@ -87,6 +89,19 @@ in
       echo "WARNING: toolchains/nix-profile/bin/erl absent; profile parity NOT checked" >&2
     fi
 
-    echo "OTP $otp OK at ${pinnedErl}"
+    actual_cc="$(readlink -f "$(command -v cc)")"
+    expected_cc="$(readlink -f "${pinnedCC}")"
+    if [ "$actual_cc" != "$expected_cc" ]; then
+      echo "SC-NIX-DEVENV-001 violation [C compiler]: cc resolves to $actual_cc; pin admits $expected_cc" >&2
+      exit 1
+    fi
+    profile_cc="$UOS_ROOT/toolchains/nix-profile/bin/cc"
+    if [ -d "$UOS_ROOT/toolchains/nix-profile" ]; then
+      if [ ! -x "$profile_cc" ] || [ "$(readlink -f "$profile_cc")" != "$expected_cc" ]; then
+        echo "SC-NIX-DEVENV-001 violation [profile parity]: C compiler missing or different from devenv pin" >&2
+        exit 1
+      fi
+    fi
+    echo "OTP $otp OK at ${pinnedErl}; C compiler OK at $expected_cc"
   '';
 }

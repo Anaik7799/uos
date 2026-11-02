@@ -36,6 +36,7 @@
       toolchain = [
         otp29                          # 29.0.5 -- the sole admitted BEAM
         pkgs.beam29Packages.rebar3     # built against OTP 29
+        pkgs.stdenv.cc.out             # pinned C compiler for BEAM port drivers
         pkgs.zig                       # 0.16.0 -- engines/zigvm README pin
         pkgs.z3                        # 4.16.0
         pkgs.quint                     # 0.32.0 -- .qnt front-end compiler
@@ -52,6 +53,7 @@
       # is exactly how /nix/store/...-erlang-29.0.6 reached tools/release_process.ml
       # while every release-number assertion in the tree stayed green.
       pinnedErl = "${otp29}/lib/erlang/bin/erl";
+      pinnedCC = "${pkgs.stdenv.cc.out}/bin/cc";
 
       # coreutils is pinned because tools/release_process.ml shells out to cp,
       # printf, sleep and false on absolute /usr/bin paths. Those are OS utilities
@@ -92,7 +94,13 @@
         case "$erl_bin" in
           /usr/*|/home/*) echo "pin escaped the store: $erl_bin" >&2; exit 1 ;;
         esac
-        echo "pinned erl $erl_bin reports OTP $release" > $out
+        cc_bin="${pinnedCC}"
+        test -x "$cc_bin" || { echo "pinned C compiler missing: $cc_bin" >&2; exit 1; }
+        printf '#include <stdio.h>\n#include <stdlib.h>\nint main(void) { return puts("cc-probe") < 0 || getenv("PATH") == NULL; }\n' > "$TMPDIR/cc-probe.c"
+        "$cc_bin" -o "$TMPDIR/cc-probe" "$TMPDIR/cc-probe.c"
+        "$TMPDIR/cc-probe" > "$TMPDIR/cc-probe.out"
+        test "$(cat "$TMPDIR/cc-probe.out")" = "cc-probe"
+        printf 'pinned erl %s reports OTP %s; C compiler %s compiled and ran\n' "$erl_bin" "$release" "$cc_bin" > $out
       '';
 
       devShells.${system}.default = pkgs.mkShell {

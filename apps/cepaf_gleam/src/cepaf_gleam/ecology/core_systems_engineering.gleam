@@ -583,7 +583,13 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         SysMLPort("mcp_ctrl_out", OutPort, "McpJsonRpc", "1"),
         SysMLPort("zenoh_digest_in", InPort, "SignedZenohDigest512", "1"),
       ],
-      sub_parts: [],
+      sub_parts: [
+        "gleam_mcp_gateway",
+        "holonic_hive",
+        "bionic_homeostasis",
+        "fractal_poodavr_fpp",
+        "zlp_zenoh_bus",
+      ],
       requirements: ["REQ-ZERO-MUDA", "REQ-MARGIN-40"],
     ),
     SysMLPart(
@@ -593,7 +599,7 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         SysMLPort("mcp_ctrl_in", InPort, "McpJsonRpc", "1"),
         SysMLPort("hive_cmd_out", OutPort, "HiveDispatchFrame", "1..5"),
       ],
-      sub_parts: ["uos_mcp_stdio", "runtime_gateway"],
+      sub_parts: [],
       requirements: ["REQ-HARNESS-MCP", "REQ-ZERO-MUDA"],
     ),
     SysMLPart(
@@ -603,7 +609,7 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         SysMLPort("hive_cmd_in", InPort, "HiveDispatchFrame", "1..5"),
         SysMLPort("bio_vitals_out", OutPort, "BionicTelemetry", "1"),
       ],
-      sub_parts: ["forager_flash", "nurse_pro", "architect_argon", "sentinel_codex"],
+      sub_parts: [],
       requirements: ["REQ-MARGIN-40", "REQ-SELF-HEAL"],
     ),
     SysMLPart(
@@ -613,7 +619,7 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         SysMLPort("bio_vitals_in", InPort, "BionicTelemetry", "1"),
         SysMLPort("poodavr_ctrl_out", OutPort, "PoodavrControlSignal", "10"),
       ],
-      sub_parts: ["prajna_bio", "prajna_neuro", "endocrine_7", "immune_breaker"],
+      sub_parts: [],
       requirements: ["REQ-POODAVR-FPP", "REQ-SELF-HEAL"],
     ),
     SysMLPart(
@@ -623,7 +629,7 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         SysMLPort("poodavr_ctrl_in", InPort, "PoodavrControlSignal", "10"),
         SysMLPort("zenoh_env_out", OutPort, "SignedZenohUosV1", "1..*"),
       ],
-      sub_parts: ["kalman_lyapunov", "pid_regulator", "fprime_fsm"],
+      sub_parts: [],
       requirements: ["REQ-POODAVR-FPP", "REQ-PROVENANCE-93"],
     ),
     SysMLPart(
@@ -633,7 +639,7 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         SysMLPort("zenoh_env_in", InPort, "SignedZenohUosV1", "1..*"),
         SysMLPort("zenoh_digest_out", OutPort, "SignedZenohDigest512", "1"),
       ],
-      sub_parts: ["lean_verify_frame", "zig_avx512_port", "ets_wal_outbox"],
+      sub_parts: [],
       requirements: ["REQ-HARNESS-MCP", "REQ-PROVENANCE-93"],
     ),
   ]

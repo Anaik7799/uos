@@ -136,7 +136,56 @@ fn verify_at_effect_time_workspace_checked(
         "AUDIT_ONLY_MUTATION_FORBIDDEN",
         "AuditOnly mode cannot execute mutations at effect time",
       ))
-    _, _ -> verify_effect_class(context, call.spec, call.arguments, True)
+    _, _ -> {
+      case verify_effect_class(context, call.spec, call.arguments, True) {
+        Error(error) -> Error(error)
+        Ok(refreshed) -> verify_original_binding(call, refreshed)
+      }
+    }
+  }
+}
+
+/// Refreshing a live lease must never move a previously admitted call to a
+/// different principal, session, task attempt, or grant. The principal here is
+/// as trustworthy as its transport constructor; this comparison is not a
+/// substitute for authenticating a launcher or an individual Zenoh sender.
+fn verify_original_binding(
+  original: ValidatedCall,
+  refreshed: ValidatedCall,
+) -> Result(ValidatedCall, ToolError) {
+  let original_principal = original.principal
+  let current_principal = refreshed.principal
+  let principal_matches =
+    principal.actor_id(original_principal)
+    == principal.actor_id(current_principal)
+    && principal.client_profile(original_principal)
+    == principal.client_profile(current_principal)
+    && principal.transport(original_principal)
+    == principal.transport(current_principal)
+    && principal.workspace_root(original_principal)
+    == principal.workspace_root(current_principal)
+    && principal.session_id(original_principal)
+    == principal.session_id(current_principal)
+  case principal_matches {
+    False ->
+      Error(authority_error(
+        "CALL_PRINCIPAL_CHANGED_AT_EFFECT_TIME",
+        "The validated call belongs to a different transport principal or session",
+      ))
+    True ->
+      case
+        original.plan_id == refreshed.plan_id
+        && original.task_id == refreshed.task_id
+        && original.attempt == refreshed.attempt
+        && original.grant_id == refreshed.grant_id
+      {
+        False ->
+          Error(authority_error(
+            "CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME",
+            "The validated call belongs to a different task attempt or grant",
+          ))
+        True -> Ok(refreshed)
+      }
   }
 }
 

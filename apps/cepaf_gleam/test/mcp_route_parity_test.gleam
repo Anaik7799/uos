@@ -40,6 +40,9 @@ import simplifile
 @external(erlang, "file", "set_cwd")
 fn erl_set_cwd(path: String) -> Result(Nil, dynamic.Dynamic)
 
+@external(erlang, "session_sync_ffi", "unique_id")
+fn unique_test_id() -> String
+
 const workspace = "/home/an/NAS-setup/uos"
 
 fn active_candidate() -> String {
@@ -850,22 +853,41 @@ pub fn client_schema_digest_pin_enforced_in_admit_converged_test() {
 pub fn public_mutation_attempt_bump_executes_fresh_handler_test() {
   let assert Ok(pool0) = supervisor.start_worker_pool(1)
   let backends0 = server_backends(store_with([]))
+  let isolated = "/tmp/uos-mcp-route-parity-" <> unique_test_id()
+  let assert Ok(_) = simplifile.create_directory(isolated)
   let args =
     dict.from_list([
       #("plan_id", "attempt-bump-plan"),
       #("task_id", "attempt-bump-task"),
     ])
 
-  let assert Some(base_fence) = context().task_fence
+  let base_context = context()
+  let assert Some(base_fence) = base_context.task_fence
+  let assert Some(base_ticket) = base_fence.grant
+  let isolated_principal =
+    principal.from_launcher_env(
+      actor: principal.actor_id(base_context.principal),
+      client: principal.client_profile(base_context.principal),
+      workspace_root: isolated,
+      session_id: principal.session_id(base_context.principal),
+    )
   let fence1 =
     admission.TaskFence(
       ..base_fence,
       plan_id: "attempt-bump-plan",
       task_id: "attempt-bump-task",
       attempt: 1,
+      grant: Some(
+        admission.GrantTicket(..base_ticket, workspace_root: isolated),
+      ),
     )
   let context1 =
-    admission.AdmissionContext(..context(), task_fence: Some(fence1))
+    admission.AdmissionContext(
+      ..base_context,
+      principal: isolated_principal,
+      workspace_root: isolated,
+      task_fence: Some(fence1),
+    )
   let assert Some(grant_ticket) = fence1.grant
   let pub_grant = Some(RouteGrant("public", ["plan_add"], grant_ticket))
 
@@ -913,7 +935,7 @@ pub fn public_mutation_attempt_bump_executes_fresh_handler_test() {
   // handler against the still-fresh backends0.
   let fence2 = admission.TaskFence(..fence1, attempt: 2)
   let context2 =
-    admission.AdmissionContext(..context(), task_fence: Some(fence2))
+    admission.AdmissionContext(..context1, task_fence: Some(fence2))
   let #(bumped_outcome, pool2, backends2) =
     server.execute_route_authenticated(
       context2,
@@ -932,6 +954,7 @@ pub fn public_mutation_attempt_bump_executes_fresh_handler_test() {
     "attempt-bump-task",
   ))
   |> should.equal(True)
+  simplifile.delete(isolated) |> should.be_ok
 }
 
 // ---------------------------------------------------------------------------

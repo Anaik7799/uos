@@ -474,29 +474,83 @@ pub fn burned_signature_path(signature: String) -> String {
   "var/harness/effects/burned-signature@" <> signature <> ".json"
 }
 
-/// A new grant must not become a fresh namespace for the same logical effect, so
-/// the signature tombstone is keyed OUTSIDE the grant id.
+/// The signature tombstone path is global, but the signature itself includes
+/// grant and attempt. The separate intent tombstone blocks the same stable
+/// intent across grants; it does not deduplicate a newly named equivalent effect.
 pub fn check_not_burned(
   execution: a.Execution,
   intent: String,
   signature: String,
 ) -> Result(Nil, String) {
-  use by_intent <- result.try(a.read_optional(burned_intent_path(intent)))
+  check_not_burned_with(execution, intent, signature, a.read_optional)
+}
+
+pub fn check_not_burned_with(
+  execution: a.Execution,
+  intent: String,
+  signature: String,
+  read: fn(String) -> Result(Option(String), String),
+) -> Result(Nil, String) {
+  use by_intent <- result.try(read(burned_intent_path(intent)))
   use _ <- result.try(a.require(
     by_intent == None,
     "intent_permanently_quarantined_no_retry",
   ))
   use by_signature <- result.try(
-    a.read_optional(burned_signature_path(signature)),
+    read(burned_signature_path(signature)),
   )
   use _ <- result.try(a.require(
     by_signature == None,
     "logical_effect_permanently_quarantined_no_retry",
   ))
   use by_grant <- result.try(
-    a.read_optional(effect_path(execution, intent, "quarantine")),
+    read(effect_path(execution, intent, "quarantine")),
   )
   a.require(by_grant == None, "intent_permanently_quarantined_no_retry")
+}
+
+fn quarantine_tombstone(intent: String, signature: String, path: String) -> String {
+  json.object([
+    #("intent_id", json.string(intent)),
+    #("signature", json.string(signature)),
+    #("quarantine_receipt", json.string(path)),
+  ])
+  |> json.to_string
+}
+
+/// An existing matching file is re-synced before it counts as durable; its
+/// mere presence may be the result of a previously failed parent sync.
+pub fn create_or_same_durable(
+  root: String,
+  path: String,
+  body: String,
+) -> Result(Nil, String) {
+  use existing <- result.try(files.read_optional(root, path))
+  case existing {
+    None -> files.create(root, path, body)
+    Some(_) -> dev.verify_artifact_durability(root, path, body)
+  }
+}
+
+/// Write global retry blocks before the per-grant record. Each step is
+/// create-or-same and separately fenced. An interruption between completed
+/// writes leaves a repairable prefix; torn/conflicting bytes remain held for
+/// investigation. A new quarantine is published only after both global blocks.
+pub fn write_quarantine_records(
+  burned_intent: String,
+  burned_signature: String,
+  quarantine: String,
+  tombstone: String,
+  record: String,
+  fence: fn() -> Result(Nil, String),
+  write_same: fn(String, String) -> Result(Nil, String),
+) -> Result(Nil, String) {
+  use _ <- result.try(fence())
+  use _ <- result.try(write_same(burned_intent, tombstone))
+  use _ <- result.try(fence())
+  use _ <- result.try(write_same(burned_signature, tombstone))
+  use _ <- result.try(fence())
+  write_same(quarantine, record)
 }
 
 pub fn record_quarantine(
@@ -512,6 +566,13 @@ pub fn record_quarantine(
   use signature <- result.try(text(parsed, "signature"))
   use tool <- result.try(text(parsed, "tool"))
   use original_input <- result.try(text(parsed, "input_sha256"))
+  use _ <- result.try(a.require(
+    a.digest_valid(signature)
+      && a.digest_valid(original_input)
+      && a.intent_valid(tool)
+      && effect_prepared_matches_execution(parsed, execution, intent),
+    "quarantine_binding_invalid",
+  ))
   use now <- result.try(clock.observe())
   use observed <- result.try(guard_capture_execution(execution))
   let record =
@@ -579,23 +640,15 @@ pub fn record_quarantine(
       #("system_admission", json.bool(False)),
     ])
   let path = effect_path(execution, intent, "quarantine")
-  use _ <- result.try(files.create(dev.root, path, json.to_string(record)))
-  let tombstone =
-    json.object([
-      #("intent_id", json.string(intent)),
-      #("signature", json.string(signature)),
-      #("quarantine_receipt", json.string(path)),
-    ])
-    |> json.to_string
-  use _ <- result.try(files.create(
-    dev.root,
+  let tombstone = quarantine_tombstone(intent, signature, path)
+  use _ <- result.try(write_quarantine_records(
     burned_intent_path(intent),
-    tombstone,
-  ))
-  use _ <- result.try(files.create(
-    dev.root,
     burned_signature_path(signature),
+    path,
     tombstone,
+    json.to_string(record),
+    fn() { a.fence(execution, 1000) |> result.map(fn(_) { Nil }) },
+    fn(path, body) { create_or_same_durable(dev.root, path, body) },
   ))
   Ok(record)
 }
@@ -1830,6 +1883,29 @@ fn prepared_task_identity_matches(
   }
 }
 
+fn matching_effect_text(
+  before: value.Value,
+  after: value.Value,
+  key: String,
+  valid: fn(String) -> Bool,
+) -> Bool {
+  case value.get(before, key), value.get(after, key) {
+    Ok(value.Text(left)), Ok(value.Text(right)) -> left == right && valid(left)
+    _, _ -> False
+  }
+}
+
+fn matching_positive_effect_integer(
+  before: value.Value,
+  after: value.Value,
+  key: String,
+) -> Bool {
+  case value.get(before, key), value.get(after, key) {
+    Ok(value.Integer(left)), Ok(value.Integer(right)) -> left > 0 && left == right
+    _, _ -> False
+  }
+}
+
 pub fn effect_result_matches_prepared(
   prepared: value.Value,
   settled: value.Value,
@@ -1845,19 +1921,29 @@ pub fn effect_result_matches_prepared(
         && value.get(before, "task") == Ok(value.Text(task))
         && value.get(after, "plan") == Ok(value.Text(plan))
         && value.get(after, "task") == Ok(value.Text(task))
-        && value.get(before, "grant_sha256") == value.get(after, "grant_sha256")
-        && value.get(before, "worker") == value.get(after, "worker")
-        && value.get(before, "attempt") == value.get(after, "attempt")
+        && matching_effect_text(before, after, "grant_sha256", a.digest_valid)
+        && matching_effect_text(before, after, "worker", dev.valid_identifier)
+        && matching_positive_effect_integer(before, after, "attempt")
+        && matching_positive_effect_integer(before, after, "coordinator_epoch")
     _, _ -> False
   }
+  let result_status = value.get(settled, "status")
   identity_matches
+    && value.get(prepared, "schema") == Ok(value.Text("uos.harness-successor-effect.v1"))
+    && value.get(settled, "schema") == Ok(value.Text("uos.harness-successor-effect.v1"))
     && value.get(prepared, "kind") == Ok(value.Text("effect_intent"))
     && value.get(settled, "kind") == Ok(value.Text("effect_result"))
+    && value.get(prepared, "status") == Ok(value.Text("PREPARED"))
+    && {
+      result_status == Ok(value.Text("EXECUTED"))
+      || result_status == Ok(value.Text("FAILED_OR_UNVERIFIED"))
+    }
+    && a.intent_valid(intent)
     && value.get(prepared, "intent_id") == Ok(value.Text(intent))
     && value.get(settled, "intent_id") == Ok(value.Text(intent))
-    && value.get(prepared, "signature") == value.get(settled, "signature")
-    && value.get(prepared, "tool") == value.get(settled, "tool")
-    && value.get(prepared, "input_sha256") == value.get(settled, "input_sha256")
+    && matching_effect_text(prepared, settled, "signature", a.digest_valid)
+    && matching_effect_text(prepared, settled, "tool", a.intent_valid)
+    && matching_effect_text(prepared, settled, "input_sha256", a.digest_valid)
 }
 
 pub fn known_no_effect_refusal(
@@ -1869,6 +1955,87 @@ pub fn known_no_effect_refusal(
     && tool == "harness_write_file"
     && { failure == "source_digest_conflict"
       || failure == "refused: source_digest_conflict" }
+}
+
+/// Classifies a failed receipt for diagnosis only. A nonzero check exit is not
+/// proof that the workspace is unchanged or that all descendants have stopped.
+/// It never settles the task's pending-effect guard or permits replay.
+pub type FailedEffectDisposition {
+  UnappliedWriteConflict
+  NonzeroCheckExit(code: Int)
+  UnknownEffectOutcome
+}
+
+pub fn failed_effect_disposition(
+  status: String,
+  tool: String,
+  failure: String,
+) -> FailedEffectDisposition {
+  case known_no_effect_refusal(status, tool, failure) {
+    True -> UnappliedWriteConflict
+    False -> {
+      case
+        status == "FAILED_OR_UNVERIFIED"
+        && list.contains(["harness_build", "harness_test"], tool)
+        && string.starts_with(failure, "backend_exit:")
+      {
+        False -> UnknownEffectOutcome
+        True -> case string.split(failure, "\n") {
+          [first, _diagnostic, ..] -> {
+            let code_text = string.drop_start(first, 13)
+            case int.parse(code_text) {
+              Ok(code) if code > 0 && code < 124 ->
+                case int.to_string(code) == code_text {
+                  True -> NonzeroCheckExit(code)
+                  False -> UnknownEffectOutcome
+                }
+              _ -> UnknownEffectOutcome
+            }
+          }
+          _ -> UnknownEffectOutcome
+        }
+      }
+    }
+  }
+}
+
+/// Reports both original records without settling a failed check. Only the
+/// existing narrow write-conflict disposition may continue to its resolution.
+pub fn require_failed_effect_adjudication(
+  status: String,
+  tool: String,
+  failure: String,
+  receipt_path: String,
+  receipt_sha256: String,
+  prepared_path: String,
+  prepared_sha256: String,
+) -> Result(Nil, String) {
+  case failed_effect_disposition(status, tool, failure) {
+    UnappliedWriteConflict -> Ok(Nil)
+    NonzeroCheckExit(code) -> {
+      use _ <- result.try(a.require(
+        a.risk_path(receipt_path)
+          && string.starts_with(receipt_path, "var/harness/effects/")
+          && string.ends_with(receipt_path, "@result.json")
+          && a.digest_valid(receipt_sha256)
+          && a.risk_path(prepared_path)
+          && string.starts_with(prepared_path, "var/harness/effects/")
+          && string.ends_with(prepared_path, "@intent.json")
+          && a.digest_valid(prepared_sha256)
+          && string.drop_end(receipt_path, 12) == string.drop_end(prepared_path, 12),
+        "failure_receipt_binding_invalid",
+      ))
+      Error(
+        "failed_check_exit_requires_adjudication:"
+        <> int.to_string(code)
+        <> ";receipt:" <> receipt_path
+        <> ";sha256:" <> receipt_sha256
+        <> ";intent:" <> prepared_path
+        <> ";intent_sha256:" <> prepared_sha256,
+      )
+    }
+    UnknownEffectOutcome -> Error("effect_outcome_unknown_requires_adjudication")
+  }
 }
 
 pub fn effect_resolution_matches(
@@ -1890,6 +2057,42 @@ pub fn effect_resolution_matches(
     && value.get(resolution, "result_sha256") == Ok(value.Text(files.digest(result_raw)))
     && value.get(resolution, "reason") == Ok(value.Text("source_digest_conflict"))
     && value.get(resolution, "attribution") == Ok(value.Text("KNOWN_NOT_APPLIED"))
+}
+
+pub fn parse_bound_effect_resolution(
+  raw: String,
+  prepared_raw: String,
+  result_raw: String,
+  plan: String,
+  task: String,
+  intent: String,
+  signature: String,
+) -> Result(json.Json, String) {
+  use parsed <- result.try(
+    json.parse(raw, value.decoder())
+      |> result.map_error(fn(_) { "effect_resolution_json" }),
+  )
+  use _ <- result.try(a.require(
+    effect_resolution_matches(parsed, prepared_raw, result_raw, plan, task, intent, signature),
+    "effect_resolution_binding_mismatch",
+  ))
+  Ok(value.encode(parsed))
+}
+
+/// A bound terminal resolution may be replayed; the dispatcher must still
+/// retain the task-wide stop if any other operation remains unresolved.
+pub fn existing_resolution_reconcilable(
+  raw: String,
+  prepared_raw: String,
+  result_raw: String,
+  plan: String,
+  task: String,
+  intent: String,
+  signature: String,
+) -> Result(Bool, String) {
+  parse_bound_effect_resolution(
+    raw, prepared_raw, result_raw, plan, task, intent, signature,
+  ) |> result.map(fn(_) { True })
 }
 
 pub fn legacy_effect_terminal_valid(
@@ -1943,10 +2146,22 @@ pub fn legacy_effect_terminal_valid(
                       json.parse(resolution_raw, value.decoder())
                         |> result.map_error(fn(_) { "effect_resolution_json" }),
                     )
-                    Ok(effect_resolution_matches(
+                    let matches = effect_resolution_matches(
                       parsed_resolution, prepared_raw, raw, plan, task, intent,
                       signature,
-                    ))
+                    )
+                    case matches {
+                      False -> Ok(False)
+                      True -> {
+                        use _ <- result.try(a.require(
+                          string.ends_with(name, "@intent.json"),
+                          "effect_resolution_intent_path_invalid",
+                        ))
+                        let path = "var/harness/effects/" <> string.drop_end(name, 12) <> "@resolution.json"
+                        use _ <- result.try(dev.verify_artifact_durability(dev.root, path, resolution_raw))
+                        Ok(True)
+                      }
+                    }
                   }
                 }
               }
@@ -3386,12 +3601,91 @@ fn reconcile_assessment_path_lock(
   }
 }
 
+/// The planning CURRENT pointer is scoped to the parent task and logical ID.
+/// It is an eligibility check only; planning.reconcile still validates the
+/// ledger, authority fence, payload, result and postcondition.
+pub fn planning_reconciliation_pointer_matches(
+  raw: String,
+  plan: String,
+  task: String,
+  logical_id: String,
+) -> Result(Bool, String) {
+  use pointer <- result.try(
+    json.parse(raw, value.decoder())
+      |> result.map_error(fn(_) { "planning_pointer_json" }),
+  )
+  use key <- result.try(text(pointer, "current_key"))
+  use _ <- result.try(a.require(
+    value.get(pointer, "schema") == Ok(value.Text("uos.harness-planning-current.v1"))
+      && value.get(pointer, "parent_plan") == Ok(value.Text(plan))
+      && value.get(pointer, "parent_task") == Ok(value.Text(task))
+      && a.digest_valid(key)
+      && a.intent_valid(logical_id),
+    "planning_pointer_binding_invalid",
+  ))
+  Ok(key == planning.logical_key(plan, task, logical_id))
+}
+
+/// Detect overlapping immutable-record namespaces before choosing a recovery
+/// route. A collision is a hold, including when one record is terminal: a
+/// historical receipt must not silently shadow another operation with the
+/// same textual identifier. `read` is injectable for isolated tests.
+pub fn reconciliation_namespace_guard_with(
+  execution: a.Execution,
+  intent: String,
+  assessment_lock: Bool,
+  read: fn(String) -> Result(Option(String), String),
+) -> Result(Nil, String) {
+  use _ <- result.try(a.require(a.intent_valid(intent), "intent_id"))
+  let assessment_path = initial_assessment_ledger_path(
+    execution.scope, execution.grant, intent,
+  )
+  use assessment <- result.try(read(assessment_path))
+  use assessment_terminal <- result.try(read(assessment_path <> ".terminal.json"))
+  use assessment_resolution <- result.try(read(assessment_path <> ".resolution.json"))
+  let has_assessment = assessment_lock || assessment != None
+    || assessment_terminal != None || assessment_resolution != None
+  use pointer <- result.try(read(planning.andon_path(
+    execution.scope.plan, execution.scope.task,
+  )))
+  use pointer_matches <- result.try(case pointer {
+    None -> Ok(False)
+    Some(raw) -> planning_reconciliation_pointer_matches(
+      raw, execution.scope.plan, execution.scope.task, intent,
+    )
+  })
+  let key = planning.logical_key(execution.scope.plan, execution.scope.task, intent)
+  use planning_intent <- result.try(read(planning.ledger_path(key, "intent")))
+  use planning_result <- result.try(read(planning.ledger_path(key, "result")))
+  use planning_resolution <- result.try(read(planning.resolution_path(key)))
+  let has_planning = pointer_matches || planning_intent != None
+    || planning_result != None || planning_resolution != None
+  use effect <- result.try(read(effect_path(execution, intent, "intent")))
+  use effect_result <- result.try(read(effect_path(execution, intent, "result")))
+  use quarantine <- result.try(read(effect_path(execution, intent, "quarantine")))
+  use effect_resolution <- result.try(read(effect_path(execution, intent, "resolution")))
+  let has_effect = effect != None || effect_result != None || quarantine != None
+    || effect_resolution != None
+  use completion <- result.try(read(effect_path(execution, intent, "completion-intent")))
+  use completion_result <- result.try(read(effect_path(execution, intent, "completion-result")))
+  use completion_resolution <- result.try(read(effect_path(execution, intent, "completion-resolution")))
+  let has_completion = completion != None || completion_result != None
+    || completion_resolution != None
+  let count = list.length(list.filter(
+    [has_assessment, has_planning, has_effect, has_completion], fn(x) { x },
+  ))
+  a.require(count <= 1, "reconciliation_intent_ambiguous")
+}
+
 pub fn reconciliation_intent_is_pending(
   execution: a.Execution,
   intent: String,
 ) -> Result(Bool, String) {
   use _ <- result.try(a.require(a.intent_valid(intent), "intent_id"))
   use assessment_lock <- result.try(assessment_lock_pending_for(execution, intent))
+  use _ <- result.try(reconciliation_namespace_guard_with(
+    execution, intent, assessment_lock, a.read_optional,
+  ))
   case assessment_lock {
     True -> Ok(True)
     False -> {
@@ -3418,7 +3712,23 @@ pub fn reconciliation_intent_is_pending(
             False -> Ok(False)
           }
         }
-        None -> pending_effect_or_completion_intent(execution, intent)
+        None -> {
+          use pointer <- result.try(a.read_optional(
+            planning.andon_path(execution.scope.plan, execution.scope.task),
+          ))
+          case pointer {
+            None -> pending_effect_or_completion_intent(execution, intent)
+            Some(raw) -> {
+              use matches <- result.try(planning_reconciliation_pointer_matches(
+                raw, execution.scope.plan, execution.scope.task, intent,
+              ))
+              case matches {
+                True -> Ok(True)
+                False -> pending_effect_or_completion_intent(execution, intent)
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -3452,11 +3762,7 @@ fn pending_effect_or_completion_intent(
         json.parse(raw, value.decoder())
           |> result.map_error(fn(_) { "effect_intent_json" }),
       )
-      Ok(pending_effect_record_matches(
-        prepared, execution.grant.digest, execution.scope.plan,
-        execution.scope.task, execution.binding.worker,
-        execution.binding.attempt, intent,
-      ))
+      Ok(effect_prepared_matches_execution(prepared, execution, intent))
     }
     Some(raw), Some(result_raw), _, _, None, _ -> {
       use prepared <- result.try(
@@ -3475,13 +3781,7 @@ fn pending_effect_or_completion_intent(
       })
       use signature <- result.try(text(prepared, "signature"))
       use _ <- result.try(a.require(
-        effect_result_matches_prepared(
-          prepared,
-          result_record,
-          execution.scope.plan,
-          execution.scope.task,
-          intent,
-        ),
+        effect_result_matches_execution(prepared, result_record, execution, intent),
         "effect_result_binding_mismatch",
       ))
       case status {
@@ -3491,19 +3791,12 @@ fn pending_effect_or_completion_intent(
           True -> case resolution {
             None -> Ok(True)
             Some(resolution_raw) -> {
-              use parsed_resolution <- result.try(
-                json.parse(resolution_raw, value.decoder())
-                  |> result.map_error(fn(_) { "effect_resolution_json" }),
+              // Replay eligibility is separate from task-wide pending state.
+              // The dispatcher re-scans the task before clearing its stop.
+              existing_resolution_reconcilable(
+                resolution_raw, raw, result_raw, execution.scope.plan,
+                execution.scope.task, intent, signature,
               )
-              Ok(!effect_resolution_matches(
-                parsed_resolution,
-                raw,
-                result_raw,
-                execution.scope.plan,
-                execution.scope.task,
-                intent,
-                signature,
-              ))
             }
           }
           False -> Ok(True)
@@ -3582,6 +3875,44 @@ pub fn pending_effect_record_matches(
     && identity_matches
 }
 
+/// A past attempt is reconcilable only by the same reviewed grant and worker,
+/// with no recorded attempt or coordinator epoch newer than the current fence.
+pub fn effect_prepared_matches_execution(
+  prepared: value.Value,
+  execution: a.Execution,
+  intent: String,
+) -> Bool {
+  let epoch_matches = case value.get(prepared, "execution") {
+    Ok(identity) -> case value.get(identity, "coordinator_epoch") {
+      Ok(value.Integer(epoch)) -> epoch > 0 && epoch <= execution.binding.epoch
+      _ -> False
+    }
+    _ -> False
+  }
+  execution.binding.plan == execution.scope.plan
+    && execution.binding.task == execution.scope.task
+    && execution.binding.worker == execution.grant.worker
+    && execution.binding.session == execution.grant.session
+    && pending_effect_record_matches(
+      prepared, execution.grant.digest, execution.scope.plan,
+      execution.scope.task, execution.binding.worker,
+      execution.binding.attempt, intent,
+    )
+    && epoch_matches
+}
+
+pub fn effect_result_matches_execution(
+  prepared: value.Value,
+  settled: value.Value,
+  execution: a.Execution,
+  intent: String,
+) -> Bool {
+  effect_prepared_matches_execution(prepared, execution, intent)
+    && effect_result_matches_prepared(
+      prepared, settled, execution.scope.plan, execution.scope.task, intent,
+    )
+}
+
 pub fn pending_completion_record_matches(
   prepared: value.Value,
   grant_sha: String,
@@ -3612,6 +3943,10 @@ pub fn reconcile(
 ) -> Result(json.Json, String) {
   use _ <- result.try(a.require(a.intent_valid(intent), "intent_id"))
   use _ <- result.try(a.check(execution.grant))
+  use assessment_pending <- result.try(assessment_lock_pending_for(execution, intent))
+  use _ <- result.try(reconciliation_namespace_guard_with(
+    execution, intent, assessment_pending, a.read_optional,
+  ))
   use assessment_lock <- result.try(reconcile_assessment_path_lock(
     execution, intent,
   ))
@@ -3651,9 +3986,29 @@ fn reconcile_effect_or_completion(
   }
 }
 
+/// Stop before effect reconciliation if the current task/lease fence is stale.
+/// The injected guard makes the ordering checkable without a live coordinator.
+pub fn with_effect_reconciliation_fence(
+  fence: fn() -> Result(Nil, String),
+  action: fn() -> Result(json.Json, String),
+) -> Result(json.Json, String) {
+  use _ <- result.try(fence())
+  action()
+}
+
 /// A dangling effect intent -- written before dispatch, never resulted -- is the
 /// state that previously had no exit at all. It gets quarantined, not resolved.
 fn reconcile_effect(
+  execution: a.Execution,
+  intent: String,
+) -> Result(json.Json, String) {
+  with_effect_reconciliation_fence(
+    fn() { a.fence(execution, 15_000) |> result.map(fn(_) { Nil }) },
+    fn() { reconcile_effect_after_fence(execution, intent) },
+  )
+}
+
+fn reconcile_effect_after_fence(
   execution: a.Execution,
   intent: String,
 ) -> Result(json.Json, String) {
@@ -3670,8 +4025,35 @@ fn reconcile_effect(
         value.get(parsed, "schema")
           == Ok(value.Text("uos.harness-successor-quarantine.v1"))
           && value.get(parsed, "kind") == Ok(value.Text("quarantine_record"))
+          && value.get(parsed, "status") == Ok(value.Text("QUARANTINED_OUTCOME_UNKNOWN"))
+          && value.get(parsed, "disposition") == Ok(value.Text("PERMANENT_NO_RETRY"))
           && value.get(parsed, "intent_id") == Ok(value.Text(intent)),
         "quarantine_kind_mismatch",
+      ))
+      // Older writes could stop after the per-grant record but before either
+      // global tombstone. Bind it to the original intent, then repair any
+      // missing prefix idempotently before returning the observation.
+      let prepared_path = effect_path(execution, intent, "intent")
+      use prepared_raw <- result.try(files.read(dev.root, prepared_path))
+      use prepared <- result.try(
+        json.parse(prepared_raw, value.decoder())
+          |> result.map_error(fn(_) { "intent_json" }),
+      )
+      use signature <- result.try(text(prepared, "signature"))
+      use _ <- result.try(a.require(
+        effect_prepared_matches_execution(prepared, execution, intent)
+          && value.get(parsed, "signature") == Ok(value.Text(signature))
+          && value.get(parsed, "original_intent_path") == Ok(value.Text(prepared_path))
+          && value.get(parsed, "original_intent_sha256") == Ok(value.Text(files.digest(prepared_raw))),
+        "quarantine_binding_invalid",
+      ))
+      let quarantine_path = effect_path(execution, intent, "quarantine")
+      use _ <- result.try(write_quarantine_records(
+        burned_intent_path(intent), burned_signature_path(signature),
+        quarantine_path, quarantine_tombstone(intent, signature, quarantine_path),
+        body,
+        fn() { a.fence(execution, 1000) |> result.map(fn(_) { Nil }) },
+        fn(path, body) { create_or_same_durable(dev.root, path, body) },
       ))
       Ok(value.encode(parsed))
     }
@@ -3706,10 +4088,7 @@ fn reconcile_effect(
               )
               use signature <- result.try(text(parsed, "signature"))
               use _ <- result.try(a.require(
-                effect_result_matches_prepared(
-                  parsed, result_record, execution.scope.plan,
-                  execution.scope.task, intent,
-                ),
+                effect_result_matches_execution(parsed, result_record, execution, intent),
                 "effect_result_binding_mismatch",
               ))
               use status <- result.try(text(result_record, "status"))
@@ -3722,39 +4101,59 @@ fn reconcile_effect(
                     Ok(value.Text(s)) -> Ok(s)
                     _ -> Ok("")
                   })
-                  use _ <- result.try(a.require(
-                    known_no_effect_refusal(status, tool, failure),
-                    "effect_outcome_unknown_requires_adjudication",
+                  use _ <- result.try(require_failed_effect_adjudication(
+                    status,
+                    tool,
+                    failure,
+                    effect_path(execution, intent, "result"),
+                    files.digest(body),
+                    effect_path(execution, intent, "intent"),
+                    files.digest(intent_body),
                   ))
-                  use now <- result.try(clock.observe())
-                  let resolution = json.object([
-                    #("schema", json.string("uos.harness-effect-resolution.v1")),
-                    #("state", json.string("KNOWN_NOT_APPLIED")),
-                    #("intent_id", json.string(intent)),
-                    #("plan", json.string(execution.scope.plan)),
-                    #("task", json.string(execution.scope.task)),
-                    #("request_signature", json.string(signature)),
-                    #("prepared_sha256", json.string(files.digest(intent_body))),
-                    #("result_sha256", json.string(files.digest(body))),
-                    #("reason", json.string("source_digest_conflict")),
-                    #("attribution", json.string("KNOWN_NOT_APPLIED")),
-                    #("observed_at", clock.to_json(now)),
-                  ])
-                  use _ <- result.try(create_or_same(
-                    effect_path(execution, intent, "resolution"),
-                    json.to_string(resolution),
-                  ))
-                  Ok(resolution)
+                  let path = effect_path(execution, intent, "resolution")
+                  use existing <- result.try(a.read_optional(path))
+                  case existing {
+                    Some(raw) -> {
+                      use resolution <- result.try(parse_bound_effect_resolution(
+                        raw, intent_body, body, execution.scope.plan,
+                        execution.scope.task, intent, signature,
+                      ))
+                      use _ <- result.try(a.fence(execution, 1000))
+                      use _ <- result.try(create_or_same_durable(dev.root, path, raw))
+                      Ok(resolution)
+                    }
+                    None -> {
+                      use now <- result.try(clock.observe())
+                      let resolution = json.object([
+                        #("schema", json.string("uos.harness-effect-resolution.v1")),
+                        #("state", json.string("KNOWN_NOT_APPLIED")),
+                        #("intent_id", json.string(intent)),
+                        #("plan", json.string(execution.scope.plan)),
+                        #("task", json.string(execution.scope.task)),
+                        #("request_signature", json.string(signature)),
+                        #("prepared_sha256", json.string(files.digest(intent_body))),
+                        #("result_sha256", json.string(files.digest(body))),
+                        #("reason", json.string("source_digest_conflict")),
+                        #("attribution", json.string("KNOWN_NOT_APPLIED")),
+                        #("observed_at", clock.to_json(now)),
+                      ])
+                      use _ <- result.try(a.fence(execution, 1000))
+                      use _ <- result.try(create_or_same_durable(dev.root, path, json.to_string(resolution)))
+                      Ok(resolution)
+                    }
+                  }
                 }
               }
             }
-            None ->
+            None -> {
+              use _ <- result.try(a.fence(execution, 1000))
               record_quarantine(
                 execution,
                 intent,
                 intent_body,
                 "dangling_effect_intent",
               )
+            }
           }
         }
       }

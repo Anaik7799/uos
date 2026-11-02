@@ -1373,7 +1373,10 @@ pub fn prepare(
   use logical_id <- result.try(case value.get(args, "logical_id") {
     Ok(value.Text(id)) ->
       case dev.valid_identifier(id) {
-        True -> Ok(id)
+        True -> case a.intent_valid(id) {
+          True -> Ok(id)
+          False -> Error("logical_id_not_reconcilable")
+        }
         False -> Error("logical_id_required")
       }
     _ -> Error("logical_id_required")

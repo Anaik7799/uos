@@ -57,6 +57,7 @@ uos_tool_path() {
     escript)    printf '%s\n' "$UOS_TC/nix-profile/bin/escript" ;;
     gleam)      printf '%s\n' "$UOS_TC/gleam-1.16.0/bin/gleam" ;;
     rebar3)     printf '%s\n' "$UOS_TC/nix-profile/bin/rebar3" ;;
+    cc)         printf '%s\n' "$UOS_TC/nix-profile/bin/cc" ;;
     # --- systems ---
     zig)        printf '%s\n' "$UOS_TC/nix-profile/bin/zig" ;;
     cargo)      printf '%s\n' "$UOS_TC/cargo/bin/cargo" ;;
@@ -122,7 +123,7 @@ uos_env() {
   mkdir -p "$ZIG_GLOBAL_CACHE_DIR"
 }
 
-UOS_ALL_TOOLS="erl erlc escript gleam rebar3 zig cargo rustc ocaml ocamlfind dune lean lake z3 quint jj pixi mojo node npm"
+UOS_ALL_TOOLS="erl erlc escript gleam rebar3 cc zig cargo rustc ocaml ocamlfind dune lean lake z3 quint jj pixi mojo node npm"
 
 uos_toolchain_report() {
   local name p status

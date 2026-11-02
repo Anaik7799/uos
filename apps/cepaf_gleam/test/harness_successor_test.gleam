@@ -14,6 +14,9 @@ import gleeunit/should
 import simplifile
 import uos_swarm/session_sync
 
+@external(erlang, "session_sync_ffi", "unique_id")
+fn unique_test_id() -> String
+
 fn scope() {
   a.Scope(
     "uos/test/20260909",
@@ -91,6 +94,120 @@ pub fn task_scope_excludes_old_bootstrap_and_secrets_test() {
   |> should.be_false
   a.scope_valid(a.Scope(..scope(), sources: ["AGENTS.md"]))
   |> should.be_false
+}
+
+pub fn reviewed_formal_and_toolchain_writes_require_source_manifest_test() {
+  let allowed = [
+    "formal/lean/HarnessFailedCheck.lean",
+    "flake.nix",
+    "devenv.nix",
+    "tools/preflight",
+    "tools/lib/uos-toolchain.sh",
+    "tools/release_process.ml",
+  ]
+  list.each(allowed, fn(target) {
+    a.scope_valid(a.Scope(..scope(), reads: [target], writes: [target], sources: [target]))
+    |> should.be_true
+    a.scope_valid(a.Scope(..scope(), reads: [target], writes: [target], sources: ["AGENTS.md"]))
+    |> should.be_false
+  })
+  a.scope_valid(a.Scope(..scope(), reads: ["flake.lock", "devenv.lock"]))
+  |> should.be_true
+  a.scope_valid(a.Scope(..scope(), writes: ["flake.lock"], sources: ["flake.lock"]))
+  |> should.be_false
+  a.scope_valid(a.Scope(..scope(), writes: ["devenv.lock"], sources: ["devenv.lock"]))
+  |> should.be_false
+  a.scope_valid(a.Scope(..scope(), writes: ["tools/unreviewed.ml"], sources: ["tools/unreviewed.ml"]))
+  |> should.be_false
+  a.scope_valid(a.Scope(..scope(), writes: ["formal/lean/../outside.lean"], sources: ["formal/lean/../outside.lean"]))
+  |> should.be_false
+  a.scope_valid(a.Scope(..scope(), writes: ["formal/lean/.secret.lean"], sources: ["formal/lean/.secret.lean"]))
+  |> should.be_false
+}
+
+pub fn policy_documents_are_candidate_sources_not_evidence_writes_test() {
+  list.each([
+    "AGENTS.md",
+    "engines/hermes/modules/hermes_sysml/AGENTS.md",
+    "governance/sources/example/GEMINI.md",
+    "governance/agents/example/SKILL.md",
+    "apps/cepaf_gleam/CLAUDE.md",
+    "contracts/rules/example.md",
+    "contracts/inference/max_inference_contract.json",
+    "docs/sop/example.md",
+    "governance/agents/policy/example.json",
+  ], fn(target) {
+    a.scope_valid(a.Scope(..scope(), writes: [target], sources: ["apps/cepaf_gleam/test/harness_successor_test.gleam"]))
+    |> should.be_false
+    a.scope_valid(a.Scope(..scope(), writes: [target], sources: [target]))
+    |> should.be_true
+    let policy_scope = a.Scope(..scope(), writes: [target], sources: [target])
+    a.policy_workspace_valid("", [policy_scope]) |> should.be_false
+    a.policy_workspace_valid(".uos-workspaces/candidate", [policy_scope])
+    |> should.be_true
+  })
+  // Explicitly granted journal/evidence writes remain a separate class. They
+  // are not source identity and do not by themselves authorize publication.
+  a.scope_valid(a.Scope(..scope(), writes: ["docs/journal/example.md"], sources: ["AGENTS.md"]))
+  |> should.be_true
+}
+
+fn grant_body_for_write(path: String, source: String, workspace: String) {
+  let task =
+    json.object([
+      #("plan", json.string("uos/test/20260909")),
+      #("task", json.string("clock")),
+      #("read_paths", json.array([path], json.string)),
+      #("write_paths", json.array([path], json.string)),
+      #("source_paths", json.array([source], json.string)),
+      #("test_modules", json.array(["harness_successor_test"], json.string)),
+      #("risk_portfolio", json.string("var/harness/20260909-1751-current-risk.json")),
+    ])
+  json.object([
+    #("schema", json.string("uos.harness-development-grant.v1")),
+    #("role", json.string("development")),
+    #("grant_id", json.string("test-grant")),
+    #("session", json.string("test-session")),
+    #("worker", json.string("test-worker")),
+    #("host_id", json.string(string.repeat("b", 64))),
+    #("boot_id", json.string("test-boot")),
+    #("expires_utc_us", json.string("2000000000000000")),
+    #("tasks", json.array([task], fn(value) { value })),
+    #("workspace_root", json.string(workspace)),
+    #("review_path", json.string("docs/reviews/20260909-1751-test.json")),
+    #("review_sha256", json.string(string.repeat("c", 64))),
+  ])
+  |> json.to_string
+}
+
+pub fn decoded_policy_grant_requires_candidate_workspace_test() {
+  let grant_path = "var/harness/20260909-1751-test-grant.json"
+  list.each([
+    "AGENTS.md",
+    "engines/hermes/modules/hermes_sysml/AGENTS.md",
+    "governance/agents/example/SKILL.md",
+    "contracts/rules/example.md",
+    "contracts/inference/max_inference_contract.json",
+    "docs/sop/example.md",
+    "governance/agents/policy/example.json",
+  ], fn(path) {
+    a.decode_grant(grant_path, grant_body_for_write(path, path, ""))
+    |> should.be_error
+    a.decode_grant(
+      grant_path,
+      grant_body_for_write(path, path, ".uos-workspaces/nonexistent-policy-test"),
+    )
+    |> should.be_error
+  })
+  a.decode_grant(
+    grant_path,
+    grant_body_for_write(
+      "docs/journal/example.md",
+      "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "",
+    ),
+  )
+  |> should.be_ok
 }
 
 pub fn path_components_and_empty_evidence_fail_closed_test() {
@@ -806,6 +923,24 @@ pub fn task_completion_cannot_bypass_an_unresolved_effect_test() {
   |> should.equal(#(state, Error("unresolved_operation_stop_line")))
 }
 
+pub fn reconciliation_keeps_stop_when_another_task_intent_is_pending_test() {
+  let binding = dev.Binding(
+    "development", scope().plan, scope().task, grant().worker, 1, grant().session, 1,
+  )
+  let execution = a.Execution(grant(), scope(), binding, scope().portfolio)
+  let state = mcp.State(..mcp.initial(grant()), execution: Some(execution), unresolved: True)
+  let receipt = json.object([])
+  mcp.reconciled_state_with(state, receipt, fn(_) { Ok(True) })
+  |> should.equal(Ok(state))
+  mcp.reconciled_state_with(state, receipt, fn(_) { Error("scan_failed") })
+  |> should.equal(Error("post_reconciliation_pending_unknown:scan_failed"))
+  mcp.reconciled_state_with(state, receipt, fn(_) { Ok(False) })
+  |> should.equal(Ok(mcp.State(..state, execution: None, unresolved: False)))
+  let planning_receipt = json.object([#("kind", json.string("planning_resolution"))])
+  mcp.reconciled_state_with(state, planning_receipt, fn(_) { Ok(False) })
+  |> should.equal(Ok(mcp.State(..state, unresolved: False)))
+}
+
 // --- Retained diagnostic integrity (RECEIPT_FIX) ---------------------------
 //
 // Observed defect, 2026-10-27, receipt of a real harness_test effect under
@@ -1134,6 +1269,167 @@ fn planning_execution() {
     ),
     "var/harness/20261027-1013-planning-current-risk.json",
   )
+}
+
+pub fn reconciliation_rejects_colliding_record_namespaces_test() {
+  let execution = planning_execution()
+  let intent = "shared-id"
+  let pointer = planning.pointer_record(
+    execution.scope.plan,
+    execution.scope.task,
+    planning.logical_key(execution.scope.plan, execution.scope.task, intent),
+  )
+  let assessment = fn(path) {
+    string.ends_with(path, "-" <> intent <> "-assessment-ledger.json")
+  }
+  let effect = fn(path) { string.ends_with(path, "@" <> intent <> "@intent.json") }
+  let completion = fn(path) {
+    string.ends_with(path, "@" <> intent <> "@completion-intent.json")
+  }
+  let is_pointer = fn(path) {
+    path == planning.andon_path(execution.scope.plan, execution.scope.task)
+  }
+  let key = planning.logical_key(execution.scope.plan, execution.scope.task, intent)
+  let historical_planning_path = planning.ledger_path(key, "intent")
+  let read_planning_and_effect = fn(path) {
+    case is_pointer(path), effect(path) {
+      True, _ -> Ok(Some(pointer))
+      _, True -> Ok(Some("effect"))
+      _, _ -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_planning_and_effect)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_planning_and_assessment = fn(path) {
+    case is_pointer(path), assessment(path) {
+      True, _ -> Ok(Some(pointer))
+      _, True -> Ok(Some("assessment"))
+      _, _ -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_planning_and_assessment)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_planning_and_completion = fn(path) {
+    case is_pointer(path), completion(path) {
+      True, _ -> Ok(Some(pointer))
+      _, True -> Ok(Some("completion"))
+      _, _ -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_planning_and_completion)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_assessment_and_effect = fn(path) {
+    case assessment(path) || effect(path) {
+      True -> Ok(Some("record"))
+      False -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_assessment_and_effect)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_assessment_and_completion = fn(path) {
+    case assessment(path) || completion(path) {
+      True -> Ok(Some("record"))
+      False -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_assessment_and_completion)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_terminal_assessment_and_effect = fn(path) {
+    case string.ends_with(path, "-" <> intent <> "-assessment-ledger.json.terminal.json")
+      || effect(path) {
+      True -> Ok(Some("record"))
+      False -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_terminal_assessment_and_effect)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_historical_planning_and_effect = fn(path) {
+    case path == historical_planning_path || effect(path) {
+      True -> Ok(Some("record"))
+      False -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_historical_planning_and_effect)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_effect_and_completion = fn(path) {
+    case effect(path) || completion(path) {
+      True -> Ok(Some("record"))
+      False -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_effect_and_completion)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_effect_and_completion_resolution = fn(path) {
+    case effect(path) || string.ends_with(path, "@" <> intent <> "@completion-resolution.json") {
+      True -> Ok(Some("record"))
+      False -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_effect_and_completion_resolution)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_effect_only = fn(path) {
+    case effect(path) { True -> Ok(Some("effect")) False -> Ok(None) }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_effect_only)
+  |> should.equal(Ok(Nil))
+  let read_planning_only = fn(path) {
+    case is_pointer(path) { True -> Ok(Some(pointer)) False -> Ok(None) }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_planning_only)
+  |> should.equal(Ok(Nil))
+  let other_pointer = planning.pointer_record(
+    execution.scope.plan, execution.scope.task,
+    planning.logical_key(execution.scope.plan, execution.scope.task, "other-id"),
+  )
+  let read_other_planning_and_effect = fn(path) {
+    case is_pointer(path), effect(path) {
+      True, _ -> Ok(Some(other_pointer))
+      _, True -> Ok(Some("effect"))
+      _, _ -> Ok(None)
+    }
+  }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_other_planning_and_effect)
+  |> should.equal(Ok(Nil))
+  ops.reconciliation_namespace_guard_with(execution, intent, True, read_effect_only)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let read_failure = fn(_) { Error("read_failed") }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read_failure)
+  |> should.equal(Error("read_failed"))
+}
+
+pub fn reconciliation_collision_guard_reads_real_isolated_records_test() {
+  let execution = planning_execution()
+  let intent = "shared-id"
+  let root = "/tmp/uos-route-guard-" <> unique_test_id()
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/var/harness/effects")
+  let pointer_path = planning.andon_path(execution.scope.plan, execution.scope.task)
+  let pointer = planning.pointer_record(
+    execution.scope.plan, execution.scope.task,
+    planning.logical_key(execution.scope.plan, execution.scope.task, intent),
+  )
+  let effect_path = "var/harness/effects/" <> execution.grant.id
+    <> "@" <> intent <> "@intent.json"
+  let assert Ok(_) = files.create(root, pointer_path, pointer)
+  let assert Ok(_) = files.create(root, effect_path, "prepared")
+  let read = fn(path) { files.read_optional(root, path) }
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read)
+  |> should.equal(Error("parent_unavailable"))
+  let assessment_directory = ops.assessment_target_directory_for(
+    dev.root, execution.scope.plan, execution.scope.task, execution.scope.portfolio,
+  )
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/" <> assessment_directory)
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read)
+  |> should.equal(Error("reconciliation_intent_ambiguous"))
+  let assert Ok(_) = simplifile.delete(root <> "/" <> pointer_path)
+  ops.reconciliation_namespace_guard_with(execution, intent, False, read)
+  |> should.equal(Ok(Nil))
+  let assert Ok(_) = simplifile.delete(root <> "/" <> effect_path)
+  let assert Ok(_) = simplifile.delete(root <> "/" <> assessment_directory)
+  let assert Ok(_) = simplifile.delete(root <> "/var/harness/assessment-ledgers")
+  let assert Ok(_) = simplifile.delete(root <> "/var/harness/effects")
+  let assert Ok(_) = simplifile.delete(root <> "/var/harness")
+  let assert Ok(_) = simplifile.delete(root <> "/var")
+  simplifile.delete(root) |> should.be_ok
 }
 
 fn ok_plan_readback(id: String, title: String) -> String {
@@ -1752,6 +2048,24 @@ pub fn planning_prepare_reaches_target_name_and_size_guards_test() {
     [],
   )
   |> should.equal(Error("evidence_write_scope_refused"))
+}
+
+pub fn planning_rejects_new_logical_ids_that_cannot_be_reconciled_test() {
+  let approved = "uos/development/planning-proof/20261027-1013"
+  let payload = fn(id) {
+    value.Object([
+      #("intent", value.Text("CreateTask")),
+      #("logical_id", value.Text(id)),
+      #("target_plan", value.Text(approved)),
+      #("task_id", value.Text("t01")),
+      #("title", value.Text("a title")),
+    ])
+  }
+  planning.prepare(payload("L-1"), [approved], []) |> should.be_ok
+  planning.prepare(payload("branch/item"), [approved], [])
+  |> should.equal(Error("logical_id_not_reconcilable"))
+  planning.prepare(payload(string.repeat("x", 49)), [approved], [])
+  |> should.equal(Error("logical_id_not_reconcilable"))
 }
 
 pub fn planning_ledger_trace_applied_replay_next_and_conflict_test() {

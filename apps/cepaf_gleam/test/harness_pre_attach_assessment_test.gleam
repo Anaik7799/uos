@@ -774,6 +774,246 @@ pub fn known_no_effect_refusal_is_narrowly_classified_test() {
   |> should.be_false
 }
 
+pub fn failed_check_exit_is_distinct_from_no_effect_and_unknown_test() {
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:1\ncompiler failed",
+  ) |> should.equal(operations.NonzeroCheckExit(1))
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_test", "backend_exit:23\ntest failed",
+  ) |> should.equal(operations.NonzeroCheckExit(23))
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_write_file", "source_digest_conflict",
+  ) |> should.equal(operations.UnappliedWriteConflict)
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:124\ntimeout",
+  ) |> should.equal(operations.UnknownEffectOutcome)
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:125\nunknown",
+  ) |> should.equal(operations.UnknownEffectOutcome)
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:01\nambiguous",
+  ) |> should.equal(operations.UnknownEffectOutcome)
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_write_file", "backend_exit:1\nunknown",
+  ) |> should.equal(operations.UnknownEffectOutcome)
+  operations.failed_effect_disposition(
+    "EXECUTED", "harness_build", "backend_exit:1\ncontradictory",
+  ) |> should.equal(operations.UnknownEffectOutcome)
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:1",
+  ) |> should.equal(operations.UnknownEffectOutcome)
+  operations.failed_effect_disposition(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:1\n",
+  ) |> should.equal(operations.NonzeroCheckExit(1))
+  list.each(["backend_exit:+1\nerror", "backend_exit:-1\nerror", "backend_exit:0\nerror", "backend_exit: 1\nerror", "timeout", "guardian_timeout"], fn(failure) {
+    operations.failed_effect_disposition(
+      "FAILED_OR_UNVERIFIED", "harness_build", failure,
+    ) |> should.equal(operations.UnknownEffectOutcome)
+  })
+}
+
+pub fn failed_check_adjudication_reports_original_receipt_and_refuses_test() {
+  let digest = string.repeat("a", 64)
+  let path = "var/harness/effects/grant@build-1@result.json"
+  let intent_path = "var/harness/effects/grant@build-1@intent.json"
+  let intent_digest = string.repeat("b", 64)
+  operations.require_failed_effect_adjudication(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:1\nfailed", path, digest,
+    intent_path, intent_digest,
+  ) |> should.equal(Error(
+    "failed_check_exit_requires_adjudication:1;receipt:" <> path <> ";sha256:" <> digest
+    <> ";intent:" <> intent_path <> ";intent_sha256:" <> intent_digest,
+  ))
+  operations.require_failed_effect_adjudication(
+    "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:1\nfailed", "../unsafe.json", digest,
+    intent_path, intent_digest,
+  ) |> should.equal(Error("failure_receipt_binding_invalid"))
+  list.each([
+    #("var/harness/effects/other@build-1@intent.json", intent_digest),
+    #("var/harness/effects/grant@build-1@result.json", intent_digest),
+    #("var/harness/effects/../grant@build-1@intent.json", intent_digest),
+    #(intent_path, "not-a-digest"),
+  ], fn(binding) {
+    operations.require_failed_effect_adjudication(
+      "FAILED_OR_UNVERIFIED", "harness_build", "backend_exit:1\nfailed", path, digest,
+      binding.0, binding.1,
+    ) |> should.equal(Error("failure_receipt_binding_invalid"))
+  })
+}
+
+pub fn failed_build_result_remains_pending_and_is_bound_to_its_intent_test() {
+  let digest = string.repeat("a", 64)
+  let execution = json.object([
+    #("plan", json.string("plan")),
+    #("task", json.string("task")),
+    #("grant_sha256", json.string(digest)),
+    #("worker", json.string("worker")),
+    #("attempt", json.int(7)),
+    #("coordinator_epoch", json.int(2)),
+  ])
+  let fields = [
+    #("schema", json.string("uos.harness-successor-effect.v1")),
+    #("intent_id", json.string("build-1")),
+    #("signature", json.string(digest)),
+    #("tool", json.string("harness_build")),
+    #("input_sha256", json.string(digest)),
+    #("execution", execution),
+  ]
+  let prepared_raw = json.to_string(json.object([
+    #("kind", json.string("effect_intent")),
+    #("status", json.string("PREPARED")), ..fields,
+  ]))
+  let failed_raw = json.to_string(json.object([
+    #("kind", json.string("effect_result")),
+    #("status", json.string("FAILED_OR_UNVERIFIED")),
+    #("failure", json.string("backend_exit:1\ncompiler failed")),
+    ..fields,
+  ]))
+  operations.legacy_effect_terminal_valid(
+    "grant@build-1@intent.json", prepared_raw, parsed(prepared_raw),
+    "plan", "task", Some(failed_raw), None,
+  ) |> should.equal(Ok(False))
+  let tampered = string.replace(failed_raw, "\"task\":\"task\"", "\"task\":\"other\"")
+  operations.legacy_effect_terminal_valid(
+    "grant@build-1@intent.json", prepared_raw, parsed(prepared_raw),
+    "plan", "task", Some(tampered), None,
+  ) |> should.be_error
+}
+
+pub fn matched_failed_effects_require_present_typed_identity_fields_test() {
+  let hash = string.repeat("a", 64)
+  let make = fn(kind: String, missing_root: String, missing_identity: String) {
+    let identity = [
+      #("plan", value.Text("plan")),
+      #("task", value.Text("task")),
+      #("grant_sha256", value.Text(hash)),
+      #("worker", value.Text("worker")),
+      #("attempt", value.Integer(7)),
+      #("coordinator_epoch", value.Integer(2)),
+    ]
+    |> list.filter(fn(pair) { pair.0 != missing_identity })
+    let root = [
+      #("schema", value.Text("uos.harness-successor-effect.v1")),
+      #("kind", value.Text(kind)),
+      #("status", case kind {
+        "effect_intent" -> value.Text("PREPARED")
+        _ -> value.Text("FAILED_OR_UNVERIFIED")
+      }),
+      #("intent_id", value.Text("build-1")),
+      #("signature", value.Text(hash)),
+      #("tool", value.Text("harness_build")),
+      #("input_sha256", value.Text(hash)),
+      #("execution", value.Object(identity)),
+    ]
+    |> list.filter(fn(pair) { pair.0 != missing_root })
+    value.Object(root)
+  }
+  operations.effect_result_matches_prepared(
+    make("effect_intent", "", ""), make("effect_result", "", ""),
+    "plan", "task", "build-1",
+  ) |> should.be_true
+  list.each(["signature", "tool", "input_sha256", "schema", "status"], fn(key) {
+    operations.effect_result_matches_prepared(
+      make("effect_intent", key, ""), make("effect_result", key, ""),
+      "plan", "task", "build-1",
+    ) |> should.be_false
+  })
+  list.each(["grant_sha256", "worker", "attempt", "coordinator_epoch"], fn(key) {
+    operations.effect_result_matches_prepared(
+      make("effect_intent", "", key), make("effect_result", "", key),
+      "plan", "task", "build-1",
+    ) |> should.be_false
+  })
+  let replace = fn(object, key, changed) {
+    case object {
+      value.Object(fields) ->
+        value.Object(list.map(fields, fn(field) {
+          case field.0 == key { True -> #(key, changed) False -> field }
+        }))
+      _ -> object
+    }
+  }
+  let replace_identity = fn(object, key, changed) {
+    case value.get(object, "execution") {
+      Ok(identity) -> replace(object, "execution", replace(identity, key, changed))
+      Error(_) -> object
+    }
+  }
+  let before = make("effect_intent", "", "")
+  let after = make("effect_result", "", "")
+  list.each([
+    #("signature", value.Text("short")),
+    #("input_sha256", value.Text("short")),
+    #("tool", value.Text("")),
+  ], fn(pair) {
+    operations.effect_result_matches_prepared(
+      replace(before, pair.0, pair.1), replace(after, pair.0, pair.1),
+      "plan", "task", "build-1",
+    ) |> should.be_false
+  })
+  list.each([
+    #("grant_sha256", value.Text("short")),
+    #("worker", value.Text("")),
+    #("attempt", value.Integer(0)),
+    #("coordinator_epoch", value.Integer(0)),
+  ], fn(pair) {
+    operations.effect_result_matches_prepared(
+      replace_identity(before, pair.0, pair.1), replace_identity(after, pair.0, pair.1),
+      "plan", "task", "build-1",
+    ) |> should.be_false
+  })
+
+  let scope = admission.Scope(
+    "plan", "task", [], [], ["AGENTS.md"], ["harness_pre_attach_assessment_test"],
+    "var/harness/test-current-risk.json", [], [],
+  )
+  let grant = admission.Grant(
+    "fixture-grant", "var/harness/fixture-grant.json", hash,
+    "fixture-session", "worker", hash, "fixture-boot", 1000,
+    [scope], "", "docs/reviews/fixture.json", hash,
+  )
+  let binding = dev.Binding("development", "plan", "task", "worker", 7, "fixture-session", 2)
+  let current = admission.Execution(grant, scope, binding, scope.portfolio)
+  operations.effect_result_matches_execution(before, after, current, "build-1")
+  |> should.be_true
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, grant: admission.Grant(..grant, digest: string.repeat("b", 64))), "build-1",
+  ) |> should.be_false
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, worker: "other")), "build-1",
+  ) |> should.be_false
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, session: "other")), "build-1",
+  ) |> should.be_false
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, plan: "other-plan")), "build-1",
+  ) |> should.be_false
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, task: "other-task")), "build-1",
+  ) |> should.be_false
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, attempt: 6)), "build-1",
+  ) |> should.be_false
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, epoch: 1)), "build-1",
+  ) |> should.be_false
+  list.each([
+    #("grant_sha256", value.Text(string.repeat("b", 64))),
+    #("worker", value.Text("other")),
+    #("attempt", value.Integer(8)),
+    #("coordinator_epoch", value.Integer(3)),
+  ], fn(pair) {
+    operations.effect_result_matches_execution(
+      replace_identity(before, pair.0, pair.1),
+      replace_identity(after, pair.0, pair.1),
+      current, "build-1",
+    ) |> should.be_false
+  })
+  operations.effect_result_matches_execution(
+    before, after, admission.Execution(..current, binding: dev.Binding(..binding, attempt: 8, epoch: 3)), "build-1",
+  ) |> should.be_true
+}
+
 pub fn effect_resolution_binds_prepared_and_failed_result_hashes_test() {
   let signature = string.repeat("a", 64)
   let prepared_raw = json.to_string(json.object([
@@ -808,7 +1048,7 @@ pub fn effect_resolution_binds_prepared_and_failed_result_hashes_test() {
       #("attempt", json.int(7)),
     ])),
   ]))
-  let resolution = parsed(json.object([
+  let resolution_raw = json.object([
     #("schema", json.string("uos.harness-effect-resolution.v1")),
     #("state", json.string("KNOWN_NOT_APPLIED")),
     #("intent_id", json.string("write-1")),
@@ -819,7 +1059,8 @@ pub fn effect_resolution_binds_prepared_and_failed_result_hashes_test() {
     #("result_sha256", json.string(files.digest(result_raw))),
     #("reason", json.string("source_digest_conflict")),
     #("attribution", json.string("KNOWN_NOT_APPLIED")),
-  ]) |> json.to_string)
+  ]) |> json.to_string
+  let resolution = parsed(resolution_raw)
   operations.effect_resolution_matches(
     resolution,
     prepared_raw,
@@ -840,6 +1081,15 @@ pub fn effect_resolution_binds_prepared_and_failed_result_hashes_test() {
     signature,
   )
   |> should.be_false
+  operations.parse_bound_effect_resolution(
+    resolution_raw, prepared_raw, result_raw, "plan", "task", "write-1", signature,
+  ) |> should.be_ok
+  operations.existing_resolution_reconcilable(
+    resolution_raw, prepared_raw, result_raw, "plan", "task", "write-1", signature,
+  ) |> should.equal(Ok(True))
+  operations.parse_bound_effect_resolution(
+    resolution_raw, prepared_raw, result_raw <> " ", "plan", "task", "write-1", signature,
+  ) |> should.equal(Error("effect_resolution_binding_mismatch"))
 }
 
 pub fn pending_completion_reconcile_requires_exact_task_identity_test() {
@@ -855,6 +1105,135 @@ pub fn pending_completion_reconcile_requires_exact_task_identity_test() {
   operations.pending_completion_record_matches(
     prepared, digest, "plan", "other-task", "worker", 7, "finish-1",
   ) |> should.be_false
+}
+
+pub fn planning_reconciliation_pointer_requires_exact_task_and_logical_id_test() {
+  let key = planning.logical_key("plan", "task", "operation-1")
+  let pointer = planning.pointer_record("plan", "task", key)
+  operations.planning_reconciliation_pointer_matches(pointer, "plan", "task", "operation-1")
+  |> should.equal(Ok(True))
+  operations.planning_reconciliation_pointer_matches(pointer, "plan", "task", "other-operation")
+  |> should.equal(Ok(False))
+  operations.planning_reconciliation_pointer_matches(pointer, "different-plan", "task", "operation-1")
+  |> should.equal(Error("planning_pointer_binding_invalid"))
+  operations.planning_reconciliation_pointer_matches("not-json", "plan", "task", "operation-1")
+  |> should.equal(Error("planning_pointer_json"))
+}
+
+pub fn effect_reconciliation_checks_fence_before_action_test() {
+  operations.with_effect_reconciliation_fence(
+    fn() { Error("stale_or_expired") },
+    fn() { Error("action_must_not_run") },
+  ) |> should.equal(Error("stale_or_expired"))
+  operations.with_effect_reconciliation_fence(
+    fn() { Ok(Nil) },
+    fn() { Error("action_was_run") },
+  ) |> should.equal(Error("action_was_run"))
+}
+
+pub fn quarantine_records_burn_first_and_repair_partial_write_test() {
+  let root = "/tmp/uos-harness-quarantine-" <> unique_id()
+  let assert Ok(_) = simplifile.create_directory(root)
+  let write_same = fn(path, body) {
+    operations.create_or_same_durable(root, path, body)
+  }
+  let fence_until_first_write = fn() {
+    case files.read_optional(root, "burned-intent") {
+      Ok(None) -> Ok(Nil)
+      _ -> Error("lease_expired")
+    }
+  }
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "record",
+    fence_until_first_write, write_same,
+  ) |> should.equal(Error("lease_expired"))
+  files.read(root, "burned-intent") |> should.equal(Ok("tombstone"))
+  files.read_optional(root, "burned-signature") |> should.equal(Ok(None))
+  files.read_optional(root, "quarantine") |> should.equal(Ok(None))
+  let live_fence = fn() { Ok(Nil) }
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "record",
+    live_fence, write_same,
+  ) |> should.equal(Ok(Nil))
+  files.read(root, "burned-signature") |> should.equal(Ok("tombstone"))
+  files.read(root, "quarantine") |> should.equal(Ok("record"))
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "record",
+    live_fence, write_same,
+  ) |> should.equal(Ok(Nil))
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "different",
+    live_fence, write_same,
+  ) |> should.equal(Error("artifact_bytes_changed"))
+  files.read(root, "quarantine") |> should.equal(Ok("record"))
+  let assert Ok(_) = simplifile.delete(root)
+}
+
+pub fn quarantine_does_not_publish_after_losing_second_fence_test() {
+  let root = "/tmp/uos-harness-quarantine-" <> unique_id()
+  let assert Ok(_) = simplifile.create_directory(root)
+  let write_same = fn(path, body) {
+    operations.create_or_same_durable(root, path, body)
+  }
+  let fence_until_second_write = fn() {
+    case files.read_optional(root, "burned-signature") {
+      Ok(None) -> Ok(Nil)
+      _ -> Error("lease_expired")
+    }
+  }
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "record",
+    fence_until_second_write, write_same,
+  ) |> should.equal(Error("lease_expired"))
+  files.read(root, "burned-intent") |> should.equal(Ok("tombstone"))
+  files.read(root, "burned-signature") |> should.equal(Ok("tombstone"))
+  files.read_optional(root, "quarantine") |> should.equal(Ok(None))
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "record",
+    fn() { Ok(Nil) }, write_same,
+  ) |> should.equal(Ok(Nil))
+  files.read(root, "quarantine") |> should.equal(Ok("record"))
+  let assert Ok(_) = simplifile.delete(root)
+}
+
+pub fn quarantine_holds_on_torn_existing_tombstone_test() {
+  let root = "/tmp/uos-harness-quarantine-" <> unique_id()
+  let assert Ok(_) = simplifile.create_directory(root)
+  let assert Ok(Nil) = files.create(root, "burned-intent", "partial")
+  operations.write_quarantine_records(
+    "burned-intent", "burned-signature", "quarantine", "tombstone", "record",
+    fn() { Ok(Nil) },
+    fn(path, body) { operations.create_or_same_durable(root, path, body) },
+  ) |> should.equal(Error("artifact_bytes_changed"))
+  files.read(root, "burned-intent") |> should.equal(Ok("partial"))
+  files.read_optional(root, "burned-signature") |> should.equal(Ok(None))
+  files.read_optional(root, "quarantine") |> should.equal(Ok(None))
+  let assert Ok(_) = simplifile.delete(root)
+}
+
+pub fn quarantine_blocks_same_intent_across_grants_test() {
+  let root = "/tmp/uos-harness-quarantine-" <> unique_id()
+  let assert Ok(_) = simplifile.create_directory_all(root <> "/var/harness/effects")
+  let hash = string.repeat("a", 64)
+  let scope = admission.Scope(
+    "plan", "task", [], [], ["AGENTS.md"], ["harness_pre_attach_assessment_test"],
+    "var/harness/test-current-risk.json", [], [],
+  )
+  let grant = admission.Grant(
+    "other-grant", "var/harness/fixture-grant.json", hash,
+    "fixture-session", "worker", hash, "fixture-boot", 1000,
+    [scope], "", "docs/reviews/fixture.json", hash,
+  )
+  let binding = dev.Binding("development", "plan", "task", "worker", 7, "fixture-session", 2)
+  let current = admission.Execution(grant, scope, binding, scope.portfolio)
+  let assert Ok(Nil) = files.create(root, operations.burned_intent_path("build-1"), "blocked")
+  let read = fn(path) { files.read_optional(root, path) }
+  operations.check_not_burned_with(current, "build-1", hash, read)
+  |> should.equal(Error("intent_permanently_quarantined_no_retry"))
+  // Different IDs and attempt-bound signatures are a known deduplication gap.
+  operations.check_not_burned_with(current, "different-intent", string.repeat("b", 64), read)
+  |> should.equal(Ok(Nil))
+  let assert Ok(_) = simplifile.delete(root)
 }
 
 pub fn engine_ml_and_mli_paths_are_explicit_public_sources_test() {
