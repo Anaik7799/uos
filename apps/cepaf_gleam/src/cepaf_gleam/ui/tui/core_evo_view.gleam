@@ -55,7 +55,7 @@ fn render_dashboard(use_ansi: Bool) -> String {
     <> " bps & $6/$10 OR)"
 
   let sim_line =
-    "  Holons: 170 (10x17) x 24 Epochs = 4080 States (12/12 Invariants) | Intelligent FPP Actors: 40/40 (4 Domains x L0..L9) | OI07 Targets: "
+    "  Holons: 170 (10x17) x 24 Epochs = 4080 States (12/12 Invariants) | Intelligent FPP Actors: 40/40 (4 Domains x L0..L9) | Bionic Token Twin: 13/13 Math + 8 FPP-TOK | OI07 Targets: "
     <> int.to_string(target_count)
     <> " (0 mixed readers) | Modules: "
     <> int.to_string(list.length(modules))

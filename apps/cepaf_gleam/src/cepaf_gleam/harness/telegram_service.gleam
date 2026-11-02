@@ -4247,12 +4247,12 @@ pub fn start_supervised_service(
   // is created there and dies there, without a handoff or bootstrap registry.
   case process.receive(bridge_subject, 3000) {
     Ok(#(scope, actor_subj)) -> {
-      case #(
+      case
         ffi_get_worker_subject(scope, "authority"),
         ffi_get_worker_subject(scope, "store"),
         ffi_get_worker_subject(scope, "poller")
-      ) {
-        #(Ok(auth_subj), Ok(store_subj), Ok(poller_subj)) ->
+      {
+        Ok(auth_subj), Ok(store_subj), Ok(poller_subj) ->
           Ok(SupervisedService(
             supervisor: sup_started.data,
             actor_subject: actor_subj,
@@ -4264,7 +4264,7 @@ pub fn start_supervised_service(
             configuration: config,
             media_janitor: option.map(media_janitor, fn(pair) { pair.0 }),
           ))
-        _ -> {
+        _, _, _ -> {
           let cleanup = stop_instance(sup_started.pid)
           Error("supervised_worker_subject_missing: " <> string.inspect(cleanup))
         }

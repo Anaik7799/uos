@@ -40,7 +40,7 @@ pub type Outcome {
   Outcome(assessment: v.Assessment, receipt: String, runs: List(GateRun))
 }
 
-type Observation {
+pub type Observation {
   Observation(
     result: String,
     child_exit: Int,

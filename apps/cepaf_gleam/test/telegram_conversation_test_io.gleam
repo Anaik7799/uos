@@ -3,7 +3,6 @@ import gleam/string
 import cepaf_gleam/harness/telegram_service as service
 import gleam/json
 import gleam/option.{Some}
-import gleam/result
 import simplifile
 import uos_swarm/openrouter_worker as model
 

@@ -26,6 +26,7 @@
 ////    - All 8 Bionic organs + ZLP-v3 monotonic `seq_id` signed Zenoh `uos/v1/**`
 //// 3. 12-Invariant Machine Verification Certificate (`INV-HOLON-01..12`).
 
+import cepaf_gleam/ecology/core_bionic_token_twin
 import cepaf_gleam/ecology/core_biomorphic_fractal.{
   type FractalLayer10, type MetabolicRegime, AntigenForeignC3iFrame,
   AntigenProvenanceAboveEv93, ImmuneIsolateAndHeal,
@@ -861,9 +862,15 @@ pub fn verify_simulation_correctness(
     && core_sysml.satisfaction_ratio == 1.0
     && fpp_cnt == 6
 
-  // INV-11: Zero Split-Brain & EV-93 Provenance Sovereignty (all 3 attack ticks quarantined)
+  // INV-11: Zero Split-Brain & EV-93 Provenance Sovereignty + 13-Theorem Bionic Token Twin
+  let math_specs =
+    core_bionic_token_twin.verify_full_12_domain_mathematical_coverage()
+  let bionic_math_ok =
+    list.length(math_specs) == 13
+    && list.all(math_specs, fn(m) { m.verified_holds })
   let inv11 =
     sim.attacks_quarantined == 3
+    && bionic_math_ok
     && list.all(sim.epochs, fn(e) { e.root_trust_ok })
 
   // INV-12: Strictly Monotonic ZLP-v3 Signed Zenoh Sequence Numbers (seq_{t+1} > seq_t)

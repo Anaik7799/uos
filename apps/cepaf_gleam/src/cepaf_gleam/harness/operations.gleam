@@ -674,7 +674,7 @@ pub fn effect(
   use saved <- result.try(a.read_optional(result_path))
   case saved {
     Some(body) -> {
-      use receipt <- result.try(replay(body, sig))
+      use _receipt <- result.try(replay(body, sig))
       Ok(effect_response_summary(result_path, body, True))
     }
     None -> {
@@ -1114,7 +1114,7 @@ pub fn initial_plan_rows(raw: String) -> Result(List(value.Value), String) {
   let task_lines = list.filter(lines, fn(line) { string.starts_with(line, "{") })
   let diagnostics = list.filter(lines, fn(line) { string.starts_with(line, "sa-plan-pipeline ") })
   use _ <- result.try(a.require(
-    list.length(task_lines) > 0 && list.length(diagnostics) == 1
+    task_lines != [] && list.length(diagnostics) == 1
       && list.length(task_lines) + list.length(diagnostics) == list.length(lines),
     "canonical_task_list_output_invalid",
   ))

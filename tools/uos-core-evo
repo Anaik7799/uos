@@ -389,7 +389,8 @@ cmd_biomorphic_fractal() {
       <<\"lyapunov_v_now\">> => VNow,
       <<\"lyapunov_delta_v\">> => DeltaV,
       <<\"lyapunov_decreasing\">> => (DeltaV =< 0),
-      <<\"bionic_services_online\">> => element(8, Bionic),
+      <<\"bionic_services_online\">> => element(10, Bionic),
+      <<\"bionic_token_twin_verified\">> => element(11, Bionic),
       <<\"admitted_ev_ceiling\">> => ${ADMITTED_EV_CEILING}
     },
     io:put_chars([json:encode(Out), <<\"\n\">>]),
@@ -473,6 +474,15 @@ cmd_run_task() {
     "${plan_id}" "${task_id}" "${role}" "${prompt_file}"
 }
 
+cmd_bionic_token_twin() {
+  run_otp29_eval "
+    ApiMod = 'cepaf_gleam@ui@wisp@core_evo_api',
+    Json = 'gleam@json':to_string(ApiMod:bionic_token_twin_json()),
+    io:put_chars([Json, <<\"\n\">>]),
+    halt(0).
+  "
+}
+
 usage() {
   cat <<'EOF'
 Usage: tools/uos-core-evo <subcommand> [options]
@@ -483,6 +493,7 @@ Subcommands:
   systems-engineering    Verify 17-Aspect, Sheaf, Stan, 11-Domain Rete-UL, FPP/SysML & 8 Bionic Services
   simulate-verify        Simulate 24 epochs x 170 Fractal Holons (4,080 states, 12 invariants)
   fpp-actor-mesh         Verify all 40 OTP 29 FPP actors + persistent OneForOne supervisor + Ed25519 Zenoh
+  bionic-token-twin      Verify Bionic Token Twin: 8 Shannon fastpath profiles, 8 watchdogs, 10 surfaces & 13/13 math theorems
   biomorphic-fractal     Evaluate Metabolic ATP & Lyapunov dV/dt stability
   quota                  Query or record 40%-margin sliding-window quota ledger
   plan-attempt           Compute deterministic 3-attempt Jidoka self-healing plan
@@ -504,6 +515,7 @@ case "${subcmd}" in
   systems-engineering) cmd_systems_engineering "$@" ;;
   simulate-verify) cmd_simulate_verify "$@" ;;
   fpp-actor-mesh) cmd_fpp_actor_mesh "$@" ;;
+  bionic-token-twin) cmd_bionic_token_twin "$@" ;;
   biomorphic-fractal) cmd_biomorphic_fractal "$@" ;;
   quota) cmd_quota "$@" ;;
   plan-attempt) cmd_plan_attempt "$@" ;;

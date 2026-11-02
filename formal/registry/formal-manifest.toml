@@ -1,7 +1,7 @@
 # UOS Formal Specification Authority Registry
 [meta]
 schema = "UOS-FORMAL-MANIFEST-v1"
-authorities_count = 9
+authorities_count = 11
 
 [authorities.gospel]
 status = "ACTIVE_AUTHORITY"
@@ -19,3 +19,13 @@ scope = "Lockstep freshness and kernel core theorems"
 [authorities.tla]
 status = "MODEL_CHECKER"
 scope = "Distributed consensus and supervisor state machines"
+
+[authorities.quint]
+version = "0.33.0"
+status = "MODEL_CHECKER"
+scope = "Temporal state-machine invariants, Monte Carlo traces, and cutover protocols"
+
+[authorities.rocq]
+version = "9.1.1"
+status = "KERNEL_PROVER"
+scope = "Constructive kernel-checked mathematical proofs and Why3/WhyML verification conditions"

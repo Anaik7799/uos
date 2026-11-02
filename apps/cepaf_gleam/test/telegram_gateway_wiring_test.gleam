@@ -14,7 +14,6 @@ import cepaf_gleam/harness/telegram_store_transport as transport
 import gleam/dynamic.{type Dynamic}
 import gleam/erlang/process.{type Pid}
 import gleam/list
-import gleam/option.{None}
 import gleam/otp/static_supervisor as sup
 import gleam/otp/system
 import gleam/string

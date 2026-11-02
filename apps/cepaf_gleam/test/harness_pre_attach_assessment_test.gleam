@@ -10,7 +10,6 @@ import gleam/erlang/process
 import gleam/bit_array
 import gleam/erlang/atom
 import gleam/list
-import gleam/int
 import simplifile
 import uos_swarm/session_store as store
 import uos_swarm/session_sync as sync

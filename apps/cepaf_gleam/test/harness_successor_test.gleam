@@ -1442,17 +1442,6 @@ fn ok_plan_readback(id: String, title: String) -> String {
   <> "\"}\nsa-plan-pipeline {\"command\":\"--plan-show\"}"
 }
 
-fn stub_backend(
-  dispatch: Result(String, String),
-  readback: Result(String, String),
-) {
-  planning.Backend(
-    dispatch: fn(_argv) { dispatch },
-    readback: fn(_argv) { readback },
-    write_evidence: fn(_path, _body) { Ok(Nil) },
-  )
-}
-
 pub fn planning_prevalidation_refuses_before_any_dispatch_test() {
   let execution = planning_execution()
   // A dispatch that would panic if reached proves these refusals are pre-effect.

@@ -3,8 +3,7 @@
 
 import cepaf_gleam/harness/files
 import cepaf_gleam/mcp/types.{
-  type EvidenceRecord, type Outcome, Complete, EvidenceRecord, NonRetryable,
-  Refused, ToolError,
+  type Outcome, Complete, EvidenceRecord, NonRetryable, Refused, ToolError,
 }
 import gleam/dynamic/decode
 import gleam/json

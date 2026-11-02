@@ -61,6 +61,7 @@ pub fn view() -> String {
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/hive\">5-Caste Holonic Hive &amp; 9 Benefits JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/services\">8 Bionic Services, 7 Modules &amp; 13 Commands JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/fpp-actors\">40 Intelligent NASA FPP Actors JSON</a> &middot; "
+  <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/core-evo/bionic-token-twin\">Bionic Token Twin &amp; 13-Theorem Math JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/core-evo/health\">Health Probe JSON</a></p>"
   <> "<p><a href=\""
   <> spec_url
@@ -134,6 +135,7 @@ fn render_runtime_summary() -> String {
   <> ", 4 Supervision Domains x L0..L9)</code> &middot; OI07 Recoverable Cutover Targets: <code>"
   <> int.to_string(target_count)
   <> " targets (0 mixed readers)</code></li>"
+  <> "<li>Bionic Token Digital Twin &amp; Shannon Fastpath: <code>8 Content Classes &middot; 8 FPP-TOK Watchdogs &middot; 10 Fractal Surfaces (L0..L9) &middot; 13/13 Multi-Prover Math Domains (Lean4/Rocq/Z3/Why3/Quint/TLA+)</code></li>"
   <> "</ul></section>"
 }
 

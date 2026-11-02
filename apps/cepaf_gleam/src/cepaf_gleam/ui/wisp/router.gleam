@@ -360,6 +360,12 @@ fn route_internal(path: String) -> String {
         "core-evo/fpp-actors",
         "plane",
       ))
+    "/api/v1/core-evo/bionic-token-twin" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.bionic_token_twin_json()),
+        "core-evo/bionic-token-twin",
+        "plane",
+      ))
     "/api/v1/verification" | "/api/verification/status" ->
       module_guard.unwrap(module_guard.guard_json(
         verification_json(),

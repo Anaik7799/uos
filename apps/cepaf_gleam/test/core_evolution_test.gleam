@@ -22,6 +22,11 @@ import cepaf_gleam/ecology/core_hive.{
   QuorumFailClosedHold, SovereignSentinel, TrailCorruptionQuarantine,
   TrailReadyPull,
 }
+import cepaf_gleam/ecology/core_bionic_token_twin.{
+  CtFormalSpec, CtHighEntropy, CtJsonStruct, CtLogStream, CtProseMd,
+  CtSourceAst, CtTabularCsv, CtUnifiedDiff, TokenHealthOptimal,
+  TokenHealthRedflag, TokenTurnTelemetry,
+}
 import cepaf_gleam/ecology/core_fractal_holonic_simulator
 import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
   ActorIntentAccepted, ActorIntentRequest, ActorIntentVetoed, AdvisoryFreeTier,
@@ -943,7 +948,7 @@ pub fn full_fpp_6_machines_sysml_v2_packages_and_8_bionic_services_test() {
   should.be_true(core_rep.valid)
   should.equal(core_rep.satisfaction_ratio, 1.0)
   should.equal(core_rep.errors, [])
-  should.equal(core_rep.total_parts, 6)
+  should.equal(core_rep.total_parts, 7)
   should.equal(fpp_cnt, 6)
 
   let q = QuotaSnapshot(900, 1200, 1500, 750_000_000)
@@ -963,6 +968,7 @@ pub fn full_fpp_6_machines_sysml_v2_packages_and_8_bionic_services_test() {
   should.equal(bionic.metabolic_regime, AnabolicParallel)
   should.equal(bionic.fractal_l0_l9_health, LayerHealthy)
   should.equal(bionic.bionic_services_online, 8)
+  should.be_true(bionic.bionic_token_twin_verified)
 
   let unified =
     core_systems_engineering.evaluate_unified_systems_engineering(
@@ -1536,3 +1542,137 @@ fn ffi_expected_payload_env_matches(payload_sha: String) -> Bool
 
 @external(erlang, "core_fpp_candidate_ffi", "set_expected_payload_env_for_test")
 fn ffi_set_expected_payload_env_for_test(val: String) -> Nil
+
+pub fn bionic_token_twin_shannon_fastpath_and_8_fpp_watchdogs_test() {
+  let profiles = core_bionic_token_twin.all_content_fastpath_profiles()
+  should.equal(list.length(profiles), 8)
+
+  let json_prof =
+    core_bionic_token_twin.classify_shannon_fastpath(4621, 778, 1200, 80)
+  should.equal(json_prof.content_class, CtJsonStruct)
+  should.equal(json_prof.target_compression_ratio_x10, 145)
+
+  let entropy_prof =
+    core_bionic_token_twin.classify_shannon_fastpath(5800, 100, 7200, 20)
+  should.equal(entropy_prof.content_class, CtHighEntropy)
+  should.equal(entropy_prof.target_compression_ratio_x10, 920)
+
+  let log_prof =
+    core_bionic_token_twin.classify_shannon_fastpath(4400, 200, 2200, 180)
+  should.equal(log_prof.content_class, CtLogStream)
+
+  let watchdogs = core_bionic_token_twin.canonical_8_fpp_token_watchdogs()
+  should.equal(list.length(watchdogs), 8)
+
+  let nominal_sample =
+    TokenTurnTelemetry(
+      raw_tokens: 34_400,
+      wire_tokens: 5606,
+      cache_hit_bps: 9450,
+      kl_drift_milli: 12,
+      lyapunov_v_prev_micro: 214_000,
+      lyapunov_v_curr_micro: 11_482,
+      remaining_margin_bps: 10_000,
+      active_context_controllers: 1,
+      capsule_sha_matched: True,
+      nif_latency_us: 19,
+    )
+  case core_bionic_token_twin.evaluate_token_watchdog_mesh(nominal_sample) {
+    TokenHealthOptimal(red_bps, dv_micro, active_count) -> {
+      should.be_true(red_bps > 8000)
+      should.be_true(dv_micro < 0)
+      should.equal(active_count, 8)
+    }
+    _ -> should.fail()
+  }
+
+  let misconfig_sample =
+    TokenTurnTelemetry(
+      raw_tokens: 34_400,
+      wire_tokens: 25_099,
+      cache_hit_bps: 7000,
+      kl_drift_milli: 50,
+      lyapunov_v_prev_micro: 100_000,
+      lyapunov_v_curr_micro: 140_000,
+      remaining_margin_bps: 3500,
+      active_context_controllers: 2,
+      capsule_sha_matched: False,
+      nif_latency_us: 2000,
+    )
+  case core_bionic_token_twin.evaluate_token_watchdog_mesh(misconfig_sample) {
+    TokenHealthRedflag(flags, dv_micro, reflex) -> {
+      should.equal(list.length(flags), 7)
+      should.be_true(dv_micro > 0)
+      should.equal(reflex, "ReflexJidokaConstitutionalHalt")
+    }
+    _ -> should.fail()
+  }
+}
+
+pub fn bionic_token_twin_bdd_8_archetypes_and_rate_distortion_fold_test() {
+  // BDD Scenario 1: Given all 8 content archetypes, when classified by Shannon entropy
+  // and structural/hex/newline densities, then each maps to its exact FastpathProfile.
+  let p_high = core_bionic_token_twin.classify_shannon_fastpath(6200, 120, 7500, 40)
+  should.equal(p_high.content_class, CtHighEntropy)
+
+  let p_json = core_bionic_token_twin.classify_shannon_fastpath(4500, 820, 900, 90)
+  should.equal(p_json.content_class, CtJsonStruct)
+
+  let p_csv = core_bionic_token_twin.classify_shannon_fastpath(4100, 90, 1900, 280)
+  should.equal(p_csv.content_class, CtTabularCsv)
+
+  let p_log = core_bionic_token_twin.classify_shannon_fastpath(4300, 220, 2100, 160)
+  should.equal(p_log.content_class, CtLogStream)
+
+  let p_diff = core_bionic_token_twin.classify_shannon_fastpath(4400, 260, 1100, 210)
+  should.equal(p_diff.content_class, CtUnifiedDiff)
+
+  let p_formal = core_bionic_token_twin.classify_shannon_fastpath(5100, 540, 800, 110)
+  should.equal(p_formal.content_class, CtFormalSpec)
+
+  let p_ast = core_bionic_token_twin.classify_shannon_fastpath(4400, 460, 700, 110)
+  should.equal(p_ast.content_class, CtSourceAst)
+
+  let p_prose = core_bionic_token_twin.classify_shannon_fastpath(4200, 120, 400, 90)
+  should.equal(p_prose.content_class, CtProseMd)
+
+  // BDD Scenario 2: Rate-distortion fold respects D_KL <= 35 milli-nats and rejects unsafe distortion
+  let assert Ok(#(folded_json, kl_json)) =
+    core_bionic_token_twin.compute_rate_distortion_fold(14_500, p_json, 120)
+  should.be_true(folded_json < 1000)
+  should.be_true(kl_json <= 35)
+
+  // Low lambda weight causes KL divergence > 35 -> fail-closed Error
+  let assert Error(reason) =
+    core_bionic_token_twin.compute_rate_distortion_fold(14_500, p_prose, 50)
+  should.equal(reason, "KL_DIVERGENCE_CEILING_EXCEEDED")
+}
+
+pub fn bionic_token_twin_data_driven_10_fractal_surfaces_and_property_chaos_test() {
+  // 1. Data-Driven 10-Layer (L0..L9) Fractal Surface Table Verification
+  let surfaces = core_bionic_token_twin.canonical_10_layer_fractal_token_surfaces()
+  should.equal(list.length(surfaces), 10)
+  list.each(surfaces, fn(s) {
+    should.be_true(s.slo_latency_us > 0 && s.slo_latency_us <= 1200)
+    should.be_true(s.min_compression_ratio_x10 >= 24)
+    should.be_true(string.starts_with(s.watchdog_agent_id, "FPP-"))
+    should.be_true(string.starts_with(s.governing_contract, "SC-"))
+  })
+
+  // 2. Property-Based, Fuzz & Chaos Suite (1,000 deterministic trials: 500 nominal + 500 chaos fault injections)
+  let #(passed, redflags, optimals) =
+    core_bionic_token_twin.run_property_and_chaos_suite(1000, 42_093)
+  should.equal(passed, 1000)
+  should.equal(redflags, 500)
+  should.equal(optimals, 500)
+}
+
+pub fn bionic_token_twin_full_12_domain_mathematical_coverage_test() {
+  let theorems =
+    core_bionic_token_twin.verify_full_12_domain_mathematical_coverage()
+  should.equal(list.length(theorems), 13)
+  list.each(theorems, fn(t) {
+    should.be_true(string.starts_with(t.theorem_id, "MATH-"))
+    should.be_true(t.verified_holds)
+  })
+}

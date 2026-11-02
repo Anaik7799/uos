@@ -16,6 +16,7 @@ TARGETS=(
   "formal/lean/ProvenanceAdjudication.lean"
   "formal/lean/Ruliad.lean"
   "formal/lean/Substrate_Categorical_Mechanics.lean"
+  "formal/lean/BionicTokenMathematicalCoverage.lean"
 )
 
 if [[ ! -x "$LEAN" ]]; then

@@ -164,6 +164,25 @@ pub fn wisp_core_evo_api_and_router_endpoints_return_expected_contracts_test() {
   string.contains(fpp_resp.body, "\"actor_count\":40") |> should.be_true()
   string.contains(fpp_resp.body, "\"AUTONOMOUS_SELF_HEAL\"") |> should.be_true()
 
+  let twin_str = core_evo_api.bionic_token_twin_json() |> json.to_string()
+  string.contains(twin_str, "\"schema\":\"uos.core_evo.bionic_token_twin.v5\"")
+  |> should.be_true()
+  string.contains(twin_str, "\"fastpath_profile_count\":8") |> should.be_true()
+  string.contains(twin_str, "\"watchdog_count\":8") |> should.be_true()
+  string.contains(twin_str, "\"fractal_surface_count\":10") |> should.be_true()
+  string.contains(twin_str, "\"math_domains_total\":13") |> should.be_true()
+  string.contains(twin_str, "\"math_domains_verified\":13") |> should.be_true()
+  string.contains(twin_str, "\"math_all_theorems_hold\":true")
+  |> should.be_true()
+  string.contains(twin_str, "\"MATH-13\"") |> should.be_true()
+
+  let twin_resp = get_path("/api/v1/core-evo/bionic-token-twin")
+  twin_resp.status |> should.equal(200)
+  string.contains(twin_resp.body, "\"math_all_theorems_hold\":true")
+  |> should.be_true()
+  string.contains(twin_resp.body, "\"property_total_trials\":1000")
+  |> should.be_true()
+
   // Verify live_corpus Poka-Yoke for /wiki/holons and [[wiki:...]] / [[zk:...]] syntax examples
   let holons_resp = get_path("/wiki/holons")
   holons_resp.status |> should.equal(200)

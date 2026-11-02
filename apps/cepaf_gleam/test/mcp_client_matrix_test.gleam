@@ -40,7 +40,6 @@ import cepaf_gleam/mcp/types.{
 import cepaf_gleam/mcp/wire
 import gleam/bit_array
 import gleam/dict
-import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}

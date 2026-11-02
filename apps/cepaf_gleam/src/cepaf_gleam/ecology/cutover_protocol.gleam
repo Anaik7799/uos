@@ -329,7 +329,13 @@ pub fn authorize_next(
   let fresh_context =
     admission.AdmissionContext(..context, task_fence: task, now_ms: now)
   case admission.verify_at_effect_time(fresh_context, call) {
-    Error(error) -> Error(error.code)
+    Error(error) ->
+      case error.code {
+        "CALL_TASK_BINDING_CHANGED_AT_EFFECT_TIME"
+        | "CALL_PRINCIPAL_CHANGED_AT_EFFECT_TIME" ->
+          Error("RELEASE_CALL_BINDING_MISMATCH")
+        _ -> Error(error.code)
+      }
     Ok(checked) -> {
       case task {
         None -> Error("MISSING_TASK_FENCE")

@@ -41,6 +41,7 @@
 ////      Lean 4.33.0 / Zig 0.16.0 AVX-512 Reflex Arc (`zlp_hyperplane`), and
 ////      Hermes Gospel + Isolated MAX/Mojo SIMD Ranker supervision descriptors.
 
+import cepaf_gleam/ecology/core_bionic_token_twin
 import cepaf_gleam/ecology/core_biomorphic_fractal.{
   type FractalLayer10, type LayerHealth, type MetabolicRegime, LayerHealthy,
 }
@@ -589,6 +590,7 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
         "bionic_homeostasis",
         "fractal_poodavr_fpp",
         "zlp_zenoh_bus",
+        "bionic_token_twin",
       ],
       requirements: ["REQ-ZERO-MUDA", "REQ-MARGIN-40"],
     ),
@@ -638,9 +640,25 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
       ports: [
         SysMLPort("zenoh_env_in", InPort, "SignedZenohUosV1", "1..*"),
         SysMLPort("zenoh_digest_out", OutPort, "SignedZenohDigest512", "1"),
+        SysMLPort("token_sample_out", OutPort, "TokenTelemetrySample", "8"),
       ],
       sub_parts: [],
       requirements: ["REQ-HARNESS-MCP", "REQ-PROVENANCE-93"],
+    ),
+    SysMLPart(
+      id: "bionic_token_twin",
+      name: "Bionic Token Digital Twin, Shannon Fastpath & 8 FPP-TOK Watchdogs",
+      ports: [
+        SysMLPort("token_sample_in", InPort, "TokenTelemetrySample", "8"),
+        SysMLPort(
+          "shannon_fastpath_out",
+          OutPort,
+          "FastpathRouteReceipt",
+          "10",
+        ),
+      ],
+      sub_parts: [],
+      requirements: ["REQ-ZERO-MUDA", "REQ-MARGIN-40"],
     ),
   ]
 
@@ -692,6 +710,14 @@ pub fn core_evo_sysml_package() -> SysMLPackage {
       "queen_conductor",
       "zenoh_digest_in",
       "Zenoh-uos-v1-Digest512",
+    ),
+    SysMLConnection(
+      "c7_zlp_to_bionic_twin",
+      "zlp_zenoh_bus",
+      "token_sample_out",
+      "bionic_token_twin",
+      "token_sample_in",
+      "Mojo-OCaml-SIMD-NIF",
     ),
   ]
 
@@ -785,6 +811,7 @@ pub type BionicOrganSuiteStatus {
     metabolic_regime: MetabolicRegime,
     fractal_l0_l9_health: LayerHealth,
     bionic_services_online: Int,
+    bionic_token_twin_verified: Bool,
   )
 }
 
@@ -897,6 +924,16 @@ pub fn evaluate_bionic_services_suite(
     })
   let fractal_health = core_biomorphic_fractal.rollup_fractal_health(obs)
 
+  let math_specs =
+    core_bionic_token_twin.verify_full_12_domain_mathematical_coverage()
+  let all_math_ok =
+    list.length(math_specs) == 13
+    && list.all(math_specs, fn(m) { m.verified_holds })
+  let #(passed_cnt, rf_cnt, opt_cnt) =
+    core_bionic_token_twin.run_property_and_chaos_suite(100, 42_093)
+  let twin_ok =
+    all_math_ok && passed_cnt == 100 && rf_cnt == 50 && opt_cnt == 50
+
   BionicOrganSuiteStatus(
     holon_active: bio.is_healthy(active_holon),
     membrane_allows_uos_gleam: allows_uos,
@@ -907,6 +944,7 @@ pub fn evaluate_bionic_services_suite(
     metabolic_regime: regime,
     fractal_l0_l9_health: fractal_health,
     bionic_services_online: 8,
+    bionic_token_twin_verified: twin_ok,
   )
 }
 
@@ -1019,7 +1057,8 @@ pub fn evaluate_unified_systems_engineering(
       && bionic.membrane_allows_uos_gleam
       && bionic.membrane_blocks_legacy_c3i
       && bionic.neuro_spine_delivered
-      && bionic.prajna_breaker_allowed,
+      && bionic.prajna_breaker_allowed
+      && bionic.bionic_token_twin_verified,
   )
 }
 
