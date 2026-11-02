@@ -17,6 +17,7 @@ import cepaf_gleam/mcp/adapters/features
 import cepaf_gleam/mcp/adapters/knowledge
 import cepaf_gleam/mcp/adapters/planning_read
 import cepaf_gleam/mcp/adapters/planning_write
+import cepaf_gleam/mcp/adapters/recovery_control
 import cepaf_gleam/mcp/adapters/system_observation
 import cepaf_gleam/mcp/adapters/vault_backend
 import cepaf_gleam/mcp/adapters/vault_metadata
@@ -1498,8 +1499,7 @@ fn handle_dispatch(
         list.fold(
           extra_entries,
           case prefetched_doc {
-            Some(#(path, entry)) ->
-              apply_document(call_knowledge, path, entry)
+            Some(#(path, entry)) -> apply_document(call_knowledge, path, entry)
             None -> call_knowledge
           },
           fn(corpus, entry) { knowledge.with_entry(corpus, entry) },
@@ -1761,7 +1761,10 @@ fn dispatch_public_actor_prefetched(
         _ -> None
       }
       let prefetched_plan = case registry.lookup(route, tool) {
-        Ok(spec) if spec.family == "planning_read" ->
+        Ok(spec)
+          if spec.family == "planning_read"
+          || spec.family == "recovery_control_readiness"
+        ->
           Some(load_planning(
             root,
             argument(args, "plan_id", argument(args, "plan", "")),
@@ -2753,8 +2756,17 @@ fn successor_binding(
 ) -> Result(PrivateBinding, String) {
   use root <- result.try(harness_admission.source_root(grant))
   let ticket = successor_ticket(grant, root)
-  use fence <- result.try(case state.execution {
-    Some(execution) -> {
+  use fence <- result.try(case tool, state.execution {
+    "harness_recovery_prepare", _ -> {
+      // This tool performs observation preparation only. It must not turn an
+      // expired controlling execution into a live TaskFence. The actual grant,
+      // exact target/read scope and dedicated review are checked by admission.
+      use plan <- result.try(ops.text(args, "plan"))
+      use task <- result.try(ops.text(args, "task"))
+      use _ <- result.try(harness_admission.lookup(grant, plan, task))
+      Ok(None)
+    }
+    _, Some(execution) -> {
       use proof <- result.try(harness_admission.fence(execution, 0))
       Ok(
         Some(admission.TaskFence(
@@ -2768,7 +2780,7 @@ fn successor_binding(
         )),
       )
     }
-    None ->
+    _, None ->
       case preattach_tool(tool) {
         False -> Ok(None)
         True -> {
@@ -2818,6 +2830,7 @@ fn preattach_tool(tool: String) -> Bool {
   list.contains(
     [
       "harness_status",
+      "harness_recovery_prepare",
       "harness_clock",
       "harness_heartbeat",
       "harness_claim",
@@ -2902,7 +2915,12 @@ pub fn observe_preattach_scope(
     Error(_), Error(_) ->
       case
         list.contains(
-          ["harness_claim", "harness_attach", "harness_assess"],
+          [
+            "harness_claim",
+            "harness_attach",
+            "harness_assess",
+            "harness_recovery_prepare",
+          ],
           tool,
         )
       {
@@ -4308,7 +4326,12 @@ fn refresh_live_read_receipt(
   let live_read =
     call.spec.effect_class == types.ReadOnly
     && list.contains(
-      ["vault_metadata", "feature_evidence", "planning_read"],
+      [
+        "vault_metadata",
+        "feature_evidence",
+        "planning_read",
+        "recovery_control_readiness",
+      ],
       call.spec.family,
     )
   case cached {
@@ -4357,6 +4380,13 @@ fn refresh_live_read_receipt(
                   // Match the normalized outcome stored by mark_complete,
                   // without re-entering the authenticated execution path.
                   let live_outcome = case call.spec.family {
+                    "recovery_control_readiness" ->
+                      recovery_control.observe(
+                        state.backends.planning_read,
+                        state.pool.ledger.candidate,
+                        now_ms(),
+                        call.arguments,
+                      )
                     "feature_evidence" ->
                       features.execute(
                         state.backends.features,

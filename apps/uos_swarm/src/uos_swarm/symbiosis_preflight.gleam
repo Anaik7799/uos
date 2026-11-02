@@ -346,11 +346,28 @@ fn registry_for(s: State, a: Agent) -> Option(Registry) {
   }
 }
 
+/// Read-only policy DATA. This is the exact binding already held by State,
+/// not a conversion from a source digest or an authenticated runtime identity.
+pub fn binding_snapshot(s: State, a: Agent) -> Binding {
+  binding_for(s, a)
+}
+
+/// Caller-bound required set, not an attestation of official catalog coverage.
+pub fn registry_snapshot(s: State, a: Agent) -> Option(Registry) {
+  registry_for(s, a)
+}
+
 fn coverage_for(s: State, a: Agent) -> CoverageState {
   case list.find(s.coverage, fn(c) { c.agent == a }) {
     Ok(c) -> c
     Error(_) -> CoverageState(a, None, None, False, 0)
   }
+}
+
+/// Last recorded leaf DATA, possibly stale or failed. Call coverage_health for
+/// the existing aggregate freshness/failure decision; this accessor renews none.
+pub fn coverage_snapshot(s: State, a: Agent) -> Option(CoverageEvidence) {
+  coverage_for(s, a).proof
 }
 
 fn fresh_dimension(d: ServiceDimension, now: Int, age: Int) -> Bool {

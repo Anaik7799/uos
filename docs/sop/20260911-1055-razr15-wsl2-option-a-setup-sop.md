@@ -186,3 +186,7 @@ ssh an@razr15-wsl2 "cd ~/uos && tools/mojo run services/inference/max/gemma4_gpu
 | | `CHK-16-OTEL` | C3I Universal JSON telemetry standard compliant | **PASS** |
 | **Domain 5: Tri-Sovereign Governance** | `CHK-17-SOV` | Tri-sovereign consensus active | **PASS** |
 | | `CHK-18-JJ` | Standalone Jujutsu monorepo with 0 native Git mutations | **PASS** |
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Before applying these host/network setup procedures, bind the exact candidate configuration and relevant executable/effect paths to applicable formal constraints and observed host checks under the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). Missing ownership, configuration identity or safety evidence remains `UNKNOWN`/`HOLD`; this note authorizes no host changes and installs no runtime gate.

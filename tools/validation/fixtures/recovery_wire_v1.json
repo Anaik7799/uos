@@ -1,0 +1,108 @@
+{
+  "schema": "uos.recovery-factual-wire-vectors.v1",
+  "expected_digest_origin": "Literal canonical strings independently hashed by /usr/bin/sha256sum; codecs must not regenerate expectations.",
+  "vectors": [
+    {
+      "name": "precision",
+      "input": {
+        "request_id": "req-1",
+        "plan": "uos/p",
+        "snapshot_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "members": [
+          {
+            "task_id": "c",
+            "worker": "worker-c",
+            "old_attempt": 999999,
+            "old_lease_ns": "9223372036854775807",
+            "lease_ms": 1
+          },
+          {
+            "task_id": "a",
+            "worker": "worker-a",
+            "old_attempt": 1,
+            "old_lease_ns": "9007199254740993",
+            "lease_ms": 1
+          },
+          {
+            "task_id": "b",
+            "worker": "worker-b",
+            "old_attempt": 2,
+            "old_lease_ns": "20",
+            "lease_ms": 1
+          }
+        ],
+        "deadline_utc_ms": 1793487751775
+      },
+      "canonical": "{\"domain\":\"uos.sa-plan.reclaim-three.v1\",\"request_id\":\"req-1\",\"plan\":\"uos/p\",\"snapshot\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"old\":[{\"task\":\"a\",\"worker\":\"worker-a\",\"attempt\":1,\"lease\":\"9007199254740993\"},{\"task\":\"b\",\"worker\":\"worker-b\",\"attempt\":2,\"lease\":\"20\"},{\"task\":\"c\",\"worker\":\"worker-c\",\"attempt\":999999,\"lease\":\"9223372036854775807\"}],\"duration\":\"1000000\",\"deadline\":\"1793487751775000000\"}",
+      "sha256": "4990bcbccdc0231f5733b9067c68d14f5d3a4626998cc1dc1fc48cb24dd2dce6"
+    },
+    {
+      "name": "maximum",
+      "input": {
+        "request_id": "req-max",
+        "plan": "uos/p",
+        "snapshot_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "members": [
+          {
+            "task_id": "a",
+            "worker": "w-a",
+            "old_attempt": 1,
+            "old_lease_ns": "1",
+            "lease_ms": 3600000
+          },
+          {
+            "task_id": "b",
+            "worker": "w-b",
+            "old_attempt": 1,
+            "old_lease_ns": "1",
+            "lease_ms": 3600000
+          },
+          {
+            "task_id": "c",
+            "worker": "w-c",
+            "old_attempt": 1,
+            "old_lease_ns": "1",
+            "lease_ms": 3600000
+          }
+        ],
+        "deadline_utc_ms": 9223372036854
+      },
+      "canonical": "{\"domain\":\"uos.sa-plan.reclaim-three.v1\",\"request_id\":\"req-max\",\"plan\":\"uos/p\",\"snapshot\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"old\":[{\"task\":\"a\",\"worker\":\"w-a\",\"attempt\":1,\"lease\":\"1\"},{\"task\":\"b\",\"worker\":\"w-b\",\"attempt\":1,\"lease\":\"1\"},{\"task\":\"c\",\"worker\":\"w-c\",\"attempt\":1,\"lease\":\"1\"}],\"duration\":\"3600000000000\",\"deadline\":\"9223372036854000000\"}",
+      "sha256": "0d53a904e9304722138837867c12f4e005f5e5939a514b901915c076575376b0"
+    },
+    {
+      "name": "minimum",
+      "input": {
+        "request_id": "r",
+        "plan": "p",
+        "snapshot_sha256": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "members": [
+          {
+            "task_id": "a",
+            "worker": "w",
+            "old_attempt": 1,
+            "old_lease_ns": "1",
+            "lease_ms": 1
+          },
+          {
+            "task_id": "b",
+            "worker": "w",
+            "old_attempt": 1,
+            "old_lease_ns": "1",
+            "lease_ms": 1
+          },
+          {
+            "task_id": "c",
+            "worker": "w",
+            "old_attempt": 1,
+            "old_lease_ns": "1",
+            "lease_ms": 1
+          }
+        ],
+        "deadline_utc_ms": 1
+      },
+      "canonical": "{\"domain\":\"uos.sa-plan.reclaim-three.v1\",\"request_id\":\"r\",\"plan\":\"p\",\"snapshot\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"old\":[{\"task\":\"a\",\"worker\":\"w\",\"attempt\":1,\"lease\":\"1\"},{\"task\":\"b\",\"worker\":\"w\",\"attempt\":1,\"lease\":\"1\"},{\"task\":\"c\",\"worker\":\"w\",\"attempt\":1,\"lease\":\"1\"}],\"duration\":\"1000000\",\"deadline\":\"1000000\"}",
+      "sha256": "a80938603519fbca41d00bb76737e5d541f747395e5548e1c859a88a63fcad05"
+    }
+  ]
+}

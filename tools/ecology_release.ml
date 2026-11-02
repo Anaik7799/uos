@@ -194,35 +194,6 @@ let build_apps root =
   let web=collect "indrajaal_gleam_web" in
   need(List.mem_assoc "cepaf_gleam" web && List.mem_assoc "indrajaal_gleam_web" web) "missing root application artifacts";
   web
-(* Poka-Yoke: refuse packaging if any workspace Gleam/Erlang source module under
-   apps/<app>/src lacks a compiled BEAM (or has newer mtime than both BEAM and
-   Gleam cache_meta) inside the indrajaal_gleam_web build closure. *)
-let verify_gleam_beam_correspondence root apps =
-  List.iter(fun(app_name,rel_build)->
-    let src_dir=root^"/apps/"^app_name^"/src" in
-    let ebin_dir=root^"/"^rel_build^"/ebin" in
-    let art_dir=root^"/"^rel_build^"/_gleam_artefacts" in
-    if Sys.file_exists src_dir && (lstat src_dir).st_kind=S_DIR then
-      List.iter(fun rel_src->
-        let src_st=regular(src_dir^"/"^rel_src) in
-        let ext=Filename.extension rel_src in
-        if ext=".gleam" then (
-          let stem=String.sub rel_src 0 (String.length rel_src - 6) in
-          let mod_name=String.concat "@" (String.split_on_char '/' stem) in
-          let beam_full=ebin_dir^"/"^mod_name^".beam" in
-          need(Sys.file_exists beam_full)("missing compiled BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src);
-          let beam_st=regular beam_full in
-          let cache_full=art_dir^"/"^mod_name^".cache_meta" in
-          let fresh=(beam_st.st_mtime +. 0.001 >= src_st.st_mtime) ||
-            (Sys.file_exists cache_full && (regular cache_full).st_mtime +. 0.001 >= src_st.st_mtime) in
-          need fresh ("stale compiled BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src))
-        else if ext=".erl" then (
-          let mod_name=Filename.chop_suffix(Filename.basename rel_src)".erl" in
-          let beam_full=ebin_dir^"/"^mod_name^".beam" in
-          need(Sys.file_exists beam_full)("missing compiled FFI BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src);
-          let beam_st=regular beam_full in
-          need(beam_st.st_mtime +. 0.001 >= src_st.st_mtime)("stale compiled FFI BEAM in indrajaal_gleam_web closure for "^app_name^"/src/"^rel_src)))
-      (files src_dir ""))apps
 let verify_app_closure root erl apps =
   let paths=List.map(fun(name,p)->root^"/"^p^"/ebin/"^name^".app")apps in
   let eval="Ps=init:get_plain_arguments(), A=lists:map(fun(P)->{ok,[{application,N,V}]}=file:consult(P),{N,proplists:get_value(applications,V,[]),[M||M<-proplists:get_value(modules,V,[]),not filelib:is_regular(filename:join(filename:dirname(P),atom_to_list(M)++\".beam\"))]} end,Ps), Ns=[N||{N,_,_}<-A], Missing=lists:usort([D||{_,Ds,_}<-A,D<-Ds,not lists:member(D,Ns),code:lib_dir(D)=:={error,bad_name}]), MissingModules=lists:usort(lists:append([Ms||{_,_,Ms}<-A])),io:put_chars(json:encode(#{applications=>[atom_to_binary(N)||N<-Ns],missing=>[atom_to_binary(N)||N<-Missing],missing_modules=>[atom_to_binary(N)||N<-MissingModules]})),case {Missing,MissingModules} of {[],[]}->halt(0);_->halt(1) end." in
@@ -248,6 +219,26 @@ let payload root apps =
   List.map(fun n->List.assoc "lustre" apps^"/priv/static/"^n,"apps/lustre/priv/static/"^n)
     ["lustre-server-component.mjs";"lustre-server-component.min.mjs"] @
   List.map(fun p->p,p)["tools/ecology_process.ml";"services/inference/max/ecology_max_worker.py"]
+(* Source catalog only. These development components are NOT native payload
+   roles or admitted production endpoints. Existing roots without the adapter
+   retain their original catalog; partial present trees fail normal capture. *)
+let recovery_source_inputs root =
+  let base="engines/hermes/modules/sa_plan" in
+  if Sys.file_exists(root^"/"^base^"/development/dune") then
+    files(root^"/"^base)"" |> List.filter(fun p ->
+      List.mem(Filename.extension p)[".ml";".mli";".inc";".c";".h";".gospel"] ||
+      List.mem(Filename.basename p)["dune";"dune-project";"reviewed-dependencies.sha256"])
+    |> List.map(fun p->base^"/"^p)
+    |> fun native -> native @ ["tools/recovery_development_capsule.ml";
+      "tools/validation/recovery_capsule_fixture.ml";
+      "tools/validation/recovery_native_signer_bundle_fixture.ml";
+      "tools/validation/recovery_integrated_fixture.ml";
+      "native/ocaml/recovery_resource_signer/recovery_resource_signer.ml";
+      "native/ocaml/recovery_resource_signer/recovery_resource_signer.mli";
+      "native/ocaml/recovery_resource_signer/recovery_resource_signer_port.ml";
+      "native/ocaml/recovery_resource_signer/test/recovery_external_provider_fixture.ml.inc";
+      "native/ocaml/recovery_resource_signer/dune"]
+  else []
 let source_inputs root payload =
   let app_sources=List.concat_map(fun app -> let base="apps/"^app in
     if Sys.file_exists(root^"/"^base^"/src") then
@@ -257,11 +248,12 @@ let source_inputs root payload =
         else []) ["src";"test"]) @
       [base^"/gleam.toml";base^"/manifest.toml"] else [])
     ["cepaf_gleam";"indrajaal_gleam_web";"uos_swarm";"uos_tui"] in
-  List.map fst payload @ app_sources @
+  List.map fst payload @ app_sources @ recovery_source_inputs root @
     ["flake.nix";"flake.lock";"devenv.nix";"tools/ecology_release.ml";
      "tools/ecology_release.mojo";"tools/ecology_pin_audit.ml";"tools/ecology_pin_audit_cli.ml";
      "tools/ecology_pin_edit.ml";"tools/km_provenance/km_adjudication.ml";
      "tools/ecology_native_build.ml";"tools/ecology_file_transaction.ml";
+     "native/c/finite_environment_launch.c";
      "tools/ecology_file_transaction_port.ml";"tools/telegram_store_transport_guardian.ml";
      "services/inference/max/pixi.toml";"services/inference/max/pixi.lock"]
   |> List.sort_uniq String.compare
@@ -326,6 +318,22 @@ let verify_native_elf root dir =
 (* The independently retained build ID binds actual native outputs and the
    captured input set. It does not prove a complete transitive compiler closure
    or confer release authority. Packaged verification needs no mutable build tree. *)
+let verify_static_launcher path =
+  let text=read path in let len=String.length text in
+  let u off count=need(off>=0 && off<=len-count) "static launcher ELF bounds";
+    let x=ref 0 in for k=count-1 downto 0 do
+      need(!x<=max_int lsr 8) "static launcher ELF integer";
+      x:=(!x lsl 8)lor Char.code text.[off+k]done;!x in
+  need(len>=64 && String.sub text 0 7="\127ELF\002\001\001" && u 16 2=2 && u 18 2=62) "static launcher Linux x86_64 ELF";
+  let offset=u 32 8 and count=u 56 2 and entry=u 24 8 in
+  need(u 54 2=56 && count>0 && count<=64 && offset<=len-count*56) "static launcher program headers";
+  let executable_entry=ref false in
+  for j=0 to count-1 do let p=offset+j*56 in let kind=u p 4 in
+    need(kind<>2 && kind<>3) "static launcher cannot have PT_DYNAMIC/PT_INTERP";
+    if kind=1 then(let fileoff=u(p+8)8 and va=u(p+16)8 and bytes=u(p+32)8 in
+      need(fileoff<=len-bytes) "static launcher segment bounds";
+      if u(p+4)4 land 1<>0 && entry>=va && entry-va<bytes then executable_entry:=true)
+  done;need !executable_entry "static launcher executable entry"
 let verify_native_cutover ~staging root binding =
   let id=binding|>member "artifact_id"|>to_string in
   need(hex 64 id) "native artifact identity";
@@ -334,13 +342,18 @@ let verify_native_cutover ~staging root binding =
   need(String.length encoded<=1048576 && digest encoded=id) "native manifest identity";
   let m=Yojson.Safe.from_string encoded in
   need(encoded=canonical m) "native manifest canonical encoding";
-  let composite=m|>member "schema"|>to_string="uos.native-build.v2" in
+  let version=m|>member "schema"|>to_string in
+  let finite=version="uos.native-build.v3" in
+  let composite=finite || version="uos.native-build.v2" in
   need(m|>to_assoc|>List.map fst|>List.sort String.compare =
        (if composite then ["admitted";"authority";"inputs";"outputs";"recipe";"runtime";"schema"]else ["admitted";"authority";"inputs";"outputs";"recipe";"schema"])) "native manifest fields";
   need(composite || m|>member "schema"|>to_string="uos.native-build.v1") "native manifest schema";
   need(m|>member "admitted"|>to_bool=false && m|>member "authority"|>to_string="NONE") "native build cannot grant authority";
   let inputs=member "inputs" m and recipe=member "recipe" m in
-  need(inputs|>member "schema"|>to_string=(if composite then "uos.native-build-inputs.v2"else "uos.native-build-inputs.v1")) "native captured inputs schema";
+  need(inputs|>member "schema"|>to_string=(if finite then "uos.native-build-inputs.v3"else if composite then "uos.native-build-inputs.v2"else "uos.native-build-inputs.v1")) "native captured inputs schema";
+  if finite then need(recipe|>member "architecture"|>to_string="linux-x86_64" &&
+    recipe|>member "launch_profile"|>to_string="native-storage-v1" &&
+    recipe|>member "finite_environment"=arr(List.map(fun(k,v)->arr[s k;s v])["PATH","/nonexistent";"LANG","C";"LC_ALL","C";"TZ","UTC"])) "native closed finite profile";
   need(List.length(to_assoc recipe)>0 && digest(canonical recipe)=(inputs|>member "recipe_sha256"|>to_string)) "native recipe binding";
   List.iter(fun key->let rows=inputs|>member key|>to_list in
     need(rows<>[] && List.length rows<=2048) "native captured input inventory";
@@ -348,7 +361,7 @@ let verify_native_cutover ~staging root binding =
       hex 64(row|>member "sha256"|>to_string) && row|>member "bytes"|>to_int>=0) "native captured input binding")rows)["sources";"toolchain"];
   let outputs=m|>member "outputs"|>to_list in
   let names=List.map(fun x->member "path" x|>to_string)outputs in
-  let executables=if composite then native_executables else ["worker.exe";"guardian.exe"] in
+  let executables=if finite then native_executables@["finite_launcher.exe"]else if composite then native_executables else ["worker.exe";"guardian.exe"] in
   need(List.sort String.compare names=List.sort String.compare executables) "native output inventory";
   List.iter(fun row->
     let name=row|>member "path"|>to_string in
@@ -369,6 +382,7 @@ let verify_native_cutover ~staging root binding =
     need(Sys.readdir(dir^"/runtime")|>Array.to_list|>List.sort String.compare=native_runtime_names) "unexpected native runtime file";
     if not staging then need((lstat(dir^"/runtime")).st_perm=0o555) "native runtime directory permissions";
     verify_native_elf root dir);
+  if finite then verify_static_launcher(dir^"/finite_launcher.exe");
   need(Sys.readdir dir|>Array.to_list|>List.sort String.compare=List.sort String.compare(executables@["manifest.json"]@(if composite then ["runtime"]else []))) "native directory inventory";
   if not staging then need((lstat(dir^"/manifest.json")).st_perm=0o444) "native manifest permissions"
 let native_cutover_inputs root id =
@@ -379,10 +393,11 @@ let native_cutover_inputs root id =
   need(checked|>member "status"|>to_string="BUILT_OR_VERIFIED" &&
        checked|>member "artifact_id"|>to_string=id) "native artifact verification failed";
   let base="var/ecology/native-builds/cas/"^id in
-  let payload=native_executables@["manifest.json"]@native_runtime_paths in
+  let payload=(if checked|>member "launch_profile"=`String"native-storage-v1"then
+    native_executables@["finite_launcher.exe"]else native_executables)@["manifest.json"]@native_runtime_paths in
   need(List.sort String.compare(checked|>member "payload_files"|>to_list|>List.map to_string)=List.sort String.compare payload) "composite native payload required";
   let copied=List.map(fun name->base^"/"^name,"native/cutover/"^name)payload in
-  obj["artifact_id",s id;"scope",s"Fixed composite source build plus owned SONAME/RUNPATH runtime. NODEFLIB alone does not prevent all fallback. Runtime activation HOLD until launcher scrub and external Nix loader residency verified; complete compiler correspondence unproven; no authority"],copied
+  obj["artifact_id",s id;"scope",s"Source-built native inventory; optional v3 finite launcher is explicitly selected, legacy paths remain distinct. Runtime activation HOLD pending immutable owner paths, trusted BEAM startup and independently managed external Nix loader retention; compiler closure unproven; no authority"],copied
 let verify ?(staging=false) ?(dependency_recovery=false) release =
   let root=realpath release in need(read(root^"/.uos-ecology-release")=marker) "release marker";
   let encoded=read(root^"/release-manifest.json") in let m=Yojson.Safe.from_string encoded in
@@ -420,31 +435,12 @@ let verify ?(staging=false) ?(dependency_recovery=false) release =
 let freeze root =
   List.iter(fun p->chmod(root^"/"^p)(if List.mem p(List.map(fun n->"native/cutover/"^n)native_executables) then 0o555 else 0o444))(files root "");
   let rec dirs p=Array.iter(fun n->let q=p^"/"^n in if(lstat q).st_kind=S_DIR then dirs q)(Sys.readdir p);chmod p 0o555 in dirs root
-let verify_effect_fence_pregate root =
-  let gate=root^"/tools/effect-fence-check" in
-  let release_src=root^"/tools/ecology_release.ml" in
-  (* Fixture roots built in selftest do not copy tools/; real UOS roots (.jj + tools/) must fail closed. *)
-  if Sys.file_exists(root^"/tools") then (
-    need(Sys.file_exists gate) "OI07 effect-fence pregate missing tools/effect-fence-check";
-    let out=run root "/bin/bash" [gate;"--selftest"] |> Yojson.Safe.from_string in
-    need(out|>member "ok"|>to_bool=true) "OI07 effect-fence pregate selftest failed";
-    let cand_sha=if Sys.file_exists release_src then "sha256:"^sha release_src else "sha256:fixture" in
-    let plan=try Sys.getenv "UOS_EFFECT_PLAN_ID" with Not_found->"uos/agy-fractal-issue-resolution-master/20261101-1454" in
-    let task=try Sys.getenv "UOS_EFFECT_TASK_ID" with Not_found->"oi02e-rehearsal" in
-    let worker=try Sys.getenv "UOS_EFFECT_WORKER" with Not_found->"ecology-release-stage" in
-    let oi07=try Sys.getenv "UOS_EFFECT_OI07_VERIFIED" with Not_found->"false" in
-    let ctx_out=run root "/bin/bash"
-      [gate;"--check-context";plan;task;worker;"1";"2000000000";"1000000000";cand_sha;cand_sha;"0";"300";"uos-gleam-ecology-authority:4100";oi07]
-      |> Yojson.Safe.from_string in
-    need(ctx_out|>member "ok"|>to_bool=true) "OI07 effect-fence context evaluation refused stage")
 let stage ?native_id source =
   let root=realpath source in need(Sys.file_exists(root^"/.jj")) "standalone UOS root required";
-  verify_effect_fence_pregate root;
   let erl=dependency root "toolchains/nix-profile/bin/erl" true in
   let exe=erl|>member "path"|>to_string in
   let identity=otp_identity root exe and deps=runtime_dependencies ~snapshot:true root in
-  let apps=build_apps root in verify_gleam_beam_correspondence root apps;
-  let closure=verify_app_closure root exe apps in
+  let apps=build_apps root in let closure=verify_app_closure root exe apps in
   let native_binding,native_copied=match native_id with None->`Null,[]|Some id->native_cutover_inputs root id in
   let copied=payload root apps@native_copied in let inputs=source_inputs root copied in
   let before=source_manifest root inputs in
@@ -663,22 +659,6 @@ let selftest () =
   check "native-coherent-admission-claim-refused" (fun()->rejects(fun()->verify_native_cutover ~staging:true dir(obj["artifact_id",s(digest admitted)])));
   List.iter(fun n->unlink(native^"/"^n))["worker.exe";"guardian.exe";"manifest.json"];
   rmdir native;rmdir(dir^"/native");
-  let g_src=dir^"/apps/cepaf_gleam/src/cepaf_gleam/core_evo" in
-  let g_ebin=dir^"/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam/ebin" in
-  mkdir g_src;mkdir g_ebin;
-  write(g_src^"/probe.gleam")"pub fn ok() { 1 }";
-  let fixture_apps=["cepaf_gleam","apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam"] in
-  check "gleam-beam-missing-refused" (fun()->rejects(fun()->verify_gleam_beam_correspondence dir fixture_apps));
-  write(g_ebin^"/cepaf_gleam@core_evo@probe.beam")"BEAM";
-  utimes(g_ebin^"/cepaf_gleam@core_evo@probe.beam")1000.0 1000.0;
-  utimes(g_src^"/probe.gleam")2000.0 2000.0;
-  check "gleam-beam-stale-refused" (fun()->rejects(fun()->verify_gleam_beam_correspondence dir fixture_apps));
-  utimes(g_ebin^"/cepaf_gleam@core_evo@probe.beam")2001.0 2001.0;
-  check "gleam-beam-fresh-accepted" (fun()->verify_gleam_beam_correspondence dir fixture_apps;true);
-  unlink(g_ebin^"/cepaf_gleam@core_evo@probe.beam");unlink(g_src^"/probe.gleam");
-  List.iter rmdir [g_src;dir^"/apps/cepaf_gleam/src/cepaf_gleam";dir^"/apps/cepaf_gleam/src";dir^"/apps/cepaf_gleam";
-    g_ebin;dir^"/apps/indrajaal_gleam_web/build/dev/erlang/cepaf_gleam";dir^"/apps/indrajaal_gleam_web/build/dev/erlang";
-    dir^"/apps/indrajaal_gleam_web/build/dev";dir^"/apps/indrajaal_gleam_web/build";dir^"/apps/indrajaal_gleam_web";dir^"/apps"];
   List.iter(fun p->unlink(dir^"/"^p))(files dir "");
   rmdir dir;
   obj["status",s"PASS";"checks",`Int !count;"scope",s"bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"]

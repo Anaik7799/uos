@@ -237,3 +237,7 @@ Obligations for this runbook package; runtime items are UNRUN until an operator 
 [Journey spec](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-defence-ha.md) · [Contract](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0210-telegram-operator-journey-contract.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/)
 
 UOS footer: `nas-1.tail55d152.ts.net:4100` - procedure only; a pass binds one staging candidate and grants no admission.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+For authorized human-run staging journeys, bind each journey requirement to candidate-specific application/effect paths, safety constraints, test observations and recovery evidence using the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). This note does not authorize a traffic run or convert simulated, declared or historical observations into live evidence.

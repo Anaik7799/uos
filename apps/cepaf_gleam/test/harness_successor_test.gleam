@@ -2204,10 +2204,12 @@ pub fn active_mutations_require_prepared_assessment_guard_test() {
 
 pub fn every_declared_operation_has_schema_and_client_mcp_config_is_routed_test() {
   let defs = mcp.tool_definitions()
-  list.length(defs) |> should.equal(15)
-  list.length(ops.names) |> should.equal(15)
+  list.length(defs) |> should.equal(17)
+  list.length(ops.names) |> should.equal(17)
   list.contains(ops.names, "harness_client_mcp_config") |> should.be_true
   list.contains(ops.names, "harness_plan_intent") |> should.be_true
+  list.contains(ops.names, "harness_recovery_prepare") |> should.be_true
+  list.contains(ops.names, "harness_agent_review") |> should.be_true
   // Verify that calling harness_client_mcp_config with an active execution reaches the prepared assessment guard / active_call_dispatch rather than falling through to unknown_tool
   let exec =
     a.Execution(

@@ -147,7 +147,7 @@ pub fn same_name_different_route_does_not_expand_grant_test() {
   let dev_specs = registry.definitions(Modern20260728, PrivateDevelopmentView)
   let succ_specs = registry.definitions(Modern20260728, PrivateSuccessorView)
   list.length(dev_specs) |> should.equal(21)
-  list.length(succ_specs) |> should.equal(15)
+  list.length(succ_specs) |> should.equal(17)
 
   let overlapping = [
     "harness_finish",
@@ -336,16 +336,16 @@ pub fn legacy_finish_cannot_bypass_completion_evidence_test() {
 pub fn all_fifteen_successor_tools_same_candidate_test() {
   let successor_specs =
     registry.definitions(Modern20260728, PrivateSuccessorView)
-  list.length(successor_specs) |> should.equal(15)
+  list.length(successor_specs) |> should.equal(17)
 
   let all_specs = registry.all_specs()
-  list.length(all_specs) |> should.equal(101)
+  list.length(all_specs) |> should.equal(104)
   list.count(all_specs, fn(spec) { spec.route == "development" })
   |> should.equal(21)
   list.count(all_specs, fn(spec) { spec.route == "public" })
-  |> should.equal(65)
+  |> should.equal(66)
   list.count(all_specs, fn(spec) { spec.route == "successor" })
-  |> should.equal(15)
+  |> should.equal(17)
 
   let names = list.map(successor_specs, fn(spec) { spec.name })
   let successor_grant = grant("successor", names)
@@ -385,7 +385,7 @@ pub fn all_fifteen_successor_tools_same_candidate_test() {
       registry.verify_schema_digest(spec, spec.input_schema) |> should.be_ok
       #(next_pool, count + 1)
     })
-  completed_count |> should.equal(15)
+  completed_count |> should.equal(17)
 }
 
 pub fn foreign_candidate_completion_evidence_is_refused_test() {

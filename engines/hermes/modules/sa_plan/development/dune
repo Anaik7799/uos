@@ -1,0 +1,38 @@
+; Development-only, uninstalled data interpreter. No production port depends on it.
+(rule
+ (target recovery_adapter_store.ml)
+ (deps ../sa_plan_store.ml recovery_adapter_store_extension.ml.inc)
+ (action (with-stdout-to %{target}
+  (progn (echo "open Sa_plan__\n") (cat ../sa_plan_store.ml)
+   (cat recovery_adapter_store_extension.ml.inc)))))
+
+(rule
+ (target recovery_adapter_vfs.ml)
+ (deps dependencies/sqlite_write_vfs.ml)
+ (action (copy %{deps} %{target})))
+
+(rule
+ (target sqlite_write_vfs_stubs.c)
+ (deps dependencies/sqlite_write_vfs_stubs.c)
+ (action (copy %{deps} %{target})))
+
+(library
+ (name recovery_adapter_development)
+ (wrapped false)
+ (modules recovery_adapter recovery_adapter_store recovery_adapter_vfs recovery_adapter_context)
+ (private_modules recovery_adapter_store recovery_adapter_vfs recovery_adapter_context)
+ (libraries sa_plan recovery_kernel recovery_resource sqlite_main_mapping control_checker core sqlite3 yojson unix)
+ (preprocess (pps ppx_jane))
+ (foreign_stubs (language c) (names sqlite_write_vfs_stubs)
+  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
+ (c_library_flags -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -lsqlite3 -ldl -lpthread))
+
+; Uninstalled development DATA endpoint. No initializer/fixture trust linked.
+(executable
+ (name recovery_adapter_data_port)
+ (modules recovery_adapter_data_port)
+ (libraries recovery_adapter_development yojson sqlite3 unix)
+ (link_flags (:standard -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))

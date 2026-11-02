@@ -16,9 +16,15 @@
 //// </c3i-module>
 //// =============================================================================
 
+import cepaf_gleam/harness/agent_capabilities
+import cepaf_gleam/harness/agent_meta_policy
+import cepaf_gleam/harness/agent_preflight_map
 import gleam/int
 import gleam/list
+import gleam/option.{type Option}
+import gleam/result
 import gleam/string
+import uos_swarm/symbiosis_preflight
 
 pub const andon_halt_unauthorized_code: Int = -32_002
 
@@ -215,6 +221,9 @@ pub fn can_invoke_tool(profile: AgentProfile, tool_name: String) -> Bool {
 }
 
 /// Evaluates an agent's intent to execute a tool under Sa-Plan lease & 2oo3 quorum constraints.
+/// Historical advisory evaluator: caller-supplied booleans and the PERMITTED
+/// string are not admission evidence. Runtime effects still require the actual
+/// harness grant/task/intent/clock checks; the ontology does not upgrade this API.
 pub fn evaluate_agent_intent(
   profile: AgentProfile,
   tool_name: String,
@@ -244,6 +253,51 @@ pub fn evaluate_agent_intent(
 pub fn validate_aspect_completeness(aspects: List(SystemAspect)) -> Bool {
   let all = all_system_aspects()
   list.all(all, fn(expected) { list.contains(aspects, expected) })
+}
+
+/// Typed source-level four-agent capability coordinates. Declaration/source
+/// presence does not establish loaded operation, fresh evidence or authority.
+/// The legacy evaluate_agent_intent helper above is advisory only; its caller
+/// flags cannot create an authenticated capability, TaskFence or effect grant.
+pub fn agent_capability_registry() -> List(agent_capabilities.Registration) {
+  agent_capabilities.registry()
+}
+
+/// Existing policy snapshot only; injected collector DATA is not admission.
+pub fn format_agent_preflight(
+  state: Option(symbiosis_preflight.State),
+  ontology_sha256: Option(String),
+  monotonic_ms: Int,
+) -> Result(String, String) {
+  agent_preflight_map.project(state, ontology_sha256, monotonic_ms)
+  |> result.map(agent_preflight_map.format_snapshot)
+}
+
+/// Reuses the ecology view. Pure meta state is caller DATA, never authenticated
+/// runtime ownership or legacy evaluate_agent_intent advisory admission flags.
+pub fn format_agent_meta(state: Option(agent_meta_policy.State)) -> String {
+  case state {
+    option.None -> agent_meta_policy.summary()
+    option.Some(value) -> agent_meta_policy.format_state(value)
+  }
+}
+
+/// Explicit L-only conversion; no H role is inferred from a fractal coordinate.
+pub fn meta_layer(
+  layer: FractalLayer,
+) -> Result(agent_meta_policy.Layer, String) {
+  agent_meta_policy.layer(case layer {
+    L0Constitutional -> 0
+    L1Atomic -> 1
+    L2ComponentState -> 2
+    L3TransactionHistory -> 3
+    L4SystemRuntime -> 4
+    L5CognitiveReasoning -> 5
+    L6SwarmEcosystem -> 6
+    L7FederationEgress -> 7
+    L8LivingKnowledge -> 8
+    L9SREHomeostasis -> 9
+  })
 }
 
 // -----------------------------------------------------------------------------
@@ -811,7 +865,12 @@ pub fn format_ecology_summary() -> String {
   <> "7. ⚡ `quarantined_inference_worker` [L5 Cognitive Reasoning]\n"
   <> "   • *Role:* Quarantined AI Inference Worker\n"
   <> "   • *Aspects:* A09 | *Capabilities:* 3 | *2oo3 Required:* False\n\n"
-  <> "Send `/ecology <agent_id>` to view detailed capability lattices and tool allowlists."
+  <> "Send `/ecology <agent_id>` to view detailed capability lattices and tool allowlists.\n\n"
+  <> agent_capabilities.format_registry()
+  <> "\n\n"
+  <> agent_preflight_map.format_summary()
+  <> "\n\n"
+  <> agent_meta_policy.summary()
 }
 
 /// Formats detailed specifications for a single agent profile.

@@ -2,15 +2,18 @@
 #use "topfind";;
 #require "bos,yojson,cryptokit,mtime.clock.os";;
 
-(* LOCAL Codex relay. @agent_intent: Build only the reviewed public Kernel,
-   Port and unchanged guardian with cached pinned tools; never release authority.
+(* LOCAL Codex relay. @agent_intent: Build the reviewed public Kernel, Port,
+   unchanged guardian, factual grant worker and bounded static finite-env facade
+   with cached pinned tools; never release authority. Linux x86_64 only.
    @laws: transformation preserves every byte except the three exact directives;
    captured inputs are rechecked before publication; pinned artifact ID covers the
    complete manifest and outputs; unknown/conflicting/partial output is HOLD.
    Owner permissions/index lookup are cooperative, not cryptographic authority.
    A caller must retain artifact_id independently. Existing process guardian
    bounds compiler time/output/group; local regular-FS and frozen same-UID inputs
-   are premises. Escaped descendants require a service cgroup. No DB/config,
+   are premises. Hash-before-exec does not defeat concurrent same-UID path
+   replacement; verified runtime ownership/freeze remains an activation HOLD.
+   Escaped descendants require a service cgroup. No DB/config,
    package installer, network, arbitrary command, library or source arguments.
    CLI: build SOURCE_ROOT TOOLCHAIN_ROOT | verify SOURCE_ROOT TOOLCHAIN_ROOT ID *)
 module Native_build : sig
@@ -30,6 +33,8 @@ module Native_build : sig
   val guardian_sha256 : artifact -> string
   val release_worker : artifact -> string
   val release_worker_sha256 : artifact -> string
+  val launcher : artifact -> string
+  val launcher_sha256 : artifact -> string
   val payload_files : artifact -> string list
   val test_retarget_versions : worker:bool -> string -> (string,error) result
   val test_verify_versions : string -> (unit,error) result
@@ -61,6 +66,7 @@ end = struct
   let max_manifest=1024*1024
   let hermes="engines/hermes/modules/hermes_harness/"
   let sources=[
+    "native/c/finite_environment_launch.c","297cf7a9f15768c0be2f8335e53d6dd8dcc8cc01a20d0be6378fe77ed23b1371";
     "tools/ecology_file_transaction.ml","64789f843adf44440b8190fd3c6eb8fadba4b5d7d052dd790a33e8375d240cd2";
     "tools/ecology_file_transaction_port.ml","463e6c48bbbee414d5be551ed5485f84ec49a478d2830d888a9f4ee7d20918b6";
     "tools/telegram_store_transport_guardian.ml","9ba03f57d2350c75ab95bfaa36553e637f432bd30e32dffd7db6ce738978d6d5";
@@ -200,9 +206,15 @@ end = struct
     "(executable (name guardian) (modules guardian) (libraries unix mtime.clock.os)"^fixed_link^")\n"^
     "(executable (name release_grants_worker) (modules release_grants_worker) (libraries release_impl yojson sqlite3 unix)"^fixed_link^")\n"
   let worker_entry="let ()=Port_impl.Port.main()\n"
+  let launcher_flags=["-nostdlib";"-static";"-no-pie";"-ffreestanding";"-fno-builtin";
+    "-fno-stack-protector";"-fno-pie";"-mno-red-zone";"-O2";"-Wall";"-Wextra";"-Werror";
+    "-Wl,--build-id=none";"-Wl,-e,_start";"-Wl,-z,noexecstack"]
   let recipe=`Assoc["dune_project",s dune_project;"dune_workspace",s dune_workspace;"dune",s dune_recipe;"worker",s worker_entry;
-    "transform",s"composite_exact_hermes_bytes_and_soname_runpath_runtime.v3";"jobs",n 1;"compiler_timeout_ms",n 50000;"output_limit",n 1048576;
-    "runtime_policy",s"Closed bare SONAME DT_NEEDED and exact matching Verneed; executable RUNPATH=$ORIGIN/runtime, library RUNPATH=$ORIGIN, DF_1_NODEFLIB. Clean environment and pinned Nix interpreter residency required. NODEFLIB does not exclude nondefault cache or LD overrides; no universal no-fallback claim. Existing runtime transport inherits environment: activation HOLD until independently reviewed scrub. Compiler correctness/transitive build-tool closure unproved."]
+    "transform",s"composite_exact_hermes_and_finite_static_launch.v4";"jobs",n 1;"compiler_timeout_ms",n 50000;"output_limit",n 1048576;
+    "architecture",s"linux-x86_64";"launch_profile",s"native-storage-v1";
+    "launcher_flags",`List(List.map s launcher_flags);
+    "finite_environment",`List(List.map(fun(k,v)->`List[s k;s v])["PATH","/nonexistent";"LANG","C";"LC_ALL","C";"TZ","UTC"]);
+    "runtime_policy",s"Opt-in static finite launcher before guardian loader; legacy paths remain separate. Closed SONAME/Verneed, RUNPATH, NODEFLIB require trusted startup/immutable paths and independently retained loader lifetime; no universal no-fallback or same-UID defence. Compiler/transitive build closure unproved. No admission."]
   let list_bounded path cap=
     let d=opendir path in Fun.protect ~finally:(fun()->closedir d)(fun()->
       let rec loop count acc=match readdir d with
@@ -235,7 +247,7 @@ end = struct
       need(realpath path=path && (lstat path).st_perm land 0o222=0)Toolchain_mismatch;
       let b=hash_file ~owner:0 ~deadline ~single:false ~cap:max_binary path in
       need(b.sha=expected)Toolchain_mismatch;b)nix_inputs in
-    let json=`Assoc["schema",s"uos.native-build-inputs.v2";"source_root",s source_root;"toolchain_root",s toolchain_root;
+    let json=`Assoc["schema",s"uos.native-build-inputs.v3";"source_root",s source_root;"toolchain_root",s toolchain_root;
       "sources",`List(List.map(fun(b,_)->binding_json b)src);"toolchain",`List(List.map binding_json deps);
       "nix_inputs",`List(List.map binding_json nix);
       "recipe_sha256",s(digest(encoded recipe));"ocaml_version",s"5.5.0";"dune_version",s"3.23.1"]in
@@ -264,13 +276,16 @@ end = struct
     let st=lstat path in need(st.st_kind=S_REG && st.st_nlink=1 && st.st_uid=geteuid() && st.st_perm=0o600)Unsafe_file;
     let fd=openfile path[O_RDWR;O_NONBLOCK;O_CLOEXEC]0 in
     Fun.protect ~finally:(fun()->close fd)(fun()->need(same st(fstat fd) && same st(lstat path))Unsafe_file;lockf fd F_TLOCK 0;f())
-  type artifact={id:string;dir:string;worker_hash:string;guardian_hash:string;release_hash:string}
+  type artifact={id:string;dir:string;worker_hash:string;guardian_hash:string;release_hash:string;launcher_hash:string}
   let artifact_id a=a.id and directory a=a.dir
   let worker a=a.dir^"/worker.exe" and guardian a=a.dir^"/guardian.exe" and manifest a=a.dir^"/manifest.json"
   let worker_sha256 a=a.worker_hash and guardian_sha256 a=a.guardian_hash
   let release_worker a=a.dir^"/release_grants_worker.exe"
   let release_worker_sha256 a=a.release_hash
-  let executables=["worker.exe";"guardian.exe";"release_grants_worker.exe"]
+  let launcher a=a.dir^"/finite_launcher.exe"
+  let launcher_sha256 a=a.launcher_hash
+  let dynamic_executables=["worker.exe";"guardian.exe";"release_grants_worker.exe"]
+  let executables=dynamic_executables@["finite_launcher.exe"]
   let runtime_files=List.map(fun(n,_,_)->"runtime/"^n)runtime_sources
   let payload_files _=executables@["manifest.json"]@runtime_files
   let output_json i dir=
@@ -280,8 +295,8 @@ end = struct
     let files=List.map(fun path->let b=hash_file ~deadline:i.deadline ~single:true ~cap:max_binary(dir^"/"^path)in
       need((lstat b.path).st_perm=0o444)Invalid_artifact;binding_json{b with path})runtime_files in
     `Assoc["external_loader",binding_json(hash_file ~owner:0 ~deadline:i.deadline ~single:false ~cap:max_binary loader);
-      "files",`List files;"activation",s"HOLD: runtime launcher environment scrub and exact external Nix loader GC residency unverified; not entirely self-contained; no admission"]
-  let manifest_json i dir outputs=`Assoc["schema",s"uos.native-build.v2";"inputs",i.json;"recipe",recipe;
+      "files",`List files;"activation",s"HOLD: opt-in finite launcher is not runtime adoption; immutable owner paths, trusted BEAM startup and independently managed Nix loader release lifetime unverified; no admission"]
+  let manifest_json i dir outputs=`Assoc["schema",s"uos.native-build.v3";"inputs",i.json;"recipe",recipe;
     "runtime",runtime_json i dir;"outputs",`List(List.map binding_json outputs);"authority",s"NONE";"admitted",`Bool false]
   let elf_tool i args=
     let out,code=run i ~process:(i.source_root^"/tools/ecology_process.ml") ~timeout:2000 ~limit:8192 patchelf args in
@@ -300,7 +315,9 @@ end = struct
      SONAME identities and an exact owned RUNPATH instead.
      Only that four-byte reference is adapted to an existing dynstr entry.
      Version hashes/names/indices and all other bytes remain.
-     Closed ELF64LE/x86_64 parser; unsupported/extended headers are HOLD. *)
+     Closed ELF64LE/x86_64 structural parser; unsupported/extended headers are
+     HOLD. Section-table versus loader PT_DYNAMIC/DT_STRTAB correspondence is
+     NOT proved by this parser; actual bounded startup is separate evidence. *)
   let elf_versions text=
     let len=String.length text in
     let span p n=need(p>=0 && n>=0 && p<=len-n)Invalid_artifact in
@@ -325,8 +342,16 @@ end = struct
       let rec ending k=need(k<str_size && k-n<=1024)Invalid_artifact;
         if text.[str_start+k]='\000'then k else ending(k+1)in
       String.sub text(str_start+n)(ending n-n)in
-    let needed=List.init(size/16)(fun k->start+k*16)|>List.filter_map(fun p->
-      if u32 p=1L && u32(p+4)=0L then let index=u64(p+8)in Some(string_at index,index)else None)in
+    let rec dynamic k acc=
+      need(k<size/16)Invalid_artifact;let p=start+k*16 in
+      if u32 p=0L && u32(p+4)=0L then(
+        (* The loader stops at FIRST DT_NULL. Refuse hidden trailing entries
+           and noncanonical nonzero NULL values rather than inspect past it. *)
+        need(String.for_all((=)'\000')(String.sub text p(start+size-p)))Invalid_artifact;
+        List.rev acc)
+      else let acc=if u32 p=1L && u32(p+4)=0L then
+        let index=u64(p+8)in (string_at index,index)::acc else acc in dynamic(k+1)acc in
+    let needed=dynamic 0 []in
     need(List.length needed<=8)Invalid_artifact;
     let versions=List.filter(fun p->u32(p+4)=0x6ffffffeL)sections in
     let references=match versions with []->[]|[p]->
@@ -382,7 +407,23 @@ end = struct
       let allowed=loader::List.map(fun(n,_,_)->n)runtime_sources in
       need(ns<>[] && List.for_all(fun n->List.mem n allowed)ns)Invalid_artifact;
       if rel="release_grants_worker.exe"then need(List.mem "libsqlite3.so.0" ns)Invalid_artifact
-    )(executables@runtime_files)
+    )(dynamic_executables@runtime_files)
+  let verify_static i dir=
+    let _,text=read_source ~deadline:i.deadline(dir^"/finite_launcher.exe")max_binary in
+    let len=String.length text in
+    let u off count=need(off>=0 && off<=len-count)Invalid_artifact;
+      let x=ref 0 in for k=count-1 downto 0 do
+        need(!x<=max_int lsr 8)Invalid_artifact;x:=(!x lsl 8)lor Char.code text.[off+k] done;!x in
+    need(len>=64 && String.sub text 0 7="\127ELF\002\001\001" && u 16 2=2 && u 18 2=62)Invalid_artifact;
+    let offset=u 32 8 and count=u 56 2 and entry=u 24 8 in
+    need(u 54 2=56 && count>0 && count<=64 && offset<=len-count*56)Invalid_artifact;
+    let executable_entry=ref false in
+    for j=0 to count-1 do let p=offset+j*56 in let kind=u p 4 in
+      need(kind<>2 && kind<>3)Invalid_artifact; (* PT_DYNAMIC / PT_INTERP *)
+      if kind=1 then(let fileoff=u(p+8)8 and va=u(p+16)8 and bytes=u(p+32)8 in
+        need(fileoff<=len-bytes)Invalid_artifact;
+        if u(p+4)4 land 1<>0 && entry>=va && entry-va<bytes then executable_entry:=true)
+    done;need !executable_entry Invalid_artifact
   let runtime_smoke i dir=
     List.iter(fun name->
       let out,code=run i ~process:(i.source_root^"/tools/ecology_process.ml") ~timeout:2000 ~limit:8192(dir^"/"^name)[]in
@@ -393,20 +434,25 @@ end = struct
         need(!count=String.length out-4)Runtime_unavailable;
         let body=Yojson.Safe.from_string(String.sub out 4 !count)in
         need(Yojson.Safe.Util.member "status"body=`String"hold")Runtime_unavailable)
-    )executables
+    )dynamic_executables;
+    let out,code=run i ~process:(i.source_root^"/tools/ecology_process.ml") ~timeout:2000 ~limit:8192(dir^"/finite_launcher.exe")[]in
+    need(code=127 && out="")Runtime_unavailable
   let verify_loaded i id=
     need(hex id)Invalid_artifact;let dir=base i^"/cas/"^id in
     let st=lstat dir in need(st.st_kind=S_DIR && st.st_uid=geteuid() && st.st_perm=0o555 && realpath dir=dir)Invalid_artifact;
-    need(list_bounded dir 6=["guardian.exe";"manifest.json";"release_grants_worker.exe";"runtime";"worker.exe"])Invalid_artifact;
+    need(list_bounded dir 7=["finite_launcher.exe";"guardian.exe";"manifest.json";"release_grants_worker.exe";"runtime";"worker.exe"])Invalid_artifact;
     need((lstat(dir^"/runtime")).st_kind=S_DIR && (lstat(dir^"/runtime")).st_perm=0o555 &&
       list_bounded(dir^"/runtime")(List.length runtime_sources+1)=List.sort String.compare(List.map(fun(n,_,_)->n)runtime_sources))Invalid_artifact;
-    verify_elf i dir;
-    runtime_smoke i dir;
     let outputs=output_json i dir in
     let text=encoded(manifest_json i dir outputs)in
     let _,actual=read_source ~deadline:i.deadline(dir^"/manifest.json")max_manifest in
     need((lstat(dir^"/manifest.json")).st_perm=0o444 && actual=text && digest actual=id)Invalid_artifact;
-    {id;dir;worker_hash=(List.hd outputs).sha;guardian_hash=(List.nth outputs 1).sha;release_hash=(List.nth outputs 2).sha}
+    (* Authenticate EVERY observed executable and runtime-library byte against
+       the separately retained artifact ID BEFORE any artifact execution.
+       This ordering is necessary, not a hostile same-UID TOCTOU defence. *)
+    verify_elf i dir;verify_static i dir;
+    runtime_smoke i dir;
+    {id;dir;worker_hash=(List.hd outputs).sha;guardian_hash=(List.nth outputs 1).sha;release_hash=(List.nth outputs 2).sha;launcher_hash=(List.nth outputs 3).sha}
   let verify ~source_root ~toolchain_root ~artifact_id=protect(fun()->let i=snapshot source_root toolchain_root in verify_loaded i artifact_id)
   let input_current i=
     let next=snapshot ~deadline:i.deadline i.source_root i.toolchain_root in need(encoded next.json=encoded i.json)Source_mismatch
@@ -442,6 +488,10 @@ end = struct
           ["build";"--root";project;"--build-dir";project^"/_build";"--workspace";project^"/dune-workspace";
            "--no-config";"--disable-promotion";"-j1";"worker.exe";"guardian.exe";"release_grants_worker.exe"]in
         write_new(stage^"/build.log")log;need(code=0)Build_failed;
+        write_new(project^"/finite_environment_launch.c")(source "native/c/finite_environment_launch.c");
+        let log,code=run i ~process ~timeout:5000 ~limit:16384 nix_gcc
+          (launcher_flags@[project^"/finite_environment_launch.c";"-o";project^"/_build/default/finite_launcher.exe"])in
+        write_new(stage^"/launcher-build.log")log;need(code=0)Build_failed;
         List.iter(fun name->let path=project^"/_build/default/"^name in
           let _,body=read_source ~deadline:i.deadline path max_binary in
           write_new(publish^"/"^name)body)executables;
@@ -451,8 +501,9 @@ end = struct
           Fun.protect ~finally:(fun()->close fd)(fun()->let rec read_all n=if n<Bytes.length bytes then let got=read fd bytes n(Bytes.length bytes-n)in need(got>0)Io_failure;read_all(n+got)in read_all 0);
           write_new(publish^"/runtime/"^name)(Bytes.to_string bytes))runtime_sources;
         List.iter(fun name->patch_elf i ~worker:false(publish^"/"^name);chmod(publish^"/"^name)0o444)runtime_files;
-        List.iter(fun name->patch_elf i ~worker:true(publish^"/"^name);chmod(publish^"/"^name)0o555)executables;
-        chmod(publish^"/runtime")0o555;fsync_dir(publish^"/runtime");verify_elf i publish;runtime_smoke i publish;
+        List.iter(fun name->patch_elf i ~worker:true(publish^"/"^name);chmod(publish^"/"^name)0o555)dynamic_executables;
+        chmod(publish^"/finite_launcher.exe")0o555;
+        chmod(publish^"/runtime")0o555;fsync_dir(publish^"/runtime");verify_elf i publish;verify_static i publish;runtime_smoke i publish;
         let outputs=output_json i publish in let text=encoded(manifest_json i publish outputs)in
         need(String.length text<=max_manifest)Resource_bound;
         let id=digest text in write_new ~mode:0o444(publish^"/manifest.json")text;
@@ -473,6 +524,7 @@ end = struct
     "directory",s a.dir;"worker",s(worker a);"guardian",s(guardian a);"manifest",s(manifest a);
     "worker_sha256",s a.worker_hash;"guardian_sha256",s a.guardian_hash;
     "release_worker",s(release_worker a);"release_worker_sha256",s a.release_hash;
+    "launcher",s(launcher a);"launcher_sha256",s a.launcher_hash;"architecture",s"linux-x86_64";"launch_profile",s"native-storage-v1";
     "payload_files",`List(List.map s(payload_files a));"authority",s"NONE";"admitted",`Bool false]
 end
 let ()=if Filename.basename Sys.argv.(0)="ecology_native_build.ml"then(

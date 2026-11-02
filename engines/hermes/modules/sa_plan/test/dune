@@ -1,13 +1,127 @@
+(test
+ (name test_recovery_readonly_snapshot)
+ (modules test_recovery_readonly_snapshot)
+ (libraries sa_plan digestif sqlite3 yojson unix))
+
+(rule
+ (target recovery_migration_v1_helpers.ml)
+ (deps recovery_migration_fixture.ml)
+ (action (copy %{deps} %{target})))
+
+(test
+ (name test_recovery_schema_migration_v2)
+ (modules test_recovery_schema_migration_v2 recovery_migration_v2_fixture recovery_migration_v1_helpers)
+ (libraries recovery_schema_migration_v2 recovery_schema_migration recovery_kernel_fixture recovery_kernel core digestif sqlite3 yojson unix)
+ (action (run %{test} %{workspace_root}/../.. %{env:UOS_REVIEWED_ADAPTER_SCHEMA_SOURCE=UNCONFIGURED})))
+
 (executable
  (name sa_plan_main)
  (public_name sa-plan)
  (modules sa_plan_main sa_plan_cli sa_plan_work sa_plan_manual journal_markdown_html)
  (libraries bos core core_unix time_now yojson sa_plan))
 
+; Effectful migration interpreter is private test code, NEVER a production port.
+(test
+ (name test_recovery_schema_migration)
+ (modules test_recovery_schema_migration recovery_migration_fixture)
+ (libraries recovery_schema_migration recovery_kernel_fixture recovery_kernel recovery_owner_journal core digestif sqlite3 yojson unix))
+
 (executable
  (name sa_plan_test)
  (modules sa_plan_test)
  (libraries core core_unix sa_plan))
+
+(test
+ (name test_recovery_resource)
+ (modules test_recovery_resource)
+ (libraries recovery_resource recovery_kernel digestif mirage-crypto-ec yojson sqlite3 unix)
+ (deps ../recovery_kernel.ml ../recovery_resource.ml))
+
+(test
+ (name test_recovery_owner_journal)
+ (modules test_recovery_owner_journal)
+ (libraries recovery_owner_journal core digestif sqlite3 yojson unix))
+
+(executable
+ (name recovery_owner_fixture_wrapper)
+ (modules recovery_owner_fixture_wrapper)
+ (libraries yojson unix))
+
+(executable
+ (name recovery_owner_fixture)
+ (modules recovery_owner_fixture)
+ (libraries recovery_owner_journal recovery_kernel_fixture recovery_kernel core mirage-crypto-ec yojson sqlite3 unix)
+ (link_deps recovery_owner_fixture_wrapper.exe recovery_kernel_fixture_port.exe recovery_fixture_guardian.exe ../recovery_owner_journal_port.exe ../sa_plan_store.ml))
+
+; Private actual-clock/capability interpreter: never part of the sa_plan library.
+(library
+ (name recovery_kernel_fixture)
+ (wrapped false)
+ (modules recovery_kernel_fixture)
+ (libraries core sa_plan recovery_kernel sqlite3)
+ (preprocess (pps ppx_jane)))
+
+(rule
+ (target recovery_kernel_fixture.ml)
+ (deps ../sa_plan_store.ml reclaim_fixture_extension.ml recovery_kernel_fixture_extension.ml)
+ (action
+  (with-stdout-to %{target}
+   (progn (echo "open Sa_plan__\n") (cat ../sa_plan_store.ml)
+    (cat reclaim_fixture_extension.ml) (cat recovery_kernel_fixture_extension.ml)))))
+
+(executable
+ (name recovery_kernel_fixture_port)
+ (modules recovery_kernel_fixture_port)
+ (libraries recovery_kernel_fixture recovery_kernel yojson unix))
+
+(rule
+ (target recovery_fixture_guardian.ml)
+ (deps %{workspace_root}/../../tools/telegram_store_transport_guardian.ml)
+ (action (copy %{deps} %{target})))
+
+(executable
+ (name recovery_fixture_guardian)
+ (modules recovery_fixture_guardian)
+ (libraries unix mtime.clock))
+
+(executable
+ (name recovery_fixture_prepare)
+ (modules recovery_fixture_prepare)
+ (libraries recovery_kernel mirage-crypto-ec yojson unix))
+
+(rule
+ (target fixture_launcher.ml)
+ (deps ../sa_plan_store.ml ../recovery_port.exe recovery_kernel_fixture_port.exe recovery_fixture_guardian.exe)
+ (action
+  (with-stdout-to %{target}
+   (run %{exe:recovery_fixture_prepare.exe}
+    %{exe:recovery_kernel_fixture_port.exe} %{exe:recovery_fixture_guardian.exe} ../sa_plan_store.ml))))
+
+(test
+ (name test_recovery_kernel)
+ (modules test_recovery_kernel fixture_launcher)
+ (libraries recovery_kernel_fixture recovery_kernel sa_plan core mirage-crypto-ec yojson sqlite3 unix astring)
+ (deps ../sa_plan_store.mli ../recovery_kernel.mli ../sa_plan_store.ml reclaim_fixture_extension.ml recovery_kernel_fixture_extension.ml recovery_kernel_fixture.ml))
+
+(test
+ (name test_sa_plan_reclaim)
+ (modules test_sa_plan_reclaim reclaim_fixture)
+ (deps ../sa_plan_store.ml reclaim_fixture_extension.ml reclaim_fixture.ml)
+ (preprocess (pps ppx_jane))
+ (libraries core sa_plan sqlite3 unix astring))
+
+; No fixture writer belongs to the production sa_plan library or its MLI.
+; This private module uses exact production implementation bytes, then the
+; test-only extension, with only the wrapper namespace import prepended.
+(rule
+ (target reclaim_fixture.ml)
+ (deps ../sa_plan_store.ml reclaim_fixture_extension.ml)
+ (action
+  (with-stdout-to %{target}
+   (progn
+    (echo "open Sa_plan__\n")
+    (cat ../sa_plan_store.ml)
+    (cat reclaim_fixture_extension.ml)))))
 
 (executable
  (name test_sa_plan_control_plane)
@@ -92,3 +206,21 @@
  (name test_sa_plan_dependency_repair)
  (modules test_sa_plan_dependency_repair)
  (libraries core core_unix sa_plan sqlite3 yojson))
+(test
+ (name test_sqlite_main_mapping)
+ (modules test_sqlite_main_mapping)
+ (libraries sqlite_main_mapping core sqlite3 unix bos)
+ (deps ../sqlite_main_mapping_stubs.c)
+ (link_flags (:standard
+  -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
+
+(test
+ (name test_sqlite_bound_vfs)
+ (modules test_sqlite_bound_vfs)
+ (libraries sqlite_bound_vfs sqlite_main_mapping core sqlite3 unix bos)
+ (link_flags (:standard
+  -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))

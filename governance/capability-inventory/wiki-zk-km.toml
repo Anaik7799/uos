@@ -638,3 +638,15 @@ journal = "docs/journal/20261102-1930-fpp4-sovereign-gate-v11-and-pi-fractal-tok
 journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261102-1930-fpp4-sovereign-gate-v11-and-pi-fractal-token-optimization-journal.md"
 wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
 zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+
+
+[[knowledge_group]]
+id = "ONTOLOGY-META-HARNESS-JOURNAL-20261101-0615"
+state = "development_draft"
+admitted = false
+journal = "docs/journal/20261101-0615-four-agent-ontology-meta-harness-journal.md"
+journal_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261101-0615-four-agent-ontology-meta-harness-journal.md"
+specification = "docs/design/20261101-0502-uos-four-agent-capability-ontology-intent-spec.md"
+url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261101-0502-uos-four-agent-capability-ontology-intent-spec.md"
+wiki = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+zk = "docs/zk/20260905-1801-moc-uos-unified-master.md"
