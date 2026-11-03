@@ -1,0 +1,404 @@
+{
+  "schema": "uos.hive-speedup-observations.v1",
+  "observed_at": "2026-10-31T14:13:53Z",
+  "authority": "REPORT_ONLY",
+  "source_candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "system_admitted": false,
+  "sources": [
+    {
+      "sha256": "96f57a1613b3ce3c6c010d5c53e40545a5dbaf05b61854928cb72b31aba03605",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/features.gleam"
+    },
+    {
+      "sha256": "3f271cd23a724a934a84f43d1b58befb7bd41a65e97155631ec7a89859b87c36",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/workspace_knowledge.gleam"
+    },
+    {
+      "sha256": "90fa507175cee25521b8ba7170ec959e65a053112c3bda34da05c02b40e30cea",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam"
+    },
+    {
+      "sha256": "ace59ce098625963394ce1f0cbafe07ca732140086ba1d63d488565caaefacb3",
+      "path": "tools/ecology_budget.ml"
+    }
+  ],
+  "observations": {
+    "logical_cpu_count": 24,
+    "available_ram_gib_approx": 32,
+    "host_capacity_time": "2026-10-31T13:50:54Z",
+    "connected_knowledge_search_arguments": [
+      "query"
+    ],
+    "missing_connected_knowledge_search_argument": "limit",
+    "feature_intent_behavior": "read-only recorded-intent lookup; not an actuator",
+    "zenoh_publish_response_behavior": "returns published after body substring check with no publisher invocation",
+    "mcp_zenoh_process_observation": "stdio-local subscriber stopped; REST and TCP reachable; does not establish production subscriber status",
+    "signed_roundtrip_this_task": "UNRUN",
+    "oi08_dependencies_observed": [
+      "OI03_101_ROUTE_LIVE_DAEMON_FIDELITY",
+      "OI04_OFFLINE_NIX_LEAN4_RESERVOIR",
+      "OI05_HISTORICAL_374_LINK_ALIAS_MAP",
+      "OI07_EFFECT_TIME_KM_RISK_FENCING"
+    ],
+    "missing_oi08_dependency": "OI09_NATIVE_HERMES_WIKI_AND_KM_SERVICE_UNIFICATION",
+    "canonical_budget": {
+      "daily_limit_usd": 10,
+      "fixed_request_reservation_usd": 0.25,
+      "maximum_requests_per_day": 40,
+      "refunds_supported": false
+    },
+    "pi_usage_estimate_usd_after_nine_calls": 0.031024,
+    "pi_reserved_liability_usd_after_nine_calls": 2.25,
+    "claude_context_cache_creation_tokens": {
+      "failed_launch": 295983,
+      "completed_slim_review": 20474,
+      "comparison_kind": "diagnostic_not_speedup_benchmark"
+    },
+    "benchmark_10x": "TARGET_NOT_MEASURED"
+  },
+  "models_api_observation": [
+    {
+      "id": "deepseek/deepseek-v4.1-flash-1017",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.00000015",
+        "completion": "0.0000006",
+        "input_cache_read": "0.000000003",
+        "overrides": [
+          {
+            "utc_days": [
+              "saturday",
+              "sunday"
+            ],
+            "prompt": "0.00000015",
+            "completion": "0.0000006",
+            "input_cache_read": "0.000000003"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 0,
+            "utc_end": 100,
+            "prompt": "0.00000015",
+            "completion": "0.0000006",
+            "input_cache_read": "0.000000003"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 100,
+            "utc_end": 400,
+            "prompt": "0.0000003",
+            "completion": "0.0000012",
+            "input_cache_read": "0.000000006"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 400,
+            "utc_end": 600,
+            "prompt": "0.00000015",
+            "completion": "0.0000006",
+            "input_cache_read": "0.000000003"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 600,
+            "utc_end": 1000,
+            "prompt": "0.0000003",
+            "completion": "0.0000012",
+            "input_cache_read": "0.000000006"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 1000,
+            "utc_end": 0,
+            "prompt": "0.00000015",
+            "completion": "0.0000006",
+            "input_cache_read": "0.000000003"
+          }
+        ]
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 393216,
+        "is_moderated": false
+      },
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_completion_tokens",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    {
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.00000066",
+        "completion": "0.00000198",
+        "input_cache_read": "0.000000022",
+        "overrides": [
+          {
+            "utc_days": [
+              "saturday",
+              "sunday"
+            ],
+            "prompt": "0.00000066",
+            "completion": "0.00000198",
+            "input_cache_read": "0.000000022"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 0,
+            "utc_end": 100,
+            "prompt": "0.00000066",
+            "completion": "0.00000198",
+            "input_cache_read": "0.000000022"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 100,
+            "utc_end": 400,
+            "prompt": "0.00000132",
+            "completion": "0.00000396",
+            "input_cache_read": "0.000000044"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 400,
+            "utc_end": 600,
+            "prompt": "0.00000066",
+            "completion": "0.00000198",
+            "input_cache_read": "0.000000022"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 600,
+            "utc_end": 1000,
+            "prompt": "0.00000132",
+            "completion": "0.00000396",
+            "input_cache_read": "0.000000044"
+          },
+          {
+            "utc_days": [
+              "monday",
+              "tuesday",
+              "wednesday",
+              "thursday",
+              "friday"
+            ],
+            "utc_start": 1000,
+            "utc_end": 0,
+            "prompt": "0.00000066",
+            "completion": "0.00000198",
+            "input_cache_read": "0.000000022"
+          }
+        ]
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 393216,
+        "is_moderated": false
+      },
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash-0731",
+      "context_length": 1048576,
+      "pricing": {
+        "prompt": "0.000000119",
+        "completion": "0.000000238",
+        "input_cache_read": "0.0000000238"
+      },
+      "top_provider": {
+        "context_length": 1048576,
+        "max_completion_tokens": 943718,
+        "is_moderated": false
+      },
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_a",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ]
+    }
+  ],
+  "model_routing": {
+    "complex_code": "deepseek/deepseek-v4-pro-0813",
+    "simple_text": "deepseek/deepseek-v4-flash-0731 subject to observed yield",
+    "preferred_new_snapshot": "deepseek/deepseek-v4.1-flash-1017",
+    "new_snapshot_budget_state": "NOT_ALLOWLISTED"
+  },
+  "private_receipts_prefix": "var/harness/20261031-1334-codex-hive/",
+  "limits": [
+    "No private DB, WAL, secret or configuration bytes included",
+    "Capacity, API schema, prices and task DAG must be re-observed before effects",
+    "Source inspection is distinct from runtime proof",
+    "Raw model reviews and failed attempts retained privately"
+  ],
+  "speedup_task_readback": [
+    {
+      "id": "A01_PLAN_10X",
+      "state": "executing",
+      "dependencies": []
+    },
+    {
+      "id": "A02_SCALE_CONTROL",
+      "state": "available",
+      "dependencies": [
+        "A01_PLAN_10X"
+      ]
+    },
+    {
+      "id": "A03_BENCHMARK",
+      "state": "available",
+      "dependencies": [
+        "A01_PLAN_10X"
+      ]
+    },
+    {
+      "id": "A04_ETS_FRESHNESS",
+      "state": "available",
+      "dependencies": [
+        "A03_BENCHMARK"
+      ]
+    },
+    {
+      "id": "A05_ZENOH_SYNC",
+      "state": "available",
+      "dependencies": [
+        "A01_PLAN_10X"
+      ]
+    },
+    {
+      "id": "A06_PI_BUDGET_ADAPTER",
+      "state": "available",
+      "dependencies": [
+        "A01_PLAN_10X"
+      ]
+    },
+    {
+      "id": "A07_SCALE_ACTIVATION",
+      "state": "available",
+      "dependencies": [
+        "A02_SCALE_CONTROL",
+        "A03_BENCHMARK",
+        "A04_ETS_FRESHNESS",
+        "A05_ZENOH_SYNC",
+        "A06_PI_BUDGET_ADAPTER"
+      ]
+    }
+  ],
+  "task_readback_authority": "READ_ONLY_OBSERVATION_NOT_EFFECT_AUTHORITY"
+}

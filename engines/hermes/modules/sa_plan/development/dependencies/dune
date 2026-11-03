@@ -1,15 +1,3 @@
-(library
- (name sqlite_main_mapping)
- (wrapped false)
- (modules sqlite_main_mapping)
- (libraries core digestif sqlite3 unix threads)
- (foreign_stubs (language c) (names sqlite_main_mapping_stubs)
-  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
- (c_library_flags -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
-  -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -lsqlite3 -ldl))
-
-(library
- (name recovery_resource)
- (wrapped false)
- (modules recovery_resource)
- (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
+; sqlite_main_mapping and recovery_resource are defined once, in ../../dune,
+; over byte-identical sources. This directory only supplies sqlite_write_vfs
+; inputs copied by ../dune; it declares no libraries of its own.

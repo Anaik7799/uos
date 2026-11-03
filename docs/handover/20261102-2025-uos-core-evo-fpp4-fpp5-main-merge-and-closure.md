@@ -125,3 +125,12 @@ EV ceiling remains `EV-93` (`admitted_ev_ceiling = 93`). `EV-94..EV-109` and `AD
 
 **Previous:** [20261102-1930 FPP-4 Gate v11 & Pi Token Optimization Journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20261102-1930-fpp4-sovereign-gate-v11-and-pi-fractal-token-optimization-journal.md) · **Next:** [Universal 40-Actor FPP Wiki](http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md)  
 **UOS footer:** Merged to `main` and documented; `application_admitted = false`, `system_admitted = false`.
+
+## Addendum 20261103-1243 — final "merge all code into main"
+
+- `main` before: `qksskklv` (`fe9882c0`), a peer merge of `ovnkkswt` (Bionic Token Twin, 13-theorem formal coverage) and `snqronxu` (`c595d3b4`): the 7-parent merge of the 2026-11-01 ontology/meta-harness, recovery kernel/owner, migration v2, readiness, native signer and SQLite bound-VFS branches.
+- This change adds 4 documents that were missing from `main` (from `rpwuwsmrxtop` and `wqtwqwnlpxxw`). It also removes duplicate dune library stanzas (`sqlite_main_mapping`, `recovery_resource`) from `engines/hermes/modules/sa_plan/development/dependencies/dune`; their sources were byte-identical to the canonical stanzas in `sa_plan/dune`.
+- Checked, not merged: older versions on the 2026-10-29 to 2026-10-31 heads that `main` already supersedes; the heads `pswytpqpprsl` and `xtzznzwowvsm`, which contain only `build/` artifacts (Zero-Muda); and `test_sa_plan_recovery_snapshot.ml`, an earlier variant of the readonly-snapshot test already on `main`.
+- Verified: `gleam build` passes. These 10 OTP 29.0.5 EUnit suites pass: fpp 4, sysml 14, core_evolution 30, pre-attach 48, successor 69, admission 6, route_parity 13, recovery_owner 2, recovery_ingress 15, agent_meta_policy 17. `km-gate --gate` returns PASS. `dune build @modules/sa_plan/runtest` passes more than 500 checks.
+- Held, not force-passed: `test_sqlite_main_mapping` fails closed with `UNSUPPORTED_RUNTIME` (the SQLite runtime-pin guard); `test_recovery_schema_migration_v2` needs the repo root as its working directory; Hermes server/wiki/vision binaries fail to link because `-lssl`, `-lcrypto` and `-lffi` are absent from the toolchain environment. All of these are unrelated to the merge.
+- Unchanged: `admitted_ev_ceiling = 93`; EV-94..EV-109 `NOT_ADMITTED`; `system_admitted = false`. The `governance/provenance/20261031-1423-ev94-109-forensic-ledger.json` ledger now on `main` is forensic evidence, not admission evidence.

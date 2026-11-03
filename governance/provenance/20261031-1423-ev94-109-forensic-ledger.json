@@ -1,0 +1,613 @@
+{
+  "schema": "uos.provenance-forensic-ledger.v1",
+  "observed_at": "2026-10-31T14:07:23Z",
+  "source_candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+  "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+  "authority": "REPORT_ONLY",
+  "admitted_ev_ceiling": 93,
+  "application_admitted": false,
+  "system_admitted": false,
+  "new_ev_minted": 0,
+  "plan_id": "uos/codex-handover-open-items-fractal-plan/20261031-1240",
+  "task_id": "OI01_EV94_109_SOVEREIGN_AUDIT",
+  "worker": "pi-hive-execution-20261031",
+  "attempt": 1,
+  "classification_basis": "Observed non-secret historical document and referenced source-file bytes; source presence does not establish runtime behavior or sovereign admission",
+  "joint_sovereign_review": {
+    "codex": "DOSSIER_PREPARATION_ONLY",
+    "agy": "PENDING",
+    "decision": "NOT_ADMITTED"
+  },
+  "observed_sources": [
+    {
+      "adr": 71,
+      "ev": 94,
+      "historical_path": "docs/zk/20260907-2030-adr-071-zmof-zenoh-backplane-wiki-transclusion-and-ev94-ratification.md",
+      "historical_sha256": "c664b899798f585ca7cc229d4c0410f6f2d2c7de2316b0ac06e57962ee7d796b",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/zmof_transport.gleam",
+      "code_sha256": "354baf76ea4e81a3646e48a2b75d670c93da465ada5035ca14a47a3d3e0770bd",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 72,
+      "ev": 95,
+      "historical_path": "docs/zk/20260907-2045-adr-072-cross-host-peer-simulator-agui-sparklines-and-ev95-ratification.md",
+      "historical_sha256": "f0c23f733c76bd16fdeb4039ee5f06b22ca44618336a9c678648d0a290f81519",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/peer_simulator.gleam",
+      "code_sha256": "cea123ef4f5f5c84e3b14e6c22000c64271126a049e0174388ffc7832e3eb56b",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 73,
+      "ev": 96,
+      "historical_path": "docs/zk/20260907-2055-adr-073-adaptive-lyapunov-damping-and-ev96-ratification.md",
+      "historical_sha256": "05656dae70ae50427d5610bd37bff1a0d02af51733ed787d61737670292db49f",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/lyapunov_controller.gleam",
+      "code_sha256": "d3d933a70e68b8a4a370fd5dc9d592209e5072fc493ae5e77448ded1dfa911b6",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 74,
+      "ev": 97,
+      "historical_path": "docs/zk/20260907-2105-adr-074-heijunka-scheduler-ws-hot-stream-and-ev97-ratification.md",
+      "historical_sha256": "4db310b2fca7c97defe9f3f720810e2b84a2f43f36cce2b3a8043793794222a3",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam",
+      "code_sha256": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 75,
+      "ev": 98,
+      "historical_path": "docs/zk/20260907-2130-adr-075-crdt-delta-mesh-engine-deadman-freshness-and-ev98-ratification.md",
+      "historical_sha256": "277ba0558f9975b84fdc5642f8962003412be48e2ec311dc22a376da15869058",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "code_sha256": "97b67a2f4f4acfdd652dfca579a29a15a861959e8754a42f5745f54397311d24",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 76,
+      "ev": 99,
+      "historical_path": "docs/zk/20260907-2145-adr-076-decentralized-work-stealing-topology-view-and-ev99-ratification.md",
+      "historical_sha256": "3eae8062b1e255b48949d3e1e34e138888dbe818dd1c655111d8cddc1e196a93",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam",
+      "code_sha256": "b156c992ceca39fc0cb0b6c983c194164045fbb88b20ff9cf3212b04b23e7a8a",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 77,
+      "ev": 100,
+      "historical_path": "docs/zk/20260907-2200-adr-077-century-milestone-swarm-harmony-and-ev100-ratification.md",
+      "historical_sha256": "dc28e644181ea66a02e8ebd6f2ba4c9316a7c35128883a9b781af0984be0bf26",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/pid_tuner.gleam",
+      "code_sha256": "e3bfd5238724e3a9220ea8287a99d455f821412a60efd8b4fa968c9cdc275111",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 78,
+      "ev": 101,
+      "historical_path": "docs/zk/20260907-2210-adr-078-autonomous-semantic-knowledge-sheaf-and-ev101-ratification.md",
+      "historical_sha256": "3f4f306e079fe0805ae7910c2e60110ca25692bfad17db7d22527827974cdb12",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+      "code_sha256": "8ccc385d0a4ae4399ba2a9fe8990a35066ee9881ec1cb5a4a2c9064851fbfed5",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 79,
+      "ev": 102,
+      "historical_path": "docs/zk/20260907-2220-adr-079-biomorphic-chaos-immune-engine-and-ev102-ratification.md",
+      "historical_sha256": "fd4fa0488b3a11f24fc975379abc8f2ce4e378143cffc7e5ffc635a1e7bb1def",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/immune/chaos_immune_engine.gleam",
+      "code_sha256": "5cf0261f629959a3f87ddd9f86b70712a0b6000e30954cb7af5666521016871f",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 80,
+      "ev": 103,
+      "historical_path": "docs/zk/20260907-2230-adr-080-dynamic-semantic-rag-vector-cache-and-ev103-ratification.md",
+      "historical_sha256": "16596a017bec612ceac37d1ce942fa6c64d2a3a501602cfb5c79ca508afad4fa",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+      "code_sha256": "0dc918abb976b34802934cdfd0ccb7a18836198da62422316e18a4cf68392dcb",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 81,
+      "ev": 104,
+      "historical_path": "docs/zk/20260907-2245-adr-081-autonomous-ooda-copilot-shruti-synthesizer-and-ev104-ratification.md",
+      "historical_sha256": "9c77ba0587712a3261f5c35de162353f906b421a8f0cf51d7322bd56ce04161f",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/agents/ooda_shruti_copilot.gleam",
+      "code_sha256": "b6f299f29f9d8ff8b387cdc834a0761edc4ee49a6ccec907ddba2568e7c4c490",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 82,
+      "ev": 105,
+      "historical_path": "docs/zk/20260907-2300-adr-082-autonomous-multi-agent-consensus-quorum-and-ev105-ratification.md",
+      "historical_sha256": "8b6fce8a668fcae9b2ea7a4fa6eb657cbdf05708f399db35b2d033118ecb5e2c",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+      "code_sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 83,
+      "ev": 106,
+      "historical_path": "docs/zk/20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md",
+      "historical_sha256": "1e18eeb55c443f0b99a7192f3aa58291339092030bc3db46a541291be2ae603e",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+      "code_sha256": "5813678ba71dcb676d8713e6d6a8bb4afb62e7f61adc38267bd8c29ac6a86c70",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 84,
+      "ev": 107,
+      "historical_path": "docs/zk/20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md",
+      "historical_sha256": "26b39957197a668e36fd0226e95bc2ff8623304e1a31d0df40f40ac53c30f747",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+      "code_sha256": "d5c54d35aa3addbb24d5dd865f6266772880c1f1ce91ccf25eaa84cbe87bbefd",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 85,
+      "ev": 108,
+      "historical_path": "docs/zk/20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md",
+      "historical_sha256": "dc6aa781dea55fd43562057672f4a8f6d1200a3ddf69b3d257fedd697479a582",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+      "code_sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    },
+    {
+      "adr": 86,
+      "ev": 109,
+      "historical_path": "docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md",
+      "historical_sha256": "f6a58cc1d912b1a404131ae28aa0d000bc074ac081349b3e04cfe93637e5c162",
+      "code_path": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+      "code_sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd",
+      "code_file_observed": true,
+      "runtime_key": "UNRUN",
+      "formal_rebind": "UNRUN",
+      "status": "NOT_ADMITTED",
+      "authority": "REPORT_ONLY"
+    }
+  ],
+  "recommendations": [
+    {
+      "ev": 94,
+      "adr": 71,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 95,
+      "adr": 72,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 96,
+      "adr": 73,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 97,
+      "adr": 74,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 98,
+      "adr": 75,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 99,
+      "adr": 76,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 100,
+      "adr": 77,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 101,
+      "adr": 78,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 102,
+      "adr": 79,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 103,
+      "adr": 80,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 104,
+      "adr": 81,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 105,
+      "adr": 82,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 106,
+      "adr": 83,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 107,
+      "adr": 84,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 108,
+      "adr": 85,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    },
+    {
+      "ev": 109,
+      "adr": 86,
+      "historical_status": "NOT_ADMITTED",
+      "recommendation": "CODE_PRESENT_REQUIRES_FRESH_TWO_KEY_REBIND",
+      "basis": "source-file presence only",
+      "runtime_key": "UNRUN",
+      "legacy_formal_rebind": "UNRUN"
+    }
+  ],
+  "parser_input": {
+    "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+    "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+    "claims": [
+      {
+        "ev": 94,
+        "adr": 71,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/zmof_transport.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 95,
+        "adr": 72,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/peer_simulator.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 96,
+        "adr": 73,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/lyapunov_controller.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 97,
+        "adr": 74,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 98,
+        "adr": 75,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 99,
+        "adr": 76,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 100,
+        "adr": 77,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/pid_tuner.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 101,
+        "adr": 78,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 102,
+        "adr": 79,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/immune/chaos_immune_engine.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 103,
+        "adr": 80,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 104,
+        "adr": 81,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/agents/ooda_shruti_copilot.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 105,
+        "adr": 82,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 106,
+        "adr": 83,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 107,
+        "adr": 84,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 108,
+        "adr": 85,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      },
+      {
+        "ev": 109,
+        "adr": 86,
+        "evidence": [
+          {
+            "kind": "code_present",
+            "locator": "apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+            "candidate_commit": "a4dcfaa6124f647b1770e37288724a24ea8949c5",
+            "source_map_sha256": "5a19fa8f75de1debbe983a823988a5bb3b3846c27565f43036f26551fa6ae14c",
+            "tick_us": null,
+            "utc_us": null
+          }
+        ]
+      }
+    ]
+  },
+  "remaining_gaps": [
+    "Joint Codex and AGY sovereign adjudication is pending",
+    "Legacy runtime and formal behavior are not freshly rebound",
+    "Audit-tool final candidate verification is recorded separately",
+    "No historical byte rewrite or admission transition is authorized"
+  ]
+}
