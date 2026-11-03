@@ -37,24 +37,41 @@ fn error_code(raw: String, expected: Int) {
 }
 
 pub fn go_sdk_null_parameterless_params_and_zero_argument_call_test() {
-  list.each(["tools/list", "ping", "resources/list", "prompts/list"], fn(method) {
-    let assert Some(reply) = rpc("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"" <> method <> "\",\"params\":null}")
-    let assert Ok(value.Object(fields)) = json.parse(reply, value.decoder())
-    list.any(fields, fn(pair) { pair.0 == "result" }) |> should.be_true
-  })
-  let assert Some(reply) = rpc("{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/call\",\"params\":{\"name\":\"integrity_check\",\"arguments\":null}}")
-  json.parse(reply, decode.at(["result", "isError"], decode.bool)) |> should.equal(Ok(False))
+  list.each(
+    ["tools/list", "ping", "resources/list", "prompts/list"],
+    fn(method) {
+      let assert Some(reply) =
+        rpc(
+          "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\""
+          <> method
+          <> "\",\"params\":null}",
+        )
+      let assert Ok(value.Object(fields)) = json.parse(reply, value.decoder())
+      list.any(fields, fn(pair) { pair.0 == "result" }) |> should.be_true
+    },
+  )
+  let assert Some(reply) =
+    rpc(
+      "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/call\",\"params\":{\"name\":\"integrity_check\",\"arguments\":null}}",
+    )
+  json.parse(reply, decode.at(["result", "isError"], decode.bool))
+  |> should.equal(Ok(False))
 }
 
 pub fn null_required_params_and_primitive_or_array_bindings_remain_invalid_test() {
-  list.each([
-    "\"method\":\"tools/call\",\"params\":null",
-    "\"method\":\"resources/read\",\"params\":null",
-    "\"method\":\"ping\",\"params\":123",
-    "\"method\":\"ping\",\"params\":[]",
-    "\"method\":\"tools/call\",\"params\":{\"name\":\"integrity_check\",\"arguments\":\"bad\"}",
-    "\"method\":\"tools/call\",\"params\":{\"name\":\"integrity_check\",\"arguments\":[]}",
-  ], fn(fields) { error_code("{\"jsonrpc\":\"2.0\",\"id\":3," <> fields <> "}", -32_602) })
+  list.each(
+    [
+      "\"method\":\"tools/call\",\"params\":null",
+      "\"method\":\"resources/read\",\"params\":null",
+      "\"method\":\"ping\",\"params\":123",
+      "\"method\":\"ping\",\"params\":[]",
+      "\"method\":\"tools/call\",\"params\":{\"name\":\"integrity_check\",\"arguments\":\"bad\"}",
+      "\"method\":\"tools/call\",\"params\":{\"name\":\"integrity_check\",\"arguments\":[]}",
+    ],
+    fn(fields) {
+      error_code("{\"jsonrpc\":\"2.0\",\"id\":3," <> fields <> "}", -32_602)
+    },
+  )
 }
 
 pub fn suite2_unknown_notifications_are_silent_test() {
@@ -370,7 +387,7 @@ pub fn suite4_all_53_advertised_schemas_have_no_adapter_key_mismatch_test_() {
 
 fn all_53_schema_parity() {
   let definitions = tools.operational_tool_definitions()
-  list.length(definitions) |> should.equal(53)
+  list.length(definitions) |> should.equal(54)
   let results =
     list.map(definitions, fn(definition) {
       let assert Ok(schema) =

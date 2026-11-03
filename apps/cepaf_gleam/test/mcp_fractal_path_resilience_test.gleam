@@ -18,7 +18,7 @@ import simplifile
 
 const root = "/home/an/NAS-setup/uos"
 
-const candidate = "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663"
+const candidate = "sha256:f2fe03a39113e3f2ad74bef9b9bce89dd0075b43292c480fbe0ea61305df2503"
 
 fn frame(method: String, params: json.Json) -> String {
   json.object([

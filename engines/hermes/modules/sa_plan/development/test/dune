@@ -13,6 +13,7 @@
  (libraries recovery_adapter_development recovery_adapter_prepare sa_plan recovery_kernel control_checker core sqlite3 yojson unix)
  (link_flags (:standard -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
   -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,--disable-new-dtags
   -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
 
 ; Private unsigned draft/detached fact finalizer, never a production route.
@@ -33,4 +34,5 @@
  (libraries recovery_native_prepare sa_plan recovery_kernel control_checker core sqlite3 yojson unix)
  (link_flags (:standard -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
   -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,--disable-new-dtags
   -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))

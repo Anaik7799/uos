@@ -20,7 +20,7 @@ probe_main() ->
     #{<<"result">>:=#{<<"protocolVersion">>:= <<"2026-07-28">>}}=
         Call(<<"initialize">>,#{protocolVersion=><<"2026-07-28">>,capabilities=>#{}},1),
     #{<<"result">>:=#{<<"tools">>:=Tools}}=Call(<<"tools/list">>,#{},2),
-    53=length(Tools),true=G:is_running(),
+    54=length(Tools),true=G:is_running(),
     {call_count,InitCalls}=erlang:trace_info(MFA,call_count),
     io:format("STARTUP_SQL_PROBE ~s~n",[json:encode(#{bounded_commands_before_planning=>InitCalls})]),
     0=InitCalls,

@@ -10,7 +10,7 @@ import cepaf_gleam/gateway/telegram_gateway_ticker as ticker
 import cepaf_gleam/harness/telegram_delivery_ledger as ledger
 import gleam/erlang/process.{type Subject}
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{Some}
 import gleam/otp/actor
 import gleam/otp/system
 import gleam/string

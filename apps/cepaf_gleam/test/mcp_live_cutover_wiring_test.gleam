@@ -1058,7 +1058,7 @@ pub fn private_live_ungranted_routes_and_all_route_tool_lists_test() {
   )
   let state = fixture()
   list.each(
-    [#("public", 53), #("development", 21), #("successor", 15)],
+    [#("public", 54), #("development", 21), #("successor", 17)],
     fn(pair) {
       let raw = "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}"
       let assert Ok(msg) = wire.decode_request(types.Modern20260728, raw)
@@ -1096,9 +1096,9 @@ pub fn private_live_ungranted_routes_and_all_route_tool_lists_test() {
       list.length(live_tools) |> should.equal(pair.1)
     },
   )
-  list.length(registry.all_specs()) |> should.equal(101)
+  list.length(registry.all_specs()) |> should.equal(104)
   list.each(
-    [#("public", 65), #("development", 21), #("successor", 15)],
+    [#("public", 66), #("development", 21), #("successor", 17)],
     fn(pair) {
       registry.all_specs()
       |> list.filter(fn(s) { s.route == pair.0 })
@@ -1148,7 +1148,7 @@ pub fn private_development_executes_with_candidate_evidence_and_lossless_argumen
   json.parse(body, value.decoder()) |> should.equal(Ok(expected))
   evidence.candidate
   |> should.equal(
-    "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+    "sha256:f2fe03a39113e3f2ad74bef9b9bce89dd0075b43292c480fbe0ea61305df2503",
   )
   evidence.route |> should.equal("development")
   evidence.admission_state |> should.equal("not_admitted")
@@ -2481,7 +2481,7 @@ pub fn gateway_actor_is_idempotent_and_candidate_bound_test() {
   json.parse(health, decode.at(["child_id"], decode.string))
   |> should.equal(Ok("mcp_unified_gateway"))
   json.parse(health, decode.at(["total_routes"], decode.int))
-  |> should.equal(Ok(101))
+  |> should.equal(Ok(104))
   json.parse(health, decode.at(["application_admitted"], decode.bool))
   |> should.equal(Ok(False))
   let assert Ok(candidate) =
@@ -2561,9 +2561,9 @@ pub fn authenticated_http_dispatches_live_registries_and_backends_test() {
   let tools = http_payload(request("tools/list"))
   let assert Ok(definitions) =
     json.parse(tools, decode.at(["tools"], decode.list(decode.dynamic)))
-  list.length(definitions) |> should.equal(53)
+  list.length(definitions) |> should.equal(54)
   http_payload(call("mcp_capability_inventory", []))
-  |> string.contains("101")
+  |> string.contains("104")
   |> should.be_true
   http_payload(call("read_file", [#("path", "AGENTS.md")]))
   |> string.contains("Unified Operational System")
@@ -2621,7 +2621,7 @@ pub fn canonical_stdio_both_profiles_and_split_frames_test() {
         }
       })
     let assert [Ok(inventory), Ok(resources)] = payloads
-    inventory |> string.contains("101") |> should.be_true
+    inventory |> string.contains("104") |> should.be_true
     resources
     |> string.contains("uos://system/mcp-gateway-health")
     |> should.be_true
@@ -2678,7 +2678,7 @@ pub fn standard_mcp_returns_structured_results_and_silent_notifications_test() {
       standard(request("tools/list")),
       decode.at(["result", "tools"], decode.list(decode.dynamic)),
     )
-  list.length(tools) |> should.equal(53)
+  list.length(tools) |> should.equal(54)
   list.each(
     [
       call("read_file", [#("path", "AGENTS.md")]),
@@ -2779,7 +2779,7 @@ pub fn signed_zenoh_dispatch_and_forgery_refusal_test() {
       now,
     )
   reply |> should.equal(envelope.reply_topic)
-  body |> string.contains("101") |> should.be_true
+  body |> string.contains("104") |> should.be_true
   let assert Error(forged) =
     gateway.handle_zenoh_with_secret(
       "cutover-zenoh-test-key",
@@ -2805,7 +2805,7 @@ pub fn signed_zenoh_dispatch_and_forgery_refusal_test() {
 pub fn immutable_six_core_source_candidate_test() {
   candidate_id.from_root(root)
   |> should.equal(
-    "sha256:5fb7a77609e9f41f8368fc5a761435dec6519736a00f4642d6e986ca3e8e1663",
+    "sha256:f2fe03a39113e3f2ad74bef9b9bce89dd0075b43292c480fbe0ea61305df2503",
   )
 }
 
@@ -2898,7 +2898,7 @@ pub fn raw_zenoh_uses_configured_secret_and_pins_actual_topic_test() {
       let assert Some(#(reply, body)) =
         gateway.handle_zenoh_raw(envelope.topic, encode_envelope(envelope))
       reply |> should.equal(envelope.reply_topic)
-      body |> string.contains("101") |> should.be_true
+      body |> string.contains("104") |> should.be_true
     }
   }
   let forged = zenoh.SignedZenohEnvelope(..envelope, signature: "forged")
@@ -3188,7 +3188,7 @@ pub fn zenoh_sse_loopback_chunked_hmac_overflow_reconnect_and_put_test() {
     decode.map(decode.at(["tools"], decode.list(decode.dynamic)), list.length)
   let assert Ok(tool_payload) =
     json.parse(tools, decode.at(["result", "value"], decode.string))
-  json.parse(tool_payload, decoder) |> should.equal(Ok(53))
+  json.parse(tool_payload, decoder) |> should.equal(Ok(54))
   json.parse(pong, decode.at(["id"], decode.int)) |> should.equal(Ok(32))
   string.contains(pong, "\"error\"") |> should.be_false
 }

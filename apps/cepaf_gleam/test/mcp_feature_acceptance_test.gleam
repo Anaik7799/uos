@@ -233,10 +233,10 @@ pub fn capability_inventory_keeps_five_epistemic_states_and_ev93_ceiling_test() 
     )
 
   let inventory = capability_inventory(store) |> should.be_ok
-  inventory.total_routes |> should.equal(101)
-  inventory.public_routes |> should.equal(65)
+  inventory.total_routes |> should.equal(104)
+  inventory.public_routes |> should.equal(66)
   inventory.development_routes |> should.equal(21)
-  inventory.successor_routes |> should.equal(15)
+  inventory.successor_routes |> should.equal(17)
   inventory.declared_count |> should.equal(1)
   inventory.implemented_count |> should.equal(1)
   inventory.observed_count |> should.equal(1)

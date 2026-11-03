@@ -5,7 +5,6 @@ import cepaf_gleam/telegram/mini_alerts as alerts
 import cepaf_gleam/telegram/mini_api as api
 import gleam/dict
 import gleam/erlang/process
-import gleam/int
 import gleam/json
 import gleam/dynamic/decode
 import gleam/list

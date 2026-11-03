@@ -139,7 +139,7 @@ pub fn pin() -> census.Pin {
     [
       census.SourceBinding(
         "apps/cepaf_gleam/manifest.toml",
-        "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+        "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
       ),
       census.SourceBinding(
         "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",

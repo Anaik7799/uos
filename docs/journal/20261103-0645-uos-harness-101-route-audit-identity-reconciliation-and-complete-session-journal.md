@@ -116,57 +116,29 @@ $$\hat{\mathbf{x}}_{0|0} = \begin{bmatrix} \text{DeclaredRoutes} = 101 \\ \text{
 ### 3.3 Dual-Source Architecture Diagram (`SC-DIAGRAM-001`)
 
 ```text
-+-----------------------------------------------------------------------------------+
-| L0 CONSTITUTIONAL KERNEL (EV-93 Ceiling, 2oo3 Sovereign Quorum, SC-PROVENANCE-001)|
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-| L1 FORMAL & MATHEMATICAL AUTHORITY (Lean 4.33 / Rocq 9.1 / Why3 1.8.2 / Quint/Z3) |
-|   MATH-01..MATH-13 Proofs + formal/lean/McpAuthority.lean + mcp_gateway.qnt       |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-| L2 SUPERVISION & RELEASE CAPSULE (OTP 29.0.5 / ERTS 17.0.5 / ecology_release.ml)  |
-|   Capsule: 20261102-1620-a7b06b60... | Payload SHA256: e8f218a5... (11/11 Pins)   |
-+-----------------------------------------+-----------------------------------------+
-                                          |
-                                          v
-+-----------------------------------------------------------------------------------+
-| L3 UOS-HARNESS MCP GATEWAY (runtime_gateway.gleam: 101 Routes = 65 Pub/21 Dev/15) |
-|   Active Candidate: sha256:5d134b5b... | ReceiptLedger + 256KB Native JSON Guard  |
-+-------+-------------------+-------------------+-------------------+---------------+
-        |                   |                   |                   |
-        v                   v                   v                   v
-+---------------+   +---------------+   +---------------+   +-----------------------+
-| Caste-01 (AGY)|   | Caste-02 (Pi) |   |Caste-03(Codex)|   | Caste-04 (Claude)     |
-| L9 Governance |   | L4-L7 Builder |   | L8 Sentinel   |   | L1/L5 Formal Scholar  |
-| Minimal/Quorum|   | Argon + Codem.|   | Read-Only Gate|   | Lean4/Rocq/Why3/Journal|
-+-------+-------+   +-------+-------+   +-------+-------+   +-----------+-----------+
-        |                   |                   |                       |
-        +-------------------+---------+---------+-----------------------+
-                                      |
-                                      v
-+-----------------------------------------------------------------------------------+
-| Caste-05 HOLONIC SWARM & FPP ACTOR MESH (L4-L7 Execution Plane)                   |
-|  - core_fpp_actor_mesh.gleam (FPP-1..FPP-5 Bounded Queues, Supervision, Leases)   |
-|  - core_fractal_holonic_simulator.gleam (Simulator-First Digital Twin Verification)|
-|  - core_systems_engineering.gleam (SysML v2 <-> FPP Bidirectional Traceability)   |
-|  - bionic_token_twin.ml + uos_km_kernel.mojo SIMD Fastpath (14,567x Speedup)      |
-+-----------------------------------------------------------------------------------+
+[L0 Constitutional Kernel EV-93 Ceiling · 2oo3 Sovereign Quorum · SC-PROVENANCE-001] --> [L1 Formal & Mathematical Authority Lean 4.33 · Rocq 9.1 · Why3 1.8.2 · Quint · Z3 MATH-01..MATH-13 · McpAuthority.lean · mcp_gateway.qnt]
+[L1 Formal & Mathematical Authority Lean 4.33 · Rocq 9.1 · Why3 1.8.2 · Quint · Z3 MATH-01..MATH-13 · McpAuthority.lean · mcp_gateway.qnt] --> [L2 Supervision & Release Capsule OTP 29.0.5 / ERTS 17.0.5 · ecology_release.ml Capsule: 20261102-1620-a7b06b60... · Payload: e8f218a5... - 11/11 Pins]
+[L2 Supervision & Release Capsule OTP 29.0.5 / ERTS 17.0.5 · ecology_release.ml Capsule: 20261102-1620-a7b06b60... · Payload: e8f218a5... - 11/11 Pins] --> [L3 UOS-Harness MCP Gateway runtime_gateway.gleam · 101 Routes - 65 Pub / 21 Dev / 15 Succ Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard]
+[L3 UOS-Harness MCP Gateway runtime_gateway.gleam · 101 Routes - 65 Pub / 21 Dev / 15 Succ Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard] --> [Caste-01 - AGY L9 Governance Minimal / Quorum]
+[L3 UOS-Harness MCP Gateway runtime_gateway.gleam · 101 Routes - 65 Pub / 21 Dev / 15 Succ Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard] --> [Caste-02 - Pi L4-L7 Builder Argon + Codemode]
+[L3 UOS-Harness MCP Gateway runtime_gateway.gleam · 101 Routes - 65 Pub / 21 Dev / 15 Succ Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard] --> [Caste-03 - Codex L8 Sentinel Read-Only Gate]
+[L3 UOS-Harness MCP Gateway runtime_gateway.gleam · 101 Routes - 65 Pub / 21 Dev / 15 Succ Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard] --> [Caste-04 - Claude L1/L5 Formal Scholar Lean4/Rocq/Why3/Journal]
+[Caste-01 - AGY L9 Governance Minimal / Quorum] --> [Caste-05 Holonic Swarm & FPP Actor Mesh - L4-L7 Execution Plane core_fpp_actor_mesh.gleam · core_fractal_holonic_simulator.gleam core_systems_engineering.gleam · bionic_token_twin.ml - 14,567x]
+[Caste-02 - Pi L4-L7 Builder Argon + Codemode] --> [Caste-05 Holonic Swarm & FPP Actor Mesh - L4-L7 Execution Plane core_fpp_actor_mesh.gleam · core_fractal_holonic_simulator.gleam core_systems_engineering.gleam · bionic_token_twin.ml - 14,567x]
+[Caste-03 - Codex L8 Sentinel Read-Only Gate] --> [Caste-05 Holonic Swarm & FPP Actor Mesh - L4-L7 Execution Plane core_fpp_actor_mesh.gleam · core_fractal_holonic_simulator.gleam core_systems_engineering.gleam · bionic_token_twin.ml - 14,567x]
+[Caste-04 - Claude L1/L5 Formal Scholar Lean4/Rocq/Why3/Journal] --> [Caste-05 Holonic Swarm & FPP Actor Mesh - L4-L7 Execution Plane core_fpp_actor_mesh.gleam · core_fractal_holonic_simulator.gleam core_systems_engineering.gleam · bionic_token_twin.ml - 14,567x]
 ```
 
 ```mermaid
 flowchart TD
     L0["L0 Constitutional Kernel<br/>EV-93 Ceiling · 2oo3 Sovereign Quorum · SC-PROVENANCE-001"] --> L1["L1 Formal & Mathematical Authority<br/>Lean 4.33 · Rocq 9.1 · Why3 1.8.2 · Quint · Z3<br/>MATH-01..MATH-13 · McpAuthority.lean · mcp_gateway.qnt"]
-    L1 --> L2["L2 Supervision & Release Capsule<br/>OTP 29.0.5 / ERTS 17.0.5 · ecology_release.ml<br/>Capsule: 20261102-1620-a7b06b60... · Payload: e8f218a5... (11/11 Pins)"]
-    L2 --> L3["L3 UOS-Harness MCP Gateway<br/>runtime_gateway.gleam · 101 Routes (65 Pub / 21 Dev / 15 Succ)<br/>Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard"]
-    L3 --> C1["Caste-01 (AGY)<br/>L9 Governance<br/>Minimal / Quorum"]
-    L3 --> C2["Caste-02 (Pi)<br/>L4-L7 Builder<br/>Argon + Codemode"]
-    L3 --> C3["Caste-03 (Codex)<br/>L8 Sentinel<br/>Read-Only Gate"]
-    L3 --> C4["Caste-04 (Claude)<br/>L1/L5 Formal Scholar<br/>Lean4/Rocq/Why3/Journal"]
-    C1 --> C5["Caste-05 Holonic Swarm & FPP Actor Mesh (L4-L7 Execution Plane)<br/>core_fpp_actor_mesh.gleam · core_fractal_holonic_simulator.gleam<br/>core_systems_engineering.gleam · bionic_token_twin.ml (14,567x)"]
+    L1 --> L2["L2 Supervision & Release Capsule<br/>OTP 29.0.5 / ERTS 17.0.5 · ecology_release.ml<br/>Capsule: 20261102-1620-a7b06b60... · Payload: e8f218a5... - 11/11 Pins"]
+    L2 --> L3["L3 UOS-Harness MCP Gateway<br/>runtime_gateway.gleam · 101 Routes - 65 Pub / 21 Dev / 15 Succ<br/>Active Candidate: sha256:5d134b5b... · ReceiptLedger + Native JSON Guard"]
+    L3 --> C1["Caste-01 - AGY<br/>L9 Governance<br/>Minimal / Quorum"]
+    L3 --> C2["Caste-02 - Pi<br/>L4-L7 Builder<br/>Argon + Codemode"]
+    L3 --> C3["Caste-03 - Codex<br/>L8 Sentinel<br/>Read-Only Gate"]
+    L3 --> C4["Caste-04 - Claude<br/>L1/L5 Formal Scholar<br/>Lean4/Rocq/Why3/Journal"]
+    C1 --> C5["Caste-05 Holonic Swarm & FPP Actor Mesh - L4-L7 Execution Plane<br/>core_fpp_actor_mesh.gleam · core_fractal_holonic_simulator.gleam<br/>core_systems_engineering.gleam · bionic_token_twin.ml - 14,567x"]
     C2 --> C5
     C3 --> C5
     C4 --> C5

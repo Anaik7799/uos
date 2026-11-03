@@ -28,14 +28,11 @@
 ////
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-002, SC-GLM-UI-008, SC-GLM-UI-009, SC-MUDA-001
 
-import cepaf_gleam/agui/event_stream_widget
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ui/lustre/shell
 import cepaf_gleam/ui/state.{
-  type SharedMeshState, OodaAct, OodaDecide, OodaObserve, OodaOrient, OodaVerify,
-  ThreatCritical, ThreatSevere, cockpit_mode_to_string, ooda_phase_to_string,
+  type SharedMeshState, cockpit_mode_to_string, ooda_phase_to_string,
 }
-import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string
@@ -764,39 +761,6 @@ fn bool_status(b: Bool) -> String {
   }
 }
 
-fn ooda_phase_pill(label: String, active: Bool) -> Element(msg) {
-  let cls = case active {
-    True -> "ooda-phase ooda-phase-active"
-    False -> "ooda-phase"
-  }
-  html.span([attribute.class(cls)], [element.text(label)])
-}
-
-fn quick_link_card(
-  title: String,
-  href: String,
-  description: String,
-  layer: String,
-) -> Element(msg) {
-  html.a([attribute.href(href), attribute.class("card quick-link-card")], [
-    html.div([attribute.class("card-header")], [
-      html.span([attribute.class("mono text-sm")], [element.text(title)]),
-      html.span([attribute.class("layer-badge layer-" <> string_lower(layer))], [
-        element.text(layer),
-      ]),
-    ]),
-    html.div([attribute.class("card-detail")], [element.text(description)]),
-  ])
-}
-
-fn filter_pill(label: String, active: Bool) -> Element(msg) {
-  let cls = case active {
-    True -> "btn btn-primary"
-    False -> "btn btn-ghost"
-  }
-  html.span([attribute.class(cls)], [element.text(label)])
-}
-
 fn string_lower(s: String) -> String {
   case s {
     "L0" -> "l0"
@@ -809,88 +773,6 @@ fn string_lower(s: String) -> String {
     "L7" -> "l7"
     _ -> s
   }
-}
-
-// ---------------------------------------------------------------------------
-// Concept F: Dashboard helpers (C1 weather bar, C2 progress rings, C12 fractal)
-// ---------------------------------------------------------------------------
-
-/// Concept F SVG progress ring for C2 (active/blocked/completed/health)
-fn dash_progress_ring(
-  value: String,
-  label: String,
-  color: String,
-  dash: String,
-  gap: String,
-) -> Element(msg) {
-  html.div([attribute.class("dash-progress-ring")], [
-    element.element("svg", [attribute.attribute("viewBox", "0 0 100 100")], [
-      element.element(
-        "circle",
-        [
-          attribute.attribute("cx", "50"),
-          attribute.attribute("cy", "50"),
-          attribute.attribute("r", "45"),
-          attribute.attribute("fill", "none"),
-          attribute.attribute("stroke", "#1e2a3a"),
-          attribute.attribute("stroke-width", "8"),
-        ],
-        [],
-      ),
-      element.element(
-        "circle",
-        [
-          attribute.attribute("cx", "50"),
-          attribute.attribute("cy", "50"),
-          attribute.attribute("r", "45"),
-          attribute.attribute("fill", "none"),
-          attribute.attribute("stroke", color),
-          attribute.attribute("stroke-width", "8"),
-          attribute.attribute("stroke-linecap", "round"),
-          attribute.attribute("stroke-dasharray", dash <> " " <> gap),
-          attribute.attribute("transform", "rotate(-90 50 50)"),
-        ],
-        [],
-      ),
-    ]),
-    html.div([attribute.class("dash-ring-value")], [element.text(value)]),
-    html.div([attribute.class("dash-ring-label")], [element.text(label)]),
-  ])
-}
-
-/// Concept F fractal layer health bar for C12 sidebar
-fn fractal_layer_health_bar(
-  label: String,
-  health: Int,
-  color: String,
-) -> Element(msg) {
-  let health_str = int.to_string(health)
-  let bar_color = case health >= 80 {
-    True -> color
-    False ->
-      case health >= 60 {
-        True -> "#f5a623"
-        False -> "#ff4757"
-      }
-  }
-  html.div([attribute.class("fractal-health-row")], [
-    html.div([attribute.class("fractal-health-label")], [element.text(label)]),
-    html.div([attribute.class("fractal-health-bar-outer")], [
-      html.div(
-        [
-          attribute.class("fractal-health-bar-fill"),
-          attribute.attribute(
-            "style",
-            "width:" <> health_str <> "%;background:" <> bar_color,
-          ),
-        ],
-        [],
-      ),
-    ]),
-    html.div([attribute.class("fractal-health-pct")], [
-      element.text(health_str <> "%"),
-    ]),
-  ])
 }
 
 /// Parse an integer from the JSON raw string (same pattern as domain_views).
@@ -953,76 +835,4 @@ fn parse_leading_int(s: String) -> Int {
         Error(_) -> 0
       }
   }
-}
-
-/// Vega-Lite JSON spec for health sparkline preset (SC-AGUI-UI-007).
-/// Returns a minimal Vega-Lite 5 spec for a single bar chart of health metrics.
-fn vega_health_sparkline_spec(health_score: Int) -> String {
-  let h = int.to_string(health_score)
-  "{\"$schema\":\"https://vega.github.io/schema/vega-lite/v5.json\","
-  <> "\"description\":\"C3I Health Sparkline\","
-  <> "\"width\":\"container\",\"height\":80,"
-  <> "\"data\":{\"values\":["
-  <> "{\"metric\":\"Health\",\"value\":"
-  <> h
-  <> "},"
-  <> "{\"metric\":\"Quorum\",\"value\":95},"
-  <> "{\"metric\":\"NIF\",\"value\":98},"
-  <> "{\"metric\":\"Zenoh\",\"value\":97}"
-  <> "]},"
-  <> "\"mark\":{\"type\":\"bar\",\"cornerRadiusTopLeft\":3,\"cornerRadiusTopRight\":3},"
-  <> "\"encoding\":{"
-  <> "\"x\":{\"field\":\"metric\",\"type\":\"nominal\",\"axis\":{\"labelColor\":\"#7a8fa6\",\"tickColor\":\"#1e2a3a\",\"domainColor\":\"#1e2a3a\"}},"
-  <> "\"y\":{\"field\":\"value\",\"type\":\"quantitative\",\"scale\":{\"domain\":[0,100]},\"axis\":{\"labelColor\":\"#7a8fa6\",\"tickColor\":\"#1e2a3a\",\"domainColor\":\"#1e2a3a\"}},"
-  <> "\"color\":{\"field\":\"metric\",\"type\":\"nominal\",\"scale\":{\"range\":[\"#00d4aa\",\"#3dd68c\",\"#4d96ff\",\"#9b59b6\"]},\"legend\":null},"
-  <> "\"tooltip\":[{\"field\":\"metric\",\"type\":\"nominal\"},{\"field\":\"value\",\"type\":\"quantitative\"}]"
-  <> "},"
-  <> "\"config\":{\"background\":\"transparent\",\"view\":{\"stroke\":null}}}"
-}
-
-/// Concept F CSS for the new dashboard components (C1/C2/C12/C7).
-/// Follows the responsive 4-breakpoint pattern (SC-AGUI-UI-008).
-fn dashboard_concept_f_css() -> String {
-  "
-/* ── Concept F: Weather Bar (C1) ── */
-.dash-weather-bar{display:flex;align-items:center;gap:1rem;padding:.6rem 1.2rem;background:rgba(20,25,34,0.85);backdrop-filter:blur(8px);border:1px solid rgba(30,42,58,0.6);border-radius:10px;margin:.75rem 0;flex-wrap:wrap;min-height:44px;}
-.dash-weather-emoji{font-size:1.5rem;}
-.dash-weather-label{flex:1;font-size:.88rem;color:#b0bcc8;min-width:200px;}
-.dash-weather-score{font-size:1.1rem;font-weight:700;color:var(--accent,#3dd68c);font-family:monospace;}
-.dash-ws-indicator{font-size:.75rem;color:#7a8fa6;transition:color .4s;}
-.dash-ws-indicator.ws-live{color:#3dd68c;}
-.dash-ws-indicator.ws-dead{color:#ff4757;}
-
-/* ── Concept F: Top Section — Rings + Fractal Sidebar (C2 + C12) ── */
-.dash-concept-f-top{display:grid;grid-template-columns:1fr 280px;gap:1.2rem;margin:.75rem 0;align-items:start;}
-@media(max-width:1024px){.dash-concept-f-top{grid-template-columns:1fr;}}
-
-/* ── C2: Progress Rings ── */
-.dash-rings-block{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;padding:.75rem;background:rgba(20,25,34,0.5);border:1px solid rgba(30,42,58,0.5);border-radius:10px;}
-.dash-progress-ring{display:flex;flex-direction:column;align-items:center;gap:.3rem;min-width:90px;}
-.dash-progress-ring svg{width:90px;height:90px;}
-@media(max-width:768px){.dash-progress-ring svg{width:70px;height:70px;}.dash-progress-ring{min-width:70px;}}
-@media(min-width:1400px){.dash-progress-ring svg{width:110px;height:110px;}}
-.dash-ring-value{font-size:1.05rem;font-weight:700;color:var(--text,#e0e6ed);font-family:monospace;}
-.dash-ring-label{font-size:.75rem;color:#7a8fa6;text-transform:uppercase;}
-
-/* ── C12: Fractal Layer Sidebar ── */
-.dash-fractal-sidebar{background:rgba(20,25,34,0.6);backdrop-filter:blur(6px);border:1px solid rgba(30,42,58,0.5);border-radius:10px;padding:.9rem;}
-.fractal-sidebar-title{font-size:.8rem;color:#7a8fa6;text-transform:uppercase;margin-bottom:.6rem;border-bottom:1px solid rgba(30,42,58,0.4);padding-bottom:.3rem;}
-.fractal-health-row{display:flex;align-items:center;gap:.5rem;margin:.35rem 0;}
-.fractal-health-label{font-size:.75rem;color:#b0bcc8;min-width:130px;flex-shrink:0;}
-.fractal-health-bar-outer{flex:1;height:6px;background:#1e2a3a;border-radius:3px;overflow:hidden;}
-.fractal-health-bar-fill{height:100%;border-radius:3px;transition:width .6s ease;}
-.fractal-health-pct{font-size:.73rem;color:#7a8fa6;min-width:36px;text-align:right;font-family:monospace;}
-
-/* ── C7: Vega-Lite Chart Container ── */
-.dash-vega-container{background:rgba(20,25,34,0.5);border:1px solid rgba(30,42,58,0.4);border-radius:10px;padding:1rem;overflow:hidden;}
-.vega-fallback-sparkline{display:flex;flex-direction:column;gap:.5rem;}
-.vega-sparkline-bar-row{display:flex;align-items:center;gap:.75rem;}
-.vega-sparkline-label{font-size:.8rem;color:#7a8fa6;min-width:110px;}
-.vega-sparkline-bar-outer{flex:1;height:10px;background:#1e2a3a;border-radius:5px;overflow:hidden;}
-.vega-sparkline-bar-fill{height:100%;border-radius:5px;transition:width .5s ease;}
-.bar-healthy{background:#3dd68c;}.bar-degraded{background:#f5a623;}.bar-critical{background:#ff4757;}.bar-active{background:#00d4aa;}
-.vega-sparkline-value{font-size:.8rem;font-family:monospace;color:#e0e6ed;min-width:36px;text-align:right;}
-"
 }

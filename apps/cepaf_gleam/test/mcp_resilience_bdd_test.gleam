@@ -646,9 +646,9 @@ fn given_agent_when_transport_profile_plane_matrix_then_counts_and_typed_public_
       list.each(["public", "development", "successor"], fn(route) {
         // Zenoh is intentionally public-only: an untrusted route label cannot expose private tools.
         let expected = case transport, route {
-          "zenoh", _ | _, "public" -> 53
+          "zenoh", _ | _, "public" -> 54
           _, "development" -> 21
-          _, _ -> 15
+          _, _ -> 17
         }
         let body =
           bdd_transport(
@@ -848,7 +848,7 @@ pub fn given_split_sse_stream_when_100_forged_frames_overflow_and_eof_then_recov
     json.parse(tools, decode.at(["result", "value"], decode.string))
   json.parse(body, decode.at(["tools"], decode.list(decode.dynamic)))
   |> result.map(list.length)
-  |> should.equal(Ok(53))
+  |> should.equal(Ok(54))
   json.parse(pong, decode.at(["id"], decode.int)) |> should.equal(Ok(42))
   gateway.is_running() |> should.be_true
 }

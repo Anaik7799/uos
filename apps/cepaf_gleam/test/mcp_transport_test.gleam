@@ -276,7 +276,7 @@ pub fn stdout_contains_only_jsonrpc_test() {
   let assert Ok(#(after_diag, diag_stdout)) =
     stdio.ingest_chunk(session, "not-json\n", 0, complete_handler)
   diag_stdout |> should.equal([])
-  { list.length(after_diag.stderr_logs) > 0 } |> should.be_true()
+  { after_diag.stderr_logs != [] } |> should.be_true()
 
   // A notification produces no response frame.
   let assert Ok(#(after_notification, notification_stdout)) =
@@ -312,7 +312,7 @@ pub fn stdout_contains_only_jsonrpc_test() {
   list.each(after_refusal.stdout_frames, fn(frame) {
     frame_is_jsonrpc(frame) |> should.be_true()
   })
-  { list.length(after_refusal.stderr_logs) > 0 } |> should.be_true()
+  { after_refusal.stderr_logs != [] } |> should.be_true()
 }
 
 // ---------------------------------------------------------------------------

@@ -38,7 +38,7 @@ pub fn pin(source: census.Source) -> census.Pin {
         [
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
-            "9af105c618bfdfcff21b6dd39aff81cb0fefad77b8b31de670f83f5913594787",
+            "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
@@ -46,11 +46,11 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
-        65,
-        "0241247b579e14ae6b1ee3d22ac289076d1790fa56aa1b0540a8e8307effde04",
+        66,
+        "4185325d997484e1308b1955dfd3f89bbded464e5c26af9f27279ace465f03bf",
       )
     census.RootSupervision ->
       census.Pin(
@@ -63,7 +63,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
         26,
@@ -80,7 +80,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
         11,
@@ -97,7 +97,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
         75,
@@ -114,7 +114,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
         167,
@@ -131,7 +131,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
         145,
@@ -164,7 +164,7 @@ pub fn pin(source: census.Source) -> census.Pin {
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
         ],
         239,
@@ -189,7 +189,7 @@ pub fn actual(source: census.Source) -> census.Snapshot {
 pub fn all_ten_actual_sources_conserve_775_records_test() {
   let snapshots = list.map(sources, actual)
   let total = snapshots |> list.flat_map(census.entries) |> list.length
-  total |> should.equal(777)
+  total |> should.equal(780)
   list.each(snapshots, fn(snapshot) {
     let catalogs = census.catalogs(snapshot)
     list.all(catalogs, fn(catalog) {

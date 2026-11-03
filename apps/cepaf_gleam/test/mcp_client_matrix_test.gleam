@@ -54,7 +54,7 @@ fn run_bounded(
   timeout_ms: Int,
 ) -> Result(#(Int, BitArray), String)
 
-const workspace = "/home/an/NAS-setup/uos"
+const workspace = "/tmp/uos-t23-matrix-workspace"
 
 const matrix_temp_workspace = "/tmp/uos-t23-matrix-workspace"
 
@@ -745,6 +745,42 @@ fn private_handler(
             ]),
           )
         }
+        "harness_agent_review" -> {
+          let path = matrix_temp_workspace <> "/agent_review.json"
+          let content =
+            json.to_string(
+              json.object([
+                #("review_op", json.string(spec.name)),
+                #("intent_id", json.string("matrix-intent")),
+              ]),
+            )
+          let sha = write_and_digest(path, content)
+          Ok(
+            outcome_json(spec, [
+              #("review_op", json.string(spec.name)),
+              #("intent_id", json.string("matrix-intent")),
+              #("review_sha256", json.string(sha)),
+            ]),
+          )
+        }
+        "harness_recovery_prepare" -> {
+          let path = matrix_temp_workspace <> "/recovery_prepare.json"
+          let content =
+            json.to_string(
+              json.object([
+                #("recovery_op", json.string(spec.name)),
+                #("intent_id", json.string("matrix-intent")),
+              ]),
+            )
+          let sha = write_and_digest(path, content)
+          Ok(
+            outcome_json(spec, [
+              #("recovery_op", json.string(spec.name)),
+              #("intent_id", json.string("matrix-intent")),
+              #("recovery_sha256", json.string(sha)),
+            ]),
+          )
+        }
         _ -> Error("unhandled_private_tool:" <> spec.name)
       }
     }
@@ -897,6 +933,8 @@ fn private_tool_semantic_ok(name: String, val: String) -> Bool {
     "harness_feature_initialize"
     | "harness_feature_sync"
     | "harness_feature_status" -> string.contains(val, "tracking_op")
+    "harness_agent_review" -> string.contains(val, "review_op")
+    "harness_recovery_prepare" -> string.contains(val, "recovery_op")
     _ -> False
   }
 }
@@ -913,6 +951,9 @@ fn cell_has_tool_specific_semantics(spec: ToolSpec, frame: String) -> Bool {
         0 -> False
         _ ->
           case spec.family {
+            "recovery_control_readiness" ->
+              string.contains(val, "uos.recovery-control-readiness.v1")
+              && string.contains(val, "\"status\":\"HELD\"")
             "planning_read" ->
               case spec.name {
                 "feature_tracker_status" ->
@@ -984,6 +1025,9 @@ fn cell_has_tool_specific_semantics(spec: ToolSpec, frame: String) -> Bool {
 
 fn positive_args_for(spec: ToolSpec) -> dict.Dict(String, String) {
   let pairs = case spec.family {
+    "recovery_control_readiness" -> [
+      #("plan_id", "uos/codex-handover-open-items-fractal-plan/20261031-1240"),
+    ]
     "planning_read" -> [
       #("plan_id", "plan"),
       #("task_id", "matrix-task"),
@@ -1325,20 +1369,20 @@ pub fn every_required_matrix_cell_has_actual_client_turn_test() {
   |> should.equal(["agy", "gemini", "codex", "claude", "pi"])
 
   let specs = registry.all_specs()
-  list.length(specs) |> should.equal(101)
+  list.length(specs) |> should.equal(104)
   list.count(specs, fn(spec) { spec.route == "public" })
-  |> should.equal(65)
+  |> should.equal(66)
   list.count(specs, fn(spec) { spec.route == "development" })
   |> should.equal(21)
   list.count(specs, fn(spec) { spec.route == "successor" })
-  |> should.equal(15)
-  list.length(clients) * list.length(specs) |> should.equal(505)
+  |> should.equal(17)
+  list.length(clients) * list.length(specs) |> should.equal(520)
 
   let stdio_cells =
     list.flat_map(clients, fn(client) {
       list.map(specs, fn(spec) { run_stdio_turn(client, spec) })
     })
-  list.length(stdio_cells) |> should.equal(505)
+  list.length(stdio_cells) |> should.equal(520)
 
   let route_specs =
     list.map(["public", "development", "successor"], fn(route) {
@@ -1361,8 +1405,8 @@ pub fn every_required_matrix_cell_has_actual_client_turn_test() {
   list.length(http_cells) |> should.equal(15)
 
   let all_cells = list.append(stdio_cells, list.append(zenoh_cells, http_cells))
-  list.length(all_cells) |> should.equal(535)
-  list.length(clients) * list.length(specs) + 30 |> should.equal(535)
+  list.length(all_cells) |> should.equal(550)
+  list.length(clients) * list.length(specs) + 30 |> should.equal(550)
 
   // The active candidate is the live SHA-256 revision, never a static label.
   let active_cand = matrix_candidate()
@@ -1385,7 +1429,7 @@ pub fn every_required_matrix_cell_has_actual_client_turn_test() {
   list.count(all_cells, fn(cell) {
     cell.positive && cell.candidate == active_cand
   })
-  |> should.equal(535)
+  |> should.equal(550)
 
   // Every cell must carry tool-specific semantics, never the generic
   // `{"handled":true}` fallback that proved nothing about the backend.

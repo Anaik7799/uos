@@ -319,7 +319,14 @@ let () =
   | ["--latest"] ->
       let dir = "docs/journal" in
       let files = Sys.readdir dir in
-      let md_files = List.filter (fun f -> Filename.check_suffix f ".md") (Array.to_list files) in
+      let ts_regex = Str.regexp "^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]-" in
+      let md_files =
+        List.filter
+          (fun f ->
+             Filename.check_suffix f ".md"
+             && (try ignore (Str.search_forward ts_regex f 0); true with Not_found -> false))
+          (Array.to_list files)
+      in
       let sorted = List.sort (fun a b -> String.compare b a) md_files in
       (match sorted with
        | latest :: _ ->

@@ -4,7 +4,7 @@
 
 import cepaf_gleam/ha/work_stealing.{
   type WorkStealingEngine, HeaviestQueueFirst, LyapunovDivergentFirst,
-  NodeQueueState, RandomVictim, StealResponse, StealableTask, TransferAccepted,
+  NodeQueueState, StealResponse, StealableTask, TransferAccepted,
   TransferRejected, WorkStealingEngine, apply_steal_response, enqueue_local_task,
   generate_steal_request, handle_steal_request, init_work_stealing,
   select_victim_node, should_initiate_steal, total_cluster_queued_tasks,

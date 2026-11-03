@@ -3,7 +3,6 @@
 //// STAMP: SC-GLM-UI-001, SC-HARNESS-MCP-001, SC-ZLP-PORT-001, SC-PROVENANCE-001
 
 import cepaf_gleam/mcp/transports/zlp_hyperplane
-import gleam/int
 import gleam/json
 import gleam/list
 

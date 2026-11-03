@@ -463,7 +463,7 @@ pub fn absent_ledger_yields_honest_empty_projection_test() {
   store.completed_task_ids |> should.equal([])
   store.receipts |> dict.size |> should.equal(0)
   store.intents |> dict.size |> should.equal(0)
-  list.length(store.capabilities) |> should.equal(101)
+  list.length(store.capabilities) |> should.equal(104)
 
   let report = features.compute_progress(store)
   report.completed_total |> should.equal(0)
@@ -472,7 +472,7 @@ pub fn absent_ledger_yields_honest_empty_projection_test() {
   report.stale_receipt_count |> should.equal(0)
 
   let assert Ok(inventory) = features.capability_inventory(store)
-  inventory.total_routes |> should.equal(101)
+  inventory.total_routes |> should.equal(104)
 
   list.any(store.completed_task_ids, fn(id) {
     list.contains(fake_task_ids(), id)
@@ -494,7 +494,7 @@ pub fn empty_verified_store_matches_absent_projection_test() {
   direct.admitted_ev_ceiling |> should.equal(features.ev_ceiling)
   direct.completed_task_ids |> should.equal([])
   direct.receipts |> dict.size |> should.equal(0)
-  list.length(direct.capabilities) |> should.equal(101)
+  list.length(direct.capabilities) |> should.equal(104)
 }
 
 /// Declared-unavailable tools are never counted as implemented.

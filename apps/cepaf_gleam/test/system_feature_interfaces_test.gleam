@@ -23,7 +23,7 @@ pub fn pin(source: census.Source) -> census.Pin {
         [
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
@@ -56,15 +56,15 @@ pub fn pin(source: census.Source) -> census.Pin {
         [
           census.SourceBinding(
             "apps/cepaf_gleam/manifest.toml",
-            "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+            "f179389b75cd9e03281a2f1e71210ec60711e0cd75e8bacbe11c9daf5067026b",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
-            "24dee34d3592bf21902ceb373c20e2a4289bf8e5114877234eaac72a6d57fae4",
+            "8bfe33f2976add4994f6aee4b381c7e2d2ef4ed44fe8d69a420001fec4aa84e6",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
-            "5ba157f3b24de965226547ec21075b6a7c8ff661bc20b05ad24fdc2e0a39b4fb",
+            "a6b12af70f0f2cc5d612553efa2f7cacd85ff5944a38efffc932784b5e3d2fc2",
           ),
           census.SourceBinding(
             "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
@@ -75,8 +75,8 @@ pub fn pin(source: census.Source) -> census.Pin {
             "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405",
           ),
         ],
-        15,
-        "5e0bc106f9b038d5a6f44b1c7c586e1fcf48e85eca15f8ce1842156e095ccfd5",
+        17,
+        "c2c5a23bda9fb1d636649b2dda65fb34b1c8d9351f6fef3ace9cc8c07594e9fd",
       )
     _ -> panic as "not a harness source"
   }
@@ -193,7 +193,7 @@ pub fn harness_census_keeps_both_servers_and_all_34_declarations_test() {
   |> should.equal(list.sort(successor_names, string.compare))
   let entries = list.append(first, second)
   list.length(list.unique(list.map(entries, fn(entry) { entry.feature.id })))
-  |> should.equal(36)
+  |> should.equal(38)
   list.each(entries, fn(entry) {
     let feature = entry.feature
     feature.declared_stage
@@ -233,11 +233,11 @@ pub const development_names = [
 ]
 
 pub const successor_names = [
-  "harness_plan_intent", "harness_status", "harness_clock",
-  "harness_heartbeat", "harness_claim", "harness_attach", "harness_release",
-  "harness_read_file", "harness_client_mcp_config", "harness_write_file",
-  "harness_build", "harness_test", "harness_assess", "harness_finish",
-  "harness_reconcile",
+  "harness_agent_review", "harness_recovery_prepare", "harness_plan_intent",
+  "harness_status", "harness_clock", "harness_heartbeat", "harness_claim",
+  "harness_attach", "harness_release", "harness_read_file",
+  "harness_client_mcp_config", "harness_write_file", "harness_build",
+  "harness_test", "harness_assess", "harness_finish", "harness_reconcile",
 ]
 
 fn binding() {
@@ -333,7 +333,7 @@ pub fn successor_listing_is_exact_pre_refactor_wire_and_unchanged_state_test() {
   let assert Some(body) = reply
   files.digest(body)
   |> should.equal(
-    "5e66178fdcd780f7d1b03ae37b4d5c6b227949b48f2cae910a394584e20afefd",
+    "cceca49af0ac8b754c84241973373141929cfa4cc8285dd8a20d11028e51d3e4",
   )
   wire(successor.tool_definitions()) |> should.equal(body)
   list.map(successor.tool_definitions(), fn(tool) { tool.name })

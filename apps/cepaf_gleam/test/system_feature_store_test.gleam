@@ -184,7 +184,7 @@ pub fn both_harness_servers_persist_without_collapsing_tool_names_test_() -> #(
         |> list.map(fn(entry) { entry.feature })
       })
     let assert Ok([catalog]) = census.shards(fixture.digest(), declarations)
-    features.declarations(catalog) |> list.length |> should.equal(36)
+    features.declarations(catalog) |> list.length |> should.equal(38)
     store.publish(runtime, catalog)
     |> should.equal(Ok(features.fingerprint(catalog)))
     store.load(runtime, features.fingerprint(catalog))
@@ -219,76 +219,101 @@ pub fn malformed_foreign_and_incomplete_history_are_not_absence_test() {
   store.load(unavailable, fixture.digest()) |> should.be_error
 }
 
-pub fn unknown_create_outcome_is_not_retried_or_published_test() {
-  let #(database, runtime) = private_runtime()
-  let interrupted =
-    store.Runtime(runtime.fence, fn(args) {
-      case list.take(args, 2) == ["workflow", "start"] {
-        True -> Error("unknown transport outcome")
-        False -> runtime.run(args)
-      }
-    })
-  store.publish(interrupted, fixture.catalog())
-  |> should.equal(Error("unknown transport outcome"))
-  let assert Ok(id) =
-    store.record_id("catalog", features.fingerprint(fixture.catalog()))
-  let assert Ok(#(code, _)) =
-    cli(database, ["workflow", "history", id, "--format", "json"])
-  code |> should.equal(1)
+pub fn unknown_create_outcome_is_not_retried_or_published_test_() -> #(
+  atom.Atom,
+  Int,
+  fn() -> Nil,
+) {
+  #(atom.create("timeout"), 30, fn() {
+    let #(database, runtime) = private_runtime()
+    let interrupted =
+      store.Runtime(runtime.fence, fn(args) {
+        case list.take(args, 2) == ["workflow", "start"] {
+          True -> Error("unknown transport outcome")
+          False -> runtime.run(args)
+        }
+      })
+    store.publish(interrupted, fixture.catalog())
+    |> should.equal(Error("unknown transport outcome"))
+    let assert Ok(id) =
+      store.record_id("catalog", features.fingerprint(fixture.catalog()))
+    let assert Ok(#(code, _)) =
+      cli(database, ["workflow", "history", id, "--format", "json"])
+    code |> should.equal(1)
+  })
 }
 
-pub fn preexisting_same_identity_different_payload_is_refused_test() {
-  let #(database, runtime) = private_runtime()
-  let declaration = fixture.declaration("files.read", [])
-  let digest = features.encode_feature(declaration) |> files.digest
-  let assert Ok(id) = store.record_id("feature", digest)
-  let assert Ok(#(0, _)) =
-    cli(database, ["workflow", "start", id, id, "feature-metadata", "{}"])
-  store.publish(runtime, fixture.catalog())
-  |> should.equal(Error("feature_record_payload_conflict"))
+pub fn preexisting_same_identity_different_payload_is_refused_test_() -> #(
+  atom.Atom,
+  Int,
+  fn() -> Nil,
+) {
+  #(atom.create("timeout"), 30, fn() {
+    let #(database, runtime) = private_runtime()
+    let declaration = fixture.declaration("files.read", [])
+    let digest = features.encode_feature(declaration) |> files.digest
+    let assert Ok(id) = store.record_id("feature", digest)
+    let assert Ok(#(0, _)) =
+      cli(database, ["workflow", "start", id, id, "feature-metadata", "{}"])
+    store.publish(runtime, fixture.catalog())
+    |> should.equal(Error("feature_record_payload_conflict"))
+  })
 }
 
-pub fn altered_stored_payload_is_refused_test() {
-  let #(_, runtime) = private_runtime()
-  let catalog = fixture.catalog()
-  store.publish(runtime, catalog) |> should.be_ok
-  let changed =
-    store.Runtime(runtime.fence, fn(args) {
-      use #(code, output) <- result.try(runtime.run(args))
-      Ok(#(code, string.replace(output, "Read a file", "Forged file")))
-    })
-  store.load(changed, features.fingerprint(catalog))
-  |> should.equal(Error("feature_record_digest_conflict"))
+pub fn altered_stored_payload_is_refused_test_() -> #(
+  atom.Atom,
+  Int,
+  fn() -> Nil,
+) {
+  #(atom.create("timeout"), 30, fn() {
+    let #(_, runtime) = private_runtime()
+    let catalog = fixture.catalog()
+    store.publish(runtime, catalog) |> should.be_ok
+    let changed =
+      store.Runtime(runtime.fence, fn(args) {
+        use #(code, output) <- result.try(runtime.run(args))
+        Ok(#(code, string.replace(output, "Read a file", "Forged file")))
+      })
+    store.load(changed, features.fingerprint(catalog))
+    |> should.equal(Error("feature_record_digest_conflict"))
+  })
 }
 
-pub fn partial_child_persistence_never_publishes_manifest_test() {
-  let #(database, runtime) = private_runtime()
-  let assert Ok(catalog) =
-    features.catalog(fixture.digest(), [
-      fixture.declaration("a", []),
-      fixture.declaration("b", []),
-    ])
-  let assert Ok(second_id) =
-    store.record_id(
-      "feature",
-      features.encode_feature(fixture.declaration("b", [])) |> files.digest,
-    )
-  let failing =
-    store.Runtime(runtime.fence, fn(args) {
-      case list.contains(args, second_id) {
-        True -> Error("fixture write failure")
-        False -> runtime.run(args)
-      }
-    })
-  store.publish(failing, catalog)
-  |> should.equal(Error("fixture write failure"))
-  let assert Ok(id) = store.record_id("catalog", features.fingerprint(catalog))
-  let assert Ok(#(code, _)) =
-    cli(database, ["workflow", "history", id, "--format", "json"])
-  code |> should.equal(1)
-  store.publish(runtime, catalog) |> should.be_ok
-  store.load(runtime, features.fingerprint(catalog))
-  |> should.equal(Ok(catalog))
+pub fn partial_child_persistence_never_publishes_manifest_test_() -> #(
+  atom.Atom,
+  Int,
+  fn() -> Nil,
+) {
+  #(atom.create("timeout"), 30, fn() {
+    let #(database, runtime) = private_runtime()
+    let assert Ok(catalog) =
+      features.catalog(fixture.digest(), [
+        fixture.declaration("a", []),
+        fixture.declaration("b", []),
+      ])
+    let assert Ok(second_id) =
+      store.record_id(
+        "feature",
+        features.encode_feature(fixture.declaration("b", [])) |> files.digest,
+      )
+    let failing =
+      store.Runtime(runtime.fence, fn(args) {
+        case list.contains(args, second_id) {
+          True -> Error("fixture write failure")
+          False -> runtime.run(args)
+        }
+      })
+    store.publish(failing, catalog)
+    |> should.equal(Error("fixture write failure"))
+    let assert Ok(id) =
+      store.record_id("catalog", features.fingerprint(catalog))
+    let assert Ok(#(code, _)) =
+      cli(database, ["workflow", "history", id, "--format", "json"])
+    code |> should.equal(1)
+    store.publish(runtime, catalog) |> should.be_ok
+    store.load(runtime, features.fingerprint(catalog))
+    |> should.equal(Ok(catalog))
+  })
 }
 
 pub fn invalid_identifiers_fail_before_backend_test() {
@@ -302,24 +327,30 @@ pub fn invalid_identifiers_fail_before_backend_test() {
   store.record_id("task", fixture.digest()) |> should.be_error
 }
 
-pub fn observations_persist_but_database_registration_is_not_attestation_test() {
-  let #(_, runtime) = private_runtime()
-  let catalog = fixture.catalog()
-  store.publish(runtime, catalog) |> should.be_ok
-  let assert Ok(ledger) =
-    features.record(features.empty(), fixture.receipt("one"))
-  let assert Ok(digest) = store.publish_ledger(runtime, catalog, ledger)
-  store.load_ledger(runtime, catalog, digest) |> should.equal(Ok(ledger))
-  store.publish_ledger(runtime, catalog, ledger) |> should.equal(Ok(digest))
-  let assert Ok(loaded) = store.load_ledger(runtime, catalog, digest)
-  features.availability(
-    catalog,
-    "files.read",
-    fixture.endpoint(),
-    loaded,
-    features.Context(..fixture.context(1500), trusted_receipts: []),
-  )
-  |> should.equal(features.Unknown)
+pub fn observations_persist_but_database_registration_is_not_attestation_test_() -> #(
+  atom.Atom,
+  Int,
+  fn() -> Nil,
+) {
+  #(atom.create("timeout"), 30, fn() {
+    let #(_, runtime) = private_runtime()
+    let catalog = fixture.catalog()
+    store.publish(runtime, catalog) |> should.be_ok
+    let assert Ok(ledger) =
+      features.record(features.empty(), fixture.receipt("one"))
+    let assert Ok(digest) = store.publish_ledger(runtime, catalog, ledger)
+    store.load_ledger(runtime, catalog, digest) |> should.equal(Ok(ledger))
+    store.publish_ledger(runtime, catalog, ledger) |> should.equal(Ok(digest))
+    let assert Ok(loaded) = store.load_ledger(runtime, catalog, digest)
+    features.availability(
+      catalog,
+      "files.read",
+      fixture.endpoint(),
+      loaded,
+      features.Context(..fixture.context(1500), trusted_receipts: []),
+    )
+    |> should.equal(features.Unknown)
+  })
 }
 
 pub fn foreign_ledger_is_refused_before_any_io_test() {

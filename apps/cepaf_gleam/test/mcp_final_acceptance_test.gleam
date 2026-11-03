@@ -107,13 +107,13 @@ fn assert_both_blocked(decision: DevAcceptanceDecision, label: String) -> Nil {
 
 fn assert_registry_census() -> Nil {
   let specs = registry.all_specs()
-  list.length(specs) |> should.equal(101)
+  list.length(specs) |> should.equal(104)
   list.length(list.filter(specs, fn(spec) { spec.route == "public" }))
-  |> should.equal(65)
+  |> should.equal(66)
   list.length(list.filter(specs, fn(spec) { spec.route == "development" }))
   |> should.equal(21)
   list.length(list.filter(specs, fn(spec) { spec.route == "successor" }))
-  |> should.equal(15)
+  |> should.equal(17)
 }
 
 // ---------------------------------------------------------------------------

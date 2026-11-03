@@ -29,7 +29,10 @@ let raw path f=
  Fun.protect~finally:(fun()->let closed=Sqlite3.db_close db in Core.Gc.keep_alive db;if not closed then failwith"private read close unknown")(fun()->f db)
 let ()=
  if Array.length Sys.argv<>3 then failwith"explicit source root and public adapter evidence required";
- let root=Unix.realpath Sys.argv.(1)in
+ let rec find_repo_root dir=
+  if Sys.file_exists(dir^"/.jj")||Sys.file_exists(dir^"/engines/hermes/modules/sa_plan/recovery_schema_migration.ml")then dir
+  else let parent=Filename.dirname dir in if parent=dir then dir else find_repo_root parent in
+ let root=find_repo_root(Unix.realpath Sys.argv.(1))in
  let v1ml=read(root^"/engines/hermes/modules/sa_plan/recovery_schema_migration.ml")in
  let v1mli=read(root^"/engines/hermes/modules/sa_plan/recovery_schema_migration.mli")in
  let local_adapter=root^"/engines/hermes/modules/sa_plan/development/recovery_adapter_context.ml"in

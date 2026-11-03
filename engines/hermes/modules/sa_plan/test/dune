@@ -12,7 +12,8 @@
  (name test_recovery_schema_migration_v2)
  (modules test_recovery_schema_migration_v2 recovery_migration_v2_fixture recovery_migration_v1_helpers)
  (libraries recovery_schema_migration_v2 recovery_schema_migration recovery_kernel_fixture recovery_kernel core digestif sqlite3 yojson unix)
- (action (run %{test} %{workspace_root}/../.. %{env:UOS_REVIEWED_ADAPTER_SCHEMA_SOURCE=UNCONFIGURED})))
+ (deps ../recovery_schema_migration.ml ../recovery_schema_migration.mli ../recovery_schema_migration_v2.ml ../development/recovery_adapter_context.ml)
+ (action (run %{test} %{workspace_root}/../../../.. %{env:UOS_REVIEWED_ADAPTER_SCHEMA_SOURCE=UNCONFIGURED})))
 
 (executable
  (name sa_plan_main)
@@ -206,6 +207,26 @@
  (name test_sa_plan_dependency_repair)
  (modules test_sa_plan_dependency_repair)
  (libraries core core_unix sa_plan sqlite3 yojson))
+
+; Independent canonical checker projection, source-identical generated fixtures.
+(rule (target priority.ml)
+ (deps %{workspace_root}/../../plugins/uos-risk-prioritization/validation/priority.ml)
+ (action (copy %{deps} %{target})))
+(rule (target bounded.ml)
+ (deps %{workspace_root}/../../plugins/uos-risk-prioritization/validation/bounded.ml)
+ (action (copy %{deps} %{target})))
+(rule (target live_plan.ml)
+ (deps %{workspace_root}/../../plugins/uos-risk-prioritization/validation/live_plan.ml)
+ (action (copy %{deps} %{target})))
+(test
+ (name test_sa_plan_recovery_snapshot)
+ (modules test_sa_plan_recovery_snapshot priority bounded live_plan)
+ (libraries core sa_plan sqlite3 yojson cryptokit unix astring)
+ (link_flags (:standard
+  -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,--disable-new-dtags
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
 (test
  (name test_sqlite_main_mapping)
  (modules test_sqlite_main_mapping)
@@ -214,6 +235,7 @@
  (link_flags (:standard
   -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
   -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,--disable-new-dtags
   -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
 
 (test
@@ -223,4 +245,5 @@
  (link_flags (:standard
   -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
   -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,--disable-new-dtags
   -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))

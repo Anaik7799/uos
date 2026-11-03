@@ -10,7 +10,7 @@ import gleeunit/should
 
 pub fn all_65_public_tools_have_one_owner_test() {
   let public_defs = tools.get_tool_definitions()
-  list.length(public_defs) |> should.equal(65)
+  list.length(public_defs) |> should.equal(66)
   list.each(public_defs, fn(def) {
     let res = registry.lookup("public", def.name)
     res |> should.be_ok
@@ -28,7 +28,7 @@ pub fn private_name_overlap_retains_route_schema_test() {
   let dev_defs = dev_mcp.tool_definitions()
   let succ_defs = successor_mcp.tool_definitions()
   list.length(dev_defs) |> should.equal(21)
-  list.length(succ_defs) |> should.equal(15)
+  list.length(succ_defs) |> should.equal(17)
 
   let assert Ok(dev_finish) = registry.lookup("development", "harness_finish")
   let assert Ok(succ_finish) = registry.lookup("successor", "harness_finish")
