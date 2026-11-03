@@ -6,6 +6,7 @@ import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
 import cepaf_gleam/harness/files
 import cepaf_gleam/harness/value
+import cepaf_gleam/mcp/json_guard
 import cepaf_gleam/planning/sa_plan_bridge as sa
 import gleam/bit_array
 import gleam/dynamic/decode
@@ -53,6 +54,38 @@ pub type Grant {
 
 pub type Execution {
   Execution(grant: Grant, scope: Scope, binding: dev.Binding, risk_path: String)
+}
+
+/// Factual fixed-plan recovery context. This is neither a TaskFence nor a
+/// permission. Only the explicit preparation branch consumes it.
+pub opaque type RecoveryProposalData {
+  RecoveryProposalData(
+    plan: String,
+    selected_task: String,
+    worker: String,
+    snapshot_sha256: String,
+    assessment_sha256: String,
+    source_manifest_sha256: String,
+    bindings: List(RecoveryOldClaim),
+    selection_review: value.Value,
+  )
+}
+
+pub type RecoveryOldClaim {
+  RecoveryOldClaim(task: String, worker: String, attempt: Int, lease_ns: Int)
+}
+
+pub opaque type RecoveryObservationData {
+  RecoveryObservationData(proposal: RecoveryProposalData, report_sha256: String)
+}
+
+pub opaque type PreparedRecovery {
+  PreparedRecovery(
+    observation: RecoveryObservationData,
+    grant_sha256: String,
+    review_sha256: String,
+    observed_utc_us: Int,
+  )
 }
 
 @external(erlang, "cepaf_gleam_ffi", "get_env")
@@ -1302,6 +1335,709 @@ pub fn fence(
     duration_ms + 5000,
   ))
   Ok(proof)
+}
+
+fn recovery_closed(v: value.Value, names: List(String)) -> Result(Nil, String) {
+  case v {
+    value.Object(fs) ->
+      require(
+        list.length(fs) == list.length(names)
+          && list.length(list.unique(list.map(fs, fn(f) { f.0 })))
+          == list.length(fs)
+          && list.all(fs, fn(f) { list.contains(names, f.0) }),
+        "recovery_closed_fields",
+      )
+    _ -> Error("recovery_object_required")
+  }
+}
+
+fn recovery_parse(raw: String) -> Result(value.Value, String) {
+  use _ <- result.try(require(
+    string.byte_size(raw) > 0 && string.byte_size(raw) <= files.max_bytes,
+    "recovery_json_bound",
+  ))
+  json_guard.native_inspect(raw, 32)
+  |> result.map_error(fn(_) { "recovery_strict_json" })
+}
+
+fn recovery_integer(v: value.Value, key: String) -> Result(Int, String) {
+  use found <- result.try(value.get(v, key))
+  case found {
+    value.Integer(n) -> Ok(n)
+    _ -> Error("recovery_integer:" <> key)
+  }
+}
+
+fn recovery_array(
+  v: value.Value,
+  key: String,
+  maximum: Int,
+) -> Result(List(value.Value), String) {
+  use found <- result.try(value.get(v, key))
+  case found {
+    value.Array(xs) -> {
+      use _ <- result.try(require(
+        list.length(xs) <= maximum,
+        "recovery_array_bound",
+      ))
+      Ok(xs)
+    }
+    _ -> Error("recovery_array:" <> key)
+  }
+}
+
+fn recovery_decimal(v: value.Value, key: String) -> Result(Int, String) {
+  use raw <- result.try(text_field(v, key))
+  use n <- result.try(
+    int.parse(raw) |> result.map_error(fn(_) { "recovery_decimal" }),
+  )
+  use _ <- result.try(require(
+    n > 0 && n <= 9_000_000_000_000_000_000 && int.to_string(n) == raw,
+    "recovery_decimal_bound",
+  ))
+  Ok(n)
+}
+
+fn recovery_binding(v: value.Value) -> Result(RecoveryOldClaim, String) {
+  use _ <- result.try(
+    recovery_closed(v, ["task_id", "worker", "attempt", "lease_until_ns"]),
+  )
+  use task <- result.try(text_field(v, "task_id"))
+  use worker <- result.try(text_field(v, "worker"))
+  use attempt <- result.try(recovery_integer(v, "attempt"))
+  use lease <- result.try(recovery_decimal(v, "lease_until_ns"))
+  use _ <- result.try(require(
+    dev.valid_identifier(task)
+      && component(worker)
+      && attempt > 0
+      && attempt < 1_000_000,
+    "recovery_old_binding",
+  ))
+  Ok(RecoveryOldClaim(task, worker, attempt, lease))
+}
+
+fn recovery_binding_json(b: RecoveryOldClaim) -> json.Json {
+  json.object([
+    #("task_id", json.string(b.task)),
+    #("worker", json.string(b.worker)),
+    #("attempt", json.int(b.attempt)),
+    #("lease_until_ns", json.string(int.to_string(b.lease_ns))),
+  ])
+}
+
+/// DATA parser only. Calling this does not authenticate a review or authorize a
+/// claim. The effectful preparation branch independently loads/checks a grant,
+/// observes its canonical review task and reruns the existing checker.
+pub fn recovery_proposal_data(
+  raw: String,
+) -> Result(RecoveryProposalData, String) {
+  use p <- result.try(recovery_parse(raw))
+  use _ <- result.try(
+    recovery_closed(p, [
+      "schema", "plan_id", "selected_task", "target_worker", "snapshot_sha256",
+      "assessment_sha256", "source_manifest_sha256", "bindings",
+      "selection_review",
+    ]),
+  )
+  use plan <- result.try(text_field(p, "plan_id"))
+  use task <- result.try(text_field(p, "selected_task"))
+  use worker <- result.try(text_field(p, "target_worker"))
+  use snapshot <- result.try(text_field(p, "snapshot_sha256"))
+  use assessment <- result.try(text_field(p, "assessment_sha256"))
+  use source <- result.try(text_field(p, "source_manifest_sha256"))
+  use rows <- result.try(recovery_array(p, "bindings", 1000))
+  use bindings <- result.try(list.try_map(rows, recovery_binding))
+  use selection <- result.try(value.get(p, "selection_review"))
+  use _ <- result.try(case selection {
+    value.Null -> Ok(Nil)
+    _ -> {
+      use _ <- result.try(
+        recovery_closed(selection, [
+          "path",
+          "sha256",
+          "proof_path",
+          "proof_sha256",
+        ]),
+      )
+      use path <- result.try(text_field(selection, "path"))
+      use proof <- result.try(text_field(selection, "proof_path"))
+      use digest <- result.try(text_field(selection, "sha256"))
+      use proof_digest <- result.try(text_field(selection, "proof_sha256"))
+      require(
+        public_path(path)
+          && public_path(proof)
+          && digest_valid(digest)
+          && digest_valid(proof_digest),
+        "recovery_selection_reference",
+      )
+    }
+  })
+  use _ <- result.try(require(
+    value.get(p, "schema")
+      == Ok(value.Text("uos.harness-reviewed-recovery-proposal.v1"))
+      && dev.valid_identifier(plan)
+      && string.starts_with(plan, "uos/")
+      && dev.valid_identifier(task)
+      && task != "HARNESSBOOT"
+      && component(worker)
+      && digest_valid(snapshot)
+      && digest_valid(assessment)
+      && digest_valid(source)
+      && bindings != []
+      && list.length(list.unique(list.map(bindings, fn(b) { b.task })))
+      == list.length(bindings)
+      && bindings
+      == list.sort(bindings, fn(a, b) { string.compare(a.task, b.task) })
+      && list.any(bindings, fn(b) { b.task == task && b.worker == worker }),
+    "recovery_proposal_scope",
+  ))
+  Ok(RecoveryProposalData(
+    plan,
+    task,
+    worker,
+    snapshot,
+    assessment,
+    source,
+    bindings,
+    selection,
+  ))
+}
+
+fn recovery_snapshot_row(v: value.Value) -> Result(value.Value, String) {
+  let keys = [
+    "task_id",
+    "state",
+    "worker",
+    "lease_until_ns",
+    "attempt",
+    "completed_at_ns",
+    "result_present",
+    "dependencies",
+  ]
+  use _ <- result.try(recovery_closed(v, keys))
+  use id <- result.try(text_field(v, "task_id"))
+  use state <- result.try(text_field(v, "state"))
+  use attempt <- result.try(recovery_integer(v, "attempt"))
+  use deps <- result.try(recovery_array(v, "dependencies", 10_000))
+  use _ <- result.try(require(
+    dev.valid_identifier(id)
+      && list.contains(
+      ["available", "executing", "completed", "failed", "cancelled", "blocked"],
+      state,
+    )
+      && attempt >= 0
+      && attempt <= 1_000_000,
+    "recovery_snapshot_scalar",
+  ))
+  use worker <- result.try(value.get(v, "worker"))
+  use _ <- result.try(case worker {
+    value.Null -> Ok(Nil)
+    value.Text(w) -> require(component(w), "recovery_snapshot_worker")
+    _ -> Error("recovery_snapshot_worker")
+  })
+  use _ <- result.try(
+    list.try_each(["lease_until_ns", "completed_at_ns"], fn(key) {
+      use x <- result.try(value.get(v, key))
+      case x {
+        value.Null -> Ok(Nil)
+        _ -> recovery_decimal(v, key) |> result.map(fn(_) { Nil })
+      }
+    }),
+  )
+  use _ <- result.try(case value.get(v, "result_present") {
+    Ok(value.Boolean(_)) -> Ok(Nil)
+    _ -> Error("recovery_snapshot_result")
+  })
+  use _ <- result.try(
+    list.try_each(deps, fn(d) {
+      case d {
+        value.Text(x) -> require(dev.valid_identifier(x), "recovery_dependency")
+        _ -> Error("recovery_dependency")
+      }
+    }),
+  )
+  use ordered <- result.try(
+    list.try_map(keys, fn(k) {
+      use x <- result.try(value.get(v, k))
+      Ok(#(k, x))
+    }),
+  )
+  Ok(value.Object(ordered))
+}
+
+/// Strict binding of an observation, NOT authentication. Only actual checker
+/// output obtained by prepare_reviewed_recovery has process provenance.
+pub fn recovery_bind_observation_data(
+  p: RecoveryProposalData,
+  raw: String,
+  observed_now_ns: Int,
+) -> Result(RecoveryObservationData, String) {
+  use report <- result.try(recovery_parse(raw))
+  use _ <- result.try(
+    recovery_closed(report, [
+      "status", "authority", "runtime_admission", "reclaim", "observed_at",
+      "completed_at", "elapsed_monotonic_seconds", "clock_start", "clock_end",
+      "assessment_sha256", "selection_review", "evidence_files_checked",
+      "sa_plan", "order", "findings", "limits",
+    ]),
+  )
+  use _ <- result.try(require(
+    observed_now_ns > 0
+      && observed_now_ns <= 9_000_000_000_000_000_000
+      && value.get(report, "status") == Ok(value.Text("RECLAIM_PREFLIGHT_PASS"))
+      && value.get(report, "authority") == Ok(value.Text("NONE"))
+      && value.get(report, "runtime_admission") == Ok(value.Text("NOT_GRANTED"))
+      && value.get(report, "findings") == Ok(value.Array([]))
+      && value.get(report, "assessment_sha256")
+      == Ok(value.Text(p.assessment_sha256)),
+    "recovery_checker_hold",
+  ))
+  use live <- result.try(value.get(report, "sa_plan"))
+  use _ <- result.try(
+    recovery_closed(live, [
+      "plan_id",
+      "snapshot_sha256",
+      "tasks",
+      "mode",
+      "lease_fencing_authority",
+    ]),
+  )
+  use _ <- result.try(require(
+    value.get(live, "plan_id") == Ok(value.Text(p.plan))
+      && value.get(live, "snapshot_sha256") == Ok(value.Text(p.snapshot_sha256))
+      && value.get(live, "mode") == Ok(value.Text("READONLY"))
+      && value.get(live, "lease_fencing_authority")
+      == Ok(value.Text("NOT_GRANTED")),
+    "recovery_snapshot_binding",
+  ))
+  use raw_rows <- result.try(recovery_array(live, "tasks", 1000))
+  use rows <- result.try(list.try_map(raw_rows, recovery_snapshot_row))
+  use ids <- result.try(
+    list.try_map(rows, fn(row) { text_field(row, "task_id") }),
+  )
+  use _ <- result.try(require(
+    rows != []
+      && ids == list.sort(ids, string.compare)
+      && list.unique(ids) == ids
+      && files.digest(json.to_string(value.encode(value.Array(rows))))
+      == p.snapshot_sha256,
+    "recovery_snapshot_bytes",
+  ))
+  use expired <- result.try(
+    list.try_map(rows, fn(row) {
+      use id <- result.try(text_field(row, "task_id"))
+      case value.get(row, "state") {
+        Ok(value.Text("executing")) -> {
+          use lease <- result.try(recovery_decimal(row, "lease_until_ns"))
+          case lease <= observed_now_ns {
+            False -> Ok(None)
+            True -> {
+              use worker <- result.try(text_field(row, "worker"))
+              use attempt <- result.try(recovery_integer(row, "attempt"))
+              use _ <- result.try(require(
+                component(worker)
+                  && attempt > 0
+                  && attempt < 1_000_000
+                  && value.get(row, "completed_at_ns") == Ok(value.Null)
+                  && value.get(row, "result_present")
+                  == Ok(value.Boolean(False)),
+                "recovery_expired_tuple",
+              ))
+              Ok(Some(RecoveryOldClaim(id, worker, attempt, lease)))
+            }
+          }
+        }
+        _ -> Ok(None)
+      }
+    }),
+  )
+  let expired =
+    list.filter_map(expired, fn(x) {
+      case x {
+        Some(b) -> Ok(b)
+        None -> Error(Nil)
+      }
+    })
+    |> list.sort(fn(a, b) { string.compare(a.task, b.task) })
+  use _ <- result.try(require(
+    expired == p.bindings,
+    "recovery_complete_expired_set",
+  ))
+  use reclaim <- result.try(value.get(report, "reclaim"))
+  use _ <- result.try(
+    recovery_closed(reclaim, ["plan_id", "bindings", "scope"]),
+  )
+  use actual <- result.try(value.get(reclaim, "bindings"))
+  let expected =
+    json.array(p.bindings, fn(b) {
+      json.object([
+        #("task_id", json.string(b.task)),
+        #("worker", json.string(b.worker)),
+        #("previous_attempt", json.int(b.attempt)),
+        #("previous_lease_until_ns", json.string(int.to_string(b.lease_ns))),
+        #("expected_new_attempt", json.int(b.attempt + 1)),
+      ])
+    })
+    |> json.to_string
+  use expected <- result.try(recovery_parse(expected))
+  use _ <- result.try(require(
+    value.get(reclaim, "plan_id") == Ok(value.Text(p.plan))
+      && same_value(actual, expected),
+    "recovery_report_old_set",
+  ))
+  use order <- result.try(recovery_array(report, "order", 1000))
+  use _ <- result.try(case order {
+    [first, ..] ->
+      require(
+        value.get(first, "task_id") == Ok(value.Text(p.selected_task)),
+        "recovery_selection_changed",
+      )
+    _ -> Error("recovery_selection_missing")
+  })
+  use selection <- result.try(value.get(report, "selection_review"))
+  use _ <- result.try(case p.selection_review {
+    value.Null ->
+      require(selection == value.Null, "recovery_selection_unexpected")
+    value.Object(fields) -> {
+      use _ <- result.try(require(
+        value.get(selection, "reviewer_authenticated")
+          == Ok(value.Boolean(False)),
+        "recovery_selection_identity_not_authenticated",
+      ))
+      list.try_each(fields, fn(pair) {
+        require(
+          value.get(selection, pair.0) == Ok(pair.1),
+          "recovery_selection_changed",
+        )
+      })
+    }
+    _ -> Error("recovery_selection_invalid")
+  })
+  Ok(RecoveryObservationData(p, files.digest(raw)))
+}
+
+pub fn recovery_observation_json(data: RecoveryObservationData) -> json.Json {
+  json.object([
+    #("status", json.string("BOUND_OBSERVATION_DATA_ONLY")),
+    #("authority", json.string("NONE")),
+    #("plan", json.string(data.proposal.plan)),
+    #("task", json.string(data.proposal.selected_task)),
+    #("snapshot_sha256", json.string(data.proposal.snapshot_sha256)),
+    #("assessment_sha256", json.string(data.proposal.assessment_sha256)),
+    #("report_sha256", json.string(data.report_sha256)),
+    #("effect_authority", json.bool(False)),
+    #("production_admission", json.bool(False)),
+  ])
+}
+
+fn recovery_source_manifest(
+  grant: Grant,
+  scope: Scope,
+) -> Result(String, String) {
+  use root <- result.try(source_root(grant))
+  use sources <- result.try(
+    list.try_map(list.sort(scope.sources, string.compare), fn(path) {
+      use bytes <- result.try(files.read(root, path))
+      Ok(dev.SourceDigest(path, files.digest(bytes)))
+    }),
+  )
+  Ok(dev.manifest_digest(sources))
+}
+
+/// DATA-only delegation check. The caller must first authenticate the complete
+/// grant document through check/load_with. Session IDs remain labels: canonical
+/// task completion authenticates the recorded worker/attempt, not session IAM.
+pub fn recovery_review_read_delegated(
+  document: value.Value,
+  reviewer: value.Value,
+  target_plan: String,
+  target_task: String,
+) -> Result(Nil, String) {
+  use allowed <- result.try(recovery_array(
+    document,
+    "recovery_review_tasks",
+    16,
+  ))
+  use _ <- result.try(
+    list.try_each(allowed, fn(entry) {
+      use _ <- result.try(
+        recovery_closed(entry, ["target_plan", "target_task", "reviewer"]),
+      )
+      use plan <- result.try(text_field(entry, "target_plan"))
+      use task <- result.try(text_field(entry, "target_task"))
+      use r <- result.try(value.get(entry, "reviewer"))
+      use _ <- result.try(
+        recovery_closed(r, [
+          "plan_id", "task_id", "worker", "session_id", "attempt",
+        ]),
+      )
+      use rp <- result.try(text_field(r, "plan_id"))
+      use rt <- result.try(text_field(r, "task_id"))
+      use rw <- result.try(text_field(r, "worker"))
+      use rs <- result.try(text_field(r, "session_id"))
+      use ra <- result.try(recovery_integer(r, "attempt"))
+      require(
+        dev.valid_identifier(plan)
+          && string.starts_with(plan, "uos/")
+          && dev.valid_identifier(task)
+          && task != "HARNESSBOOT"
+          && dev.valid_identifier(rp)
+          && string.starts_with(rp, "uos/")
+          && dev.valid_identifier(rt)
+          && rt != "HARNESSBOOT"
+          && component(rw)
+          && component(rs)
+          && ra > 0
+          && ra < 1_000_000,
+        "recovery_review_read_delegation_shape",
+      )
+    }),
+  )
+  require(
+    list.any(allowed, fn(entry) {
+      value.get(entry, "target_plan") == Ok(value.Text(target_plan))
+      && value.get(entry, "target_task") == Ok(value.Text(target_task))
+      && case value.get(entry, "reviewer") {
+        Ok(r) -> same_value(r, reviewer)
+        Error(_) -> False
+      }
+    }),
+    "recovery_review_task_read_not_delegated",
+  )
+}
+
+fn recovery_review_task(
+  grant: Grant,
+  scope: Scope,
+  review: value.Value,
+  digest: String,
+) -> Result(Nil, String) {
+  use reviewer <- result.try(value.get(review, "reviewer"))
+  // The optional delegation is covered by exact whole-grant proposal/review
+  // equality. Reading a review file alone never delegates task metadata reads.
+  use body <- result.try(files.read(dev.root, grant.path))
+  use _ <- result.try(require(
+    files.digest(body) == grant.digest,
+    "grant_changed",
+  ))
+  use document <- result.try(recovery_parse(body))
+  use _ <- result.try(recovery_review_read_delegated(
+    document,
+    reviewer,
+    scope.plan,
+    scope.task,
+  ))
+  use _ <- result.try(
+    recovery_closed(reviewer, [
+      "plan_id",
+      "task_id",
+      "worker",
+      "session_id",
+      "attempt",
+    ]),
+  )
+  use plan <- result.try(text_field(reviewer, "plan_id"))
+  use task <- result.try(text_field(reviewer, "task_id"))
+  use worker <- result.try(text_field(reviewer, "worker"))
+  use session <- result.try(text_field(reviewer, "session_id"))
+  use attempt <- result.try(recovery_integer(reviewer, "attempt"))
+  use _ <- result.try(require(
+    dev.valid_identifier(plan)
+      && string.starts_with(plan, "uos/")
+      && dev.valid_identifier(task)
+      && task != "HARNESSBOOT"
+      && component(worker)
+      && component(session)
+      && worker != grant.worker
+      && session != grant.session
+      && attempt > 0
+      && attempt < 1_000_000,
+    "recovery_independent_review_binding",
+  ))
+  let binding =
+    dev.Binding("development", plan, task, worker, attempt, session, 1)
+  use row <- result.try(dev.read_task(binding))
+  require(
+    dev.terminal_matches(
+      binding,
+      row,
+      "uos.harness-recovery-review.v1:" <> digest,
+    ),
+    "recovery_canonical_review_completion",
+  )
+}
+
+/// Existing reviewed-launcher admission is mandatory. There is deliberately no
+/// relaxed TaskFence, no claim/SQL/DDL dispatch, no issuer/provider constructor
+/// and no interpretation of a report-only selection as effect authority.
+pub fn prepare_reviewed_recovery(
+  supplied_grant: Grant,
+  plan: String,
+  task: String,
+  intent: String,
+  review_path: String,
+  review_sha256: String,
+) -> Result(PreparedRecovery, String) {
+  use grant <- result.try(load_with(supplied_grant.path, supplied_grant.digest))
+  use scope <- result.try(lookup(grant, plan, task))
+  use _ <- result.try(require(
+    intent_valid(intent)
+      && digest_valid(review_sha256)
+      && public_path(review_path)
+      && string.starts_with(review_path, "governance/planning/")
+      && list.contains(scope.reads, review_path),
+    "recovery_reference_scope",
+  ))
+  use now <- result.try(check(grant))
+  use _ <- result.try(validate_window_for(grant, now, 20_000))
+  use review_bytes <- result.try(files.read(dev.root, review_path))
+  use _ <- result.try(require(
+    files.digest(review_bytes) == review_sha256,
+    "recovery_review_changed",
+  ))
+  use review <- result.try(recovery_parse(review_bytes))
+  use _ <- result.try(
+    recovery_closed(review, [
+      "schema",
+      "verdict",
+      "grant_id",
+      "grant_sha256",
+      "target_session",
+      "target_worker",
+      "observed_utc_us",
+      "expires_utc_us",
+      "proposal",
+      "proposal_sha256",
+      "reviewer",
+    ]),
+  )
+  use observed <- result.try(recovery_decimal(review, "observed_utc_us"))
+  use expires <- result.try(recovery_decimal(review, "expires_utc_us"))
+  use _ <- result.try(require(
+    value.get(review, "schema")
+      == Ok(value.Text("uos.harness-reviewed-recovery.v1"))
+      && value.get(review, "verdict")
+      == Ok(value.Text("APPROVE_DEV_RECOVERY_PREPARATION_ONLY"))
+      && value.get(review, "grant_id") == Ok(value.Text(grant.id))
+      && value.get(review, "grant_sha256") == Ok(value.Text(grant.digest))
+      && value.get(review, "target_worker") == Ok(value.Text(grant.worker))
+      && value.get(review, "target_session") == Ok(value.Text(grant.session))
+      && observed <= now.sample.observed.utc_us
+      && now.sample.observed.utc_us < expires
+      && expires - observed <= 3_600_000_000,
+    "recovery_review_scope_or_window",
+  ))
+  use proposal <- result.try(value.get(review, "proposal"))
+  let proposal_bytes = json.to_string(value.encode(proposal))
+  use proposal_digest <- result.try(text_field(review, "proposal_sha256"))
+  use _ <- result.try(require(
+    digest_valid(proposal_digest)
+      && files.digest(proposal_bytes) == proposal_digest,
+    "recovery_review_proposal_digest",
+  ))
+  use p <- result.try(recovery_proposal_data(proposal_bytes))
+  use _ <- result.try(require(
+    p.plan == scope.plan
+      && p.selected_task == scope.task
+      && p.worker == grant.worker,
+    "recovery_scope_mismatch",
+  ))
+  use _ <- result.try(recovery_review_task(grant, scope, review, review_sha256))
+  use manifest <- result.try(recovery_source_manifest(grant, scope))
+  use _ <- result.try(require(
+    manifest == p.source_manifest_sha256,
+    "recovery_source_manifest_changed",
+  ))
+  let bindings =
+    json.object([
+      #("plan_id", json.string(plan)),
+      #("bindings", json.array(p.bindings, recovery_binding_json)),
+    ])
+    |> json.to_string
+  use mode <- result.try(case p.selection_review {
+    value.Null ->
+      Ok([
+        "--reclaim-set-preflight",
+        dev.root <> "/" <> scope.portfolio,
+        task,
+        bindings,
+      ])
+    selection -> {
+      use path <- result.try(text_field(selection, "path"))
+      use proof <- result.try(text_field(selection, "proof_path"))
+      use _ <- result.try(require(
+        list.contains(scope.reads, path) && list.contains(scope.reads, proof),
+        "recovery_selection_read_scope",
+      ))
+      Ok([
+        "--reclaim-set-preflight-reviewed",
+        dev.root <> "/" <> scope.portfolio,
+        task,
+        bindings,
+        path,
+      ])
+    }
+  })
+  use raw <- result.try(dev.bounded(
+    dev.root <> "/toolchains/nix-profile/bin/env",
+    [
+      "PATH="
+        <> dev.root
+        <> "/toolchains/nix-profile/bin:"
+        <> dev.root
+        <> "/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "OPAM_SWITCH_PREFIX=" <> dev.root <> "/toolchains/opam-ocaml",
+      "/usr/bin/bash",
+      dev.root <> "/tools/risk-priority-check",
+      ..mode
+    ],
+    15_000,
+  ))
+  use after <- result.try(check(grant))
+  use _ <- result.try(require(
+    after.sample.observed.utc_us >= now.sample.observed.utc_us
+      && after.sample.observed.utc_us < expires,
+    "recovery_review_expired",
+  ))
+  use same_review <- result.try(files.read(dev.root, review_path))
+  use _ <- result.try(require(
+    same_review == review_bytes,
+    "recovery_review_changed",
+  ))
+  use after_manifest <- result.try(recovery_source_manifest(grant, scope))
+  use _ <- result.try(require(
+    after_manifest == manifest,
+    "recovery_source_manifest_changed",
+  ))
+  use observation <- result.try(recovery_bind_observation_data(
+    p,
+    raw,
+    after.sample.observed.utc_us * 1000,
+  ))
+  Ok(PreparedRecovery(
+    observation,
+    grant.digest,
+    review_sha256,
+    after.sample.observed.utc_us,
+  ))
+}
+
+pub fn prepared_recovery_json(prepared: PreparedRecovery) -> json.Json {
+  json.object([
+    #("status", json.string("PREPARED_OBSERVATION_ONLY")),
+    #("observation", recovery_observation_json(prepared.observation)),
+    #("grant_sha256", json.string(prepared.grant_sha256)),
+    #("review_sha256", json.string(prepared.review_sha256)),
+    #("observed_utc_us", json.string(int.to_string(prepared.observed_utc_us))),
+    #("native_executor", json.string("UNAVAILABLE")),
+    #(
+      "reviewer_identity",
+      json.string("CANONICAL_TASK_WORKER_ATTEMPT_SESSION_LABEL_UNAUTHENTICATED"),
+    ),
+    #("authority", json.string("NONE")),
+    #("task_mutation_enabled", json.bool(False)),
+    #("production_admission", json.bool(False)),
+  ])
 }
 
 pub fn observe_execution(execution: Execution) -> json.Json {

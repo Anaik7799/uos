@@ -232,3 +232,7 @@ Document-package checks only; the live run itself is UNRUN until an operator per
 [Journey spec](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0215-telegram-journey-security-incident.md) · [Contract](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261026-0210-telegram-operator-journey-contract.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/)
 
 UOS footer: `nas-1.tail55d152.ts.net:4100` · peer `vm-1.tail55d152.ts.net:4100` · operator evidence only; no admission.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+For staging-bot security response, bind each credential boundary, detection/containment action, handler and recovery claim to formal constraints and candidate-bound observable evidence via the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). Do not turn the reference into a live incident or credential operation; any unmapped security path remains `UNKNOWN`/`HOLD`.

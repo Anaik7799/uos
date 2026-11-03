@@ -2,6 +2,7 @@
 //// All task mutations use canonical Sa-plan through admission/operations.
 
 import cepaf_gleam/harness/admission as a
+import cepaf_gleam/harness/review_dispatch
 import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/clock
 import cepaf_gleam/harness/development as dev
@@ -248,6 +249,7 @@ fn status(state: State) -> Result(json.Json, String) {
       #("grant_id", json.string(state.grant.id)),
       #("active", active),
       #("unresolved_operation", json.bool(state.unresolved)),
+      #("completion_review", review_dispatch.availability_json()),
       #("plans", json.array(observations, fn(x) { x })),
       #("scope", json.string("local_development_only")),
       #("all_features_complete", json.bool(False)),
@@ -275,6 +277,36 @@ fn dispatch(
 ) -> #(State, Result(json.Json, String)) {
   case name {
     "harness_status" -> #(state, status(state))
+    "harness_recovery_prepare" -> {
+      let outcome = case state.unresolved {
+        True -> Error("unresolved_operation_stop_line")
+        False -> {
+          use plan <- result.try(ops.text(args, "plan"))
+          use task <- result.try(ops.text(args, "task"))
+          use intent <- result.try(ops.text(args, "intent_id"))
+          use path <- result.try(ops.text(args, "review_path"))
+          use digest <- result.try(ops.text(args, "review_sha256"))
+          use scope <- result.try(a.lookup(state.grant, plan, task))
+          use pending <- result.try(ops.assessment_pending(scope))
+          use _ <- result.try(a.require(
+            !pending,
+            "assessment_prepared_stop_line",
+          ))
+          a.prepare_reviewed_recovery(
+            state.grant,
+            plan,
+            task,
+            intent,
+            path,
+            digest,
+          )
+          |> result.map(a.prepared_recovery_json)
+        }
+      }
+      // Observation preparation never installs an Execution, clears unknown
+      // cleanup, dispatches a claim or turns an expired TaskFence into a live one.
+      #(state, outcome)
+    }
     // The 14th private tool. It deliberately does NOT route through the
     // generic grant+intent effect wrapper: that outer path keys receipts by
     // grant id and includes attempt in the signature, so wrapping it would
@@ -545,7 +577,7 @@ fn active_call_dispatch(
           Error(e),
         )
       }
-    "harness_write_file" | "harness_build" | "harness_test" | "harness_client_mcp_config" ->
+    "harness_write_file" | "harness_build" | "harness_test" | "harness_client_mcp_config" | "harness_agent_review" ->
       case state.unresolved {
         True -> #(state, Error("unresolved_operation_stop_line"))
         False -> {

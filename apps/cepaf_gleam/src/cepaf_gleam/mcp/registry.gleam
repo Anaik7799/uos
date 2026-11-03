@@ -134,6 +134,7 @@ fn successor_spec(def: ToolDefinition) -> ToolSpec {
 fn classify_harness_effect(name: String) -> EffectClass {
   case name {
     "harness_status"
+    | "harness_recovery_prepare"
     | "harness_clock"
     | "harness_read_file"
     | "harness_peers"
@@ -151,6 +152,14 @@ fn classify_public(
   name: String,
 ) -> #(String, String, Int, EffectClass, String, Int) {
   case name {
+    "recovery_control_status" -> #(
+      "recovery_control_readiness",
+      "OI02_RECOVERY_READINESS",
+      0,
+      ReadOnly,
+      "gleam_recovery_owner",
+      3000,
+    )
     "plan_status"
     | "plan_list_pending"
     | "plan_list"

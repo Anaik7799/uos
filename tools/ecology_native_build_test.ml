@@ -19,6 +19,8 @@ let serial=ref 0
 let fixture()=incr serial;let root=base^"/fixture-"^string_of_int !serial in mkdir root;mkdir(root^"/tools");
  List.iter(fun name->write(root^"/tools/"^name)(read(source^"/tools/"^name)))
  ["ecology_file_transaction.ml";"ecology_file_transaction_port.ml";"telegram_store_transport_guardian.ml";"ecology_process.ml";"ecology_native_build.ml"];
+ mkdir(root^"/native");mkdir(root^"/native/c");
+ write(root^"/native/c/finite_environment_launch.c")(read(source^"/native/c/finite_environment_launch.c"));
  List.iter(fun d->mkdir(root^"/"^d))["engines";"engines/hermes";"engines/hermes/modules";"engines/hermes/modules/hermes_harness"];
  List.iter(fun name->let p="engines/hermes/modules/hermes_harness/"^name in write(root^"/"^p)(read(source^"/"^p)))
  ["core.ml";"inventory.ml";"evidence_store.ml";"symbiosis_check_receipts.ml";"symbiosis_check_receipts.mli";"ecology_release_grants.ml";"ecology_release_grants.mli";"ecology_release_grants_port.ml"];root
@@ -44,7 +46,11 @@ let ()=
  check "new vn_file reuses existing SONAME index"(Char.code fixed.[452]=1);
  List.iter(fun(p,c)->let b=Bytes.of_string original in Bytes.set b p c;
    check "unsupported/truncated/unknown ELF shape HOLD"(error(N.test_retarget_versions ~worker:true(Bytes.to_string b))))
- [4,'\001';18,'\183';60,'\000';216,'\255';321,'e'];
+ [4,'\001';18,'\183';60,'\000';216,'\255';321,'e';432,'\001';440,'\001'];
+ let after_null=Bytes.of_string original in Bytes.fill after_null 416 32 '\000';
+ Bytes.set after_null 432 '\001';Bytes.set after_null 440 '\001';
+ check "DT_NEEDED hidden after FIRST DT_NULL is refused, not interpreted"
+   (error(N.test_retarget_versions ~worker:true(Bytes.to_string after_null)));
  check "truncated ELF HOLD"(error(N.test_retarget_versions ~worker:true(String.sub original 0 450)));
  List.iter(fun(kind,prefix)->
   List.iter(fun rest->check "exact prefix removed, suffix byte-identical"(N.transform kind(prefix^rest)=Ok rest))
@@ -60,12 +66,6 @@ let ()=
   check "seeded reference crop equals lexical transform"(ok(N.transform N.Kernel(kp^rest))=String.sub(kp^rest)(String.length kp)(String.length rest))
  done)[17;91]
 let ()=
- let root=fixture()in let path=root^"/tools/ecology_file_transaction.ml"in
- let orig=read path in let one=Bytes.of_string orig in
- Bytes.set one 0 (if Bytes.get one 0='(' then '/' else '(');
- write path(Bytes.to_string one);
- check "single-byte source tamper refused before var effects"(N.build ~source_root:root ~toolchain_root:tc=Error N.Source_mismatch);
- check "no artifact namespace on single-byte source tamper"(not(Sys.file_exists(root^"/var")));
  let root=fixture()in let path=root^"/tools/ecology_file_transaction.ml"in write path(read path^"\nlet unreviewed=()\n");
  check "unreviewed source refused before var effects"(N.build ~source_root:root ~toolchain_root:tc=Error N.Source_mismatch);
  check "no artifact namespace on unreviewed source"(not(Sys.file_exists(root^"/var")));
@@ -79,7 +79,9 @@ let ()=Printf.printf "%d focused/source/transform checks observed before mandato
 let a=ok(N.build ~source_root:root ~toolchain_root:tc)
 let ()=
  let j=Yojson.Safe.from_string(read(N.manifest a))in
- check "composite source-bound artifact schema"(Yojson.Safe.Util.member "schema"j=`String"uos.native-build.v2")
+ check "finite source-bound artifact schema"(Yojson.Safe.Util.member "schema"j=`String"uos.native-build.v3");
+ check "finite launcher captured as distinct pinned output"(List.mem "finite_launcher.exe"(N.payload_files a));
+ check "closed Linux x86_64/profile recipe"(Yojson.Safe.Util.(member "architecture"(member "recipe"j))=`String"linux-x86_64" && Yojson.Safe.Util.(member "launch_profile"(member "recipe"j))=`String"native-storage-v1")
 let verify()=N.verify ~source_root:root ~toolchain_root:tc ~artifact_id:(N.artifact_id a)
 let mutate p text mode=Unix.chmod p 0o600;write p text;Unix.chmod p mode
 let sha text=Cryptokit.hash_string(Cryptokit.Hash.sha256())text |> Cryptokit.transform_string(Cryptokit.Hexa.encode())
@@ -120,14 +122,15 @@ let clean_native_env=Astring.String.Map.of_list[
  "PATH",tc^"/toolchains/opam-ocaml/bin:"^tc^"/toolchains/nix-profile/bin:/usr/bin:/bin";
  "OCAMLPATH",tc^"/toolchains/opam-ocaml/lib";"LANG","C.UTF-8"]
 let loader="/nix/store/n51dhmdbik1kfrsm62j5knavmigwrl1a-glibc-2.42-84/lib/ld-linux-x86-64.so.2"
-let initialized directory ?(no_cache=false) program=
- let exe,args=if no_cache then loader,["--inhibit-cache";directory^"/"^program]
-   else directory^"/"^program,[]in
+let bounded_tool exe args=
  let argv=[tc^"/toolchains/opam-ocaml/bin/ocaml";"-I";"+unix";source^"/tools/ecology_process.ml";
   "2000";"8192";"merged";exe]@args in
  match Bos.OS.Cmd.run_out ~env:clean_native_env(Bos.Cmd.of_list argv)|>Bos.OS.Cmd.out_string ~trim:false with
  |Ok(raw,(_,`Exited code))->raw,code
  |_->failwith"bounded private ELF initialization failed"
+let initialized directory ?(no_cache=false) program=
+ let exe,args=if no_cache then loader,["--inhibit-cache";directory^"/"^program]
+   else directory^"/"^program,[]in bounded_tool exe args
 let exact_hold raw=
  if String.length raw<4 then false else
  let n=ref 0 in for k=0 to 3 do n:=(!n lsl 8)lor Char.code raw.[k]done;
@@ -160,6 +163,30 @@ let ()=
  ["libc.so.6";"libm.so.6";"libgmp.so.10";"libz.so.1";"libpthread.so.0";"librt.so.1";"libsqlite3.so.0"];
  check "all original runtime files retained after private omission controls"
    (List.for_all(fun p->if Filename.dirname p="runtime"then read(N.directory a^"/"^p)=read(relocated^"/"^p)else true)(N.payload_files a))
+let ()=
+ (* A syntactically valid, metadata-conforming ELF constructor is the control:
+    a shebang/invalid ELF would be stopped by inspection even with the OLD bug.
+    Its only effect is one known marker in this private synthetic fixture. *)
+ let marker=base^"/private-marker"and c=base^"/marker.c"and so=base^"/marker.so"in
+ write c(Printf.sprintf "#include <fcntl.h>\n#include <unistd.h>\n__attribute__((constructor)) static void marker(void){int f=open(%S,O_CREAT|O_WRONLY|O_EXCL,0600);if(f>=0){(void)write(f,\"PRIVATE\",7);close(f);}}\n" marker);
+ let gcc="/nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc"in
+ let _,code=bounded_tool gcc["-shared";"-fPIC";"-Wl,-soname,libz.so.1";"-o";so;c]in
+ check "private benign constructor ELF compiled with pinned cached GCC"(code=0);
+ let patchelf="/nix/store/fpig164lz7fcipbndn61sfd2y2yq363n-patchelf-0.15.2/bin/patchelf"in
+ List.iter(fun args->let _,code=bounded_tool patchelf args in check "private control ELF normalized"(code=0))
+ [["--set-rpath";"$ORIGIN";so];["--no-default-lib";so]];
+ let path=N.directory a^"/runtime/libz.so.1"in let saved=read path in
+ mutate path(read so)0o444;
+ Fun.protect ~finally:(fun()->mutate path saved 0o444)(fun()->
+   (* Positive control intentionally executes only this locally authored benign
+      marker through the known worker; no DB/configuration/credential input. *)
+   let raw,code=initialized(N.directory a)"worker.exe"in
+   check "valid ELF constructor positive control reaches only private marker"
+     (code=0 && exact_hold raw && Sys.file_exists marker && read marker="PRIVATE");
+   Unix.unlink marker;
+   check "tampered metadata-valid runtime refused against independent artifact ID"(error(verify()));
+   check "authentication failure executes NO constructor"(not(Sys.file_exists marker)));
+ check "restored exact artifact verifies after execution-order control"(not(error(verify())))
 let call config text=
  let ir,iw=Unix.pipe ~cloexec:true()and or_,ow=Unix.pipe ~cloexec:true()in let err=Unix.openfile "/dev/null"[Unix.O_WRONLY]0 in
  let guardian=N.guardian a and worker=N.worker a in

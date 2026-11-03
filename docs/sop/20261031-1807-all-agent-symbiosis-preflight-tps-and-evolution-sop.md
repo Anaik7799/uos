@@ -168,3 +168,22 @@ EV93 ceiling; EV94..109 / ADR071..086 NOT_ADMITTED. No new EV numbers. Source gu
 [Previous operations manual](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261001-1117-uos-agent-symbiosis-operations.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Next execution plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20261031-1240-uos-open-items-fractal-design-implement-test-plan.md).
 
 UOS footer: development/process scope only; no production admission.
+
+
+## 20261101-0621 — MCP-first capability ontology and intent-controller work
+
+#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #km-triad #zero-muda
+
+**Status: isolated development draft / NOT_ADMITTED.** Apply this sequence to the four-agent ontology/controller slice:
+
+1. Keep the typed coordinates for runtime, provider, exact model, identity, capability, observation, authority and evidence distinct. Bind source/candidate, actor/session, Sa-plan task and freshness before treating an observation as applicable.
+2. Treat intent as a closed request description. It is not permission. Route required operations through authenticated MCP and Gleam/OTP; Sa-plan remains the sole task authority and effect-time identity/grant/lease/budget checks remain mandatory.
+3. Assign actual work and review under the current binding: Codex supervises/integrates; Pi executes eligible bounded slices; Claude reviews independently; AGY provides peer/design/sovereign review. Verify native identity and independence rather than relying on labels or relays.
+4. Use an operator-authorized direct provider call only for advisory review while the needed MCP review interface is not ready. The call itself is an external, potentially billable effect; the operator authorization covers that bounded review call only. Record model/provider, exact scope, response and usage status. It grants no separate authority to mutate tasks, perform other runtime effects, release, deploy or admit. Hold any requested task effect that lacks its MCP/fenced route, and migrate the review capability to MCP once available.
+5. Preserve UNKNOWN/STALE, counterevidence and unresolved cost. Unknown outcomes block blind retry; reconcile against the same operation/idempotency identity. Keep pressure testing marked **UNRUN** until it is performed and reviewed under an authorized scope.
+
+This addendum is process guidance and does not establish that MCP routes, native collectors, identities, mandatory effect gates, recovery, or all-agent service coverage are active. EV-93 remains the admitted ceiling; no new EV number or admission is created.
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+Apply the proposed [Lean model/code synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md) and [bounded coverage inventory — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0752-model-code-sync-sop-coverage-inventory.md) to agent/controller changes and applicable checks. This candidate cross-reference does not install authenticated MCP/Gleam enforcement, prove complete source-to-model refinement, or admit any capability. Unmapped or stale controller/effect paths remain `UNKNOWN`/`HOLD`; preserve the existing Sa-plan, runtime ownership and independent review boundaries. This note is proposed text in an isolated workspace and does not change live policy or runtime behavior.

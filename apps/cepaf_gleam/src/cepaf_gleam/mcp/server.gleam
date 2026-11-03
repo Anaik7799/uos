@@ -20,6 +20,7 @@ import cepaf_gleam/mcp/adapters/features
 import cepaf_gleam/mcp/adapters/knowledge
 import cepaf_gleam/mcp/adapters/planning_read
 import cepaf_gleam/mcp/adapters/planning_write
+import cepaf_gleam/mcp/adapters/recovery_control
 import cepaf_gleam/mcp/adapters/system_observation
 import cepaf_gleam/mcp/adapters/vault_metadata
 import cepaf_gleam/mcp/adapters/verification
@@ -293,6 +294,15 @@ fn dispatch_authenticated(
 ) -> #(Outcome, ServerBackends) {
   let tool_name = call.spec.name
   case call.spec.family {
+    "recovery_control_readiness" -> #(
+      recovery_control.observe(
+        backends.planning_read,
+        pool.ledger.candidate,
+        context.now_ms,
+        call.arguments,
+      ),
+      backends,
+    )
     "planning_read" -> #(
       planning_read.execute(backends.planning_read, tool_name, call.arguments),
       backends,
@@ -842,6 +852,12 @@ fn execute_available_tool(
     // Sa-Plan Durable Execution Tools (SC-JIDOKA-001, SC-SA-PLAN-001)
     "sa_plan_status" -> tool_sa_plan_status(id)
     "sa_plan_status_for" -> tool_sa_plan_status_for(id, raw_line)
+    "recovery_control_status" ->
+      tool_unavailable(
+        id,
+        "recovery_control_status",
+        "use the unified public MCP gateway; legacy dispatcher has no trusted readiness context",
+      )
     "feature_tracker_status" -> tool_feature_tracker_status(id, raw_line)
     "mcp_capability_inventory" -> tool_mcp_capability_inventory(id)
     "harness_system_feature_catalog" ->

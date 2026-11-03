@@ -1,5 +1,69 @@
 (library
  (name sa_plan)
  (public_name hermes_workspace.sa_plan)
+ (modules (:standard \ recovery_kernel recovery_port recovery_owner_journal recovery_owner_journal_port recovery_schema_migration recovery_schema_migration_v2 recovery_resource sqlite_main_mapping sqlite_bound_vfs))
  (libraries core digestif sqlite3 yojson)
  (preprocess (pps ppx_jane)))
+
+(library
+ (name recovery_schema_migration_v2)
+ (wrapped false)
+ (modules recovery_schema_migration_v2)
+ (libraries recovery_schema_migration yojson))
+
+(library
+ (name recovery_schema_migration)
+ (wrapped false)
+ (modules recovery_schema_migration)
+ (libraries yojson))
+
+(library
+ (name recovery_kernel)
+ (wrapped false)
+ (modules recovery_kernel)
+ (libraries digestif yojson mirage-crypto-ec unix mtime.clock ptime.clock))
+
+(executable
+ (name recovery_port)
+ (modules recovery_port)
+ (libraries recovery_kernel yojson))
+
+(library
+ (name recovery_owner_journal)
+ (wrapped false)
+ (modules recovery_owner_journal)
+ (libraries recovery_schema_migration core digestif yojson sqlite3 unix))
+
+(executable
+ (name recovery_owner_journal_port)
+ (modules recovery_owner_journal_port)
+ (libraries recovery_owner_journal))
+
+(library
+ (name recovery_resource)
+ (wrapped false)
+ (modules recovery_resource)
+ (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
+
+; No-effect SQL observation kernel only, never a BEAM NIF or task mutator.
+(library
+ (name sqlite_main_mapping)
+ (wrapped false)
+ (modules sqlite_main_mapping)
+ (libraries core digestif sqlite3 unix threads)
+ (foreign_stubs
+  (language c)
+  (names sqlite_main_mapping_stubs)
+  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
+ (c_library_flags -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -lsqlite3 -ldl))
+
+(library
+ (name sqlite_bound_vfs)
+ (wrapped false)
+ (modules sqlite_bound_vfs)
+ (libraries sqlite_main_mapping yojson unix)
+ (foreign_stubs
+  (language c)
+  (names sqlite_bound_vfs_stubs)
+  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
+ (c_library_flags -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib -lsqlite3 -ldl -lpthread))

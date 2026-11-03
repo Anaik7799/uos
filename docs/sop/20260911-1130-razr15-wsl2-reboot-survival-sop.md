@@ -166,3 +166,7 @@ To test full cold-boot survival:
 | `CHK-17-SOV` | Tracked in Sa-Plan under plan `uos/razr15-wsl2-reboot-survival` | **PASS** |
 | `CHK-18-JJ` | Standalone Jujutsu monorepo with 0 native Git mutations | **PASS** |
 
+
+## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
+
+For reboot/startup claims, bind the relevant configuration, service/process ownership, lifecycle invariants, recovery checks and actual boot/runtime identity to the exact candidate using the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). Unobserved startup or recovery behavior remains `UNKNOWN`/`HOLD`; this appendix neither runs nor authorizes reboot effects.
