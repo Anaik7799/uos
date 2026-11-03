@@ -632,6 +632,10 @@ pub fn bionic_token_twin_json() -> json.Json {
         ])
       }),
     ),
+    #(
+      "mcip_digital_twin",
+      core_bionic_token_twin.mcip_digital_twin_summary_json(),
+    ),
     #("admitted_ev_ceiling", json.int(core_evolution.admitted_ev_ceiling)),
     #("system_admitted", json.bool(False)),
     #("cockpit_url", json.string(cockpit_url)),

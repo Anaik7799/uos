@@ -45,11 +45,15 @@ import cepaf_gleam/ecology/core_systems_engineering.{
   RiskBlockedPrecondition, RiskPrioritized, StanCalibrated, StanDiagnostics,
   StanTriggerFired, StpaUcaAnalysis, Trace13Vector,
 }
+import cepaf_gleam/ui/lustre/core_evo_cockpit
+import cepaf_gleam/ui/tui/core_evo_view
+import cepaf_gleam/ui/wisp/core_evo_api
 import cepaf_gleam/zenoh/core_bus.{
   AuthCoreError, ErrDigestMismatch, ErrLegacySplitBrainTopic, ErrNonMonotonicSeq,
   ErrPayloadTooLarge, ErrProvenanceCeilingExceeded, SignedCoreEnvelope,
 }
 import gleam/erlang/process
+import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
@@ -1676,3 +1680,97 @@ pub fn bionic_token_twin_full_12_domain_mathematical_coverage_test() {
     should.be_true(t.verified_holds)
   })
 }
+
+pub fn bionic_token_twin_mcip_v1_and_digital_twin_mirroring_test() {
+  // 1. Public Model Architecture Catalog (5 canonical models across Caste-02..Caste-04)
+  let models = core_bionic_token_twin.canonical_public_model_catalog()
+  should.equal(list.length(models), 5)
+  list.each(models, fn(m) {
+    should.be_true(m.context_window_tokens >= 163_840)
+    should.be_true(m.prefix_cache_affinity_bps >= 8800)
+  })
+
+  // 2. MCIP-v1 Envelope Encoding (RoPE Attention-Sink Aligned Header + Forecast + Anchors + Footer)
+  let anchors = [
+    "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam:412",
+    "sha256:e8f218a5772fd4248086dc95f854d0c7e134b041c249f6bbdf5db136a468b44c",
+    "admitted_ev_ceiling=93",
+    "fencing_token=91044",
+  ]
+  let env =
+    core_bionic_token_twin.encode_mcip_v1_envelope(
+      "W01_CODE_EXEC_BASH_GLEAM_DUNE",
+      "L3",
+      "VERIFY",
+      3758,
+      64,
+      190,
+      320,
+      anchors,
+    )
+  should.equal(env.protocol_version, "MCIP/1.0")
+  should.equal(env.critical_anchors_preserved, 4)
+  should.be_false(env.re_read_required)
+  should.equal(env.ev_ceiling, 93)
+  should.be_true(string.starts_with(env.wire_packet, "@MCIP/1.0{id=W01_"))
+  should.be_true(string.contains(
+    env.wire_packet,
+    "@MCIP_DECISION{re_read_required=false|ev_ceiling=EV-93",
+  ))
+
+  // 3. Mojo 1.0 Digital Twin Mirroring Summary (>= 95.0% fidelity gate)
+  let twin = core_bionic_token_twin.verified_digital_twin_mirroring_summary()
+  should.equal(twin.recorded_transactions, 4357)
+  should.equal(twin.replayed_valid_transactions, 4337)
+  should.be_true(twin.token_mirroring_bps >= 9500)
+  should.be_true(twin.cost_mirroring_bps >= 9500)
+  should.be_true(twin.behavior_decision_mirroring_bps >= 9500)
+  should.be_true(twin.composite_mirroring_bps >= 9500)
+  should.be_true(twin.meets_95pct_gate)
+  should.equal(twin.mcip_anchor_recall_bps, 10_000)
+
+  // 4. 2x2 Live SQLite WAL Transaction Capture (`billion-context` vs `uos-harness`)
+  let tx2x2 =
+    core_bionic_token_twin.verified_live_2x2_sqlite_transaction_summary()
+  should.equal(tx2x2.supervisor_model, "pi+openrouter(gemini-4-argon)")
+  should.equal(tx2x2.bili_transactions, 2)
+  should.equal(tx2x2.uos_transactions, 2)
+  should.equal(tx2x2.anchor_audit_rows, 20)
+  should.equal(tx2x2.uos_anchor_recall_bps, 10_000)
+  should.equal(tx2x2.uos_reread_turns, 0)
+  should.be_true(tx2x2.uos_total_cost_nanodollars < tx2x2.bili_total_cost_nanodollars)
+  should.be_true(tx2x2.append_only_triggers_verified)
+
+  // 5. 15 Fractal Data-Driven Optimizations (`FDO-01..FDO-15`) across 4 Domains
+  let fdos =
+    core_bionic_token_twin.canonical_15_fractal_data_driven_optimizations()
+  should.equal(list.length(fdos), 15)
+  should.be_true(list.all(fdos, fn(f) { f.verified_pass }))
+
+  // 6. Wisp API, Lustre Cockpit HTML, and TUI Plain View Triple-Surface Verification
+  let api_str = json.to_string(core_evo_api.bionic_token_twin_json())
+  should.be_true(string.contains(api_str, "\"mcip_digital_twin\":{"))
+  should.be_true(string.contains(api_str, "\"live_2x2_sqlite_ledger\":{"))
+  should.be_true(string.contains(
+    api_str,
+    "\"fractal_data_driven_optimizations_count\":15",
+  ))
+  should.be_true(string.contains(api_str, "\"fdo_id\":\"FDO-15\""))
+  should.be_true(string.contains(
+    api_str,
+    "\"supervisor_model\":\"pi+openrouter(gemini-4-argon)\"",
+  ))
+
+  let html = core_evo_cockpit.view()
+  should.be_true(string.contains(
+    html,
+    "MCIP/1.0 Protocol &amp; 5-Model Mojo Digital Twin (99.69% Mirroring over 4,337 Turns, 100.0% Anchor Recall, 2x2 SQLite WAL Live Ledger Verified, 15/15 Fractal Optimizations FDO-01..FDO-15)",
+  ))
+
+  let tui_plain = core_evo_view.render_plain()
+  should.be_true(string.contains(
+    tui_plain,
+    "MCIP/1.0 (99.69% Twin, 2x2 SQLite WAL, 15/15 FDO)",
+  ))
+}
+

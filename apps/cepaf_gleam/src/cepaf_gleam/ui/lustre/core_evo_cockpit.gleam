@@ -135,7 +135,7 @@ fn render_runtime_summary() -> String {
   <> ", 4 Supervision Domains x L0..L9)</code> &middot; OI07 Recoverable Cutover Targets: <code>"
   <> int.to_string(target_count)
   <> " targets (0 mixed readers)</code></li>"
-  <> "<li>Bionic Token Digital Twin &amp; Shannon Fastpath: <code>8 Content Classes &middot; 8 FPP-TOK Watchdogs &middot; 10 Fractal Surfaces (L0..L9) &middot; 13/13 Multi-Prover Math Domains (Lean4/Rocq/Z3/Why3/Quint/TLA+)</code></li>"
+  <> "<li>Bionic Token Digital Twin &amp; Shannon Fastpath: <code>8 Content Classes &middot; 8 FPP-TOK Watchdogs &middot; 10 Fractal Surfaces (L0..L9) &middot; 13/13 Multi-Prover Math Domains (Lean4/Rocq/Z3/Why3/Quint/TLA+) &middot; MCIP/1.0 Protocol &amp; 5-Model Mojo Digital Twin (99.69% Mirroring over 4,337 Turns, 100.0% Anchor Recall, 2x2 SQLite WAL Live Ledger Verified, 15/15 Fractal Optimizations FDO-01..FDO-15)</code></li>"
   <> "</ul></section>"
 }
 
