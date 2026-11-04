@@ -800,12 +800,36 @@ let scan_knowledge_transclusions root_dir =
   let wiki_exists id = note_exists wiki_dir id in
   let zk_exists id = note_exists zk_dir id || note_exists (Filename.concat zk_dir "adr") id in
 
+  (* SC-KM-TRIAD-001: a transclusion token quoted inside Markdown code is an
+     EXAMPLE, not a live link. Strip inline code spans and fenced blocks before
+     scanning, so prose naming a token is not counted as a broken transclusion. *)
+  let strip_code_spans s =
+    let n = String.length s in
+    let b = Buffer.create n in
+    let rec go i =
+      if i >= n then ()
+      else if s.[i] = Char.chr 96 then (
+        match String.index_from_opt s (i + 1) (Char.chr 96) with
+        | Some j -> go (j + 1)
+        | None -> Buffer.add_char b s.[i]; go (i + 1)
+      )
+      else (Buffer.add_char b s.[i]; go (i + 1))
+    in
+    go 0;
+    Buffer.contents b
+  in
+
   let scan_md_file full =
     try
       let ic = open_in full in
+      let in_fence = ref false in
       (try
         while true do
-          let line = input_line ic in
+          let raw = input_line ic in
+          let trimmed = String.trim raw in
+          let is_fence = String.length trimmed >= 3 && String.sub trimmed 0 3 = String.make 3 (Char.chr 96) in
+          if is_fence then in_fence := not !in_fence;
+          let line = if is_fence then "" else strip_code_spans raw in
           (* Extract [[wiki:ID]] *)
           let rec parse_prefix prefix is_wiki pos =
             let plen = String.length prefix in

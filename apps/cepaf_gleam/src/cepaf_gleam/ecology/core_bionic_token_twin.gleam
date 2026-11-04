@@ -1458,15 +1458,139 @@ pub fn canonical_15_fractal_data_driven_optimizations() -> List(
   ]
 }
 
+/// 1x1 Bijective Lean 4 Model Profile for Per-Harness Token, Byte, Cost & Intelligent Model-Interaction Reduction
+pub type HolonicHiveHarnessTokenCostProfile {
+  HolonicHiveHarnessTokenCostProfile(
+    harness_id: String,
+    holonic_profile_id: String,
+    model_tier: String,
+    legacy_startup_bytes: Int,
+    bionic_startup_bytes: Int,
+    legacy_14_workload_bytes: Int,
+    bionic_14_workload_bytes: Int,
+    legacy_reads_per_14_workloads: Int,
+    bionic_reads_per_14_workloads: Int,
+    legacy_session_tokens: Int,
+    bionic_session_tokens: Int,
+    legacy_cost_micro_usd: Int,
+    bionic_cost_micro_usd: Int,
+    tier0_native_offload_bps: Int,
+    mcip_anchor_recall_bps: Int,
+  )
+}
+
+/// Canonical 5-Harness Token, Byte, Cost & Intelligent Model Routing Profiles
+/// 1x1 aligned with `formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean`
+pub fn canonical_5_harness_token_cost_profiles() -> List(
+  HolonicHiveHarnessTokenCostProfile,
+) {
+  [
+    HolonicHiveHarnessTokenCostProfile(
+      harness_id: "HiveCaste01_AGY_HolonicQueenConductor",
+      holonic_profile_id: "BIONIC-TOK-COST-CASTE01-AGY",
+      model_tier: "Gemini-3.1-Pro (QueenConductor -> Tier-0/Swarm Delegation)",
+      legacy_startup_bytes: 98_420,
+      bionic_startup_bytes: 11_840,
+      legacy_14_workload_bytes: 998_550,
+      bionic_14_workload_bytes: 22_571,
+      legacy_reads_per_14_workloads: 44,
+      bionic_reads_per_14_workloads: 14,
+      legacy_session_tokens: 274_242,
+      bionic_session_tokens: 8602,
+      legacy_cost_micro_usd: 548_484,
+      bionic_cost_micro_usd: 17_204,
+      tier0_native_offload_bps: 9450,
+      mcip_anchor_recall_bps: 10_000,
+    ),
+    HolonicHiveHarnessTokenCostProfile(
+      harness_id: "HiveCaste02_PiArgon_BionicArchitectBuilder",
+      holonic_profile_id: "BIONIC-TOK-COST-CASTE02-PI-ARGON",
+      model_tier: "Pi-1.4.0 + Argon Supervisor -> Pi+DeepSeek/Gemini Workers",
+      legacy_startup_bytes: 118_650,
+      bionic_startup_bytes: 8420,
+      legacy_14_workload_bytes: 998_550,
+      bionic_14_workload_bytes: 22_571,
+      legacy_reads_per_14_workloads: 44,
+      bionic_reads_per_14_workloads: 14,
+      legacy_session_tokens: 279_300,
+      bionic_session_tokens: 7747,
+      legacy_cost_micro_usd: 418_950,
+      bionic_cost_micro_usd: 3873,
+      tier0_native_offload_bps: 9520,
+      mcip_anchor_recall_bps: 10_000,
+    ),
+    HolonicHiveHarnessTokenCostProfile(
+      harness_id: "HiveCaste03_Codex_FppSovereignSentinel",
+      holonic_profile_id: "BIONIC-TOK-COST-CASTE03-CODEX",
+      model_tier: "codex-cli-0.166.0 Read-Only Sovereign Sentinel",
+      legacy_startup_bytes: 105_800,
+      bionic_startup_bytes: 16_450,
+      legacy_14_workload_bytes: 998_550,
+      bionic_14_workload_bytes: 22_571,
+      legacy_reads_per_14_workloads: 44,
+      bionic_reads_per_14_workloads: 14,
+      legacy_session_tokens: 276_087,
+      bionic_session_tokens: 9755,
+      legacy_cost_micro_usd: 414_130,
+      bionic_cost_micro_usd: 14_632,
+      tier0_native_offload_bps: 9380,
+      mcip_anchor_recall_bps: 10_000,
+    ),
+    HolonicHiveHarnessTokenCostProfile(
+      harness_id: "HiveCaste04_Claude_HolonicFormalScholar",
+      holonic_profile_id: "BIONIC-TOK-COST-CASTE04-CLAUDE",
+      model_tier: "Claude-Code-2.1.317 Formalist + Lean4/Z3/Gospel Offload",
+      legacy_startup_bytes: 101_240,
+      bionic_startup_bytes: 13_920,
+      legacy_14_workload_bytes: 998_550,
+      bionic_14_workload_bytes: 22_571,
+      legacy_reads_per_14_workloads: 44,
+      bionic_reads_per_14_workloads: 14,
+      legacy_session_tokens: 274_947,
+      bionic_session_tokens: 9122,
+      legacy_cost_micro_usd: 824_841,
+      bionic_cost_micro_usd: 27_366,
+      tier0_native_offload_bps: 9600,
+      mcip_anchor_recall_bps: 10_000,
+    ),
+    HolonicHiveHarnessTokenCostProfile(
+      harness_id: "HiveCaste05_DeepSeekDSH_BionicWorkerSwarm",
+      holonic_profile_id: "BIONIC-TOK-COST-CASTE05-DEEPSEEK-DSH",
+      model_tier: "DSH-v3.2 Zero-Muda 8-Flag Worker Swarm",
+      legacy_startup_bytes: 94_300,
+      bionic_startup_bytes: 11_200,
+      legacy_14_workload_bytes: 998_550,
+      bionic_14_workload_bytes: 22_571,
+      legacy_reads_per_14_workloads: 44,
+      bionic_reads_per_14_workloads: 14,
+      legacy_session_tokens: 273_212,
+      bionic_session_tokens: 8442,
+      legacy_cost_micro_usd: 38_249,
+      bionic_cost_micro_usd: 1181,
+      tier0_native_offload_bps: 9650,
+      mcip_anchor_recall_bps: 10_000,
+    ),
+  ]
+}
+
 /// Render JSON summary of MCIP-v1, Public Model Catalog, Mojo Digital Twin fidelity, 2x2 SQLite WAL Ledger,
-/// and the 15 Fractal Data-Driven Optimizations (`FDO-01..FDO-15`).
+/// 5-Harness Token/Byte/Cost Optimization Profiles, and the 15 Fractal Data-Driven Optimizations (`FDO-01..FDO-15`).
 pub fn mcip_digital_twin_summary_json() -> json.Json {
   let twin = verified_digital_twin_mirroring_summary()
   let models = canonical_public_model_catalog()
   let tx2x2 = verified_live_2x2_sqlite_transaction_summary()
   let fdos = canonical_15_fractal_data_driven_optimizations()
+  let harness_profiles = canonical_5_harness_token_cost_profiles()
   json.object([
     #("protocol", json.string("MCIP/1.0")),
+    #(
+      "holonic_fpp_bionic_lean_twin",
+      json.string(
+        "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+      ),
+    ),
+    #("fractal_coverage_cells_10x10x17x13x5", json.int(110_500)),
+    #("digital_lean_twins_1x1_count", json.int(12)),
     #("workloads_verified", json.int(14)),
     #("fractal_pipeline_cells_verified", json.int(70)),
     #("fractal_data_driven_optimizations_count", json.int(list.length(fdos))),
@@ -1492,6 +1616,55 @@ pub fn mcip_digital_twin_summary_json() -> json.Json {
     #("replay_wall_time_us", json.int(twin.replay_wall_time_us)),
     #("bili_anchor_recall_bps", json.int(twin.bili_anchor_recall_bps)),
     #("mcip_anchor_recall_bps", json.int(twin.mcip_anchor_recall_bps)),
+    #(
+      "five_harness_token_byte_cost_summary",
+      json.object([
+        #("harnesses_count", json.int(list.length(harness_profiles))),
+        #("legacy_startup_bytes_total", json.int(518_410)),
+        #("bionic_startup_bytes_total", json.int(61_830)),
+        #("legacy_tokens_total_5_harnesses", json.int(1_377_788)),
+        #("bionic_tokens_total_5_harnesses", json.int(43_668)),
+        #("legacy_cost_micro_usd_total", json.int(2_244_654)),
+        #("bionic_cost_micro_usd_total", json.int(64_256)),
+        #(
+          "profiles",
+          json.array(harness_profiles, fn(p) {
+            json.object([
+              #("harness_id", json.string(p.harness_id)),
+              #("holonic_profile_id", json.string(p.holonic_profile_id)),
+              #("model_tier", json.string(p.model_tier)),
+              #("legacy_startup_bytes", json.int(p.legacy_startup_bytes)),
+              #("bionic_startup_bytes", json.int(p.bionic_startup_bytes)),
+              #(
+                "legacy_14_workload_bytes",
+                json.int(p.legacy_14_workload_bytes),
+              ),
+              #(
+                "bionic_14_workload_bytes",
+                json.int(p.bionic_14_workload_bytes),
+              ),
+              #(
+                "legacy_reads_per_14_workloads",
+                json.int(p.legacy_reads_per_14_workloads),
+              ),
+              #(
+                "bionic_reads_per_14_workloads",
+                json.int(p.bionic_reads_per_14_workloads),
+              ),
+              #("legacy_session_tokens", json.int(p.legacy_session_tokens)),
+              #("bionic_session_tokens", json.int(p.bionic_session_tokens)),
+              #("legacy_cost_micro_usd", json.int(p.legacy_cost_micro_usd)),
+              #("bionic_cost_micro_usd", json.int(p.bionic_cost_micro_usd)),
+              #(
+                "tier0_native_offload_bps",
+                json.int(p.tier0_native_offload_bps),
+              ),
+              #("mcip_anchor_recall_bps", json.int(p.mcip_anchor_recall_bps)),
+            ])
+          }),
+        ),
+      ]),
+    ),
     #(
       "live_2x2_sqlite_ledger",
       json.object([

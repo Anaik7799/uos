@@ -130,3 +130,46 @@ source = "uos_local_adapter"
 state = "development_guidance_runtime_adoption_unverified"
 sop = "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md"
 authority = "Advisory lifecycle binding; no production activation"
+
+[[superpower_binding]]
+name = "uos-caste04-lifecycle"
+source = "uos_local_adapter"
+state = "development_guidance_runtime_adoption_unverified"
+harness = "claude"
+caste = "Caste04ScholarKnowledge"
+profile = "CLAUDE.md"
+skill = "governance/agents/20261001-1118-skills/uos-caste04-claude-harness-profile/SKILL.md"
+lifecycle = ["brainstorming", "writing-plans", "executing-plans", "requesting-code-review", "receiving-code-review", "verification-before-completion"]
+adjunct = ["systematic-debugging", "dispatching-parallel-agents", "using-superpowers", "diagnosing-superpowers"]
+authority = "NONE"
+note = "Lifecycle entry/exit guidance pulled on demand; applies within existing user authorization and grants no effect authority"
+
+# >>> GENERATED-BLOCK caste04-superpowers (UosAgentSurfaceGenerator.lean) >>>
+
+[[superpower_binding]]
+name = "uos-caste04-lifecycle"
+source = "uos_local_adapter"
+harness = "claude"
+caste = "Caste04ScholarKnowledge"
+lifecycle = ["brainstorming", "writing-plans", "executing-plans", "requesting-code-review", "receiving-code-review", "verification-before-completion"]
+generated_by = "formal/lean/UosAgentSurfaceGenerator.lean"
+authority = "NONE"
+# <<< GENERATED-BLOCK caste04-superpowers <<<
+
+# ---------------------------------------------------------------------------
+# 20261105-1659 — Document & artifact publication workflow binding.
+# Records the lifecycle actually used to publish the monitoring/governance
+# twin's companion page. Reference-only; grants no effect authority, no
+# release authority and no admission. EV ceiling 93.
+# ---------------------------------------------------------------------------
+
+[[superpower]]
+name = "artifact-publication-lifecycle"
+source = "harness_binding"
+version = "1.0.0"
+state = "observed_executed_20261105_no_admission"
+path = "harness://artifact-tool + harness://skills/artifact-design"
+upstream_reference = "harness-provided; not vendored into UOS per full-symbiosis parity scope"
+authority = "quickstart -> design plan -> author .html -> publish; publication is not admission"
+binds = ["artifact-design", "artifact-capabilities", "artifact-diagramming", "dataviz"]
+notes = "SC-DIAGRAM-001 still requires ASCII and Mermaid semantic parity in any published diagram."

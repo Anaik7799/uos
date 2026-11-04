@@ -29,3 +29,17 @@ historical_authority_claim = "BEAM_OTP_SUPERVISED"
 installation = "UNPROBED"
 runtime_authority = "NONE"
 admission = "UNKNOWN"
+
+[[plugin_binding]]
+name = "uos-caste04-plugin-bindings"
+source = "uos"
+harness = "claude"
+caste = "Caste04ScholarKnowledge"
+state = "declared_packaging_adoption_unverified"
+plugins = ["plugins/superpowers", "plugins/uos-risk-prioritization", "plugins/uos-interface-quality", "plugins/uos-telegram-journeys"]
+profile = "CLAUDE.md"
+skill = "governance/agents/20261001-1118-skills/uos-caste04-claude-harness-profile/SKILL.md"
+installation = "NOT_ASSERTED"
+runtime_authority = "NONE"
+admission = "UNKNOWN"
+note = "Bindings recorded here instead of in always-on harness profile text; a plugin is policy packaging, not an installed runtime"

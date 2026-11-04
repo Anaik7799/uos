@@ -15,6 +15,7 @@
 ///
 /// STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-GLM-UI-006, SC-GLM-UI-007,
 ///        SC-SAFETY-001, SC-SAFETY-022, SC-SIL4-006
+import cepaf_gleam/ui/wisp/intelligence_api
 import cepaf_gleam/agui/sse as agui_sse
 import cepaf_gleam/agui/sse_stream
 import cepaf_gleam/agui/state as agui_state
@@ -364,6 +365,18 @@ fn route_internal(path: String) -> String {
       module_guard.unwrap(module_guard.guard_json(
         json.to_string(core_evo_api.bionic_token_twin_json()),
         "core-evo/bionic-token-twin",
+        "plane",
+      ))
+    "/api/v1/core-evo/systems-engineering" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.systems_engineering_json()),
+        "core-evo/systems-engineering",
+        "plane",
+      ))
+    "/api/v1/core-evo/dashboard" ->
+      module_guard.unwrap(module_guard.guard_json(
+        json.to_string(core_evo_api.dashboard_json()),
+        "core-evo/dashboard",
         "plane",
       ))
     "/api/v1/verification" | "/api/verification/status" ->
@@ -1012,17 +1025,38 @@ fn route_internal(path: String) -> String {
                               c3i_nif.knowledge_search(query)
                             }
                             False ->
-                              case string.starts_with(path, "/api/v1/ai/chat") {
+                              case string.starts_with(path, "/api/v1/ai/resolve") {
                                 True -> {
                                   let query = case string.split(path, "q=") {
                                     [_, q] ->
                                       string.replace(q, "%20", " ")
                                       |> string.replace("+", " ")
-                                    _ -> "status"
+                                    _ -> "local_resolve"
                                   }
-                                  ai_chat_response(query)
+                                  let res =
+                                    intelligence_api.resolve_local_first_json(
+                                      "wisp-req-" <> query,
+                                      "wisp-log-" <> query,
+                                      "tenant-wisp",
+                                      "L1",
+                                      query,
+                                      False,
+                                    )
+                                  json.to_string(res)
                                 }
-                                False -> not_found_json(path)
+                                False ->
+                                  case string.starts_with(path, "/api/v1/ai/chat") {
+                                    True -> {
+                                      let query = case string.split(path, "q=") {
+                                        [_, q] ->
+                                          string.replace(q, "%20", " ")
+                                          |> string.replace("+", " ")
+                                        _ -> "status"
+                                      }
+                                      ai_chat_response(query)
+                                    }
+                                    False -> not_found_json(path)
+                                  }
                               }
                           }
                       }

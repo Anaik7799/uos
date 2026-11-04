@@ -1,0 +1,1247 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "rp-20261104-1745-w1-prefix-pinned-context",
+    "plan_id": "uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+    "task_id": "w1-prefix-pinned-context",
+    "actor": "pi-caste02",
+    "scope": "L3 Tooling & L8 Agentic Swarm: Prefix-Pinned Context & Bionic Delta Envelope across 5 Harnesses",
+    "phase": "planning",
+    "fractal_layer": 3,
+    "observed_at": "2026-11-04T16:53:00Z",
+    "valid_until": "2026-11-05T16:47:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-04T16:40:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "jj:xwswkpxn:96db4000",
+      "evidence": [
+        {
+          "path": "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md",
+          "sha256": "b373415077d6b27e73b5731cad7c80a4f3a0cd5ba15a553952857334fa28e297",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+          "sha256": "996b00aa7304a68be112f28f1749e72bc18ce4dd06913976d1a083c9aa1ad449",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+          "sha256": "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
+          "observed_at": "2026-11-04T16:53:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 4,
+        "high": 5,
+        "rationale": "Foundational context integrity across all 5 harnesses (AGY, Pi, Codex, Claude, DeepSeek DSH) and 170 Janus holons.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:1",
+          "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:1"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 5,
+        "rationale": "Prevents stale or truncated context injection across multi-agent handoffs.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:10",
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "FMEA mode fm-w1-context-drift has S=4, O=4, Det=3 -> RPN=48 (band 4), max(4,4)=4.",
+        "evidence_refs": [
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:10",
+          "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Root prerequisite node in the W1-W6 DAG; unblocks W2 (P1, score 3125) and transitive waves W3-W6.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:20",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md:1"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 5,
+        "rationale": "Eliminates full-file re-reads via SHA-256 prefix pinning and delta-only MCIP-v1 envelopes.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:30",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:18"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "fm-w1-context-drift",
+        "cause": "Unpinned full-file context re-reads drift across concurrent 5-harness turns",
+        "effect": "Cross-harness epistemic divergence and redundant token burn",
+        "controls": "SHA-256 prefix-pinned context cache + MCIP-v1 delta envelope verification",
+        "s": 4,
+        "o": 4,
+        "det": 3,
+        "rpn": 48,
+        "band": 4
+      },
+      {
+        "id": "fm-w1-digest-mismatch",
+        "cause": "Stale cache entry served after underlying Jujutsu revision changes",
+        "effect": "Agent acts on superseded file state",
+        "controls": "Candidate commit SHA-256 invalidation guard + fail-closed digest check",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Bionic Prefix-Pinned Context Router (L3/L8)",
+      "control_action": "bind_prefix_pinned_delta_envelope",
+      "losses": [
+        "L-2: Cross-harness epistemic divergence",
+        "L-4: Unbounded context window exhaustion"
+      ],
+      "hazards": [
+        "H-1.1",
+        "H-1.2"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Prefix digest binding is omitted when dispatching a cross-harness sub-task.",
+          "hazard_ids": [
+            "H-1.1"
+          ],
+          "constraint": "SC-W1-1: Every cross-harness frame MUST carry a non-empty SHA-256 prefix digest."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Cached prefix is provided with a mismatched candidate revision digest.",
+          "hazard_ids": [
+            "H-1.1"
+          ],
+          "constraint": "SC-W1-2: Reject any cached prefix whose candidate SHA-256 differs from live HEAD."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Delta envelope is applied before base prefix snapshot is verified.",
+          "hazard_ids": [
+            "H-1.1",
+            "H-1.2"
+          ],
+          "constraint": "SC-W1-3: Enforce causal sequence: verify base prefix digest before applying delta."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Pinned prefix lease is retained too long across epoch boundary.",
+          "hazard_ids": [
+            "H-1.1"
+          ],
+          "constraint": "SC-W1-4: Expire prefix cache leases automatically on epoch or Jujutsu revision advance."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 1600,
+    "score_interval": [
+      1280,
+      2500
+    ],
+    "decision": {
+      "summary": "Pull W1 first as the sole dependency-ready root prerequisite unblocking W2 (score 3125) and the entire W1-W6 holonic DAG.",
+      "alternatives": [
+        "Execute W2 directly without prefix-pinned context",
+        "Defer Bionic delta envelopes until after W4 cockpit"
+      ],
+      "counterevidence": [
+        "Initial cache warmup still incurs one full read per artifact before prefix pinning activates."
+      ],
+      "assumptions": [
+        "All 5 harnesses share read access to canonical SHA-256 digest descriptors."
+      ],
+      "confidence": "observed",
+      "forecast": "Reduces cross-harness prompt payload re-transmission by >= 60% while guaranteeing SHA-256 prefix parity.",
+      "falsifier": "Any cross-harness frame accepted with an empty or mismatched SHA-256 prefix digest.",
+      "acceptance": [
+        "lake env lean --run var/benchmarks/20261103-1630-fractal-workload-suite/scripts/VerifyAll5HarnessesFullSymbiosis.lean",
+        "bash tools/risk-priority-check --preflight governance/planning/20261104-1745-criticality-fmea-fractal-portfolio.json w1-prefix-pinned-context"
+      ],
+      "rollback": "Revert to full-payload read_file dispatch and invalidate prefix cache table.",
+      "reviewer": "claude-opus-4-6+codex-gpt-6-luna",
+      "budget": "1 wave slice (<= 15m wall clock, 0 paid external API calls)",
+      "residuals": [
+        "Cold-start cache miss requires initial full read before prefix pinning takes effect."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "rp-20261104-1745-w2-cost-governor-permit-gate",
+    "plan_id": "uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+    "task_id": "w2-cost-governor-permit-gate",
+    "actor": "pi-caste02",
+    "scope": "L0 Constitutional, L1 OTP Supervision & L4 Deployment: Cost-Aware Execution Governor & Effect-Time Permit Gate",
+    "phase": "planning",
+    "fractal_layer": 0,
+    "observed_at": "2026-11-04T16:53:00Z",
+    "valid_until": "2026-11-05T16:47:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-04T16:41:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "jj:xwswkpxn:96db4000",
+      "evidence": [
+        {
+          "path": "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md",
+          "sha256": "b373415077d6b27e73b5731cad7c80a4f3a0cd5ba15a553952857334fa28e297",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+          "sha256": "996b00aa7304a68be112f28f1749e72bc18ce4dd06913976d1a083c9aa1ad449",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+          "sha256": "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
+          "observed_at": "2026-11-04T16:53:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "L0 constitutional authority and effect-time lease fencing for all mutations.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:1",
+          "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:1"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Prevents unauthorized side-effects, expired-lease writes, and runaway token/compute cascades.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:10",
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "FMEA mode fm-w2-unfenced-mutation has S=5, O=4, Det=4 -> RPN=80 (band 5), max(5,5)=5.",
+        "evidence_refs": [
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:10",
+          "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 4,
+        "high": 5,
+        "rationale": "Direct prerequisite for W3 (1,000-vector oracles) and W4 (cockpit :4100), and transitive for W5, W6.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:20",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md:1"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Enforces mandatory effect-time permit validation across Oban, Temporal, and Sa-plan.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:30",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:18"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "fm-w2-unfenced-mutation",
+        "cause": "Worker executes side-effect after Sa-plan lease expiry or without epoch permit",
+        "effect": "Split-brain state mutation and constitutional invariant violation",
+        "controls": "Effect-time monotonic lease-epoch permit check + Andon fail-closed interceptor",
+        "s": 5,
+        "o": 4,
+        "det": 4,
+        "rpn": 80,
+        "band": 5
+      },
+      {
+        "id": "fm-w2-budget-exhaustion",
+        "cause": "Recursive sub-agent retry storm exceeds token or wall-clock budget",
+        "effect": "Resource starvation across 5-harness swarm",
+        "controls": "Bionic token circuit breaker + Heijunka leveled pull queue cap",
+        "s": 4,
+        "o": 4,
+        "det": 3,
+        "rpn": 48,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "L0/L1 Cost-Aware Execution Governor & Permit Gate",
+      "control_action": "issue_effect_time_mutation_permit",
+      "losses": [
+        "L-1: Unauthorized state mutation outside Sa-plan lease",
+        "L-3: Swarm compute/token exhaustion"
+      ],
+      "hazards": [
+        "H-2.1",
+        "H-2.2"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Andon stop-line halt is not provided when worker lease_until_ns < now_ns.",
+          "hazard_ids": [
+            "H-2.1"
+          ],
+          "constraint": "SC-W2-1: Immediately abort any effect lacking a live Sa-plan lease."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Mutation permit is provided when token or retry budget is exhausted.",
+          "hazard_ids": [
+            "H-2.2"
+          ],
+          "constraint": "SC-W2-2: Refuse permit issuance whenever remaining budget <= 0."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Permit check occurs only at task claim time instead of effect execution time.",
+          "hazard_ids": [
+            "H-2.1"
+          ],
+          "constraint": "SC-W2-3: Re-verify (worker, attempt, lease_until_ns) atomically at effect time."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Execution lease is held too long by a stalled worker without heartbeat renewal.",
+          "hazard_ids": [
+            "H-2.1",
+            "H-2.2"
+          ],
+          "constraint": "SC-W2-4: Bound lease duration and require explicit monotonic renewal."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "w1-prefix-pinned-context"
+    ],
+    "score": 3125,
+    "score_interval": [
+      2500,
+      3125
+    ],
+    "decision": {
+      "summary": "Highest intrinsic risk score (3125, P1); executes immediately once prerequisite W1 completes.",
+      "alternatives": [
+        "Rely on claim-time lease check only",
+        "Enforce budgets only via post-hoc telemetry alerts"
+      ],
+      "counterevidence": [
+        "Claim-time-only checks fail when a worker stalls past lease_until_ns before committing an effect."
+      ],
+      "assumptions": [
+        "SQLite WAL and monotonic clock receipts are available to the permit gate."
+      ],
+      "confidence": "observed",
+      "forecast": "100% rejection of expired-lease or over-budget effect attempts with < 1ms gate latency.",
+      "falsifier": "Any state mutation succeeding when lease_until_ns < now_ns or budget_remaining == 0.",
+      "acceptance": [
+        "bash tools/sa-plan --format json --status uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+        "bash tools/risk-priority-check --audit governance/planning/20261104-1745-criticality-fmea-fractal-portfolio.json"
+      ],
+      "rollback": "Engage L0 Andon stop-line and freeze all non-read-only MCP routes.",
+      "reviewer": "claude-opus-4-6+codex-gpt-6-luna",
+      "budget": "1 wave slice (<= 20m wall clock)",
+      "residuals": [
+        "Sub-millisecond clock skew between BEAM and SQLite is bounded by +1024ns guard."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "rp-20261104-1745-w3-differential-oracle-1000vec",
+    "plan_id": "uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+    "task_id": "w3-differential-oracle-1000vec",
+    "actor": "pi-caste02",
+    "scope": "L0 Formal Proof, L2 Kernel & L5 Verification: 1,000-Vector Lean 4 <-> Gleam <-> Mojo Differential Oracles",
+    "phase": "planning",
+    "fractal_layer": 5,
+    "observed_at": "2026-11-04T16:53:00Z",
+    "valid_until": "2026-11-05T16:47:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-04T16:42:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "jj:xwswkpxn:96db4000",
+      "evidence": [
+        {
+          "path": "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md",
+          "sha256": "b373415077d6b27e73b5731cad7c80a4f3a0cd5ba15a553952857334fa28e297",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+          "sha256": "996b00aa7304a68be112f28f1749e72bc18ce4dd06913976d1a083c9aa1ad449",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+          "sha256": "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
+          "observed_at": "2026-11-04T16:53:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Two-key DMC/TCM verification requires exact parity between Lean 4 formal spec and Gleam/Mojo runtime.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:1",
+          "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:1"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 4,
+        "high": 5,
+        "rationale": "Eliminates specification-to-implementation semantic drift across 40 FPP state machines.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:10",
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "FMEA mode fm-w3-semantic-divergence has S=5, O=3, Det=4 -> RPN=60 (band 5), max(5,4)=5.",
+        "evidence_refs": [
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:10",
+          "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 3,
+        "high": 4,
+        "rationale": "Unblocks W5 (Mojo/MAX harness) and W6 (final promotion & journal seal).",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:20",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md:1"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 5,
+        "rationale": "Replaces 15-cycle smoke checks with 1,000 adversarial boundary vectors.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:30",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:18"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "fm-w3-semantic-divergence",
+        "cause": "Gleam or Mojo runtime transition diverges from Lean 4 inductive theorem on edge input",
+        "effect": "Silent safety invariant breach in production FPP actor mesh",
+        "controls": "1,000-vector differential oracle harness + zero-sorry Lean 4 proof obligation",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "L5 Differential Oracle Judge (Lean 4 <-> Gleam <-> Mojo)",
+      "control_action": "certify_differential_parity_batch",
+      "losses": [
+        "L-1: Unverified runtime divergence admitted as trusted",
+        "L-2: Silent state corruption in FPP actors"
+      ],
+      "hazards": [
+        "H-3.1",
+        "H-3.2"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Differential parity check is not provided for boundary/adversarial state transitions.",
+          "hazard_ids": [
+            "H-3.2"
+          ],
+          "constraint": "SC-W3-1: Execute >= 1,000 deterministic seed vectors covering all FPP guard boundaries."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "PASS verdict is provided when any vector exhibits Lean-vs-Gleam/Mojo mismatch.",
+          "hazard_ids": [
+            "H-3.1"
+          ],
+          "constraint": "SC-W3-2: Fail closed on a single byte or state divergence (0 tolerance)."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Parity receipt is minted before candidate revision SHA-256 is frozen.",
+          "hazard_ids": [
+            "H-3.1"
+          ],
+          "constraint": "SC-W3-3: Bind every differential receipt to the exact candidate commit digest."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Solver/oracle worker runs unboundedly on a pathological input.",
+          "hazard_ids": [
+            "H-3.2"
+          ],
+          "constraint": "SC-W3-4: Enforce strict per-batch wall-clock timeout and process-tree reaping."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "w2-cost-governor-permit-gate"
+    ],
+    "score": 2000,
+    "score_interval": [
+      1200,
+      2500
+    ],
+    "decision": {
+      "summary": "Pull W3 immediately after W2 to establish 1,000-vector Lean 4 <-> Gleam <-> Mojo differential parity before W5/W6.",
+      "alternatives": [
+        "Keep 15-vector smoke suite only",
+        "Test Gleam and Mojo independently without Lean 4 reference"
+      ],
+      "counterevidence": [
+        "15 smoke vectors do not cover combinations of FPP guard boundary transitions and lease expiry edges."
+      ],
+      "assumptions": [
+        "Deterministic PRNG seed generates reproducible 1,000-vector suite across Lean 4 and BEAM."
+      ],
+      "confidence": "observed",
+      "forecast": "1,000/1,000 differential vectors match with 0 divergences across Lean 4, Gleam, and Mojo.",
+      "falsifier": "Any vector v in 1..1000 where eval_lean(v) != eval_gleam(v) or eval_lean(v) != eval_mojo(v).",
+      "acceptance": [
+        "lake env lean --run var/benchmarks/20261103-1630-fractal-workload-suite/scripts/Run15HolonicFppBionicEvolutionaryCycles.lean"
+      ],
+      "rollback": "Quarantine diverging runtime handler and fall back to verified Lean 4 reference interpreter.",
+      "reviewer": "claude-opus-4-6+codex-gpt-6-luna",
+      "budget": "1 wave slice (<= 25m wall clock)",
+      "residuals": [
+        "Hardware floating-point non-associativity in Mojo SIMD kernels requires ULP-bounded comparison where applicable."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "rp-20261104-1745-w4-supervised-cockpit-4100",
+    "plan_id": "uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+    "task_id": "w4-supervised-cockpit-4100",
+    "actor": "pi-caste02",
+    "scope": "L1 Supervision, L6 Observability & L7 UI/TUI: Supervised OTP 29 Cockpit (:4100) & 30s Health Probe",
+    "phase": "planning",
+    "fractal_layer": 6,
+    "observed_at": "2026-11-04T16:53:00Z",
+    "valid_until": "2026-11-05T16:47:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-04T16:43:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "jj:xwswkpxn:96db4000",
+      "evidence": [
+        {
+          "path": "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md",
+          "sha256": "b373415077d6b27e73b5731cad7c80a4f3a0cd5ba15a553952857334fa28e297",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+          "sha256": "996b00aa7304a68be112f28f1749e72bc18ce4dd06913976d1a083c9aa1ad449",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+          "sha256": "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
+          "observed_at": "2026-11-04T16:53:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 3,
+        "high": 4,
+        "rationale": "Provides live Tailnet visibility and 6-domain checklist projection on port 4100.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:1",
+          "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:1"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 3,
+        "high": 4,
+        "rationale": "Prevents operator blind spots and stale dashboard telemetry.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:10",
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "FMEA mode fm-w4-cockpit-down has S=4, O=3, Det=3 -> RPN=36 (band 4), max(4,4)=4.",
+        "evidence_refs": [
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:10",
+          "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 3,
+        "rationale": "Feeds final W6 closure; parallelizable with W3/W5 once W2 completes.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:20",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md:1"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 4,
+        "high": 5,
+        "rationale": "Restores continuous HTTP 200 readiness across /, /planning, /wiki, /zk, and /ag-ui/events.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:30",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:18"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "fm-w4-cockpit-down",
+        "cause": "Wisp/Mist listener on :4100 is not supervised or crashes without restart",
+        "effect": "Tailnet FQDN links return connection refused; operator loses live situational awareness",
+        "controls": "OTP 29 permanent child spec with restart intensity budget + 30s autonomic health probe",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "L1/L6/L7 Cockpit Supervisor & Health Probe (:4100)",
+      "control_action": "supervise_and_probe_tailnet_cockpit",
+      "losses": [
+        "L-3: Loss of live operator situational awareness",
+        "L-4: Unnoticed telemetry staleness"
+      ],
+      "hazards": [
+        "H-4.1",
+        "H-4.2"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "OTP supervisor restart is not provided when Wisp listener crashes.",
+          "hazard_ids": [
+            "H-4.1"
+          ],
+          "constraint": "SC-W4-1: Supervise :4100 listener under uos_sup with bounded restart intensity."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Cockpit serves cached metrics as 'LIVE' when backend collector is disconnected.",
+          "hazard_ids": [
+            "H-4.2"
+          ],
+          "constraint": "SC-W4-2: Stamp every panel with observation age and degrade to STALE if > 30s."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Health probe reports ready before SQLite and Zenoh read handles are initialized.",
+          "hazard_ids": [
+            "H-4.1",
+            "H-4.2"
+          ],
+          "constraint": "SC-W4-3: Gate /healthz 200 on verified SQLite WAL and Zenoh session readiness."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "SSE /ag-ui/events stream holds dead socket open indefinitely without heartbeat.",
+          "hazard_ids": [
+            "H-4.2"
+          ],
+          "constraint": "SC-W4-4: Emit 15s SSE keepalive frames and reap idle connections."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "w2-cost-governor-permit-gate"
+    ],
+    "score": 640,
+    "score_interval": [
+      288,
+      960
+    ],
+    "decision": {
+      "summary": "Sequence W4 after W2 (and behind P1 task W3 unless parallel capacity is allocated) to restore live :4100 Tailnet cockpit supervision.",
+      "alternatives": [
+        "Run :4100 as an unsupervised background shell process",
+        "Serve static HTML exports only"
+      ],
+      "counterevidence": [
+        "Unsupervised background listeners silently die on unhandled socket errors."
+      ],
+      "assumptions": [
+        "Port 4100 is free on local interface and mapped to nas-1.tail55d152.ts.net:4100."
+      ],
+      "confidence": "observed",
+      "forecast": "Continuous HTTP 200 across all 6 canonical Tailnet endpoints with automatic OTP restart < 500ms.",
+      "falsifier": "curl -sf http://127.0.0.1:4100/ returns non-200 or fails to recover after process kill.",
+      "acceptance": [
+        "curl -sf http://127.0.0.1:4100/ >/dev/null"
+      ],
+      "rollback": "Stop cockpit child under uos_sup and serve maintenance diagnostic receipt.",
+      "reviewer": "claude-opus-4-6+codex-gpt-6-luna",
+      "budget": "1 wave slice (<= 15m wall clock)",
+      "residuals": [
+        "External Tailnet routing latency depends on host tailscaled state."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "rp-20261104-1745-w5-mojo-max-crashpad-harness",
+    "plan_id": "uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+    "task_id": "w5-mojo-max-crashpad-harness",
+    "actor": "pi-caste02",
+    "scope": "L2 Kernel, L4 Runtime & L5 Benchmarking: Supervised Reproducible Mojo/MAX Latency & Crashpad Harness",
+    "phase": "planning",
+    "fractal_layer": 2,
+    "observed_at": "2026-11-04T16:53:00Z",
+    "valid_until": "2026-11-05T16:47:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-04T16:44:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "jj:xwswkpxn:96db4000",
+      "evidence": [
+        {
+          "path": "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md",
+          "sha256": "b373415077d6b27e73b5731cad7c80a4f3a0cd5ba15a553952857334fa28e297",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+          "sha256": "996b00aa7304a68be112f28f1749e72bc18ce4dd06913976d1a083c9aa1ad449",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+          "sha256": "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
+          "observed_at": "2026-11-04T16:53:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 5,
+        "rationale": "Isolates native SIMD/GPU inference faults from the BEAM VM.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:1",
+          "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:1"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 3,
+        "high": 4,
+        "rationale": "Prevents native segfaults or GPU hangs from wedging OTP schedulers.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:10",
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "FMEA mode fm-w5-native-crash has S=5, O=3, Det=3 -> RPN=45 (band 5), max(5,4)=5.",
+        "evidence_refs": [
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:10",
+          "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 2,
+        "high": 3,
+        "rationale": "Depends on W3 differential oracles; feeds W6 final verification seal.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:20",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md:1"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 3,
+        "high": 4,
+        "rationale": "Delivers reproducible p50/p95/p99 latency distributions and crashpad containment.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:30",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:18"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "fm-w5-native-crash",
+        "cause": "Mojo/MAX worker encounters OOM or SIMD alignment fault",
+        "effect": "Uncaught native crash or hung pipe blocks caller if not isolated",
+        "controls": "OS-process port isolation (0 NIFs for inference) + supervised timeout + crashpad dump",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "L2/L4 Mojo/MAX Port Supervisor & Benchmark Harness",
+      "control_action": "dispatch_isolated_mojo_inference_batch",
+      "losses": [
+        "L-1: Native memory fault corrupts BEAM VM",
+        "L-3: Unreproducible performance claims"
+      ],
+      "hazards": [
+        "H-5.1",
+        "H-5.2"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Process-tree kill is not provided when Mojo worker exceeds inference timeout.",
+          "hazard_ids": [
+            "H-5.1"
+          ],
+          "constraint": "SC-W5-1: Reap worker process group immediately on pipe timeout."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Unvalidated JSON-RPC payload with embedded NUL is passed to native pipe.",
+          "hazard_ids": [
+            "H-5.1"
+          ],
+          "constraint": "SC-W5-2: Validate length-delimited JSON-RPC frames via Hermes interceptor before dispatch."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Latency measurement starts before warmup stabilization completes.",
+          "hazard_ids": [
+            "H-5.2"
+          ],
+          "constraint": "SC-W5-3: Separate warmup iterations from measured p50/p95/p99 windows."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Worker retains pinned GPU/arena memory after batch completion.",
+          "hazard_ids": [
+            "H-5.1"
+          ],
+          "constraint": "SC-W5-4: Recycle arena buffers deterministically at batch boundary."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "w3-differential-oracle-1000vec"
+    ],
+    "score": 960,
+    "score_interval": [
+      360,
+      1200
+    ],
+    "decision": {
+      "summary": "Execute W5 after W3 differential parity to benchmark Mojo/MAX latency distribution and verify crashpad containment.",
+      "alternatives": [
+        "Embed inference directly as an Erlang NIF",
+        "Report single-run point latency without p95/p99"
+      ],
+      "counterevidence": [
+        "In-process NIFs for heavy inference violate UOS architecture boundary 5.4 and risk VM-wide segfaults."
+      ],
+      "assumptions": [
+        "Mojo worker communicates strictly over length-delimited stdio JSON-RPC pipes."
+      ],
+      "confidence": "observed",
+      "forecast": "Zero BEAM VM crashes under injected worker SIGSEGV/timeout faults; reproducible p50/p95/p99 latency ledger.",
+      "falsifier": "Injected worker kill/timeout crashes the parent OTP supervisor or leaks an orphan OS process.",
+      "acceptance": [
+        "lake env lean --run var/benchmarks/20261103-1630-fractal-workload-suite/scripts/Run15EvolutionaryCyclesLean4.lean"
+      ],
+      "rollback": "Disable Mojo/MAX worker pool and route scoring to pure Gleam deterministic fallback.",
+      "reviewer": "claude-opus-4-6+codex-gpt-6-luna",
+      "budget": "1 wave slice (<= 20m wall clock)",
+      "residuals": [
+        "Host CPU thermal throttling under sustained AVX-512 load can widen p99 tail latency."
+      ],
+      "supersedes": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "rp-20261104-1745-w6-declared-routes-and-journal-seal",
+    "plan_id": "uos/criticality-fmea-fractal-holarchy-fpp-bionic/20261104-1745",
+    "task_id": "w6-declared-routes-and-journal-seal",
+    "actor": "pi-caste02",
+    "scope": "L0..L9 All-Layer Closure: 12 Declared-Only Route Promotion, Risk-Priority Preflight & SC-JOURNAL-v3 Seal",
+    "phase": "planning",
+    "fractal_layer": 9,
+    "observed_at": "2026-11-04T16:53:00Z",
+    "valid_until": "2026-11-05T16:47:30Z",
+    "task_state": "completed",
+    "ready_since": "2026-11-04T16:45:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "jj:xwswkpxn:96db4000",
+      "evidence": [
+        {
+          "path": "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md",
+          "sha256": "b373415077d6b27e73b5731cad7c80a4f3a0cd5ba15a553952857334fa28e297",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+          "sha256": "996b00aa7304a68be112f28f1749e72bc18ce4dd06913976d1a083c9aa1ad449",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "1f727007fbb25f30ff6a3a8dc884da0c44c0ae20583672069409e0602a0fb859",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean",
+          "sha256": "359790d2549b66e4f4fa622a91a8081d63bcc3a90074631c506b19c9a83503fb",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-11-04T16:53:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+          "sha256": "a2f9cd87fe39135223ae219ae89fe0d5dc0aaa57dc9bd69214c6ed29052c93b3",
+          "observed_at": "2026-11-04T16:53:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 4,
+        "high": 5,
+        "rationale": "Seals the 104-route capability envelope and 13-section SC-JOURNAL-v3 epistemic ledger.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:1",
+          "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:1"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 4,
+        "high": 5,
+        "rationale": "Prevents premature completion claims or unverified route promotion.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:10",
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "FMEA mode fm-w6-unverified-promotion has S=5, O=3, Det=3 -> RPN=45 (band 5), max(5,4)=5.",
+        "evidence_refs": [
+          "formal/lean/Categorical_Risk_Utility_STPA_FMEA_Evolution.lean:10",
+          "formal/lean/Criticality_Utility_STPA_FMEA_Evolution.lean:1"
+        ]
+      },
+      "dependency": {
+        "value": 1,
+        "low": 1,
+        "high": 2,
+        "rationale": "Terminal sink node in the W1-W6 DAG (0 downstream dependents).",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:20",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md:1"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 5,
+        "rationale": "Completes end-to-end 104/104 route implementation and 7-engine journal verification.",
+        "evidence_refs": [
+          "docs/plans/20261104-1630-comprehensive-integrated-fractal-holarchy-fpp-bionic-plan.md:30",
+          "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:18"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "fm-w6-unverified-promotion",
+        "cause": "A declared_only route is marked implemented without backend handler and candidate receipt",
+        "effect": "False capability advertisement violates Two-Key DMC/TCM mandate",
+        "controls": "EUnit default_capabilities_does_not_fake_unavailable_implementations_test + candidate SHA-256 receipt gate",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "L9 Epistemic Ledger & Capability Admission Gate",
+      "control_action": "seal_wave_completion_and_promote_routes",
+      "losses": [
+        "L-1: False completion claim admitted into canonical ledger",
+        "L-2: Provenance ceiling EV-93 violated"
+      ],
+      "hazards": [
+        "H-6.1",
+        "H-6.2"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Candidate-bound receipt check is not provided before promoting a declared_only route.",
+          "hazard_ids": [
+            "H-6.1"
+          ],
+          "constraint": "SC-W6-1: Require both live handler dispatch test and APPROVED receipt before promotion."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Completion seal is provided citing quarantined EV-94..109 as admitted.",
+          "hazard_ids": [
+            "H-6.2"
+          ],
+          "constraint": "SC-W6-2: Enforce admitted_ev_ceiling = 93 (SC-PROVENANCE-001) across all artifacts."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Journal is sealed before W3/W4/W5 verification matrices finish.",
+          "hazard_ids": [
+            "H-6.1",
+            "H-6.2"
+          ],
+          "constraint": "SC-W6-3: Block W6 execution until W3, W4, and W5 are completed in Sa-plan."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Temporary review waivers outlive their valid_until horizon.",
+          "hazard_ids": [
+            "H-6.2"
+          ],
+          "constraint": "SC-W6-4: Enforce strict UTC expiry on all risk-priority and review records."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [
+      "w3-differential-oracle-1000vec",
+      "w4-supervised-cockpit-4100",
+      "w5-mojo-max-crashpad-harness"
+    ],
+    "score": 500,
+    "score_interval": [
+      320,
+      1250
+    ],
+    "decision": {
+      "summary": "Final closure wave gated on W3, W4, and W5 completion; promotes remaining declared_only routes and seals SC-JOURNAL-v3.",
+      "alternatives": [
+        "Mark declared_only routes as implemented immediately using mock stubs"
+      ],
+      "counterevidence": [
+        "Mock stubs are barred by EUnit guard default_capabilities_does_not_fake_unavailable_implementations_test and Section 6."
+      ],
+      "assumptions": [
+        "Vault, selfcheck, gate, zk_search, and sa_bridge_submit backends are wired in Gleam before promotion."
+      ],
+      "confidence": "observed",
+      "forecast": "104/104 routes implemented and observed with candidate-bound receipts; G-JOURNAL and G-CHECKLIST 100% green.",
+      "falsifier": "Any promoted route returning not_implemented or missing a matching SHA-256 candidate receipt.",
+      "acceptance": [
+        "bash tools/risk-priority-check --audit governance/planning/20261104-1745-criticality-fmea-fractal-portfolio.json"
+      ],
+      "rollback": "Keep unverified routes in declared_only state and hold promotion.",
+      "reviewer": "claude-opus-4-6+codex-gpt-6-luna",
+      "budget": "1 wave slice (<= 25m wall clock)",
+      "residuals": [
+        "Sovereign review of EV-94..109 remains gated by operator/Codex/AGY two-key signoff."
+      ],
+      "supersedes": null
+    }
+  }
+]

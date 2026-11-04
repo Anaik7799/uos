@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Lean-backed agent-surface generator, projection gate and drift reconciler.
+# Source of truth: formal/lean/UosAgentSurfaceGenerator.lean (SC-MIRROR-PROJ-001 as amended).
+set -euo pipefail
+UOS_ROOT="${UOS_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+export UOS_ROOT
+WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
+cp "$UOS_ROOT/formal/lean/UosAgentSurfaceGenerator.lean" "$WORK/Main.lean"
+cd "$WORK"
+exec "$UOS_ROOT/tools/lean" --run Main.lean "${@:---check}"

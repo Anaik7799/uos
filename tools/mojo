@@ -6,4 +6,7 @@ set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/uos-toolchain.sh"
 MOJO_ENV="$UOS_ROOT/services/inference/max/.pixi/envs/default"
 export MODULAR_HOME="$MOJO_ENV/share/max"
+export MODULAR_CRASH_REPORTING_HANDLER_PATH="$MOJO_ENV/bin/modular-crashpad-handler"
+export MODULAR_CRASH_REPORTING_ENABLED="false"
+mkdir -p "$UOS_ROOT/var/core-evo/crashpad-db"
 exec "$MOJO_ENV/bin/mojo" "$@"

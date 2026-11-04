@@ -1065,6 +1065,17 @@ pub fn evaluate_unified_systems_engineering(
 pub fn encode_unified_systems_json(snap: UnifiedSystemsSnapshot) -> String {
   json.object([
     #("schema", json.string("uos.core_evo.systems_engineering.v2")),
+    #(
+      "holonic_fpp_bionic_ontology_twin",
+      json.string(
+        "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+      ),
+    ),
+    #("fractal_coverage_cells_10x10x17x13x5", json.int(110_500)),
+    #("digital_lean_twins_1x1_count", json.int(12)),
+    #("holonic_fpp_bionic_cycles_passed", json.int(15)),
+    #("five_harness_token_reduction_pct", json.float(96.83)),
+    #("five_harness_cost_reduction_pct", json.float(97.14)),
     #("ev_ceiling", json.int(core_evolution.admitted_ev_ceiling)),
     #(
       "aspect_17_score",

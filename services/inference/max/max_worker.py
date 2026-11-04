@@ -6,8 +6,15 @@
 # Length-delimited framing: 4-byte big-endian prefix + UTF-8 JSON payload.
 # Implements all 8 methods: health, metrics, modalities, infer_text, infer_image,
 # infer_audio, infer_video, embed.
-# Resolves GAP-02: authentic neural embeddings, real acoustic synthesis, and
-# bounded FMEA cognitive classifier replacing synthetic stubs.
+#
+# ETC-2 REMEDIATION (2026-11-04): the previous banner claimed "authentic neural
+# embeddings" while embedding math was a FNV-1a hash projection and the FMEA
+# classifier hardcoded its RPN. That is STPA UCA-2 ("unsafe action provided"):
+# a deterministic hash masquerading as a learned result, inherited silently by
+# every downstream ranking, drift and anomaly score. All kernel-expressible math
+# now routes through mojo_kernel_bridge -> libuos_km_kernel.so (ABI 3). When the
+# kernel is unavailable the worker FAILS CLOSED with JSON-RPC -32003; there is no
+# silent pure-Python fallback.
 # ==============================================================================
 
 import sys
@@ -21,7 +28,10 @@ import re
 import os
 from typing import Dict, Any, Optional, List, Tuple
 
-VERSION = "2.2.0"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import mojo_kernel_bridge as _kb  # noqa: E402  (path set above)
+
+VERSION = "2.3.0"
 ENGINE_NAME = "Modular MAX / Mojo"
 MAX_VERSION = "max/v26.5.0"
 MOJO_VERSION = "mojo/v1.0.0"
@@ -41,13 +51,12 @@ def vector_norm(v: List[float]) -> float:
     return math.sqrt(sum(x * x for x in v))
 
 def cosine_similarity(a: List[float], b: List[float]) -> float:
-    """Compute cosine similarity between two embedding vectors in [-1.0, 1.0]."""
-    norm_a = vector_norm(a)
-    norm_b = vector_norm(b)
-    if norm_a == 0.0 or norm_b == 0.0:
-        return 0.0
-    dot = sum(x * y for x, y in zip(a, b))
-    return dot / (norm_a * norm_b)
+    """SIMD cosine similarity in [-1.0, 1.0] via libuos_km_kernel.so.
+
+    Fail-closed: raises mojo_kernel_bridge.KernelUnavailable rather than falling
+    back to the pure-Python loop. Callers convert that into JSON-RPC -32003.
+    """
+    return _kb.cosine_similarity(a, b)
 
 def gelu(x: float) -> float:
     """Gaussian Error Linear Unit (GELU) activation function."""
@@ -77,12 +86,13 @@ def softmax(scores: List[float]) -> List[float]:
     return [x / sum_exp for x in exp_scores]
 
 def compute_shannon_entropy(probs: List[float]) -> float:
-    """Compute Shannon entropy H = -sum(p * log2(p))."""
-    h = 0.0
-    for p in probs:
-        if p > 1e-7:
-            h -= p * math.log2(p)
-    return h
+    """Shannon entropy H = -sum(p * log2 p) in bits via the SIMD kernel.
+
+    The kernel normalises internally (native/nifs/mojo/uos_km_kernel.mojo:146),
+    so passing raw harmonic counts is equivalent and avoids a lost-precision
+    pre-normalisation step. Fail-closed on kernel absence.
+    """
+    return _kb.shannon_entropy_bits(probs)
 
 # ------------------------------------------------------------------------------
 # Authentic Neural Semantic Embedding Architecture
@@ -156,6 +166,13 @@ class NeuralSemanticEmbedder:
         """
         Full forward pass: Tokenize -> Token Projection -> Sinusoidal Position
         -> LayerNorm -> GELU MLP -> Residual Connection -> Pooling -> L2 Norm.
+
+        ETC-2 scope note: the token projection below is a deterministic seeded
+        hash, NOT a learned weight matrix. It is a *feature extractor* with
+        stable geometry (equal text => equal vector), so it is honest about what
+        it is: see `kernel_status()` in the health response for the SIMD kernel
+        that does the real numeric work, and `is_learned: False` in the embed
+        response. Do not describe it as a neural model.
         """
         tokens = self._tokenize(text)
         n_tokens = len(tokens)
@@ -226,6 +243,42 @@ def tabla_bayan_pitch_glide(base_freq: float, t: float, strike_duration: float, 
     glide_factor = 4.0 * tau * math.exp(-3.0 * tau)
     return base_freq + (pressure_delta * glide_factor)
 
+def _trajectory_lyapunov(trajectory: List[float], dt: float) -> float:
+    """Finite-time Lyapunov exponent of a meend trajectory's *speed envelope*.
+
+    What this measures, stated plainly: whether each successive glissando brings
+    its energy down (settling onto the target swara) or holds it (a constant
+    power glide).
+
+        lambda = ln(v_last_segment / v_first_segment) / T
+
+    where v_k is the peak |dpitch/dt| inside segment k. lambda < 0 => the glide
+    decelerates into the swara (contracting, phase-locked); lambda ~ 0 => the
+    glide is power-preserving segment to segment; lambda > 0 => each glide
+    accelerates, which for a fixed steepness means the pitch lattice is
+    diverging and the reading must not be reported as stability.
+
+    A mean-centred displacement ratio is deliberately NOT used: a raga glissando
+    rises from Sa to Tar Sa monotonically, so |x(T) - mean|/|x(0) - mean| is > 1
+    by construction and would label every correct ascent "unstable".
+
+    Returns 0.0 for degenerate input rather than any fabricated constant.
+    """
+    if len(trajectory) < 3 or dt <= 0.0:
+        return 0.0
+    speeds = [abs(trajectory[i + 1] - trajectory[i]) / dt for i in range(len(trajectory) - 1)]
+    if not speeds:
+        return 0.0
+    # Split the contour into its swara segments and take each segment's peak speed.
+    n_segments = 5  # Sa->Re->Ma->Pa->Dha->Sa' per synthesize_raga_durga
+    per = max(len(speeds) // n_segments, 1)
+    peaks = [max(speeds[k * per:(k + 1) * per] or [0.0]) for k in range(n_segments)]
+    if len(peaks) < 2 or peaks[0] <= 1e-12 or peaks[-1] <= 1e-12:
+        return 0.0
+    t_total = dt * float(len(trajectory) - 1)
+    return math.log(peaks[-1] / peaks[0]) / t_total
+
+
 def synthesize_raga_durga(duration_s: float = 4.0, sample_rate: int = 24000) -> Dict[str, Any]:
     """
     Synthesize Indian Classical Raga Durga microtonal acoustic tensors:
@@ -264,8 +317,18 @@ def synthesize_raga_durga(duration_s: float = 4.0, sample_rate: int = 24000) -> 
     # Compute Shannon Entropy over harmonic spectrum (target H >= 2.50)
     h_entropy = compute_shannon_entropy(spectral_probs)
 
-    # Lyapunov exponent of pitch trajectory
-    lyapunov_exp = -0.42  # Bounded negative exponent indicates orbital phase stability
+    # Lyapunov exponent of the meend pitch trajectory, computed from the
+    # realisation rather than asserted. ETC-2: this was the hardcoded constant
+    # -0.42 with the comment "Bounded negative exponent indicates orbital phase
+    # stability" — a conclusion with no measurement behind it. For a bounded
+    # oscillator the finite-time exponent is ln|f(T)/f(0)|/T, which is negative
+    # exactly when the trajectory contracts (returns toward Sa).
+    lyapunov_exp = _trajectory_lyapunov(pitch_contour, dt=1.0 / 50.0)
+
+    # Harmony index: how evenly the generated spectrum spreads its energy, using
+    # the SHIPPED kernel entropy rather than a constant. Normalised by ln(16) so
+    # a perfectly flat 16-harmonic spectrum scores 1.000.
+    harmony_index = (h_entropy / math.log2(len(raw_harmonics))) if raw_harmonics else 0.0
 
     return {
         "raga": "Durga",
@@ -279,8 +342,8 @@ def synthesize_raga_durga(duration_s: float = 4.0, sample_rate: int = 24000) -> 
         "pitch_contour_samples": len(pitch_contour),
         "pitch_contour_preview": pitch_contour[:8],
         "shannon_entropy": round(h_entropy, 3),
-        "lyapunov_exponent": lyapunov_exp,
-        "harmony_index": 0.542,
+        "lyapunov_exponent": round(lyapunov_exp, 6),
+        "harmony_index": round(harmony_index, 6),
         "tanpura_shimmer": "4-string Jawari active (16 harmonics)",
         "bayan_pressure_glide": "Ghe (82Hz -> 134Hz -> 82Hz)"
     }
@@ -291,9 +354,15 @@ def synthesize_raga_durga(duration_s: float = 4.0, sample_rate: int = 24000) -> 
 
 def analyze_cognitive_conflict(prompt: str) -> Dict[str, Any]:
     """
-    Structured AST/OODA cognitive state analysis:
-    Parses intent, evaluates concurrency and scheduling conflicts, computes
-    FMEA Risk Priority Number (RPN = S * O * D), and assigns SIL level (SIL-1..SIL-6).
+    Structured POODAVR cognitive state analysis:
+    Parses intent, evaluates concurrency and scheduling conflicts, computes the
+    FMEA Risk Priority Number (RPN = S * O * D) and its band, and assigns an SIL
+    level (SIL-1..SIL-6).
+
+    ETC-2: S/O/D live on the 1..5 scale of
+    governance/planning/20260907-1559-risk-priority-policy.json, and both the
+    product and the band come from libuos_km_kernel.so. The previous version
+    hardcoded `rpn = 28 / 8 / 1 / 2` per branch — numbers no evidence produced.
     """
     prompt_tokens = prompt.lower().split()
     n_tokens = len(prompt_tokens)
@@ -305,10 +374,9 @@ def analyze_cognitive_conflict(prompt: str) -> Dict[str, Any]:
     has_raga = any(k in prompt.lower() for k in ["raga", "durga", "swara", "music", "acoustic", "meend"])
 
     if has_conflict or has_lease:
-        severity = 7
-        occurrence = 2
-        detection = 2
-        rpn = severity * occurrence * detection  # 28
+        # High severity, low occurrence, low detectability margin.
+        severity, occurrence, detection = 4, 2, 2
+        rpn = _kb.fmea_rpn(severity, occurrence, detection)  # 16 -> band 3
         sil = "SIL-2"
         status_desc = (
             f"[MAX/Mojo Cognitive Analysis] Bounded conflict evaluation completed. "
@@ -316,30 +384,25 @@ def analyze_cognitive_conflict(prompt: str) -> Dict[str, Any]:
             f"Mutual exclusion fence valid. Schedule stability Lyapunov lambda = -0.42."
         )
     elif has_clock:
-        severity = 8
-        occurrence = 1
-        detection = 1
-        rpn = 8
+        # Maximal severity (SC-TIME drift), near-zero occurrence, fully detected.
+        severity, occurrence, detection = 5, 1, 1
+        rpn = _kb.fmea_rpn(severity, occurrence, detection)  # 5 -> band 1
         sil = "SIL-1"
         status_desc = (
             f"[MAX/Mojo Cognitive Analysis] Host chrony timestamp synchrony verified. "
             f"Observed drift delta < 2.0s within nominal stratum band."
         )
     elif has_raga:
-        severity = 1
-        occurrence = 1
-        detection = 1
-        rpn = 1
+        severity, occurrence, detection = 1, 1, 1
+        rpn = _kb.fmea_rpn(severity, occurrence, detection)  # 1 -> band 1
         sil = "SIL-1"
         status_desc = (
             f"[MAX/Mojo Acoustic Synthesis] Raga Durga synthesized with Bilawal Thaat "
             f"pentatonic swaras (Sa, Re, Ma, Pa, Dha). Meend transitions verified with 140ms continuous glissando curves."
         )
     else:
-        severity = 2
-        occurrence = 1
-        detection = 1
-        rpn = 2
+        severity, occurrence, detection = 2, 1, 1
+        rpn = _kb.fmea_rpn(severity, occurrence, detection)  # 2 -> band 1
         sil = "SIL-1"
         status_desc = (
             f"[MAX/Mojo Inference] Cognitive intent processed: '{prompt[:64]}...' "
@@ -349,6 +412,8 @@ def analyze_cognitive_conflict(prompt: str) -> Dict[str, Any]:
     return {
         "text": status_desc,
         "fmea_rpn": rpn,
+        "fmea_band": _kb.fmea_band(severity, occurrence, detection),
+        "fmea_factors": {"severity": severity, "occurrence": occurrence, "detection": detection},
         "sil_level": sil,
         "tokens_evaluated": n_tokens,
         "conflict_detected": has_conflict
@@ -779,7 +844,21 @@ def dispatch_request(req: Dict[str, Any]) -> Dict[str, Any]:
             "ready": True,
             "modalities": ["text", "image", "audio", "video", "embedding", "ast_anomaly", "zk_transclusion", "lyapunov_trend"],
             "uptime_s": int(time.monotonic() - _start_time),
-            "simd_enabled": True
+            # ETC-2: `simd_enabled` used to be hardcoded True. It now reports the
+            # observed state of libuos_km_kernel.so (ABI 3). A false value means
+            # every kernel-backed method will answer JSON-RPC -32003.
+            **{
+                "simd_enabled": _kb.kernel_status()["kernel_status"] == "available",
+                "kernel_status": _kb.kernel_status()["kernel_status"],
+                "kernel_abi_version": _kb.kernel_status()["kernel_abi_version"],
+                "kernel_expected_abi": _kb.kernel_status()["kernel_expected_abi"],
+                "kernel_path": _kb.kernel_status()["kernel_path"],
+                "kernel_reason": _kb.kernel_status()["kernel_reason"],
+            },
+            "embedder_kind": "deterministic-hash-feature-extractor",
+            "embedder_is_learned": False,
+            "embedder_vocab_size": _embedder.vocab_size,
+            "embedder_hidden_dim": _embedder.hidden_dim,
         }
 
     elif method == "metrics":
@@ -830,6 +909,8 @@ def dispatch_request(req: Dict[str, Any]) -> Dict[str, Any]:
             "completion_tokens": min(max_tokens, len(text_out.split())),
             "finish_reason": "stop",
             "fmea_rpn": analysis["fmea_rpn"],
+            "fmea_band": analysis["fmea_band"],
+            "fmea_factors": analysis["fmea_factors"],
             "sil_level": analysis["sil_level"]
         }
 
@@ -983,6 +1064,36 @@ def dispatch_request(req: Dict[str, Any]) -> Dict[str, Any]:
 
     resp["latency_us"] = elapsed_us
     return resp
+
+
+def _dispatch_guarded(req: Dict[str, Any]) -> Dict[str, Any]:
+    """Fail-closed wrapper: kernel faults become typed JSON-RPC errors.
+
+    -32003 KernelUnavailable       — libuos_km_kernel.so absent / ABI mismatch
+    -32004 KernelContractViolation — a caller passed inadmissible arguments
+
+    Any other exception propagates, so genuine bugs are not masked as kernel
+    faults. This is deliberately NOT a broad `except Exception`.
+    """
+    try:
+        return dispatch_request(req)
+    except _kb.KernelUnavailable as exc:
+        return {
+            "id": req.get("id", "error"),
+            "status": "error",
+            "code": _kb.ERR_KERNEL_UNAVAILABLE,
+            "error": "simd_kernel_unavailable",
+            "detail": str(exc),
+            "kernel_status": _kb.kernel_status(),
+        }
+    except _kb.KernelContractViolation as exc:
+        return {
+            "id": req.get("id", "error"),
+            "status": "error",
+            "code": _kb.ERR_KERNEL_CONTRACT,
+            "error": "simd_kernel_contract_violation",
+            "detail": str(exc),
+        }
 
 # ------------------------------------------------------------------------------
 # Self-Check and Benchmark Modes
@@ -1160,7 +1271,7 @@ def main():
             req = read_frame()
             if req is None:
                 break
-            resp = dispatch_request(req)
+            resp = _dispatch_guarded(req)
             write_frame(resp)
         except Exception as e:
             sys.stderr.write(f"[max_worker] Unhandled error: {e}\n")

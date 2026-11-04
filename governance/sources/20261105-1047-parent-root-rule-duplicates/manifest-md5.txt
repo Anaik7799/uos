@@ -1,0 +1,9 @@
+b59425e58afbd2a0fd3552b20dd45f88  comprehensive-checklist-contract.md.parent-preserved
+9f223d19848862277234b2a28eadf493  dmc-tcm-mandate.md.parent-preserved
+5a2feaa63aee39082616cf47a4854f06  full-symbiosis.md.parent-preserved
+e96f90db7078b0517fd0ffae1d688e0e  km-wiki-zk-contract.md.parent-preserved
+fa6e8cfb9f7bf95ebf73ac7881104be4  parent-dot-claude-AGENTS.md.parent-preserved
+5e8939c426e7e3d35a7ca1ce5d9f0ddb  tailscale-web-fqdn-mandate.md.parent-preserved
+183b1ee76cb9bacfca2febd8141c0c8a  timestamp-mandate.md.parent-preserved
+c72a287ac09c8f146d575a98d30e769a  uos-governance.md.parent-preserved
+f13c375f2d04919c84e0372e36d2aa10  parent-root-AGENTS.md.parent-preserved

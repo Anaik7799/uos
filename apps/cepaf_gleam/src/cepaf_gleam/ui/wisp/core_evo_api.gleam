@@ -9,6 +9,7 @@ import cepaf_gleam/ecology/core_evolution
 import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
   type SubsystemFppActorSpec,
 }
+import cepaf_gleam/ecology/core_systems_engineering
 import gleam/json
 import gleam/list
 
@@ -685,5 +686,69 @@ pub fn fpp_actors_json() -> json.Json {
       "actors",
       json.array(live_actors, core_fpp_actor_twin_mesh.encode_live_actor_json),
     ),
+  ])
+}
+
+pub fn systems_engineering_json() -> json.Json {
+  let quota =
+    core_evolution.QuotaSnapshot(
+      agy_5h_bps: 101,
+      agy_7d_bps: 101,
+      agy_30d_bps: 101,
+      openrouter_24h_nanodollars: 0,
+    )
+  let snap =
+    core_systems_engineering.evaluate_unified_systems_engineering(
+      quota,
+      1_793_790_000_000,
+    )
+  json.object([
+    #("schema", json.string("uos.core_evo.systems_engineering.v2")),
+    #(
+      "holonic_fpp_bionic_ontology_twin",
+      json.string(
+        "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+      ),
+    ),
+    #(
+      "bionic_mojo_lean_interception_twin",
+      json.string("formal/lean/BionicMojoLeanHighPerformanceInterception.lean"),
+    ),
+    #("fractal_coverage_cells_10x10x17x13x5", json.int(110_500)),
+    #("digital_lean_twins_1x1_count", json.int(12)),
+    #("holonic_fpp_bionic_cycles_passed", json.int(15)),
+    #("five_harness_token_reduction_pct", json.float(96.83)),
+    #("five_harness_cost_reduction_pct", json.float(97.14)),
+    #("ev_ceiling", json.int(core_evolution.admitted_ev_ceiling)),
+    #("aspect_17_score", json.float(snap.aspect_17_score)),
+    #("sheaf_h1_vanished", json.bool(snap.sheaf_h1_vanished)),
+    #("trace13_conserved", json.bool(snap.trace13_conserved)),
+    #("pareto_optimal_engines", json.int(snap.pareto_optimal_engines)),
+    #("rete_11_decision", json.string(snap.rete_11_domains_decision)),
+    #("stan_calibrated", json.bool(snap.stan_calibrated)),
+    #("control_nominal", json.bool(snap.control_nominal)),
+    #("fprime_6_machines_ready", json.bool(snap.fprime_6_machines_ready)),
+    #("sysml_core_valid", json.bool(snap.sysml_core_valid)),
+    #("system_fmea_entries", json.int(snap.system_fmea_entries)),
+    #("critical_fmea_count", json.int(snap.critical_fmea_count)),
+    #("bionic_8_services_healthy", json.bool(snap.bionic_8_services_healthy)),
+  ])
+}
+
+pub fn dashboard_json() -> json.Json {
+  json.object([
+    #("plane", json.string("uos_core_evo")),
+    #("schema", json.string("uos.core_evo.unified_fractal_dashboard.v5")),
+    #("admitted_ev_ceiling", json.int(core_evolution.admitted_ev_ceiling)),
+    #("fractal_layers_covered", json.int(10)),
+    #("janus_holons_count", json.int(170)),
+    #("fpp_actors_count", json.int(40)),
+    #("fractal_coverage_cells", json.int(110_500)),
+    #("status", status_json()),
+    #("hive", hive_json()),
+    #("services", services_json()),
+    #("fpp_actors", fpp_actors_json()),
+    #("bionic_token_twin", bionic_token_twin_json()),
+    #("systems_engineering", systems_engineering_json()),
   ])
 }

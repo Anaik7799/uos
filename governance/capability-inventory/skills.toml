@@ -927,3 +927,66 @@ state = "development_guidance_runtime_adoption_unverified"
 skill = "governance/agents/20261001-1118-skills/full-symbiosis/SKILL.md"
 sop = "docs/sop/20261031-1807-all-agent-symbiosis-preflight-tps-and-evolution-sop.md"
 authority = "NONE"
+
+[[skill]]
+name = "uos-caste04-claude-harness-profile"
+source = "uos"
+reference_only = false
+state = "development_guidance_pending_independent_review"
+path = "governance/agents/20261001-1118-skills/uos-caste04-claude-harness-profile/SKILL.md"
+mirrors = [".claude/skills", ".agents/skills", ".codex/skills", ".gemini/skills"]
+purpose = "On-demand depth tier for Caste04; replaces always-on CLAUDE.md bulk after the 20261105-1007 compaction"
+authority = "Canonical root policy AGENTS.md, SC-HARNESS-MCP-001 and SC-MIRROR-PROJ-001; no runtime admission"
+
+# >>> GENERATED-BLOCK caste04-skills (UosAgentSurfaceGenerator.lean) >>>
+
+[[skill]]
+name = "uos-caste04-claude-harness-profile"
+source = "uos"
+reference_only = false
+state = "development_guidance_pending_independent_review"
+path = "governance/agents/20261001-1118-skills/uos-caste04-claude-harness-profile/SKILL.md"
+generated_by = "formal/lean/UosAgentSurfaceGenerator.lean"
+authority = "Canonical root policy AGENTS.md, SC-HARNESS-MCP-001 and SC-MIRROR-PROJ-001; no runtime admission"
+# <<< GENERATED-BLOCK caste04-skills <<<
+
+# ---------------------------------------------------------------------------
+# 20261105-1659 — Document & artifact authoring capability surface.
+# Harness-provided skills, registered reference-only per the full-symbiosis
+# parity scope (no propagation of home-directory skills into UOS). Presence is
+# recorded truthfully; it grants no runtime admission and mints no EV number.
+# Used by: docs/artifacts for the unified monitoring & governance digital twin
+# (formal/lean/UosUnifiedMonitoringGovernanceDigitalTwin.lean).
+# ---------------------------------------------------------------------------
+
+[[skill]]
+name = "artifact-design"
+source = "harness"
+reference_only = true
+state = "harness_provided_observed_loaded_20261105"
+path = "harness://skills/artifact-design"
+authority = "page contract and design fundamentals for published artifacts; no admission"
+
+[[skill]]
+name = "artifact-capabilities"
+source = "harness"
+reference_only = true
+state = "harness_provided_not_loaded"
+path = "harness://skills/artifact-capabilities"
+authority = "runtime capability roster for published artifact pages; load before declaring capabilities"
+
+[[skill]]
+name = "artifact-diagramming"
+source = "harness"
+reference_only = true
+state = "harness_provided_not_loaded"
+path = "harness://skills/artifact-diagramming"
+authority = "inline-SVG and mechanism diagram guidance; complements SC-DIAGRAM-001 dual-source rule"
+
+[[skill]]
+name = "dataviz"
+source = "harness"
+reference_only = true
+state = "harness_provided_not_loaded"
+path = "harness://skills/dataviz"
+authority = "chart form, palette and accessibility method for any rendered visualization; no admission"

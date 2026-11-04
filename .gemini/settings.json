@@ -9,7 +9,7 @@
     "UOS_MCP_WORKSPACE_ROOT": "/home/an/NAS-setup/uos",
     "UOS_MCP_ROUTE": "public",
     "UOS_MCP_CLIENT_NAME": "agy-gemini",
-    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261102-1620-a7b06b609fd26d53ca50d3451c2e4a4633df7dff2fb2e2f3faf2fd4ec59d6735",
-    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "e8f218a5ae7d8c0cda42238aa2392a964b09cf1215b23acd02f7e46f7ab137ec"
+    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261103-2138-27ce5665bc3ac799a3b6e90e3a734fa55eb170aa37e39239d2a38a2f94f36686",
+    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "5362fb888e9db64ec461bb090bbe2e0fed02bfb35e23f012b9b478d97df888e6"
   }
 }}}
