@@ -83,12 +83,14 @@ end = struct
    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_owner_store.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_factual_reply.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_native_signature_facts.gleam";
+   "apps/cepaf_gleam/src/cepaf_gleam/harness/recovery_trust_discovery.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/mcp/adapters/recovery_control.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/mcp/registry.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam";
    "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam";
    "apps/cepaf_gleam/test/mcp_recovery_control_readiness_test.gleam";
+   "apps/cepaf_gleam/test/mcp_recovery_metadata_resource_test.gleam";
    "apps/cepaf_gleam/test/mcp_registry_test.gleam";
    "apps/cepaf_gleam/test/fixtures/recovery_owner_fixture_extension.gleam.inc";
    "apps/cepaf_gleam/src/cepaf_gleam/harness/native_launch.gleam";
@@ -98,6 +100,10 @@ end = struct
    "tools/recovery_development_capsule.ml";"tools/validation/recovery_capsule_fixture.ml";
    "tools/validation/recovery_native_signer_bundle_fixture.ml";
    "tools/validation/recovery_integrated_fixture.ml";
+   "tools/validation/recovery_metadata_route_fixture.ml";
+   "native/ocaml/recovery_trust_metadata/recovery_trust_metadata.ml";
+   "native/ocaml/recovery_trust_metadata/recovery_trust_metadata.mli";
+   "native/ocaml/recovery_trust_metadata/recovery_trust_metadata_port.ml";
    "native/ocaml/recovery_resource_signer/recovery_resource_signer.ml";
    "native/ocaml/recovery_resource_signer/recovery_resource_signer.mli";
    "native/ocaml/recovery_resource_signer/recovery_resource_signer_port.ml";

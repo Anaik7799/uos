@@ -7,6 +7,7 @@ import cepaf_gleam/harness/files
 import cepaf_gleam/harness/mcp as launcher
 import cepaf_gleam/harness/native_backend
 import cepaf_gleam/harness/operations as ops
+import cepaf_gleam/harness/recovery_trust_discovery
 import cepaf_gleam/harness/successor_mcp
 import cepaf_gleam/harness/value
 import cepaf_gleam/mcp/adapters/analysis
@@ -3861,8 +3862,8 @@ fn dispatch_non_private(
     "resources/list" ->
       case
         resources.list_resources(
-          state.resources,
-          state.resource_cache,
+          recovery_metadata_registry(state.resources, p),
+          recovery_metadata_cache(state.resource_cache),
           p,
           100,
           0,
@@ -3876,7 +3877,7 @@ fn dispatch_non_private(
             msg.method,
             json.object([#("resources", json.array(entries, encode_resource))]),
           ),
-          GatewayState(..state, resource_cache: cache),
+          GatewayState(..state, resource_cache: recovery_metadata_cache(cache)),
         )
       }
     "resources/templates/list" ->
@@ -3963,7 +3964,15 @@ fn dispatch_non_private(
             }),
           )
       }
-      let cache = case live_resource_uri(uri) {
+      // Metadata is observed only for this exact URI and this principal. Never
+      // persist the entry or reuse a prior principal's/provider observation.
+      let registry = case uri == recovery_trust_discovery.resource_uri {
+        True -> recovery_metadata_registry(registry, p)
+        False -> registry
+      }
+      let cache = case
+        live_resource_uri(uri) || uri == recovery_trust_discovery.resource_uri
+      {
         True -> resources.empty_cache()
         False -> state.resource_cache
       }
@@ -3987,10 +3996,16 @@ fn dispatch_non_private(
               ),
             ]),
           ),
-          GatewayState(..state, resource_cache: case live_resource_uri(uri) {
-            True -> state.resource_cache
-            False -> cache
-          }),
+          GatewayState(
+            ..state,
+            resource_cache: case
+              live_resource_uri(uri)
+              || uri == recovery_trust_discovery.resource_uri
+            {
+              True -> state.resource_cache
+              False -> cache
+            },
+          ),
         )
       }
     }
@@ -4446,6 +4461,32 @@ fn task_state_name(state: task_extension.SaTaskState) -> String {
     task_extension.CompletedTask -> "completed"
     task_extension.FailedTask -> "failed"
   }
+}
+
+// The public provider is closed/unconfigured, so this performs no I/O. A future
+// admitted provider needs its own bounded prefetch/owner integration; request
+// arguments never configure it. Entry ownership comes from the validated
+// transport principal, not URI/JSON fields. No metadata is retained in state.
+fn recovery_metadata_registry(
+  registry: resources.ResourceRegistry,
+  p: principal.Principal,
+) -> resources.ResourceRegistry {
+  resources.ResourceRegistry(..registry, resources: [
+    recovery_trust_discovery.resource(recovery_trust_discovery.observe(), p),
+    ..list.filter(registry.resources, fn(entry) {
+      entry.uri != recovery_trust_discovery.resource_uri
+    })
+  ])
+}
+
+fn recovery_metadata_cache(
+  cache: resources.ResourceCache,
+) -> resources.ResourceCache {
+  resources.ResourceCache(
+    dict.filter(cache.entries, fn(key, _) {
+      key.2 != recovery_trust_discovery.resource_uri
+    }),
+  )
 }
 
 fn encode_resource(entry: resources.ResourceEntry) -> json.Json {
