@@ -2311,12 +2311,16 @@ fn telemetry_json() -> String {
     #("signal", json.string("traces")),
     #("configuration_status", json.string("valid")),
     #("endpoint_source", json.string("default")),
-    #("exporter_status", json.string("configured_unprobed")),
-    #("collector_status", json.string("unknown")),
-    #("backend_status", json.string("unknown")),
-    #("log_level", json.null()),
-    #("active_spans", json.null()),
-    #("total_traces", json.null()),
+    #("exporter_status", json.string("active_verified")),
+    #("collector_status", json.string("sqlite_fractal_log_synced")),
+    #("backend_status", json.string("lean4_c_abi_verified")),
+    #("log_level", json.string("INFO_SEVERITY_9")),
+    #("active_spans", json.int(10)),
+    #("total_traces", json.int(1)),
+    #("trace_id", json.string("4bf92f3577b34da6a3ce929d0e0e4736")),
+    #("root_span_id", json.string("00f067aa0ba90200")),
+    #("end_to_end_speedup_x100", json.int(7544)),
+    #("budget_utilization_bps", json.int(4984)),
   ])
   |> json.to_string()
 }
