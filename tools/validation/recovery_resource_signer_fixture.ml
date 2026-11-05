@@ -1,5 +1,5 @@
 #use "topfind";;
-#require "bos,yojson,cryptokit,unix";;
+#require "bos,yojson,cryptokit,unix,mtime.clock.os";;
 (* Ordinary signature-only fixture. Never opens a canonical DB, uses no genuine
    key, performs no task/release/config effects, and runs no restricted tests. *)
 let read p=let c=open_in_bin p in Fun.protect ~finally:(fun()->close_in c)(fun()->really_input_string c(in_channel_length c))
@@ -7,7 +7,7 @@ let rec mkdir p=if not(Sys.file_exists p)then(mkdir(Filename.dirname p);Unix.mkd
 let write p s=mkdir(Filename.dirname p);let fd=Unix.openfile p[Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL]0o600 in let c=Unix.out_channel_of_descr fd in Fun.protect ~finally:(fun()->close_out c)(fun()->output_string c s)
 let sha s=Cryptokit.hash_string(Cryptokit.Hash.sha256())s|>Cryptokit.transform_string(Cryptokit.Hexa.encode())
 let ()=
- if Array.length Sys.argv<>2||Filename.basename Sys.argv.(1)<>"codex-native-recovery-signer-20261101"then failwith"fixed workspace argument";
+ if Array.length Sys.argv<>2||Filename.basename Sys.argv.(1)<>"codex-external-custody-signer-20261101"then failwith"fixed workspace argument";
  let ws=Unix.realpath Sys.argv.(1)and root="/home/an/NAS-setup/uos"in
  let scratch=ws^"/var/harness"in mkdir scratch;
  let base=Filename.temp_file ~temp_dir:scratch "uos-native-resource-signer-"""in Unix.unlink base;Unix.mkdir base 0o700;
@@ -26,9 +26,12 @@ let ()=
  let src=ws^"/native/ocaml/recovery_resource_signer/"and kernel=ws^"/engines/hermes/modules/sa_plan/"in
  List.iter(fun name->write(native^"/"^name)(capture(kernel^name)))["recovery_kernel.ml";"recovery_kernel.mli";"recovery_resource.ml";"recovery_resource.mli"];
  let signer_code=capture(src^"recovery_resource_signer.ml")in
+ if Astring.String.is_infix~affix:"key:Mirage_crypto_ec.Ed25519.priv"signer_code
+  ||Astring.String.is_infix~affix:"Ed25519.sign"signer_code then failwith"SIGNER_CLIENT_MUST_NOT_HOLD_OR_USE_PRIVATE_KEYS";
  List.iter(fun name->write(native^"/"^name)(capture(src^name)))["recovery_resource_signer.ml";"recovery_resource_signer.mli";"recovery_resource_signer_port.ml"];
  ignore(capture(ws^"/tools/validation/recovery_resource_signer_fixture.ml"));
  write(native^"/fixture_signer.ml")signer_code;
+ write(native^"/fixture_provider.ml")(signer_code^capture(src^"test/recovery_external_provider_fixture.ml.inc"));
  write(native^"/fixture_guardian.ml")(capture(root^"/tools/telegram_store_transport_guardian.ml"));
  let preparer={|
 module K=Recovery_kernel
@@ -111,6 +114,7 @@ let ()=
 (library (name recovery_kernel) (wrapped false) (modules recovery_kernel recovery_resource) (libraries digestif yojson mirage-crypto-ec unix mtime.clock ptime.clock))
 (library (name recovery_resource_signer) (wrapped false) (modules recovery_resource_signer) (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
 (library (name fixture_signer) (wrapped false) (modules fixture_signer) (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
+(library (name fixture_provider) (wrapped false) (modules fixture_provider) (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
 (executable (name recovery_resource_signer_port) (modules recovery_resource_signer_port) (libraries recovery_resource_signer))
 (executable (name fixture_prepare) (modules fixture_prepare) (libraries recovery_kernel digestif yojson mirage-crypto-ec unix))
 (executable (name fixture_validate) (modules fixture_validate) (libraries recovery_resource_signer recovery_kernel yojson unix))
@@ -123,22 +127,58 @@ let ()=
  let bin=build^"/default"in let guardian=bin^"/fixture_guardian.exe"in
  let manifest_sha=String.trim(run"02-fixed-manifest"(bin^"/fixture_prepare.exe")[base;ws;guardian])in
  if String.length manifest_sha<>64 then failwith"manifest digest";
- List.iter(fun(name,role,vector)->write(native^"/"^name^".ml")(Printf.sprintf{|
+ let socket_directory=Filename.temp_file"uos-custody-"""in Unix.unlink socket_directory;Unix.mkdir socket_directory 0o700;
+ let reviewer_socket=socket_directory^"/reviewer.sock"and issuer_socket=socket_directory^"/issuer.sock"in
+ List.iter(fun(name,role,vector,path)->write(native^"/"^name^".ml")(Printf.sprintf{|
 let ()=
  let key=match Mirage_crypto_ec.Ed25519.priv_of_octets(String.make 32 %C)with Ok k->k|Error _->failwith"public fixture vector"in
- let provider:Fixture_signer.provider={role=Fixture_signer.%s;key;manifest_path=%S;manifest_sha=%S}in
- Fixture_signer.serve_with(Fixture_signer.sign_bound provider)
-|}vector role(base^"/manifest.json")manifest_sha))["reviewer_worker","Reviewer",'R';"issuer_worker","Issuer",'I'];
+ Fixture_provider.fixture_provider Fixture_provider.%s key %S %S %S
+|}vector role path(base^"/manifest.json")manifest_sha))["reviewer_provider","Reviewer",'R',reviewer_socket;"issuer_provider","Issuer",'I',issuer_socket];
  let channel=open_out_gen[Open_wronly;Open_append]0o600(native^"/dune")in
- output_string channel"\n(executable (name reviewer_worker) (modules reviewer_worker) (libraries fixture_signer))\n(executable (name issuer_worker) (modules issuer_worker) (libraries fixture_signer))\n";close_out channel;
- build_targets"03-role-workers"["reviewer_worker.exe";"issuer_worker.exe"];
+ output_string channel"\n(executable (name reviewer_provider) (modules reviewer_provider) (libraries fixture_provider))\n(executable (name issuer_provider) (modules issuer_provider) (libraries fixture_provider))\n";close_out channel;
+ build_targets"03-provider-services"["reviewer_provider.exe";"issuer_provider.exe"];
+ let services=ref[]in
+ let start name=
+  let log=base^"/"^name^".log"in
+  let fd=Unix.openfile log[Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL]0o600 in
+  let exe=bin^"/"^name^".exe"in
+  let pid=Fun.protect~finally:(fun()->Unix.close fd)(fun()->Unix.create_process exe[|exe|]Unix.stdin fd fd)in
+  services:=(name,pid)::!services in
+ let mono()=Mtime_clock.now_ns()in
+ let rec reap until=
+  services:=List.filter(fun(name,pid)->match Unix.waitpid[Unix.WNOHANG]pid with
+   |0,_->true|_,Unix.WEXITED 0->Printf.printf"PROVIDER_REAPED=%s exit0\n%!"name;false
+   |_->failwith"private provider failed")!services;
+  if !services<>[]then(if mono()>=until then failwith"provider cleanup unknown"else(ignore(Unix.select[][][]0.01);reap until))in
+ let cleanup()=
+  List.iter(fun(_,pid)->try match Unix.waitpid[Unix.WNOHANG]pid with 0,_->Unix.kill pid Sys.sigterm|_->()with Unix.Unix_error(Unix.ECHILD,_,_)->())!services;
+  if !services<>[]then(try reap(Int64.add(mono())2000000000L)with _->failwith"PROVIDER_CLEANUP_UNKNOWN_NO_RETRY")in
  let reviewer=bin^"/reviewer_worker.exe"and issuer=bin^"/issuer_worker.exe"in
  let quote s=Yojson.Basic.to_string(`String s)in
  let cfg p="{local_configuration,list_to_binary("^quote guardian^"),list_to_binary("^quote(sha(read guardian))^"),list_to_binary("^quote p^"),list_to_binary("^quote(sha(read p))^"),<<\"/NATIVE_SIGNING_NO_CALLER_LOCATOR\">>}"in
- let eval="io:format(\"FFI=~p OTP=~p~n\",[code:which(telegram_store_transport_ffi),erlang:system_info(otp_release)]),Call=fun(C,Op,KR,KI,RR)->B=iolist_to_binary([\"{\\\"schema\\\":\\\"uos.recovery.native-signing.v2\\\",\\\"operation\\\":\\\"\",Op,\"\\\",\\\"intent_id\\\":\\\"ordinary-native-signature\\\",\\\"kernel_review\\\":\\\"\",KR,\"\\\",\\\"kernel_issuer\\\":\\\"\",KI,\"\\\",\\\"resource_review\\\":\\\"\",RR,\"\\\"}\"]),{{ok,Reply},{some,{0,T}}}=telegram_store_transport_ffi:request_config_with_cleanup(C,B),true=T>0,M=json:decode(Reply),io:format(\"FACT:~s~n\",[Reply]),<<\"SIGNATURE_FACT_ONLY\">>=maps:get(<<\"status\">>,M),maps:get(<<\"signature_hex\">>,M)end,Review="^cfg reviewer^",Issuer="^cfg issuer^",KR=Call(Review,<<\"review_kernel\">>,<<>>,<<>>,<<>>),KI=Call(Issuer,<<\"issue_kernel\">>,KR,<<>>,<<>>),RR=Call(Review,<<\"review_resource\">>,KR,KI,<<>>),_=Call(Issuer,<<\"issue_resource\">>,KR,KI,RR),halt(0)."in
+ let eval=lazy("io:format(\"FFI=~p OTP=~p~n\",[code:which(telegram_store_transport_ffi),erlang:system_info(otp_release)]),Call=fun(C,Op,KR,KI,RR)->B=iolist_to_binary([\"{\\\"schema\\\":\\\"uos.recovery.native-signing.v2\\\",\\\"operation\\\":\\\"\",Op,\"\\\",\\\"intent_id\\\":\\\"ordinary-native-signature\\\",\\\"kernel_review\\\":\\\"\",KR,\"\\\",\\\"kernel_issuer\\\":\\\"\",KI,\"\\\",\\\"resource_review\\\":\\\"\",RR,\"\\\"}\"]),{{ok,Reply},{some,{0,T}}}=telegram_store_transport_ffi:request_config_with_cleanup(C,B),true=T>0,M=json:decode(Reply),io:format(\"FACT:~s~n\",[Reply]),<<\"SIGNATURE_FACT_ONLY\">>=maps:get(<<\"status\">>,M),maps:get(<<\"signature_hex\">>,M)end,Review="^cfg reviewer^",Issuer="^cfg issuer^",KR=Call(Review,<<\"review_kernel\">>,<<>>,<<>>,<<>>),KI=Call(Issuer,<<\"issue_kernel\">>,KR,<<>>,<<>>),RR=Call(Review,<<\"review_resource\">>,KR,KI,<<>>),_=Call(Issuer,<<\"issue_resource\">>,KR,KI,RR),halt(0).")in
  let lib="/tmp/uos-unified-app-build-fea562/lib"in
  let ffibeam=lib^"/cepaf_gleam/ebin/telegram_store_transport_ffi.beam"in ignore(capture ffibeam);
- let logs=run"04-actual-four-guarded-signatures"(root^"/toolchains/nix-profile/bin/erl")["+S";"2:2";"-noshell";"-pa";lib^"/cepaf_gleam/ebin";"-eval";eval]in
+ let logs=Fun.protect~finally:cleanup(fun()->
+ start"reviewer_provider";start"issuer_provider";
+ let until=Int64.add(mono())5000000000L in
+ let rec ready()=if Sys.file_exists reviewer_socket&&Sys.file_exists issuer_socket then()else
+  if mono()>=until then failwith"provider readiness unknown"else(ignore(Unix.select[][][]0.01);ready())in ready();
+ List.iter(fun(name,role,path)->let st=Unix.lstat path in
+  write(native^"/"^name^".ml")(Printf.sprintf{|
+let ()=
+ let socket:Fixture_signer.socket_anchor={path=%S;device=%d;inode=%d;uid=%d}in
+ let provider:Fixture_signer.provider={role=Fixture_signer.%s;manifest_path=%S;manifest_sha=%S;socket}in
+ Fixture_signer.serve_with(Fixture_signer.sign_bound provider)
+|}path st.Unix.st_dev st.Unix.st_ino st.Unix.st_uid role(base^"/manifest.json")manifest_sha))
+  ["reviewer_worker","Reviewer",reviewer_socket;"issuer_worker","Issuer",issuer_socket];
+ let channel=open_out_gen[Open_wronly;Open_append]0o600(native^"/dune")in
+ output_string channel"\n(executable (name reviewer_worker) (modules reviewer_worker) (libraries fixture_signer))\n(executable (name issuer_worker) (modules issuer_worker) (libraries fixture_signer))\n";close_out channel;
+ build_targets"03-role-workers"["reviewer_worker.exe";"issuer_worker.exe"];
+ List.iter(fun p->let bytes=read p in if Astring.String.is_infix~affix:"String.make 32"bytes||Astring.String.is_infix~affix:"fixture_provider"bytes then failwith"client source linked fixture key provider")
+  [native^"/reviewer_worker.ml";native^"/issuer_worker.ml"];
+ let logs=run"04-actual-four-guarded-signatures"(root^"/toolchains/nix-profile/bin/erl")["+S";"2:2";"-noshell";"-pa";lib^"/cepaf_gleam/ebin";"-eval";Lazy.force eval]in
+ reap(Int64.add(mono())2000000000L);logs)in
  if not(Astring.String.is_infix ~affix:("FFI=\""^ffibeam^"\"")logs)then failwith"actual paired FFI path mismatch";
  let facts=String.split_on_char '\n' logs|>List.filter_map(fun line->if String.starts_with ~prefix:"FACT:"line then Some(Yojson.Basic.from_string(String.sub line 5(String.length line-5)))else None)in
  write(base^"/facts.json")(Yojson.Basic.to_string(`List facts));
@@ -149,7 +189,7 @@ let ()=
  let receipt=base^"/"^prefix^"-native-resource-signing-development-receipt.json"in
  write receipt(Yojson.Basic.pretty_to_string(`Assoc["schema",`String"uos.native-resource-signing-development.v2";"authority",`String"NONE";"production_provider",`String"Unavailable";"mode",`String"ORDINARY_PRIVATE_SIGNATURE_ONLY";
  "source_before_after",`List(List.map(fun(p,h)->`Assoc["path",`String p;"sha256",`String h])!pins);"evidence",`List refs;"four_exact_purposes_verified",`Bool true;
- "native_artifacts",`List(List.map(fun p->`Assoc["path",`String p;"sha256",`String(sha(read p))])[reviewer;issuer;guardian;bin^"/recovery_resource_signer_port.exe";bin^"/fixture_validate.exe"]);
+ "native_artifacts",`List(List.map(fun p->`Assoc["path",`String p;"sha256",`String(sha(read p))])[reviewer;issuer;guardian;bin^"/reviewer_provider.exe";bin^"/issuer_provider.exe";bin^"/recovery_resource_signer_port.exe";bin^"/fixture_validate.exe"]);
  "retained_failures",`List(List.map(fun p->`String p)["/tmp/uos-native-resource-signer-63d372/01-native-build.log";"/tmp/uos-native-resource-signer-7b364a/01-native-build.log";"/tmp/uos-native-resource-signer-959571/03-role-workers.log";ws^"/var/harness/uos-native-resource-signer-520fba/05-unchanged-native-verifiers.log"]);
  "limits",`List(List.map(fun s->`String s)["Fixed public R/I vectors only; no real keys/keygen/export/custody/provider/independent factual review or grant.";"Native kernel v1 inner plus resource v2 outer signatures exactly; no JWT adaptation. All four guarded calls followed by unchanged K.verify/R.verify and private resource identity check.";"Manifest locator+digest compiled into fixture workers by owning driver, not supplied request; actual production protected launcher configuration absent. This does not authenticate organizational custody.";"Only synthetic request/evidence digests, empty private resource files; no real checker/portfolio/task DB or canonical recovery is established.";"Actual existing source/worker/guardian/launcher/owner/journal artifacts hash checked. Single source pin is kernel source, not whole release/toolchain closure. Signed finite-launcher pin is not execution through that launcher.";"Native UTC/Linux MONOTONIC/boot checked; no NTP synchronization proof/current owner high-water/durable signer replay/revocation log or signature-commit atomicity.";"Cooperative private file/manifest topology, no hostile same-UID ABA/FD confinement/cgroup/powerloss proof; scheduling after check remains residual.";"Only ordinary happy-path signing/verification/public-unavailable check executed; restricted/broad/fault/mutation tests UNRUN. No live service/config/task/JJ effects."])]));
  Printf.printf"RECEIPT=%s\nSHA256=%s\n%!"receipt(sha(read receipt))

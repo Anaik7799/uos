@@ -1,7 +1,8 @@
 (* Exact native K.v1 + resource.v2 purpose signing PREPARATION only.
-   Private provider provenance/key handles are never constructed from request
-   bytes. Production has no binding. Test-only workers each own ONE deliberately
-   public fixed vector and an independently compiled private manifest pin. *)
+   Private transport/manifest bindings are never constructed from request bytes.
+   This client NEVER receives or operates on a private key. A separate provider
+   must reconstruct the same purpose from its own pinned manifest. Production
+   has no authenticated provider binding. Test keys live only in another process. *)
 module K=Recovery_kernel
 module R=Recovery_resource
 let ( let* )=Result.bind
@@ -23,8 +24,10 @@ let parse cap bytes=
 type role=Reviewer|Issuer
 type operation=ReviewKernel|IssueKernel|ReviewResource|IssueResource
 type request={operation:operation;intent:string;kr:string;ki:string;rr:string}
-type provider={role:role;key:Mirage_crypto_ec.Ed25519.priv;manifest_path:string;manifest_sha:string}
+type socket_anchor={path:string;device:int;inode:int;uid:int}
+type provider={role:role;manifest_path:string;manifest_sha:string;socket:socket_anchor}
 type signature_fact={operation:operation;intent:string;manifest_sha:string;request_sha:string;capability_sha:string;resource_sha:string option;signature:string}
+type prepared={fact:signature_fact;message:string;public:string;recheck:unit->unit;check_signature:string->unit}
 let op_name=function ReviewKernel->"review_kernel"|IssueKernel->"issue_kernel"|ReviewResource->"review_resource"|IssueResource->"issue_resource"
 let op_role=function ReviewKernel|ReviewResource->Reviewer|IssueKernel|IssueResource->Issuer
 let request_of_json raw=try
@@ -48,7 +51,6 @@ let capture path limit=
   let after=Unix.fstat fd and named=Unix.lstat path in
   require(same before opened&&same opened after&&same after named)"MANIFEST_CHANGED";Bytes.sub_string b 0 n)
 let unhex s=let d c=if c<='9'then Char.code c-48 else Char.code c-87 in String.init(String.length s/2)(fun i->Char.chr((d s.[i*2]lsl 4)lor d s.[i*2+1]))
-let as_hex s=String.concat""(List.init(String.length s)(fun i->Printf.sprintf"%02x"(Char.code s.[i])))
 let verify public signature message=
  require(hex public 64&&hex signature 128)"PRIOR_SIGNATURE_SCOPE";
  let key=ok(Mirage_crypto_ec.Ed25519.pub_of_octets(unhex public))in
@@ -70,7 +72,7 @@ let hash_file path=
   let same a b=a.Unix.st_dev=b.Unix.st_dev&&a.Unix.st_ino=b.Unix.st_ino&&a.Unix.st_size=b.Unix.st_size&&a.Unix.st_mtime=b.Unix.st_mtime&&a.Unix.st_ctime=b.Unix.st_ctime&&a.Unix.st_kind=b.Unix.st_kind&&a.Unix.st_perm=b.Unix.st_perm&&a.Unix.st_uid=b.Unix.st_uid&&a.Unix.st_gid=b.Unix.st_gid&&a.Unix.st_nlink=b.Unix.st_nlink in
   require(same(Unix.fstat(Unix.descr_of_in_channel c))before&&same(Unix.lstat path)before)"PIN_CHANGED";Digestif.SHA256.(to_hex(get !ctx)))
 let cap_keys=["domain";"profile";"configuration_sha256";"request_sha256";"evidence_sha256";"context_sha256";"proposal_sha256";"portfolio_sha256";"selection_sha256";"factual_review_sha256";"source_sha256";"worker_sha256";"guardian_sha256";"reviewer";"reviewer_session";"issuer";"issuer_session";"host";"boot";"clock_domain";"epoch";"issued_utc_ns";"expires_utc_ns";"issued_mono_ns";"expires_mono_ns"]
-let sign_bound (provider:provider) (request:request)=try
+let prepare_bound (provider:provider) (request:request)=try
  require(op_role request.operation=provider.role)"ROLE_REFUSED";
  let bytes=capture provider.manifest_path 262144 in require(hex provider.manifest_sha 64&&K.sha256 bytes=provider.manifest_sha)"MANIFEST_PIN_REFUSED";
  let manifest=parse 262144 bytes in closed manifest["domain";"intent_id";"kernel_configuration";"resource_anchor";"request";"capability";"database";"journal";"pins"];
@@ -95,8 +97,7 @@ let sign_bound (provider:provider) (request:request)=try
  let result=Fun.protect ~finally:(fun()->R.close database)(fun()->let journal=ok(R.open_owned(text manifest"journal"))in
  Fun.protect ~finally:(fun()->R.close journal)(fun()->
  require(R.identity_json database=Yojson.Basic.Util.member"database_identity"aj&&R.identity_json journal=Yojson.Basic.Util.member"journal_identity"aj)"RESOURCE_BINDING_REFUSED";
- let public=as_hex(Mirage_crypto_ec.Ed25519.pub_to_octets(Mirage_crypto_ec.Ed25519.pub_of_priv provider.key))in
- require(public=text(if provider.role=Reviewer then reviewer else issuer)"public_key_hex")"KEY_BINDING_REFUSED";
+ let public=text(if provider.role=Reviewer then reviewer else issuer)"public_key_hex"in
  let resource=match request.operation with ReviewKernel|IssueKernel->None|ReviewResource|IssueResource->
   ignore(ok(K.verify config ~request_bytes:native_request ~capability_bytes:capability ~reviewer_signature:request.kr ~issuer_signature:request.ki));
   Some(ok(R.resource_bytes anchor ~request_bytes:native_request ~capability_bytes:capability ~reviewer_signature:request.kr ~issuer_signature:request.ki))in
@@ -107,13 +108,84 @@ let sign_bound (provider:provider) (request:request)=try
  |IssueResource,Some r->verify(text reviewer"public_key_hex")request.rr(R.review_message r);R.issuer_message r ~reviewer_signature:request.rr
  |_->raise(Refused"PURPOSE_REFUSED")in
  ignore(ok(R.check_opened database));ignore(ok(R.check_opened journal));now_valid cfg cap;
- let signature=as_hex(Mirage_crypto_ec.Ed25519.sign ~key:provider.key message)in
- (match request.operation,resource with
+ let check_signature signature=
+ verify public signature message;
+ match request.operation,resource with
  |IssueKernel,_->ignore(ok(K.verify config ~request_bytes:native_request ~capability_bytes:capability ~reviewer_signature:request.kr ~issuer_signature:signature))
  |IssueResource,Some resource_bytes->ignore(ok(R.verify anchor ~request_bytes:native_request ~capability_bytes:capability ~reviewer_signature:request.kr ~issuer_signature:request.ki ~resource_bytes ~resource_reviewer_signature:request.rr ~resource_issuer_signature:signature))
- |_->());
- Ok{operation=request.operation;intent=request.intent;manifest_sha=provider.manifest_sha;request_sha=K.sha256 native_request;capability_sha=K.sha256 capability;resource_sha=Option.map K.sha256 resource;signature}))in result
+ |_->()in
+ let recheck()=
+ require(K.sha256(capture provider.manifest_path 262144)=provider.manifest_sha)"MANIFEST_PIN_REFUSED";
+ List.iter(fun(role,expected)->let p=Yojson.Basic.Util.member role pins in require(hash_file(text p"path")=expected)"ARTIFACT_PIN_REFUSED")
+  (List.map(fun k->k,text cfg(k^"_sha256"))["source";"worker";"guardian"]@List.map(fun k->k,text aj(k^"_sha256"))["launcher";"owner_source";"journal_worker"]);
+ let db=ok(R.open_owned(text manifest"database"))in
+ Fun.protect~finally:(fun()->R.close db)(fun()->let jo=ok(R.open_owned(text manifest"journal"))in
+ Fun.protect~finally:(fun()->R.close jo)(fun()->
+ require(R.identity_json db=Yojson.Basic.Util.member"database_identity"aj&&R.identity_json jo=Yojson.Basic.Util.member"journal_identity"aj)"RESOURCE_BINDING_REFUSED";
+ ignore(ok(R.check_opened db));ignore(ok(R.check_opened jo));now_valid cfg cap))in
+ let fact={operation=request.operation;intent=request.intent;manifest_sha=provider.manifest_sha;request_sha=K.sha256 native_request;capability_sha=K.sha256 capability;resource_sha=Option.map K.sha256 resource;signature=""}in
+ Ok{fact;message;public;recheck;check_signature}))in result
  with Refused e->Error e|_->Error"PROVIDER_UNAVAILABLE"
+
+(* Bounded LOCAL transport, not provider authentication by itself. Namespace
+   ownership/freeze and separately provisioned role/public-key custody remain
+   trusted-startup obligations. The response signature proves possession under
+   the pinned manifest key, NOT managed custody, review truth or effect authority.
+   No caller endpoint/key/message is accepted, and no retry is performed. *)
+let socket_check a=
+ require(String.length a.path>1&&String.length a.path<108&&a.path.[0]='/'&&Unix.realpath a.path=a.path)"PROVIDER_UNAVAILABLE";
+ let st=Unix.lstat a.path and parent=Unix.lstat(Filename.dirname a.path)in
+ require(st.Unix.st_kind=Unix.S_SOCK&&st.Unix.st_uid=a.uid&&a.uid=Unix.geteuid()&&st.Unix.st_dev=a.device&&st.Unix.st_ino=a.inode&&st.Unix.st_perm land 0o077=0
+  &&parent.Unix.st_kind=Unix.S_DIR&&parent.Unix.st_uid=a.uid&&parent.Unix.st_perm land 0o077=0)"PROVIDER_UNAVAILABLE"
+let io_deadline()=Int64.add(Mtime_clock.now_ns())1000000000L
+let wait fd writing until=
+ let remaining=Int64.sub until(Mtime_clock.now_ns())in require(remaining>0L)"PROVIDER_OUTCOME_UNKNOWN";
+ let r,w,_=Unix.select(if writing then[]else[fd])(if writing then[fd]else[])[](Int64.to_float remaining/.1e9)in
+ require((if writing then w else r)<>[])"PROVIDER_OUTCOME_UNKNOWN"
+let transfer fd writing until bytes offset count=
+ let rec loop at=
+ if at<count then(
+ wait fd writing until;
+ try let n=if writing then Unix.write fd bytes(offset+at)(count-at)else Unix.read fd bytes(offset+at)(count-at)in
+ require(n>0)"PROVIDER_OUTCOME_UNKNOWN";loop(at+n)
+ with Unix.Unix_error((Unix.EAGAIN|Unix.EWOULDBLOCK|Unix.EINTR),_,_)->loop at)in loop 0
+let frame_header n=Bytes.init 4(fun i->Char.chr((n lsr((3-i)*8))land 255))
+let send_frame fd until body=
+ require(String.length body>0&&String.length body<=4096)"PROVIDER_BOUND";
+ transfer fd true until(frame_header(String.length body))0 4;
+ transfer fd true until(Bytes.of_string body)0(String.length body);Unix.shutdown fd Unix.SHUTDOWN_SEND
+let receive_frame fd until=
+ let h=Bytes.create 4 in transfer fd false until h 0 4;
+ let n=ref 0 in Bytes.iter(fun c->n:=(!n lsl 8)lor Char.code c)h;
+ require(!n>0&& !n<=4096)"PROVIDER_BOUND";
+ let b=Bytes.create !n in transfer fd false until b 0 !n;
+ let extra=Bytes.create 1 in wait fd false until;
+ require(Unix.read fd extra 0 1=0)"PROVIDER_BOUND";Bytes.to_string b
+let external_request (request:request) (prepared:prepared)=Yojson.Basic.to_string(`Assoc[
+ "schema",`String"uos.recovery.external-provider-request.v1";"operation",`String(op_name request.operation);"intent_id",`String request.intent;
+ "manifest_sha256",`String prepared.fact.manifest_sha;"request_sha256",`String prepared.fact.request_sha;"capability_sha256",`String prepared.fact.capability_sha;
+ "resource_sha256",(match prepared.fact.resource_sha with None->`Null|Some s->`String s);"message_sha256",`String(K.sha256 prepared.message);
+ "kernel_review",`String request.kr;"kernel_issuer",`String request.ki;"resource_review",`String request.rr])
+let provider_exchange anchor body=
+ socket_check anchor;
+ let fd=Unix.socket~cloexec:true Unix.PF_UNIX Unix.SOCK_STREAM 0 in
+ Fun.protect~finally:(fun()->Unix.close fd)(fun()->
+ Unix.set_nonblock fd;let until=io_deadline()in
+ (try Unix.connect fd(Unix.ADDR_UNIX anchor.path)with
+  Unix.Unix_error((Unix.EINPROGRESS|Unix.EWOULDBLOCK|Unix.EAGAIN),_,_)->wait fd true until;
+   require(Unix.getsockopt_error fd=None)"PROVIDER_OUTCOME_UNKNOWN");
+ socket_check anchor;send_frame fd until body;receive_frame fd until)
+let sign_bound provider request=
+ let* prepared=prepare_bound provider request in
+ try let body=external_request request prepared in
+ let reply=parse 4096(provider_exchange provider.socket body)in
+ closed reply["schema";"operation";"intent_id";"provider_request_sha256";"message_sha256";"signature_hex";"authority";"admitted"];
+ require(text reply"schema"="uos.recovery.external-provider-response.v1"&&text reply"operation"=op_name request.operation&&text reply"intent_id"=request.intent
+  &&text reply"provider_request_sha256"=K.sha256 body&&text reply"message_sha256"=K.sha256 prepared.message
+  &&text reply"authority"="NONE"&&Yojson.Basic.Util.member"admitted"reply=`Bool false)"PROVIDER_RESPONSE_REFUSED";
+ let signature=text reply"signature_hex"in prepared.check_signature signature;prepared.recheck();
+ Ok{prepared.fact with signature}
+ with Refused e->Error e|_->Error"PROVIDER_OUTCOME_UNKNOWN"
 let launcher_provider : provider option = None
 let sign request=match launcher_provider with None->Error"Unavailable"|Some p->sign_bound p request
 let encode outcome=Yojson.Basic.to_string(match outcome with
