@@ -572,7 +572,7 @@ def main : IO UInt32 := do
 
   let ok := gatewayAligned canonicalExpectation obs && auditPass
   IO.println ""
-  IO.println s!"GATEWAY & NAME-OWNERSHIP TWIN : {if ok then "MATCHES TWIN (19/19 THEOREMS, 12/12 CONFIGS, LIVE HANDSHAKE GREEN)" else "DIVERGENT"}"
+  IO.println s!"GATEWAY & NAME-OWNERSHIP TWIN : {if ok then "MATCHES TWIN (22/22 THEOREMS, 12/12 CONFIGS, LIVE HANDSHAKE GREEN)" else "DIVERGENT"}"
   IO.println "(specification + live runtime evidence at this candidate; not system admission)"
 
   if ok then return 0

@@ -676,15 +676,36 @@ let audit_pins repository =
   need(member "schema"report=`String "uos.ecology-pin-audit.v1" && member "authority"report=`String "NONE")
     "unrecognized pin observation report";
   report
+let repin_clients repository release =
+  let root=realpath repository in
+  need(Sys.file_exists(root^"/.jj")) "standalone UOS root required";
+  let rel=realpath release in
+  let m=verify rel in
+  let payload_sha256=m|>member "payload_sha256"|>to_string in
+  let ocaml=dependency root "toolchains/opam-ocaml/bin/ocaml" true|>member "path"|>to_string in
+  let home=(getpwuid(geteuid())).pw_dir in
+  let output=run root ocaml["-I";root^"/tools";root^"/tools/ecology_pin_audit_cli.ml";"repin";root;home;rel;payload_sha256]in
+  let report=Yojson.Safe.from_string output in
+  need(member "schema"report=`String "uos.ecology-pin-audit.v1" && member "authority"report=`String "NONE" &&
+       member "status"report=`String "OBSERVED_CONSISTENT_PINS_ONLY")
+    "repin_clients failed to converge all catalog targets";
+  let write_pointer p v =
+    let tmp=p^".repin-tmp" in
+    (try unlink tmp with _->());
+    write tmp v;chmod tmp 0o600;rename tmp p in
+  write_pointer(root^"/var/releases/ecology/current-mcp-release")(rel^"\n");
+  write_pointer(root^"/var/releases/ecology/current-release")(rel^"\n");
+  report
 let () = try
-  need(Array.length Sys.argv<=4 && Array.for_all(fun x->String.length x<=4096)Sys.argv) "usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID | verify RELEASE | rebind RELEASE | audit-pins ROOT | selftest";
+  need(Array.length Sys.argv<=5 && Array.for_all(fun x->String.length x<=4096)Sys.argv) "usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID | verify RELEASE | rebind RELEASE | audit-pins ROOT | repin-clients ROOT RELEASE | selftest";
   let result=match Array.to_list Sys.argv with
     | [_;"stage";root] -> stage root
     | [_;"stage-native";root;id] -> stage ~native_id:id root
     | [_;"rebind";release] -> rebind release
     | [_;"verify";release] -> let m=verify release in obj["status",s"PASS";"release",s release;"payload_sha256",member "payload_sha256" m;"application_admitted",`Bool false]
     | [_;"audit-pins";root] -> audit_pins root
+    | [_;"repin-clients";root;release] -> repin_clients root release
     | [_;"selftest"] -> selftest()
-    | _ -> failwith "usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID | verify RELEASE | rebind RELEASE | audit-pins ROOT | selftest" in
+    | _ -> failwith "usage: ecology_release.ml stage ROOT | stage-native ROOT ARTIFACT_ID | verify RELEASE | rebind RELEASE | audit-pins ROOT | repin-clients ROOT RELEASE | selftest" in
   print_string(json result)
 with e -> prerr_endline(Yojson.Safe.to_string(obj["status",s"FAIL";"error",s(Printexc.to_string e);"application_admitted",`Bool false]));exit 1
