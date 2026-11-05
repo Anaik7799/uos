@@ -9,8 +9,8 @@
       "args": [],
       "env": {
         "UOS_ROOT": "/home/an/NAS-setup/uos",
-        "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261103-2138-27ce5665bc3ac799a3b6e90e3a734fa55eb170aa37e39239d2a38a2f94f36686",
-        "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "5362fb888e9db64ec461bb090bbe2e0fed02bfb35e23f012b9b478d97df888e6"
+        "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261105-1830-afc4943e14ae8ae6b350c18487997ad8f53aa7c14b42fc43a62ffafcc027b844",
+        "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "7365bd96a39d79911bcc8431085ead7738933cb6f23e294a20772197b26148f8"
       }
     }
   }

@@ -1,17 +1,18 @@
 {
   "mcpServers": {
     "uos-gleam": {
-  "command": "/home/an/NAS-setup/uos/tools/uos-mcp-stdio",
-  "args": [],
-  "cwd": "/home/an/NAS-setup/uos",
-  "env": {
-    "ERL_CRASH_DUMP_SECONDS": "0",
-    "UOS_MCP_WORKSPACE_ROOT": "/home/an/NAS-setup/uos",
-    "UOS_MCP_ROUTE": "public",
-    "UOS_MCP_CLIENT_NAME": "claude-code",
-    "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261105-1830-afc4943e14ae8ae6b350c18487997ad8f53aa7c14b42fc43a62ffafcc027b844",
-    "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "7365bd96a39d79911bcc8431085ead7738933cb6f23e294a20772197b26148f8"
-  }
-}
+      "command": "/home/an/NAS-setup/uos/tools/uos-mcp-stdio",
+      "args": [],
+      "cwd": "/home/an/NAS-setup/uos",
+      "env": {
+        "ERL_CRASH_DUMP_SECONDS": "0",
+        "UOS_MCP_WORKSPACE_ROOT": "/home/an/NAS-setup/uos",
+        "UOS_MCP_ROUTE": "public",
+        "UOS_MCP_CLIENT_NAME": "claude-code",
+        "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261105-1830-afc4943e14ae8ae6b350c18487997ad8f53aa7c14b42fc43a62ffafcc027b844",
+        "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "7365bd96a39d79911bcc8431085ead7738933cb6f23e294a20772197b26148f8"
+      },
+      "enabled": true
+    }
   }
 }
