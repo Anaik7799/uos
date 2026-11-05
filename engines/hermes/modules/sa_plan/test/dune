@@ -4,6 +4,25 @@
  (modules sa_plan_main sa_plan_cli sa_plan_work sa_plan_manual journal_markdown_html)
  (libraries bos core core_unix time_now yojson sa_plan))
 
+; Private integration fixture: NEVER linked/installed in production libraries.
+(library
+ (name jj_integration_fixture_kernel)
+ (wrapped false)
+ (modules jj_integration_fixture_kernel)
+ (libraries sa_plan digestif yojson unix mtime.clock.os))
+(executables
+ (names jj_integration_fixture_port jj_integration_fixture_setup)
+ (modules jj_integration_fixture_port jj_integration_fixture_setup)
+ (libraries jj_integration_fixture_kernel sa_plan digestif yojson unix))
+(rule
+ (target jj_integration_fixture_guardian.ml)
+ (deps %{workspace_root}/../../tools/telegram_store_transport_guardian.ml)
+ (action (copy %{deps} %{target})))
+(executable
+ (name jj_integration_fixture_guardian)
+ (modules jj_integration_fixture_guardian)
+ (libraries unix mtime.clock))
+
 (executable
  (name sa_plan_test)
  (modules sa_plan_test)
