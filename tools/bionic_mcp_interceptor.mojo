@@ -168,8 +168,12 @@ def main():
     var t1 = perf_counter_ns()
 
     var simhash_us = Float64(t1 - t0) / 1000000.0
-    var struct_tokens = uos_mojo_structural_density(ptr, n)
-    var anchors = uos_mojo_mcip_anchor_count(ptr, n)
+    var t_fused0 = perf_counter_ns()
+    var fused = uos_mojo_fused_single_pass_scan(ptr, n)
+    var t_fused1 = perf_counter_ns()
+    var fused_us = Float64(t_fused1 - t_fused0) / 1000.0
+    var struct_tokens = fused[1]
+    var anchors = fused[4]
     var h_single = uos_mojo_simhash64_avx512(ptr, n)
 
     # Verify fail-closed traps on adversarial SQLi (-3)
@@ -196,5 +200,49 @@ def main():
         + String(anchors)
         + ',"xor_accumulator_guard":'
         + String(h_acc)
+        + ',"fused_single_pass_us":'
+        + String(fused_us)
         + ',"zero_allocation_register_fastpath":true}'
     )
+
+
+def uos_mojo_fused_single_pass_scan(
+    ptr: Pointer[UInt8, _], length: Int
+) -> Tuple[Int, Int, Int, Int, Int]:
+    """Data-Driven Single-Pass Cache-Line Scanner (Zero Second-Pass Cache Misses).
+    Simultaneously computes in 1 pass over L1 cache:
+      1. sec_code: 0 (PASS), -2 (NUL 0x00 trap), -3 ('DROP T' SQLi trap)
+      2. struct_count: JSON-RPC structural delimiters ({, }, [, ], :, ,)
+      3. newline_count: line feeds (0x0A)
+      4. hex_count: hex digits (0-9, a-f, A-F)
+      5. anchor_count: MCIP-v1 anchors ('uos://', 'sha256', 'EV-', 'ADR-')
+    """
+    var sec_code: Int = 0
+    var struct_count: Int = 0
+    var newline_count: Int = 0
+    var hex_count: Int = 0
+    var anchor_count: Int = 0
+    for i in range(length):
+        var b = Int(ptr[unsafe_offset = i])
+        if b == 0:
+            return (-2, struct_count, newline_count, hex_count, anchor_count)
+        if b == 10:
+            newline_count += 1
+        elif b == 123 or b == 125 or b == 91 or b == 93 or b == 58 or b == 44:
+            struct_count += 1
+        elif (b >= 48 and b <= 57) or (b >= 97 and b <= 102) or (b >= 65 and b <= 70):
+            hex_count += 1
+        if i + 5 < length:
+            if b == 68 and Int(ptr[unsafe_offset = i + 1]) == 82 and Int(ptr[unsafe_offset = i + 2]) == 79 and Int(ptr[unsafe_offset = i + 3]) == 80 and Int(ptr[unsafe_offset = i + 4]) == 32 and Int(ptr[unsafe_offset = i + 5]) == 84:
+                sec_code = -3
+            elif b == 117 and Int(ptr[unsafe_offset = i + 1]) == 111 and Int(ptr[unsafe_offset = i + 2]) == 115 and Int(ptr[unsafe_offset = i + 3]) == 58 and Int(ptr[unsafe_offset = i + 4]) == 47 and Int(ptr[unsafe_offset = i + 5]) == 47:
+                anchor_count += 1
+            elif b == 115 and Int(ptr[unsafe_offset = i + 1]) == 104 and Int(ptr[unsafe_offset = i + 2]) == 97 and Int(ptr[unsafe_offset = i + 3]) == 50 and Int(ptr[unsafe_offset = i + 4]) == 53 and Int(ptr[unsafe_offset = i + 5]) == 54:
+                anchor_count += 1
+        if i + 3 < length:
+            if b == 65 and Int(ptr[unsafe_offset = i + 1]) == 68 and Int(ptr[unsafe_offset = i + 2]) == 82 and Int(ptr[unsafe_offset = i + 3]) == 45:
+                anchor_count += 1
+        if i + 2 < length:
+            if b == 69 and Int(ptr[unsafe_offset = i + 1]) == 86 and Int(ptr[unsafe_offset = i + 2]) == 45:
+                anchor_count += 1
+    return (sec_code, struct_count, newline_count, hex_count, anchor_count)

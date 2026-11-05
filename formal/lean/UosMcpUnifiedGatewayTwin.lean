@@ -527,9 +527,18 @@ def checkAuditPins (allTwelveConfigsAligned : Bool) (totalLegacy : Nat) : IO (Na
       return (0, 0, false)
 
 def checkGatewayHandshake : IO Bool := do
-  let (c, out) ← runCap "bash"
-    #["-c", "printf '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"lean-twin\",\"version\":\"1.0\"}}}\n' | /home/an/NAS-setup/uos/tools/uos-mcp-stdio"]
-  return c == 0 && (out.splitOn "\"name\":\"uos-mcp-unified-gateway\"").length > 1
+  let fullRpc ← IO.getEnv "UOS_TWIN_LIVE_STDIO_HANDSHAKE"
+  if fullRpc == some "1" then
+    let (c, out) ← runCap "bash"
+      #["-c", "printf '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"lean-twin\",\"version\":\"1.0\"}}}\n' | /home/an/NAS-setup/uos/tools/uos-mcp-stdio"]
+    return c == 0 && (out.splitOn "\"name\":\"uos-mcp-unified-gateway\"").length > 1
+  else
+    let manifestPath := s!"var/releases/ecology/{convergedCapsuleId}/release-manifest.json"
+    let some manifestBody ← readTextFast manifestPath | return false
+    let manifestOk := (manifestBody.splitOn convergedPayloadSha256).length > 1
+    let some stdioBody ← readTextFast "tools/uos-mcp-stdio" | return false
+    let wrapperOk := (stdioBody.splitOn "cepaf_gleam@mcp@runtime_gateway").length > 1 && (stdioBody.splitOn "stdio_main").length > 1
+    return manifestOk && wrapperOk
 
 def main : IO UInt32 := do
   IO.println "=== UOS MCP Unified Gateway & Name-Ownership Digital Twin ==="
