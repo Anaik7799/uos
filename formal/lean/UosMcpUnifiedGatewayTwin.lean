@@ -456,8 +456,8 @@ def configClean (path : String) : IO (Bool × Bool) := do
   let (c, body) ← runCap "cat" #[path]
   if c != 0 then return (false, false)
   let pinConverged :=
-    (body.splitOn "20261105-1830-afc4943e14ae8ae6b350c18487997ad8f53aa7c14b42fc43a62ffafcc027b844").length > 1
-    && (body.splitOn "7365bd96a39d79911bcc8431085ead7738933cb6f23e294a20772197b26148f8").length > 1
+    (body.splitOn "20261105-1956-630752df0813ce1938ae3e821f453a138900a05013c7f220061cf8b684aa30f2").length > 1
+    && (body.splitOn "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6537").length > 1
   let canonical :=
     (body.splitOn "uos-harness").length > 1
     || (body.splitOn "uos-gleam").length > 1
