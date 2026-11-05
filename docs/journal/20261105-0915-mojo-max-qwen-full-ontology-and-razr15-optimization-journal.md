@@ -16,12 +16,13 @@
   - `uos/mojo-max-zenoh-holonic-full-resource/20261105-1510` (`z1`..`z4` 4/4 `completed`)
   - `uos/observability-metering-atlas-intent-zenoh/20261105-1520` (`m1`..`m4` 4/4 `completed`)
   - `uos/full-symbiosis-data-control-metering-atlas-intent-lean-twin/20261105-1616` (`f1`..`f4` 4/4 `completed`)
+  - `plan-lean4-expansion-20261105-2048` (`l1` `completed`, `l2`..`l3` planned & staged)
 
 ---
 
 ## 1. Scope & Trigger (Engine 5: Formal Lean 4 / Gospel Gateways)
 
-### Saved Verbatim Operator Prompts & Directives (`m00348`, `m00356`, `m00397`, `m00549`, `m00748`, `m00778`, `m00828`, `m00850`, `m00868`, `m00894`, `m00920`, `m00962`)
+### Saved Verbatim Operator Prompts & Directives (`m00348`, `m00356`, `m00397`, `m00549`, `m00748`, `m00778`, `m00828`, `m00850`, `m00868`, `m00894`, `m00920`, `m00962`, `m00999`, `m01009`, `m01022`, `m01060`, `m01064`, `m01135`, `m01161`, `m01162`, `m01164`, `m01173`, `m01174`)
 
 1. **`m00348` / `m00356`**: *"is llama server required to run on razr15-1 foe qwen+max to be running. How do we make max resources on razr15-1 - RAM, GPU, VRAM, CPU etc are optmized for max+qwen use? see if max can be tweaked further to run qwen model optimally"*
 2. **`m00397`**: *"extract all public and library info on Mojo, MAX and Qwen models and create a Lean ontology and library with all the functionality. Lean is the preferred language for all doc and ops on this functionality. Then create the optimized code that utilizes the full capabilities of the models, library and hardware. Benchmark and optimize. Use Claude and Codex for SDLC and SRE. Show the processing pipeline that is being setup"*
@@ -33,6 +34,13 @@
 8. **`m00868`**: *"Check all existing system rules, skills, superpowers and ops are aligned for building a solid verifiable lean based SDLC and SRE workflows. Include all aspects of the system. USe the holarchy+fpps+bionic system setup and parallelization to optimize compute+gpu and token usage via a data driven approach. Do the review with claude and codex"*
 9. **`m00894`**: *"check if mojo and max are fully using the computer, storage, memory, gpu etc capabilities, also ensure zenoh and remote agent coordination is working well. Review with claude and codex"*
 10. **`m00920` / `m00962`**: *"make sure we have transparent observability and metering for every stage of the pipeline to evaluate and optimize the system further. Also use the algebraic atlas and denotational intent to make the compute, memory, storage, gpu resources configurable as per need. review with claude and codex. Also share the fractal prompt that captures all that we have been doing in a clean and simple manner. Do full symbiosis"*
+11. **`m00999`**: *"save journal"*
+12. **`m01009` / `m01022`**: *"make sure all the webpage and links are working. use claude or codex"*
+13. **`m01060` / `m01064`**: *"continue"* (reconcile `current-mcp-release` capsule pin to `20261105-1551-eedf669f...` and seal `jj` `main` bookmark at `9b0ca520`)
+14. **`m01135`**: *"what are the key areas to increase lean4 based functionality, use claude and codex for all analysis, docs and code implementation"*
+15. **`m01161` / `m01162`**: *"what is happening and what rae you working on"*
+16. **`m01164`**: *"save analysis, plan, implementation approach and prompt histiory"*
+17. **`m01173` / `m01174`**: *"merge all code from claude, code, pi, deepseek  and agy into main"*
 
 ### Scope Objectives
 1. Determine whether `llama-server` is required on `razr15-1` (`100.114.9.28`) for `Qwen + MAX` to run and optimize all `razr15-1` resources (RAM, GPU, VRAM, CPU, Windows `C:` disk).
@@ -87,6 +95,9 @@
    - **L0..L9 Constitutional Invariants**: `Trust = Fresh Empirical Behavior /\ Formal Lean 4 Spec (0 sorry, 0 axioms)`; sole execution authority `sa-plan` (`SC-SA-PLAN-001`, `SC-JIDOKA-001`); `admitted_ev_ceiling = 93` (`INV-PROV-05`); NVMe lock `HARD_DENIED_SYSTEM_OS_SERIAL = "[REDACTED_SYSTEM_OS_SERIAL]"`; sealed 104-surface `uos-harness` MCP gateway (`53` tools + `38` resources + `10` prompts + `3` templates).
    - **Zero-Remote-Token Local-First Cascade**: `KindLocal` structurally omits remote-token fields (`remote_tokens_billed = 0` by construction) across Stage 0 Mojo 1.3 AOT AVX2 (`92-99 ns/actor` across 40 FPP actors, `160 ns/op`), Stage 1 Algebraic Atlas & Denotational Intent (`100%` interlock pass) + MAX 26.8 GPU Graph Batch Router (`1.81 us/query` on `sm_75`), and Stage 2 Mode A Hybrid GPU (`49.05 tok/s`, `29/29` layers, `5,446 / 8,192 MiB` VRAM, Flash Attention, `q8_0` KV) with Mode B Pure MAX CPU `ops.qmatmul(Q4_K/Q6_K)` + `b_q/b_k/b_v` bias fallback (`5.42 tok/s`).
    - **Dual-Plane 14-Stage Observability & 4-Gate POODAVR Loop**: `GET /v1/telemetry/pipeline` (`uos.observability.dual_plane_14stage.v1`), `POST /v1/intent/evaluate` (`max_saturation`, `burst`, `sovereign_cpu`, `eco`), and `uos.zenoh.core_evo.v1` Zenoh broadcast (`100.87.7.78:7447` / `:8080`) governed by Gate 1 Preflight, Gate 2 Canary (`2 + 2 = 4`, `>= 99%` QKV parity, `>= 35 tok/s`), Gate 3 SRE Drift (`VRAM <= 7600 MiB`, `dV/dt = -0.42 < 0`), and Gate 4 Deterministic Mode-A -> Mode-B Rollback.
+9. **Top 7 Key Areas for Lean 4 Runtime & Kernel Expansion (`plan-lean4-expansion-20261105-2048`, `l1`..`l3`, `m01135` / `m01164`)**:
+   - **Codebase Audit**: Surveyed all `32` Lean 4 modules (`26,647` lines) under `formal/lean/`. Currently only `1/32` files (`formal/lean/UosZlpHyperplane.lean`, exporting `8` `@[export]` functions into `native/zlp/build_zlp_port.sh` -> `bin/uos_zlp_port_v3`) is compiled into an in-flight C-ABI runtime binary; the remaining `31/32` files (including our `66` proved theorems in `Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean`, `Razr15_Max_Qwen_Digital_Twin.lean`, and `Minimum_Token_Cascade_Theorems.lean`) run as offline `lean --run` verifiers while their runtime predicates are duplicated in Python/Mojo/Gleam/OCaml.
+   - **7 High-Leverage Expansion Areas**: (1) In-Flight `@[export]` Shared Library (`libuos_lean_guard.so`) for Mojo 1.3 `OwnedDLHandle` & MAX 26.8 `ctypes.CDLL` (`uos_lean_check_intent`, `uos_lean_route_cascade`, `uos_lean_verify_14stage_telemetry`, `uos_lean_solve_atlas_budget`, `< 80 ns/call`); (2) Gleam/OTP ZLP Port v3 Expansion (`native/zlp/lean_shim_v3.c` adding Cascade Router, 5-Factor STPA/FMEA Risk Scorer, and 7-Stage POODAVR Guard); (3) Standalone Compiled Lean 4 SDLC/SRE Gate Binaries (`leanc -O3` -> `tools/uos-lean-gate`, `< 3 ms` startup); (4) Continuous OTP-Supervised Digital Twin Daemon (`bin/uos_razr15_twin_daemon`); (5) MCP Stdio Gateway Zero-Trust Payload Guard (`SC-HARNESS-MCP-001` across 104 surfaces); (6) 4-Resource Algebraic Atlas & KV-Cache Budget Solver; (7) Zenoh Wire-Envelope & Replay-Window Formal Guard (`FNV-1a` + epoch watermark).
 
 ### Processing Pipeline Diagram (ASCII + Mermaid per `SC-DIAGRAM-001`)
 

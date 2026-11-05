@@ -200,6 +200,13 @@ pub fn get_modules() -> List(CoreEvoModuleRecord) {
       layers: "L0, L1, L4, L8",
       invariants_and_capabilities: "OI07 8-guard effect-time lease/SHA-256 authority fence (blocking oi02 until oi07_verified, rejecting :4200/c3i) & 14-target reader-drain crash rollback",
     ),
+    CoreEvoModuleRecord(
+      id: "MOD-08",
+      module_name: "core_bionic_token_twin",
+      path: "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_bionic_token_twin.gleam",
+      layers: "L0, L5, L8",
+      invariants_and_capabilities: "Bionic token/byte cost twin for the 5-harness envelope. Declared 20261105-1740 to close the ontology undercount: this module was imported and live but absent from get_modules(), so module_count reported 7 while 8 core_* modules (7,970 LOC) exist on disk. See THM_ONT_08/THM_ONT_09 in formal/lean/UosCoreEvoUnifiedDigitalTwin.lean",
+    ),
   ]
 }
 

@@ -49,8 +49,22 @@ pub const brain_roots = [
   "governance/planning",
   "formal/lean",
   "formal/quint",
+  // Added 20261105-1748: brain_roots gates read_file via brain_file. Without
+  // these a reviewer could read formal/lean but never the tools and systemd
+  // units under review — the PATH_NOT_IN_CORPUS that Codex hit.
+  "tools",
+  "ops",
 ]
 
+// 20261105-1745 — KM resource coverage fix.
+// Independent reviewers (Codex, Pi+Argon) could not read the artifacts under
+// review: uos://km/tools/uos_web_watchdog.ml returned RESOURCE_NOT_FOUND and
+// read_file returned PATH_NOT_IN_CORPUS, because the corpus covered only
+// documentation trees. A review surface that cannot serve source is not a
+// review surface. Source trees are added below; secrecy is still enforced by
+// `markers` (applied to EVERY path via clean_relative), the `extensions`
+// allowlist, and `barred_cache_segments`. `var/` is deliberately NOT included:
+// it holds var/harness/mcp-transport-secrets.env and the sa-plan stores.
 const trees = [
   "docs",
   "contracts",
@@ -64,6 +78,15 @@ const trees = [
   ".claude/rules",
   ".claude/skills",
   "plugins",
+  // Source and operations trees, added 20261105-1745 so the code under review
+  // is readable by a reviewer. No secret-shaped content found in these trees
+  // at the time of the change; the marker denylist remains the guard.
+  "tools",
+  "ops",
+  "apps",
+  "engines",
+  "native",
+  "services",
 ]
 
 const seeds = ["AGENTS.md", "CLAUDE.md", "GEMINI.md", "README.md"]
@@ -84,6 +107,16 @@ const extensions = [
   ".sh",
   ".html",
   ".svg",
+  // Added 20261105-1745: systemd unit and drop-in types. The ops/systemd/user
+  // tree was admitted above, but without these extensions the units themselves
+  // stayed 403 — the exact files an independent reviewer asked for. These are
+  // plain configuration text; `markers` still bars anything secret-shaped.
+  ".service",
+  ".timer",
+  ".socket",
+  ".target",
+  ".conf",
+  ".nix",
 ]
 
 const markers = [
@@ -104,6 +137,12 @@ const markers = [
 
 const barred_cache_segments = [
   ".lake",
+  // Added 20261105-1745 together with the source trees: vendored dependency
+  // and toolchain trees are not project corpus and must not be served.
+  ".pixi",
+  ".venv",
+  "toolchains",
+  "vendor",
   "__pycache__",
   "_build",
   "node_modules",
@@ -269,9 +308,17 @@ pub fn brain_file(path: String) -> Bool {
     || string.starts_with(path, ".agents/skills/")
     || list.any(brain_roots, fn(r) { string.starts_with(path, r <> "/") })
   }
-  && list.any([".md", ".toml", ".json", ".lean", ".qnt"], fn(e) {
-    string.ends_with(path, e)
-  })
+  && list.any(
+    // Extended 20261105-1748: brain_file previously admitted only prose and
+    // proof types, so source and unit files were unreadable through read_file
+    // even once their trees were in the corpus. Secrecy is still enforced by
+    // allowed_file -> clean_relative -> markers.
+    [
+      ".md", ".toml", ".json", ".lean", ".qnt", ".ml", ".mli", ".gleam",
+      ".service", ".timer", ".socket", ".target", ".conf", ".sh", ".zig",
+    ],
+    fn(e) { string.ends_with(path, e) },
+  )
 }
 
 fn prefix_stat(

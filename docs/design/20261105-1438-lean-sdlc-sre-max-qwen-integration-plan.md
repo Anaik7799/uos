@@ -5,11 +5,15 @@
 - **Document URI**: [http://nas-1.tail55d152.ts.net:4100/docs/design/20261105-1438-lean-sdlc-sre-max-qwen-integration-plan.md](http://nas-1.tail55d152.ts.net:4100/docs/design/20261105-1438-lean-sdlc-sre-max-qwen-integration-plan.md)
 - **Companion SC-JOURNAL-v3 Ledger**: [http://nas-1.tail55d152.ts.net:4100/docs/journal/20261105-0915-mojo-max-qwen-full-ontology-and-razr15-optimization-journal.md](http://nas-1.tail55d152.ts.net:4100/docs/journal/20261105-0915-mojo-max-qwen-full-ontology-and-razr15-optimization-journal.md)
 - **Install & Operations Guide**: [http://nas-1.tail55d152.ts.net:4100/docs/guides/20261105-0515-razr1-wsl2-max-mojo-install.md](http://nas-1.tail55d152.ts.net:4100/docs/guides/20261105-0515-razr1-wsl2-max-mojo-install.md)
-- **Authoritative Lean 4 Specs (50 Proved Theorems, 0 `sorry`, 0 Axioms)**:
-  1. [http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean) (**20/20** Theorems)
-  2. [http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Razr15_Max_Qwen_Digital_Twin.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Razr15_Max_Qwen_Digital_Twin.lean) (**24/24** Theorems + Live SSH/HTTP Probe)
+- **Authoritative Lean 4 Specs (86 Total Proved Theorems across 4 Core Files, 0 `sorry`, 0 Axioms)**:
+  1. [http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean) (**35/35** Theorems)
+  2. [http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Razr15_Max_Qwen_Digital_Twin.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Razr15_Max_Qwen_Digital_Twin.lean) (**25/25** Theorems + Live 14-Stage & Veto Probe)
   3. [http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Minimum_Token_Cascade_Theorems.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/Minimum_Token_Cascade_Theorems.lean) (**6/6** Theorems)
-- **Sa-Plan Authority**: `uos/lean-sdlc-sre-max-qwen-integration/20261105-1438` (`s1`..`s4` `completed`)
+  4. [http://nas-1.tail55d152.ts.net:4100/files/formal/lean/UosZlpHyperplane.lean](http://nas-1.tail55d152.ts.net:4100/files/formal/lean/UosZlpHyperplane.lean) (**20/20** Theorems + `8` `@[export]` C-ABI Kernels)
+- **Sa-Plan Authority**:
+  - `uos/lean-sdlc-sre-max-qwen-integration/20261105-1438` (`s1`..`s4` `completed`)
+  - `uos/full-symbiosis-data-control-metering-atlas-intent-lean-twin/20261105-1616` (`f1`..`f4` `completed`)
+  - `plan-lean4-expansion-20261105-2048` (`l1` `completed`, `l2`..`l3` staged)
 - **Admitted EV Ceiling**: `EV-93` (`SC-PROVENANCE-001`, `INV-PROV-05`)
 
 ---
@@ -134,11 +138,38 @@ cd /home/an/NAS-setup/uos/apps/cepaf_gleam && \
 
 ---
 
-## 6. Six-Domain Comprehensive Verification Checklist (`SC-CHECKLIST-001`, `SC-PROVENANCE-001`)
+---
+
+## 6. Phase 2 Expansion Plan & Implementation Approach: Increasing Lean 4 Runtime Functionality (`plan-lean4-expansion-20261105-2048`, `m01135` / `m01164`)
+
+### 6.1 Architectural Audit of `formal/lean/` (`32` Modules, `26,647` Lines)
+An audit across the entire `/home/an/NAS-setup/uos/formal/lean/` corpus revealed that while UOS maintains **26,647 lines of theorem-proved Lean 4 specifications**, only **1 out of 32 modules** (`formal/lean/UosZlpHyperplane.lean`, exporting `8` `@[export]` C-ABI symbols into `native/zlp/lean_shim_v3.c` -> `bin/uos_zlp_port_v3`) is compiled into an in-flight runtime binary. The remaining **31 modules** (including our **66-theorem** `Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean`, `Razr15_Max_Qwen_Digital_Twin.lean`, and `Minimum_Token_Cascade_Theorems.lean`) execute only as offline `lean --run` verifiers while their runtime guards are duplicated in Python, Mojo, Gleam, and OCaml.
+
+### 6.2 Top 7 Key Areas to Increase Lean 4-Based Functionality
+
+| Priority | Area | Current Implementation | Target Lean 4 Runtime Architecture | Latency / Overhead Target |
+|---|---|---|---|---|
+| **P1 (`l2`)** | **In-Flight Denotational Intent, Cascade & 14-Stage Metering Shared Library (`libuos_lean_guard.so`)** | Re-implemented in Python (`max_qwen_server.py`) and Mojo (`mojo_full_resource_engine.mojo`) | Export scalar C-ABI functions (`@[export uos_lean_check_intent]`, `@[export uos_lean_route_cascade]`, `@[export uos_lean_verify_14stage_telemetry]`, `@[export uos_lean_solve_atlas_budget]`) via `lean -c` + `leanc -shared -O3 -fPIC` into `libuos_lean_guard.so` | `< 80 ns/call` (zero heap allocation on unboxed `UInt64`/`UInt32`/`UInt8`) |
+| **P2 (`l3`)** | **Mojo 1.3 `OwnedDLHandle` & MAX 26.8 `ctypes.CDLL` In-Process FFI (`razr15-1`)** | Separate logic between formal proof and live server | Load `libuos_lean_guard.so` directly inside `mojo_full_resource_engine.mojo` and `max_qwen_server.py` on `razr15-1` (`100.114.9.28:8000`) so every HTTP request executes the compiled Lean 4 kernel | `< 150 ns` end-to-end FFI roundtrip |
+| **P3** | **Gleam/OTP ZLP Port v3 Expansion (`native/zlp/lean_shim_v3.c`)** | `UosZlpHyperplane.lean` exports 8 functions | Add Local-First Cascade Router, 5-Factor STPA/FMEA Risk Priority Scorer (`SC-RISK-PRIORITY-001`), and 7-Stage POODAVR Transition Guard to `UosZlpHyperplane.lean` + `lean_shim_v3.c` | `< 1.2 us` over BEAM Port / Perceus ST slab |
+| **P4** | **Standalone Compiled Lean 4 SDLC/SRE Gate Binaries (`tools/uos-lean-gate`)** | Interpreted OCaml scripts (`journal_linter.ml`, `km_gate_check.ml`, `risk_priority_check.ml`) | Compile `SCJournalV3Model.lean`, `ProvenanceModel.lean`, and `RiskPriorityModel.lean` via `leanc -O3` into standalone native ELF binaries | `< 3 ms` process startup (vs `~450 ms` `lean --run`) |
+| **P5** | **Continuous OTP-Supervised Digital Twin Daemon** | Manual one-shot `lean --run Razr15_Max_Qwen_Digital_Twin.lean` | Compile `Razr15_Max_Qwen_Digital_Twin.lean` via `leanc -O3` into `bin/uos_razr15_twin_daemon` supervised by OTP to continuously verify `S0..S6` / `C0..C6` telemetry | `5 s` bounded poll cadence, `0` remote tokens |
+| **P6** | **MCP Stdio Gateway Zero-Trust Payload Guard (`SC-HARNESS-MCP-001`)** | Gleam/OCaml JSON-RPC pre-checks on `uos-harness` | Export Lean 4 `checkMcpFrame` and `checkSaPlanAuthority` from `HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean` to gate all 104 MCP surfaces | `< 200 ns/frame` |
+| **P7** | **4-Resource Algebraic Atlas & Zenoh Wire-Envelope Guard** | Hardcoded CLI flags & Python dict construction | Compute `(cpu_threads, gpu_layers, kv_quant_bits, vram_budget_mib)` via Lean 4 `uos_lean_solve_atlas_budget` and sign Zenoh `uos.zenoh.core_evo.v1` payloads with `uos_zlp_verify_frame` | Deterministic compile-time + runtime parity |
+
+### 6.3 Concrete Implementation Approach (`@[export]` -> `lean -c` -> `leanc -shared -O3`)
+
+1. **Unboxed Scalar C-ABI Exports in Lean 4**: Export `uos_lean_check_intent (saPlanBound nvmeSafe : UInt8) (evId healthPct vramMib : UInt32) : UInt8`, `uos_lean_route_cascade (confMilli : UInt32) (preflightOk gpuWorkerOk : UInt8) : UInt8`, `uos_lean_verify_14stage_telemetry (dataStages ctrlStages : UInt32) (remoteTokens : UInt64) (vramMib : UInt32) (lyapunovNeg : UInt8) : UInt8`, and `uos_lean_solve_atlas_budget (profileId : UInt8) : UInt32`. Because all inputs and outputs are unboxed scalar types, Lean 4 emits direct register-level C functions with zero heap allocation.
+2. **Shared Library Compilation (`native/zlp/build_lean_guard_so.sh`)**: Compile via `lean -c /tmp/uos_lean_guard.c` and `cc -O3 -march=native -fPIC -shared -I"${LEAN_ROOT}/include" /tmp/uos_lean_guard.c native/zlp/lean_guard_init.c -L"${LEAN_ROOT}/lib/lean" -lleanshared -o bin/libuos_lean_guard.so`.
+3. **Direct FFI Binding in Mojo 1.3 & MAX 26.8 (`razr15-1`)**: Bind `libuos_lean_guard.so` via `OwnedDLHandle` in `ops/nodes/razr15-1-wsl2/mojo_full_resource_engine.mojo` and `ctypes.CDLL` in `ops/nodes/razr15-1-wsl2/max_qwen_server.py`.
+
+---
+
+## 7. Six-Domain Comprehensive Verification Checklist (`SC-CHECKLIST-001`, `SC-PROVENANCE-001`)
 
 - [x] **Domain 1 (Metadata, Timestamp & Tailscale Navigation)**: `20261105-1438-` timestamp prefix, fractal tags `#fractal-l0`..`#fractal-l9`, clickable `http://nas-1.tail55d152.ts.net:4100/...` links.
 - [x] **Domain 2 (Zero-Muda Purity & Storage Safety)**: `0` Bevy, `0` Graphite, `0` foreign NIFs; host OS NVMe serial `[REDACTED_SYSTEM_OS_SERIAL]` hardware interlock preserved.
-- [x] **Domain 3 (Testing Gold Standard & Formal Math Gates)**: `50/50` Lean 4 theorems proved (`0 sorry`, `0` axioms); `45/45` Gleam EUnit tests green; `10/10` `SC-JOURNAL-v3` checks green.
-- [x] **Domain 4 (Cross-Language Control & Observability)**: 7-stage `POODAVR` loop bound across Lean 4, Gleam/OTP, Mojo 1.3 AVX2 (`160 ns/op`), MAX 26.8 GPU Graph (`1.81 us/query`), and CUDA `sm_75` (`49.05 tok/s`).
-- [x] **Domain 5 (Tri-Sovereign Governance & Jujutsu Monorepo)**: Standalone Jujutsu (`.jj/`) clean diff; reviewed with Claude (`Caste04`) and Codex (`Caste03`); tracked in `sa-plan` `uos/lean-sdlc-sre-max-qwen-integration/20261105-1438`.
+- [x] **Domain 3 (Testing Gold Standard & Formal Math Gates)**: `66/66` Lean 4 theorems proved in MAX/Mojo/Qwen stack + `20/20` in `UosZlpHyperplane.lean` (`0 sorry`, `0` axioms); `45/45` Gleam EUnit tests green; `10/10` `SC-JOURNAL-v3` checks green.
+- [x] **Domain 4 (Cross-Language Control & Observability)**: 7-stage `POODAVR` and Dual-Plane 14-Stage (`S0..S6` + `C0..C6`) loop bound across Lean 4, Gleam/OTP, Mojo 1.3 AVX2 (`92-99 ns/actor`, `160 ns/op`), MAX 26.8 GPU Graph (`1.81 us/query`), and CUDA `sm_75` (`49.05 tok/s`).
+- [x] **Domain 5 (Tri-Sovereign Governance & Jujutsu Monorepo)**: Standalone Jujutsu (`.jj/`) clean diff; reviewed with Claude (`Caste04`) and Codex (`Caste03`); tracked in `sa-plan` (`20261105-1438`, `20261105-1616`, `plan-lean4-expansion-20261105-2048`).
 - [x] **Domain 6 (Provenance Integrity)**: `admitted_ev_ceiling = 93` strictly enforced (`INV-PROV-05`).

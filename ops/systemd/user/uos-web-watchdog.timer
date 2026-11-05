@@ -1,0 +1,12 @@
+[Unit]
+Description=UOS external web-plane watchdog cadence (Heijunka: cheap probe, often)
+
+[Timer]
+OnBootSec=60
+OnUnitInactiveSec=60
+AccuracySec=5s
+Unit=uos-web-watchdog.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

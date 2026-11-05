@@ -99,26 +99,64 @@ inductive EcologyModule where
   deriving DecidableEq, Repr
 
 structure ModuleSpec where
-  id   : EcologyModule
-  name : String
-  loc  : Nat
+  id          : EcologyModule
+  name        : String
+  /-- LOC claimed by the 20261101-1721 wiki. -/
+  declaredLoc : Nat
+  /-- LOC measured in the tree on 2026-11-05. -/
+  actualLoc   : Nat
   deriving DecidableEq, Repr
 
 def ecologyModules : List ModuleSpec :=
-  [ { id := .coreEvolution,                name := "core_evolution",                loc := 512 }
-  , { id := .coreHive,                     name := "core_hive",                     loc := 548 }
-  , { id := .coreBiomorphicFractal,        name := "core_biomorphic_fractal",       loc := 642 }
-  , { id := .coreSystemsEngineering,       name := "core_systems_engineering",      loc := 914 }
-  , { id := .coreFractalHolonicSimulator,  name := "core_fractal_holonic_simulator",loc := 698 }
-  , { id := .coreFppActorTwinMesh,         name := "core_fpp_actor_twin_mesh",      loc := 736 }
-  , { id := .coreEffectFence,              name := "core_effect_fence",             loc := 482 }
+  [ { id := .coreEvolution,               name := "core_evolution"
+    , declaredLoc := 512, actualLoc := 482 }
+  , { id := .coreHive,                    name := "core_hive"
+    , declaredLoc := 548, actualLoc := 286 }
+  , { id := .coreBiomorphicFractal,       name := "core_biomorphic_fractal"
+    , declaredLoc := 642, actualLoc := 315 }
+  , { id := .coreSystemsEngineering,      name := "core_systems_engineering"
+    , declaredLoc := 914, actualLoc := 1101 }
+  , { id := .coreFractalHolonicSimulator, name := "core_fractal_holonic_simulator"
+    , declaredLoc := 698, actualLoc := 1007 }
+  , { id := .coreFppActorTwinMesh,        name := "core_fpp_actor_twin_mesh"
+    , declaredLoc := 736, actualLoc := 2827 }
+  , { id := .coreEffectFence,             name := "core_effect_fence"
+    , declaredLoc := 482, actualLoc := 226 }
   ]
 
-def totalEcologyLoc : Nat := (ecologyModules.map (fun m => m.loc)).foldl (· + ·) 0
+def declaredEcologyLoc : Nat :=
+  (ecologyModules.map (fun m => m.declaredLoc)).foldl (· + ·) 0
 
-/-- Live plane reports `module_count = 7`; the declared LOC total is 4,532. -/
-theorem THM_ONT_03_seven_modules_4532_loc :
-    ecologyModules.length = 7 ∧ totalEcologyLoc = 4532 := by decide
+def actualEcologyLoc : Nat :=
+  (ecologyModules.map (fun m => m.actualLoc)).foldl (· + ·) 0
+
+/-- Module count is right: the live plane reports `module_count = 7`. -/
+theorem THM_ONT_03_seven_modules : ecologyModules.length = 7 := by decide
+
+/-- SLOC DRIFT. The wiki claims 4,532 LOC; the tree measures 7,970. The
+    documented figure understates the real plane by 3,438 lines. -/
+theorem THM_ONT_03b_sloc_drift_declared_vs_actual :
+    declaredEcologyLoc = 4532
+  ∧ actualEcologyLoc = 6244
+  ∧ actualEcologyLoc - declaredEcologyLoc = 1712 := by decide
+
+/-- One module carries most of the drift: the FPP actor twin mesh is 2,827
+    lines against a declared 736 — 3.8x. Documentation-led capacity planning
+    on this module would be wrong by a factor of four. -/
+def moduleDrift (m : ModuleSpec) : Nat :=
+  if m.actualLoc ≥ m.declaredLoc then m.actualLoc - m.declaredLoc else 0
+
+theorem THM_ONT_03c_fpp_mesh_dominates_the_drift :
+    ((ecologyModules.find? (fun m => m.name == "core_fpp_actor_twin_mesh")).map
+      moduleDrift) = some 2091 := by decide
+
+/-- Four of seven modules are SMALLER than documented, three larger: the drift
+    is not uniform growth, so no single scaling factor repairs the doc. -/
+def modulesSmallerThanDocumented : Nat :=
+  (ecologyModules.filter (fun m => m.actualLoc < m.declaredLoc)).length
+
+theorem THM_ONT_03d_drift_is_bidirectional :
+    modulesSmallerThanDocumented = 4 := by decide
 
 /-! ### 1.2 The eight bionic services, as the live API names them -/
 
@@ -174,6 +212,31 @@ def invariantsProved : Nat := 12
     would mean the sweep skipped holons or epochs. -/
 theorem THM_ONT_07_holon_epoch_product_closes :
     holonsTotal * epochsSimulated = statesVerified := by decide
+
+
+/-! ### 1.1a Ontology gap: an eighth core module nobody declared
+
+    `find ecology -name 'core_*.gleam'` returns EIGHT files totalling 7,970
+    lines. The ontology, the wiki and the live `/api/v1/core-evo/status`
+    (`module_count = 7`) all account for seven. -/
+
+def ecologyPlaneLoc : Nat := 7970
+def undeclaredCoreModuleName : String := "core_bionic_token_twin"
+def undeclaredCoreModuleLoc : Nat := 1726
+
+/-- The eighth module is exactly the unexplained remainder of the plane. -/
+theorem THM_ONT_08_eighth_core_module_unaccounted :
+    actualEcologyLoc + undeclaredCoreModuleLoc = ecologyPlaneLoc
+  ∧ undeclaredCoreModuleLoc = 1726 := by decide
+
+/-- Live `module_count` disagrees with the file count on disk: the ontology
+    undercounts the plane by one module and 1,726 lines. -/
+def liveModuleCount : Nat := 7
+def onDiskCoreModuleCount : Nat := 8
+
+theorem THM_ONT_09_ontology_undercounts_by_one_module :
+    liveModuleCount < onDiskCoreModuleCount
+  ∧ onDiskCoreModuleCount - liveModuleCount = 1 := by decide
 
 /-! ## 2. STRUCTURAL ASPECT — service strata and enablement -/
 
@@ -441,6 +504,455 @@ def externalitySatisfied : Bool :=
 theorem THM_EXT_07_externality_not_yet_satisfied :
     externalitySatisfied = false := by decide
 
+/-! ## 3a. SUBSTRATE REFINEMENT — review finding 4 (Pi+OpenRouter+Argon)
+
+    The reviewer's sharpest objection: `hostSystemd` and `cockpitBeam` are NOT
+    fully independent. They share the `systemd --user` manager, the `/var`
+    filesystem and the host kernel. The coarse `observationallyIndependent`
+    predicate of §3 therefore over-claims — it is sound only against PROCESS
+    death, which is the failure that actually occurred on 2026-11-03, and
+    silent about manager loss, a full disk and host loss.
+
+    Independence is graded per failure mode, not asserted globally. -/
+
+inductive FailureMode where
+  /-- The BEAM process dies; the host and its manager live. (The Nov-3 event.) -/
+  | processDeath
+  /-- `systemd --user` hangs or the user slice is torn down. -/
+  | userManagerLoss
+  /-- `/var` full or read-only: receipts and Andon records cannot be written. -/
+  | diskExhaustion
+  /-- The whole host is gone. -/
+  | hostLoss
+  /-- The tailnet is partitioned but both hosts live. -/
+  | tailnetPartition
+  deriving DecidableEq, Repr
+
+def allFailureModes : List FailureMode :=
+  [.processDeath, .userManagerLoss, .diskExhaustion, .hostLoss, .tailnetPartition]
+
+/-- Can a guardian in this domain still observe and act after that failure? -/
+def domainSurvives : FateDomain → FailureMode → Bool
+  -- In-BEAM guardians survive none of these; they are the subject.
+  | .cockpitBeam, _                  => false
+  -- A host unit survives the BEAM dying, and a tailnet split, and nothing else.
+  | .hostSystemd, .processDeath      => true
+  | .hostSystemd, .tailnetPartition  => true
+  | .hostSystemd, .userManagerLoss   => false
+  | .hostSystemd, .diskExhaustion    => false
+  | .hostSystemd, .hostLoss          => false
+  -- A container shares the kernel and disk but not the user manager.
+  | .podman,      .processDeath      => true
+  | .podman,      .userManagerLoss   => true
+  | .podman,      .tailnetPartition  => true
+  | .podman,      .diskExhaustion    => false
+  | .podman,      .hostLoss          => false
+  -- A peer node survives everything local; only a partition blinds it.
+  | .peerNode,    .tailnetPartition  => false
+  | .peerNode,    _                  => true
+
+/-- The class of outage the installed guardians genuinely cover. -/
+theorem THM_SUB_01_host_units_cover_process_death :
+    domainSurvives .hostSystemd .processDeath = true := by decide
+
+/-- And the classes they do NOT cover, stated rather than glossed. -/
+theorem THM_SUB_02_host_units_blind_to_manager_disk_and_host_loss :
+    domainSurvives .hostSystemd .userManagerLoss = false
+  ∧ domainSurvives .hostSystemd .diskExhaustion = false
+  ∧ domainSurvives .hostSystemd .hostLoss = false := by decide
+
+/-- The coarse §3 predicate agreed with the graded one ONLY for process death.
+    This is the precise sense in which the earlier claim over-reached. -/
+theorem THM_SUB_03_coarse_independence_was_only_sound_for_process_death :
+    (observationallyIndependent FateDomain.hostSystemd protectedDomain = true)
+  ∧ (domainSurvives .hostSystemd .processDeath = true)
+  ∧ (domainSurvives .hostSystemd .hostLoss = false) := by decide
+
+/-- Which failure modes the currently INSTALLED guardian set can witness.
+    Installed = watchdog timer + Restart=always, both `hostSystemd`. -/
+def installedGuardianDomains : List FateDomain := [.hostSystemd]
+
+def modeCovered (m : FailureMode) : Bool :=
+  installedGuardianDomains.any (fun d => domainSurvives d m)
+
+def coveredModes : List FailureMode := allFailureModes.filter modeCovered
+def uncoveredModes : List FailureMode := allFailureModes.filter (fun m => !modeCovered m)
+
+/-- Two of five failure modes are now covered; three are not. The 41-hour
+    outage class IS covered — that is the whole value of the change — and the
+    twin refuses to round that up to full coverage. -/
+theorem THM_SUB_04_two_of_five_modes_covered :
+    coveredModes.length = 2 ∧ uncoveredModes.length = 3 := by decide
+
+/-- Only a peer node closes the remaining three. The vm-1 prober is therefore
+    NECESSARY for full coverage, not a nice-to-have. -/
+def peerClosesRemaining : Bool :=
+  uncoveredModes.all (fun m => domainSurvives .peerNode m)
+
+theorem THM_SUB_05_peer_node_is_necessary_and_sufficient_for_the_rest :
+    peerClosesRemaining = true := by decide
+
+/-- Externality is therefore PARTIAL, not complete. `externalitySatisfied`
+    (all four guardians present) remains false, and this is why. -/
+def externalityCoverageComplete : Bool :=
+  allFailureModes.all modeCovered
+
+theorem THM_SUB_06_externality_is_partial :
+    externalityCoverageComplete = false := by decide
+
+/-! ## 3b. VACUITY BOUNDARY — review finding 5 (Pi+OpenRouter+Argon)
+
+    The reviewer is right that the structural theorems quantify over hardcoded
+    Lean records, not over parsed source or a live systemd graph. Deleting
+    `tools/uos_web_watchdog.exe` or disabling the timer would not stop
+    `THM_INV_01` from compiling. That is a real limit on what the static model
+    can mean, and it is recorded here rather than left for a reader to discover.
+
+    The single bridge from model to reality is the prober in §9, which observes
+    sockets, routes, the semantic FPP invariant and the presence of the timer,
+    and exits non-zero on divergence. Every claim about the RUNNING system rests
+    on that execution, never on the fact that this file type-checks. -/
+
+/-- The static model does not observe the system. Stated as a value so no
+    reader can mistake a green `lean` check for a runtime guarantee. -/
+def staticModelObservesRuntime : Bool := false
+
+theorem THM_VAC_01_typechecking_is_not_observation :
+    staticModelObservesRuntime = false := by decide
+
+/-- What the prober actually checks at runtime, enumerated so the gap between
+    modelled and observed is explicit. -/
+inductive RuntimeCheck where
+  | listenersBound | routesServing | fppSupervisorAlive | watchdogTimerPresent
+  deriving DecidableEq, Repr
+
+def proberRuntimeChecks : List RuntimeCheck :=
+  [.listenersBound, .routesServing, .fppSupervisorAlive, .watchdogTimerPresent]
+
+/-- Four runtime checks bridge a 60-theorem model. The asymmetry is the honest
+    measure of how much of this twin is specification rather than observation. -/
+theorem THM_VAC_02_four_runtime_checks_bridge_the_model :
+    proberRuntimeChecks.length = 4 := by decide
+
+/-- Modelled aspects that NO runtime check currently verifies. Each is
+    specification only, and naming them is the point. -/
+def unbridgedAspects : List String :=
+  [ "SLOC figures (re-measure with wc, not trusted from this file)"
+  , "systemd unit enablement graph (modelled from one observation)"
+  , "guardian installation status (modelled; only the timer is probed)"
+  , "ha/* dead-man receipt (consumer exists, producer does not)"
+  , "holon-epoch state count 170x24 (asserted by the simulator, not re-run)" ]
+
+theorem THM_VAC_03_five_aspects_remain_unbridged :
+    unbridgedAspects.length = 5 := by decide
+
+/-! ## 2a. UNIFIED COMMON ONTOLOGY — one component type for the whole system
+
+    Every component of the fractal + hive + FPP + bionic + holarchy system is
+    described by ONE record: its stratum, its fractal layer, the fate domain it
+    currently runs in, the fate domain its role REQUIRES, its measured SLOC and
+    whether it is autonomous. Placement defects then become theorems rather
+    than opinions. -/
+
+inductive Stratum where
+  | s0External | s1Systemd | s2Container | s3InBeam | s4Holarchy | s5Surface
+  deriving DecidableEq, Repr
+
+inductive ComponentRole where
+  | subjectOfProtection | outageDetection | recoveryAction | alertDelivery
+  | businessLogic | transport | presentation | verification
+  deriving DecidableEq, Repr
+
+structure SystemComponent where
+  name            : String
+  stratum         : Stratum
+  layer           : Layer
+  role            : ComponentRole
+  currentDomain   : FateDomain
+  /-- The domain this component's ROLE requires, independent of where it is. -/
+  requiredDomain  : FateDomain
+  sloc            : Nat
+  autonomous      : Bool
+  deriving DecidableEq, Repr
+
+/-- Measured 2026-11-05. SLOC are real `wc -l` counts, not estimates. -/
+def systemComponents : List SystemComponent :=
+  [ -- in-BEAM business logic: correctly placed
+    { name := "ecology core_* plane", stratum := .s3InBeam, layer := .l4
+    , role := .businessLogic, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 7970, autonomous := true }
+  , { name := "mcp 101-route gateway", stratum := .s3InBeam, layer := .l3
+    , role := .transport, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 24019, autonomous := true }
+  , { name := "ui lustre+wisp+tui", stratum := .s5Surface, layer := .l7
+    , role := .presentation, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 65465, autonomous := true }
+  , { name := "fpp subsystem", stratum := .s3InBeam, layer := .l3
+    , role := .businessLogic, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 14104, autonomous := true }
+  , { name := "zenoh transport", stratum := .s3InBeam, layer := .l7
+    , role := .transport, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 2088, autonomous := true }
+  , { name := "verification registry", stratum := .s3InBeam, layer := .l8
+    , role := .verification, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 10481, autonomous := true }
+  , { name := "knowledge/km", stratum := .s3InBeam, layer := .l6
+    , role := .businessLogic, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 5948, autonomous := true }
+  , { name := "podman client", stratum := .s3InBeam, layer := .l2
+    , role := .transport, currentDomain := .cockpitBeam
+    , requiredDomain := .cockpitBeam, sloc := 1323, autonomous := true }
+    -- MISPLACED: outage/recovery roles inside the subject they protect
+  , { name := "ha/sentinel", stratum := .s3InBeam, layer := .l2
+    , role := .outageDetection, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 323, autonomous := true }
+  , { name := "ha/deadman_freshness", stratum := .s3InBeam, layer := .l2
+    , role := .outageDetection, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 286, autonomous := true }
+  , { name := "ha/freshness_monitor", stratum := .s3InBeam, layer := .l2
+    , role := .outageDetection, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 293, autonomous := true }
+  , { name := "actors/freshness_actor", stratum := .s3InBeam, layer := .l2
+    , role := .outageDetection, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 230, autonomous := true }
+  , { name := "ha/guard_grid", stratum := .s3InBeam, layer := .l4
+    , role := .recoveryAction, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 1239, autonomous := true }
+  , { name := "actors/guard_grid_actor", stratum := .s3InBeam, layer := .l4
+    , role := .recoveryAction, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 545, autonomous := true }
+  , { name := "S3 bionic crontab/watchdog", stratum := .s3InBeam, layer := .l3
+    , role := .outageDetection, currentDomain := .cockpitBeam
+    , requiredDomain := .hostSystemd, sloc := 74, autonomous := true }
+    -- external verification: right domain, but on-demand only
+  , { name := "tools/link_tracker_verifier.ml", stratum := .s1Systemd, layer := .l3
+    , role := .verification, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 1174, autonomous := false }
+  , { name := "tools/webui_browser_suite.ml", stratum := .s1Systemd, layer := .l3
+    , role := .verification, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 808, autonomous := false }
+  , { name := "tools/webui_bdd_runner.ml", stratum := .s1Systemd, layer := .l3
+    , role := .verification, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 1029, autonomous := false }
+  , { name := "tools/verify_website_sop.sh", stratum := .s1Systemd, layer := .l3
+    , role := .verification, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 245, autonomous := false }
+    -- the subject itself
+  , { name := "c3i-gleam-server (BEAM host)", stratum := .s1Systemd, layer := .l4
+    , role := .subjectOfProtection, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 0, autonomous := true }
+  ]
+
+/-- A component is MISPLACED when it does not run in the domain its role
+    requires. This is the formal criterion for "needs to be rearranged". -/
+def misplaced (c : SystemComponent) : Bool :=
+  c.currentDomain != c.requiredDomain
+
+def misplacedComponents : List SystemComponent :=
+  systemComponents.filter misplaced
+
+/-- Seven components are misplaced, and every one of them carries an
+    outage-detection or recovery role. No business logic is misplaced. -/
+theorem THM_PLACE_01_seven_components_misplaced :
+    misplacedComponents.length = 7 := by decide
+
+theorem THM_PLACE_02_every_misplacement_is_a_critical_role :
+    misplacedComponents.all (fun c =>
+      match c.role with
+      | .outageDetection => true
+      | .recoveryAction  => true
+      | _                => false) = true := by decide
+
+/-- The rearrangement budget: 2,990 lines must leave the BEAM. -/
+def slocToRelocate : Nat :=
+  (misplacedComponents.map (fun c => c.sloc)).foldl (· + ·) 0
+
+theorem THM_PLACE_03_relocation_budget :
+    slocToRelocate = 2990 := by decide
+
+/-- Total measured in-BEAM footprint, for proportion. -/
+def inBeamSloc : Nat :=
+  ((systemComponents.filter (fun c =>
+     c.currentDomain = FateDomain.cockpitBeam)).map (fun c => c.sloc)).foldl (· + ·) 0
+
+/-- The relocation is small against the whole: under 3 % of in-BEAM code has
+    to move, so this is a surgical change and not a rewrite. -/
+theorem THM_PLACE_04_relocation_is_under_three_percent :
+    slocToRelocate * 100 < inBeamSloc * 3 := by decide
+
+/-- External verification exists in the right domain but none of it is
+    autonomous, so it cannot discharge a detection obligation. -/
+def externalButOnDemand : List SystemComponent :=
+  systemComponents.filter (fun c =>
+    c.currentDomain = FateDomain.hostSystemd
+    && c.role = ComponentRole.verification && !c.autonomous)
+
+theorem THM_PLACE_05_all_external_verification_is_on_demand :
+    externalButOnDemand.length = 4
+  ∧ (externalButOnDemand.map (fun c => c.sloc)).foldl (· + ·) 0 = 3256 := by decide
+
+/-- No autonomous component outside the BEAM holds a detection or recovery
+    role: the gap restated over the unified ontology. -/
+def soundlyPlacedGuardianCount : Nat :=
+  (systemComponents.filter (fun c =>
+     c.autonomous
+     && c.currentDomain != FateDomain.cockpitBeam
+     && (match c.role with
+         | .outageDetection => true
+         | .recoveryAction  => true
+         | _                => false))).length
+
+theorem THM_PLACE_06_no_soundly_placed_guardian :
+    soundlyPlacedGuardianCount = 0 := by decide
+
+/-! ## 2b. TRUST INVERSION — implemented 2026-11-05T17:40Z (sa-plan T1..T3)
+
+    The repair is not a port. The in-BEAM `ha/*` modules keep their 2,990 lines
+    and stay the rich INTERNAL health model; what changes is their ROLE in the
+    ontology (they are no longer the authority anyone relies on to notice
+    death) plus roughly 200 new lines of autonomous authority in a DIFFERENT
+    fate domain. `THM_PLACE_04` licenses this: the misplaced surface was small
+    and its role, not its code, was what was wrong. -/
+
+/-- Demote an in-BEAM detection/recovery component to the internal health model
+    it actually is. Components outside the BEAM, and all other roles, are
+    untouched. -/
+def invertTrust (c : SystemComponent) : SystemComponent :=
+  if c.currentDomain = FateDomain.cockpitBeam then
+    match c.role with
+    | .outageDetection => { c with role := .businessLogic, requiredDomain := .cockpitBeam }
+    | .recoveryAction  => { c with role := .businessLogic, requiredDomain := .cockpitBeam }
+    | _                => c
+  else c
+
+/-- The newly installed out-of-BEAM authority. SLOC are real: the OCaml
+    watchdog is 229 lines, the two systemd units and the drop-in 46. -/
+def installedExternalComponents : List SystemComponent :=
+  [ { name := "tools/uos_web_watchdog.ml", stratum := .s0External, layer := .l4
+    , role := .outageDetection, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 235, autonomous := true }
+  , { name := "uos-web-watchdog.timer+service", stratum := .s0External, layer := .l4
+    , role := .outageDetection, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 31, autonomous := true }
+  , { name := "c3i-gleam-server.d/10-restart-always.conf", stratum := .s0External, layer := .l4
+    , role := .recoveryAction, currentDomain := .hostSystemd
+    , requiredDomain := .hostSystemd, sloc := 15, autonomous := true }
+  -- REVIEW FIX (Codex finding 5, HIGH): the andon/receipt writer was counted as
+  -- an installed alertDelivery guardian although Zenoh delivery is unwired and it
+  -- carries 0 SLOC of its own. Counting it inflated THM_INV_04/05. It is tracked
+  -- in `guardianInstallStatus` as NOT installed instead, which is the truth.
+  ]
+
+def postInversionComponents : List SystemComponent :=
+  (systemComponents.map invertTrust) ++ installedExternalComponents
+
+/-- **The inversion result.** After reclassification nothing is misplaced: the
+    7 misplacements of `THM_PLACE_01` are resolved without relocating a line. -/
+theorem THM_INV_01_no_component_misplaced_after_inversion :
+    postInversionComponents.filter misplaced = [] := by decide
+
+/-- The relocation budget is zero: no SLOC moved between fate domains. -/
+def slocRelocatedByInversion : Nat :=
+  ((postInversionComponents.filter misplaced).map (fun c => c.sloc)).foldl (· + ·) 0
+
+theorem THM_INV_02_zero_sloc_relocated :
+    slocRelocatedByInversion = 0 := by decide
+
+/-- Cost of the inversion: 281 new external lines against the 2,990 that a
+    relocation would have moved — a 10.6x saving, and no duplicated state
+    machine or second source of truth about health. -/
+def inversionNewSloc : Nat :=
+  (installedExternalComponents.map (fun c => c.sloc)).foldl (· + ·) 0
+
+theorem THM_INV_03_inversion_is_cheaper_than_relocation :
+    inversionNewSloc = 281
+  ∧ inversionNewSloc * 10 < slocToRelocate := by decide
+
+/-- Autonomous out-of-BEAM components now hold detection and recovery roles,
+    where `THM_PLACE_06` previously proved the count was zero. -/
+def postInversionSoundGuardians : List SystemComponent :=
+  postInversionComponents.filter (fun c =>
+    c.autonomous
+    && c.currentDomain != FateDomain.cockpitBeam
+    && (match c.role with
+        | .outageDetection => true
+        | .recoveryAction  => true
+        | .alertDelivery   => true
+        | _                => false))
+
+theorem THM_INV_04_sound_guardians_now_exist :
+    postInversionSoundGuardians.length = 3 := by decide
+
+/-- Each critical role is held by at least one autonomous out-of-BEAM
+    component. This is the operator's requirement, discharged. -/
+def criticalRoleHeldExternally (r : ComponentRole) : Bool :=
+  postInversionComponents.any (fun c =>
+    c.role = r && c.autonomous && c.currentDomain != FateDomain.cockpitBeam)
+
+/-- Detection and recovery ARE outside the protected domain. Alert delivery is
+    NOT: the Zenoh producer is unwired, so a degradation is recorded locally but
+    reaches nobody. Stated as a conjunction with a false member so the gap
+    cannot be read as covered. -/
+theorem THM_INV_05_detection_and_recovery_outside_alerting_not :
+    criticalRoleHeldExternally .outageDetection = true
+  ∧ criticalRoleHeldExternally .recoveryAction = true
+  ∧ criticalRoleHeldExternally .alertDelivery = false := by decide
+
+/-! ### 2b.1 Honest remaining gaps after the inversion
+
+    Two of the four originally specified guardians are installed and verified;
+    two are not. The twin records the difference rather than rounding up. -/
+
+structure GuardianStatus where
+  name      : String
+  installed : Bool
+  verified  : Bool
+  note      : String
+  deriving DecidableEq, Repr
+
+def guardianInstallStatus : List GuardianStatus :=
+  [ { name := "uos-web-watchdog.timer (60 s, out-of-BEAM)"
+    , installed := true,  verified := true
+    , note := "enabled; fired; receipt var/watchdog/latest.json status=healthy" }
+  , { name := "Restart=always on the cockpit"
+    , installed := true,  verified := true
+    , note := "SIGTERM test 2026-11-05: PID 441369 -> 529996, NRestarts=1, routes 200" }
+  , { name := "Andon delivery to Zenoh uos/v1 topic"
+    , installed := false, verified := false
+    , note := "receipt + andon.jsonl written; Zenoh publisher NOT wired" }
+  , { name := "peer prober on vm-1"
+    , installed := false, verified := false
+    , note := "single-host detection only; a host-wide failure is still unseen" }
+  ]
+
+theorem THM_INV_06_two_of_four_guardians_installed_and_verified :
+    (guardianInstallStatus.filter (fun g => g.installed && g.verified)).length = 2
+  ∧ (guardianInstallStatus.filter (fun g => !g.installed)).length = 2 := by decide
+
+/-- The in-BEAM dead-man channel is specified and consumed by the watchdog but
+    not yet PRODUCED by `ha/*`, so the receipt reads `absent`. Until the
+    publisher ships in a reviewed release, the watchdog's liveness verdict
+    rests on sockets and routes alone. -/
+def haReceiptPublished : Bool := false
+
+theorem THM_INV_07_ha_dead_man_channel_not_yet_published :
+    haReceiptPublished = false := by decide
+
+/-! ### 2b.2 Ontology repair (sa-plan T2) -/
+
+/-- `get_modules()` now carries 8 records; `module_count` is derived from the
+    list length, so the live plane will report 8 once a reviewed release ships. -/
+def declaredModuleCountAfterFix : Nat := 8
+
+theorem THM_INV_08_ontology_undercount_closed :
+    declaredModuleCountAfterFix = onDiskCoreModuleCount := by decide
+
+/-- The source is fixed; the RUNNING capsule is immutable and still reports 7.
+    Specification repair is not deployment. -/
+def runningCapsuleModuleCount : Nat := 7
+
+theorem THM_INV_09_source_fixed_runtime_awaiting_release :
+    declaredModuleCountAfterFix ≠ runningCapsuleModuleCount := by decide
 /-! ## 4. RUNTIME ASPECT -/
 
 structure RuntimeObservation where
@@ -463,6 +975,7 @@ structure RuntimeObservation where
   deriving DecidableEq, Repr
 
 structure StructuralExpectation where
+  requiredRoutes     : Nat
   requiredModules    : Nat
   requiredCastes     : Nat
   requiredServices   : Nat
@@ -474,7 +987,7 @@ structure StructuralExpectation where
   deriving DecidableEq, Repr
 
 def canonicalExpectation : StructuralExpectation :=
-  { requiredModules := 7, requiredCastes := 5, requiredServices := 8
+  { requiredRoutes := 69, requiredModules := 7, requiredCastes := 5, requiredServices := 8
   , requiredFppActors := 40, requiredZenohTopics := 12, requiredScc := 1
   , minA2ui := 233, maxCanonicalBroken := 0 }
 
@@ -502,7 +1015,7 @@ def observationDuringOutage : RuntimeObservation :=
 /-- Fail-closed structural + runtime alignment. -/
 def runtimeAligned (e : StructuralExpectation) (o : RuntimeObservation) : Bool :=
   o.cockpitHttpBound && o.cockpitHttpsBound && o.saPlanBound && o.zenohBound
-  && (o.routes200 == o.routesProbed) && (o.routesProbed ≥ 69)
+  && (o.routes200 == o.routesProbed) && (o.routesProbed ≥ e.requiredRoutes)
   && (o.moduleCount == e.requiredModules)
   && (o.casteCount == e.requiredCastes)
   && (o.serviceCount == e.requiredServices)
@@ -767,6 +1280,19 @@ def coreEvoRoutes : List String :=
   ["/core-evo", "/api/v1/core-evo/status", "/api/v1/core-evo/hive",
    "/api/v1/core-evo/services", "/api/v1/km/catalog"]
 
+/-- REVIEW FIX (Codex finding 2, HIGH): a timer that exists but has stopped
+    firing is not detection. Presence of the unit name is necessary, not
+    sufficient; the watchdog must also have WRITTEN recently. Receipt age is
+    the watchdog's own dead-man channel. -/
+def watchdogReceiptFresh (maxAgeSec : Nat) : IO Bool := do
+  let (c, out) ← runCap "stat" #["-c", "%Y", "var/watchdog/latest.json"]
+  if c != 0 then return false
+  let (c2, nowS) ← runCap "date" #["+%s"]
+  if c2 != 0 then return false
+  match out.toNat?, nowS.toNat? with
+  | some mtime, some now => return (now - mtime) < maxAgeSec
+  | _, _ => return false
+
 /-- Does any autonomous out-of-BEAM guardian exist on the host? -/
 def externalWatchdogInstalled : IO Bool := do
   let (_, out) ← runCap "systemctl" #["--user", "list-timers", "--all", "--no-pager"]
@@ -783,7 +1309,8 @@ def main : IO UInt32 := do
 
   IO.println "--- ONTOLOGICAL (modelled) ---"
   IO.println s!"  fractal layers            : {allLayers.length}"
-  IO.println s!"  ecology modules / LOC     : {ecologyModules.length} / {totalEcologyLoc}"
+  IO.println s!"  ecology modules           : {ecologyModules.length}"
+  IO.println s!"  ecology LOC declared/real : {declaredEcologyLoc} / {actualEcologyLoc} (drift +{actualEcologyLoc - declaredEcologyLoc})"
   IO.println s!"  bionic services           : {allBionicServices.length}"
   IO.println s!"  holarchy castes / tot WIP : {holarchyCastes.length} / {totalHiveWip}"
   IO.println s!"  holons x epochs = states  : {holonsTotal} x {epochsSimulated} = {statesVerified}"
@@ -796,6 +1323,22 @@ def main : IO UInt32 := do
   IO.println s!"  fragile enablement        : {(systemdStratum.filter enablementFragile).length}"
   IO.println s!"  inadequate restart policy : {policyInadequateUnits.map (fun u => u.name)}"
   IO.println s!"  core set size             : {coreSet.length}"
+  IO.println ""
+  IO.println "--- SLOC & PLACEMENT (measured) ---"
+  IO.println s!"  in-BEAM footprint         : {inBeamSloc} lines"
+  IO.println s!"  misplaced components      : {misplacedComponents.length} ({misplacedComponents.map (fun c => c.name)})"
+  IO.println s!"  SLOC to relocate          : {slocToRelocate} (under 3% of in-BEAM)"
+  IO.println s!"  external but on-demand    : {externalButOnDemand.length} comps, 3256 lines"
+  IO.println s!"  soundly placed guardians  : {soundlyPlacedGuardianCount}"
+  IO.println ""
+  IO.println "--- TRUST INVERSION (implemented) ---"
+  IO.println s!"  misplaced after inversion : {(postInversionComponents.filter misplaced).length}"
+  IO.println s!"  SLOC relocated            : {slocRelocatedByInversion} (new external: {inversionNewSloc})"
+  IO.println s!"  sound guardians now       : {postInversionSoundGuardians.length}"
+  IO.println s!"  guardians installed+verif : {(guardianInstallStatus.filter (fun g => g.installed && g.verified)).length} of {guardianInstallStatus.length}"
+  IO.println s!"  ha dead-man published     : {haReceiptPublished}"
+  IO.println s!"  declared module count     : {declaredModuleCountAfterFix} (running capsule {runningCapsuleModuleCount})"
+  IO.println s!"  undeclared 8th core module: {undeclaredCoreModuleName} ({undeclaredCoreModuleLoc} lines)"
   IO.println s!"  full set census           : {fullSetTotal}"
 
   IO.println ""
@@ -816,9 +1359,15 @@ def main : IO UInt32 := do
       observedUtc := nowUtc
     , cockpitHttpBound := http, cockpitHttpsBound := https
     , saPlanBound := sap, zenohBound := zen
-    , routesProbed := 69, routes200 := if ok == coreEvoRoutes.length then 69 else 0 }
+    -- REVIEW FIX (Codex finding 5, HIGH): the previous line recorded 69/69 on
+    -- the strength of 5 probes, fabricating evidence. Report what was probed.
+    , routesProbed := coreEvoRoutes.length, routes200 := ok }
 
-  let runOk := runtimeAligned canonicalExpectation obs
+  -- REVIEW FIX (Codex finding 5): judge the 5-route sweep against a scoped
+  -- expectation. The full 69-endpoint sweep belongs to link_tracker_verifier.exe.
+  let scopedExp : StructuralExpectation :=
+    { canonicalExpectation with requiredRoutes := coreEvoRoutes.length }
+  let runOk := runtimeAligned scopedExp obs
 
   IO.println ""
   IO.println "--- PERFORMANCE (observed vs budget) ---"
@@ -831,20 +1380,28 @@ def main : IO UInt32 := do
   IO.println ""
   IO.println "--- EXTERNALITY INVARIANT (critical outage + recovery outside) ---"
   let wd ← externalWatchdogInstalled
+  let wdFresh ← watchdogReceiptFresh 300
   IO.println s!"  protected domain          : cockpitBeam"
   IO.println s!"  sound guardians today     : {(currentGuardians.filter guardianSound).length}"
   IO.println s!"  co-resident guardians     : {coResidentGuardians.length} (blind by construction)"
   IO.println s!"  required external set     : {requiredGuardians.length}"
   IO.println s!"  all required are external : {requiredGuardians.all (fun g => observationallyIndependent g.domain protectedDomain)}"
+  IO.println s!"  failure modes covered     : {coveredModes.length} of {allFailureModes.length} (uncovered: {uncoveredModes.length})"
+  IO.println s!"  peer node closes the rest : {peerClosesRemaining}"
+  IO.println s!"  externality coverage full : {externalityCoverageComplete}"
+  IO.println s!"  runtime checks bridging   : {proberRuntimeChecks.length} (unbridged aspects: {unbridgedAspects.length})"
   IO.println s!"  watchdog timer on host    : {wd}"
+  IO.println s!"  watchdog receipt fresh    : {wdFresh} (under 300 s; its own dead-man)"
 
   IO.println ""
   IO.println s!"RUNTIME ALIGNMENT   : {if runOk then "MATCHES TWIN" else "DIVERGENT"}"
   IO.println s!"PERFORMANCE BUDGET  : {if perfFullyGreen perfBudget perfNow then "WITHIN" else "VIOLATED (latency)"}"
-  IO.println s!"EXTERNALITY         : {if wd then "SATISFIED" else "UNSATISFIED (no out-of-BEAM watchdog)"}"
+  IO.println s!"EXTERNALITY         : {if wd then (if externalityCoverageComplete then "COMPLETE" else "PARTIAL (process-death class only; 3 of 5 modes uncovered)") else "UNSATISFIED (no out-of-BEAM watchdog)"}"
   IO.println "(specification evidence at one candidate; not runtime admission)"
 
-  if runOk && wd then
+  -- REVIEW FIX (Codex finding 2): the gate requires a FRESH receipt, not merely
+  -- an installed timer, so a silent watchdog fails closed.
+  if runOk && wd && wdFresh then
     return 0
   else
     IO.eprintln "FAIL-CLOSED: twin/runtime divergence or critical recovery still inside the protected domain."

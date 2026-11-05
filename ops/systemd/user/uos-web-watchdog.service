@@ -1,0 +1,16 @@
+[Unit]
+Description=UOS external web-plane watchdog (out-of-BEAM outage detector)
+Documentation=file:///home/an/NAS-setup/uos/formal/lean/UosCoreEvoUnifiedDigitalTwin.lean
+# Deliberately NOT PartOf= or BindsTo= c3i.target: this unit must survive the
+# fate domain it protects (THM_EXT_04). Do not add such a dependency.
+After=network-online.target
+
+[Service]
+Type=oneshot
+Environment=UOS_ROOT=/home/an/NAS-setup/uos
+WorkingDirectory=/home/an/NAS-setup/uos
+ExecStart=/home/an/NAS-setup/uos/tools/uos_web_watchdog.exe
+# A degraded plane exits 1. That is a real signal, not a unit failure to hide.
+SuccessExitStatus=0 1
+TimeoutStartSec=120
+NoNewPrivileges=true
