@@ -226,7 +226,7 @@ theorem THM_STR_05_four_in_repo_seven_private :
 
 /-! ## 3. ROUTE SCOPE: the real axis, measured
 
-    Three live `tools/list` probes against capsule 20261105-1830-afc4943e. -/
+    Three live `tools/list` probes against capsule 20261105-1956-630752df. -/
 
 structure RouteCensus where
   scope    : RouteScope
@@ -451,7 +451,7 @@ def repoConfigs : List String :=
   [".mcp.json", ".codex/config.toml", ".gemini/settings.json", ".pi/mcp.json", ".deepseek/mcp.json"]
 
 /-- A repo config is aligned when it declares the converged release capsule
-    20261105-1830-afc4943e and payload 7365bd96 on an admitted gateway server. -/
+    20261105-1956-630752df and payload b7397e54 on an admitted gateway server. -/
 def configClean (path : String) : IO (Bool × Bool) := do
   let (c, body) ← runCap "cat" #[path]
   if c != 0 then return (false, false)
