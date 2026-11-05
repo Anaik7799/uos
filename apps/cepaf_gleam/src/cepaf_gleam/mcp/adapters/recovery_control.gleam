@@ -3,6 +3,7 @@
 //// binding. Counts do not establish live leases, review or effect authority.
 
 import cepaf_gleam/harness/recovery_owner
+import cepaf_gleam/harness/recovery_trust_discovery
 import cepaf_gleam/mcp/adapters/planning_read
 import cepaf_gleam/mcp/evidence
 import cepaf_gleam/mcp/types.{
@@ -95,6 +96,15 @@ pub fn observe(
           #("owner_runtime_liveness", json.string("NOT_PROBED")),
           #("mutation_enabled", json.bool(False)),
           #("signing_enabled", json.bool(False)),
+          #(
+            "trust_metadata_resource",
+            json.object([
+              #("uri", json.string(recovery_trust_discovery.resource_uri)),
+              #("access", json.string("PRINCIPAL_PRIVATE")),
+              #("role", json.string("OBSERVATION_ONLY_NOT_ROSTER")),
+              #("provider", json.string("UNCONFIGURED_BY_CONSTRUCTION")),
+            ]),
+          ),
           #("registered_operations", json.array(["status"], json.string)),
           #(
             "required_gates",

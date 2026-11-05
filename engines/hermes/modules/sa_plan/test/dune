@@ -27,6 +27,25 @@
  (modules test_recovery_schema_migration recovery_migration_fixture)
  (libraries recovery_schema_migration recovery_kernel_fixture recovery_kernel recovery_owner_journal core digestif sqlite3 yojson unix))
 
+; Private integration fixture: NEVER linked/installed in production libraries.
+(library
+ (name jj_integration_fixture_kernel)
+ (wrapped false)
+ (modules jj_integration_fixture_kernel)
+ (libraries sa_plan digestif yojson unix mtime.clock.os))
+(executables
+ (names jj_integration_fixture_port jj_integration_fixture_setup)
+ (modules jj_integration_fixture_port jj_integration_fixture_setup)
+ (libraries jj_integration_fixture_kernel sa_plan digestif yojson unix))
+(rule
+ (target jj_integration_fixture_guardian.ml)
+ (deps %{workspace_root}/../../tools/telegram_store_transport_guardian.ml)
+ (action (copy %{deps} %{target})))
+(executable
+ (name jj_integration_fixture_guardian)
+ (modules jj_integration_fixture_guardian)
+ (libraries unix mtime.clock))
+
 (executable
  (name sa_plan_test)
  (modules sa_plan_test)
@@ -123,7 +142,6 @@
     (echo "open Sa_plan__\n")
     (cat ../sa_plan_store.ml)
     (cat reclaim_fixture_extension.ml)))))
-
 (executable
  (name test_sa_plan_control_plane)
  (modules test_sa_plan_control_plane quint_rt sa_plan_ooda_bridge)
@@ -207,7 +225,6 @@
  (name test_sa_plan_dependency_repair)
  (modules test_sa_plan_dependency_repair)
  (libraries core core_unix sa_plan sqlite3 yojson))
-
 ; Independent canonical checker projection, source-identical generated fixtures.
 (rule (target priority.ml)
  (deps %{workspace_root}/../../plugins/uos-risk-prioritization/validation/priority.ml)
@@ -247,3 +264,36 @@
   -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
   -ccopt -Wl,--disable-new-dtags
   -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
+
+; Private same-connection adapter: production MLI hides callback and SQL handle.
+(library
+ (name sqlite_write_vfs_fixture)
+ (wrapped false)
+ (modules sqlite_write_vfs_fixture)
+ (libraries sqlite_write_vfs sqlite_main_mapping core sqlite3 yojson unix))
+(rule
+ (target sqlite_write_vfs_fixture.ml)
+ (deps ../sqlite_write_vfs.ml)
+ (action (copy %{deps} %{target})))
+(test
+ (name test_sqlite_write_vfs)
+ (modules test_sqlite_write_vfs)
+ (deps sqlite_write_fault_shim.so)
+ (foreign_stubs
+  (language c)
+  (names sqlite_write_setup_stubs)
+  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
+ (libraries sqlite_write_vfs_fixture sqlite_write_vfs recovery_kernel_fixture recovery_kernel core sqlite3 unix bos yojson)
+ (link_flags (:standard
+  -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,--disable-new-dtags
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
+
+; PRIVATE failure DSO. Product libraries neither link nor select this shim.
+(rule
+ (target sqlite_write_fault_shim.so)
+ (deps sqlite_write_fault_shim.c)
+ (action
+  (run /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+   -shared -fPIC -O2 -Wall -Wextra -Werror %{deps} -ldl -o %{target})))

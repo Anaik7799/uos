@@ -233,6 +233,10 @@ let recovery_source_inputs root =
       "tools/validation/recovery_capsule_fixture.ml";
       "tools/validation/recovery_native_signer_bundle_fixture.ml";
       "tools/validation/recovery_integrated_fixture.ml";
+      "tools/validation/recovery_metadata_route_fixture.ml";
+      "native/ocaml/recovery_trust_metadata/recovery_trust_metadata.ml";
+      "native/ocaml/recovery_trust_metadata/recovery_trust_metadata.mli";
+      "native/ocaml/recovery_trust_metadata/recovery_trust_metadata_port.ml";
       "native/ocaml/recovery_resource_signer/recovery_resource_signer.ml";
       "native/ocaml/recovery_resource_signer/recovery_resource_signer.mli";
       "native/ocaml/recovery_resource_signer/recovery_resource_signer_port.ml";
