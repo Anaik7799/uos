@@ -460,9 +460,13 @@ def main():
         var fold0 = should_fold(UInt32(12000), UInt32(50), UInt32(10))
         var met3 = classify_metabolic(UInt32(7500))
         var imm2 = eval_immune(UInt8(2), UInt32(0), UInt32(94))
+        var verify_otel = handle.get_function[UInt8]("uos_lean_verify_otel_span_kpi")
+        var eval_sla = handle.get_function[UInt8]("uos_lean_eval_context_kpi_sla")
         var lyap1 = eval_lyapunov(UInt32(600), UInt32(0), UInt32(0), UInt32(0), UInt32(0))
         var hol1 = verify_holon170(UInt32(170), UInt8(1), UInt8(1), UInt32(8580), UInt32(71), UInt32(0))
-        lean_c_abi_ok = (ok1 == 1 and veto94 == 0 and tier0 == 0 and stage14 == 1 and atlas0 == 0x0C1D0120 and arch0 == 0 and fold1 == 1 and fold0 == 0 and met3 == 3 and imm2 == 0x22 and lyap1 == 1 and hol1 == 1)
+        var otel1 = verify_otel(UInt8(1), UInt8(1), UInt8(3), UInt8(9), UInt8(1), UInt32(120), UInt32(72), UInt32(500))
+        var sla1 = eval_sla(UInt32(9590), UInt32(6039), UInt32(49), UInt32(16), UInt32(12))
+        lean_c_abi_ok = (ok1 == 1 and veto94 == 0 and tier0 == 0 and stage14 == 1 and atlas0 == 0x0C1D0120 and arch0 == 0 and fold1 == 1 and fold0 == 0 and met3 == 3 and imm2 == 0x22 and lyap1 == 1 and hol1 == 1 and otel1 == 1 and sla1 == 1)
     except:
         lean_c_abi_ok = False
 
@@ -471,6 +475,13 @@ def main():
 
     print(
         '{"schema":"uos.bionic.custom_mojo_max_ai_engine.v1"'
+        + ',"trace_id":"4bf92f3577b34da6a3ce929d0e0e4736"'
+        + ',"span_id":"00f067aa0ba902b8"'
+        + ',"parent_span_id":"00f067aa0ba902b7"'
+        + ',"fractal_layer":"L3_BYTE_PARITY"'
+        + ',"holon_id":"holon.l3.bionic_custom_ai_engine"'
+        + ',"severity_number":9'
+        + ',"subsystem":"max_inference"'
         + ',"lean_c_abi_guard_verified":' + bool_json(lean_c_abi_ok)
         + ',"max_version":"26.5.0"'
         + ',"mojo_version":"0.26.3.0.dev2026040205"'

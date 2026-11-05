@@ -216,13 +216,66 @@ theorem THM_GUARD_09_lyapunov_energy_monotone :
     uosLeanEvalLyapunovStable 600 0 0 0 0 = 1
   ∧ uosLeanEvalLyapunovStable 100 2 0 0 0 = 0 := by decide
 
+/-- 11. C3I Fractal Observability & W3C OTel Span Budget Gate (SC-OTEL-002 / SC-LOG-001)
+    Verifies non-zero 128-bit W3C trace_id & 64-bit span_id, fractal layer in 0..9 (L0..L9),
+    severity in {5,9,13,17,21} (DEBUG..FATAL), piiScrubbed == 1 (SC-LOG-003),
+    clockDriftMs < 2000 (SC-TIME-001 nominal <2s), and latencyUs <= budgetUs. -/
+@[export uos_lean_verify_otel_span_kpi]
+def uosLeanVerifyOtelSpanKpi
+    (traceNonZero  : UInt8)
+    (spanNonZero   : UInt8)
+    (fractalLayer  : UInt8)
+    (severityNum   : UInt8)
+    (piiScrubbed   : UInt8)
+    (clockDriftMs  : UInt32)
+    (latencyUs     : UInt32)
+    (budgetUs      : UInt32) : UInt8 :=
+  let sevOk := severityNum == 5 || severityNum == 9 || severityNum == 13 || severityNum == 17 || severityNum == 21
+  if traceNonZero == 1 && spanNonZero == 1 && fractalLayer <= 9 && sevOk
+     && piiScrubbed == 1 && clockDriftMs < 2000 && latencyUs <= budgetUs then
+    1
+  else
+    0
+
+/-- 12. End-to-End 10-Layer Context Fast-Path SLA KPI Gate
+    Verifies aggregate L0..L9 KPI vector:
+      • cacheHitBps >= 8500 (>= 85.00% prompt-cache hit rate)
+      • simdThroughputMbs >= 4000 (>= 4,000 MB/s 64-byte AVX-512 fused scan)
+      • cabiLatencyNs <= 200 (<= 200 ns/call unboxed Lean 4 C-ABI FFI)
+      • twinVerifyMs <= 50 (<= 50 ms AOT Unified Gateway Twin verification)
+      • catalogTargets == 12 (12/12 MCP configurations converged) -/
+@[export uos_lean_eval_context_kpi_sla]
+def uosLeanEvalContextKpiSla
+    (cacheHitBps       : UInt32)
+    (simdThroughputMbs : UInt32)
+    (cabiLatencyNs     : UInt32)
+    (twinVerifyMs      : UInt32)
+    (catalogTargets    : UInt32) : UInt8 :=
+  if cacheHitBps >= 8500 && simdThroughputMbs >= 4000
+     && cabiLatencyNs <= 200 && twinVerifyMs <= 50 && catalogTargets == 12 then
+    1
+  else
+    0
+
 theorem THM_GUARD_10_holon_lattice_170_sound :
     uosLeanVerify170HolonLattice 170 1 1 8580 71 0 = 1
   ∧ uosLeanVerify170HolonLattice 170 1 1 3900 71 0 = 0
   ∧ uosLeanVerify170HolonLattice 169 1 1 8580 71 0 = 0 := by decide
 
+theorem THM_GUARD_11_otel_span_kpi_contract_enforced :
+    uosLeanVerifyOtelSpanKpi 1 1 2 9 1 120 72 500   = 1
+  ∧ uosLeanVerifyOtelSpanKpi 0 1 2 9 1 120 72 500   = 0
+  ∧ uosLeanVerifyOtelSpanKpi 1 1 2 9 0 120 72 500   = 0
+  ∧ uosLeanVerifyOtelSpanKpi 1 1 2 9 1 2500 72 500  = 0
+  ∧ uosLeanVerifyOtelSpanKpi 1 1 2 9 1 120 600 500  = 0 := by decide
+
+theorem THM_GUARD_12_context_kpi_sla_sound :
+    uosLeanEvalContextKpiSla 9590 6039 49 16 12 = 1
+  ∧ uosLeanEvalContextKpiSla 7000 6039 49 16 12 = 0
+  ∧ uosLeanEvalContextKpiSla 9590 6039 49 16 11 = 0 := by decide
+
 def main : IO UInt32 := do
-  IO.println "UOS_LEAN_RUNTIME_GUARD_10_THEOREMS_AND_10_C_ABI_EXPORTS=PASS"
+  IO.println "UOS_LEAN_RUNTIME_GUARD_12_THEOREMS_AND_12_C_ABI_EXPORTS=PASS"
   return 0
 
 end UosLeanRuntimeGuard

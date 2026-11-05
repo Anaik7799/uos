@@ -182,8 +182,16 @@ def main():
         adv_sqli.unsafe_ptr(), adv_sqli.byte_length()
     )
 
+    var throughput_mbs = Int(Float64(n) / fused_us)
     print(
         '{"schema":"uos.bionic.mojo_lean_interception_bridge.v1"'
+        + ',"trace_id":"4bf92f3577b34da6a3ce929d0e0e4736"'
+        + ',"span_id":"00f067aa0ba902b7"'
+        + ',"parent_span_id":"00f067aa0ba90200"'
+        + ',"fractal_layer":"L2_INSTRUCTION_DISPATCH"'
+        + ',"holon_id":"holon.l2.bionic_simd_interceptor"'
+        + ',"severity_number":9'
+        + ',"subsystem":"agent_interceptor"'
         + ',"bytes_scanned":'
         + String(n)
         + ',"simhash_and_intercept_us_per_pass":'
@@ -202,6 +210,8 @@ def main():
         + String(h_acc)
         + ',"fused_single_pass_us":'
         + String(fused_us)
+        + ',"simd_throughput_mbs":'
+        + String(throughput_mbs)
         + ',"zero_allocation_register_fastpath":true}'
     )
 
@@ -209,7 +219,7 @@ def main():
 def uos_mojo_fused_single_pass_scan(
     ptr: Pointer[UInt8, _], length: Int
 ) -> Tuple[Int, Int, Int, Int, Int]:
-    """Data-Driven Single-Pass Cache-Line Scanner (Zero Second-Pass Cache Misses).
+    """Data-Driven Single-Pass Cache-Line Scanner for Zero Second-Pass Cache Misses.
     Simultaneously computes in 1 pass over L1 cache:
       1. sec_code: 0 (PASS), -2 (NUL 0x00 trap), -3 ('DROP T' SQLi trap)
       2. struct_count: JSON-RPC structural delimiters ({, }, [, ], :, ,)
@@ -223,30 +233,30 @@ def uos_mojo_fused_single_pass_scan(
     var hex_count: Int = 0
     var anchor_count: Int = 0
     var i: Int = 0
-    while i + 64 <= length:
-        var chunk = (ptr + i).load[width=64]()
-        if chunk.eq(0).reduce_or():
+    var ones64 = SIMD[DType.uint16, 64](1)
+    var zeros64 = SIMD[DType.uint16, 64](0)
+    while i + 70 <= length:
+        var c0 = ptr.unsafe_offset(i).unsafe_load[width=64]()
+        if c0.eq(0).reduce_or():
             return (-2, struct_count, newline_count, hex_count, anchor_count)
-        for lane in range(64):
-            var b = Int(chunk[lane])
-            if b == 10:
-                newline_count += 1
-            elif b == 123 or b == 125 or b == 91 or b == 93 or b == 58 or b == 44:
-                struct_count += 1
-            elif (b >= 48 and b <= 57) or (b >= 97 and b <= 102) or (b >= 65 and b <= 70):
-                hex_count += 1
-            var pos = i + lane
-            if pos + 5 < length:
-                if b == 68 and Int(ptr[unsafe_offset = pos + 1]) == 82 and Int(ptr[unsafe_offset = pos + 2]) == 79 and Int(ptr[unsafe_offset = pos + 3]) == 80 and Int(ptr[unsafe_offset = pos + 4]) == 32 and Int(ptr[unsafe_offset = pos + 5]) == 84:
-                    sec_code = -3
-                elif b == 117 and Int(ptr[unsafe_offset = pos + 1]) == 111 and Int(ptr[unsafe_offset = pos + 2]) == 115 and Int(ptr[unsafe_offset = pos + 3]) == 58 and Int(ptr[unsafe_offset = pos + 4]) == 47 and Int(ptr[unsafe_offset = pos + 5]) == 47:
-                    anchor_count += 1
-                elif b == 115 and Int(ptr[unsafe_offset = pos + 1]) == 104 and Int(ptr[unsafe_offset = pos + 2]) == 97 and Int(ptr[unsafe_offset = pos + 3]) == 50 and Int(ptr[unsafe_offset = pos + 4]) == 53 and Int(ptr[unsafe_offset = pos + 5]) == 54:
-                    anchor_count += 1
-            if pos + 3 < length and b == 65 and Int(ptr[unsafe_offset = pos + 1]) == 68 and Int(ptr[unsafe_offset = pos + 2]) == 82 and Int(ptr[unsafe_offset = pos + 3]) == 45:
-                anchor_count += 1
-            if pos + 2 < length and b == 69 and Int(ptr[unsafe_offset = pos + 1]) == 86 and Int(ptr[unsafe_offset = pos + 2]) == 45:
-                anchor_count += 1
+        newline_count += Int(c0.eq(10).select(ones64, zeros64).reduce_add())
+        var st_mask = c0.eq(123) | c0.eq(125) | c0.eq(91) | c0.eq(93) | c0.eq(58) | c0.eq(44)
+        struct_count += Int(st_mask.select(ones64, zeros64).reduce_add())
+        var hx_mask = (c0.ge(48) & c0.le(57)) | (c0.ge(97) & c0.le(102)) | (c0.ge(65) & c0.le(70))
+        hex_count += Int(hx_mask.select(ones64, zeros64).reduce_add())
+        var c1 = ptr.unsafe_offset(i + 1).unsafe_load[width=64]()
+        var c2 = ptr.unsafe_offset(i + 2).unsafe_load[width=64]()
+        var c3 = ptr.unsafe_offset(i + 3).unsafe_load[width=64]()
+        var c4 = ptr.unsafe_offset(i + 4).unsafe_load[width=64]()
+        var c5 = ptr.unsafe_offset(i + 5).unsafe_load[width=64]()
+        if (c0.eq(68) & c1.eq(82) & c2.eq(79) & c3.eq(80) & c4.eq(32) & c5.eq(84)).reduce_or():
+            sec_code = -3
+        var m_uos = c0.eq(117) & c1.eq(111) & c2.eq(115) & c3.eq(58) & c4.eq(47) & c5.eq(47)
+        var m_sha = c0.eq(115) & c1.eq(104) & c2.eq(97) & c3.eq(50) & c4.eq(53) & c5.eq(54)
+        var m_adr = c0.eq(65) & c1.eq(68) & c2.eq(82) & c3.eq(45)
+        var m_ev  = c0.eq(69) & c1.eq(86) & c2.eq(45)
+        var anc_vec = m_uos.select(ones64, zeros64) + m_sha.select(ones64, zeros64) + m_adr.select(ones64, zeros64) + m_ev.select(ones64, zeros64)
+        anchor_count += Int(anc_vec.reduce_add())
         i += 64
     while i < length:
         var b = Int(ptr[unsafe_offset = i])
