@@ -357,21 +357,31 @@ def containsSubstr (s sub : String) : Bool :=
 
 def main : IO Unit := do
   let uosRoot := "/home/an/NAS-setup/uos"
-  -- 1. Execute High-Performance Mojo AVX-512 Interceptor (`tools/bionic_mcp_interceptor.mojo`)
-  let mojoInter ← IO.Process.output {
-    cmd := "/bin/bash"
-    args := #[uosRoot ++ "/tools/mojo", "run", uosRoot ++ "/tools/bionic_mcp_interceptor.mojo"]
-    cwd := some uosRoot
-  }
+  -- 1. Execute High-Performance Mojo AVX-512 Interceptor (AOT fast-path `var/mojo-bin/bionic_mcp_interceptor_bin`, fallback `tools/mojo run`)
+  let interBin := uosRoot ++ "/var/mojo-bin/bionic_mcp_interceptor_bin"
+  let interExists ← System.FilePath.pathExists interBin
+  let mojoInter ← if interExists then
+    IO.Process.output { cmd := interBin, args := #[], cwd := some uosRoot }
+  else
+    IO.Process.output {
+      cmd := "/bin/bash"
+      args := #[uosRoot ++ "/tools/mojo", "run", uosRoot ++ "/tools/bionic_mcp_interceptor.mojo"]
+      cwd := some uosRoot
+    }
   let interStdout := mojoInter.stdout.trimAscii.toString
   let interStderr := mojoInter.stderr.trimAscii.toString
 
-  -- 2. Execute Local Mojo/MAX Custom AI Engine (`tools/bionic_custom_ai_engine.mojo`)
-  let mojoAi ← IO.Process.output {
-    cmd := "/bin/bash"
-    args := #[uosRoot ++ "/tools/mojo", "run", uosRoot ++ "/tools/bionic_custom_ai_engine.mojo"]
-    cwd := some uosRoot
-  }
+  -- 2. Execute Local Mojo/MAX Custom AI Engine (AOT fast-path `var/mojo-bin/bionic_custom_ai_engine_bin`, fallback `tools/mojo run`)
+  let aiBin := uosRoot ++ "/var/mojo-bin/bionic_custom_ai_engine_bin"
+  let aiExists ← System.FilePath.pathExists aiBin
+  let mojoAi ← if aiExists then
+    IO.Process.output { cmd := aiBin, args := #[], cwd := some uosRoot }
+  else
+    IO.Process.output {
+      cmd := "/bin/bash"
+      args := #[uosRoot ++ "/tools/mojo", "run", uosRoot ++ "/tools/bionic_custom_ai_engine.mojo"]
+      cwd := some uosRoot
+    }
   let aiStdout := mojoAi.stdout.trimAscii.toString
   let aiStderr := mojoAi.stderr.trimAscii.toString
 

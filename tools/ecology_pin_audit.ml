@@ -56,6 +56,7 @@ module Audit = struct
     "workspace_codex_config",Repository,".codex/config.toml",Toml;
     "workspace_agy_settings",Repository,".gemini/settings.json",Json;
     "workspace_pi_mcp",Repository,".pi/mcp.json",Json;
+    "workspace_deepseek_mcp",Repository,".deepseek/mcp.json",Json;
     "home_agy_antigravity_mcp",Home,".gemini/antigravity-cli/mcp_config.json",Json;
     "home_agy_config_mcp",Home,".gemini/config/mcp_config.json",Json;
     "home_agy_settings",Home,".gemini/settings.json",Json;
@@ -82,15 +83,16 @@ module Audit = struct
     let expected=List.map(fun(id,_,_,_)->id)catalog|>List.sort String.compare in
     let actual=List.map(fun item->item.id)items|>List.sort String.compare in
     let exact_catalog=actual=expected in
+    let catalog_count=List.length catalog in
     `Assoc["schema",`String "uos.ecology-pin-audit.v1";
-      "status",`String(if exact_catalog && observed=11 && List.length bindings=1
+      "status",`String(if exact_catalog && observed=catalog_count && List.length bindings=1
         then "OBSERVED_CONSISTENT_PINS_ONLY"else "HOLD");"authority",`String "NONE";
       "read_only",`Bool true;"runtime_readiness",`String "UNVERIFIED";
       "scope",`String "explicit_configuration_catalog_only_not_runtime_or_enabled_client_inventory";
       "configuration_targets",`Int(List.length items);"observed_targets",`Int observed;
       "exact_configuration_catalog",`Bool exact_catalog;
       "observed_server_slots",`Int(List.length pins);"distinct_observed_bindings",`Int(List.length bindings);
-      "all_configuration_targets_observed",`Bool(exact_catalog && observed=11);
+      "all_configuration_targets_observed",`Bool(exact_catalog && observed=catalog_count);
       "runtime_targets",`String "UNRUN_3_LOGICAL_TARGETS";
       "rows",`List(List.map row items)]
 end

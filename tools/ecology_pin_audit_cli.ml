@@ -35,10 +35,9 @@ let ()=
   let report=match Array.to_list Sys.argv with
   |[_;repository;home]->A.canonical ~repository ~home|>A.export
   |[_;"repin";repository;home;capsule;payload_sha256]->
-    let targets=(A.catalog@[("workspace_deepseek_mcp",A.Repository,".deepseek/mcp.json",A.Json)])in
     List.iter(fun(_,scope,relative,format)->
       let root=match scope with A.Repository->repository|A.Home->home in
-      repin_target ~root ~relative ~format ~capsule ~payload_sha256)targets;
+      repin_target ~root ~relative ~format ~capsule ~payload_sha256)A.catalog;
     A.canonical ~repository ~home|>A.export
   |_->`Assoc["schema",`String "uos.ecology-pin-audit.v1";"status",`String "HOLD";
       "authority",`String "NONE";"reason",`String "explicit_repository_and_home_required"]in

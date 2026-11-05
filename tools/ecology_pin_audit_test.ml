@@ -93,7 +93,7 @@ let ()=write "config.json" json;
  check "unowned synthetic credential not emitted"(not(Astring.String.is_infix ~affix:"synthetic-do-not-emit"report));
  check "unowned field not emitted"(not(Astring.String.is_infix ~affix:"PRIVATE_UNOWNED"report));
  let metadata=ok(P.inspect_json ~servers:["uos-gleam"]json)in
- let forged=A.export(List.init 11(fun _->A.item "duplicate"(A.Observed metadata)))in
+ let forged=A.export(List.init 12(fun _->A.item "duplicate"(A.Observed metadata)))in
  check "equal count is not exact catalog"(Yojson.Safe.Util.member "all_configuration_targets_observed"forged=`Bool false);
  List.iter(fun name->Unix.unlink(path name))["config.json";"symlink.json";"fifo.json";"oversize.json";"bad.json"];
  Unix.rmdir root;

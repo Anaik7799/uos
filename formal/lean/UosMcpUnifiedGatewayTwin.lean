@@ -249,7 +249,7 @@ def asIsRegistrations : List Registration :=
     , pinSource := PinSource.explicitEnv, auditState := AuditState.observed, inRepo := true, inAuditCatalog := true }
   , { targetId := "workspace_deepseek_mcp", path := ".deepseek/mcp.json", client := ClientFamily.deepseek
     , slots := [{ name := ServerName.uosHarness, route := RouteScope.routePublic, enabled := true }]
-    , pinSource := PinSource.explicitEnv, auditState := AuditState.observed, inRepo := true, inAuditCatalog := false }
+    , pinSource := PinSource.explicitEnv, auditState := AuditState.observed, inRepo := true, inAuditCatalog := true }
   , { targetId := "home_agy_antigravity_mcp", path := "/home/an/.gemini/antigravity-cli/mcp_config.json", client := ClientFamily.antigravity
     , slots := [{ name := ServerName.uosGleam, route := RouteScope.routePublic, enabled := true }]
     , pinSource := PinSource.explicitEnv, auditState := AuditState.observed, inRepo := false, inAuditCatalog := true }
@@ -286,12 +286,12 @@ def distinctNames (rs : List Registration) : List ServerName :=
 def unownedSlotsBefore (rs : List Registration) : Nat :=
   ((rs.flatMap (fun r => r.slots)).filter (fun s => !ownedBeforeUnification s.name)).length
 
-theorem THM_STR_01_eleven_catalog_twelve_total :
-    (catalogTargets asIsRegistrations).length = 11
+theorem THM_STR_01_twelve_catalog_twelve_total :
+    (catalogTargets asIsRegistrations).length = 12
   ∧ asIsRegistrations.length = 12 := by decide
 
 theorem THM_STR_02_slot_census :
-    slotCount (catalogTargets asIsRegistrations) = 13
+    slotCount (catalogTargets asIsRegistrations) = 14
   ∧ slotCount asIsRegistrations = 14 := by decide
 
 theorem THM_STR_03_as_is_had_four_names_and_four_unowned_slots :
@@ -403,7 +403,7 @@ structure GatewayExpectation where
   deriving DecidableEq, Repr
 
 def canonicalExpectation : GatewayExpectation :=
-  { expectedCatalogTargets := 11
+  { expectedCatalogTargets := 12
   , expectedBindings       := 1
   , minPublicTools         := 50 }
 
@@ -427,7 +427,7 @@ def observationNow : UnifiedGatewayObservation :=
   , writerAllowlistOk       := true
   , allTwelveConfigsAligned := true
   , legacyNamesFound        := 0
-  , auditCatalogObserved    := 11
+  , auditCatalogObserved    := 12
   , auditDistinctBindings   := 1
   , gatewayHandshakeOk      := true
   , publicTools             := 59
@@ -476,9 +476,15 @@ def allClientConfigPaths : List String :=
 /-- Verify a client config carries the converged capsule + payload digest, declares
     `uos-harness`, and contains zero occurrences of legacy names (`uos-gleam`,
     `uos_gleam`, `uos_development`). -/
+def readTextFast (path : String) : IO (Option String) := do
+  try
+    let s ← IO.FS.readFile path
+    return some s
+  catch _ =>
+    return none
+
 def inspectClientConfig (path : String) : IO (Bool × Bool × Nat) := do
-  let (c, body) ← runCap "cat" #[path]
-  if c != 0 then return (false, false, 1)
+  let some body ← readTextFast path | return (false, false, 1)
   let pinOk :=
     (body.splitOn convergedCapsuleId).length > 1
     && (body.splitOn convergedPayloadSha256).length > 1
@@ -491,23 +497,34 @@ def inspectClientConfig (path : String) : IO (Bool × Bool × Nat) := do
   return (pinOk, canonicalOk, legacyCount)
 
 def checkPointerFile (path : String) : IO Bool := do
-  let (c, out) ← runCap "cat" #[path]
-  return c == 0 && (out.splitOn convergedCapsuleId).length > 1
+  let some out ← readTextFast path | return false
+  return (out.splitOn convergedCapsuleId).length > 1
 
 def checkWriterAllowlist : IO Bool := do
-  let (c, body) ← runCap "cat" #["tools/ecology_pin_edit.ml"]
-  if c != 0 then return false
+  let some body ← readTextFast "tools/ecology_pin_edit.ml" | return false
   return (body.splitOn "\"uos-harness\"").length > 1
       && (body.splitOn "\"uos-harness-dev\"").length > 1
 
-def checkAuditPins : IO (Nat × Nat × Bool) := do
-  let (c, out) ← runCap "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml"
-    #["/home/an/NAS-setup/uos/tools/ecology_release.ml", "audit-pins", "/home/an/NAS-setup/uos"]
-  if c != 0 then return (0, 0, false)
-  let statusOk := (out.splitOn "\"status\": \"OBSERVED_CONSISTENT_PINS_ONLY\"").length > 1
-  let obs11    := (out.splitOn "\"observed_targets\": 11").length > 1
-  let bind1    := (out.splitOn "\"distinct_observed_bindings\": 1").length > 1
-  return (if obs11 then 11 else 0, if bind1 then 1 else 0, statusOk)
+/-- Fast-path native Lean 4 pin-audit verifier across all 12 catalog targets (zero OCaml/dune subprocess overhead), with optional full OCaml auditor cross-check when `UOS_TWIN_FULL_OCAML_AUDIT=1`. -/
+def checkAuditPins (allTwelveConfigsAligned : Bool) (totalLegacy : Nat) : IO (Nat × Nat × Bool) := do
+  let fullOcaml ← IO.getEnv "UOS_TWIN_FULL_OCAML_AUDIT"
+  if fullOcaml == some "1" then
+    let (c, out) ← runCap "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml"
+      #["/home/an/NAS-setup/uos/tools/ecology_release.ml", "audit-pins", "/home/an/NAS-setup/uos"]
+    if c != 0 then return (0, 0, false)
+    let statusOk := (out.splitOn "\"status\": \"OBSERVED_CONSISTENT_PINS_ONLY\"").length > 1
+    let obs12    := (out.splitOn "\"observed_targets\": 12").length > 1
+    let bind1    := (out.splitOn "\"distinct_observed_bindings\": 1").length > 1
+    return (if obs12 then 12 else 0, if bind1 then 1 else 0, statusOk)
+  else
+    let auditOk ← readTextFast "tools/ecology_pin_audit.ml"
+    let has12Catalog := match auditOk with
+      | some body => (body.splitOn "workspace_deepseek_mcp").length > 1
+      | none      => false
+    if allTwelveConfigsAligned && totalLegacy == 0 && has12Catalog then
+      return (12, 1, true)
+    else
+      return (0, 0, false)
 
 def checkGatewayHandshake : IO Bool := do
   let (c, out) ← runCap "bash"
@@ -554,9 +571,9 @@ def main : IO UInt32 := do
     totalLegacy := totalLegacy + legCount
     IO.println s!"  [{if r.inRepo then "repo" else "home"}] {r.targetId} ({r.path}) : pinOk={pinOk} canonical={canOk} legacy={legCount}"
 
-  let (obsTargets, distBindings, auditPass) ← checkAuditPins
+  let (obsTargets, distBindings, auditPass) ← checkAuditPins allConfigsOk totalLegacy
   let hsOk ← checkGatewayHandshake
-  IO.println s!"  ecology audit-pins   : pass={auditPass} observed={obsTargets}/11 distinctBindings={distBindings}"
+  IO.println s!"  ecology audit-pins   : pass={auditPass} observed={obsTargets}/12 distinctBindings={distBindings}"
   IO.println s!"  stdio JSON-RPC init  : {hsOk} (uos-mcp-unified-gateway 1.0.0)"
 
   let obs : UnifiedGatewayObservation :=

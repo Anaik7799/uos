@@ -12,6 +12,7 @@
 # ==============================================================================
 
 from std.time import perf_counter_ns
+from std.ffi import OwnedDLHandle
 
 
 def bool_json(b: Bool) -> String:
@@ -435,11 +436,30 @@ def main():
         and dtx4[2] == "HOLD_ANDON_TORPOR_OR_BREAKER_OPEN"
     )
 
+    # 7. Verify In-Process Lean 4.33.0 C-ABI Guard Kernel (libuos_lean_guard.so)
+    var lean_c_abi_ok = False
+    try:
+        var handle = OwnedDLHandle("/home/an/NAS-setup/uos/var/zlp/libuos_lean_guard.so")
+        var check_intent = handle.get_function[UInt8]("uos_lean_check_intent")
+        var route_cascade = handle.get_function[UInt8]("uos_lean_route_cascade")
+        var classify_shannon = handle.get_function[UInt8]("uos_lean_classify_shannon_archetype")
+        var should_fold = handle.get_function[UInt8]("uos_lean_should_fold_context")
+        var ok1 = check_intent(UInt8(1), UInt8(1), UInt32(93), UInt32(95), UInt32(5446))
+        var veto94 = check_intent(UInt8(1), UInt8(1), UInt32(94), UInt32(95), UInt32(5446))
+        var tier0 = route_cascade(UInt32(920), ok1, UInt8(1))
+        var arch0 = classify_shannon(UInt32(6200), UInt32(120), UInt32(7200), UInt32(80))
+        var fold1 = should_fold(UInt32(28000), UInt32(50), UInt32(10))
+        var fold0 = should_fold(UInt32(12000), UInt32(50), UInt32(10))
+        lean_c_abi_ok = (ok1 == 1 and veto94 == 0 and tier0 == 0 and arch0 == 0 and fold1 == 1 and fold0 == 0)
+    except:
+        lean_c_abi_ok = False
+
     var t1 = perf_counter_ns()
     var elapsed_us = Float64(t1 - t0) / 1000.0
 
     print(
         '{"schema":"uos.bionic.custom_mojo_max_ai_engine.v1"'
+        + ',"lean_c_abi_guard_verified":' + bool_json(lean_c_abi_ok)
         + ',"max_version":"26.5.0"'
         + ',"mojo_version":"0.26.3.0.dev2026040205"'
         + ',"crashpad_handler_configured":true'
