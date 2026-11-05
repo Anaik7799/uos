@@ -2,14 +2,14 @@
 # Only observed read operations are enabled until control bindings are verified.
 # Canonical Sa-plan status and capability inventory were exercised via initialized
 # stdio MCP under uos/stabilization/20260930-0311. Neither admits task effects.
-[mcp_servers.uos_gleam]
+[mcp_servers.uos-harness]
 enabled = true
 command = "/home/an/NAS-setup/uos/tools/uos-mcp-stdio"
 args = []
 startup_timeout_sec = 20
 tool_timeout_sec = 30
 
-[mcp_servers.uos_gleam.env]
+[mcp_servers.uos-harness.env]
 UOS_MCP_EXPECTED_PAYLOAD_SHA256 = "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6537"
 UOS_COCKPIT_RELEASE = "/home/an/NAS-setup/uos/var/releases/ecology/20261105-1956-630752df0813ce1938ae3e821f453a138900a05013c7f220061cf8b684aa30f2"
 ERL_CRASH_DUMP_SECONDS = "0"
@@ -17,105 +17,105 @@ UOS_MCP_WORKSPACE_ROOT = "/home/an/NAS-setup/uos"
 UOS_MCP_ROUTE = "public"
 UOS_MCP_CLIENT_NAME = "codex-cli"
 
-[mcp_servers.uos_gleam.tools.knowledge_search]
+[mcp_servers.uos-harness.tools.knowledge_search]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.read_file]
+[mcp_servers.uos-harness.tools.read_file]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.sa_plan_status_for]
+[mcp_servers.uos-harness.tools.sa_plan_status_for]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.mcp_capability_inventory]
+[mcp_servers.uos-harness.tools.mcp_capability_inventory]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.zk_search]
+[mcp_servers.uos-harness.tools.zk_search]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.zk_transclude]
+[mcp_servers.uos-harness.tools.zk_transclude]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.kms_catalog]
+[mcp_servers.uos-harness.tools.kms_catalog]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.sa_plan_status]
+[mcp_servers.uos-harness.tools.sa_plan_status]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.sa_plan_list]
+[mcp_servers.uos-harness.tools.sa_plan_list]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.plan_status]
+[mcp_servers.uos-harness.tools.plan_status]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.plan_list]
+[mcp_servers.uos-harness.tools.plan_list]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.plan_list_pending]
+[mcp_servers.uos-harness.tools.plan_list_pending]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.plan_get]
+[mcp_servers.uos-harness.tools.plan_get]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.plan_search]
+[mcp_servers.uos-harness.tools.plan_search]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.feature_tracker_status]
+[mcp_servers.uos-harness.tools.feature_tracker_status]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.system_health]
+[mcp_servers.uos-harness.tools.system_health]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.system_dashboard]
+[mcp_servers.uos-harness.tools.system_dashboard]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.system_immune]
+[mcp_servers.uos-harness.tools.system_immune]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.system_zenoh]
+[mcp_servers.uos-harness.tools.system_zenoh]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.system_verification]
+[mcp_servers.uos-harness.tools.system_verification]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.ooda_phase]
+[mcp_servers.uos-harness.tools.ooda_phase]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.ooda_decide]
+[mcp_servers.uos-harness.tools.ooda_decide]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.fractal_status]
+[mcp_servers.uos-harness.tools.fractal_status]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.prajna_health]
+[mcp_servers.uos-harness.tools.prajna_health]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.dark_cockpit_mode]
+[mcp_servers.uos-harness.tools.dark_cockpit_mode]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.integrity_check]
+[mcp_servers.uos-harness.tools.integrity_check]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.evolution_metrics]
+[mcp_servers.uos-harness.tools.evolution_metrics]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.mesh_topology]
+[mcp_servers.uos-harness.tools.mesh_topology]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.metabolic_state]
+[mcp_servers.uos-harness.tools.metabolic_state]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.preflight_check]
+[mcp_servers.uos-harness.tools.preflight_check]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.harness_execution_progress]
+[mcp_servers.uos-harness.tools.harness_execution_progress]
 approval_mode = "approve"
 
-[mcp_servers.uos_gleam.tools.holon_status]
+[mcp_servers.uos-harness.tools.holon_status]
 approval_mode = "approve"
 
 # Full task-scoped interface. Enable only with a current reviewed launcher grant.
 # Grant values are inherited from the launcher environment, never checked in.
-[mcp_servers.uos_development]
+[mcp_servers.uos-harness-dev]
 enabled = false
 command = "/home/an/NAS-setup/uos/tools/uos-mcp-stdio"
 args = []
@@ -123,7 +123,7 @@ env_vars = ["UOS_HARNESS_GRANT_PATH", "UOS_HARNESS_GRANT_SHA256"]
 startup_timeout_sec = 30
 tool_timeout_sec = 300
 
-[mcp_servers.uos_development.env]
+[mcp_servers.uos-harness-dev.env]
 UOS_MCP_EXPECTED_PAYLOAD_SHA256 = "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6537"
 UOS_COCKPIT_RELEASE = "/home/an/NAS-setup/uos/var/releases/ecology/20261105-1956-630752df0813ce1938ae3e821f453a138900a05013c7f220061cf8b684aa30f2"
 ERL_CRASH_DUMP_SECONDS = "0"

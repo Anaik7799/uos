@@ -460,8 +460,9 @@ def configClean (path : String) : IO (Bool × Bool) := do
     && (body.splitOn "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6537").length > 1
   let canonical :=
     (body.splitOn "uos-harness").length > 1
-    || (body.splitOn "uos-gleam").length > 1
-    || (body.splitOn "uos_gleam").length > 1
+    && (body.splitOn "uos-gleam").length == 1
+    && (body.splitOn "uos_gleam").length == 1
+    && (body.splitOn "uos_development").length == 1
   return (pinConverged, canonical)
 
 def pointerOk : IO Bool := do

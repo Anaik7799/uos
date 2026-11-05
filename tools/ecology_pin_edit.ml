@@ -258,7 +258,7 @@ end = struct
     parts(first+1)[]
 
   let toml ~servers ~capsule ~payload_sha256 body=protect(fun()->
-    bindings ["uos_gleam";"uos_development"] servers capsule payload_sha256;
+    bindings ["uos-harness";"uos-harness-dev";"uos_gleam";"uos_development"] servers capsule payload_sha256;
     bounded body;
     require(not(String.exists(fun c->(Char.code c<32 && not(ws c)) || Char.code c=127)body)) "invalid_toml_control";
     String.iteri(fun i c->if c='\r' then
@@ -333,7 +333,7 @@ end = struct
         if first>=String.length text || text.[first]<>'['then None else
         let parts,_=toml_header text first in
         match parts with
-        |["mcp_servers";server]|["mcp_servers";server;"env"]when List.mem server["uos_gleam";"uos_development"]->Some server
+        |["mcp_servers";server]|["mcp_servers";server;"env"]when List.mem server["uos-harness";"uos-harness-dev";"uos_gleam";"uos_development"]->Some server
         |_->None)|>List.sort_uniq String.compare in
       require(servers<>[]) "missing_owned_servers";servers)with
     |Error reason->Error reason|Ok servers->inspect_toml ~servers body

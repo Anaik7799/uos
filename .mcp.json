@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "uos-gleam": {
+    "uos-harness": {
       "command": "/home/an/NAS-setup/uos/tools/uos-mcp-stdio",
       "args": [],
       "cwd": "/home/an/NAS-setup/uos",
