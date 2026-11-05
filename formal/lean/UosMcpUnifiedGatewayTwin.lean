@@ -78,10 +78,10 @@ def observedHostUtc : String := "2026-11-05T21:05:00Z"
 def twinCandidateId : String := "uos/mcp-unified-gateway-twin/20261105-2105"
 
 def convergedCapsuleId : String :=
-  "20261105-2224-f67e69aa8b88d4cef2627aad60100b8a4bb79667b91e1b87834871344b5ad4a2"
+  "20261105-2254-de32503b029a1181870744f4f66ddc3bdaac0f7a5fc4ef6441d9ae4909c8e907"
 
 def convergedPayloadSha256 : String :=
-  "74dccb4c320b4c3adbd3e05a5c733a4e9ee41db600397e323a4a82a62d92db00"
+  "6cc571d0f3be8a1213df96a8fda3cf85e04ebc1e3e0b2031dc0d8cad8d718447"
 
 theorem THM_PROV_01_ceiling : admittedEvCeiling = 93 := by decide
 

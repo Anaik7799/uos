@@ -150,7 +150,7 @@ def uos_mojo_mcip_anchor_count(ptr: Pointer[UInt8, _], length: Int) -> Int:
 def main():
     var sample = String(
         '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","client":"bionic-mojo-lean4"}}\n'
-        '{"jsonrpc":"2.0","id":2,"result":{"uri":"uos://km/triad","ev":"EV-93","adr":"ADR-065","capsule_sha256":"74dccb4c320b4c3adbd3e05a5c733a4e9ee41db600397e323a4a82a62d92db00"}}\n'
+        '{"jsonrpc":"2.0","id":2,"result":{"uri":"uos://km/triad","ev":"EV-93","adr":"ADR-065","capsule_sha256":"6cc571d0f3be8a1213df96a8fda3cf85e04ebc1e3e0b2031dc0d8cad8d718447"}}\n'
     )
     var payload = String("")
     for _ in range(1500):
