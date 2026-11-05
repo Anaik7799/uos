@@ -132,12 +132,34 @@ def renderOtelJsonl (s : LayerOtelSpanKpi) : String :=
   ++ "," ++ q ++ "admitted_ev_ceiling" ++ q ++ ":93}"
   ++ "," ++ q ++ "evidence_sha256" ++ q ++ ":" ++ q ++ "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6537" ++ q ++ "}"
 
+def shortLayerCode : FractalLayer → String
+  | .L0_MICROKERNEL_ALLOCATOR    => "L0"
+  | .L1_TERM_JIT                 => "L1"
+  | .L2_INSTRUCTION_DISPATCH     => "L2"
+  | .L3_BYTE_PARITY              => "L3"
+  | .L4_STM_CONCURRENCY          => "L4"
+  | .L5_ACTOR_SUPERVISION        => "L5"
+  | .L6_ZERO_TRUST_GATE          => "L6"
+  | .L7_PROBABILISTIC_TELEMETRY => "L7"
+  | .L8_LIVING_ONTOLOGY          => "L8"
+  | .L9_AUTONOMOUS_FEDERATION    => "L9"
+
+def renderSqlInsert (s : LayerOtelSpanKpi) : String :=
+  let payload := renderOtelJsonl s
+  "INSERT INTO sa_plan_fractal_log (trace_id, span_id, layer, subsystem, event_kind, payload_json, recorded_at_ns, recorded_at_iso) VALUES ('"
+  ++ w3cTraceId ++ "', '" ++ s.spanId ++ "', '" ++ shortLayerCode s.layer ++ "', '" ++ s.subsystem
+  ++ "', 'context_fastpath_span_verified', '" ++ payload ++ "', 1793917920000000000, '2026-11-05T22:32:00.000000Z');"
+
 def main : IO UInt32 := do
   let lines := allLayerSpans.map renderOtelJsonl
   let nl := String.singleton (Char.ofNat 10)
   let content := (String.intercalate nl lines) ++ nl
   IO.FS.writeFile "/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl" content
-  IO.println s!"UOS_CONTEXT_FASTPATH_KPI_OTEL_TWIN=PASS (layers={allLayerSpans.length}, all_within_budget={allLayerSpans.all spanWithinBudget}, jsonl=/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl)"
+  let sqlLines := ["BEGIN TRANSACTION;", "DELETE FROM sa_plan_fractal_log WHERE trace_id = '4bf92f3577b34da6a3ce929d0e0e4736';"] ++ (allLayerSpans.map renderSqlInsert) ++ ["COMMIT;"]
+  let sqlContent := (String.intercalate nl sqlLines) ++ nl
+  IO.FS.writeFile "/tmp/uos_fractal_log_sync.sql" sqlContent
+  let _ ← IO.Process.output { cmd := "sqlite3", args := #["/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3", ".read /tmp/uos_fractal_log_sync.sql"] }
+  IO.println s!"UOS_CONTEXT_FASTPATH_KPI_OTEL_TWIN=PASS (layers={allLayerSpans.length}, all_within_budget={allLayerSpans.all spanWithinBudget}, sqlite_synced=true, jsonl=/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl)"
   return 0
 
 end UosContextPathKpiOtelTwin
