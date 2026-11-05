@@ -202,3 +202,35 @@
   -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
   -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
   -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
+
+; Private same-connection adapter: production MLI hides callback and SQL handle.
+(library
+ (name sqlite_write_vfs_fixture)
+ (wrapped false)
+ (modules sqlite_write_vfs_fixture)
+ (libraries sqlite_write_vfs sqlite_main_mapping core sqlite3 yojson unix))
+(rule
+ (target sqlite_write_vfs_fixture.ml)
+ (deps ../sqlite_write_vfs.ml)
+ (action (copy %{deps} %{target})))
+(test
+ (name test_sqlite_write_vfs)
+ (modules test_sqlite_write_vfs)
+ (deps sqlite_write_fault_shim.so)
+ (foreign_stubs
+  (language c)
+  (names sqlite_write_setup_stubs)
+  (flags (:standard -I/nix/store/538744yaz5y7xyx780wpfw2azby9iqxj-sqlite-3.53.3-dev/include -Wall -Wextra -Werror)))
+ (libraries sqlite_write_vfs_fixture sqlite_write_vfs recovery_kernel_fixture recovery_kernel core sqlite3 unix bos yojson)
+ (link_flags (:standard
+  -cc /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+  -ccopt -L/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib
+  -ccopt -Wl,-rpath,/nix/store/xcv2rrfly0za0kdhzvmc0j2a6074zkib-sqlite-3.53.3/lib)))
+
+; PRIVATE failure DSO. Product libraries neither link nor select this shim.
+(rule
+ (target sqlite_write_fault_shim.so)
+ (deps sqlite_write_fault_shim.c)
+ (action
+  (run /nix/store/w88q44gqd1qg5wmkk7v0h97rpiqvam0l-gcc-wrapper-15.3.0/bin/gcc
+   -shared -fPIC -O2 -Wall -Wextra -Werror %{deps} -ldl -o %{target})))
