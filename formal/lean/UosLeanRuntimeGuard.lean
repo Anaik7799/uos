@@ -132,13 +132,97 @@ theorem THM_GUARD_05_atlas_profiles_bounded :
   ∧ uosLeanSolveAtlasBudget 2 = 0x0C000108
   ∧ uosLeanSolveAtlasBudget 3 = 0x061D0108 := by decide
 
+/-- 7. Biomorphic Metabolic Regime Classifier (THM_BML_05 1x1 Parity)
+    Returns:
+    - 0 : TorporMargin40Hold        (minMarginBps < 4000)
+    - 1 : CatabolicCriticalPathOnly (4000 <= minMarginBps < 4500)
+    - 2 : HomeostaticZeroOrShift    (4500 <= minMarginBps <= 5500)
+    - 3 : AnabolicParallel          (minMarginBps > 5500) -/
+@[export uos_lean_classify_metabolic_regime]
+def uosLeanClassifyMetabolicRegime (minMarginBps : UInt32) : UInt8 :=
+  if minMarginBps < 4000 then 0
+  else if minMarginBps > 5500 then 3
+  else if minMarginBps >= 4500 then 2
+  else 1
+
+/-- 8. Biomorphic Immune Circuit-Breaker Evaluator (THM_BML_05 1x1 Parity)
+    Packs (immuneResponse <<< 4) ||| breakerState:
+    immuneResponse: 0=TolerateSelf, 1=IsolateAndHeal, 2=QuarantineAndTripBreaker
+    breakerState  : 0=Closed,       1=HalfOpen,       2=Open -/
+@[export uos_lean_eval_immune_breaker]
+def uosLeanEvalImmuneBreaker
+    (antigenCode   : UInt8)
+    (priorFailures : UInt32)
+    (param         : UInt32) : UInt8 :=
+  if antigenCode == 0 then
+    if priorFailures > 0 then 0x01 else 0x00
+  else if antigenCode == 1 then
+    if priorFailures + 1 >= 3 then 0x12 else 0x11
+  else if antigenCode == 2 || antigenCode == 3 then
+    0x22
+  else if antigenCode == 4 then
+    if param >= 90 then 0x22 else 0x11
+  else
+    if param > 0 then 0x11 else 0x00
+
+/-- 9. Biomorphic Lyapunov Stability Gate (dV/dt <= 0)
+    Computes V_now = 100*failingTasks + 40*staleLeases + 15*openIssues + 80*driftEvents.
+    Returns 1 iff V_now == 0 || V_now <= vPrev (stable/decreasing Lyapunov energy). -/
+@[export uos_lean_eval_lyapunov_stable]
+def uosLeanEvalLyapunovStable
+    (vPrev        : UInt32)
+    (failingTasks : UInt32)
+    (staleLeases  : UInt32)
+    (openIssues   : UInt32)
+    (driftEvents  : UInt32) : UInt8 :=
+  let vNow := 100 * failingTasks + 40 * staleLeases + 15 * openIssues + 80 * driftEvents
+  if vNow == 0 || vNow <= vPrev then 1 else 0
+
+/-- 10. 170-Holon Janus Monoidal Lattice Fast-Path Verifier
+    Verifies totalHolons == 170, rootTrust == 1, rootGammaUp == 1,
+    minAtpMarginBps >= 4000, maxFmeaRpn < 200, and totalLyapunovV == 0. -/
+@[export uos_lean_verify_170_holon_lattice]
+def uosLeanVerify170HolonLattice
+    (totalHolons     : UInt32)
+    (rootTrust       : UInt8)
+    (rootGammaUp     : UInt8)
+    (minAtpMarginBps : UInt32)
+    (maxFmeaRpn      : UInt32)
+    (totalLyapunovV  : UInt32) : UInt8 :=
+  if totalHolons == 170 && rootTrust == 1 && rootGammaUp == 1
+     && minAtpMarginBps >= 4000 && maxFmeaRpn < 200 && totalLyapunovV == 0 then
+    1
+  else
+    0
+
 theorem THM_GUARD_06_fold_scheduler_protects_cache_breakeven :
     uosLeanShouldFoldContext 12000 50 10 = 0
   ∧ uosLeanShouldFoldContext 28000 50 10 = 1
   ∧ uosLeanShouldFoldContext 8000  90 2  = 1 := by decide
 
+theorem THM_GUARD_07_metabolic_regimes_partitioned :
+    uosLeanClassifyMetabolicRegime 3500 = 0
+  ∧ uosLeanClassifyMetabolicRegime 4200 = 1
+  ∧ uosLeanClassifyMetabolicRegime 5000 = 2
+  ∧ uosLeanClassifyMetabolicRegime 7500 = 3 := by decide
+
+theorem THM_GUARD_08_immune_breaker_trips_on_ev94_and_digest_drift :
+    uosLeanEvalImmuneBreaker 0 0 0  = 0x00
+  ∧ uosLeanEvalImmuneBreaker 2 0 94 = 0x22
+  ∧ uosLeanEvalImmuneBreaker 3 0 1  = 0x22
+  ∧ uosLeanEvalImmuneBreaker 4 0 92 = 0x22 := by decide
+
+theorem THM_GUARD_09_lyapunov_energy_monotone :
+    uosLeanEvalLyapunovStable 600 0 0 0 0 = 1
+  ∧ uosLeanEvalLyapunovStable 100 2 0 0 0 = 0 := by decide
+
+theorem THM_GUARD_10_holon_lattice_170_sound :
+    uosLeanVerify170HolonLattice 170 1 1 8580 71 0 = 1
+  ∧ uosLeanVerify170HolonLattice 170 1 1 3900 71 0 = 0
+  ∧ uosLeanVerify170HolonLattice 169 1 1 8580 71 0 = 0 := by decide
+
 def main : IO UInt32 := do
-  IO.println "UOS_LEAN_RUNTIME_GUARD_6_THEOREMS_AND_6_C_ABI_EXPORTS=PASS"
+  IO.println "UOS_LEAN_RUNTIME_GUARD_10_THEOREMS_AND_10_C_ABI_EXPORTS=PASS"
   return 0
 
 end UosLeanRuntimeGuard

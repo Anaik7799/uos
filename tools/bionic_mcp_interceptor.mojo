@@ -222,7 +222,33 @@ def uos_mojo_fused_single_pass_scan(
     var newline_count: Int = 0
     var hex_count: Int = 0
     var anchor_count: Int = 0
-    for i in range(length):
+    var i: Int = 0
+    while i + 64 <= length:
+        var chunk = (ptr + i).load[width=64]()
+        if chunk.eq(0).reduce_or():
+            return (-2, struct_count, newline_count, hex_count, anchor_count)
+        for lane in range(64):
+            var b = Int(chunk[lane])
+            if b == 10:
+                newline_count += 1
+            elif b == 123 or b == 125 or b == 91 or b == 93 or b == 58 or b == 44:
+                struct_count += 1
+            elif (b >= 48 and b <= 57) or (b >= 97 and b <= 102) or (b >= 65 and b <= 70):
+                hex_count += 1
+            var pos = i + lane
+            if pos + 5 < length:
+                if b == 68 and Int(ptr[unsafe_offset = pos + 1]) == 82 and Int(ptr[unsafe_offset = pos + 2]) == 79 and Int(ptr[unsafe_offset = pos + 3]) == 80 and Int(ptr[unsafe_offset = pos + 4]) == 32 and Int(ptr[unsafe_offset = pos + 5]) == 84:
+                    sec_code = -3
+                elif b == 117 and Int(ptr[unsafe_offset = pos + 1]) == 111 and Int(ptr[unsafe_offset = pos + 2]) == 115 and Int(ptr[unsafe_offset = pos + 3]) == 58 and Int(ptr[unsafe_offset = pos + 4]) == 47 and Int(ptr[unsafe_offset = pos + 5]) == 47:
+                    anchor_count += 1
+                elif b == 115 and Int(ptr[unsafe_offset = pos + 1]) == 104 and Int(ptr[unsafe_offset = pos + 2]) == 97 and Int(ptr[unsafe_offset = pos + 3]) == 50 and Int(ptr[unsafe_offset = pos + 4]) == 53 and Int(ptr[unsafe_offset = pos + 5]) == 54:
+                    anchor_count += 1
+            if pos + 3 < length and b == 65 and Int(ptr[unsafe_offset = pos + 1]) == 68 and Int(ptr[unsafe_offset = pos + 2]) == 82 and Int(ptr[unsafe_offset = pos + 3]) == 45:
+                anchor_count += 1
+            if pos + 2 < length and b == 69 and Int(ptr[unsafe_offset = pos + 1]) == 86 and Int(ptr[unsafe_offset = pos + 2]) == 45:
+                anchor_count += 1
+        i += 64
+    while i < length:
         var b = Int(ptr[unsafe_offset = i])
         if b == 0:
             return (-2, struct_count, newline_count, hex_count, anchor_count)
@@ -232,17 +258,5 @@ def uos_mojo_fused_single_pass_scan(
             struct_count += 1
         elif (b >= 48 and b <= 57) or (b >= 97 and b <= 102) or (b >= 65 and b <= 70):
             hex_count += 1
-        if i + 5 < length:
-            if b == 68 and Int(ptr[unsafe_offset = i + 1]) == 82 and Int(ptr[unsafe_offset = i + 2]) == 79 and Int(ptr[unsafe_offset = i + 3]) == 80 and Int(ptr[unsafe_offset = i + 4]) == 32 and Int(ptr[unsafe_offset = i + 5]) == 84:
-                sec_code = -3
-            elif b == 117 and Int(ptr[unsafe_offset = i + 1]) == 111 and Int(ptr[unsafe_offset = i + 2]) == 115 and Int(ptr[unsafe_offset = i + 3]) == 58 and Int(ptr[unsafe_offset = i + 4]) == 47 and Int(ptr[unsafe_offset = i + 5]) == 47:
-                anchor_count += 1
-            elif b == 115 and Int(ptr[unsafe_offset = i + 1]) == 104 and Int(ptr[unsafe_offset = i + 2]) == 97 and Int(ptr[unsafe_offset = i + 3]) == 50 and Int(ptr[unsafe_offset = i + 4]) == 53 and Int(ptr[unsafe_offset = i + 5]) == 54:
-                anchor_count += 1
-        if i + 3 < length:
-            if b == 65 and Int(ptr[unsafe_offset = i + 1]) == 68 and Int(ptr[unsafe_offset = i + 2]) == 82 and Int(ptr[unsafe_offset = i + 3]) == 45:
-                anchor_count += 1
-        if i + 2 < length:
-            if b == 69 and Int(ptr[unsafe_offset = i + 1]) == 86 and Int(ptr[unsafe_offset = i + 2]) == 45:
-                anchor_count += 1
+        i += 1
     return (sec_code, struct_count, newline_count, hex_count, anchor_count)
