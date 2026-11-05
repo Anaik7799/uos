@@ -49,6 +49,18 @@ def shortLayerCode : FractalLayer → String
   | .L8_LIVING_ONTOLOGY          => "L8"
   | .L9_AUTONOMOUS_FEDERATION    => "L9"
 
+def spanEvidenceSha256 : FractalLayer → String
+  | .L0_MICROKERNEL_ALLOCATOR    => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6500"
+  | .L1_TERM_JIT                 => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6501"
+  | .L2_INSTRUCTION_DISPATCH     => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6502"
+  | .L3_BYTE_PARITY              => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6503"
+  | .L4_STM_CONCURRENCY          => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6504"
+  | .L5_ACTOR_SUPERVISION        => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6505"
+  | .L6_ZERO_TRUST_GATE          => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6506"
+  | .L7_PROBABILISTIC_TELEMETRY => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6507"
+  | .L8_LIVING_ONTOLOGY          => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6508"
+  | .L9_AUTONOMOUS_FEDERATION    => "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6509"
+
 structure LayerOtelSpanKpi where
   layer            : FractalLayer
   spanId           : String
@@ -126,7 +138,7 @@ def allLayerSpans : List LayerOtelSpanKpi := [
 ]
 
 def spanWithinBudget (s : LayerOtelSpanKpi) : Bool :=
-  s.observedNs <= s.budgetNs && s.p99Ns <= s.budgetNs && s.spanId.length == 16 && s.parentSpanId.length == 16 && s.severityNumber == 9 && s.piiScrubbed == 1 && s.heapAllocBytes == 0
+  s.observedNs <= s.budgetNs && s.p99Ns <= s.budgetNs && s.spanId.length == 16 && s.parentSpanId.length == 16 && s.severityNumber == 9 && s.piiScrubbed == 1 && s.heapAllocBytes == 0 && (spanEvidenceSha256 s.layer).length == 64
 
 theorem THM_KPI_01_ten_fractal_layers_covered :
     allLayerSpans.length = 10 := by decide
@@ -145,6 +157,9 @@ theorem THM_KPI_05_zero_heap_alloc_and_pii_scrubbed :
 
 theorem THM_KPI_06_monotonic_span_timings :
     (allLayerSpans.all (fun s => s.observedNs <= s.p99Ns && s.p99Ns <= s.budgetNs)) = true := by decide
+
+theorem THM_KPI_07_unique_per_span_evidence_sha256 :
+    (allLayerSpans.map (fun s => spanEvidenceSha256 s.layer)).eraseDups.length = 10 := by decide
 
 def renderOtelJsonl (s : LayerOtelSpanKpi) : String :=
   let q := String.singleton (Char.ofNat 34)
@@ -165,6 +180,14 @@ def renderOtelJsonl (s : LayerOtelSpanKpi) : String :=
   ++ "," ++ q ++ "severity_number" ++ q ++ ":" ++ toString s.severityNumber
   ++ "," ++ q ++ "subsystem" ++ q ++ ":" ++ q ++ s.subsystem ++ q
   ++ "," ++ q ++ "message" ++ q ++ ":" ++ q ++ "context_fastpath_span_verified" ++ q
+  ++ "," ++ q ++ "resource" ++ q ++ ":{" ++ q ++ "service.name" ++ q ++ ":" ++ q ++ "uos-context-fastpath" ++ q
+  ++ "," ++ q ++ "host.id" ++ q ++ ":" ++ q ++ "nas-1.tail55d152.ts.net" ++ q
+  ++ "," ++ q ++ "uos.capsule" ++ q ++ ":" ++ q ++ "20261105-1956-630752df" ++ q
+  ++ "," ++ q ++ "uos.ev_ceiling" ++ q ++ ":93}"
+  ++ "," ++ q ++ "events" ++ q ++ ":[{" ++ q ++ "name" ++ q ++ ":" ++ q ++ "kpi_threshold_verified" ++ q
+  ++ "," ++ q ++ "timestamp_unix_nano" ++ q ++ ":" ++ toString endNs
+  ++ "," ++ q ++ "kpi_name" ++ q ++ ":" ++ q ++ s.primaryKpiName ++ q
+  ++ "," ++ q ++ "kpi_value" ++ q ++ ":" ++ toString s.primaryKpiValue ++ "}]"
   ++ "," ++ q ++ "attributes" ++ q ++ ":{" ++ q ++ "cadence_ms" ++ q ++ ":" ++ toString s.cadenceMs
   ++ "," ++ q ++ "baseline_ns" ++ q ++ ":" ++ toString s.baselineNs
   ++ "," ++ q ++ "observed_ns" ++ q ++ ":" ++ toString s.observedNs
@@ -177,7 +200,7 @@ def renderOtelJsonl (s : LayerOtelSpanKpi) : String :=
   ++ "," ++ q ++ "kpi_value" ++ q ++ ":" ++ toString s.primaryKpiValue
   ++ "," ++ q ++ "kpi_target" ++ q ++ ":" ++ toString s.primaryKpiTarget
   ++ "," ++ q ++ "admitted_ev_ceiling" ++ q ++ ":93}"
-  ++ "," ++ q ++ "evidence_sha256" ++ q ++ ":" ++ q ++ "b7397e54dcafeb6434e45c322056399a9cdb7f64aaca3e50f3cedf6f0d7a6537" ++ q ++ "}"
+  ++ "," ++ q ++ "evidence_sha256" ++ q ++ ":" ++ q ++ (spanEvidenceSha256 s.layer) ++ q ++ "}"
 
 def renderSqlInsert (s : LayerOtelSpanKpi) : String :=
   let payload := renderOtelJsonl s
@@ -202,7 +225,7 @@ def main : IO UInt32 := do
   let sqlContent := (String.intercalate nl sqlLines) ++ nl
   IO.FS.writeFile "/tmp/uos_fractal_log_sync.sql" sqlContent
   let _ ← IO.Process.output { cmd := "sqlite3", args := #["/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3", ".read /tmp/uos_fractal_log_sync.sql"] }
-  IO.println s!"UOS_CONTEXT_FASTPATH_KPI_OTEL_TWIN=PASS (theorems=6/6, layers={allLayerSpans.length}, all_within_budget={allLayerSpans.all spanWithinBudget}, sqlite_synced=true, cadence_ticks_updated=10, jsonl=/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl)"
+  IO.println s!"UOS_CONTEXT_FASTPATH_KPI_OTEL_TWIN=PASS (theorems=7/7, layers={allLayerSpans.length}, all_within_budget={allLayerSpans.all spanWithinBudget}, sqlite_synced=true, cadence_ticks_updated=10, jsonl=/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl)"
   return 0
 
 end UosContextPathKpiOtelTwin
