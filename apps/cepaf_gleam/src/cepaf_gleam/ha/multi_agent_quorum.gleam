@@ -49,8 +49,11 @@ pub type QuorumVote {
 }
 
 /// Quorum policy rule.
+/// `TwoOfFourSovereign` enforces any 2 distinct model families out of
+/// {Codex, AGY, Claude, Pi+OpenRouter+Gemini+Argon} (`OpenRouterSovereign`).
 pub type QuorumPolicy {
   TwoOfThreeSovereign
+  TwoOfFourSovereign
   ThreeOfFourSovereign
   ByzantineFaultTolerant(faults_tolerated: Int)
   UnanimousSovereign
@@ -123,6 +126,7 @@ pub fn create_ballot(
 ) -> QuorumBallot {
   let #(total_eligible, required_approvals) = case policy {
     TwoOfThreeSovereign -> #(3, 2)
+    TwoOfFourSovereign -> #(4, 2)
     ThreeOfFourSovereign -> #(4, 3)
     ByzantineFaultTolerant(f) -> {
       let n = 3 * f + 1
@@ -139,7 +143,7 @@ pub fn create_ballot(
       ClaudeSovereign,
       CodexSovereign,
     ]
-    ThreeOfFourSovereign | ByzantineFaultTolerant(1) -> [
+    TwoOfFourSovereign | ThreeOfFourSovereign | ByzantineFaultTolerant(1) -> [
       AgySovereign,
       ClaudeSovereign,
       CodexSovereign,

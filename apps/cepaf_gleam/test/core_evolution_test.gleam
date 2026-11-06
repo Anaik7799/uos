@@ -401,6 +401,31 @@ pub fn hive_heijunka_pheromone_decay_and_2oo3_sovereign_quorum_test() {
     QuorumFailClosedHold(_) -> Nil
     _ -> should.fail()
   }
+  // Generalized 2-of-4 Model Families + Operator Quorum (any 2 of Codex, AGY, Claude, Pi+Argon)
+  case
+    core_hive.evaluate_two_of_four_model_quorum(
+      "",
+      "",
+      "rev:8fa6d",
+      "rev:8fa6d",
+      True,
+    )
+  {
+    core_hive.QuorumAdmitted2oo4("rev:8fa6d", 2) -> Nil
+    _ -> should.fail()
+  }
+  case
+    core_hive.evaluate_two_of_four_model_quorum(
+      "rev:8fa6d",
+      "rev:8fa6d",
+      "",
+      "",
+      False,
+    )
+  {
+    QuorumFailClosedHold("operator_ratification_missing") -> Nil
+    _ -> should.fail()
+  }
   should.equal(
     core_hive.caste_engine(QueenConductor, q),
     Ok(core_evolution.AgyThinConductor),

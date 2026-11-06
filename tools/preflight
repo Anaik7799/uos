@@ -207,14 +207,28 @@ done
 # --- arm 4: TRACKED ----------------------------------------------------------
 # Ask the VCS, not the filesystem. Build artefacts are excluded by construction,
 # not by hoping they are absent.
+#
+# 20261106-0426: this arm read FAIL for "9 untracked, first:
+# tools/link_tracker_verifier.cmi". All nine were OCaml build artefacts
+# (.cmi/.cmx/.o from three natively-compiled tools), already ignored by
+# .gitignore:53-60, so Jujutsu was right not to track them. The DEFECT WAS IN
+# THIS ARM: it compared an ignore-AWARE VCS listing against an ignore-UNAWARE
+# `find`, so every compiled OCaml tool produced three phantom "untracked"
+# rows. The arm excluded *.beam already -- the same class of artefact from the
+# BEAM toolchain -- which is the precedent this follows rather than a new
+# exemption. A guard that fails on correct state teaches people to ignore it.
 if command -v "$(uos_tool_path jj)" >/dev/null 2>&1; then
   "$(uos_tool_path jj)" --repository "$PF_ROOT" file list tools 2>/dev/null | LC_ALL=C sort > "$PF_TMP/tracked"
   find tools -type f \
     -not -path '*/build/*' -not -path '*/_build/*' -not -path '*/.pixi/*' \
-    -not -name '*.beam' 2>/dev/null | LC_ALL=C sort > "$PF_TMP/present"
+    -not -name '*.beam' \
+    -not -name '*.cmi' -not -name '*.cmo' -not -name '*.cmx' \
+    -not -name '*.cma' -not -name '*.cmxa' -not -name '*.cmxs' \
+    -not -name '*.o' -not -name '*.a' -not -name '*.so' \
+    2>/dev/null | LC_ALL=C sort > "$PF_TMP/present"
   untracked="$(LC_ALL=C comm -13 "$PF_TMP/tracked" "$PF_TMP/present")"
   missing="$(LC_ALL=C comm -23 "$PF_TMP/tracked" "$PF_TMP/present" \
-             | grep -v '/build/\|/_build/\|\.beam$' || true)"
+             | grep -vE '/build/|/_build/|\.beam$|\.(cmi|cmo|cmx|cmxa|cmxs|o|a|so)$' || true)"
   n_t="$(wc -l < "$PF_TMP/tracked")"
   if [ -z "$untracked" ]; then
     row tracked tools-tree PASS "$n_t source files tracked, 0 untracked"
@@ -265,6 +279,40 @@ if out="$(cd "$PF_ROOT" && timeout 180 "$(uos_tool_path ocaml)" tools/release_pr
   esac
 else
   row parity ocaml-table FAIL "preflight command did not run"
+fi
+
+# --- arm 5b: Lean/Mojo differential (--full) ---------------------------------
+# Runs BOTH planes of every twin pair and fails closed when they DISAGREE.
+# Deliberately not fail-on-either-side: a Lean typecheck alone proves the
+# algebra is self-consistent, never that it still describes the system, and a
+# constant frozen inside a proof file cannot go stale in the kernel's eyes.
+#
+# It is gated behind --full because it typechecks every paired Lean file and
+# spawns a Mojo oracle per pair (~2 min). The cheap arms above must stay cheap.
+#
+# Verdicts and what each one means for this gate:
+#   PASS        both planes agree and the world matches
+#   WORLD_FAIL  model coherent, reality does not match it            -> FAIL
+#   BLIND       a started observer could not get its evidence        -> FAIL
+#   DIVERGENT   Lean typechecks but the derived algebra disagrees     -> FAIL
+#   VACUOUS     an oracle cannot discriminate (dead negative control) -> FAIL
+#   NO_ORACLE   a twin makes runtime claims nothing checks            -> FAIL
+#   LEAN_FAIL   proof plane does not compile, or uses sorry           -> FAIL
+#   UNRUN       the observer never started; no measurement exists     -> FAIL
+# Only PASS passes. BLIND and UNRUN are nonpassing on purpose: "I could not
+# look" and "I never looked" are not "it is fine".
+if [ "$PF_FULL" = 1 ]; then
+  if out="$(cd "$PF_ROOT" && timeout 1800 "$(uos_tool_path ocaml)" -I +unix unix.cma \
+            tools/lean_mojo_differential.ml --json 2>&1)"; then
+    row twokey lean-mojo-differential PASS \
+      "$(printf '%s' "$out" | grep -o '"overall":"[A-Z_]*"' | head -1)"
+  else
+    verdict="$(printf '%s' "$out" | grep -o '"overall":"[A-Z_]*"' | head -1)"
+    [ -n "$verdict" ] || verdict='no receipt emitted'
+    row twokey lean-mojo-differential FAIL "$verdict"
+  fi
+else
+  note "(two-key arm skipped; run with --full for the Lean/Mojo differential)"
 fi
 
 # --- arm 6 (--full): derivation identity, owned by Nix -----------------------

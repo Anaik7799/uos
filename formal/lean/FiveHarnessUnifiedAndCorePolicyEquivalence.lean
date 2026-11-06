@@ -355,5 +355,5 @@ theorem T08_admitted_upgrade_preserves_capabilities_and_archive
 end UOS.FiveHarnessUnifiedAndCorePolicy
 
 def main : IO Unit := do
-  IO.println "VERIFIED_17_FORMAL_THEOREMS=PASS (T01..T08 + 9 structural lemmas, 0 sorry, 5 Harnesses × 10 Fractal Layers × 38 Directive Families × 28 Skills × 14 Superpowers × 104 MCP Routes)"
+  IO.println "VERIFIED_17_FORMAL_THEOREMS=MODEL_CONSISTENT (T01..T08 + 9 structural lemmas, 0 sorry, 5 Harnesses × 10 Fractal Layers × 38 Directive Families × 28 Skills × 14 Superpowers × 104 MCP Routes)"
 

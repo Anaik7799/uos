@@ -631,67 +631,51 @@ theorem t25_dual_plane_observability_and_intent_twin_verified :
 
 end UOS.Razr15MaxQwen
 
-/-! ## Section 9: Executable Digital Twin Live Probe (`lean --run`) -/
+/-! ## Section 9: Observation plane — REMOVED 20261106, lives in Mojo
 
-open UOS.Razr15MaxQwen
+Section 9 used to be an "Executable Digital Twin Live Probe (`lean --run`)":
+four `curl` probes and one `ssh` into razr15-1, followed by
 
-def runCmdCapture (cmd : String) (args : Array String) : IO (UInt32 × String) := do
-  let out ← IO.Process.output { cmd := cmd, args := args }
-  return (out.exitCode, out.stdout.trimAscii.toString)
+    VERDICT: TRUST = FRESH EMPIRICAL BEHAVIOR /\ FORMAL SPEC
+             (25/25 THEOREMS GREEN)
 
-def main : IO UInt32 := do
-  IO.println "================================================================================"
-  IO.println "UOS LEAN 4 DIGITAL TWIN — RAZR15-1 MODULAR MAX 26.8.0 + QWEN2.5-CODER-7B LEDGER"
-  IO.println "================================================================================"
-  IO.println s!"[1] Constitutional Ceiling : EV-{admittedEvCeiling} | Sa-Plan: {canonicalSaPlanId}"
-  IO.println s!"[2] Target Node            : {canonicalRazr15Node.sshUser}@{canonicalRazr15Node.tailscaleIp}:{canonicalRazr15Node.sshPort} ({canonicalRazr15Node.distroDescription}, {canonicalRazr15Node.kernelRelease})"
-  IO.println s!"[3] GPU Hardware           : {razr15Rtx2070MaxQ.modelName} ({razr15Rtx2070MaxQ.architectureName} sm_{razr15Rtx2070MaxQ.computeCapability.code}, {razr15Rtx2070MaxQ.totalVramMiB} MiB VRAM)"
-  IO.println s!"[4] Modular Toolchain      : MAX {canonicalModularToolchain.maxVersion} | Mojo {canonicalModularToolchain.mojoVersion} ({canonicalModularToolchain.mojoCommit}) | Pixi {canonicalModularToolchain.pixiVersion}"
-  IO.println s!"[5] MAX Pipeline Registry  : {maxRegisteredArchitectures.length} architectures registered (Qwen2ForCausalLM + LlamaForCausalLM verified)"
-  IO.println s!"[6] Model Artifact         : {canonicalQwen25Hyperparams.ggufPath}"
-  IO.println s!"    - SHA-256              : {canonicalQwen25Hyperparams.sha256Hex}"
-  IO.println s!"    - File Size            : {canonicalQwen25Histogram.totalFileBytes} bytes (Payload: {canonicalQwen25Histogram.totalPayloadBytes} + Header: {canonicalQwen25Histogram.headerAndMetaBytes})"
-  IO.println s!"    - 339 Tensor Breakdown : Q4_K={canonicalQwen25Histogram.q4KCount} ({canonicalQwen25Histogram.q4KBytes} B), Q6_K={canonicalQwen25Histogram.q6KCount} ({canonicalQwen25Histogram.q6KBytes} B), F32={canonicalQwen25Histogram.totalF32Count} ({canonicalQwen25Histogram.totalF32Bytes} B: {canonicalQwen25Histogram.f32NormCount} norms + {canonicalQwen25Histogram.f32BiasCount} biases)"
-  IO.println s!"[7] Runtime Geometry       : {canonicalRazr15Deployment.offloadedLayers}/{canonicalQwen25Hyperparams.offloadableLayers} GPU layers | Context={canonicalQwen25Hyperparams.activeContextLength} | KV Cache={canonicalRazr15Deployment.kvCacheVramMiB} MiB | Total VRAM={canonicalRazr15Deployment.totalUsedVramMiB}/{razr15Rtx2070MaxQ.totalVramMiB} MiB"
-  IO.println s!"[8] Formal Proofs          : 25/25 Theorems Proved (0 sorry, 0 axioms)"
-  IO.println "--------------------------------------------------------------------------------"
-  IO.println s!"Executing Live Empirical Probe against razr15-1 ({canonicalRemoteMaxEndpoint.baseUrl})..."
+printed when five exit codes were zero. That banner was wrong in two
+independent ways, and both are worth recording because neither is obvious.
 
-  let (c1, modelsJson) ← runCmdCapture "curl" #["-s", "--max-time", "5", s!"{canonicalRemoteMaxEndpoint.baseUrl}{canonicalRemoteMaxEndpoint.modelsPath}"]
-  let (cTel, telJson) ← runCmdCapture "curl" #["-s", "--max-time", "5", s!"{canonicalRemoteMaxEndpoint.baseUrl}{canonicalDualPlaneTwin.telemetryEndpointPath}"]
-  let (cVeto, vetoJson) ← runCmdCapture "curl" #[
-    "-s", "--max-time", "5",
-    "-H", "Content-Type: application/json",
-    "-d", "{\"profile\":\"max_saturation\",\"authority\":\"rogue\"}",
-    s!"{canonicalRemoteMaxEndpoint.baseUrl}{canonicalDualPlaneTwin.intentEvaluatePath}"
-  ]
-  let chatPayload := "{\"model\":\"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with one line of valid Lean 4: theorem two_plus_two : 2 + 2 = 4 := rfl\"}],\"max_tokens\":32,\"temperature\":0.0}"
-  let (cChat, chatJson) ← runCmdCapture "curl" #[
-    "-s", "--max-time", "15",
-    "-H", "Content-Type: application/json",
-    "-d", chatPayload,
-    s!"{canonicalRemoteMaxEndpoint.baseUrl}{canonicalRemoteMaxEndpoint.chatCompletionsPath}"
-  ]
-  let (c2, sshProbe) ← runCmdCapture "ssh" #[
-    "-p", "2222",
-    "-o", "BatchMode=yes",
-    "-o", "ConnectTimeout=5",
-    "an@100.114.9.28",
-    "echo -n 'LMSTUDIO_PROCS='; /mnt/c/Windows/System32/tasklist.exe | grep -ic 'LM Studio' || true; cd /home/an/uos-max && /home/an/.pixi/bin/pixi run mojo --version; /home/an/.pixi/bin/pixi run max --version; stat -L -c 'GGUF_BYTES=%s' /home/an/models/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
-  ]
+First, it multiplied unrelated claims. Five HTTP/SSH exit codes do not
+establish 25 theorems, and 25 theorems do not establish that a node is up.
+CLAUDE.md's epistemic discipline is explicit that specification, model proof,
+runtime observation and admission are four different claims and are never
+collapsed; this collapsed two of them into one line.
 
-  IO.println s!"  * HTTP :8000 /v1/models             (exit {c1}): {modelsJson}"
-  IO.println s!"  * HTTP :8000 /v1/telemetry/pipeline (exit {cTel}): {telJson.take 240}..."
-  IO.println s!"  * HTTP :8000 /v1/intent/evaluate    (exit {cVeto}): {vetoJson}"
-  IO.println s!"  * HTTP :8000 /v1/chat/completions   (exit {cChat}): {chatJson}"
-  IO.println s!"  * SSH  :2222 Telemetry              (exit {c2}):\n{sshProbe}"
+Second, `curl -s` exits 0 on an HTTP 500. Four of the five conjuncts were
+satisfiable by a gateway answering nothing but errors, so the banner could
+read GREEN against a broken node.
 
-  if c1 == 0 && cTel == 0 && cVeto == 0 && cChat == 0 && c2 == 0 then
-    IO.println "================================================================================"
-    IO.println "VERDICT: TRUST = FRESH EMPIRICAL BEHAVIOR ∧ FORMAL SPEC (25/25 THEOREMS GREEN)"
-    IO.println "REMOTE MAX + DUAL-PLANE 14-STAGE TELEMETRY + INTENT VETO: VERIFIED LIVE"
-    IO.println "================================================================================"
-    return 0
-  else
-    IO.eprintln "ERROR: Live empirical probe failed!"
-    return 1
+The probe now lives at `formal/mojo/razr15_max_qwen_oracle.mojo`, which reads
+the HTTP STATUS rather than the exit code, counts the 7 data-plane and 7
+control-plane stages instead of trusting a summary field, and presents a
+rogue authority to `/v1/intent/evaluate` to require a refusal -- then
+presents the sanctioned `sa-plan` authority to require an approval, because a
+veto that refuses everything is an outage, not a veto, and checking only the
+refusal cannot tell the two apart.
+
+A KNOWN DEFECT IN THE PROOF PLANE ABOVE, LEFT STANDING FOR REVIEW:
+`DualPlaneObservabilityTwinSpec` (:594) declares every SLO as a field
+defaulted to `true` -- `allDataPlaneSlosPass := true`,
+`rogueAuthorityVetoed := true` -- and
+`t25_dual_plane_observability_and_intent_twin_verified` decides that the
+all-true record is all-true. That theorem cannot fail, so it carries no
+information about razr15-1; it is the vacuity
+`THM_VAC_01_typechecking_is_not_observation` names. Deleting another author's
+theorem is not this change's business, so instead every one of those fields
+is now OBSERVED by the Mojo oracle against the live endpoints, and a field
+the gateway does not emit is reported BLIND -- never the record's optimistic
+default. Re-stating `t25` as an implication over an observation argument, the
+way `THM_RUN_04_fail_closed_on_no_evidence` is stated in
+`UosCoreEvoUnifiedDigitalTwin.lean`, is the open follow-up.
+
+Evidence that this file is now pure algebra: no `def main`, no
+`IO.Process`, no `IO.FS`. `formal/mojo/proof_plane_guard_oracle.mojo`
+re-checks that tree-wide every run.
+-/

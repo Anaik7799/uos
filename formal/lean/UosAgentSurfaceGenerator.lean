@@ -111,7 +111,7 @@ def caste04Mandates : List Mandate :=
   , { idx := 3, name := "Standalone Jujutsu only"
     , text := "`.jj/` non-colocated, 0 native Git mutations. Feature and `integration/*` bookmarks; `main` moves only under a held `integration/main` lease by a mover who verified green at the new tip." }
   , { idx := 4, name := "Provenance ceiling"
-    , text := "`admitted_ev_ceiling = 93` (`SC-PROVENANCE-001`). `EV-94..EV-109` and `ADR-071..086` are `NOT_ADMITTED` (quarantined coordinator events 422-432 and forged event 437): pending sovereign review by Codex and AGY, citable as neither admission nor rejection. No new EV number may be minted; number work within its Sa-plan." }
+    , text := "`admitted_ev_ceiling = 93` (`SC-PROVENANCE-001`). `EV-94..EV-109` and `ADR-071..086` are `NOT_ADMITTED` (quarantined coordinator events 422-432 and forged event 437): pending 2-of-4 sovereign model ratification by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator, citable as neither admission nor rejection. No new EV number may be minted; number work within its Sa-plan." }
   , { idx := 5, name := "Sa-plan sole execution authority"
     , text := "`tools/sa-plan`, `var/sa-plan/uos.sqlite3` (`SC-SA-PLAN-001`). Claim before acting, work only inside the lease, record a completion receipt. Any un-ledgered task execution trips the fail-closed Jidoka Andon stop line (`-32002`)." }
   , { idx := 6, name := "`uos-harness` MCP boundary"

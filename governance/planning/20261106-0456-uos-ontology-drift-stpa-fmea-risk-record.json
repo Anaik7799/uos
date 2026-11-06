@@ -1,0 +1,252 @@
+{
+  "schema": "uos.risk.stpa_fmea.v1",
+  "policy_version": "SC-RISK-PRIORITY-001 v1.0.0",
+  "observed_utc": "2026-11-06T04:56:00Z",
+  "plan_id": "PLAN-LEAN-MOJO-UNIFY-20261106",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+
+  "why_this_record_exists": "Every finding in this wave was reported as a defect with file:line evidence and none was scored. SC-RISK-PRIORITY-001 requires score = C x T x F x Dep x I with each factor 1-5 and a rationale, the four UCA types explicitly considered, and raw S/O/Det reported alongside the normalised F. Reporting defects without that structure leaves the ordering to whoever reads last, which is the failure the SOP exists to prevent. Scored here, additively, after the fact -- which is itself a nonconformance and is recorded as one.",
+
+  "method_notes": {
+    "factors": "C criticality/cost-of-delay, T STPA control exposure, F FMEA band, Dep dependency importance, I benefit if acceptance criteria succeed. Each 1-5, each with a rationale.",
+    "fmea": "RPN = S x O x Det (1-125). F = max(S, rpn_band(RPN)) with bands 1-5 to 1, 6-15 to 2, 16-35 to 3, 36-70 to 4, 71-125 to 5. The severity FLOOR is applied as the SOP requires, so a severe but rare and detectable mode cannot be averaged away.",
+    "honesty": "O (occurrence) is an ordinal judgment over a stated exposure window, not a measured probability. Where the population is unknown it is marked and the reason given. These are analyst judgments; the product is not an expected loss and the factors are correlated.",
+    "safety_class_precedence": "Class precedes score. A P1 at score 100 outranks a P3 at 3125."
+  },
+
+  "losses": [
+    { "id": "L-1", "loss": "An integer crossing a plane boundary is interpreted as a different concept than the sender meant, and a control decision is taken on it." },
+    { "id": "L-2", "loss": "A recorded verdict outlives its subject and is read as current, so a real divergence goes unnoticed." },
+    { "id": "L-3", "loss": "A verification instrument under-reports and a violating state reads as clean." },
+    { "id": "L-4", "loss": "Work is spent converting or renaming artifacts that were never the live defect, while the live defect persists." }
+  ],
+
+  "hazards": [
+    { "id": "H-1", "hazard": "Two planes assign different meanings to the same integer on a shared chart, and no morphism between them is checked.", "loss": "L-1" },
+    { "id": "H-2", "hazard": "A guard's measurement instrument cannot distinguish code from prose, or absent from false.", "loss": "L-3" },
+    { "id": "H-3", "hazard": "A contract declares itself a single source of truth and no program reads it.", "loss": "L-2" },
+    { "id": "H-4", "hazard": "A gate's verdict is satisfied by file presence rather than by execution.", "loss": "L-2" },
+    { "id": "H-5", "hazard": "A proof tree has no module system, so duplication is the only available reuse and definitions drift silently.", "loss": "L-2" }
+  ],
+
+  "findings": [
+    {
+      "id": "F-01",
+      "finding": "Metabolic regime integer codes are exact inverses between the exported C ABI (UosLeanRuntimeGuard.lean:137-140, 0=Torpor) and the differential oracle (bionic_interception_oracle.mojo, 0=Anabolic). Both internally consistent, both green. Proved as an involution that is not the identity: UosOntologyAtlas.lean THM_ATLAS_08/09.",
+      "hazard": "H-1",
+      "safety_class": "P1",
+      "class_rationale": "An unresolved evidence-integrity condition on a machine-consumed boundary. It does not block unrelated work, so it is not P0; it does block any claim that the two planes agree.",
+      "uca_analysis": {
+        "required_action_not_provided": "APPLICABLE. The required action is a checked morphism between the two encodings. It was never provided, so the disagreement was undetectable from either side.",
+        "unsafe_action_provided": "APPLICABLE. tools/bionic_custom_ai_engine.mojo:469 aggregates three integer codes from three objects (tier, archetype, regime) into one lean_c_abi_ok flag, each disagreeing with a second plane. A single boolean asserts agreement that does not hold.",
+        "wrong_timing_or_order": "NOT APPLICABLE. The encodings are static; neither is time-dependent and no ordering between them is asserted.",
+        "stopped_too_soon_or_applied_too_long": "APPLICABLE. The encodings were applied indefinitely with no re-check. Correct at the moment each was written; never revisited."
+      },
+      "fmea": {
+        "component": "Lean-to-C ABI regime classifier and its Mojo differential",
+        "cause": "Two authors derived an encoding from two different sources: one from the ABI docstring, one from inductive declaration order. Neither source is wrong.",
+        "local_effect": "Integer 0 denotes Anabolic in one plane and Torpor in the other.",
+        "system_effect": "A regime-gated control decision -- hold versus parallel execution -- could invert. Torpor means hold; Anabolic means run in parallel. These are the two extremes of the axis.",
+        "existing_prevention": "None before 20261106. The two planes never met.",
+        "existing_detection": "None before 20261106. Each plane's own checks passed.",
+        "S": 4, "S_rationale": "Major: a control inversion on the metabolic axis, not data loss and not irreversible, so not 5.",
+        "O": 2, "O_rationale": "Isolated occurrence in the observed population: 1 of 10 indexed axes measured carries a full inversion. Exposure window is every ABI call; the population of actual calls is UNKNOWN and is not inflated here.",
+        "Det": 5, "Det_rationale": "Silent before 20261106: no mechanism existed that could see it. Both planes reported green.",
+        "RPN": 40, "rpn_band": 4, "F": 4, "F_rationale": "max(S=4, band(40)=4) = 4."
+      },
+      "C": 4, "C_rationale": "An imminent constraint on any two-key claim about the bionic plane; not a current loss.",
+      "T": 4, "T_rationale": "Critical UCA with no enforcement before this wave. Now enforced, so T would fall to 2 once resolved.",
+      "Dep": 3, "Dep_rationale": "Several ready consumers: the bionic oracle, the ABI, and tools/bionic_custom_ai_engine.mojo.",
+      "I": 3, "I_rationale": "One critical service: the metabolic regulator's control path.",
+      "score": 576,
+      "score_arithmetic": "C4 x T4 x F4 x Dep3 x I3 = 576",
+      "status": "DETECTED AND FAILING CLOSED. Not resolved: choosing either encoding breaks whichever consumer currently agrees with the other. OPERATOR DECISION REQUIRED.",
+      "interval_note": "O is the least certain factor. With O=1 the score is 288 and with O=3 it is 864; the ordering against F-02 is stable across that range, so the ranking is not provisional."
+    },
+    {
+      "id": "F-02",
+      "finding": "tools/lean_proof_plane_scan.ml did not handle Lean character literals, so a single `'\"'` opened a phantom string and blanked the remainder of the file. Measured on a planted file carrying two real violations: pre-fix 0/0, post-fix 1/1.",
+      "hazard": "H-2",
+      "safety_class": "P1",
+      "class_rationale": "An evidence-integrity condition in the instrument every boundary verdict depends on. Found and fixed within the wave.",
+      "uca_analysis": {
+        "required_action_not_provided": "APPLICABLE, and this is the defining one: the scan was required to report violations and reported none.",
+        "unsafe_action_provided": "NOT APPLICABLE. It emitted no false violation; it emitted a false clean.",
+        "wrong_timing_or_order": "NOT APPLICABLE.",
+        "stopped_too_soon_or_applied_too_long": "APPLICABLE. The lexer stopped processing real code at the first char literal and continued reporting as though it had not."
+      },
+      "fmea": {
+        "component": "The single Lean reader all guard arms and the differential driver consume",
+        "cause": "String-literal handling was implemented; char-literal handling was not. `'\"'` is a legal and unremarkable Lean term.",
+        "local_effect": "Everything after the char literal is blanked.",
+        "system_effect": "IT DOES NOT ERROR -- IT UNDER-REPORTS. Every count shrinks silently and the guard goes green on a violating tree. A false clean is strictly worse than a crash.",
+        "existing_prevention": "None.",
+        "existing_detection": "None by any arm. Found by Codex reading the source.",
+        "S": 5, "S_rationale": "Irreversible in effect while undetected: a FALSE SAFETY ADMISSION, which the SOP's S=5 band names explicitly.",
+        "O": 1, "O_rationale": "Rare in the observed population: zero of 108 current top-level Lean files contain a char literal. Measured, not assumed.",
+        "Det": 5, "Det_rationale": "No detection mechanism. Silent by construction.",
+        "RPN": 25, "rpn_band": 3, "F": 5, "F_rationale": "max(S=5, band(25)=3) = 5. THE SEVERITY FLOOR IS DOING THE WORK HERE -- the RPN product alone would have banded this at 3 and understated a false-admission mode."
+      },
+      "C": 5, "C_rationale": "A current unsafe effect while unfixed: every boundary verdict was unsound.",
+      "T": 5, "T_rationale": "Observed unsafe control in its hazardous context, demonstrated on a planted file.",
+      "Dep": 4, "Dep_rationale": "Required predecessor: the guard, the driver's boundary arm and the axis oracle all consume it.",
+      "I": 4, "I_rationale": "Several services: every arm that reads Lean.",
+      "score": 2000,
+      "score_arithmetic": "C5 x T5 x F5 x Dep4 x I4 = 2000",
+      "status": "FIXED 20261106. Negative control added: a planted char literal with violations after it is now detected. Residual: raw-string delimiters and interpolation expressions remain unhandled (Codex), so the same class is not closed.",
+      "residual_note": "Post-fix this mode's C and T fall to 1 and 2. The RESIDUAL assessment for raw strings and interpolation is S=5, O=1, Det=5, RPN=25, F=5 -- unchanged severity, because the failure mode is identical and only the trigger differs."
+    },
+    {
+      "id": "F-03",
+      "finding": "Nine gates in tools/uos/src/main.gleam satisfy their verdict with file_exists(<a .py>). The files performed a one-time write months ago and are never executed.",
+      "hazard": "H-4",
+      "safety_class": "P1",
+      "class_rationale": "Nine gate verdicts carry no evidence. Blocks any release claim that cites them.",
+      "uca_analysis": {
+        "required_action_not_provided": "APPLICABLE. The gate was required to verify and instead stat'd a file.",
+        "unsafe_action_provided": "APPLICABLE. It provides a PASS that the system has not earned.",
+        "wrong_timing_or_order": "NOT APPLICABLE.",
+        "stopped_too_soon_or_applied_too_long": "APPLICABLE. Applied long after the one-time work it attests to completed."
+      },
+      "fmea": {
+        "component": "uos-cli gate surface",
+        "cause": "A file-presence predicate was used as a proxy for a verification that was never written.",
+        "local_effect": "Nine gates return a verdict unrelated to system state.",
+        "system_effect": "A release decision citing these gates is citing nothing. Independently barred by CLAUDE.md epistemic discipline and SC-CHECKLIST-001, in any language.",
+        "existing_prevention": "SC-NIX-DEVENV-001 invariant 10 bars exactly this, and the adjacent G-PREFLEIGHT comment in the same file quotes the bar -- then it is violated nine times in that file.",
+        "existing_detection": "None before 20261106; now formal/mojo/language_conformance_oracle.mojo fails closed on the count.",
+        "S": 5, "S_rationale": "False safety admission.",
+        "O": 5, "O_rationale": "Reproduces on ordinary exposure: every gate invocation.",
+        "Det": 2, "Det_rationale": "Reliable alarm now exists before loss -- the new arm counts it and fails.",
+        "RPN": 50, "rpn_band": 4, "F": 5, "F_rationale": "max(S=5, band(50)=4) = 5."
+      },
+      "C": 4, "C_rationale": "Blocks release claims; no current unsafe effect in the running system.",
+      "T": 5, "T_rationale": "Observed missing control in its hazardous context.",
+      "Dep": 4, "Dep_rationale": "Required predecessor for any gate-cited release.",
+      "I": 4, "I_rationale": "Several services: the whole gate surface's credibility.",
+      "score": 1600,
+      "score_arithmetic": "C4 x T5 x F5 x Dep4 x I4 = 1600",
+      "status": "DETECTED AND FAILING CLOSED. NOT FIXED. Note the trap: converting these .py files to OCaml would PRESERVE the defect. The fix is a real check or no check.",
+      "nonconformance_note": "The nine files cannot simply be archived either: deleting one flips its gate to FAIL, so the files and the checks must change together."
+    },
+    {
+      "id": "F-04",
+      "finding": "SC-FRACTAL-TAXONOMY-001 declares itself the single source of truth for the L0-L9 concern axis. Zero tools referenced it. Its one installed enforcement pointer was deleted when .claude/rules/full-symbiosis.md was rewritten on 2026-10-01 and nothing noticed for 36 days. Its own text states 'Eleven records carry #fractal-l10'; 35 measured.",
+      "hazard": "H-3",
+      "safety_class": "P2",
+      "class_rationale": "Necessary governance work with its immediate effects controlled. Measured: concern indices 0-7 are conformant 32/32, so the axis has not actually fragmented where it is used.",
+      "uca_analysis": {
+        "required_action_not_provided": "APPLICABLE. No program read the contract.",
+        "unsafe_action_provided": "NOT APPLICABLE. No wrong action was taken from it; it was simply inert.",
+        "wrong_timing_or_order": "APPLICABLE. The pointer's deletion and the contract's assertion of enforcement diverged in time with no re-check.",
+        "stopped_too_soon_or_applied_too_long": "APPLICABLE, and precisely: the contract's frozen count 'eleven records' was applied long after it stopped being true."
+      },
+      "fmea": {
+        "component": "SC-FRACTAL-TAXONOMY-001 and its enforcement path",
+        "cause": "Enforcement was a prose pointer in two documents rather than a program; one document was rewritten.",
+        "local_effect": "A contract that believes it is enforced is not.",
+        "system_effect": "Bounded: indices 0-7 are conformant everywhere measured, and every deviation is at index 8 or 9 -- the two members the contract itself says had never been defined in any governing document before it was written. The defect is a historical pocket, not spreading rot.",
+        "existing_prevention": "None.",
+        "existing_detection": "None for 36 days; now formal/mojo/axis_registry_oracle.mojo is the contract's first machine reader.",
+        "S": 3, "S_rationale": "Service outage/rework class: governance rework, recoverable.",
+        "O": 4, "O_rationale": "Recurrent in observed conditions: a pointer-based enforcement mechanism is lost on any rewrite of either host document, and that has now happened once.",
+        "Det": 4, "Det_rationale": "Delayed detection -- 36 days, found by audit rather than by any alarm.",
+        "RPN": 48, "rpn_band": 4, "F": 4, "F_rationale": "max(S=3, band(48)=4) = 4. Here the RPN band raises the severity floor, the opposite of F-02."
+      },
+      "C": 3, "C_rationale": "Necessary within the planned milestone.",
+      "T": 3, "T_rationale": "Credible UCA with incomplete coverage; the axis itself is mostly conformant.",
+      "Dep": 3, "Dep_rationale": "Several ready consumers: 19 layer enums across two languages.",
+      "I": 3, "I_rationale": "One critical capability: the taxonomy every record is tagged against.",
+      "score": 324,
+      "score_arithmetic": "C3 x T3 x F4 x Dep3 x I3 = 324",
+      "status": "ENFORCED 20261106 by axis_registry_oracle.mojo. Index 8/9 deviations recorded, not renamed: a rename would make today's snapshot conform and leave the root cause -- a contract no tool reads -- untouched."
+    },
+    {
+      "id": "F-05",
+      "finding": "formal/lean has no lakefile for its 108 top-level files, 4 cross-file import edges, and tools/lean-offline-gate hardcodes 9 targets. 651 lines are byte-identical declaration blocks across 49 groups; HARD_DENIED_SYSTEM_OS_SERIAL is defined 10 times and the EV ceiling 93 fourteen times in two spellings.",
+      "hazard": "H-5",
+      "safety_class": "P2",
+      "class_rationale": "Necessary consolidation work. Not P1: nothing unsafe follows from duplication alone, and the duplicated blocks are byte-identical so they cannot currently disagree.",
+      "uca_analysis": {
+        "required_action_not_provided": "APPLICABLE. A module system was required for reuse and was never provided, so duplication is the only available form of sharing. THE WASTE IS A SYMPTOM, NOT CARELESSNESS.",
+        "unsafe_action_provided": "NOT APPLICABLE today -- the copies are byte-identical. It becomes applicable the moment one copy is edited.",
+        "wrong_timing_or_order": "APPLICABLE as a sequencing constraint: extracting a shared module BEFORE a gate compiles more than 9 files would make breakage undetectable, because the extraction would look green while nothing looks.",
+        "stopped_too_soon_or_applied_too_long": "NOT APPLICABLE."
+      },
+      "fmea": {
+        "component": "formal/lean packaging and compile coverage",
+        "cause": "No lakefile; a gate with a hardcoded 9-target array.",
+        "local_effect": "651 lines of byte-identical duplication; 99 of 108 files compiled by nothing.",
+        "system_effect": "A definition can drift between copies with no arm detecting it, and 99 files could be broken now with no arm detecting that either.",
+        "existing_prevention": "None.",
+        "existing_detection": "The differential typechecks its 12 subjects; the rest are unchecked.",
+        "S": 3, "S_rationale": "Rework, recoverable. Not 4: no security or evidence damage follows from duplication per se.",
+        "O": 3, "O_rationale": "Credible under expected conditions: any edit to one of 7 byte-identical copies creates a divergence.",
+        "Det": 3, "Det_rationale": "Detected after bounded loss -- a census finds it, no arm watches for it.",
+        "RPN": 27, "rpn_band": 3, "F": 3, "F_rationale": "max(S=3, band(27)=3) = 3."
+      },
+      "C": 3, "C_rationale": "Necessary within the planned milestone.",
+      "T": 2, "T_rationale": "Scoped UCA with a verified control available: the import mechanism already works for siblings.",
+      "Dep": 4, "Dep_rationale": "Required predecessor: no consolidation of any duplicated definition is safe before the compile gate widens. ORDER IS A HARD CONSTRAINT.",
+      "I": 3, "I_rationale": "One critical capability: the proof tree's integrity.",
+      "score": 216,
+      "score_arithmetic": "C3 x T2 x F3 x Dep4 x I3 = 216",
+      "status": "MEASURED AND ENFORCED as a count by ontology_atlas_oracle.mojo, which fails closed on the absent lakefile. NOT CONSOLIDATED. Honest prize: 651 lines guaranteed, up to about 2,100 with header consolidation -- 2.3% to 7.5% of the tree. If a large compaction was expected, measurement does not support it."
+    },
+    {
+      "id": "F-06",
+      "finding": "The MCP route chart carries four distinct cardinalities: 104 in CLAUDE.md mandate 6 and 10 bare Lean record fields; 101 declared and 97 observed, both PROVED by decide at UosMcpUnifiedGatewayTwin.lean:206; 45 summed per caste. The two kernel-checked readings are exactly the two that disagree with the mandate.",
+      "hazard": "H-1",
+      "safety_class": "P1",
+      "class_rationale": "An unresolved evidence condition on a figure quoted in canonical policy.",
+      "uca_analysis": {
+        "required_action_not_provided": "APPLICABLE. No reconciliation between the mandate's figure and the proved census exists.",
+        "unsafe_action_provided": "APPLICABLE. 10 Lean record fields assert 104 with no derivation, and that figure is the one policy quotes.",
+        "wrong_timing_or_order": "APPLICABLE. SC-HARNESS-MCP-001 warns that a declared route is not a connected route; the declared/observed gap of 4 is exactly that warning instantiated, and it is attached to the wrong number.",
+        "stopped_too_soon_or_applied_too_long": "NOT APPLICABLE."
+      },
+      "fmea": {
+        "component": "MCP route census across policy, Lean and Gleam",
+        "cause": "A count was restated in record fields rather than derived from registry.all_specs().",
+        "local_effect": "Four numbers for one chart.",
+        "system_effect": "Worse than the encoding charts: those were permutations of one object set, so a morphism existed and merely was unwritten. Here the object sets differ in SIZE, so no bijection can exist -- the obstruction is an unresolved question of fact, not a missing convention. Proved: UosOntologyAtlas.lean THM_ATLAS_19.",
+        "existing_prevention": "None.",
+        "existing_detection": "The gateway twin states its own declared-versus-observed gap honestly; nothing reconciles it with 104.",
+        "S": 4, "S_rationale": "Major: a figure in canonical policy is unsupported by the tree's only machine-checked evidence.",
+        "O": 5, "O_rationale": "Reproduces on ordinary exposure: every citation of mandate 6.",
+        "Det": 3, "Det_rationale": "Detected after bounded loss: the gateway twin surfaces the gap for anyone who reads it.",
+        "RPN": 60, "rpn_band": 4, "F": 4, "F_rationale": "max(S=4, band(60)=4) = 4."
+      },
+      "C": 4, "C_rationale": "An imminent constraint on any claim citing the route count.",
+      "T": 4, "T_rationale": "Critical UCA with unverified enforcement.",
+      "Dep": 3, "Dep_rationale": "Several ready consumers across policy, Lean and Gleam.",
+      "I": 3, "I_rationale": "One critical capability: the harness route surface.",
+      "score": 576,
+      "score_arithmetic": "C4 x T4 x F4 x Dep3 x I3 = 576",
+      "status": "MEASURED AND PROVED. NOT RESOLVED. Requires an operator or a derivation from registry.all_specs(); a Lean record field cannot settle it."
+    }
+  ],
+
+  "deterministic_selection": {
+    "method": "Class first (P1 before P2), then descending score. Per SC-RISK-PRIORITY-001 section 5.",
+    "order": [
+      { "rank": 1, "id": "F-02", "class": "P1", "score": 2000, "state": "FIXED in-wave; residual class open (raw strings, interpolation)" },
+      { "rank": 2, "id": "F-03", "class": "P1", "score": 1600, "state": "detected, failing closed, NOT fixed" },
+      { "rank": 3, "id": "F-01", "class": "P1", "score": 576, "state": "operator decision" },
+      { "rank": 4, "id": "F-06", "class": "P1", "score": 576, "state": "operator decision" },
+      { "rank": 5, "id": "F-04", "class": "P2", "score": 324, "state": "enforced in-wave" },
+      { "rank": 6, "id": "F-05", "class": "P2", "score": 216, "state": "measured, order-constrained" }
+    ],
+    "tie_break": "F-01 and F-06 both score 576. Broken by evidenced benefit per bounded cost, as the SOP directs: F-01 is resolvable by one operator decision between two known encodings; F-06 needs a derivation from registry.all_specs() plus a policy amendment. F-01 is therefore ordered first on cheaper discrimination, not on importance.",
+    "sensitivity": "A plus-or-minus-1 check on every factor does not reorder ranks 1-2 or move any P1 below any P2. It does swap ranks 3 and 4 under some assignments, which is why the tie-break is stated rather than implied. The ordering of ranks 1-2 against 3-6 is stable.",
+    "what_the_scores_do_not_grant": "No score here authorises an action, closes a safety constraint or completes a Sa-plan task. A high score is a claim about urgency, not about permission."
+  },
+
+  "self_reported_nonconformances": [
+    "This record was written AFTER the findings rather than at intake, so it did not inform the work it scores. SC-RISK-PRIORITY-001 section 6 places risk assessment at intake and design. Recorded rather than backdated.",
+    "O (occurrence) is an ordinal judgment in every row. Where the exposure population is unknown -- actual ABI call counts for F-01 -- it is marked UNKNOWN rather than given a synthetic value.",
+    "Two manifest edits earlier in this wave used an inline python3 -c, which the CLAUDE.md helper-language rule bars. No Python was committed.",
+    "Factor scores are not independent: C and T are correlated for every finding whose severity derives from a missing control. The product is a triage ordinal, not an expected loss."
+  ]
+}

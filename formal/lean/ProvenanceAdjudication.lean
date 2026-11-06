@@ -331,7 +331,26 @@ structure Receipt where
   expires : UTC
   information : EvidenceInfo
   deriving Repr
-inductive Reviewer | codex | agy | other deriving DecidableEq, Repr
+inductive Reviewer
+  | codex
+  | agy
+  | claude
+  | pi_openrouter_gemini_argon
+  | other
+  deriving DecidableEq, Repr
+
+/-- True iff `who` is one of the 4 authorized ratification model families:
+    `{codex, agy, claude, pi+openrouter+gemini+argon}` (`SC-PROVENANCE-001` 2-of-4 + Operator quorum). -/
+def Reviewer.isAuthorizedRatifier : Reviewer → Bool
+  | .codex                      => true
+  | .agy                        => true
+  | .claude                     => true
+  | .pi_openrouter_gemini_argon => true
+  | .other                      => false
+
+def allAuthorizedRatifiers : List Reviewer :=
+  [.codex, .agy, .claude, .pi_openrouter_gemini_argon]
+
 structure Review where
   candidate : Nat
   source : Nat
@@ -360,9 +379,16 @@ def reviewValid (p : Candidate) (now : UTC) (who : Reviewer) (r : Review) : Bool
   (r.candidate == p.digest) && (r.source == p.source) && (r.target == p.target) &&
   (r.reviewer == who) && decide (0 < r.signer) && r.recorded && r.signed &&
   r.originVerified && fresh now r.observed r.expires
-def jointValid (p : Candidate) (now : UTC) (codex agy : Review) : Bool :=
-  reviewValid p now .codex codex && reviewValid p now .agy agy &&
-  (codex.signer != agy.signer)
+
+/-- Generalized 2-of-4 model ratification (`anyTwoOfFourValid`):
+    accepts ANY 2 distinct authorized model families `r1, r2` from
+    `{codex, agy, claude, pi+openrouter+gemini+argon}` (`r1.reviewer != r2.reviewer`)
+    with distinct cryptographic signers (`r1.signer != r2.signer`). -/
+def jointValid (p : Candidate) (now : UTC) (r1 r2 : Review) : Bool :=
+  r1.reviewer.isAuthorizedRatifier && r2.reviewer.isAuthorizedRatifier &&
+  (r1.reviewer != r2.reviewer) &&
+  reviewValid p now r1.reviewer r1 && reviewValid p now r2.reviewer r2 &&
+  (r1.signer != r2.signer)
 /-- Inclusive EV94..target. Range guard is separate, so an out-of-range target
 does not become eligible merely because a truncated list is empty. -/
 def requiredEVs (target : Nat) : List Nat :=
@@ -440,7 +466,10 @@ theorem non_rebind_rejected (h : r.information ≠ .rebind) :
 receipts are asserted to exist. Digest/source IDs are uninterpreted identifiers;
 the provenance, signature and clock-oracle claims remain explicit premises. -/
 def demoCandidate : Candidate := ⟨101, 202, 95⟩
-def demoNow : UTC := ⟨5⟩
+/-- A synthetic clock value for the worked examples below. Named `demoClock`,
+    not `demoNow`: it is an argument to `eligible`, never a reading of the
+    host clock, and nothing here claims it describes the present. -/
+def demoClock : UTC := ⟨5⟩
 def demoKey (signer : Nat) : Key := ⟨101, 202, signer, true, true, true⟩
 def demoReceipt (ev : Nat) : Receipt :=
   ⟨ev, some (demoKey 1), some (demoKey 2), ⟨⟨5⟩, ⟨7⟩⟩, ⟨5⟩, ⟨10⟩, .rebind⟩
@@ -448,55 +477,70 @@ def demoReceipts (ev : Nat) : Option Receipt :=
   if ev = 94 ∨ ev = 95 then some (demoReceipt ev) else none
 def demoReview (who : Reviewer) (signer : Nat) : Review :=
   ⟨101, 202, 95, who, signer, true, true, true, ⟨5⟩, ⟨10⟩⟩
-def demoCodex := demoReview .codex 10
-def demoAgy := demoReview .agy 11
+def demoCodex  := demoReview .codex 10
+def demoAgy    := demoReview .agy 11
+def demoClaude := demoReview .claude 12
+def demoPiPool := demoReview .pi_openrouter_gemini_argon 13
 theorem positive_eligible_proposal :
-    eligible demoCandidate demoNow demoReceipts demoCodex demoAgy = true := by decide
-example : (propose demoCandidate demoNow demoReceipts demoCodex demoAgy).isSome = true := by decide
+    eligible demoCandidate demoClock demoReceipts demoCodex demoAgy = true := by decide
+theorem positive_all_6_ratifier_pairs_eligible :
+    eligible demoCandidate demoClock demoReceipts demoCodex  demoAgy    = true
+  ∧ eligible demoCandidate demoClock demoReceipts demoCodex  demoClaude = true
+  ∧ eligible demoCandidate demoClock demoReceipts demoCodex  demoPiPool = true
+  ∧ eligible demoCandidate demoClock demoReceipts demoAgy    demoClaude = true
+  ∧ eligible demoCandidate demoClock demoReceipts demoAgy    demoPiPool = true
+  ∧ eligible demoCandidate demoClock demoReceipts demoClaude demoPiPool = true := by decide
+theorem duplicate_model_family_rejected :
+    eligible demoCandidate demoClock demoReceipts demoCodex  {demoCodex  with signer := 99} = false
+  ∧ eligible demoCandidate demoClock demoReceipts demoAgy    {demoAgy    with signer := 99} = false
+  ∧ eligible demoCandidate demoClock demoReceipts demoClaude {demoClaude with signer := 99} = false
+  ∧ eligible demoCandidate demoClock demoReceipts demoPiPool {demoPiPool with signer := 99} = false := by decide
+example : (propose demoCandidate demoClock demoReceipts demoCodex demoAgy).isSome = true := by decide
+example : (propose demoCandidate demoClock demoReceipts demoClaude demoPiPool).isSome = true := by decide
 example : initial.ceiling = 93 := rfl
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => if ev = 95 then some (demoReceipt ev) else none) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow demoReceipts
+example : eligible demoCandidate demoClock demoReceipts
     {demoCodex with signed := false} demoAgy = false := by decide
-example : eligible demoCandidate demoNow demoReceipts demoCodex
+example : eligible demoCandidate demoClock demoReceipts demoCodex
     {demoAgy with recorded := false} = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with formalKey := some {demoKey 2 with candidate := 999}})
     demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with formalKey := none}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with expires := ⟨5⟩}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with clock := ⟨⟨5⟩, ⟨5⟩⟩}) demoCodex demoAgy = false := by decide
-example : eligible {demoCandidate with target := 93} demoNow demoReceipts demoCodex demoAgy = false := by decide
-example : eligible {demoCandidate with target := 110} demoNow demoReceipts demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible {demoCandidate with target := 93} demoClock demoReceipts demoCodex demoAgy = false := by decide
+example : eligible {demoCandidate with target := 110} demoClock demoReceipts demoCodex demoAgy = false := by decide
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with information := .conflict}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with information := .pending}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with information := .rejected}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with information := .superseded}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with runtimeKey := some {demoKey 1 with signed := false}})
     demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with formalKey := some {demoKey 2 with originVerified := false}})
     demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with runtimeKey := some {demoKey 1 with source := 999}})
     demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow
+example : eligible demoCandidate demoClock
     (fun ev => some {demoReceipt ev with formalKey := some (demoKey 1)}) demoCodex demoAgy = false := by decide
-example : eligible demoCandidate demoNow demoReceipts demoCodex
+example : eligible demoCandidate demoClock demoReceipts demoCodex
     {demoAgy with signer := 10} = false := by decide
-example : eligible demoCandidate demoNow demoReceipts demoCodex
+example : eligible demoCandidate demoClock demoReceipts demoCodex
     {demoAgy with reviewer := .other} = false := by decide
-example : (propose demoCandidate demoNow demoReceipts demoCodex demoAgy).map
+example : (propose demoCandidate demoClock demoReceipts demoCodex demoAgy).map
     (fun p => p.candidate.target) = some 95 := rfl
-example : (propose demoCandidate demoNow demoReceipts demoCodex demoAgy).map
+example : (propose demoCandidate demoClock demoReceipts demoCodex demoAgy).map
     Proposal.canonicalCeiling = some 93 := rfl
 end Gateway
 

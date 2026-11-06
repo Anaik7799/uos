@@ -413,6 +413,57 @@ theorem THM_THR_03_recalibration_is_governance_not_code :
     verifierWikiPostFix < sopWikiThreshold ∧ verifierZkPostFix < sopZkThreshold
     := by decide
 
+/-! ### 4.3 Provenance Ceiling & Index Enumeration Invariants (`km_metrics.ml` Sync)
+
+    Models the index enumeration and quarantine-marking invariants enforced by
+    `tools/km_provenance/km_metrics.ml` and `tools/km-gate --gate`.
+    Historical ADR counts (e.g., 137 at 2026-11-06T08:22Z) are bound as a
+    regression fixture (`kmIndexSnapshot_20261106`), while universal algebraic
+    laws hold for any corpus size. -/
+
+structure KmIndexSnapshot where
+  adrTotal          : Nat
+  mocEnumerated     : Nat
+  wikiEnumerated    : Nat
+  quarantinedTotal  : Nat
+  mocMarked         : Nat
+  wikiMarked        : Nat
+  entropyBitsX1000  : Nat
+  entropyFloorX1000 : Nat
+  deriving DecidableEq, Repr
+
+def KmIndexSnapshot.isFullyEnumeratedAndMarked (s : KmIndexSnapshot) : Bool :=
+  s.adrTotal > 0
+  && s.mocEnumerated == s.adrTotal
+  && s.wikiEnumerated == s.adrTotal
+  && s.mocMarked == s.quarantinedTotal
+  && s.wikiMarked == s.quarantinedTotal
+  && s.entropyBitsX1000 >= s.entropyFloorX1000
+
+def kmIndexSnapshot_20261106 : KmIndexSnapshot :=
+  { adrTotal          := 137
+  , mocEnumerated     := 137
+  , wikiEnumerated    := 137
+  , quarantinedTotal  := 16
+  , mocMarked         := 16
+  , wikiMarked        := 16
+  , entropyBitsX1000  := 3298
+  , entropyFloorX1000 := 2500 }
+
+theorem THM_KM_05_index_snapshot_20261106_fully_enumerated_and_marked :
+    admittedEvCeiling = 93
+  ∧ kmIndexSnapshot_20261106.isFullyEnumeratedAndMarked = true := by decide
+
+theorem THM_KM_06_unmarked_quarantined_adr_fails_index_gate :
+    KmIndexSnapshot.isFullyEnumeratedAndMarked
+      { kmIndexSnapshot_20261106 with mocMarked := 15 } = false
+  ∧ KmIndexSnapshot.isFullyEnumeratedAndMarked
+      { kmIndexSnapshot_20261106 with wikiMarked := 15 } = false
+  ∧ KmIndexSnapshot.isFullyEnumeratedAndMarked
+      { kmIndexSnapshot_20261106 with wikiEnumerated := 136 } = false
+  ∧ KmIndexSnapshot.isFullyEnumeratedAndMarked
+      { kmIndexSnapshot_20261106 with entropyBitsX1000 := 2499 } = false := by decide
+
 /-! ## 5. Capability surface — what this system must provide -/
 
 inductive Capability where
@@ -635,96 +686,34 @@ theorem THM_ALN_05_alignment_decidable (e : TwinExpectation) (o : RuntimeObserva
   · exact Or.inr rfl
   · exact Or.inl rfl
 
-/-! ## 8. Executable conformance prober
+/-! ## 8. OBSERVATION PLANE — deliberately absent
 
-    `./tools/lean formal/lean/UosUnifiedMonitoringGovernanceDigitalTwin.lean`
-    type-checks the model. `--run` additionally observes the live host and
-    compares it against `canonicalExpectation`, exiting 1 on divergence. -/
+    The executable conformance prober that stood here until `20261106-0108`
+    has moved to `formal/mojo/monitoring_governance_oracle.mojo`.
 
-def runCap (cmd : String) (args : Array String) : IO (UInt32 × String) := do
-  try
-    let out ← IO.Process.output { cmd := cmd, args := args }
-    return (out.exitCode, out.stdout.trimAscii.toString)
-  catch _ =>
-    return (127, "")
+    WHAT STAYS, AND WHY
+    -------------------
+    `observationBeforeRepair` and `observationAfterRepair` remain. They are
+    NAMED HISTORICAL FIXTURES: readings taken at a stated past moment, kept
+    as a regression corpus. `THM_ALN_01` and `THM_ALN_02` are true statements
+    about those recorded data and cannot rot, because neither claims to
+    describe the present.
 
-def portBound (port : Nat) : IO Bool := do
-  let (_, out) ← runCap "ss" #["-ltn"]
-  return (out.splitOn s!":{port} ").length > 1
+    What does NOT stay is any observation presented as current. A record
+    called `observationNow`, carrying a timestamp and a count, with a theorem
+    proving a verdict about it `by decide`, is a frozen claim about a moving
+    world: the kernel re-checks the arithmetic forever and never re-checks
+    the fact. One such record in
+    `UosMcpNameOwnershipTwin.lean` stayed green for the four hours after its
+    subject became false. The differential oracle caught it; the proof could
+    not.
 
-def routeStatus (path : String) : IO Bool := do
-  let (_, out) ← runCap "curl"
-    #["-s", "-o", "/dev/null", "-w", "%{http_code}", "--max-time", "8",
-      s!"http://127.0.0.1:4100{path}"]
-  return out == "200"
+    So: fixtures yes, present tense no. The present is observed in Mojo, at
+    the moment of asking.
 
-def canonicalRoutes : List String :=
-  ["/", "/planning", "/cortex", "/checklist", "/links", "/components",
-   "/wiki", "/zk", "/api/health", "/api/v1/links/status"]
-
-def main : IO UInt32 := do
-  IO.println "=== UOS unified monitoring & governance digital twin ==="
-  IO.println s!"candidate      : {twinCandidateId}"
-  IO.println s!"model observed : {observedHostUtc}"
-  IO.println s!"EV ceiling     : {admittedEvCeiling} (EV-94..109 NOT_ADMITTED)"
-  IO.println ""
-
-  let (_, nowUtc) ← runCap "date" #["-u", "+%Y-%m-%dT%H:%M:%SZ"]
-  IO.println s!"probe time     : {nowUtc}"
-  IO.println ""
-
-  IO.println "--- service listeners (expected vs observed) ---"
-  let mut listeners : List (ServiceId × Bool) := []
-  for s in serviceSurface do
-    let up ← portBound s.port
-    listeners := (s.id, up) :: listeners
-    IO.println s!"  :{s.port} {s.unitName} expected=bound observed={if up then "bound" else "ABSENT"}"
-
-  IO.println ""
-  IO.println "--- canonical routes (expected 200) ---"
-  let mut ok := 0
-  let mut probed := 0
-  for p in canonicalRoutes do
-    let good ← routeStatus p
-    probed := probed + 1
-    if good then ok := ok + 1
-    IO.println s!"  {p} -> {if good then "200" else "NOT 200"}"
-
-  let obs : RuntimeObservation :=
-    { observedUtc     := nowUtc
-    , listenerBound   := listeners
-    , routesProbed    := probed
-    , routes200       := ok
-    , canonicalBroken := postFixCanonicalBroken
-    , sccCount        := canonicalExpectation.requiredScc
-    , a2uiComponents  := 239 }
-
-  -- Route expectation is scaled to the subset this prober probes; the full
-  -- 69-endpoint sweep belongs to link_tracker_verifier.exe.
-  let exp : TwinExpectation :=
-    { canonicalExpectation with requiredRoutes := canonicalRoutes.length }
-
-  IO.println ""
-  IO.println "--- model facts ---"
-  IO.println s!"  quoted examples in corpus      : {totalQuotedExamples}"
-  IO.println s!"  live wiki / zk transclusions   : {wikiCensus.live} / {zkCensus.live}"
-  IO.println s!"  capability gaps                : {capabilityGaps.length} of {allCapabilities.length}"
-  IO.println s!"  checks that detect an outage   : {(checkInventory.filter detectsOutage).length}"
-  IO.println s!"  co-resident blind monitors     : {coResidentPushChecks.length}"
-  IO.println s!"  SOP wiki threshold satisfiable : {thresholdSatisfied verifierWikiPostFix verifierZkPostFix}"
-
-  IO.println ""
-  let ali := aligned exp obs
-  IO.println s!"ALIGNMENT: {if ali then "RUNTIME MATCHES TWIN" else "DIVERGENT"}"
-  IO.println "(specification evidence at one candidate; not runtime admission)"
-
-  if ali then
-    return 0
-  else
-    IO.eprintln "FAIL-CLOSED: runtime state does not match the digital twin."
-    return 1
+    A `lean` exit code from this file means the algebra is consistent. It is
+    not an observation of the system
+    (`THM_VAC_01_typechecking_is_not_observation`).
+-/
 
 end UOS.UnifiedMonitoringTwin
-
-/-- Top-level entry point so `lean --run` can execute the conformance prober. -/
-def main : IO UInt32 := UOS.UnifiedMonitoringTwin.main

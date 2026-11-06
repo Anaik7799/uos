@@ -201,7 +201,45 @@ pub fn schedule_heijunka_wave(
 pub type HiveQuorumVerdict {
   QuorumAdmittedUnanimous(digest: String)
   QuorumAdmitted2oo3(digest: String, dissenter: TmrChannel)
+  QuorumAdmitted2oo4(digest: String, approving_models: Int)
   QuorumFailClosedHold(reason: String)
+}
+
+/// Generalized 2-of-4 Model Families + Operator Ratification Quorum
+/// (`SC-PROVENANCE-001`): any 2 distinct model families out of
+/// `{Codex, AGY, Claude, Pi+OpenRouter+Gemini+Argon}` agreeing on a non-empty,
+/// non-`HOLD` candidate digest, plus mandatory `operator_approved == True`.
+pub fn evaluate_two_of_four_model_quorum(
+  codex_digest: String,
+  agy_digest: String,
+  claude_digest: String,
+  pi_argon_digest: String,
+  operator_approved: Bool,
+) -> HiveQuorumVerdict {
+  let raw_digests = [codex_digest, agy_digest, claude_digest, pi_argon_digest]
+  let any_explicit_hold = list.any(raw_digests, fn(d) { d == "HOLD" })
+  case !operator_approved, any_explicit_hold {
+    True, _ -> QuorumFailClosedHold("operator_ratification_missing")
+    _, True -> QuorumFailClosedHold("sovereign_model_explicit_hold")
+    False, False -> {
+      let valid_digests =
+        list.filter(raw_digests, fn(d) { d != "" && d != "HOLD" })
+      let matching =
+        list.find_map(valid_digests, fn(candidate) {
+          let count = list.count(valid_digests, fn(d) { d == candidate })
+          case count >= 2 {
+            True -> Ok(#(candidate, count))
+            False -> Error(Nil)
+          }
+        })
+      case matching {
+        Ok(#(agreed_digest, 4)) -> QuorumAdmittedUnanimous(agreed_digest)
+        Ok(#(agreed_digest, count)) -> QuorumAdmitted2oo4(agreed_digest, count)
+        Error(Nil) ->
+          QuorumFailClosedHold("quorum_fewer_than_2_of_4_models_agree")
+      }
+    }
+  }
 }
 
 /// 2oo3 Tri-Sovereign Hive Quorum (`QueenConductor`/`AGY`, `SovereignSentinel`/`Codex`,

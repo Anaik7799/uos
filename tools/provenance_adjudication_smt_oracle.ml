@@ -62,6 +62,7 @@ let positive_fixture =
      "runtimeSource",202; "formalSource",202;
      "runtimeSigner",1; "formalSigner",2;
      "utcRaw",5; "monoRaw",7; "observed",5; "now",5; "expires",10;
+     "codexReviewer",1; "agyReviewer",2;
      "codexCandidate",101; "agyCandidate",101;
      "codexSource",202; "agySource",202;
      "codexTarget",95; "agyTarget",95; "codexSigner",10; "agySigner",11] @
@@ -98,7 +99,10 @@ let check log =
       ["utcRaw"; "monoRaw"; "observed"; "now"; "expires"] &&
     n "utcRaw" <> n "monoRaw" && n "utcRaw" = n "observed" &&
     n "observed" <= n "now" && n "now" < n "expires" in
-  let joint = n "codexCandidate" = n "candidate" && n "agyCandidate" = n "candidate" &&
+  let joint = n "codexReviewer" >= 1 && n "codexReviewer" <= 4 &&
+    n "agyReviewer" >= 1 && n "agyReviewer" <= 4 &&
+    n "codexReviewer" <> n "agyReviewer" &&
+    n "codexCandidate" = n "candidate" && n "agyCandidate" = n "candidate" &&
     n "codexSource" = n "source" && n "agySource" = n "source" &&
     n "codexTarget" = n "target" && n "agyTarget" = n "target" &&
     n "codexSigner" > 0 && n "agySigner" > 0 && n "codexSigner" <> n "agySigner" in

@@ -1,0 +1,87 @@
+{
+  "schema": "uos.lean.proof_plane_renderers.v1",
+  "observed_utc": "2026-11-06T03:58:00Z",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "purpose": "Declares every formal/lean file that carries BOTH theorems and a trailing IO section, with the sanction each rests on. formal/mojo/proof_plane_guard_oracle.mojo fails closed on any trailing-IO file absent from this list, so the set cannot grow quietly, and on any file whose io_budget is exceeded, so a declared renderer cannot become a prober.",
+  "boundary": {
+    "hard_rule": "No IO declaration and no `def main` may appear BEFORE the last theorem in a theorem-bearing file. Lean requires declaration before use, so a trailing IO section cannot be an input to any proof above it. This arm has no exemptions and currently reads 0 across all 126 files.",
+    "why_not_a_name_allowlist": "A name allowlist is an exemption wearing a sanction's clothes: it says a file is trusted, not why, and nothing re-checks the why. The entries below are checked mechanically against the scanner's output every run.",
+    "measured_by": "tools/lean_proof_plane_scan.ml (strips nested /- -/ comments, -- lines, /-! docstrings and string literals before matching, because prose describing removed IO tripped the previous grep-based guard twice)"
+  },
+  "renderers": [
+    {
+      "file": "formal/lean/UosAgentSurfaceGenerator.lean",
+      "kind": "contract-sanctioned generator",
+      "io_budget": 25,
+      "main_budget": 2,
+      "sanction": "SC-MIRROR-PROJ-001. This file GENERATES CLAUDE.md and the four vendor rules/ surfaces; CLAUDE.md names it as its own generator, so the write is mandated, not tolerated. Verified with `tools/uos-surface-gen --check`.",
+      "why_this_is_not_an_observation_plane": "It writes a file deterministically from the model and reads files back only to report drift against that model. No reading of the live system becomes an input to a theorem. Its `IO.FS.realPath` calls implement a write fence (resolveFence, :428) that keeps writes inside the repository root -- a safety control on its own effect, not a measurement of the world."
+    },
+    {
+      "file": "formal/lean/DevelopmentCoreGate.lean",
+      "kind": "truth-table exporter",
+      "io_budget": 0,
+      "main_budget": 1,
+      "sanction": "CLAUDE.md language roles: Lean 4 covers 'pure IO base scripting / SOP / SDLC / SRE orchestration in place of ad-hoc Python, Bash and sed'. emitBudgetCases/emitReplayCases enumerate the gate's own decision function to stdout.",
+      "why_this_is_not_an_observation_plane": "Output is a total function of the model. An external checker can replay it; nothing is read from the world. This is the SAME shape as a differential oracle's algebra arm, run from the Lean side."
+    },
+    {
+      "file": "formal/lean/MirageReceiptAdmission.lean",
+      "kind": "truth-table exporter",
+      "io_budget": 0,
+      "main_budget": 1,
+      "sanction": "Same clause. The main enumerates 3x2x3x3x4x3x3x2x2x2x2 = 93,312 receipt configurations and prints `valid` for each, which is the admission predicate's full truth table over its finite domain.",
+      "why_this_is_not_an_observation_plane": "Pure enumeration of a decidable predicate. It is the most useful kind of Lean `main` in this tree: it exports what the kernel decided so another language can be held to it."
+    },
+    {
+      "file": "formal/lean/FiveHarnessUnifiedAndCorePolicyEquivalence.lean",
+      "kind": "model-consistency banner",
+      "io_budget": 0,
+      "main_budget": 1,
+      "sanction": "Same clause, narrowly. Prints one `=MODEL_CONSISTENT` line naming what typechecked.",
+      "why_this_is_not_an_observation_plane": "Changed from `=PASS` to `=MODEL_CONSISTENT` on 20261106-0108 for exactly this reason: a typecheck is not a system verdict (THM_VAC_01_typechecking_is_not_observation). G5 holds the whole tree to that."
+    },
+    {
+      "file": "formal/lean/FifteenCycleUnifiedLeanInfrastructureAndDigitalTwins.lean",
+      "kind": "model-consistency banner",
+      "io_budget": 0,
+      "main_budget": 1,
+      "sanction": "Same clause, narrowly.",
+      "why_this_is_not_an_observation_plane": "Banner changed to `=MODEL_CONSISTENT` 20261106-0108."
+    },
+    {
+      "file": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+      "kind": "model-consistency banner",
+      "io_budget": 0,
+      "main_budget": 1,
+      "sanction": "Same clause, narrowly.",
+      "why_this_is_not_an_observation_plane": "Banner changed to `=MODEL_CONSISTENT` 20261106-0108."
+    },
+    {
+      "file": "formal/lean/UosLeanRuntimeGuard.lean",
+      "kind": "model-consistency banner",
+      "io_budget": 0,
+      "main_budget": 2,
+      "sanction": "Same clause. Two `def main` because the namespaced one is re-exported at top level for `lean --run`.",
+      "why_this_is_not_an_observation_plane": "Banner changed to `=MODEL_CONSISTENT` 20261106-0108. The 12 C-ABI exports it names are declarations, not probes."
+    },
+    {
+      "file": "formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean",
+      "kind": "model-consistency banner",
+      "io_budget": 0,
+      "main_budget": 1,
+      "sanction": "Same clause.",
+      "why_this_is_not_an_observation_plane": "Every interpolated value is a projection of a model record. OPEN NONCONFORMANCE, recorded rather than silently fixed: three of its 15 lines read as live claims -- 'Zenoh Mesh Active', 'Live Digital Twin Bound', 'GPU Graph verified' -- which the file cannot establish by typechecking. They are model fields whose names assert runtime state. Renaming those FIELDS is the follow-up; the banner is honest about being MODEL_CONSISTENT, so this is a wording defect, not a boundary breach."
+    }
+  ],
+  "removed_observation_planes": [
+    { "file": "formal/lean/UosCoreEvoUnifiedDigitalTwin.lean", "moved_to": "formal/mojo/core_evo_oracle.mojo" },
+    { "file": "formal/lean/UosMcpUnifiedGatewayTwin.lean", "moved_to": "formal/mojo/mcp_gateway_oracle.mojo" },
+    { "file": "formal/lean/UosUnifiedMonitoringGovernanceDigitalTwin.lean", "moved_to": "formal/mojo/monitoring_governance_oracle.mojo" },
+    { "file": "formal/lean/UosContextPathKpiOtelTwin.lean", "moved_to": "formal/mojo/context_path_kpi_oracle.mojo" },
+    { "file": "formal/lean/UosMcpNameOwnershipTwin.lean", "moved_to": "formal/mojo/mcp_name_ownership_oracle.mojo" },
+    { "file": "formal/lean/BionicMojoLeanHighPerformanceInterception.lean", "moved_to": "formal/mojo/bionic_interception_oracle.mojo" },
+    { "file": "formal/lean/Razr15_Max_Qwen_Digital_Twin.lean", "moved_to": "formal/mojo/razr15_max_qwen_oracle.mojo" }
+  ]
+}

@@ -147,9 +147,13 @@ theorem lyapunov_energy_damped (st : EvolutionState) (cycle : CycleSpec) :
   dsimp [apply_ratified_cycle]
   omega
 
-/-- Quorum approval counting. -/
+/-- Quorum approval counting (3 total keys = any 2 of 4 model families + 1 Operator). -/
 def is_quorum_ratified (approvals : Nat) : Bool :=
   approvals >= 3
+
+/-- Generalized 2-of-4 model families + Operator ratification predicate (SC-PROVENANCE-001). -/
+def is_two_of_four_models_plus_operator (distinct_models : Nat) (operator_signed : Bool) : Bool :=
+  distinct_models >= 2 && distinct_models <= 4 && operator_signed
 
 /-- THEOREM 3: Quorum Soundness.
     Fewer than 3 sovereign approvals cannot ratify an evolutionary cycle. -/
@@ -232,7 +236,7 @@ theorem identity_cocycle_commutes :
 def evaluate_gherkin_step (precondition : ElementSemanticState) (step_ok : Bool) : ElementSemanticState :=
   match precondition with
   | ElementSemanticState.Bottom => ElementSemanticState.Bottom
-  | s => if step_ok then ElementSemanticState.Actuated else ElementSemanticState.Bottom
+  | _ => if step_ok then ElementSemanticState.Actuated else ElementSemanticState.Bottom
 
 /-- THEOREM 9: BDD Gherkin Fail-Closed Soundness.
     A scenario starting in Bottom always halts in Bottom regardless of action. -/

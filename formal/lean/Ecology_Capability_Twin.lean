@@ -3,7 +3,7 @@
    Natural-valued fragment; the Gleam boundary rejects invalid negative inputs.
    A pure model theorem grants no live lease, scheduling or deployment authority.
    No claim that the whole UOS implementation refines this model is made. -/
-namespace EcologyCapabilityTwin
+namespace UOS.EcologyCapabilityTwin
 
 structure Snapshot where
   version : Nat
@@ -115,4 +115,4 @@ example : commit sample { request with token := 2 } = none := by decide
 #print axioms exact_commit_effect
 #print axioms observation_noninterference
 #print axioms no_replay
-end EcologyCapabilityTwin
+end UOS.EcologyCapabilityTwin

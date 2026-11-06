@@ -187,6 +187,9 @@ let rec unique_json = function
   | `Assoc fields -> let ks = List.map fst fields in List.length ks = List.length (sorted ks) &&
       List.for_all (fun (_,v) -> unique_json v) fields
   | `List xs -> List.for_all unique_json xs | _ -> true
+let authorized_ratifiers =
+  ["codex"; "agy"; "claude"; "pi+openrouter+gemini+argon"]
+
 let receipt_valid ?expected_kind ~candidate ~sources bytes =
   try if not (shallow_json bytes) then false else
     let j = Yojson.Safe.from_string bytes in
@@ -195,7 +198,7 @@ let receipt_valid ?expected_kind ~candidate ~sources bytes =
         "source_sha256";"reviewer";"signature"] f ->
       let s k = match List.assoc k f with `String s -> s | _ -> "" in
       s "schema" = "uos-forensic-receipt-v1" &&
-      List.mem (s "kind") ["runtime";"formal"] && List.mem (s "reviewer") ["codex";"agy"] &&
+      List.mem (s "kind") ["runtime";"formal"] && List.mem (s "reviewer") authorized_ratifiers &&
       (match expected_kind with None -> true | Some k -> s "kind"=k) &&
       Some (s "candidate_commit") = candidate && hex 64 (s "source_sha256") &&
       String.length (s "signature") >= 1 && String.length (s "signature") <= 256 &&

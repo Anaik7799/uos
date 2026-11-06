@@ -1,25 +1,21 @@
 {
-  "status": "HOLD",
-  "findings": [
-    {
-      "rule": "KMP-ENTROPY",
-      "detail": "fractal layer entropy 1.359 bits is below the CHK-09-MATH floor of 2.50"
-    }
-  ],
+  "status": "PASS",
+  "findings": [],
+  "cycle_chain": "CHAIN_INTACT",
   "schema": "uos-km-provenance-metrics/v1",
   "contract": "SC-PROVENANCE-001",
   "authority": "REPORT_ONLY",
   "runtime_admission": "NOT_GRANTED",
-  "observed_at": "2026-09-08T08:12:03Z",
+  "observed_at": "2026-11-06T20:12:02Z",
   "admitted_ev_ceiling": 93,
   "corpus": {
-    "adr_total": 87,
+    "adr_total": 137,
     "adr_first": 1,
-    "adr_last": 87,
+    "adr_last": 137,
     "contiguous": true,
     "first_gap_at": null,
     "duplicate_numbers": [],
-    "layer_entropy_bits": 1.3588975052553565,
+    "layer_entropy_bits": 3.2980706279534964,
     "quarantined_total": 16,
     "quarantined_ids": [
       71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86
@@ -29,8 +25,8 @@
     {
       "label": "zk-master-moc",
       "path": "docs/zk/20260905-1801-moc-uos-unified-master.md",
-      "adrs_enumerated": 87,
-      "adrs_total": 87,
+      "adrs_enumerated": 137,
+      "adrs_total": 137,
       "completeness_ratio": 1.0,
       "quarantined_marked": 16,
       "quarantined_total": 16,
@@ -39,8 +35,8 @@
     {
       "label": "wiki-corpus-index",
       "path": "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md",
-      "adrs_enumerated": 87,
-      "adrs_total": 87,
+      "adrs_enumerated": 137,
+      "adrs_total": 137,
       "completeness_ratio": 1.0,
       "quarantined_marked": 16,
       "quarantined_total": 16,

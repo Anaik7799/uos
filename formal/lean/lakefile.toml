@@ -1,0 +1,65 @@
+# UOS top-level formal library — the lakefile the 108 standalone
+# formal/lean/*.lean files never had.
+#
+# WHY THIS FILE DID NOT EXIST, AND WHAT ITS ABSENCE COST
+# -----------------------------------------------------
+# Measured 20261106: 108 standalone .lean files at this level, FOUR
+# cross-file import edges, and `tools/lean-offline-gate` compiling a
+# hardcoded NINE of them. No lakefile, no .lake, no build directory.
+#
+# Three consequences followed, all of them measured rather than supposed:
+#
+#  1. 651 lines of BYTE-IDENTICAL declaration blocks across 49 groups.
+#     `HARD_DENIED_SYSTEM_OS_SERIAL` is defined 10 times; the EV ceiling 93
+#     fourteen times in two spellings. With no module system, duplication is
+#     the only available form of reuse -- the waste is a SYMPTOM of this
+#     missing file, not of carelessness.
+#  2. 99 of 108 files are compiled by nothing, so they could be broken right
+#     now and no arm would know.
+#  3. No library is reachable. `formal/lean/UosOntologyAtlas.lean` had to
+#     abandon the set-level statement of its own ATLAS-19
+#     (`card A ≠ card B → ¬ Nonempty (A ≃ B)`) because `Fintype` and `≃` are
+#     Mathlib, and the claim had to be weakened to arithmetic on Nat. Codex
+#     correctly flagged the weakened form as proving facts about literals
+#     rather than about sets.
+#
+# WHAT IS AND IS NOT CHANGED HERE
+# -------------------------------
+# This file makes the libraries REACHABLE. It does not move the pinned
+# toolchain.
+#
+# `SC-NIX-DEVENV-001` invariant 7 records Lean 4.33.0 as a deliberate
+# version pin: "formal/lean/*.lean are verified to check at 4.33.0". The
+# already-built Mathlib on disk is v4.35.0 (7.4 GB, 8,714 oleans, under
+# formal/lean/ruliad/.lake/packages), pinned there for cslib. A 4.33.0 tree
+# cannot consume a 4.35.0 Mathlib.
+#
+# So the toolchain line below is 4.35.0 and that IS A CHANGE OF PIN FOR
+# LAKE-DRIVEN BUILDS ONLY -- `tools/lean` still resolves 4.33.0, and every
+# existing gate continues to use it. Whether the 4.33.0 pin should move for
+# the whole tree is an OPERATOR DECISION, and the evidence for it is the
+# compile census recorded in the journal: how many of the 108 files compile
+# at each toolchain, measured rather than assumed.
+#
+# Reusing the ruliad package set rather than resolving a second copy is
+# deliberate: a second Mathlib would be another 7.4 GB and could drift from
+# the first, which is the duplication defect this file exists to end.
+#
+# authority NONE. EV ceiling 93; EV-94..109 NOT_ADMITTED; no new EV minted.
+
+name = "uosformal"
+defaultTargets = ["UosFormal"]
+packagesDir = "ruliad/.lake/packages"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0"
+
+[[lean_lib]]
+name = "UosFormal"
+# The 108 files are standalone and do not use the module system.
+allowNonModules = true
+# Globbed rather than enumerated: a hardcoded target array is exactly how
+# tools/lean-offline-gate came to compile 9 of 108.
+globs = ["*"]

@@ -489,4 +489,4 @@ theorem T13_fifteen_cycle_lyapunov_strict_descent :
 end UOS.FifteenCycleDigitalTwins
 
 def main : IO Unit := do
-  IO.println "FIFTEEN_CYCLE_DIGITAL_TWINS_AND_POLICY_EQUIVALENCE=PASS (13 Formal Theorems + 11 Structural Definitions, 0 sorry, 15/15 Cycles Lyapunov Descent 185000->8420)"
+  IO.println "FIFTEEN_CYCLE_DIGITAL_TWINS_AND_POLICY_EQUIVALENCE=MODEL_CONSISTENT (13 Formal Theorems + 11 Structural Definitions, 0 sorry, 15/15 Cycles Lyapunov Descent 185000->8420)"

@@ -65,6 +65,9 @@ CREATE TRIGGER IF NOT EXISTS ev_evidence_no_update BEFORE UPDATE ON ev_evidence
 BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only'); END;
 CREATE TRIGGER IF NOT EXISTS ev_evidence_no_delete BEFORE DELETE ON ev_evidence
 BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS ev_evidence_no_replace BEFORE INSERT ON ev_evidence
+WHEN EXISTS (SELECT 1 FROM ev_evidence WHERE ev=NEW.ev AND revision=NEW.revision)
+BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only; replacement refused'); END;
 
 CREATE TABLE IF NOT EXISTS ev_verdict (
   sequence      INTEGER PRIMARY KEY,
@@ -79,6 +82,9 @@ CREATE TRIGGER IF NOT EXISTS ev_verdict_no_update BEFORE UPDATE ON ev_verdict
 BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
 CREATE TRIGGER IF NOT EXISTS ev_verdict_no_delete BEFORE DELETE ON ev_verdict
 BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS ev_verdict_no_replace BEFORE INSERT ON ev_verdict
+WHEN EXISTS (SELECT 1 FROM ev_verdict WHERE sequence=NEW.sequence)
+BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only; replacement refused'); END;
 
 CREATE TABLE IF NOT EXISTS merge_hold (
   sequence            INTEGER PRIMARY KEY,
@@ -92,6 +98,9 @@ CREATE TRIGGER IF NOT EXISTS merge_hold_no_update BEFORE UPDATE ON merge_hold
 BEGIN SELECT RAISE(ABORT, 'merge_hold is append-only; record a release row instead'); END;
 CREATE TRIGGER IF NOT EXISTS merge_hold_no_delete BEFORE DELETE ON merge_hold
 BEGIN SELECT RAISE(ABORT, 'merge_hold is append-only; record a release row instead'); END;
+CREATE TRIGGER IF NOT EXISTS merge_hold_no_replace BEFORE INSERT ON merge_hold
+WHEN EXISTS (SELECT 1 FROM merge_hold WHERE sequence=NEW.sequence)
+BEGIN SELECT RAISE(ABORT, 'merge_hold is append-only; replacement refused'); END;
 CREATE TRIGGER IF NOT EXISTS merge_hold_needs_condition BEFORE INSERT ON merge_hold
 WHEN TRIM(NEW.clearing_condition) = ''
 BEGIN SELECT RAISE(ABORT, 'a hold must state its clearing condition'); END;
@@ -107,6 +116,9 @@ CREATE TRIGGER IF NOT EXISTS merge_hold_release_no_update BEFORE UPDATE ON merge
 BEGIN SELECT RAISE(ABORT, 'merge_hold_release is append-only'); END;
 CREATE TRIGGER IF NOT EXISTS merge_hold_release_no_delete BEFORE DELETE ON merge_hold_release
 BEGIN SELECT RAISE(ABORT, 'merge_hold_release is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS merge_hold_release_no_replace BEFORE INSERT ON merge_hold_release
+WHEN EXISTS (SELECT 1 FROM merge_hold_release WHERE sequence=NEW.sequence)
+BEGIN SELECT RAISE(ABORT, 'merge_hold_release is append-only; replacement refused'); END;
 |sql}
 
 let ok rc = require (rc = Sqlite3.Rc.OK) "sqlite operation failed"

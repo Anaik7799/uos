@@ -35,6 +35,8 @@
 (declare-const observed Int)
 (declare-const now Int)
 (declare-const expires Int)
+(declare-const codexReviewer Int)
+(declare-const agyReviewer Int)
 (declare-const codexCandidate Int)
 (declare-const agyCandidate Int)
 (declare-const codexSource Int)
@@ -50,6 +52,9 @@
 (declare-const codexOrigin Bool)
 (declare-const agyOrigin Bool)
 (declare-const jointFresh Bool)
+; Authorized 2-of-4 model reviewer IDs: 1=codex, 2=agy, 3=claude, 4=pi+openrouter+gemini+argon
+(define-fun authorizedReviewer ((rev Int)) Bool
+  (and (<= 1 rev) (<= rev 4)))
 (declare-const r94 Bool)
 (declare-const r95 Bool)
 (declare-const r96 Bool)
@@ -86,7 +91,9 @@
 (define-fun clockFresh () Bool
   (and (distinct utcRaw monoRaw) (= utcRaw observed) (<= observed now) (< now expires)))
 (define-fun jointReview () Bool
-  (and (= candidate codexCandidate) (= candidate agyCandidate)
+  (and (authorizedReviewer codexReviewer) (authorizedReviewer agyReviewer)
+       (distinct codexReviewer agyReviewer)
+       (= candidate codexCandidate) (= candidate agyCandidate)
        (= source codexSource) (= source agySource)
        (= target codexTarget) (= target agyTarget)
        codexRecorded agyRecorded codexSigned agySigned codexOrigin agyOrigin jointFresh
@@ -102,6 +109,7 @@
   (= runtimeSigner 1) (= formalSigner 2) runtimePresent formalPresent
   runtimeSigned formalSigned runtimeOrigin formalOrigin runtimeConfirmed formalConfirmed
   rebindInformation (= utcRaw 5) (= monoRaw 7) (= observed 5) (= now 5) (= expires 10)
+  (= codexReviewer 1) (= agyReviewer 2)
   (= codexCandidate 101) (= agyCandidate 101) (= codexSource 202) (= agySource 202)
   (= codexTarget 95) (= agyTarget 95) (= codexSigner 10) (= agySigner 11)
   codexRecorded agyRecorded codexSigned agySigned codexOrigin agyOrigin jointFresh
@@ -110,7 +118,7 @@
 (get-value (target lower candidate source runtimeCandidate formalCandidate runtimeSource formalSource
             runtimeSigner formalSigner runtimePresent formalPresent runtimeSigned formalSigned
             runtimeOrigin formalOrigin runtimeConfirmed formalConfirmed rebindInformation
-            utcRaw monoRaw observed now expires codexCandidate agyCandidate codexSource agySource
+            utcRaw monoRaw observed now expires codexReviewer agyReviewer codexCandidate agyCandidate codexSource agySource
             codexTarget agyTarget codexSigner agySigner codexRecorded agyRecorded codexSigned agySigned
             codexOrigin agyOrigin jointFresh r94 r95 r96 eligible))
 (pop)

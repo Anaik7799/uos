@@ -991,9 +991,17 @@ def canonicalExpectation : StructuralExpectation :=
   , requiredFppActors := 40, requiredZenohTopics := 12, requiredScc := 1
   , minA2ui := 233, maxCanonicalBroken := 0 }
 
-/-- Read from the live plane at 2026-11-05T17:05Z. -/
-def observationNow : RuntimeObservation :=
-  { observedUtc := "2026-11-05T17:05:00Z"
+/-- The reading a FULLY ALIGNED plane would produce -- a synthetic ideal, not
+    a reading anyone took. It exists so the theorems below can state what
+    alignment MEANS without recording a fact that will rot.
+
+    It replaces `observationNow`, which claimed `observedUtc :=
+    "2026-11-05T17:05:00Z"` and `routes200 := 69` while the prober that
+    produced it probed 5 routes and inferred the other 64. A theorem named
+    `THM_RUN_01_aligned_now` then proved the system healthy from it, and would
+    have gone on proving that with the cockpit in the ground. -/
+def idealReading : RuntimeObservation :=
+  { observedUtc := "<synthetic: no observation recorded in the proof plane>"
   , cockpitHttpBound := true, cockpitHttpsBound := true
   , saPlanBound := true, zenohBound := true
   , routesProbed := 69, routes200 := 69
@@ -1004,7 +1012,7 @@ def observationNow : RuntimeObservation :=
 
 /-- State during the 41-hour outage. -/
 def observationDuringOutage : RuntimeObservation :=
-  { observationNow with
+  { idealReading with
     observedUtc := "2026-11-05T15:41:53Z"
   , cockpitHttpBound := false, cockpitHttpsBound := false
   , routesProbed := 0, routes200 := 0
@@ -1026,8 +1034,8 @@ def runtimeAligned (e : StructuralExpectation) (o : RuntimeObservation) : Bool :
   && (o.a2uiComponents ≥ e.minA2ui)
   && (o.canonicalBroken ≤ e.maxCanonicalBroken)
 
-theorem THM_RUN_01_aligned_now :
-    runtimeAligned canonicalExpectation observationNow = true := by decide
+theorem THM_RUN_01_ideal_reading_aligns :
+    runtimeAligned canonicalExpectation idealReading = true := by decide
 
 theorem THM_RUN_02_divergent_during_outage :
     runtimeAligned canonicalExpectation observationDuringOutage = false := by decide
@@ -1036,7 +1044,7 @@ theorem THM_RUN_02_divergent_during_outage :
     39/40 actors is not the modelled plane. -/
 theorem THM_RUN_03_single_actor_loss_forces_divergence :
     runtimeAligned canonicalExpectation
-      { observationNow with fppActorsAlive := 39 } = false := by decide
+      { idealReading with fppActorsAlive := 39 } = false := by decide
 
 /-! ## 5. PERFORMANCE ASPECT
 
@@ -1066,9 +1074,15 @@ structure PerfObservation where
   invariantsProved   : Nat
   deriving DecidableEq, Repr
 
-/-- Observed: mean latency 25.08 ms from the 69-endpoint sweep; the rest from
-    `/api/v1/core-evo/status`. -/
-def perfNow : PerfObservation :=
+/-- HISTORICAL FIXTURE, measured 2026-11-05T17:05Z: mean latency 25.08 ms
+    from the 69-endpoint sweep, the rest from `/api/v1/core-evo/status`.
+
+    Named for the moment it was taken, not for "now". The theorems below are
+    statements about THIS RECORDED READING and stay true forever, including
+    `THM_PERF_02`, which records that the 10.00 ms latency budget was
+    violated at that moment. The live reading is taken by
+    `formal/mojo/core_evo_oracle.mojo`. -/
+def perfAtRepair : PerfObservation :=
   { meanLatencyCentiMs := 2508
   , agyTokenShareBps   := 101
   , mandatoryMarginBps := 4000
@@ -1089,14 +1103,14 @@ def invariantsWithinBudget (b : PerfBudget) (p : PerfObservation) : Bool :=
 
 /-- The quota disciplines hold with room to spare: 1.01 % against a 2 % cap. -/
 theorem THM_PERF_01_token_share_and_margin_hold :
-    tokenShareWithinBudget perfBudget perfNow = true
-  ∧ marginWithinBudget perfBudget perfNow = true
-  ∧ invariantsWithinBudget perfBudget perfNow = true := by decide
+    tokenShareWithinBudget perfBudget perfAtRepair = true
+  ∧ marginWithinBudget perfBudget perfAtRepair = true
+  ∧ invariantsWithinBudget perfBudget perfAtRepair = true := by decide
 
 /-- The latency budget is VIOLATED: 25.08 ms observed against a 10.00 ms
     target. Recorded as a failure, not smoothed away. -/
 theorem THM_PERF_02_latency_budget_violated :
-    latencyWithinBudget perfBudget perfNow = false := by decide
+    latencyWithinBudget perfBudget perfAtRepair = false := by decide
 
 def perfFullyGreen (b : PerfBudget) (p : PerfObservation) : Bool :=
   latencyWithinBudget b p && tokenShareWithinBudget b p
@@ -1104,12 +1118,12 @@ def perfFullyGreen (b : PerfBudget) (p : PerfObservation) : Bool :=
 
 /-- Consequently performance is not fully green, and the twin says so. -/
 theorem THM_PERF_03_performance_not_fully_green :
-    perfFullyGreen perfBudget perfNow = false := by decide
+    perfFullyGreen perfBudget perfAtRepair = false := by decide
 
 /-- The margin is a hard floor: dropping below 40 % fails even with everything
     else ideal. -/
 theorem THM_PERF_04_margin_is_a_hard_floor :
-    perfFullyGreen perfBudget { perfNow with mandatoryMarginBps := 3999 } = false
+    perfFullyGreen perfBudget { perfAtRepair with mandatoryMarginBps := 3999 } = false
     := by decide
 
 /-! ## 6. MANAGEMENT ASPECT — lifecycle ordering and aspect coverage -/
@@ -1257,157 +1271,63 @@ theorem THM_FULL_02_external_stratum_required :
     (fullSetCounts.find? (fun p => p.1 == "S0 required external guardians")).map
       (fun p => p.2) = some 4 := by decide
 
-/-! ## 9. Executable conformance prober -/
+/-! ## 9. RUNTIME CLAIMS, UNIVERSALLY QUANTIFIED
 
-def runCap (cmd : String) (args : Array String) : IO (UInt32 × String) := do
-  try
-    let out ← IO.Process.output { cmd := cmd, args := args }
-    return (out.exitCode, out.stdout.trimAscii.toString)
-  catch _ =>
-    return (127, "")
+    The theorems in section 4 bind `runtimeAligned` to two fixtures: a
+    synthetic `idealReading` and a recorded `observationDuringOutage`. Those
+    are statements about data. The statements below are about the RELATION,
+    for every observation there could ever be, so they cannot be outlived by
+    the system they describe. -/
 
-def portBound (port : Nat) : IO Bool := do
-  let (_, out) ← runCap "ss" #["-ltn"]
-  return (out.splitOn s!":{port} ").length > 1
+/-- Fail-closed on no evidence: an observation that read nothing never
+    aligns. A prober that cannot see the system must report divergence, not
+    health. This is the property the whole monitoring plane rests on. -/
+theorem THM_RUN_04_fail_closed_on_no_evidence
+    (o : RuntimeObservation)
+    (h : o.cockpitHttpBound = false) :
+    runtimeAligned canonicalExpectation o = false := by
+  simp [runtimeAligned, h]
 
-def routeOk (path : String) : IO Bool := do
-  let (_, out) ← runCap "curl"
-    #["-s", "-o", "/dev/null", "-w", "%{http_code}", "--max-time", "8",
-      s!"http://127.0.0.1:4100{path}"]
-  return out == "200"
+/-- Any dead listener forces divergence, whatever else is ideal. -/
+theorem THM_RUN_05_dead_sa_plan_forces_divergence
+    (o : RuntimeObservation) (h : o.saPlanBound = false) :
+    runtimeAligned canonicalExpectation o = false := by
+  simp [runtimeAligned, h]
 
-def coreEvoRoutes : List String :=
-  ["/core-evo", "/api/v1/core-evo/status", "/api/v1/core-evo/hive",
-   "/api/v1/core-evo/services", "/api/v1/km/catalog"]
+/-- A stopped FPP supervisor forces divergence on its own. -/
+theorem THM_RUN_06_stopped_supervisor_forces_divergence
+    (o : RuntimeObservation) (h : o.fppSupervisorRunning = false) :
+    runtimeAligned canonicalExpectation o = false := by
+  simp [runtimeAligned, h]
 
-/-- REVIEW FIX (Codex finding 2, HIGH): a timer that exists but has stopped
-    firing is not detection. Presence of the unit name is necessary, not
-    sufficient; the watchdog must also have WRITTEN recently. Receipt age is
-    the watchdog's own dead-man channel. -/
-def watchdogReceiptFresh (maxAgeSec : Nat) : IO Bool := do
-  let (c, out) ← runCap "stat" #["-c", "%Y", "var/watchdog/latest.json"]
-  if c != 0 then return false
-  let (c2, nowS) ← runCap "date" #["+%s"]
-  if c2 != 0 then return false
-  match out.toNat?, nowS.toNat? with
-  | some mtime, some now => return (now - mtime) < maxAgeSec
-  | _, _ => return false
+/-- Routes that answered must equal routes probed: partial success is
+    divergence, not partial credit. Stated for every pair of counts. -/
+theorem THM_RUN_07_partial_route_success_is_divergence
+    (o : RuntimeObservation) (h : o.routes200 ≠ o.routesProbed) :
+    runtimeAligned canonicalExpectation o = false := by
+  simp [runtimeAligned, h]
 
-/-- Does any autonomous out-of-BEAM guardian exist on the host? -/
-def externalWatchdogInstalled : IO Bool := do
-  let (_, out) ← runCap "systemctl" #["--user", "list-timers", "--all", "--no-pager"]
-  return (out.splitOn "uos-web-watchdog").length > 1
+/-- Alignment is decidable for every expectation and every observation, which
+    is precisely what lets the Mojo oracle evaluate the identical relation
+    concretely against a live reading. -/
+theorem THM_RUN_08_alignment_decidable
+    (e : StructuralExpectation) (o : RuntimeObservation) :
+    runtimeAligned e o = true ∨ runtimeAligned e o = false := by
+  cases runtimeAligned e o <;> simp
 
-def main : IO UInt32 := do
-  IO.println "=== UOS-CORE-EVO unified digital twin ==="
-  IO.println s!"candidate : {twinCandidateId}"
-  IO.println s!"plane     : {planeStatus}"
-  IO.println s!"EV ceiling: {admittedEvCeiling} (EV-94..109 NOT_ADMITTED)"
-  let (_, nowUtc) ← runCap "date" #["-u", "+%Y-%m-%dT%H:%M:%SZ"]
-  IO.println s!"probe time: {nowUtc}"
-  IO.println ""
+/-! ## 10. OBSERVATION PLANE — deliberately absent
 
-  IO.println "--- ONTOLOGICAL (modelled) ---"
-  IO.println s!"  fractal layers            : {allLayers.length}"
-  IO.println s!"  ecology modules           : {ecologyModules.length}"
-  IO.println s!"  ecology LOC declared/real : {declaredEcologyLoc} / {actualEcologyLoc} (drift +{actualEcologyLoc - declaredEcologyLoc})"
-  IO.println s!"  bionic services           : {allBionicServices.length}"
-  IO.println s!"  holarchy castes / tot WIP : {holarchyCastes.length} / {totalHiveWip}"
-  IO.println s!"  holons x epochs = states  : {holonsTotal} x {epochsSimulated} = {statesVerified}"
+    The executable conformance prober that stood here until `20261106-0108`
+    has moved to `formal/mojo/core_evo_oracle.mojo`, and the two planes are
+    run together by `tools/lean_mojo_differential.ml`, which fails closed when
+    they disagree.
 
-  IO.println ""
-  IO.println "--- STRUCTURAL (modelled vs host) ---"
-  IO.println s!"  systemd units modelled    : {systemdStratum.length}"
-  IO.println s!"  wanted-but-missing        : {missingUnits.length} {missingUnits.map (fun u => u.name)}"
-  IO.println s!"  oneshot correctly at rest : {(systemdStratum.filter oneshotAtRest).length}"
-  IO.println s!"  fragile enablement        : {(systemdStratum.filter enablementFragile).length}"
-  IO.println s!"  inadequate restart policy : {policyInadequateUnits.map (fun u => u.name)}"
-  IO.println s!"  core set size             : {coreSet.length}"
-  IO.println ""
-  IO.println "--- SLOC & PLACEMENT (measured) ---"
-  IO.println s!"  in-BEAM footprint         : {inBeamSloc} lines"
-  IO.println s!"  misplaced components      : {misplacedComponents.length} ({misplacedComponents.map (fun c => c.name)})"
-  IO.println s!"  SLOC to relocate          : {slocToRelocate} (under 3% of in-BEAM)"
-  IO.println s!"  external but on-demand    : {externalButOnDemand.length} comps, 3256 lines"
-  IO.println s!"  soundly placed guardians  : {soundlyPlacedGuardianCount}"
-  IO.println ""
-  IO.println "--- TRUST INVERSION (implemented) ---"
-  IO.println s!"  misplaced after inversion : {(postInversionComponents.filter misplaced).length}"
-  IO.println s!"  SLOC relocated            : {slocRelocatedByInversion} (new external: {inversionNewSloc})"
-  IO.println s!"  sound guardians now       : {postInversionSoundGuardians.length}"
-  IO.println s!"  guardians installed+verif : {(guardianInstallStatus.filter (fun g => g.installed && g.verified)).length} of {guardianInstallStatus.length}"
-  IO.println s!"  ha dead-man published     : {haReceiptPublished}"
-  IO.println s!"  declared module count     : {declaredModuleCountAfterFix} (running capsule {runningCapsuleModuleCount})"
-  IO.println s!"  undeclared 8th core module: {undeclaredCoreModuleName} ({undeclaredCoreModuleLoc} lines)"
-  IO.println s!"  full set census           : {fullSetTotal}"
+    This file has no `def main`. That is not tidiness: `THM_VAC_01` in this
+    very file proves `staticModelObservesRuntime = false`, and a `def main`
+    sitting beneath that theorem invited exactly the reading the theorem
+    denies. The prober's output looked like the proof's conclusion.
 
-  IO.println ""
-  IO.println "--- RUNTIME (observed) ---"
-  let http  ← portBound 4100
-  let https ← portBound 4101
-  let sap   ← portBound 4200
-  let zen   ← portBound 7447
-  IO.println s!"  :4100 {http}   :4101 {https}   :4200 {sap}   :7447 {zen}"
-  let mut ok := 0
-  for p in coreEvoRoutes do
-    let good ← routeOk p
-    if good then ok := ok + 1
-    IO.println s!"  {p} -> {if good then "200" else "NOT 200"}"
-
-  let obs : RuntimeObservation :=
-    { observationNow with
-      observedUtc := nowUtc
-    , cockpitHttpBound := http, cockpitHttpsBound := https
-    , saPlanBound := sap, zenohBound := zen
-    -- REVIEW FIX (Codex finding 5, HIGH): the previous line recorded 69/69 on
-    -- the strength of 5 probes, fabricating evidence. Report what was probed.
-    , routesProbed := coreEvoRoutes.length, routes200 := ok }
-
-  -- REVIEW FIX (Codex finding 5): judge the 5-route sweep against a scoped
-  -- expectation. The full 69-endpoint sweep belongs to link_tracker_verifier.exe.
-  let scopedExp : StructuralExpectation :=
-    { canonicalExpectation with requiredRoutes := coreEvoRoutes.length }
-  let runOk := runtimeAligned scopedExp obs
-
-  IO.println ""
-  IO.println "--- PERFORMANCE (observed vs budget) ---"
-  IO.println s!"  mean latency      : {perfNow.meanLatencyCentiMs} centi-ms (budget {perfBudget.meanLatencyMaxCentiMs}) -> {latencyWithinBudget perfBudget perfNow}"
-  IO.println s!"  AGY token share   : {perfNow.agyTokenShareBps} bps (cap {perfBudget.tokenShareMaxBps}) -> {tokenShareWithinBudget perfBudget perfNow}"
-  IO.println s!"  mandatory margin  : {perfNow.mandatoryMarginBps} bps (floor {perfBudget.marginMinBps}) -> {marginWithinBudget perfBudget perfNow}"
-  IO.println s!"  invariants proved : {perfNow.invariantsProved} (min {perfBudget.minInvariantsProved}) -> {invariantsWithinBudget perfBudget perfNow}"
-  IO.println s!"  performance green : {perfFullyGreen perfBudget perfNow}"
-
-  IO.println ""
-  IO.println "--- EXTERNALITY INVARIANT (critical outage + recovery outside) ---"
-  let wd ← externalWatchdogInstalled
-  let wdFresh ← watchdogReceiptFresh 300
-  IO.println s!"  protected domain          : cockpitBeam"
-  IO.println s!"  sound guardians today     : {(currentGuardians.filter guardianSound).length}"
-  IO.println s!"  co-resident guardians     : {coResidentGuardians.length} (blind by construction)"
-  IO.println s!"  required external set     : {requiredGuardians.length}"
-  IO.println s!"  all required are external : {requiredGuardians.all (fun g => observationallyIndependent g.domain protectedDomain)}"
-  IO.println s!"  failure modes covered     : {coveredModes.length} of {allFailureModes.length} (uncovered: {uncoveredModes.length})"
-  IO.println s!"  peer node closes the rest : {peerClosesRemaining}"
-  IO.println s!"  externality coverage full : {externalityCoverageComplete}"
-  IO.println s!"  runtime checks bridging   : {proberRuntimeChecks.length} (unbridged aspects: {unbridgedAspects.length})"
-  IO.println s!"  watchdog timer on host    : {wd}"
-  IO.println s!"  watchdog receipt fresh    : {wdFresh} (under 300 s; its own dead-man)"
-
-  IO.println ""
-  IO.println s!"RUNTIME ALIGNMENT   : {if runOk then "MATCHES TWIN" else "DIVERGENT"}"
-  IO.println s!"PERFORMANCE BUDGET  : {if perfFullyGreen perfBudget perfNow then "WITHIN" else "VIOLATED (latency)"}"
-  IO.println s!"EXTERNALITY         : {if wd then (if externalityCoverageComplete then "COMPLETE" else "PARTIAL (process-death class only; 3 of 5 modes uncovered)") else "UNSATISFIED (no out-of-BEAM watchdog)"}"
-  IO.println "(specification evidence at one candidate; not runtime admission)"
-
-  -- REVIEW FIX (Codex finding 2): the gate requires a FRESH receipt, not merely
-  -- an installed timer, so a silent watchdog fails closed.
-  if runOk && wd && wdFresh then
-    return 0
-  else
-    IO.eprintln "FAIL-CLOSED: twin/runtime divergence or critical recovery still inside the protected domain."
-    return 1
+    A `lean` exit code from this file means the algebra is consistent. Nothing
+    more. -/
 
 end UOS.CoreEvoTwin
-
-/-- Top-level entry point for `lean --run`. -/
-def main : IO UInt32 := UOS.CoreEvoTwin.main

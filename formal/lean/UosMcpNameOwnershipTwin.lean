@@ -109,44 +109,114 @@ theorem THM_ONT_01_all_names_one_gateway :
 theorem THM_ONT_02_five_names_three_routes :
     allServerNames.length = 5 := by decide
 
-/-! ## 2. OWNERSHIP — the allowlist that already exists
+/-! ## 2. OWNERSHIP — format-indexed, because the writer is
 
-    `tools/ecology_pin_edit.ml` validates its `servers` argument against
-    `["uos-gleam";"uos-harness";"uos-harness-dev"]` at line 97, and
-    `inspect_all_json` filters discovered `mcpServers` keys to the same list at
-    line 325, requiring a non-empty result (`missing_owned_servers`). -/
+    `tools/ecology_pin_edit.ml` carries TWO allowlists, one per config
+    dialect, and this matters:
 
-def ownedByWriter : ServerName → Bool
-  | ServerName.uosHarness         => true
-  | ServerName.uosHarnessDev      => true
-  | ServerName.uosGleam           => true
-  | ServerName.uosGleamUnderscore => false
-  | ServerName.uosDevelopment     => false
+      `let json ~servers ...` (line 97)
+        `bindings ["uos-gleam";"uos-harness";"uos-harness-dev"]`
+      `let toml ~servers ...` (line 261)
+        `bindings ["uos-harness";"uos-harness-dev";"uos_gleam";"uos_development"]`
 
-def ownedNames : List ServerName := allServerNames.filter ownedByWriter
-def unownedNames : List ServerName := allServerNames.filter (fun n => !ownedByWriter n)
+    and the two inspectors mirror them: `inspect_all_json` (line 325) filters
+    to the JSON list, `inspect_all_toml` (line 336) to the TOML list.
 
-theorem THM_OWN_01_three_owned_two_unowned :
-    ownedNames.length = 3 ∧ unownedNames.length = 2 := by decide
+    CORRECTION, `20261106-0108`. Until this revision this section modelled
+    ownership as a single predicate `ownedByWriter : ServerName → Bool`
+    reading only the JSON allowlist, and concluded that the two underscore
+    spellings were UNOWNED — "THE ROOT CAUSE OF DRIFT", with four of eleven
+    slots "structurally stale" and a rename needed to close the class.
 
-/-- A registration can be kept converged automatically only if its name is
-    owned: the writer refuses unowned names and the auditor filters them. -/
-def autoMaintainable (n : ServerName) : Bool := ownedByWriter n
+    That was wrong. `uos_gleam` and `uos_development` are the TOML bare-key
+    spellings and are owned by the TOML path. There is no unowned name. The
+    error came from transcribing one allowlist into Lean by hand and then
+    transcribing the same mistake into the Mojo oracle, where both agreed and
+    neither observed. Sovereign review (Codex) named exactly that failure
+    mode — "a shared wrong mapping can pass both languages" — and the fix was
+    to make `formal/mojo/mcp_name_ownership_oracle.mojo` DERIVE both
+    allowlists from the writer instead of restating them. It read 3 and 4 on
+    its first run.
 
-/-- THE ROOT CAUSE OF DRIFT. The two underscore names cannot be repinned by
-    the canonical writer, so a release cutover can never reach them. This is
-    structural, not an operational oversight. -/
-theorem THM_OWN_02_unowned_names_cannot_converge :
-    unownedNames.all (fun n => autoMaintainable n = false) = true
-  ∧ unownedNames = [ServerName.uosGleamUnderscore, ServerName.uosDevelopment]
-    := by decide
+    Ownership is therefore a relation on (format, name), never a predicate on
+    a name alone. -/
+
+inductive ConfigFormat
+  | json
+  | toml
+  deriving DecidableEq, Repr
+
+def allFormats : List ConfigFormat := [ConfigFormat.json, ConfigFormat.toml]
+
+/-- Mirrors the two `bindings [...]` lists in the writer, by format. -/
+def ownedBy : ConfigFormat → ServerName → Bool
+  | ConfigFormat.json, ServerName.uosHarness         => true
+  | ConfigFormat.json, ServerName.uosHarnessDev      => true
+  | ConfigFormat.json, ServerName.uosGleam           => true
+  | ConfigFormat.json, _                             => false
+  | ConfigFormat.toml, ServerName.uosHarness         => true
+  | ConfigFormat.toml, ServerName.uosHarnessDev      => true
+  | ConfigFormat.toml, ServerName.uosGleamUnderscore => true
+  | ConfigFormat.toml, ServerName.uosDevelopment     => true
+  | ConfigFormat.toml, _                             => false
+
+def ownedIn (f : ConfigFormat) : List ServerName :=
+  allServerNames.filter (ownedBy f)
+
+/-- Owned by at least one writer path. -/
+def ownedSomewhere (n : ServerName) : Bool :=
+  ownedBy ConfigFormat.json n || ownedBy ConfigFormat.toml n
+
+theorem THM_OWN_01_json_owns_three_toml_owns_four :
+    (ownedIn ConfigFormat.json).length = 3
+  ∧ (ownedIn ConfigFormat.toml).length = 4 := by decide
+
+/-- THE RETRACTION. There is no unowned name: every spelling in the domain is
+    owned by the writer path for its own dialect. This replaces the withdrawn
+    `THM_OWN_02_unowned_names_cannot_converge`, which asserted the opposite
+    from a half-read authority. -/
+theorem THM_OWN_02_no_unowned_name_exists :
+    allServerNames.all ownedSomewhere = true := by decide
+
+/-- A registration is auto-maintainable when its name is owned by the path for
+    its own format — not by some other format's path. -/
+def autoMaintainable (f : ConfigFormat) (n : ServerName) : Bool := ownedBy f n
+
+/-- What makes the canonical names canonical: both dialects own them, so they
+    are writable in a JSON config and a TOML config alike. -/
+theorem THM_OWN_03_canonical_owned_by_both_paths :
+    ownedBy ConfigFormat.json ServerName.uosHarness = true
+  ∧ ownedBy ConfigFormat.toml ServerName.uosHarness = true
+  ∧ ownedBy ConfigFormat.json ServerName.uosHarnessDev = true
+  ∧ ownedBy ConfigFormat.toml ServerName.uosHarnessDev = true := by decide
+
+/-- The dialects genuinely differ, which is why one flat allowlist cannot
+    model this: `uos-gleam` is JSON-only, `uos_gleam` is TOML-only. A model
+    that cannot express this distinction will mistake a dialect for drift —
+    and one did. -/
+theorem THM_OWN_04_dialects_are_not_identical :
+    ownedBy ConfigFormat.json ServerName.uosGleam = true
+  ∧ ownedBy ConfigFormat.toml ServerName.uosGleam = false
+  ∧ ownedBy ConfigFormat.toml ServerName.uosGleamUnderscore = true
+  ∧ ownedBy ConfigFormat.json ServerName.uosGleamUnderscore = false := by decide
+
+/-- A name owned by the wrong dialect is a real defect, distinct from an
+    unowned name: it is a DIALECT LEAK. Stated for every format and name. -/
+def dialectLeak (f : ConfigFormat) (n : ServerName) : Bool :=
+  ownedSomewhere n && !ownedBy f n
+
+theorem THM_OWN_05_dialect_leak_is_not_auto_maintainable
+    (f : ConfigFormat) (n : ServerName) (h : dialectLeak f n = true) :
+    autoMaintainable f n = false := by
+  simp [dialectLeak, autoMaintainable] at *
+  exact h.2
 
 /-! ## 3. THE UNIFIED CLEAN APPROACH
 
-    Canonical = one name per route scope, both already owned. `uos-gleam`
-    stays owned during transition so existing configs remain maintainable.
-    The underscore names are renamed, not added to the allowlist: widening
-    ownership to accept accidental spellings would legitimise the drift. -/
+    Canonical = one name per route scope, owned by BOTH dialects. The
+    underscore spellings are not errors to be renamed away — they are the
+    TOML dialect — but the canonical names are preferable precisely because
+    they need no dialect-specific handling at all. -/
 
 def canonicalFor : RouteScope → ServerName
   | RouteScope.routePublic => ServerName.uosHarness
@@ -157,200 +227,164 @@ def canonicalNames : List ServerName :=
   [ServerName.uosHarness, ServerName.uosHarnessDev]
 
 def deprecatedButOwned : List ServerName := [ServerName.uosGleam]
-def toBeRenamed : List ServerName := unownedNames
 
-/-- The canonical set is already owned, so adopting it needs no change to the
-    writer. The unification is a rename in the configs, nothing more. -/
-theorem THM_UNI_01_canonical_is_already_owned :
-    canonicalNames.all ownedByWriter = true := by decide
+/-- The canonical set is owned in every format, so adopting it needs no change
+    to the writer AND no dialect-specific branch anywhere. -/
+theorem THM_UNI_01_canonical_is_owned_in_every_format :
+    allFormats.all (fun f => canonicalNames.all (ownedBy f)) = true := by decide
 
 /-- The canonical name follows the contract, not the implementation language. -/
 theorem THM_UNI_02_contract_name_wins :
     canonicalFor RouteScope.routePublic = ServerName.uosHarness
   ∧ canonicalFor RouteScope.development = ServerName.uosHarnessDev := by decide
 
-/-- Rename map: underscore spellings go to their hyphenated canonical form. -/
-def rename : ServerName → ServerName
+/-- Normalisation map: every spelling goes to its canonical, dialect-free
+    form. This is a simplification, not a drift repair — the inputs were
+    already owned. -/
+def normalise : ServerName → ServerName
   | ServerName.uosGleamUnderscore => ServerName.uosHarness
   | ServerName.uosDevelopment     => ServerName.uosHarnessDev
+  | ServerName.uosGleam           => ServerName.uosHarness
   | n                             => n
 
-/-- After the rename every name in use is owned, so every registration becomes
-    auto-maintainable and the drift class is closed at the root. -/
-theorem THM_UNI_03_rename_closes_the_drift_class :
-    (allServerNames.map rename).all ownedByWriter = true := by decide
+/-- After normalisation every name is owned in EVERY format, so no
+    registration depends on which dialect its file happens to use. That is
+    the actual gain, and it is weaker than the "closes the drift class" claim
+    this theorem replaces. -/
+theorem THM_UNI_03_normalisation_removes_dialect_dependence :
+    allFormats.all (fun f => (allServerNames.map normalise).all (ownedBy f))
+      = true := by decide
 
-/-- And the rename is idempotent: applying it twice changes nothing, so it is
-    safe to run repeatedly from the release flow. -/
-theorem THM_UNI_04_rename_idempotent :
-    allServerNames.map (fun n => rename (rename n))
-      = allServerNames.map rename := by decide
+/-- Normalisation is idempotent, so it is safe to run repeatedly from the
+    release flow. -/
+theorem THM_UNI_04_normalise_idempotent :
+    allServerNames.map (fun n => normalise (normalise n))
+      = allServerNames.map normalise := by decide
 
-/-- The rename must not collapse route scope: the development surface keeps a
-    distinct canonical name rather than folding into public. -/
+/-- Normalisation must not collapse route scope: the development surface keeps
+    a distinct canonical name rather than folding into public. -/
 theorem THM_UNI_05_route_scope_not_collapsed :
-    rename ServerName.uosDevelopment ≠ rename ServerName.uosGleamUnderscore
-  ∧ canonicalFor RouteScope.development ≠ canonicalFor RouteScope.routePublic
+    canonicalFor RouteScope.development ≠ canonicalFor RouteScope.routePublic
+  ∧ normalise ServerName.uosDevelopment ≠ normalise ServerName.uosGleamUnderscore
     := by decide
 
-/-! ## 4. STRUCTURE — live name slots
-
-    From `audit-pins`: 11 targets, 13 name slots, 4 distinct names in use
-    (`uos-gleam`, `uos_gleam`, `uos_development`, `uos-harness`).
-    `uos-harness-dev` is owned but UNUSED, which is why the development
-    surface currently carries an unowned name instead. -/
-
-structure NameSlot where
-  name   : ServerName
-  count  : Nat
-  deriving DecidableEq, Repr
-
-def liveSlots : List NameSlot :=
-  [ { name := ServerName.uosGleam,           count := 5 }
-  , { name := ServerName.uosHarness,         count := 2 }
-  , { name := ServerName.uosGleamUnderscore, count := 2 }
-  , { name := ServerName.uosDevelopment,     count := 2 }
-  ]
-
-def totalSlots : Nat := (liveSlots.map (fun s => s.count)).foldl (· + ·) 0
-
-theorem THM_STR_01_eleven_slots_four_names :
-    totalSlots = 11 ∧ liveSlots.length = 4 := by decide
-
-/-- Four of eleven slots carry an unowned name and therefore cannot converge. -/
-def unownedSlotCount : Nat :=
-  ((liveSlots.filter (fun s => !ownedByWriter s.name)).map
-    (fun s => s.count)).foldl (· + ·) 0
-
-theorem THM_STR_02_four_slots_structurally_stale :
-    unownedSlotCount = 4 := by decide
-
-/-- `uos-harness-dev` is owned but appears in zero live slots: the canonical
-    development name exists in the writer and is simply unused. -/
-def harnessDevSlots : Nat :=
-  ((liveSlots.filter (fun s => s.name == ServerName.uosHarnessDev)).map
-    (fun s => s.count)).foldl (· + ·) 0
-
-theorem THM_STR_03_canonical_dev_name_unused :
-    harnessDevSlots = 0 ∧ ownedByWriter ServerName.uosHarnessDev = true
+/-- Normalisation eliminates dialect leaks for every format. -/
+theorem THM_UNI_06_normalisation_eliminates_leaks :
+    allFormats.all (fun f =>
+      (allServerNames.map normalise).all (fun n => !dialectLeak f n)) = true
     := by decide
 
-/-! ## 5. RUNTIME VERIFICATION -/
+/-! ## 4. STRUCTURE — stated as a predicate, not a recorded census
+
+    The previous revision carried `liveSlots`, a hardcoded census — 11 slots,
+    4 names, "4 structurally stale" — and proved theorems about it. Two
+    problems, both fatal to the claim: the staleness followed from the
+    half-read allowlist above, and a recorded census is a frozen observation
+    that the kernel re-checks forever while never re-reading the configs.
+    Sovereign review flagged both. The census is gone; the live count is taken
+    by the Mojo oracle.
+
+    What stays is what a well-formed registration MEANS. -/
+
+/-- A registration is well formed when its name is owned by the writer path
+    for its own file format. Decidable, so the oracle evaluates the same
+    relation against the real files. -/
+def registrationWellFormed (f : ConfigFormat) (n : ServerName) : Bool :=
+  ownedBy f n
+
+theorem THM_STR_01_canonical_registration_is_well_formed_everywhere :
+    allFormats.all (fun f =>
+      canonicalNames.all (registrationWellFormed f)) = true := by decide
+
+/-- A dialect leak is never well formed, in any format. -/
+theorem THM_STR_02_dialect_leak_is_never_well_formed
+    (f : ConfigFormat) (n : ServerName) (h : dialectLeak f n = true) :
+    registrationWellFormed f n = false := by
+  simp [dialectLeak, registrationWellFormed] at *
+  exact h.2
+
+/-- Well-formedness is decidable for every format and name, which is what
+    lets the oracle check the live files against this exact relation. -/
+theorem THM_STR_03_well_formedness_decidable
+    (f : ConfigFormat) (n : ServerName) :
+    registrationWellFormed f n = true ∨ registrationWellFormed f n = false := by
+  cases registrationWellFormed f n <;> simp
+
+/-! ## 5. RUNTIME DECISION FUNCTION
+
+    NO OBSERVATION LIVES IN THIS FILE.
+
+    Until `20261106-0108` this section carried `observationNow`, a record with
+    `observedUtc := "2026-11-05T19:40:00Z"` and `unownedNamesInConfigs := 2`,
+    and a theorem `THM_RUN_01_diverges_today` proving divergence `by decide`.
+
+    The rename landed at `2026-11-05T22:20Z`. Every live client config now
+    carries zero unowned names. The theorem did not notice, and could not:
+    a hardcoded constant cannot go stale in the kernel's eyes, so the proof
+    stayed green while its subject became false. The differential oracle
+    (`formal/mojo/mcp_name_ownership_oracle.mojo`) reported CONVERGED on its
+    first run against the same algebra, and that disagreement is what
+    surfaced the drift.
+
+    The boundary this file now holds: Lean proves properties of the DECISION
+    FUNCTION, universally quantified over every possible observation. Those
+    statements are eternally true and cannot rot. What the world actually is
+    gets observed in Mojo, at the moment of asking, and never recorded here.
+-/
 
 structure NameObservation where
   observedUtc          : String
   writerAllowlistFound : Bool
-  unownedNamesInConfigs: Nat
+  dialectLeaksInConfigs : Nat
   canonicalDevNameUsed : Bool
   deriving DecidableEq, Repr
 
-/-- Fail-closed: any unowned name in a live config is a divergence, because it
-    is a registration the release flow can never reach. -/
+/-- Fail-closed: any DIALECT LEAK in a live config is a divergence -- a name
+    owned by some other format.s writer path, which the path for this file
+    will refuse. Note what changed: the earlier formulation said "any unowned
+    name", and there are no unowned names. The defect is real but it is a
+    mismatch, not an absence. -/
 def nameSurfaceAligned (o : NameObservation) : Bool :=
-  o.writerAllowlistFound && (o.unownedNamesInConfigs == 0)
+  o.writerAllowlistFound && (o.dialectLeaksInConfigs == 0)
 
-def observationNow : NameObservation :=
-  { observedUtc := "2026-11-05T19:40:00Z"
-  , writerAllowlistFound := true
-  , unownedNamesInConfigs := 2
-  , canonicalDevNameUsed := false }
+/-- Any dialect leak at all diverges — for EVERY observation, not merely the
+    one someone wrote down. This replaces `THM_RUN_01_diverges_today`. -/
+theorem THM_RUN_01_any_dialect_leak_diverges
+    (o : NameObservation) (h : o.dialectLeaksInConfigs ≠ 0) :
+    nameSurfaceAligned o = false := by
+  simp [nameSurfaceAligned, h]
 
-/-- Current state DIVERGES, and the twin says so rather than rounding up. -/
-theorem THM_RUN_01_diverges_today :
-    nameSurfaceAligned observationNow = false := by decide
-
-/-- After the rename it converges. -/
-theorem THM_RUN_02_converges_after_rename :
-    nameSurfaceAligned { observationNow with unownedNamesInConfigs := 0 } = true
-    := by decide
+/-- Convergence is exactly: the writer is present AND nothing unowned remains.
+    An iff, so neither direction can be weakened without breaking the proof. -/
+theorem THM_RUN_02_converges_iff_writer_and_zero_leaks (o : NameObservation) :
+    nameSurfaceAligned o = true
+      ↔ (o.writerAllowlistFound = true ∧ o.dialectLeaksInConfigs = 0) := by
+  simp [nameSurfaceAligned]
 
 /-- A missing writer allowlist is a divergence even with zero unowned names:
     without the writer there is no mechanism to keep anything converged. -/
-theorem THM_RUN_03_fail_closed_without_writer :
-    nameSurfaceAligned
-      { observationNow with writerAllowlistFound := false, unownedNamesInConfigs := 0 } = false := by decide
+theorem THM_RUN_03_fail_closed_without_writer
+    (o : NameObservation) (h : o.writerAllowlistFound = false) :
+    nameSurfaceAligned o = false := by
+  simp [nameSurfaceAligned, h]
 
-/-! ## 6. Executable prober -/
+/-- The decision function is total and decidable, which is what makes the Mojo
+    oracle able to evaluate the identical algebra concretely. -/
+theorem THM_RUN_04_decidable (o : NameObservation) :
+    nameSurfaceAligned o = true ∨ nameSurfaceAligned o = false := by
+  cases nameSurfaceAligned o <;> simp
 
-def runCap (cmd : String) (args : Array String) : IO (UInt32 × String) := do
-  try
-    let out ← IO.Process.output { cmd := cmd, args := args }
-    return (out.exitCode, out.stdout.trimAscii.toString)
-  catch _ =>
-    return (127, "")
+/-! ## 6. OBSERVATION PLANE — deliberately absent
 
-def writerFile : String := "tools/ecology_pin_edit.ml"
+    This file has no `def main`, no `IO.Process`, and no `IO.FS`. The prober
+    that used to sit here lives at
+    `formal/mojo/mcp_name_ownership_oracle.mojo`
+    and is run by `tools/lean_mojo_differential.ml`.
 
-/-- The allowlist is present when the writer still carries all three owned
-    names. If someone narrows it, this fails rather than silently passing. -/
-def writerAllowlistPresent : IO Bool := do
-  let (c, body) ← runCap "cat" #[writerFile]
-  if c != 0 then return false
-  return (body.splitOn "\"uos-harness\"").length > 1
-      && (body.splitOn "\"uos-harness-dev\"").length > 1
-      && (body.splitOn "\"uos-gleam\"").length > 1
-
-/-- Count unowned (underscore) server keys across the in-repo configs. -/
-def unownedInConfigs : IO Nat := do
-  let paths := [".mcp.json", ".pi/mcp.json", ".codex/config.toml",
-                ".gemini/settings.json", ".deepseek/mcp.json"]
-  let mut total := 0
-  for p in paths do
-    let (c, body) ← runCap "cat" #[p]
-    if c == 0 then
-      let a := (body.splitOn "uos_gleam").length - 1
-      let b := (body.splitOn "uos_development").length - 1
-      total := total + a + b
-  return total
-
-def main : IO UInt32 := do
-  IO.println "=== UOS MCP name-ownership twin ==="
-  IO.println s!"candidate : {twinCandidateId}"
-  IO.println s!"EV ceiling: {admittedEvCeiling} (EV-94..109 NOT_ADMITTED)"
-  let (_, now) ← runCap "date" #["-u", "+%Y-%m-%dT%H:%M:%SZ"]
-  IO.println s!"probe time: {now}"
-  IO.println ""
-
-  IO.println "--- ONTOLOGY ---"
-  IO.println s!"  gateway            : {theGateway.wrapper}"
-  IO.println s!"  entry symbol       : {theGateway.entrySymbol}"
-  IO.println s!"  names modelled     : {allServerNames.length} (all resolve to 1 gateway)"
-  IO.println ""
-  IO.println "--- OWNERSHIP (tools/ecology_pin_edit.ml) ---"
-  IO.println s!"  owned names        : {ownedNames.length}  (uos-harness, uos-harness-dev, uos-gleam)"
-  IO.println s!"  unowned names      : {unownedNames.length}  (uos_gleam, uos_development)"
-  IO.println ""
-  IO.println "--- STRUCTURE (live slots) ---"
-  IO.println s!"  total name slots   : {totalSlots}"
-  IO.println s!"  structurally stale : {unownedSlotCount} (unowned, cannot be repinned)"
-  IO.println s!"  uos-harness-dev    : {harnessDevSlots} slots (owned but unused)"
-  IO.println ""
-  IO.println "--- UNIFIED APPROACH ---"
-  IO.println s!"  canonical public   : uos-harness"
-  IO.println s!"  canonical dev      : uos-harness-dev"
-  IO.println s!"  deprecated, owned  : uos-gleam"
-  IO.println s!"  rename closes drift: {(allServerNames.map rename).all ownedByWriter}"
-
-  IO.println ""
-  IO.println "--- RUNTIME (observed) ---"
-  let wl ← writerAllowlistPresent
-  let un ← unownedInConfigs
-  IO.println s!"  writer allowlist   : {wl}"
-  IO.println s!"  unowned keys found : {un}"
-
-  let obs : NameObservation :=
-    { observationNow with observedUtc := now, writerAllowlistFound := wl, unownedNamesInConfigs := un }
-  let ok := nameSurfaceAligned obs
-  IO.println ""
-  IO.println s!"NAME SURFACE : {if ok then "CONVERGED" else "DIVERGENT (unowned names present)"}"
-  IO.println "(specification evidence at one candidate; not runtime admission)"
-
-  if ok then return 0
-  else
-    IO.eprintln "FAIL-CLOSED: unowned server names cannot be repinned by the release flow."
-    return 1
+    A `lean` exit code from this file means the algebra is consistent. It is
+    not an observation of the system, and nothing in this file may be read as
+    one (`THM_VAC_01_typechecking_is_not_observation`, stated in
+    `UosCoreEvoUnifiedDigitalTwin.lean`).
+-/
 
 end UOS.McpNameOwnership
-
-/-- Top-level entry point for `lean --run`. -/
-def main : IO UInt32 := UOS.McpNameOwnership.main

@@ -68,9 +68,10 @@ of an EV cycle above the ceiling is `NOT_ADMITTED`.
 > inventory stops at `EV-92`, so `EV-94`..`EV-109` were never machine-verified by
 > anything — they exist only in documents and in the forged coordinator events.
 
-**INV-PROV-02.** `NOT_ADMITTED` means *pending sovereign review by Codex and
-AGY*. It is neither an admission nor a rejection. No agent may convert it to
-either without a recorded review.
+**INV-PROV-02.** `NOT_ADMITTED` means *pending 2-of-4 sovereign model ratification
+by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}`
+plus Operator*. It is neither an admission nor a rejection. No agent may convert it to
+either without a recorded 2-of-4 review.
 
 **INV-PROV-03.** Marking is additive. Quarantine-derived records are preserved
 byte-for-byte; nonconformance is recorded, never rewritten
@@ -185,5 +186,6 @@ serves the cockpit).
    mean any EV cycle is admitted.
 3. Byte presence of a filename in an index does not prove the surrounding index
    text is correct.
-4. The sovereign review of `EV-94`..`EV-109` by Codex and AGY remains open. This
-   contract records status; it does not resolve it.
+4. The sovereign ratification of `EV-94`..`EV-109` (requiring any 2 distinct model
+   families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator)
+   remains open. This contract records status; it does not resolve it.

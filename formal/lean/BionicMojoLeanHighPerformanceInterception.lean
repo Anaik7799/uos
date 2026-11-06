@@ -352,72 +352,38 @@ theorem THM_BML_06_dynamic_per_transaction_holonic_fractal_optimality :
 
 end UOS.BionicMojoLeanInterception
 
-def containsSubstr (s sub : String) : Bool :=
-  (s.splitOn sub).length > 1
+/-! ## Observation plane: REMOVED 20261106, lives in Mojo
 
-def main : IO Unit := do
-  let uosRoot := "/home/an/NAS-setup/uos"
-  -- 1. Execute High-Performance Mojo AVX-512 Interceptor (AOT fast-path `var/mojo-bin/bionic_mcp_interceptor_bin`, fallback `tools/mojo run`)
-  let interBin := uosRoot ++ "/var/mojo-bin/bionic_mcp_interceptor_bin"
-  let interExists ← System.FilePath.pathExists interBin
-  let mojoInter ← if interExists then
-    IO.Process.output { cmd := interBin, args := #[], cwd := some uosRoot }
-  else
-    IO.Process.output {
-      cmd := "/bin/bash"
-      args := #[uosRoot ++ "/tools/mojo", "run", uosRoot ++ "/tools/bionic_mcp_interceptor.mojo"]
-      cwd := some uosRoot
-    }
-  let interStdout := mojoInter.stdout.trimAscii.toString
-  let interStderr := mojoInter.stderr.trimAscii.toString
+This file used to end in a `def main` that spawned
+`var/mojo-bin/bionic_mcp_interceptor_bin` and
+`var/mojo-bin/bionic_custom_ai_engine_bin` (5 `IO.Process.output` calls, with
+a `tools/mojo run` fallback), substring-matched their JSON stdout, wrote a
+receipt with `IO.FS.writeFile`, and exited `1` on mismatch.
 
-  -- 2. Execute Local Mojo/MAX Custom AI Engine (AOT fast-path `var/mojo-bin/bionic_custom_ai_engine_bin`, fallback `tools/mojo run`)
-  let aiBin := uosRoot ++ "/var/mojo-bin/bionic_custom_ai_engine_bin"
-  let aiExists ← System.FilePath.pathExists aiBin
-  let mojoAi ← if aiExists then
-    IO.Process.output { cmd := aiBin, args := #[], cwd := some uosRoot }
-  else
-    IO.Process.output {
-      cmd := "/bin/bash"
-      args := #[uosRoot ++ "/tools/mojo", "run", uosRoot ++ "/tools/bionic_custom_ai_engine.mojo"]
-      cwd := some uosRoot
-    }
-  let aiStdout := mojoAi.stdout.trimAscii.toString
-  let aiStderr := mojoAi.stderr.trimAscii.toString
+It was the largest observation plane left in the proof tree, and it is gone
+for a reason that is not stylistic. The six theorems above decide the
+ALGEBRA of the interceptor and the per-transaction optimizer: they are
+claims about a function, true at every candidate. The prober asked whether
+two binaries were behaving correctly at one instant. Running both from
+`lean --run` made a kernel typecheck and a live probe come out of the same
+exit code, so a reader could not tell which one had failed -- and a stale
+observation would have been re-"proved" by the kernel forever.
 
-  let zeroCrashpadWarnings :=
-    !(containsSubstr interStderr "Failed to initialize Crashpad") &&
-    !(containsSubstr aiStderr "Failed to initialize Crashpad")
+The prober now lives at `formal/mojo/bionic_interception_oracle.mojo`, which
+re-derives THM_BML_02/03/05/06 independently in Mojo, evaluates them on the
+same canonical 4-transaction sequence, and separately OBSERVES the two
+binaries. Agreement between the two planes is the two-key evidence
+(`Trust = Fresh Empirical Behavior /\ Formal Spec`); disagreement is a
+reported DIVERGENCE rather than a silent pass. `tools/lean_mojo_differential.ml`
+runs both sides and fails closed, and `tools/preflight --full` carries it as
+the `twokey` arm.
 
-  let interOk :=
-    (mojoInter.exitCode == 0) &&
-    containsSubstr interStdout "\"verdict_code\":0" &&
-    containsSubstr interStdout "\"adversarial_sqli_trap_code\":-3" &&
-    containsSubstr interStdout "\"mcip_anchors_detected\":6000"
+Not reproduced: the overwrite of
+`var/core-evo/holonic-fpp-bionic/20261104-1325-mojo-max-lean4-custom-ai-and-interception-receipt.json`.
+The old prober rewrote that path on every run, so a failing run destroyed the
+evidence of the last good one; `INV-PROV-03` requires additive retention.
 
-  let aiOk :=
-    (mojoAi.exitCode == 0) &&
-    containsSubstr aiStdout "\"holarchy_170_janus_holons_verified\":true" &&
-    containsSubstr aiStdout "\"fpp_40_actors_and_8_watchdogs_aligned\":true" &&
-    containsSubstr aiStdout "\"biomorphic_homeostasis_aligned\":true" &&
-    containsSubstr aiStdout "\"shannon_8_archetypes_aligned\":true" &&
-    containsSubstr aiStdout "\"dynamic_per_transaction_optimizer_verified\":true" &&
-    containsSubstr aiStdout "\"math_13_theorems_verified\":13" &&
-    containsSubstr aiStdout "\"recurrent_ai_external_cost_usd\":0.0" &&
-    containsSubstr aiStdout "\"simulator_mirroring_bps\":9997"
-
-  let receiptPath := uosRoot ++ "/var/core-evo/holonic-fpp-bionic/20261104-1325-mojo-max-lean4-custom-ai-and-interception-receipt.json"
-  let combinedJson :=
-    "{\n" ++
-    "  \"schema\": \"uos.bionic.mojo_max_lean4_unified_verification.v1\",\n" ++
-    "  \"zero_crashpad_warnings\": " ++ toString zeroCrashpadWarnings ++ ",\n" ++
-    "  \"interceptor_bridge\": " ++ interStdout ++ ",\n" ++
-    "  \"custom_ai_engine\": " ++ aiStdout ++ ",\n" ++
-    "  \"lean4_theorems_verified\": [\"THM_BML_01\", \"THM_BML_02\", \"THM_BML_03\", \"THM_BML_04\", \"THM_BML_05\", \"THM_BML_06\"],\n" ++
-    "  \"all_checks_pass\": " ++ toString (zeroCrashpadWarnings && interOk && aiOk) ++ "\n" ++
-    "}\n"
-  IO.FS.writeFile receiptPath combinedJson
-
-  IO.println s!"BIONIC_MOJO_MAX_LEAN4_UNIFIED_ENGINE=PASS (zero_crashpad_warnings={zeroCrashpadWarnings}, inter_ok={interOk}, ai_ok={aiOk}, receipt={receiptPath})"
-  if !(zeroCrashpadWarnings && interOk && aiOk) then
-    IO.Process.exit 1
+Evidence that this file is now pure algebra: it carries no `def main`, no
+process spawn and no filesystem access, which
+`formal/mojo/proof_plane_guard_oracle.mojo` re-checks tree-wide every run.
+-/

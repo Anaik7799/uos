@@ -1,0 +1,226 @@
+{
+  "schema": "uos.ontology.indexed_axes.v1",
+  "observed_utc": "2026-11-06T04:02:00Z",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+
+  "purpose": "Declares every AXIS in this system whose members are addressed by an integer index or an LN/TierN token, names its canonical members, and states the morphisms between axes that share a token. Enforced by formal/mojo/axis_registry_oracle.mojo. An axis absent from this registry fails the guard, so the set cannot grow quietly.",
+
+  "why_an_axis_registry_rather_than_one_enum": "The first census of this drift reported 'seven incompatible definitions of one object' for routing tiers and 'nine incompatible definitions' for fractal layers. Direct measurement shows that is not the shape of the defect. Most of these are DIFFERENT AXES that legitimately coexist -- a compute-locality cascade is not a workload-class router is not a provider fallback chain -- and merging them would destroy real distinctions. The defect is that they all address their members with the token `TierN` or `LN`, so an integer crosses between axes unlabelled and nothing notices. The fix is to name the axes and check the crossings, not to collapse them.",
+
+  "measurement_corrections": [
+    "The census reported formal/lean/Minimum_Token_Cascade_Theorems.lean CascadeTier as having 3 members. It has 5 (Tier0Simd, Tier1Rete, Tier2Max, Tier3Free, Tier4Paid, :81-87), and its own docstring states it matches the Gleam type. Verified by reading the inductive.",
+    "The census listed `L10Governance` as a fractal-layer violation. It is a member of an 11-level VERTICAL REFINEMENT LADDER (apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam:9,60,74) -- a refinement-depth axis, not the concern axis. It is a token collision of exactly the kind SC-FRACTAL-TAXONOMY-001 section 3 already rules on, not an eleventh fractal layer."
+  ],
+
+  "axes": [
+    {
+      "axis_id": "agent-roster",
+      "name": "The agent/caste/harness roster",
+      "cardinality": 5,
+      "canonical_source": "formal/lean/UosOntologyAtlas.lean AgentId (agy, pi, codex, claude, deepseek) -- the terminal object of the filtration",
+      "added": "20261106-0509, after a delegated census observed that this registry declared 11 axes and NOT the one with the most definitions. That was a fair hit: the registry catalogued the L0-L9 deviations while leaving the roster axis undeclared.",
+      "structure": "A FILTRATION, not a set of conflicting definitions. {claude,codex,agy} strict subset {pi,claude,agy,codex} strict subset the 5-caste roster: three rosters at three dates, related by injections. Proved ATLAS-20/21/22; all three are simultaneously consistent (ATLAS-23), which is why staleness here typechecks forever.",
+      "sixteen_definitions_measured": "A census found 16 definitions of the agent/caste/harness object across Lean, Gleam and governance. Most are legitimately distinct: charts of the filtration (AgenticCoordination.Agent 3, AgentMetaOntology.Agent 4), or different CONCERNS entirely (enforcer.gleam AgentType is authorization, agent_ecology.gleam AgentKind is lifecycle). Those must not be 'fixed'.",
+      "genuine_conflicts": [
+        {
+          "conflict": "THREE type names collide on `HiveCaste` with three disjoint constructor sets",
+          "sites": [
+            "formal/lean/FiveHarnessUnifiedAndCorePolicyEquivalence.lean:54 (caste01SovereignGovernor..caste05WorkerSwarm)",
+            "formal/lean/FifteenCycleUnifiedLeanInfrastructureAndDigitalTwins.lean:32 (caste01Governor..caste05Swarm)",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam:29 (QueenConductor, ForagerBuilder, NurseDiagnostician, ArchitectSynthesizer, SovereignSentinel)"
+          ],
+          "assessment": "The first two are isomorphic up to renaming and each carries an explicit bijection to its harness enum, so that pair is a naming-only divergence. The THIRD is not isomorphic to either: bee-role names, and its engine binding covers only three harnesses."
+        },
+        {
+          "conflict": "ArchitectSynthesizer is bound to Pi in the executable engine and to Claude in the HTTP surface",
+          "sites": [
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam:60 ArchitectSynthesizer -> PiArgonGoogle",
+            "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/core_evo_api.gleam:244 CASTE-04 = 'Scholar Claude / ArchitectSynthesizer'"
+          ],
+          "assessment": "REAL DRIFT, not a chart distinction, and the one place the serving API tells an operator something the running code contradicts. core_hive.gleam's five roles map onto only three harnesses: there is no Claude engine and no Tier-0 binary slot in the runtime hive at all."
+        },
+        {
+          "conflict": "Two caste role names in the serving API reference roles that do not exist",
+          "sites": ["apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/core_evo_api.gleam:235 GuardImmune", ":244 ScoutExplorer"],
+          "assessment": "Neither string occurs as a constructor or type anywhere in apps/ or formal/ -- only in those two role_name literals."
+        },
+        {
+          "conflict": "Agent VERSION strings disagree across three artifacts",
+          "detail": "Codex 0.123.0 vs 0.166.0; AGY 0.36.0 vs 0.40.1/1.107.0; DeepSeek 0.4.2 vs 0.2.1-rc.5. Note 0.2.1-rc.5 is OLDER than 0.4.2, so the newer file carries the older version -- this is not a simple staleness gradient and cannot be resolved by preferring the later document."
+        }
+      ],
+      "enforced_by": "formal/mojo/ontology_atlas_oracle.mojo arms atlas20..atlas26, which derive the roster sizes and the inclusion from the inductives themselves rather than restating them.",
+      "not_integrated": "ZERO of the 40 FPP subsystem specs carry an agent or caste FIELD. Three of 40 name a caste in a free-prose description string, and two of those three lump two castes together ('CASTE-02/04', 'CASTE-01/03'), so the prose does not even resolve to a single caste. The agent chart and the holarchy/FPP charts have no declared intersection: there is nothing for a transition morphism to be defined on."
+    },
+    {
+      "axis_id": "ontology-aspect",
+      "name": "The 17 systems-engineering aspects",
+      "cardinality": 17,
+      "added": "20261106-0509, same census, same omission. This axis is MULTIPLIED INTO a coverage theorem and was undeclared here.",
+      "three_incompatible_vocabularies": [
+        { "set": "A", "where": "apps/cepaf_gleam/src/cepaf_gleam/verification/aspect_coverage_engine.gleam:53-250", "note": "The set actually multiplied to reach 170 holons. Self-checked at :263 that total_count == 17." },
+        { "set": "A-prime", "where": "formal/lean/AgentMetaOntology.lean:77-101", "note": "Isomorphic to A; allAspects.length = 17 proved." },
+        { "set": "B", "where": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean:65-108", "note": "all17...length = 17 and Nodup proved, but the MEMBERS differ from A." },
+        { "set": "C", "where": "formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean:807-837", "note": "SdlcSreSystemAspect, a fourth member list." }
+      ],
+      "consequence": "Sets A/A-prime and B/C agree on aspect 03 (Zero-Muda) and little else. So the holarchy's 170 = 10 x 17 is a product of a 17 that is NOT THE SAME 17 across planes, and the theorem 10*17==170 cannot distinguish them.",
+      "aspect_coverage_gap": "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam:177 is the only artifact assigning aspects to agents, via 7 functional-role profiles that are not the 5 castes. It assigns 13 of 17 aspects; A02VersionControlDiscipline, A05DeterministicRuntimeEngine, A12DeclarativeUIComponentCatalog and A14UniversalTailscaleWebNavigation are assigned to no profile, and layers L1-L4 are unoccupied.",
+      "the_only_complete_matrix_is_vacuous": "THM_HFB_ONT_05_full_fractal_coverage_10x10x17x13x5_complete claims 110,500 cells with zero gaps and is discharged by `decide` over fractalCellCovered, which does `let _ := (l,d,a,c,h); true`. VERIFIED by direct reading. Detected tree-wide by proof_plane_guard_oracle.mojo arm g6: 3 such definitions, all in that one file, 0 false positives across 108 files."
+    },
+    {
+      "axis_id": "fractal-concern",
+      "name": "Fractal layer concern axis (L0..L9)",
+      "canonical_source": "contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md section 2 (SC-FRACTAL-TAXONOMY-001)",
+      "cardinality": 10,
+      "members": [
+        { "index": 0, "concern": "Constitutional", "gloss": "no rule bypass, no silent downgrade, no contradictory active guidance" },
+        { "index": 1, "concern": "Atomic", "gloss": "data, absence, error, panic and secret semantics typed and explicit" },
+        { "index": 2, "concern": "Component", "gloss": "skills, agents and modules point at real files and current boundaries" },
+        { "index": 3, "concern": "Transaction", "gloss": "idempotent, timeout-bounded, non-secret-bearing; leases and durability" },
+        { "index": 4, "concern": "System", "gloss": "supervision, deployment topology, cross-surface agreement" },
+        { "index": 5, "concern": "Cognitive", "gloss": "journals and ZK capture decisions, evidence and residual risk" },
+        { "index": 6, "concern": "Ecosystem", "gloss": "external sources, attribution, credentials, ingestion" },
+        { "index": 7, "concern": "Federation", "gloss": "cross-host and cross-tree changes, drift, replication" },
+        { "index": 8, "concern": "Evolutionary", "gloss": "adaptation, mutation, fitness, optimisation over time" },
+        { "index": 9, "concern": "Sovereign", "gloss": "provenance, formal proof, two-key admission" }
+      ],
+      "index_10_and_above": "DO NOT EXIST. The contract is explicit. Any LN token with N >= 10 belongs to a different axis and must be declared as one.",
+      "root_defect": "The contract declares itself the single source and ZERO tools reference it. Its one installed enforcement pointer was deleted when .claude/rules/full-symbiosis.md was rewritten on 2026-10-01 and nothing noticed. This registry plus formal/mojo/axis_registry_oracle.mojo is the first machine reader the contract has ever had.",
+      "conformant_implementations": [
+        { "where": "formal/lean/Fractal_Holonic_Composability.lean", "indices_0_to_7": "conformant", "deviation": "L8MathematicalAuthority, L9BiosemioticTransKnowledge" },
+        { "where": "formal/lean/Fractal_Triad_Matrix_Invariants.lean", "indices_0_to_7": "conformant", "deviation": "L8MathematicalAuthority, L9BiosemioticTransKnowledge" },
+        { "where": "formal/lean/Five_BDD_Demo_Evolutionary_Cycles.lean, formal/lean/Five_Component_Deep_Design_Evolutionary_Cycles.lean, formal/lean/Five_Component_Inventory_And_Requirements_Cycles.lean, formal/lean/Five_Fractal_Hierarchical_Denotational_Cycles.lean, formal/lean/Five_Lustre_WebUI_Evolutionary_Cycles.lean, formal/lean/Five_SciViz_Library_Evolutionary_Cycles.lean (six byte-identical enums)", "indices_0_to_7": "conformant", "deviation": "L8_SheafCohomology (L9_SovereignHolarchy is conformant)" },
+        { "where": "formal/lean/Master_Feature_Composability_Evolution.lean", "indices_0_to_7": "conformant", "deviation": "L8_ProvenanceLedger and L9_EvolutionaryTeleology are TRANSPOSED: provenance is index 9 and evolution is index 8" },
+        { "where": "formal/lean/UosUnifiedMonitoringGovernanceDigitalTwin.lean", "indices_0_to_7": "conformant", "deviation": "l8Evidence (l9Governance is a defensible synonym for Sovereign)" },
+        { "where": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_biomorphic_fractal.gleam FractalLayer10", "indices_0_to_7": "conformant", "deviation": "L8ReleaseContinuity and L9MetaEvolution place EVOLUTION AT INDEX 9. This is the precise defect SC-FRACTAL-TAXONOMY-001 section 2 says km_layers.ml committed and declares fixed, still live in the enumeration from which half of the 170 Janus holons is built." },
+        { "where": "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam FractalLayer", "indices_0_to_7": "conformant", "deviation": "L8LivingKnowledge, L9SREHomeostasis" },
+        { "where": "apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam ChartIndex", "indices_0_to_7": "conformant (L2Homeostasis and L4SystemDaemons match the contract's ENACTING SUBSYSTEM column, which the contract retains as a second column of one definition)", "deviation": "L8Verification (L9Sovereignty is conformant)" },
+        { "where": "formal/lean/FractalRcaMirrorProjection.lean, formal/lean/UosCoreEvoUnifiedDigitalTwin.lean", "indices_0_to_7": "opaque l0..l9, no competing semantics", "deviation": "none -- conformant by construction" },
+        { "where": "formal/lean/Chaos_Containment.lean", "indices_0_to_7": "a 4-member SUBSET (L0, L2, L4, L6), each conformant", "deviation": "none; a subset is not a redefinition" }
+      ],
+      "summary_of_deviation": "Indices 0..7 are conformant in EVERY implementation measured. Every deviation is at index 8 or 9 -- exactly the two members the contract itself says were undefined in any governing document before 2026-09-09, and whose prior absence it names as the cause of invented vocabularies. The defect is historical and concentrated, not diffuse."
+    },
+
+    {
+      "axis_id": "zigvm-implementation-stack",
+      "name": "ZigVM implementation stack (L0 allocator .. L9 federation)",
+      "cardinality": 10,
+      "declared_distinct_from": "fractal-concern",
+      "sanction": "A genuinely different axis: it names implementation strata of the deterministic runtime (microkernel allocator, term representation/JIT, instruction dispatch, byte parity, STM concurrency, actor supervision, zero-trust gate, probabilistic telemetry, living ontology, autonomous federation). It is not a claim about what a record governs.",
+      "implementations": [
+        "formal/lean/Traceability.lean FractalLayer (L0_MicroKernel_Allocator .. L9_AutonomousFederation)",
+        "formal/lean/UosContextPathKpiOtelTwin.lean FractalLayer (SCREAMING_SNAKE spelling of the same ten)"
+      ],
+      "token_collision_hazard": "It uses the `LN` token, which SC-FRACTAL-TAXONOMY-001 section 3 reserves for the concern axis. Renaming the TYPE (not the constructors) to ZigVmStratum would remove the collision. Not done here: both files are referenced by name in journals and the ZK corpus, and the change is cosmetic against a real risk of dangling citations (INV-PROV-03)."
+    },
+    {
+      "axis_id": "uos-subsystem-stack",
+      "name": "UOS subsystem stack (L0 constitutional .. L9 evolution/TPS)",
+      "cardinality": 10,
+      "declared_distinct_from": "fractal-concern",
+      "sanction": "Names which SUBSYSTEM sits at each stratum (kernel/VFS, Hermes formal, OTP control, MAX inference, Zenoh data, KM, agent hive, cockpit UI, evolution). Overlaps the contract's 'enacting subsystem' column in intent but not in assignment.",
+      "implementations": [
+        "formal/lean/FiveHarnessUnifiedAndCorePolicyEquivalence.lean FractalLayer (l0_constitutional .. l9_evolution_tps)",
+        "formal/lean/FifteenCycleUnifiedLeanInfrastructureAndDigitalTwins.lean FractalLayer (L0_ConstitutionalKernel .. L9_EvolutionaryGovernance)"
+      ]
+    },
+    {
+      "axis_id": "fprime-scale",
+      "name": "F-prime cosmological scale axis (L0 constitutional .. L9 absolute)",
+      "cardinality": 10,
+      "declared_distinct_from": "fractal-concern",
+      "sanction": "A SCALE axis (deterministic, microkernel, hardware, orchestration, cognitive, collective, planetary, cosmic, absolute), structurally the same kind of axis as ADR-010's seven granularity levels, which SC-FRACTAL-TAXONOMY-001 section 3 already rules ORTHOGONAL rather than conflicting.",
+      "implementations": ["formal/lean/POODAVR_FPrime_Mapping.lean FractalLayer"]
+    },
+    {
+      "axis_id": "vertical-refinement-ladder",
+      "name": "Vertical refinement ladder (11 rungs, 0..10)",
+      "cardinality": 11,
+      "declared_distinct_from": "fractal-concern",
+      "sanction": "A REFINEMENT DEPTH ladder over component packets, 11 rungs deep. Its index 10 is NOT an eleventh fractal layer; it is the eleventh rung of a different ladder. This is the token collision SC-FRACTAL-TAXONOMY-001 section 3 rules on: the remedy it prescribes is to write the non-concern axis in its own words, never as a bare LN.",
+      "implementations": ["apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam:60-75"],
+      "open_followup": "Rename its rungs from LN to 'rung N' per the contract's own section 3 remedy. Blast radius 3 files."
+    },
+    {
+      "axis_id": "deckgl-visual-layer",
+      "name": "deck.gl visual layer kinds",
+      "cardinality": 7,
+      "declared_distinct_from": "fractal-concern",
+      "sanction": "Scatter/Path/Arc/Heatmap/Topology/Hexagon/Trips -- a rendering layer, sharing only the English word 'layer'. No index, no LN token, no hazard.",
+      "implementations": ["formal/lean/Fifteen_SciViz_Regression_Cycles.lean LayerItem"]
+    },
+
+    {
+      "axis_id": "cascade-locality",
+      "name": "Local-first compute cascade (position = how far work travels from the host)",
+      "cardinality": 5,
+      "canonical_source": "formal/lean/Minimum_Token_Cascade_Theorems.lean:81-87",
+      "members": [
+        { "index": 0, "name": "Tier0Simd", "locality": "local", "remote_tokens": 0 },
+        { "index": 1, "name": "Tier1Rete", "locality": "local", "remote_tokens": 0 },
+        { "index": 2, "name": "Tier2Max", "locality": "tailnet", "remote_tokens": 0 },
+        { "index": 3, "name": "Tier3Free", "locality": "remote free tier", "remote_tokens": "prompt + completion" },
+        { "index": 4, "name": "Tier4Paid", "locality": "remote paid tier", "remote_tokens": "prompt + completion" }
+      ],
+      "ACTIVE_DIVERGENCE_AT_INDEX_1": {
+        "severity": "this is the real routing-tier defect, and it is one index on one axis",
+        "readings": [
+          { "source": "formal/lean/Minimum_Token_Cascade_Theorems.lean:83", "index_1_is": "Hermes OCaml Rete-UL 64-rule forward-chaining oracle" },
+          { "source": "formal/lean/UosLeanRuntimeGuard.lean:33 (the exported C ABI uos_lean_route_cascade)", "index_1_is": "Gleam/OTP Rete-UL + Gospel solver" },
+          { "source": "apps/cepaf_gleam/src/cepaf_gleam/ai/local_first_cascade.gleam:70", "index_1_is": "Tier1Compress, a bounded local compressor -- not Rete-UL at all" }
+        ],
+        "why_it_matters": "The Lean file's own docstring at :80 says its enumeration MATCHES the Gleam type. It does not: position 1 is Rete-UL in Lean and a compressor in Gleam. Separately, the two Lean files disagree about which LANGUAGE owns Rete-UL. CLAUDE.md's language roles assign 'Rete-UL' to OCaml/Hermes, so the C ABI docstring at :33 is the one at odds with canonical policy.",
+        "resolution": "The C ABI docstring is corrected to Hermes OCaml, because canonical policy decides it. The Lean-vs-Gleam disagreement at index 1 is NOT resolved here: choosing either breaks a live consumer, and the two may genuinely be different cascades that should be separate axes. Recorded, and the guard fails closed on it."
+      },
+      "declared_morphism_to_abi": {
+        "target": "formal/lean/UosLeanRuntimeGuard.lean uosLeanRouteCascade (4 codes + veto)",
+        "map": { "0": 0, "1": 1, "2": 2, "3": 3, "4": 3 },
+        "kind": "LOSSY. Indices 3 and 4 (free and paid remote) both collapse to ABI code 3 (Tier3Remote), so the ABI cannot distinguish a free-tier advisory from a budgeted paid escalation. 255 is a fail-closed Jidoka veto outside the axis.",
+        "previously": "undeclared -- the collapse existed in code with no stated morphism, which is the failed cocycle condition SC-INTENT-ATLAS-001 requires and nothing checked"
+      }
+    },
+    {
+      "axis_id": "hive-workload-routing",
+      "name": "Hive workload-class routing (position = which agent panel handles a workload class)",
+      "cardinality": 3,
+      "canonical_source": "formal/lean/BionicMojoLeanHighPerformanceInterception.lean:141-145",
+      "declared_distinct_from": "cascade-locality",
+      "sanction": "Routes by WORKLOAD CLASS (recurrent-AI/compression, review/analysis/planning, bounded execution), not by compute locality. Its index 1 is a tri-advisory panel of three remote frontier models priced at 18505 micro-USD; cascade-locality's index 1 is a zero-token local oracle. Both are correct on their own axis. Collapsing them is what would be wrong.",
+      "members": [
+        { "index": 0, "name": "Tier0_LocalMojoMaxCustomAi_ZeroExternalUsd", "cost_micro_usd": 0 },
+        { "index": 1, "name": "Tier1_TriAdvisoryPanel_PiArgonClaudeOpusCodex", "cost_micro_usd": 18505 },
+        { "index": 2, "name": "Tier2_ExecutionCheapestSwarm_DeepSeekFlash", "cost_micro_usd": 1181 }
+      ],
+      "no_morphism_to": "cascade-locality -- deliberately. A morphism would assert the axes are comparable, and they are not: one orders by locality, the other partitions by workload class."
+    },
+    {
+      "axis_id": "provider-price",
+      "name": "Model tier by provider and price",
+      "cardinality": 4,
+      "declared_distinct_from": "cascade-locality",
+      "sanction": "LocalRuleOracle / FreeOpenRouter / PaidOpenRouter / SovereignMax -- named, not indexed. Uses NO TierN token, so it carries no collision hazard. Included so the registry is a complete census of the routing axes rather than only the hazardous ones.",
+      "implementations": ["apps/cepaf_gleam/src/cepaf_gleam/ai/intelligence_router.gleam:40-44"]
+    },
+    {
+      "axis_id": "inference-provider-fallback",
+      "name": "Inference provider fallback chain",
+      "cardinality": 7,
+      "declared_distinct_from": "cascade-locality",
+      "sanction": "An ordered fallback chain over concrete providers (Gemini direct, OpenRouter, mistral.rs, two Ollama models, Rete-UL rules, static ack). It is 1-BASED and has no Tier0, so its integers were never comparable with the 0-based cascade axis.",
+      "implementations": ["apps/cepaf_gleam/src/cepaf_gleam/cortex/cortex_types.gleam:52-60"],
+      "token_collision_hazard": "Its Tier6ReteUlRules places Rete-UL at position 6 while cascade-locality places it at 1. Both are internally coherent; the hazard is purely the shared TierN token."
+    },
+    {
+      "axis_id": "operation-class-route",
+      "name": "Operation-class routing policy (R0..R6)",
+      "cardinality": 7,
+      "declared_distinct_from": "cascade-locality",
+      "sanction": "SC-INTEL-ROUTING-001 rule 2. Uses the RN prefix precisely to avoid the TierN collision -- the one vocabulary in this family that already got the naming right.",
+      "implementations": [".claude/rules/intelligence-routing-rule.md"],
+      "open_defect": "It has NO canonical body under contracts/rules/, contrary to SC-MIRROR-PROJ-001, so there is nothing a mirror check could hold it against."
+    }
+  ],
+
+  "what_this_registry_does_not_do": "It does not rename any constructor. Indices 0..7 of the concern axis are already conformant everywhere; every deviation is at index 8 or 9, in files cited by immutable journals and the ZK corpus. Renaming would make today's snapshot conform and leave the root cause -- a contract no tool reads -- untouched, so a fourteenth enum would appear next month. The registry plus its guard arm is the first machine reader SC-FRACTAL-TAXONOMY-001 has had since it was written on 2026-09-09."
+}

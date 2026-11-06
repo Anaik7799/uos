@@ -6,7 +6,7 @@ This repository is the canonical Unified Operational System (UOS).
 
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
-- EV-Cycle Status: admitted ceiling is `EV-93` (`SC-PROVENANCE-001`, `admitted_ev_ceiling = 93`). Cycles `EV-94`..`EV-109` are `NOT_ADMITTED` pending sovereign review by Codex and AGY. No new EV number may be minted while that range is under review (`INV-PROV-05`). `DMC-TCM` completed; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- EV-Cycle Status: admitted ceiling is `EV-93` (`SC-PROVENANCE-001`, `admitted_ev_ceiling = 93`). Cycles `EV-94`..`EV-109` are `NOT_ADMITTED` pending sovereign ratification by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator. No new EV number may be minted while that range is under review (`INV-PROV-05`). `DMC-TCM` completed; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
@@ -19,7 +19,7 @@ This repository is the canonical Unified Operational System (UOS).
 > 3. **The two statements in this file disagreed.** The first line claimed `EV-01`..`EV-99` admitted while section 9 advertised `CURRENT EV-CYCLE: EV-108`. RESOLVED 2026-09-08 under sa-plan `uos/km-index-refresh/20260908-0912` (`t10`): both now state the `EV-93` ceiling and carry the `NOT_ADMITTED` range. The contradiction is recorded here because it existed, not because it persists.
 > 4. **Two-key verification is not satisfied** for any EV cycle above `EV-93`: no fresh observed runtime behaviour is bound to a candidate revision for them in this workspace.
 >
-> Status of these claims is `NOT_ADMITTED` pending sovereign review by Codex and AGY. The boundary is now pinned as a single constant and machine-checked: see [`SC-PROVENANCE-001`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-provenance-integrity-contract.md) and `bash tools/km-gate --gate`. The structural fix that prevents a recurrence, the SQLite coordinator store with append-only triggers, was integrated on 2026-09-07 under task `s1-sqlite-coordinator-cutover`; its falsifiers, a raw `UPDATE` and a raw `DELETE` on the events table, are both refused with `events are append-only`.
+> Status of these claims is `NOT_ADMITTED` pending sovereign ratification by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator. The boundary is now pinned as a single constant and machine-checked: see [`SC-PROVENANCE-001`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-provenance-integrity-contract.md) and `bash tools/km-gate --gate`. The structural fix that prevents a recurrence, the SQLite coordinator store with append-only triggers, was integrated on 2026-09-07 under task `s1-sqlite-coordinator-cutover`; its falsifiers, a raw `UPDATE` and a raw `DELETE` on the events table, are both refused with `events are append-only`.
 
 
 All agents operating in this repository must strictly adhere to the policies, boundaries, and evidence contracts defined herein.
@@ -265,7 +265,7 @@ and verify exact byte/hash board-to-Zenoh reconciliation without implied admissi
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
 ADMITTED EV CEILING: EV-93 (SC-PROVENANCE-001, admitted_ev_ceiling = 93)
-HIGHEST EV CLAIMED: EV-109 (ADR-086) - NOT_ADMITTED, pending sovereign review by Codex and AGY
+HIGHEST EV CLAIMED: EV-109 (ADR-086) - NOT_ADMITTED, pending 2-of-4 model ratification (any 2 of {codex, agy, claude, pi+openrouter+gemini+argon} + Operator)
 EV-CYCLE PROVENANCE: EV-94..EV-109 NOT_ADMITTED - sourced from quarantined coordinator events 422-432 and a forged event 437; see the provenance caveat in section 1
 NEW EV NUMBERS: BARRED WHILE THE RANGE ABOVE THE CEILING IS UNDER REVIEW (INV-PROV-05); work is numbered within its sa-plan
 CHECKLIST STATUS: 6 DOMAINS, 18/18 CORE CHECKS + DOMAIN 6 PROVENANCE (SC-CHECKLIST-001, SC-PROVENANCE-001)

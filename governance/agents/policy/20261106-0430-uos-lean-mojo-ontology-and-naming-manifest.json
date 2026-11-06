@@ -1,0 +1,274 @@
+{
+  "schema": "uos.ontology.lean_mojo_naming.v1",
+  "observed_utc": "2026-11-06T04:30:00Z",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "purpose": "The naming and ontology authority for the Lean proof plane and the Mojo observation plane. Every rule below is MEASURED against the tree by tools/lean_proof_plane_scan.ml and enforced by formal/mojo/proof_plane_guard_oracle.mojo. A rule nothing measures is a style document, and style documents are not read.",
+  "measurement_discipline": {
+    "why_this_section_exists": "Two naming 'drifts' recorded in the first pass of this work were artifacts of my own measurement, not facts about the tree. Both are written down here because the correction is more useful than the claim was.",
+    "artifact_1": "I was about to canonise `THM_<FAM>_<nn>_<claim>` tree-wide. Census: 1,492 theorems, of which 185 (12.4%) use that form and ~1,300 are claim-first snake_case. The form I was about to declare canonical is the MINORITY regime, and it is the one that puts an opaque family code where the claim already is. A mass rename would have been churn in the wrong direction.",
+    "artifact_2": "I then counted ~146 'information-free' theorem names from prefix shapes `t<n>_`, `T<n>_`, `c<n>_`, `math<n>_`. Exact measurement: ZERO theorem names in the tree are a bare index. Every one of those prefixes is followed by its claim, e.g. `t25_dual_plane_observability_and_intent_twin_verified`. There was no defect to fix.",
+    "rule_derived": "State the rule both regimes already satisfy, and guard against regression -- do not impose the rule one regime happens to use."
+  },
+  "theorem_names": {
+    "rule": "A theorem name STATES ITS CLAIM. An index prefix is optional.",
+    "admitted_forms": [
+      {
+        "form": "<lower_snake_claim>",
+        "count": 1150,
+        "note": "majority; the mathlib norm"
+      },
+      {
+        "form": "THM_<FAM>_<nn>_<lower_snake_claim>",
+        "count": 185,
+        "note": "used by the 7 differential twins; FAM is an index, the claim is still present"
+      },
+      {
+        "form": "<t|T|c|math><nn>_<lower_snake_claim>",
+        "count": 157,
+        "note": "short index plus claim; admitted because the claim is present"
+      }
+    ],
+    "barred": "A name that is ONLY an index (`t25`, `T12`, `c3`) with no claim after it. Such a theorem cannot be read without opening the file.",
+    "enforced_by": "scanner field `index_only_theorems`, guard arm `n1-index-only-theorem-names`. Currently 0 across 126 files, so this is a REGRESSION guard, which is the honest framing: it protects a property the tree already has rather than announcing a cleanup that was never needed."
+  },
+  "namespace_roots": {
+    "rule": "A Lean file's first namespace root is `UOS`, or a root declared below.",
+    "measured": {
+      "UOS": 100,
+      "Ruliad": 18,
+      "none": 4,
+      "legacy_flat": 4
+    },
+    "canonical_root": "UOS",
+    "sanctioned_additional_roots": [
+      {
+        "root": "Ruliad",
+        "files": 18,
+        "sanction": "A self-contained ruliology library (formal/lean/Ruliad.lean and formal/lean/ruliad/Ruliad/*.lean) with its own coherent `Ruliad.<Module>` hierarchy. It is a library namespace, not drift: every one of its 18 files agrees with the others, and folding it under UOS would rename a complete, internally consistent tree to no benefit."
+      }
+    ],
+    "declared_legacy_roots_not_renamed": [
+      {
+        "root": "UosZlpHyperplane",
+        "file": "formal/lean/UosZlpHyperplane.lean",
+        "external_refs": 25,
+        "reason": "Cited by live Gleam APIs (apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/zlp_api.gleam, ui/lustre/zlp_cockpit.gleam) AND by immutable journals and the ZK/wiki corpus index. INV-PROV-03 bars retroactive renaming of historical artifacts; renaming would dangle those citations."
+      },
+      {
+        "root": "ProvenanceAdjudication",
+        "file": "formal/lean/ProvenanceAdjudication.lean",
+        "external_refs": 10,
+        "reason": "Cited by tools/km_provenance/km_adjudication.ml and by four journals. Same reason."
+      },
+      {
+        "root": "AgentScaleControl",
+        "file": "formal/lean/AgentScaleControl.lean",
+        "external_refs": 9,
+        "reason": "Cited by the ZK master MOC, the wiki corpus index, and three journals. Same reason."
+      },
+      {
+        "root": "AgentMetaOntology",
+        "file": "formal/lean/AgentMetaOntology.lean",
+        "external_refs": 5,
+        "reason": "Cited by two journals, a plan, and formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean. Same reason."
+      }
+    ],
+    "renamed_in_this_wave": [
+      {
+        "from": "UosContextPathKpiOtelTwin",
+        "to": "UOS.ContextPathKpiOtelTwin",
+        "external_refs_before": 2,
+        "reason": "Confined to live source authored in this work (its own Mojo oracle and the renderer manifest). An UNQUALIFIED top-level namespace is also a collision hazard, not merely a spelling difference."
+      },
+      {
+        "from": "UosLeanRuntimeGuard",
+        "to": "UOS.LeanRuntimeGuard",
+        "external_refs_before": 1,
+        "reason": "Self-contained."
+      },
+      {
+        "from": "EcologyCapabilityTwin",
+        "to": "UOS.EcologyCapabilityTwin",
+        "external_refs_before": 0,
+        "reason": "Self-contained."
+      }
+    ],
+    "enforced_by": "scanner field `namespace_root`, guard arm `n2-namespace-root-is-declared`. An undeclared root fails the guard, so the exception set cannot grow quietly."
+  },
+  "lean_file_names": {
+    "rule": "PascalCase, no underscores, for NEW files.",
+    "preserved_as_found": [
+      "formal/lean/Razr15_Max_Qwen_Digital_Twin.lean",
+      "formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean",
+      "formal/lean/Ecology_Capability_Twin.lean",
+      "formal/lean/Fifteen_Unbounded_Fractal_Aspect_Passes.lean",
+      "formal/lean/Fifteen_SciViz_Regression_Cycles.lean",
+      "formal/lean/SciViz_Fifteen_Modalities_Verification.lean",
+      "formal/lean/Zero_Remote_Token_Ingress_Theorems.lean",
+      "formal/lean/Minimum_Token_Cascade_Theorems.lean",
+      "formal/lean/Fast_OODA_Convergence.lean"
+    ],
+    "why_not_renamed": "These names appear in generated documents, journals and the ZK/wiki corpus index. INV-PROV-03: historical names are never retroactively changed, and the CLAUDE.md pointer at this root already sets the precedent by preserving filenames whose byte counts do not match their contents rather than correcting them. Renaming the FILE is also the only rename in this family that would require touching lakefile/import graphs.",
+    "enforced_by": "Not mechanically enforced. Stated honestly as advisory, because the preserved set is larger than the conforming set would be worth."
+  },
+  "mojo_plane": {
+    "oracle_file": "<subject_snake>_oracle.mojo, one per Lean subject, in formal/mojo/",
+    "substrate": "oracle_substrate.mojo plus oracle_substrate_selftest.mojo. Renamed from uos_oracle.mojo because it matched the `*_oracle.mojo` pair glob and the driver tried to pair the substrate with a Lean file.",
+    "subject_declaration": "Each oracle names its own `formal/lean/<Subject>.lean` in its header. tools/lean_mojo_differential.ml discovers pairs by reading that string, so the mapping lives in one place and cannot drift out of sync with the files.",
+    "check_name_grammar": {
+      "form": "<fam>-<kebab-claim>",
+      "barred": "A plane prefix in the name. `Receipt._note` already prefixes the plane, so a check named `world:seven-stages` was recorded as `world:world:seven-stages` in a real receipt.",
+      "rationale": "The plane is a property of WHICH METHOD recorded the check (algebra / world / observe / mutation_probe), not of the check's name. Encoding it twice lets the two disagree."
+    },
+    "verdict_lattice": {
+      "order": [
+        "PASS",
+        "BLIND",
+        "WORLD_FAIL",
+        "DIVERGENT",
+        "VACUOUS",
+        "LEAN_FAIL",
+        "UNRUN"
+      ],
+      "severity": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "worst_wins": true,
+      "nonpassing": [
+        "BLIND",
+        "WORLD_FAIL",
+        "DIVERGENT",
+        "VACUOUS",
+        "LEAN_FAIL",
+        "UNRUN"
+      ],
+      "semantics": {
+        "BLIND": "A STARTED observer could not obtain evidence: empty capture, absent JSON field, timeout.",
+        "UNRUN": "The observer never started (toolchain absent). It cannot emit its own verdict, so the launcher classifies it.",
+        "DIVERGENT": "The algebra re-derivation disagrees with the kernel. The model drifted from itself. Graver than any outage.",
+        "VACUOUS": "A negative control was accepted, or there were no algebra checks at all. A blind oracle's other verdicts are worthless, so this is checked FIRST."
+      }
+    },
+    "json_field_lookup": {
+      "rule": "Boolean fields go through `json_flag`, which returns 1 / 0 / -1-for-absent, and are recorded with `Receipt.world_json`, which routes -1 to BLIND.",
+      "why": "A probe asked for `\"all_data_plane_slos_pass\":true` against a gateway emitting `\"all_data_plane_slos_pass\": true`. It could not find the field, scored the field FALSE, and reported six outages on a healthy node. The three-valued return removes the step where an author has to remember to compute presence separately from value."
+    },
+    "counted_cardinalities": {
+      "rule": "Where the model declares a count, the oracle COUNTS the enumeration rather than reading a summary field.",
+      "why": "A summary integer can agree with the model while the list printed beside it does not. The razr15 oracle counts seven `\"plane\":\"data_plane\"` and seven `\"plane\":\"control_plane\"` stage records instead of trusting a `stage_count` field."
+    }
+  },
+  "non_conformances_recorded_additively": [
+    {
+      "where": "formal/lean/Razr15_Max_Qwen_Digital_Twin.lean:594",
+      "what": "DualPlaneObservabilityTwinSpec declares every SLO as a field defaulted to `true`; t25_dual_plane_observability_and_intent_twin_verified decides that the all-true record is all-true. The theorem cannot fail, so it carries no information about razr15-1.",
+      "class": "vacuity (THM_VAC_01_typechecking_is_not_observation)",
+      "action_taken": "NOT deleted. Every one of those fields is now OBSERVED by formal/mojo/razr15_max_qwen_oracle.mojo against the live endpoints, and a field the gateway does not emit reads BLIND rather than the record's optimistic default.",
+      "open_followup": "Re-state t25 as an implication over an observation argument, as THM_RUN_04_fail_closed_on_no_evidence is stated in UosCoreEvoUnifiedDigitalTwin.lean."
+    },
+    {
+      "where": "formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean:1565 onward",
+      "what": "Three of the fifteen banner lines read as live claims -- 'Zenoh Mesh Active', 'Live Digital Twin Bound', 'GPU Graph verified' -- which typechecking cannot establish. They are projections of model FIELDS whose names assert runtime state.",
+      "class": "field naming asserts observation",
+      "action_taken": "Recorded. The banner itself is honest (`=MODEL_CONSISTENT`), so this is a wording defect in the field names, not a boundary breach.",
+      "open_followup": "Rename the fields, e.g. maxGpuGraphVerified -> maxGpuGraphDeclared."
+    }
+  ],
+  "cross_plane_encoding_divergence": {
+    "found_utc": "2026-11-06T04:18:35Z",
+    "verdict": "DIVERGENT",
+    "detected_by": "formal/mojo/bionic_interception_oracle.mojo, arm parity-regime-*/parity-archetype-*",
+    "why_it_was_invisible": "Every other arm re-derives the algebra from the Lean spec and agrees with the kernel. Agreeing with the kernel about a FUNCTION says nothing about agreeing with another plane about its INTEGER ENCODING. Both encodings below are internally consistent and both passed their own checks.",
+    "divergences": [
+      {
+        "object": "4 biomorphic metabolic regimes",
+        "encoding_a": {
+          "source": "formal/lean/UosLeanRuntimeGuard.lean:136-146 (exported C ABI uos_lean_classify_metabolic_regime)",
+          "codes": {
+            "0": "TorporMargin40Hold",
+            "1": "CatabolicCriticalPathOnly",
+            "2": "HomeostaticZeroOrShift",
+            "3": "AnabolicParallel"
+          },
+          "consumed_by": "tools/bionic_custom_ai_engine.mojo"
+        },
+        "encoding_b": {
+          "source": "formal/lean/BionicMojoLeanHighPerformanceInterception.lean:197 (inductive declaration order), followed by formal/mojo/bionic_interception_oracle.mojo",
+          "codes": {
+            "0": "AnabolicParallel",
+            "1": "HomeostaticZeroOrShift",
+            "2": "CatabolicCriticalPathOnly",
+            "3": "TorporMargin40Hold"
+          }
+        },
+        "relation": "EXACT INVERSE. Integer 0 means Anabolic in one plane and Torpor in the other."
+      },
+      {
+        "object": "8 Shannon fastpath archetypes",
+        "encoding_a": {
+          "source": "formal/lean/BionicMojoLeanHighPerformanceInterception.lean:86-93 and formal/mojo/bionic_interception_oracle.mojo",
+          "code_0": "CT_HIGH_ENTROPY"
+        },
+        "encoding_b": {
+          "source": "tools/bionic_token_twin.ml:18-19",
+          "code_0": "CT_JSON_STRUCT"
+        },
+        "relation": "Only CT_PROSE_MD lands on the same index in both tables, and in the OCaml table index 7 is a catch-all (| _ ->) rather than a code."
+      }
+    ],
+    "resolution_required_from_operator": "Choose ONE encoding per object and make every plane derive from it rather than restate it. This change is NOT made here because picking a direction silently would break whichever consumer currently agrees with the other table: tools/bionic_custom_ai_engine.mojo consumes encoding A for regimes, so flipping A breaks a shipped binary, and flipping B changes a Lean inductive other theorems quantify over.",
+    "why_recorded_not_fixed": "INV-PROV-03: nonconformance is recorded additively. The arm now FAILS CLOSED at DIVERGENT every run, so the defect cannot be forgotten, and the verdict is durable in var/lean-mojo/differential.jsonl."
+  },
+  "open_ontology_defects_found_by_peer_review": {
+    "note": "Found by delegated read-only census and audit on 2026-11-06. Each is MEASURED with file:line, none is fixed here, and none is enforced by any arm yet. These are the real ontology defects; theorem-name style was not one.",
+    "ranked": [
+      {
+        "rank": 1,
+        "defect": "Seven incompatible definitions of the model routing tier object, with colliding identifiers that invert cost and locality. Tier1 is proved to cost 0 remote tokens in formal/lean/Minimum_Token_Cascade_Theorems.lean:81-101 and priced at 18505 nanodollars against three remote frontier models in formal/lean/BionicMojoLeanHighPerformanceInterception.lean:141-159. Cardinalities 3/3/4/5/4/7/7.",
+        "enforced_by": "nothing"
+      },
+      {
+        "rank": 2,
+        "defect": "Nine or more incompatible L0..L9 semantics, every one proved complete at length 10. contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md declares itself the single source and ZERO tools reference it. Its one installed enforcement pointer was deleted when .claude/rules/full-symbiosis.md was rewritten on 2026-10-01 and nothing noticed. apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam:63-75 carries L10Governance, a layer the contract declares nonexistent, in a live typed enum.",
+        "enforced_by": "nothing"
+      },
+      {
+        "rank": 3,
+        "defect": "THM_BML_05_holarchy_170_fpp_40_biomorphic_homeostasis_aligned (formal/lean/BionicMojoLeanHighPerformanceInterception.lean:234-248) has NO term mentioning 40 actors or 8 watchdogs in its body. The claim exists only in the theorem NAME and docstring. tools/bionic_custom_ai_engine.mojo:492 then emits the literal string fpp_40_actors_and_8_watchdogs_aligned:true, computed from nothing, and an oracle string-matches it. A closed loop over a constant.",
+        "enforced_by": "nothing"
+      },
+      {
+        "rank": 4,
+        "defect": "MCP route count: the authoritative contract (contracts/rules/20261030-1058-ak47-multi-agent-mcp-symbiosis-rule.md:49-51) and the governance inventory say 101; the Lean plane and live Gleam say 104. The Lean partition 93 tools + 11 resources is false in every plane (the 104 Gleam specs are all ToolSpecs, zero resources). The partition 53+38+10+3 is arithmetically proved and empirically ungrounded: no static list of 38 resources, 10 prompts or 3 templates exists anywhere.",
+        "enforced_by": "nothing"
+      },
+      {
+        "rank": 5,
+        "defect": "The 170 Janus holons are 10 x 17, and the 17 is three incompatible aspect vocabularies (aspect_coverage_engine.gleam:53-250 vs HolonicFppBionic...:65-108 vs Mojo_MAX_Qwen...:807-837), agreeing only on aspect 03. The runtime 170 is built from one set; the theorem 10*17==170 cannot distinguish them.",
+        "enforced_by": "nothing"
+      },
+      {
+        "rank": 6,
+        "defect": "Caste membership disagrees: Lean and governance put DeepSeek DSH at Caste05; apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/core_evo_api.gleam:213-258 folds DeepSeek into Caste02 and gives Caste05 to deterministic binaries. A mutation probe proves the cardinality 5 is load-bearing; nothing probes membership.",
+        "enforced_by": "cardinality only"
+      },
+      {
+        "rank": 7,
+        "defect": "Six antigen classes are asserted everywhere, but variant 0 is SelfCanonicalEnvelope -- self, the thing an immune system tolerates. Gleam names exactly 5 Antigen* constructors. Codes 2 and 3 collapse into one branch in all four implementations, so the classifier distinguishes 5 behaviours over 6 inputs.",
+        "enforced_by": "nothing"
+      },
+      {
+        "rank": 8,
+        "defect": "The 14-stage dual plane is fully enumerated and bijection-proved in Lean and has NO implementation plane: absent from all Gleam, all OCaml, all governance JSON, all contracts. Its only runtime binding is a schema string on an endpoint no in-tree router defines. Two schema identities for one object (seven_stage_metering.v1 vs dual_plane_14stage.v1).",
+        "enforced_by": "a live probe that honestly reports BLIND"
+      }
+    ]
+  }
+}

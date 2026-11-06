@@ -1,0 +1,156 @@
+{
+  "record": "20261106-0807-mojo-oracle-plane-first-review",
+  "observed_utc": "2026-11-06T08:07:38Z",
+  "revision": { "change_id": "xtyszyskrrnx", "commit_id": "a7b0f845de6b" },
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "admission": "none granted; this record is a review finding log, not evidence of admission",
+  "subject": {
+    "scope": "formal/mojo/*.mojo",
+    "files": 16,
+    "lines": 4338,
+    "prior_reviews": 0
+  },
+  "reviewers": [
+    {
+      "id": "local-claude-agent",
+      "effort": "max",
+      "read_in_full": 16,
+      "subjects_opened": 8,
+      "findings": 18,
+      "outcome": "delivered"
+    },
+    {
+      "id": "codex-gpt-6-luna",
+      "reasoning_effort": "max",
+      "sandbox": "read-only",
+      "attempts": 2,
+      "outcome": "FAILED_TO_DELIVER",
+      "detail": "exit 0 both attempts; terminated after its KM-triad preamble without reading any subject file. No findings produced. Recorded so the review is not later credited to two reviewers."
+    },
+    {
+      "id": "self",
+      "outcome": "independent pass",
+      "detail": "found the tautology class (= reviewer F11) independently; traced the lattice arms to exit_of rather than severity"
+    }
+  ],
+  "routing_note": "External and free model tiers were barred for this review under SC-INTEL-ROUTING-001: the oracles are private repository source. Only the two local reviewers were eligible.",
+  "headline": "The oracle plane reproduced, one plane over, the exact defect the Lean plane spent this effort removing: an oracle that cannot disagree with its subject.",
+  "findings_fixed": [
+    {
+      "id": "F1",
+      "severity": "CRITICAL",
+      "file": "formal/mojo/agent_profile_oracle.mojo",
+      "defect": "Transcribed 195 and 850 as literal arithmetic while the subject proves 234 and 1020; the roster probe greped a closed allowlist '(agy|pi|codex|claude|deepseek)' omitting argon, so spec_agents could not return 6 and `spec_agents == 5` passed. The literal 5 was additionally the denominator of five obligation checks and three probes.",
+      "aggravating": "The subject had diagnosed this failure in advance. UosAgentCapabilityProfile.lean:290-296 records that the hardcoded form 'would have stayed green and silently wrong', which is why Lean derives each term from its carrier. The Mojo plane kept the condemned form AND the pre-widening numerals.",
+      "consequence": "PASS reported while disagreeing with the subject: a live DIVERGENT sold as agreement.",
+      "fix": "Every carrier counted from its own declaration (allAgentId, allFppService, allBionicFaculty, allTransport, AspectIx, LayerIx); the asserted totals read out of the theorem names; both sides derived. Roster count made generic over constructors. Inductive-vs-list cross-check added. Denominators replaced by the counted roster. Readability probe loosened from `== 5` to `> 0`.",
+      "negative_control": "Two perturbations of a copied subject: (A) argon dropped from allAgentId only -> both the rosters-agree arm and the total arm go DIVERGENT; (B) one FppService constructor added, theorem untouched -> derived 240 vs asserted 234, DIVERGENT. Both perturbations are invisible to the pre-fix arms, which pass unchanged.",
+      "verdict_after": "WORLD_FAIL, 3 real algebra arms (was 5 tautologies), 6 honest world failures"
+    },
+    {
+      "id": "F2",
+      "severity": "CRITICAL",
+      "file": "formal/mojo/mcp_gateway_oracle.mojo",
+      "defect": "The relation gateway_aligned was called 12 times, every argument at every call site an author-written literal or comptime. Last call at :107; first world variable at :119. The two halves could not meet. Three of ten conjuncts (catalog_observed, distinct_bindings, public_tools) had no world derivation anywhere in the file, while the header asserted 'the tool count below is handshaked, never read off a config' — there was no tool count below. One world arm (gateway-handshake) was registered twice.",
+      "aggravating": "The subject delegated explicitly. UosMcpUnifiedGatewayTwin.lean:425-436 deleted its own frozen observationNow — which proved the gateway healthy by decide from a hardcoded publicTools := 59 and would have stayed green through any outage — and recorded that 'the claim about the present is now made by formal/mojo/mcp_gateway_oracle.mojo, at the moment of asking'. The proof plane surrendered its frozen claim on the understanding that this file would take a live one. It did not.",
+      "consequence": "Supplied the spec side twice and reported a two-key differential.",
+      "fix": "All three missing quantities now measured: catalog_observed as how many of the twin's registration target paths exist on disk (12/12), distinct_bindings as distinct MCP server names across the five live client configs (1), public_tools from a real tools/list RPC (54). A single live verdict arm feeds every reading through the relation, guarded by a readings_complete check so an unread -1 cannot manufacture a confident false. Duplicate handshake arm removed. False header claim corrected in place.",
+      "measurement_traps_hit": [
+        "grep '\"tools\":' matches the initialize response too (its capabilities carry \"tools\":{\"listChanged\":false}); with head -1 the count came from the wrong message and returned 1. Fixed by selecting the array form '\"tools\":['.",
+        "Counting '\"name\":' gives 57 against an authoritative 54 because a tool whose input schema has a parameter called 'name' adds a match. inputSchema occurs exactly once per tool and agrees with a full JSON parse."
+      ],
+      "self_note": "The first version of the probe reported public_tools = 1 and the live arm correctly failed. That failure was the instrument, not the gateway. It is recorded because it is the same class of error the review was commissioned to find, committed inside the fix for it — and because it served as an unplanned demonstration that the new arm is load-bearing.",
+      "verdict_after": "WORLD_FAIL; live arm passes; the 2 remaining failures are genuine subject defects (capsule hardcodes 2024-11-05; no server/discover RPC)"
+    },
+    {
+      "id": "F7",
+      "severity": "HIGH",
+      "file": "formal/mojo/oracle_substrate.mojo",
+      "defect": "Vacuity has two forms and only the probe-failure form was tested first. The zero-algebra form sat below world_failures and blind, so an oracle that bailed out before reaching its algebra — what an oracle does when its input is unreadable — was labelled WORLD_FAIL or BLIND instead of VACUOUS. The misordering sat one line under a comment reading 'Vacuity first'.",
+      "lattice_basis": "tools/lean_mojo_differential.ml:159-167 ranks Vacuous at severity 5, above World_fail 2 and Blind 1, so the inversion was real and not a difference of convention.",
+      "authors_were_right": [
+        "axis_registry_oracle.mojo:96 — 'registry unreadable; every verdict below would be vacuous'",
+        "mcp_name_ownership_oracle.mojo:108 — 'Emit BLIND and stop'",
+        "twin_coverage_oracle.mojo:87 — 'every number below would be invented'"
+      ],
+      "blast_radius": "Confined to the uos.oracle.v1 receipt's own status field (the artifact of record) and the standalone exit code, because the driver tests zero-algebra vacuity first on its own.",
+      "why_undetected": "oracle_substrate_selftest.mojo exercised zero-algebra vacuity only in the clean case (a passing world arm, no blind). That combination is satisfied by the defective implementation as well as the correct one, so every documented expectation was green while status() inverted the lattice.",
+      "fix": "Both vacuity forms tested together, before everything else. Selftest extended with the two exposing inputs: zero-algebra with a world failure, and zero-algebra with a blind.",
+      "negative_control": "The extended selftest run against the pre-fix substrate returns WORLD_FAIL and BLIND for the two new cases; against the fixed substrate both return VACUOUS. All eight verdict paths verified: PASS/0, DIVERGENT/3, WORLD_FAIL/1, BLIND/2, VACUOUS/4 x4."
+    },
+    {
+      "id": "F8-partial",
+      "severity": "HIGH",
+      "file": "formal/mojo/mcp_gateway_oracle.mojo",
+      "defect": "The file's only mutation_probe was a verbatim duplicate of an existing algebra arm (`ideal()` at both :69 and :110). The reasoning behind it was sound — a predicate false for everything makes every `not aligned(...)` arm pass vacuously — but the check already existed as algebra, so routing it through the vacuity channel spent the one probe slot and left the file with no negative control. `vacuous` could not increment, making Receipt.status()'s first and gravest test dead code for this oracle.",
+      "fix": "Positive control kept as an observation where it belongs; a real negative control added, requiring the relation to reject a reading live in every respect but one.",
+      "negative_control": "gateway_aligned weakened to `return True` -> vacuous:1, status VACUOUS. The probe fires.",
+      "still_open_for": ["core_evo_oracle.mojo", "monitoring_governance_oracle.mojo", "context_path_kpi_oracle.mojo"]
+    }
+  ],
+  "findings_open": {
+    "note": "Reported by the local reviewer and NOT independently confirmed by the author except where stated. Each needs its own verification before it is treated as established.",
+    "independently_confirmed_by_author": {
+      "F11": {
+        "severity": "HIGH",
+        "defect": "28 of 123 algebra arms are literal tautologies — the Mojo analogue of the `true && true = true` the Lean plane was cleansed of. Three oracles are 100% unfalsifiable on their algebra key: agent_profile 5/5 (now fixed), language_conformance 3/3, proof_plane_guard 6/6. proof_plane_guard is the guard enforcing the plane split; its own algebra half is empty.",
+        "worst_subclass": "Arms whose NAME asserts a world fact the body never examines: prov:admitted-ev-ceiling-is-93 (93 == 93) reads no contract; endpoint:gateway-port-matches-firewall-port (PORT == 8000) reads no firewall; deploy-proved-total-fits-rtx2070maxq-8192mib (7104 <= 8192) reads neither the twin's record nor the card.",
+        "second_order": "The four lattice-* arms in proof_plane_guard_oracle transcribe exit_of (the process exit-code table, World_fail -> 1) while named for severity (the real worst-wins lattice, World_fail -> 2). The arm named for the lattice checks the other table, and because the numerals are inlined nothing can detect it.",
+        "status": "OPEN except for agent_profile, fixed under F1"
+      }
+    },
+    "relayed_unconfirmed": [
+      "F3 HIGH core_evo_oracle.mojo:210-215 — 8 of 15 conjuncts in the live verdict are self-comparisons",
+      "F4 HIGH — the razr15 whitespace defect reintroduced in 13 arms, in the two files that did not import json_flag",
+      "F5 HIGH context_path_kpi_oracle.mojo — the header's central claim is false; there is no write, and a stale artifact passes",
+      "F6 HIGH km_census_oracle.mojo:73-96 — reproduces verbatim the frozen-constant theorem its own header condemns",
+      "F9 MODERATE-HIGH ontology_atlas_oracle.mojo:211-212 — a world arm that compares 0 to 0",
+      "F10 MODERATE-HIGH twin_coverage_oracle.mojo:141-142 — fixing the system trips the gravest verdict",
+      "F12 MODERATE — transcribed mutation_probe values convert a legitimate subject change into VACUOUS, masking DIVERGENT",
+      "F13 MODERATE — the Lean G6 argument-discard shape, three times, in Mojo",
+      "F14 MODERATE — world() used where absence reads as a real negative observation",
+      "F15 MODERATE — 52 observe() calls fed a stringified Int can never register BLIND",
+      "F16 MODERATE axis_registry_oracle.mojo:318-333 — the declared count is a hardcoded 11 dressed as a derivation",
+      "F17 LOW-MODERATE — stale and fragile instruments",
+      "F18 LOW — name hygiene and name/body mismatches"
+    ],
+    "withdrawn_by_author": [
+      "Decorative negative controls: none. All 32 mutation_probe arms compute from a real read, not a literal.",
+      "Four oracles lack negative controls outright: wrong as stated. Their algebra arms are already a `not aligned(...perturbed...)` battery, so the ideal() probe guards the complementary failure. The accurate finding is the narrower F8: the probe need not occupy the mutation_probe slot, and occupying it leaves the oracle with no negative control."
+    ]
+  },
+  "collateral_fixes": [
+    {
+      "file": "formal/lean/UosAgentCapabilityProfile.lean",
+      "defect": "The PROF-10 docstring prose still read '5 agents x ... = 5 x 39 = 195 booleans, plus 5 intelligence values' directly above a theorem named ..._is_234_cells. The numerals in the STATEMENT were derived and moved with the carrier; the numerals in the PROSE were written and did not.",
+      "note": "The identical defect the companion oracle was being repaired for, in the file that diagnosed it. Found only because the review forced both planes to be read together.",
+      "fix": "Prose corrected to 6 / 234 with the drift named rather than quietly edited."
+    },
+    {
+      "file": "formal/lean/UosOntologyAtlas.lean",
+      "defect": "ATLAS-15 redundancy: four of five conjuncts duplicated ATLAS-02 (three local tiers, pointwise) and ATLAS-04 (verbatim). Six theorems covered one function on five elements.",
+      "fix": "ATLAS-15 reduced to the single fact that was ever new (freeRemote round-trips). A composite deriving all five from ATLAS-02/15/04 was written, found by #print axioms to depend on propext and Quot.sound via simpa/List.all_eq_true, and deleted rather than re-proved: a conjunction of three theorems already in the file carries no mathematical content and was costing two axioms to keep."
+    }
+  ],
+  "verification": {
+    "lean": {
+      "UosOntologyAtlas.lean": { "theorems": 70, "errors": 0, "axiom_free": 70, "toolchain": "4.33.0" },
+      "UosAgentCapabilityProfile.lean": { "theorems": 17, "errors": 0, "axiom_free": 17, "toolchain": "4.33.0" }
+    },
+    "substrate_selftest": "8/8 verdict paths correct",
+    "differential": { "pairs": 14, "pass": 6, "world_fail": 6, "divergent": 2, "overall": "DIVERGENT" },
+    "divergent_pairs_preexisting": ["axis_registry_oracle", "bionic_interception_oracle"],
+    "regression_check": "No oracle reports VACUOUS, so the status() reordering changed no pair verdict. Neither DIVERGENT pair's file was touched.",
+    "preflight": "PASS (33 checks)"
+  },
+  "file_pins_md5": {
+    "formal/mojo/oracle_substrate.mojo": "751eb2b14740a404361cdcf6b0a1e4d2",
+    "formal/mojo/oracle_substrate_selftest.mojo": "17d4ab1419040f224019eeef809b1ad4",
+    "formal/mojo/agent_profile_oracle.mojo": "425411aa88cf48aa834b2c9bba059762",
+    "formal/mojo/mcp_gateway_oracle.mojo": "d034bf1c7ce8e6c734b3edf8e1260e20",
+    "formal/lean/UosOntologyAtlas.lean": "a037c661a7a7e4af118391aabb1d330c",
+    "formal/lean/UosAgentCapabilityProfile.lean": "0256c3add37eda67f252df8cdc205687"
+  },
+  "footer": "Document and component evidence do not grant system admission. Sa-plan remains the sole execution authority. EV ceiling 93; EV-94..109 NOT_ADMITTED."
+}

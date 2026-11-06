@@ -5,7 +5,7 @@
    1. Aspect Completeness: The union of aspect indices across all 15 cycles equals {1, ..., 17}.
    2. Monotonic Generation Advance: Gen_{t+1} = Gen_t + 1 for each ratified cycle.
    3. Lyapunov Energy Damping: Continuous stability assurance V(e_{t+1}) <= V(e_t).
-   4. Quorum Soundness: Ratification requires at least 3 of 4 sovereign approvals.
+   4. Quorum Soundness: Ratification requires at least 3 approvals (any 2 of 4 model families {Codex, AGY, Claude, Pi+OpenRouter+Gemini+Argon} + 1 Operator per SC-PROVENANCE-001).
 -/
 
 namespace UOS.Evolution
@@ -101,9 +101,13 @@ theorem lyapunov_energy_damped (st : EvolutionState) (cycle : CycleSpec) :
   dsimp [apply_ratified_cycle]
   omega
 
-/-- Quorum approval counting. -/
+/-- Quorum approval counting (3 total keys = any 2 of 4 model families + 1 Operator). -/
 def is_quorum_ratified (approvals : Nat) : Bool :=
   approvals >= 3
+
+/-- Generalized 2-of-4 model families + Operator ratification predicate (SC-PROVENANCE-001). -/
+def is_two_of_four_models_plus_operator (distinct_models : Nat) (operator_signed : Bool) : Bool :=
+  distinct_models >= 2 && distinct_models <= 4 && operator_signed
 
 /-- THEOREM 3: Quorum Soundness.
     Fewer than 3 sovereign approvals cannot ratify an evolutionary cycle. -/

@@ -6,7 +6,7 @@
    Contracts: SC-PROVENANCE-001, SC-HARNESS-MCP-001, SC-JIDOKA-001, SC-ZERO-MUDA-001
    ============================================================================= -/
 
-namespace UosLeanRuntimeGuard
+namespace UOS.LeanRuntimeGuard
 
 /-- 1. Denotational Intent & Constitutional Interlock Gate (< 50 ns unboxed C-ABI)
     Enforces:
@@ -31,7 +31,13 @@ def uosLeanCheckIntent
     Returns:
     - 255 : Fail-Closed Jidoka Veto (preflightOk == 0)
     - 0   : Tier0Simd (Mojo AVX2/AVX-512 fast-path, confMilli >= 880, 0 remote tokens)
-    - 1   : Tier1Rete (Gleam/OTP Rete-UL + Gospel solver, confMilli >= 750, 0 remote tokens)
+    - 1   : Tier1Rete (Hermes OCaml Rete-UL + Gospel solver, confMilli >= 750, 0 remote tokens)
+          CORRECTED 20261106: this said "Gleam/OTP Rete-UL". CLAUDE.md language
+          roles assign Rete-UL to OCaml/Hermes ("OCaml 5.5.0 / Hermes -- Gospel
+          contracts, Cryptokit zero-trust interception, Rete-UL, bounded Z3"),
+          and formal/lean/Minimum_Token_Cascade_Theorems.lean:83 names the same
+          index "Hermes OCaml Rete-UL". Two Lean files in one tree disagreed
+          about which language owns Rete-UL; canonical policy decides it.
     - 2   : Tier2Max  (Local MAX 26.8 + Qwen2.5-Coder-7B GPU worker, gpuWorkerOk == 1, 0 remote tokens)
     - 3   : Tier3Remote (Authorized remote fallback only when local GPU unavailable) -/
 @[export uos_lean_route_cascade]
@@ -275,9 +281,9 @@ theorem THM_GUARD_12_context_kpi_sla_sound :
   ∧ uosLeanEvalContextKpiSla 9590 6039 49 16 11 = 0 := by decide
 
 def main : IO UInt32 := do
-  IO.println "UOS_LEAN_RUNTIME_GUARD_12_THEOREMS_AND_12_C_ABI_EXPORTS=PASS"
+  IO.println "UOS_LEAN_RUNTIME_GUARD_12_THEOREMS_AND_12_C_ABI_EXPORTS=MODEL_CONSISTENT"
   return 0
 
-end UosLeanRuntimeGuard
+end UOS.LeanRuntimeGuard
 
-def main : IO UInt32 := UosLeanRuntimeGuard.main
+def main : IO UInt32 := UOS.LeanRuntimeGuard.main

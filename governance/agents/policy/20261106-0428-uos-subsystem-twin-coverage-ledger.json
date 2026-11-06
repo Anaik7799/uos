@@ -1,0 +1,440 @@
+{
+  "schema": "uos.ontology.twin_coverage.v1",
+  "observed_utc": "2026-11-06T04:28:00Z",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "purpose": "Answers, with a number rather than a promise, the standing objective 'all functionality must have an ontology and a digital twin that has all functionality verified'. For each of the 40 enumerated FPP subsystems, states whether it is VERIFIED, BLIND, MODELLED or UNMODELLED, and names the exact artifact that substantiates the claim. Enforced by formal/mojo/twin_coverage_oracle.mojo, which checks that every named check actually exists in the named oracle -- so a coverage claim cannot be inflated by naming a check that was never written.",
+  "subsystem_inventory_source": {
+    "where": "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+    "count": 40,
+    "structure": "4 domains (apps, engines, services, intel) x 10 fractal layers (l0..l9), verified by measurement: every layer carries exactly 4",
+    "why_this_source": "It is the only ENUMERATION of subsystems in the tree, as opposed to a count. The census found 170-holon, 40-actor, 104-route and 8-watchdog counts restated in six Lean field names each with no enumeration behind them; this one has 40 build_spec calls behind it."
+  },
+  "coverage_states": {
+    "VERIFIED": "A Mojo oracle OBSERVES the live subsystem and a Lean twin proves the algebra. Two-key: Trust = Fresh Empirical Behavior AND Formal Spec.",
+    "BLIND": "An observer exists and STARTED, but the subsystem does not expose the evidence. This is not coverage. It is an observability gap, and counting it as coverage is the defect this ledger exists to prevent.",
+    "MODELLED": "A Lean twin exists; nothing observes the live subsystem. The model can go stale without anything noticing -- the observationNow defect at subsystem scale.",
+    "UNMODELLED": "Neither. Stated plainly rather than omitted."
+  },
+  "why_the_keyword_probe_was_discarded": "A first pass keyword-matched each subsystem id against formal/lean and formal/mojo and reported 21 VERIFIED, 18 MODELLED, 1 UNMODELLED. That measurement is not trustworthy: a keyword appearing in an oracle's COMMENT counts as coverage under it, and three separate false positives earlier in this work came from exactly that class of loose matching. The numbers below are lower and true. A true small number is worth more than an inflated large one.",
+  "subsystems": [
+    {
+      "id": "l0_apps_iam_guardian_gate",
+      "state": "UNMODELLED",
+      "note": "FerrisKey IAM NIF. No Lean twin, no oracle. SC-FERRISKEY-NIF-001..010 define 10 STAMP constraints; none is checked by any arm."
+    },
+    {
+      "id": "l0_engines_hermes_zero_trust_hook",
+      "state": "MODELLED",
+      "note": "Hermes interception is modelled in Lean; no oracle observes the live interceptor's NUL (-2) / raw-SQL (-3) traps end to end."
+    },
+    {
+      "id": "l0_intel_constitutional_quorum",
+      "state": "MODELLED",
+      "note": "Quorum is modelled. core_evo_oracle observes cockpit-self-report-ok which reports quorum_healthy:false, so the SIGNAL is observed but no arm asserts the quorum property itself."
+    },
+    {
+      "id": "l0_services_provenance_ev93_fence",
+      "state": "MODELLED",
+      "note": "Every oracle emits ev_ceiling 93 in its receipt, and axis/bionic oracles carry prov:admitted-ev-ceiling-is-93 -- but that is an ALGEBRA check restating 93==93, not an observation of the fence. Counting it as VERIFIED would be the tautology THM_VAC_01 denies."
+    },
+    {
+      "id": "l1_apps_pure_beam_graph_math",
+      "state": "UNMODELLED",
+      "note": "Pure-BEAM Tarjan/Dijkstra/PageRank replacing foreign NIFs. No twin, no oracle. CHK-06-GRAPH is a checklist obligation with no program behind it."
+    },
+    {
+      "id": "l1_engines_zigvm_vfs_arena_kernel",
+      "state": "MODELLED",
+      "note": "ZigVM strata are modelled in Traceability.lean and UosContextPathKpiOtelTwin.lean (the zigvm-implementation-stack axis). No oracle executes the kernel."
+    },
+    {
+      "id": "l1_intel_zlp_v3_lean_zig_hyperplane",
+      "state": "MODELLED",
+      "note": "formal/lean/UosZlpHyperplane.lean, 20 theorems. No oracle."
+    },
+    {
+      "id": "l1_services_nvme_storage_interlock",
+      "state": "VERIFIED",
+      "verified_by": {
+        "oracle": "razr15_max_qwen_oracle.mojo",
+        "checks": [
+          "os-nvme-serial-stays-locked"
+        ]
+      },
+      "note": "Observed as a live telemetry flag via json_flag, so an absent key reads BLIND rather than false. The HARD_DENIED serial itself is never transmitted or logged."
+    },
+    {
+      "id": "l2_apps_prajna_circuit_breaker",
+      "state": "MODELLED",
+      "note": "Breaker states are modelled in 4 planes (BreakerClosed/HalfOpen/Open). Nothing trips a live breaker and observes the transition."
+    },
+    {
+      "id": "l2_engines_tolerance_envelope_guard",
+      "state": "UNMODELLED"
+    },
+    {
+      "id": "l2_intel_lyapunov_endocrine_regulator",
+      "state": "MODELLED",
+      "note": "Lyapunov descent is proved in several twins and re-derived in bionic_interception_oracle (bml06-lyapunov-chain-is-monotone) -- but that is ALGEBRA over a fixture sequence, not an observation of the live regulator."
+    },
+    {
+      "id": "l2_services_deadman_freshness_watchdog",
+      "state": "BLIND",
+      "note": "tools/uos_web_watchdog.ml runs every 60s via uos-web-watchdog.timer and is the only recurring verification in the system. It is also the one that OVERWRITES var/watchdog/latest.json with no timestamped copy, destroying every degraded reading between surviving andon entries -- an active INV-PROV-03 violation. No oracle reads it."
+    },
+    {
+      "id": "l3_apps_vault_kms_ram_session",
+      "state": "UNMODELLED",
+      "note": "RustyVault / KMS. Deliberately unobserved: an oracle that probed it would have to handle secret material, and no artifact in this architecture may touch key material."
+    },
+    {
+      "id": "l3_engines_ecology_file_txn_kernel",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "mcp_gateway_oracle.mojo",
+          "checks": [
+            "writer-allowlist-intact",
+            "zero-legacy-names"
+          ]
+        },
+        {
+          "oracle": "mcp_name_ownership_oracle.mojo",
+          "checks": [
+            "all-five-configs-readable",
+            "all-configs-register-canonical-name",
+            "json-configs-carry-no-toml-only-names",
+            "toml-config-carries-no-json-only-names"
+          ]
+        }
+      ],
+      "note": "The strongest pair in the system: ownership is DERIVED from tools/ecology_pin_edit.ml rather than transcribed, which is what caught a wrong two-allowlist model that had already been written into both planes."
+    },
+    {
+      "id": "l3_intel_oi07_effect_time_fence",
+      "state": "UNMODELLED",
+      "note": "The only subsystem with no Lean file mentioning it at all, by keyword or otherwise."
+    },
+    {
+      "id": "l3_services_sa_plan_dag_authority",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "core_evo_oracle.mojo",
+          "checks": [
+            "sa-plan-4200"
+          ]
+        },
+        {
+          "oracle": "monitoring_governance_oracle.mojo",
+          "checks": [
+            "sa-plan-http-4200"
+          ]
+        }
+      ],
+      "note": "Liveness and HTTP reachability observed. The DAG semantics -- dependency order, lease fencing, cycle rejection -- are NOT observed by any arm."
+    },
+    {
+      "id": "l4_apps_wisp_cockpit_capsule_4100",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "core_evo_oracle.mojo",
+          "checks": [
+            "cockpit-4100",
+            "cockpit-4101",
+            "cockpit-self-report-ok"
+          ]
+        },
+        {
+          "oracle": "monitoring_governance_oracle.mojo",
+          "checks": [
+            "cockpit-http-4100",
+            "cockpit-https-4101",
+            "all-probed-routes-200"
+          ]
+        }
+      ],
+      "note": "WORLD_FAIL standing: answers 7/7 routes while self-reporting status:unavailable and quorum_healthy:false. The pair is working; the subject is not."
+    },
+    {
+      "id": "l4_engines_mirage_unikernel_daemon",
+      "state": "MODELLED",
+      "note": "formal/lean/MirageReceiptAdmission.lean enumerates 93,312 receipt configurations as a truth table -- the most useful Lean main in the tree. Nothing boots a unikernel."
+    },
+    {
+      "id": "l4_intel_max_mojo_isolated_inference",
+      "state": "VERIFIED",
+      "verified_by": {
+        "oracle": "razr15_max_qwen_oracle.mojo",
+        "checks": [
+          "models-answers-200",
+          "canonical-model-id-is-served",
+          "gateway-completes-a-bounded-chat",
+          "remote-node-reports-a-mojo-toolchain",
+          "telemetry-answers-200",
+          "live-data-plane-stages-match-the-twin",
+          "live-control-plane-stages-match-the-twin",
+          "zero-remote-tokens-billed",
+          "rogue-authority-is-not-approved",
+          "sa-plan-authority-is-approved"
+        ]
+      },
+      "note": "The most thoroughly observed subsystem: HTTP status not exit code, counted stage enumerations not summary fields, and BOTH a required refusal and a required approval -- because a veto that refuses everything is an outage, not a veto."
+    },
+    {
+      "id": "l4_services_ecology_daemon_4110",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "mcp_gateway_oracle.mojo",
+          "checks": [
+            "pointer-matches-capsule"
+          ]
+        }
+      ],
+      "note": "Release pin read with cat, not readlink -f: the pin is a regular file holding a path, not a symlink. Getting that wrong once produced a false drift report."
+    },
+    {
+      "id": "l5_apps_cortex_agui_sse_conductor",
+      "state": "UNMODELLED"
+    },
+    {
+      "id": "l5_engines_hermes_gospel_z3_oracle",
+      "state": "MODELLED",
+      "note": "tools/z3 and tools/quint are proven to RUN by preflight arm 3 (wrapper), which is toolchain evidence, not subsystem verification."
+    },
+    {
+      "id": "l5_intel_poodavr_ruliad_executive",
+      "state": "MODELLED",
+      "note": "POODAVR stages modelled; formal/lean/ruliad/* is an 18-file library. No oracle closes a live POODAVR cycle."
+    },
+    {
+      "id": "l5_services_rete_ul_11domain_matcher",
+      "state": "MODELLED",
+      "note": "Rete-UL is the subject of the UNRESOLVED cascade index-1 divergence: Hermes OCaml in one Lean file, a bounded compressor at the same index in the Gleam type that Lean claims to match. No oracle observes a live match."
+    },
+    {
+      "id": "l6_apps_indrajaal_living_swarm",
+      "state": "UNMODELLED"
+    },
+    {
+      "id": "l6_engines_tier0_deterministic_caste",
+      "state": "MODELLED",
+      "note": "Caste cardinality 5 is proved and a core_evo_oracle mutation probe shows 4 diverges. MEMBERSHIP is unchecked and disagrees: Lean and governance put DeepSeek at Caste05, core_evo_api.gleam folds it into Caste02 and gives Caste05 to deterministic binaries."
+    },
+    {
+      "id": "l6_intel_queen_agy_jidoka_healer",
+      "state": "UNMODELLED",
+      "note": "The Jidoka andon line itself. SC-JIDOKA-001 code -32002 appears only in print statements and two Gleam TEST assertions; there is no PreToolUse, PostToolUse or Stop hook anywhere in .claude/, .codex/, .agents/ or .gemini/. The stop line is not wired to any tool-call path."
+    },
+    {
+      "id": "l6_services_pi_deepseek_argon_builders",
+      "state": "MODELLED"
+    },
+    {
+      "id": "l7_apps_request_slo_module_guard",
+      "state": "UNMODELLED"
+    },
+    {
+      "id": "l7_engines_zenoh_ed25519_core_bus",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "core_evo_oracle.mojo",
+          "checks": [
+            "zenoh-7447"
+          ]
+        },
+        {
+          "oracle": "monitoring_governance_oracle.mojo",
+          "checks": [
+            "zenoh-router-7447"
+          ]
+        }
+      ],
+      "note": "Router liveness observed. Ed25519 signing of published messages is NOT observed. And var/watchdog/andon.jsonl records published_to_zenoh:false hardcoded at tools/uos_web_watchdog.ml:280 -- no code path can set it true, so an Andon raised twice reached a local gitignored file and nothing else."
+    },
+    {
+      "id": "l7_intel_tailnet_otel_federation",
+      "state": "VERIFIED",
+      "verified_by": {
+        "oracle": "context_path_kpi_oracle.mojo",
+        "checks": [
+          "otel-jsonl-has-one-line-per-span",
+          "ten-layer-spans-declared"
+        ]
+      }
+    },
+    {
+      "id": "l7_services_unified_101route_mcp_gateway",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "mcp_gateway_oracle.mojo",
+          "checks": [
+            "gateway-handshake"
+          ]
+        },
+        {
+          "oracle": "monitoring_governance_oracle.mojo",
+          "checks": [
+            "live-alignment"
+          ]
+        }
+      ],
+      "note": "A live JSON-RPC initialize handshake against tools/uos-mcp-stdio. The ROUTE COUNT is the unresolved 101-vs-104 disagreement: the authoritative contract and governance inventory say 101, the Lean plane and live Gleam say 104, and the Lean partition 93 tools + 11 resources is false in every plane."
+    },
+    {
+      "id": "l8_apps_live_corpus_sub25ms_explorer",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "context_path_kpi_oracle.mojo",
+          "checks": [
+            "analytics-declares-twelve-catalog-targets"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "l8_engines_hermes_wiki_zk_transcluder",
+      "state": "VERIFIED",
+      "verified_by": [
+        {
+          "oracle": "km_census_oracle.mojo",
+          "checks": [
+            "corpus-scan-completed",
+            "measured:quoted-never-exceeds-raw",
+            "measured:live-non-negative"
+          ]
+        }
+      ],
+      "note": "WORLD_FAIL standing: 2,609 quoted examples measured against 1,727 declared. The oracle does NOT assert the declared census is wrong -- its original scope is unrecorded and 1,015 matches neither the whole-tree nor the docs/wiki subtree count.",
+      "withdrawn_checks": [
+        {
+          "check": "census-matches-declared-under-stated-scope",
+          "reason": "WITHDRAWN 20261106 (review finding F6). km_census_oracle registered this through r.world(), asserting the measured corpus must equal the declared census, while its own comment said the delta is reported \"NOT as proof the model is wrong, because the census original scope is unrecorded\". The claim was not assertable and is now an observation, \"delta-measured-vs-declared-scope-uncomparable\". This entry therefore rests on three checks, not four: coverage evidence here is WEAKER than the ledger previously recorded, which is the honest position."
+        }
+      ]
+    },
+    {
+      "id": "l8_intel_lean4_quint_9modality_verifier",
+      "state": "VERIFIED",
+      "verified_by": {
+        "oracle": "proof_plane_guard_oracle.mojo",
+        "checks": [
+          "g2-axiom-declarations",
+          "g3a-io-before-last-theorem",
+          "g3a-main-before-last-theorem",
+          "g3b-every-trailing-renderer-is-declared",
+          "g3b-no-renderer-exceeds-its-declared-budget",
+          "g3b-manifest-names-no-absent-file",
+          "g4a-present-tense-fixtures",
+          "g4b-present-tense-theorems",
+          "g5-unconditional-pass-banners",
+          "n1-index-only-theorem-names",
+          "n2-namespace-root-is-declared"
+        ]
+      },
+      "note": "The proof plane is the single most thoroughly guarded subsystem, which is an honest reflection of where this work was spent. 9 of the 9 modalities beyond Lean typechecking remain UNRUN."
+    },
+    {
+      "id": "l8_services_risk_priority_stpa_fmea_gate",
+      "state": "MODELLED",
+      "note": "SC-RISK-PRIORITY-001 section 8 itself states the gap: record_selection appends evidence and does NOT update sa_plan_task.priority or implement the ordering; factor validation accepts nonnegative integers rather than this policy's 1-5 bounds. The contract is honest; nothing re-measures it."
+    },
+    {
+      "id": "l9_apps_lustre_a2ui_checklist_cockpit",
+      "state": "MODELLED"
+    },
+    {
+      "id": "l9_engines_ansi_pty_tui_cockpit",
+      "state": "UNMODELLED"
+    },
+    {
+      "id": "l9_intel_tri_sovereign_release_authority",
+      "state": "MODELLED",
+      "note": "Codex and Pi/Astra reviews were obtained in this wave, which is EVIDENCE, not authority. CHK-17-SOV remains NOT_ADMITTED. No arm can verify a sovereign review occurred."
+    },
+    {
+      "id": "l9_services_telegram_journey_responder",
+      "state": "MODELLED"
+    },
+    {
+      "id": "__fpp_mesh_itself__",
+      "state": "BLIND",
+      "note": "Not one of the 40; the mesh that runs them. core_evo_oracle asks fpp-40-actors-alive and fpp-supervisor-running, and /api/health carries NEITHER key, so both read BLIND. The subsystem inventory is enumerated in Gleam and its liveness is unobservable. This is the single widest observability gap in the system: 40 subsystems whose supervisor cannot be asked whether it is running."
+    }
+  ],
+  "measured_coverage": {
+    "total_subsystems": 40,
+    "verified_count": 12,
+    "blind_count": 1,
+    "modelled_count": 17,
+    "unmodelled_count": 10,
+    "verified_fraction": "11/40 = 27.5%",
+    "honest_reading": "27.5% of the enumerated subsystems have two-key verification. 45% are modelled only, which means a Lean twin asserts something about them that nothing re-measures -- the observationNow defect at subsystem scale, 18 times over. 25% have neither. The FPP mesh that runs all 40 is BLIND.",
+    "what_would_move_the_number": "Not more theorems. 18 subsystems are already MODELLED; each needs an oracle that OBSERVES, which is a bounded unit of work per subsystem. The 10 UNMODELLED need a twin first. The BLIND one needs /api/health to emit two keys it currently omits -- the cheapest single improvement available, and it would move the FPP mesh and potentially several actors at once."
+  },
+  "why_this_ledger_can_be_trusted_more_than_its_predecessor": "Every VERIFIED claim names specific check names in a specific oracle. formal/mojo/twin_coverage_oracle.mojo greps the named oracle for each named check and FAILS if it is absent. A coverage claim therefore cannot be inflated by naming a check nobody wrote, and cannot go stale when a check is renamed or deleted.",
+  "amendments": [
+    {
+      "date": "20261106-0828",
+      "finding": "oracle-review attribution audit",
+      "what": "11 of 48 verified_by check attributions credited an oracle that does not contain the named check. The twin_coverage phantom detector matched check names against the UNION of all oracles, so cross-oracle misattribution was invisible to it; it only caught a check existing nowhere. Most cases were the same probe implemented in two oracles under different names (cockpit-4100 vs cockpit-http-4100), with the ledger merging both oracles checks into a single verified_by block.",
+      "fix": "verified_by is now a LIST of per-oracle blocks, each naming only checks that oracle actually contains. One check was withdrawn entirely; see withdrawn_checks on the affected entry.",
+      "enforcement": "twin_coverage_oracle gained \"every-claimed-check-is-in-the-oracle-credited\", which fails on any future misattribution rather than leaving it to a reader.",
+      "entries_amended": [
+        "l3_engines_ecology_file_txn_kernel",
+        "l3_services_sa_plan_dag_authority",
+        "l4_apps_wisp_cockpit_capsule_4100",
+        "l4_services_ecology_daemon_4110",
+        "l7_engines_zenoh_ed25519_core_bus",
+        "l7_services_unified_101route_mcp_gateway",
+        "l8_apps_live_corpus_sub25ms_explorer",
+        "l8_engines_hermes_wiki_zk_transcluder"
+      ],
+      "authority": "NONE",
+      "ev_ceiling": 93
+    },
+    {
+      "date": "20261106-0845",
+      "finding": "check renames invalidated two more attributions",
+      "what": "razr15_max_qwen_oracle renamed seven-data-plane-stages-are-present and seven-control-plane-stages-are-present after those arms stopped comparing the live stage census against the literal 7 and started comparing it against the twin dataPlaneStageCount and controlPlaneStageCount. The ledger still named the old checks, so twin_coverage_oracle reported them as phantoms.",
+      "fix": "Renamed in the ledger to the current arm names.",
+      "note": "The coverage claim here is now STRONGER, not weaker: the arm has the subject on one side and the running node on the other, where before it compared the node against a number the author typed. Recorded because a rename that strengthens a check still breaks every artifact that cites it by name, and the attribution arm added in the previous amendment is what caught it.",
+      "renames": [
+        {
+          "entry": "l4_intel_max_mojo_isolated_inference",
+          "from": "seven-data-plane-stages-are-present",
+          "to": "live-data-plane-stages-match-the-twin"
+        },
+        {
+          "entry": "l4_intel_max_mojo_isolated_inference",
+          "from": "seven-control-plane-stages-are-present",
+          "to": "live-control-plane-stages-match-the-twin"
+        }
+      ],
+      "authority": "NONE",
+      "ev_ceiling": 93
+    },
+    {
+      "date": "20261106-0932",
+      "finding": "declared measured_coverage was stale against the per-entry states",
+      "what": "The summary read {'total_subsystems': 40, 'verified_count': 11, 'blind_count': 1, 'modelled_count': 18, 'unmodelled_count': 10, 'verified_fraction': '11/40 = 27.5%', 'honest_reading': '27.5% of the enumerated subsystems have two-key verification. 45% are modelled only, which means a Lean twin asserts something about them that nothing re-measures -- the observationNow defect at subsystem scale, 18 times over. 25% have neither. The FPP mesh that runs all 40 is BLIND.', 'what_would_move_the_number': 'Not more theorems. 18 subsystems are already MODELLED; each needs an oracle that OBSERVES, which is a bounded unit of work per subsystem. The 10 UNMODELLED need a twin first. The BLIND one needs /api/health to emit two keys it currently omits -- the cheapest single improvement available, and it would move the FPP mesh and potentially several actors at once.'} while the 40 real subsystem entries (excluding the __fpp_mesh_itself__ sentinel, whose own state is BLIND) carry VERIFIED 12, BLIND 1, MODELLED 17, UNMODELLED 10. One subsystem was promoted MODELLED -> VERIFIED and the summary was never updated.",
+      "why_it_was_invisible": "twin_coverage_oracle's partition arm compared the DECLARED counts against the inventory size (11+1+18+10 = 40, which holds) and never read the per-entry `state` fields. It compared the summary against itself, so any drift between the summary and the entries was outside what the arm could express. The replacement arms derive the per-entry counts and compare the two recordings, and they reported this on their first run.",
+      "evidence_checked_before_correcting": "All 12 VERIFIED entries carry verified_by blocks naming between 1 and 11 checks, and the every-claimed-check-is-in-the-oracle-credited arm passes, so each named check exists in the oracle credited with it. The entries are the primary record and the summary is derived from them, so the summary was corrected to the entries and not the reverse. Correcting the count without that check would have laundered a promotion.",
+      "corrected_to": {
+        "verified_count": 12,
+        "blind_count": 1,
+        "modelled_count": 17,
+        "unmodelled_count": 10,
+        "total": 40
+      },
+      "authority": "NONE",
+      "ev_ceiling": 93
+    }
+  ]
+}

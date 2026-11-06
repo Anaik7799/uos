@@ -1,0 +1,121 @@
+{
+  "record": "20261106-1030-fractal-oracle-remediation-round-three",
+  "observed_utc": "2026-11-06T10:30:00Z",
+  "plan": "docs/plans/20261106-0924-oracle-rereview-remediation-plan.md",
+  "sa_plan_task": "TASK-LMU-P19",
+  "predecessors": [
+    "governance/sources/20261106-0807-mojo-oracle-plane-first-review.json",
+    "governance/sources/20261106-0849-mojo-oracle-plane-repair-pass.json"
+  ],
+  "authority": "NONE", "ev_ceiling": 93, "admission": "none granted",
+  "approach": {
+    "name": "fractal, L0..L9, lower layers gating higher",
+    "invariant": "INV-FALSIFY -- an assertion that cannot fail is not evidence; it must either be able to fail, or declare that it could not look.",
+    "why_fractal": "All 23 re-review findings and all 11 defects the previous round introduced are ONE defect class, and the class is scale-invariant. Two flat passes failed because each fixed it at one scale only: fixing an arm at L2 over an unfalsifiable L1 predicate produced a confident arm with a vacuous core, and fixing predicates without the L7 cross-plane contradiction left two oracles asserting both sides of one fact.",
+    "repair_operator": "R(assertion) = keep if it can fail; else rebind to a source with INDEPENDENT provenance; else delete if the claim is not expressible; else declare BLIND. R is idempotent -- round two violated idempotence because it was applied without an L1 decision procedure.",
+    "key_insight": "The L5 row -- the instrument was INSIDE the system it measured -- is why round two made things worse. The scanner certifying '0 unfalsifiable arms' detected only LITERAL tautologies, so it blessed exactly the class it was built for and was structurally blind to the class the repair created."
+  },
+  "phase_0_the_instrument": {
+    "tool": "tools/mojo_arm_falsifiability.ml",
+    "what": "Extracts every r.algebra/r.mutation_probe predicate, classifies it ANALYSABLE or NOT_ANALYSED, and for analysable arms ENUMERATES the free identifiers over a bounded domain, counting assignments where the predicate is FALSE. Zero falsifying assignments => UNFALSIFIABLE.",
+    "catches_what_the_old_scanner_could_not": [
+      "x != 3 - x        (2x != 3, no integer solution)",
+      "3 - (3 - x) == x  (arithmetic identity)",
+      "(3 - x) != x      (3 is odd)",
+      "a + b > a         (reduces to b > 0)",
+      "n == n, 93 == 93"
+    ],
+    "honest_boundary": "Bounded enumeration CANNOT PROVE falsifiability. FALSIFIABLE is evidence from the sampled domain; UNFALSIFIABLE over that domain is treated as failure. NOT_ANALYSED is an open question, never a pass. The tool does not claim a proof -- the L9 discipline applied to the L5 instrument.",
+    "own_negative_control": "formal/mojo/control_falsify_probe.mojo plants six known-unfalsifiable and four known-falsifiable expressions. The detector must flag exactly the six. Verified: 6 UNFALSIFIABLE / 4 FALSIFIABLE, with correct names and line numbers.",
+    "three_defects_in_the_detector_itself_found_and_fixed": [
+      {
+        "defect": "strip_noise DELETED comment and string characters, so offsets into the stripped copy did not map back to the source and every arm was reported as `<unnamed>` at a wrong line. Verdicts were right and unusable.",
+        "fix": "Made length-preserving: noise characters become spaces, so offsets map 1:1."
+      },
+      {
+        "defect": "max_vars was 3, so the THREE ARMS THAT MOTIVATED THE TOOL (ontology_atlas atlas06/08/09, four free identifiers each) were reported NOT_ANALYSED. The detector was blind to its own reason for existing.",
+        "fix": "Cap raised to 5 with a tiered domain, plus a one-at-a-time sweep for wider arms so an 8-identifier arm can be CONFIRMED falsifiable rather than left unexamined. The OAT sweep under-approximates, so finding no witness leaves the arm NOT_ANALYSED and never promotes it to UNFALSIFIABLE."
+      },
+      {
+        "defect": "FALSE POSITIVES. `declared != 104 and observed != 104` and `104 != observed` were reported UNFALSIFIABLE purely because 104 was absent from the sweep, so no assignment could falsify them. Both arms are correct and the instrument was wrong.",
+        "fix": "Each predicate's own integer literals (and their neighbours) are harvested into that arm's domain.",
+        "why_this_matters_most": "Trusting that verdict would have 'fixed' two sound arms -- the round-two failure mode, committed by the tool built to prevent it. It was caught only by READING the arms instead of the report."
+      }
+    ]
+  },
+  "fixes_by_layer": {
+    "L1_predicates_decidable": [
+      "ontology_atlas atlas06/07/08: the Mojo mirrors inlined phi(x) = 3 - x, substituting the CONCLUSION of THM_ATLAS_07 into ATLAS-06/08/09 and collapsing two separately declared functions into one, so every arm reduced to an integer identity. Encoding B is now read from its own declared source -- the DECLARATION ORDER of BiomorphicMetabolicRegime in BionicMojoLeanHighPerformanceInterception.lean:197, a different file with a different author. ATLAS-09 was DELETED rather than rewritten: with both sides derived it was a fourth restatement of ATLAS-06, and restatement is what produced the tautology.",
+      "twin_coverage: `v + b <= id_lines if id_lines > 0 else v + b >= 0` -- the first branch is implied by the partition arm so it cannot fail independently, and the else branch is a tautology under its own guard, so an UNREADABLE inventory produced a PASSING algebra arm that kept the receipt out of VACUOUS.",
+      "agent_profile: `subj_lean_ok >= 0` cannot fire -- grep | wc -l always prints a number.",
+      "language_conformance: `sh_files + bare_bash > sh_files` reduces to `bare_bash > 0`."
+    ],
+    "L2_arm_name_equals_arm_body": [
+      "agent_profile obligation 1 kept the grep-line-count-vs-agent-count category error that obligations 2/4/5 were converted away from (8 profiles vs 6 agents, a permanent manufactured failure). Now BLIND with the line count observed.",
+      "twin_coverage cover-verified-and-blind-are-disjoint did not test disjointness. Replaced with a real partition test deriving the per-entry states.",
+      "axis_registry: `sanctions >= axis_ids - 2` hardcoded an exemption for 'the two canonical axes'. Measured: 13 axes, 9 sanctions, FOUR unsanctioned, and NO canonical field exists anywhere in the registry -- so the exemption is not checkable from the artifact and asserting it would be inventing the registry's content. Replaced with a partition arm plus an observation naming the unsanctioned axes.",
+      "axis_registry: `grep -c ... || echo 0` is a shell bug -- grep -c already prints 0 then exits 1, so stdout became two lines, Int raised, count returned -1, and the arm went BLIND from the instrument. The ladder count also counted ladder AXES (1) under a name claiming RUNGS; the axis declares its own cardinality of 11 and that is now read."
+    ],
+    "L3_controls_survive_legitimate_change": [
+      "razr15: the F17 hardening made a NODE OUTAGE report VACUOUS -- severity 5, outranking WORLD_FAIL and BLIND -- so an unreachable machine was indistinguishable from an oracle that cannot discriminate. The rationale was right and the CHANNEL was wrong; reachability moved into a world_or_blind presence predicate. This file's own repair pass had diagnosed the identical anti-pattern in agent_profile and then introduced it here.",
+      "ontology_atlas: the F12 replacement re-pinned a RELATION (`declared > observed`), so closing the route-census gap -- the thing the surrounding arms exist to motivate -- would report VACUOUS. Reduced to readability."
+    ],
+    "L4_verdict_function_and_relations": [
+      "monitoring_governance: THREE of six conjuncts were still self-satisfying (`probed >= probed`, `0 <= 0`, `REQ_SCC == REQ_SCC`) while the comment claimed they were 'recorded BLIND RATHER THAN handed the constant'. They were both, so one run asserted the relation held and reported three of its inputs unobservable, under an arm named for the coverage it lacked. Of the four self-comparisons the comment identified, only a2ui had actually been converted. The aggregate is now BLIND and a separate arm carries what IS measured.",
+      "mcp_gateway: parameter 3 (`twelve_aligned`) was receiving `legacy == 0`, so the legacy predicate was evaluated TWICE and 'all twelve configs aligned' was never measured; parameters 9/10 were the literal True, one under a comment in the same file calling the secret conjunct 'Non-negotiable'. twelve_aligned and read_source_ok are now real readings; secret_refused is declared BLIND.",
+      "proof_plane_guard: the consistency arm compared io_pre against first_offending_line, but the scanner sets that field from `min_opt (io_pre @ main_pre)`, so a file with a def main before its last theorem and no IO token made the arm report 'the reader is wrong' when the reader was right."
+    ],
+    "L6_ledger": [
+      "The declared measured_coverage summary was STALE against the per-entry states: entries carry VERIFIED 12 / BLIND 1 / MODELLED 17 / UNMODELLED 10 over the 40 real subsystems (excluding the __fpp_mesh_itself__ sentinel, whose own state is BLIND), while the summary read 11/1/18/10. One subsystem was promoted MODELLED -> VERIFIED and the summary was never updated. Invisible because the partition arm compared the DECLARED counts against the inventory size and never read the entries -- it compared the summary against itself. Before correcting the count I verified all 12 VERIFIED entries carry verified_by blocks naming 1-11 checks and that the attribution arm passes, so each named check exists in the oracle credited with it; correcting without that check would have laundered a promotion."
+    ],
+    "L7_planes_do_not_assert_both_sides": [
+      "bionic_interception, THE MANUFACTURED DIVERGENT: three arms required the regime and archetype encodings to AGREE, while THM_ATLAS_06 proves they disagree everywhere, THM_ATLAS_07 proves they sum to 3, and THM_ATLAS_11 proves the sole archetype agreement is proseMd -- and ontology_atlas mirrors all three and PASSES. The oracle set reported 'the encodings disagree' = PASS and 'the encodings must agree' = DIVERGENT about the same facts. Exactly one could ever be green and no change to the tree made both pass, so DIVERGENT was emitted forever and a GENUINE divergence in that pair was indistinguishable from the standing one. The arms now assert the proved relation; the hygiene concern is an observation and the dual encoding is named an operator decision. Also corrected: the archetype arm compared against a hardcoded 'CT_HIGH_ENTROPY' while the OCaml table's code 0 is CT_JSON_STRUCT; both sides are now derived, and the index-7 agreement is labelled as coming from the table's CATCH-ALL rather than an explicit case.",
+      "core_evo, THE WRONG CARRIER: castes was derived from TaskRole (ImplRole, RcaTpsRole, SovereignGateRole, FmeaFormalRole, ConductorRole), which shares ONLY ITS CARDINALITY with what the subject means. core_hive.gleam's HiveCaste declares exactly the five names holarchyCastes declares, with wip limits 1,4,2,2,2 summing to 11 and matching THM_ONT_05. I picked a carrier because its count matched the expected value, in the same change where I wrote that doing so is the defect under repair and declined the requiredServices derivation on that ground. The arm now binds on the wip SUM as well as the cardinality, because any five-member type satisfies a count of 5 but only the real caste type also sums to 11.",
+      "context_path_kpi, THE WITHDRAWAL WAS WRONG: THM_KPI_06_monotonic_span_timings (:158-159) proves observedNs <= p99Ns && p99Ns <= budgetNs and had NO MOJO COUNTERPART. spanWithinBudget does not constrain the ordering, which is why the mirror was faithful and my first replacement was wrong -- but the twin does constrain it in a separate theorem. Two self-corrections in a row moved away from that, each narrowing a true statement into a false one, ending in an observe() of a falsehood. The counterpart now exists as span_timings_monotonic with three arms, and the byte-identical duplicate arm was removed.",
+      "km_census, A FIX BUILT ON A FALSE PREMISE: the oracle asserted in three places that the census scope 'is not recorded anywhere in the file and cannot be recovered'. It is recorded THREE LINES ABOVE the def lines the oracle greps -- 'Independent census over AGENTS.md, GEMINI.md, docs/**, contracts/**'. I used that false claim to downgrade a world_count to an observe, so a measurable drift read as a note and the pair PASSED. Measured under the declared scope with the oracle's own pattern: wiki 1478 vs declared 1015, zk 1853 vs 1308 -- about +46% and +42%. The scope is now READ from the docstring and the comparison restored to a channel that can fail. The stripping rule is not recorded, so the counts are comparable in scope but not bit-for-bit, which is a reason to name the scope in the arm rather than withdraw it.",
+      "mcp_gateway: capsule-does-not-hardcode-a-single-revision concluded 'a client negotiating the newest revision is told the oldest', refuted by the oracle's OWN live handshake, which returns 2026-07-28 for a 2026-07-28 request. The hardcoded site is server.gleam:517-521 initialize_response, not the live path. The arm now reads the echoed response, which the oracle already held."
+    ],
+    "L8_arms_hold_under_remediation": [
+      "language_conformance: the polarity defect had been MOVED into the algebra channel, not fixed. Converting the 39 extensionless Bash scripts to OCaml would make the arm `7 > 7` -- an ALGEBRA failure, i.e. DIVERGENT, which the substrate documents as 'the model drifted from itself ... must never be reported as an ordinary outage' -- in a file where it was the only algebra arm. Replaced with the claim that the SHEBANG instrument dominates the extension glob, which holds at every surface size including zero."
+    ],
+    "L9_L0_recorded_not_fixed": [
+      "proof_plane_guard assigns G1 (sorry detection) to a driver that typechecks 13 of 129 .lean files; a sorry in the other 116 is checked by nothing. Latent -- no real sorry proof term exists.",
+      "THM_PROV_TWIN_17 proves all (pinnedCeiling == 93 && currentlySynced) over 24 records where currentlySynced := true is written in all 24 -- the kernel proving true = true 24 times. ANOTHER WRITER'S TWIN: recorded only.",
+      "provenance_ceiling_impact_oracle.mojo: four defects (a mutation_probe that re-asserts its own algebra arm so vacuous can never increment; a frozen present-tense fixture restated byte-for-byte from the twin while the live km-gate output sits unused in the same function; an arm named sqlite-352-cycle-chain-intact that never checks 352, and the twin's provenanceChainCycles := 352 is referenced by nothing; a 24-path inventory hand-transcribed from fractalImpactInventory whose content is grep -q '93'). ANOTHER WRITER'S FILE: NOT EDITED.",
+      "Operator decisions untouched: the cascade index-1 disagreement (Tier1Rete vs Tier1Compress -- a LEGITIMATE DIVERGENT), the two inverted integer encodings, the index-8 taxonomy adjudication, the mandate's unsatisfiable cocycle invariant."
+    ],
+    "hygiene": [
+      "Two oracle sources hardcoded a REVIEW SESSION's scratchpad UUID and rm -rf'd it, so a per-session identifier had become provenance in oracle source and a stale UUID pointing somewhere real would delete it. Replaced with mktemp -d.",
+      "ontology_atlas concluded 'no lakefile and 2 import edges is WHY 651 lines are byte-identical' TWO LINES AFTER the same run reports lakefile present : 1 and 4 import edges -- the file asserted and refuted one premise inside a single receipt. The stated cause is now read from the run.",
+      "A stray `python3 -c pass` fragment I introduced in an axis_registry probe was removed: CLAUDE.md confines helper scripting to OCaml and Mojo."
+    ]
+  },
+  "verification": {
+    "gate_1_falsifiability_detector": "67 enumerated, 61 FALSIFIABLE, 6 UNFALSIFIABLE -- all six are the planted controls. 108 NOT_ANALYSED (contain calls), 0 wide-unconfirmed. The detector's own negative control still catches exactly its six.",
+    "gate_2_literal_tautologies": 0,
+    "gate_3_substrate_selftest": "8/8 verdict paths",
+    "gate_5_lean": "UosOntologyAtlas 70 theorems 0 errors; UosAgentCapabilityProfile 17 theorems 0 errors; both clean at 4.33.0",
+    "gate_6_preflight": "PASS (33 checks)",
+    "gate_7_differential": {
+      "pairs": 15, "orphans": 0, "overall": "DIVERGENT",
+      "pass": 7, "blind": 1, "world_fail": 6, "divergent": 1,
+      "reproduced": "YES -- two consecutive driver runs byte-identical, AND all 15 oracles run directly agree with the driver. The previous round's tally was asserted and turned out not to be reproducible, so reproduction is now part of the gate.",
+      "the_one_divergent": "axis_registry / Fractal_Holonic_Composability -- the cascade index-1 mismatch (Tier1Rete in Lean vs Tier1Compress in Gleam). The re-review independently judged this one LEGITIMATE: a genuine unresolved mismatch the arm correctly fails closed on. The MANUFACTURED divergent (bionic) is gone."
+    }
+  },
+  "precommitted_predictions_scored": [
+    {"n": 1, "p": 0.80, "claim": "the detector catches all six planted expressions on its first complete run", "outcome": "HELD -- 6/6 flagged, 4/4 genuine arms passed. The verdicts were right on the first run; the names and line numbers were wrong until strip_noise was made length-preserving."},
+    {"n": 2, "p": 0.65, "claim": "it finds at least one additional unfalsifiable arm I had not identified", "outcome": "FAILED, and the failure is the more useful result. It flagged two arms neither I nor the reviewer had named -- and BOTH WERE FALSE POSITIVES from a missing domain value. The arms were sound. Scored as failed because the prediction meant a genuine additional finding, and recording it as a success would be exactly the self-serving reading this effort exists to prevent."},
+    {"n": 3, "p": 0.90, "claim": "km_census moves to WORLD_FAIL on a real drift once the scope is read", "outcome": "HELD -- two world failures, 1478 vs 1015 and 1853 vs 1308."},
+    {"n": 4, "p": 0.55, "claim": "bionic stays DIVERGENT after the L7 fix", "outcome": "FAILED -- it went to PASS. I had conflated bionic with axis_registry: the cascade index-1 mismatch lives in axis_registry, and bionic's only divergence was the manufactured one."},
+    {"n": 5, "p": 0.60, "claim": "at least one fix in this round introduces a new defect a fourth review would catch", "outcome": "PARTLY REALISED AND SELF-CAUGHT WITHIN THE ROUND -- three defects in the detector itself (offset drift, a cap that hid the arms it existed for, and two false positives), plus an Int.__str__ error and an over-complicated shell extraction. All found before the gate. Whether a fourth review finds more is not settled by this record, and this round makes no claim that it will not."},
+    {"n": 6, "p": 0.85, "claim": "the differential tally changes from 7/1/5/2", "outcome": "HELD -- 7/1/6/1."}
+  ],
+  "what_this_round_does_not_claim": [
+    "That a bounded-domain FALSIFIABLE verdict is a proof. It is evidence from the sampled domain.",
+    "That 108 NOT_ANALYSED arms are sound. They contain calls and are an open question; closing them needs the enumerator to evaluate mirror functions, which it cannot.",
+    "That a move to PASS is progress. km_census SHOULD now fail, and arms that could not fail were replaced by arms that can or by explicit BLIND.",
+    "That the L0/L9 operator decisions are resolved, or that provenance_ceiling_impact_oracle.mojo has been reviewed by anyone but the re-review."
+  ],
+  "footer": "Document and component evidence do not grant system admission. Sa-plan is the sole execution authority. EV ceiling 93; EV-94..109 NOT_ADMITTED."
+}

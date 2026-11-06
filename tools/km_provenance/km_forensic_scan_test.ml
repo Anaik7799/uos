@@ -26,10 +26,11 @@ let with_fixture f =
     f root put run)
 let first r = List.hd r.claims
 let has_gap (c:claim) g = List.exists (fun (_,x) -> x=g) c.gaps
-let receipt bytes_digest = Yojson.Safe.to_string (`Assoc [
+let receipt_with_reviewer reviewer bytes_digest = Yojson.Safe.to_string (`Assoc [
   "schema",`String "uos-forensic-receipt-v1";"kind",`String "runtime";
   "candidate_commit",`String candidate;"source_path",`String code_path;
-  "source_sha256",`String bytes_digest;"reviewer",`String "codex";"signature",`String "unsigned-fixture"])
+  "source_sha256",`String bytes_digest;"reviewer",`String reviewer;"signature",`String "unsigned-fixture"])
+let receipt bytes_digest = receipt_with_reviewer "codex" bytes_digest
 let receipt_path = receipt_dir ^ "/20261031-1500-ev-094-runtime.receipt.json"
 let () =
   with_fixture (fun root _ run ->
@@ -71,6 +72,16 @@ let () =
     let c = first (scan_fixture ~root ~run) in
     check "bound unsigned receipt never authority" (has_gap c Unverified_signature);
     check "receipt candidate bound byte observation" ((List.hd c.receipts).binding=Candidate_bound));
+  List.iter (fun reviewer ->
+    with_fixture (fun root put run ->
+      put receipt_path (receipt_with_reviewer reviewer (hash "pub fn main() { Nil }\n"));
+      let c = first (scan_fixture ~root ~run) in
+      check ("2-of-4 authorized ratifier accepted: " ^ reviewer) (has_gap c Unverified_signature)))
+    ["codex"; "agy"; "claude"; "pi+openrouter+gemini+argon"];
+  with_fixture (fun root put run ->
+    put receipt_path (receipt_with_reviewer "unauthorized-model" (hash "pub fn main() { Nil }\n"));
+    let c = first (scan_fixture ~root ~run) in
+    check "unauthorized ratifier rejected" (has_gap c Invalid_receipt));
   with_fixture (fun root put run ->
     put receipt_path (receipt (String.make 64 '0'));
     check "mismatched receipt digest" (has_gap (first (scan_fixture ~root ~run)) Invalid_receipt));

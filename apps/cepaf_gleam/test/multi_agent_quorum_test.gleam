@@ -3,10 +3,11 @@
 
 import cepaf_gleam/ha/multi_agent_quorum.{
   AgySovereign, ByzantineFaultTolerant, ClaudeSovereign, CodexSovereign,
-  PeerSovereign, QuorumAbstain, QuorumApprove, QuorumReject, TwoOfThreeSovereign,
-  UnanimousSovereign, VerdictByzantineFault, VerdictPending, VerdictRatified,
-  VerdictRejected, cast_ballot_vote, compute_vote_entropy, create_ballot,
-  init_quorum_engine, record_ballot, sovereign_to_string,
+  OpenRouterSovereign, PeerSovereign, QuorumAbstain, QuorumApprove, QuorumReject,
+  TwoOfFourSovereign, TwoOfThreeSovereign, UnanimousSovereign,
+  VerdictByzantineFault, VerdictPending, VerdictRatified, VerdictRejected,
+  cast_ballot_vote, compute_vote_entropy, create_ballot, init_quorum_engine,
+  record_ballot, sovereign_to_string,
 }
 import gleeunit
 import gleeunit/should
@@ -175,4 +176,43 @@ pub fn quorum_engine_record_test() {
   let engine1 = record_ballot(engine0, b2)
   engine1.ratified_count |> should.equal(1)
   engine1.total_ballots_created |> should.equal(1)
+}
+
+pub fn two_of_four_any_pair_ratification_test() {
+  // Pair 1: Claude + Pi/OpenRouter/Gemini/Argon (without Codex or AGY)
+  let b0 =
+    create_ballot(
+      "p-2oo4-claude-pi",
+      "SC-PROVENANCE-001 2-of-4 Model Ratification",
+      TwoOfFourSovereign,
+      2000,
+    )
+  b0.total_eligible |> should.equal(4)
+  b0.required_approvals |> should.equal(2)
+  let b1 =
+    cast_ballot_vote(
+      b0,
+      ClaudeSovereign,
+      QuorumApprove,
+      "Formal & runtime receipts verified",
+      "sha-claude",
+      2010,
+    )
+  b1.verdict |> should.equal(VerdictPending)
+  let b2 =
+    cast_ballot_vote(
+      b1,
+      OpenRouterSovereign,
+      QuorumApprove,
+      "Pi+OpenRouter+Gemini+Argon verified",
+      "sha-pi-argon",
+      2020,
+    )
+  case b2.verdict {
+    VerdictRatified(approvals, total) -> {
+      approvals |> should.equal(2)
+      total |> should.equal(2)
+    }
+    _ -> panic as "Expected VerdictRatified for 2-of-4 (Claude + OpenRouter)"
+  }
 }

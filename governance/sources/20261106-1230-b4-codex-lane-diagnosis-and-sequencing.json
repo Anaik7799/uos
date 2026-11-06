@@ -1,0 +1,66 @@
+{
+  "record": "20261106-1230-b4-codex-lane-diagnosis-and-sequencing",
+  "observed_utc": "2026-11-06T12:30:00Z",
+  "sa_plan_task": "TASK-LMU-P21",
+  "authority": "NONE", "ev_ceiling": 93, "admission": "none granted",
+
+  "B4_DIAGNOSIS": {
+    "prior_claim": "Three governance records state the Codex lane is DOWN: exit 0 on three attempts across two prompt shapes, two derailing in a KM-triad preamble and one emitting no response block. Recorded as a reproducible local Codex failure and an open environment issue.",
+    "that_claim_is_WRONG": true,
+    "controlled_tests": [
+      {"test": "trivial prompt, default effort", "result": "replied ALIVE, 21,774 tokens", "conclusion": "codex exec works; hooks and MCP preamble load fine"},
+      {"test": "single-file review, model_reasoning_effort=max, read km_census_oracle.mojo and name its weakest arm", "result": "SUCCEEDED, 62,645 tokens", "finding_returned": "census:quoted-is-inline-plus-fenced compares quoted_examples(...) against the same addition that defines it, so it cannot catch a defect in the rule", "conclusion": "the finding is CORRECT and was independently flagged by the re-review as one of two identity arms in that file"},
+      {"test": "16-file review, 4338 lines, 20 ranked findings", "result": "FAILED three times, exit 0", "conclusion": "the slice was too large"}
+    ],
+    "hooks_ruled_out": "Four SessionStart hooks fire per codex exec. Timed: herdr-agent-state.sh 0.03s (timeout 10), the UOS preflight hook 2.5s on its fallback path (timeout 120). Neither is near its bound. The 4-starts/3-completions pattern in the failed logs was interleaved logging of two hook groups, not a hang.",
+    "root_cause": "SLICE SIZE, not a broken lane, not prompting, not the environment.",
+    "why_this_matters": "AK-47-03 specifies bolt clearance as one worker, one bounded file set, one observable acceptance, and SUP-03 assigns Codex the integration lane on that basis. A monolithic 16-file review is the opposite shape. The contract predicted the failure and predicted the fix; three records blamed the tool.",
+    "fix": "One oracle per codex exec. 16 bounded invocations in place of one monolithic task.",
+    "correction_to_prior_records": [
+      "governance/sources/20261106-0807-mojo-oracle-plane-first-review.json -- reviewers[].outcome FAILED_TO_DELIVER for codex-gpt-6-luna: the cause recorded there (reproducible local failure) is wrong.",
+      "governance/sources/20261106-0849-mojo-oracle-plane-repair-pass.json -- same.",
+      "governance/sources/20261106-1030-fractal-oracle-remediation-round-three.json -- prediction 4 'Codex still fails to deliver without an environment fix' at p=0.80 was predicated on the wrong diagnosis; no environment fix was needed."
+    ]
+  },
+
+  "BLAST_RADIUS_MEASURED_BEFORE_CHANGING_THE_SUBSTRATE": {
+    "measurement": "world_checks and observations for all 16 oracles",
+    "result": "every oracle has world_checks >= 4 and observations >= 7; the minimum world_checks is 4 (mcp_name_ownership) and the minimum observations is 7 (monitoring_governance)",
+    "consequence": "SC-VP-01 (PASS requires a world check) and SC-VP-02 (a world failure requires an observation) are SATISFIED BY ALL 16 ORACLES TODAY. Adding them breaks nothing now.",
+    "honest_framing": "These are REGRESSION GUARDS against a reachable state, not fixes for a live defect. The twin proves the states are reachable (THM_VP_11 in one step, THM_VP_12 in exactly two); no current oracle occupies them. Claiming these arms 'fixed' FM-05/FM-06 would overstate what changed.",
+    "prediction_scored": {
+      "prediction": "round-four prediction 2: adding the three arms makes >= 2 oracles fail that currently PASS",
+      "p": 0.75,
+      "outcome": "FAILED -- measured before implementing. All 16 already satisfy the new arms. The prediction assumed the gaps were occupied; they are only reachable."
+    }
+  },
+
+  "SEQUENCING": {
+    "order": "B4 -> B1 -> B3 -> B2 -> B5 -> robustness",
+    "rationale": "B4's fix is free and unblocks B1, which is the critical bottleneck (implementer is also the falsifier). B3 is one file. B2's cost dropped an order of magnitude once measured. So the cheap items deliver a working falsifier lane before the expensive ones start.",
+    "B2_cost_correction": {
+      "prior_claim": "needs the enumerator to evaluate Mojo mirror functions -- a small interpreter or a harness that calls the functions directly; real work, not a tweak",
+      "measured": "87 of ~98 unexamined arms call ONLY PURE mirror functions (runtime_aligned, gateway_aligned, aligned, span_within_budget, owned_in, quoted_examples, immune_breaker, live, status_for). Only 11 touch world contact.",
+      "consequence": "No interpreter is needed. A generated Mojo probe can IMPORT the oracle module and CALL its mirror function over the enumerated domain -- the technique the detector already uses, extended one step. The earlier difficulty estimate was an order of magnitude too high."
+    },
+    "B5_approach_correction": {
+      "prior_claim": "it is not clear the data plane can be verified by this architecture at all -- a model of a grep is a model of the author's belief about the grep",
+      "correction": "Modelling the grep is unnecessary. What must be shown is that the measurement is SENSITIVE to the thing it measures: perturb the real subject in a scratch copy and require the measurement to move. That technique already caught real defects by hand (argon dropped from allAgentId, an added FppService, the ledger attribution). Systematising it verifies the data plane in the only sense that matters."
+    }
+  },
+
+  "ALWAYS_WORK_REQUIREMENT": {
+    "operator_directive": "make the system extremely reliable and robust, like ak 47 it must always work",
+    "reading": "AK-47-02 steel receiver, extended from 'the invariants do not bend' to 'the mechanism runs under ordinary dirt'. For this plane that means: no oracle may crash, every adverse condition must yield a WELL-FORMED RECEIPT with an honest verdict, and no verdict may be undefined.",
+    "concrete_properties": [
+      "R1 totality -- the verdict function is total: every counter state maps to exactly one verdict",
+      "R2 fail-closed on instrument absence -- a missing tool yields BLIND, never a crash and never a manufactured failure",
+      "R3 bounded -- every world contact passes through capture's timeout; no unbounded spawn",
+      "R4 adverse-input safe -- empty captures, malformed JSON, absent files and negative counts all produce an honest verdict",
+      "R5 the selftest covers every verdict path"
+    ],
+    "method": "A robustness simulation that runs every oracle under adverse conditions (stripped PATH, absent tools, missing subjects) and requires a parseable receipt from each. An oracle that crashes or emits malformed JSON fails R1-R4 regardless of what it reports when clean."
+  },
+
+  "footer": "Document and component evidence do not grant system admission. Sa-plan is the sole execution authority. EV ceiling 93; EV-94..109 NOT_ADMITTED."
+}

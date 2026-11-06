@@ -4,7 +4,7 @@
 # Admitted EV Ceiling: 93 (EV-94..109 NOT_ADMITTED)
 -/
 
-namespace UosContextPathKpiOtelTwin
+namespace UOS.ContextPathKpiOtelTwin
 
 def admittedEvCeiling : Nat := 93
 def w3cTraceId : String := "4bf92f3577b34da6a3ce929d0e0e4736"
@@ -257,22 +257,33 @@ def renderAnalyticsSummaryJson : String :=
   q ++ "spans" ++ q ++ ":" ++ spansArray ++
   "}"
 
-def main : IO UInt32 := do
-  let lines := allLayerSpans.map renderOtelJsonl
-  let nl := String.singleton (Char.ofNat 10)
-  let content := (String.intercalate nl lines) ++ nl
-  IO.FS.writeFile "/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl" content
-  IO.FS.writeFile "/home/an/NAS-setup/uos/state/context-fastpath-analytics.json" (renderAnalyticsSummaryJson ++ nl)
-  let sqlLines := ["BEGIN TRANSACTION;", "DELETE FROM sa_plan_fractal_log WHERE trace_id = '4bf92f3577b34da6a3ce929d0e0e4736';"]
-    ++ (allLayerSpans.map renderSqlInsert)
-    ++ (allLayerSpans.map renderCadenceUpdate)
-    ++ ["COMMIT;"]
-  let sqlContent := (String.intercalate nl sqlLines) ++ nl
-  IO.FS.writeFile "/tmp/uos_fractal_log_sync.sql" sqlContent
-  let _ ← IO.Process.output { cmd := "sqlite3", args := #["/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3", ".read /tmp/uos_fractal_log_sync.sql"] }
-  IO.println s!"UOS_CONTEXT_FASTPATH_KPI_OTEL_TWIN=PASS (theorems=7/7, layers={allLayerSpans.length}, all_within_budget={allLayerSpans.all spanWithinBudget}, sqlite_synced=true, cadence_ticks_updated=10, jsonl=/home/an/NAS-setup/uos/state/context-fastpath-l0-l9.otel.jsonl)"
-  return 0
+/-! ## OBSERVATION AND EFFECT PLANE — deliberately absent
 
-end UosContextPathKpiOtelTwin
+    Until `20261106-0108` this file ended in a `def main` that did four things
+    a proof plane must never do:
 
-def main : IO UInt32 := UosContextPathKpiOtelTwin.main
+    1. `DELETE FROM sa_plan_fractal_log ...` and `INSERT` against
+       `var/sa-plan/uos.sqlite3` — a direct write to the store of the SOLE
+       EXECUTION AUTHORITY, bypassing every `sa-plan` command.
+       `SC-RISK-PRIORITY-001` §8 is explicit: "Use only supported Sa-plan
+       commands/Store APIs for task state; no direct database writes".
+    2. Wrote `/tmp/uos_fractal_log_sync.sql` at a fixed, predictable path.
+    3. Discarded the result of that write: the subprocess output was bound to
+       the wildcard `_`,
+       and then printed `sqlite_synced=true` unconditionally. The banner
+       claimed success whether sqlite3 succeeded, failed, or was absent.
+    4. Printed `=PASS` from a file whose only evidence is that it typechecks.
+
+    Artifact rendering now lives in `formal/mojo/context_path_kpi_oracle.mojo`,
+    which writes the OTEL JSONL and the analytics JSON and CHECKS the result
+    instead of asserting it.
+
+    The SQLite sync was NOT ported. Reinstating it needs an operator decision
+    about whether this telemetry belongs in the Sa-plan store at all and, if
+    so, which `sa-plan` command owns the write. It is recorded here as an open
+    question rather than silently reproduced in another language.
+
+    The rendering functions and the 7 budget theorems above are unchanged:
+    they are statements about the model and remain valid. -/
+
+end UOS.ContextPathKpiOtelTwin

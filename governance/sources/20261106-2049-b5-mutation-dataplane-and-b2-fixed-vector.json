@@ -1,0 +1,158 @@
+{
+  "schema": "uos.verification-record.v1",
+  "observed_utc": "2026-11-06T20:49:23Z",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "admission": "NOT_GRANTED",
+  "scope": "B5 mutation-based data-plane verification; B2 enabled with the FIXED_VECTOR verdict class",
+
+  "what_was_asked": "execute b5 and finish b2 with the fixed_vector class",
+
+  "b5": {
+    "tool": "tools/mojo_mutation_dataplane.ml",
+    "method": "Perturb the real subject, require the measurement to move. baseline = receipt(oracle, unmutated tree); mutant = receipt(oracle, one line of one subject changed); KILLED iff mutant differs from baseline.",
+    "two_modes": {
+      "--subject": "mutate a file the oracle names and greps; verifies the world plane",
+      "--mirror": "mutate the body of one of the oracle's own pure mirror functions; the evidence a FIXED_VECTOR arm needs in order to be sound"
+    },
+    "controls_on_the_instrument": [
+      "DETERMINISM: the oracle is run twice unmutated before any mutation. If the two receipts differ under the comparator, the comparator cannot tell a mutation from noise and the oracle is NOT measured. The comparator is tested per oracle, not assumed.",
+      "SPECIFICITY: a whitespace-only perturbation of a line the oracle names nothing on is EXPECTED to survive. 37 held, 0 fired.",
+      "NOT_RUN IS NOT A PASS: a mutant that produced no receipt was seen by nothing; it is its own category and fails the gate.",
+      "COVERAGE IS ASSERTED, NOT INFERRED: an oracle whose declared subject cannot be located or is not a readable single file is NAMED as not covered."
+    ],
+    "final_subject_sweep": {
+      "mutants": 147,
+      "gated_killed": 15,
+      "gated_survived": 0,
+      "not_run": 0,
+      "ungated_moved": 63,
+      "ungated_insensitive": 32,
+      "specificity_held": 37,
+      "specificity_fired": 0,
+      "nondet_oracles": 0,
+      "exit": 0,
+      "oracles_gated": "15 of 16; proof_plane_guard_oracle.mojo declares 'formal/lean/*.lean (tree-wide proof-plane guard)', a glob with prose that no single-file operator can empty, and is reported as not covered with that reason"
+    },
+    "final_mirror_sweep": {
+      "mirrors_with_a_mutant": 18,
+      "covered": 12,
+      "uncovered": 6,
+      "uncovered_names": ["base_url", "classify_archetype", "classify_regime",
+                          "quoted", "span_timings_monotonic", "status_for"],
+      "exclusion": "provenance_ceiling_impact_oracle.mojo is another writer's file and --mirror never edits it. Its mirrors are UNMEASURED, not covered."
+    }
+  },
+
+  "b5_findings": [
+    {
+      "id": "F-B5-01",
+      "severity": "high",
+      "class": "a declared subject is not a read subject",
+      "oracles": ["ontology_atlas_oracle.mojo", "mcp_name_ownership_oracle.mojo",
+                  "monitoring_governance_oracle.mojo", "twin_coverage_oracle.mojo"],
+      "statement": "Four oracles named a Lean twin as their receipt's `subject` and never opened it. Every reference in each source was a comment or the Receipt's own subject field. Emptying the twin to zero bytes in the real tree left the receipt byte-identical.",
+      "worst_case": "ontology_atlas_oracle runs 67 checks, 14 of them world checks, and read everything except the atlas it is named after.",
+      "consequence": "Trust = Fresh Empirical Behavior AND Formal Spec had no second term at this candidate for these four oracles. The receipt pointed at a file nothing read.",
+      "fix": "Each oracle gained two arms: the twin must be readable, and it must carry every theorem name THAT ORACLE'S OWN COMMENTS cite. The expected set is the oracle's citations, not a count harvested from the twin, because binding to a number that happens to match is the defect rather than the repair.",
+      "fix_verified": "Emptying each twin now produces named world_failures. monitoring_governance: world_checks 7 -> 9, and the emptied twin yields detail ['world:declared-twin-is-readable','world:declared-twin-carries-every-cited-theorem']. All four are KILLED in the final sweep."
+    },
+    {
+      "id": "F-B5-02",
+      "severity": "medium",
+      "class": "coverage loss absorbed by a ratio",
+      "oracle": "axis_registry_oracle.mojo",
+      "statement": "`if body.byte_length() == 0: continue` dropped an unreadable concern file's eight indices from BOTH conformant_0_to_7 and checked_0_to_7, so emptying one of four named sources moved coverage 32 -> 24 while `conformant == checked` still held and `checked > 0` still held on the remaining three. No blind was recorded and the receipt was unchanged.",
+      "fix": "The unreadable file is counted and observed by name, and a new arm `t2-every-named-concern-file-was-read` requires all four.",
+      "fix_verified": "Emptying one source now reports world:t2-every-named-concern-file-was-read:got-3-want-4."
+    },
+    {
+      "id": "F-B5-03",
+      "severity": "medium",
+      "class": "a function compared to its own definition",
+      "oracle": "km_census_oracle.mojo",
+      "statement": "`census:quoted-is-inline-plus-fenced` asserted quoted_examples(a,b) == a+b and `census:live-is-raw-minus-quoted` asserted live(r,i,f) == r-(i+f). Each restated the mirror's body, so no assignment of the read values could falsify either.",
+      "three_independent_methods": "Found by Codex reading the file, confirmed by an independent re-review, then reproduced by bounded enumeration once B2 made these arms analysable.",
+      "fix": "Deleted, not weakened. The three remaining arms bind the mirrors to READ values and to the twin's own declared total, and each is falsifiable."
+    }
+  ],
+
+  "b2": {
+    "state_before": "staged behind b2_enabled = false; 38 false positives; 109 arms NOT_ANALYSED",
+    "state_now": "ENABLED",
+    "fixed_vector_class": "An arm whose predicate has no free identifier once the mirror names AND the file's comptime constants are removed is never handed to the enumerator: there is nothing to vary, so a witness count of 0 carries no information, and calling it UNFALSIFIABLE was the instrument reporting its own inapplicability as the subject's defect. Its soundness is referred to the evidence that bears on it: mutating the mirror. CORROBORATED only when var/mutation/mirror.json records a KILLED mutant for a mirror it calls; otherwise OPEN -- the state these arms were already in under the name NOT_ANALYSED, never promoted by the absence of evidence.",
+    "final": {
+      "enumerated": 86,
+      "falsifiable": 80,
+      "unfalsifiable": 6,
+      "unfalsifiable_are": "exactly the six planted controls in control_falsify_probe.mojo",
+      "not_run": 0,
+      "fixed_vector": 60,
+      "fixed_vector_corroborated": 52,
+      "fixed_vector_open": 8,
+      "not_analysed": 44
+    },
+    "not_analysed_moved": "109 -> 44"
+  },
+
+  "defects_found_in_my_own_instruments_this_round": [
+    "The extractor kept the TRAILING COMMA of a multi-line r.algebra( call, so the predicate became a 1-tuple and 37 probes died with \"'Tuple[Bool]' does not implement '__bool__'\". Present from the start and invisible, because every arm it affected contained a mirror call and was NOT_ANALYSED: the enumerator had never tried to compile one. An open question can hide a broken reader indefinitely.",
+    "Comptime constants were enumerated as if they were runtime variables, which made 11 sound conjunct-isolation arms in mcp_gateway_oracle read UNFALSIFIABLE -- and over the varied domain the report was literally TRUE, which is what made it dangerous. Acting on it would have damaged eleven correct arms.",
+    "The WIDE-arm path lacked the import/const exclusion the narrow path had and shadowed each mirror with an Int. Two code paths, the exclusion written in only one, and the second never travelled until B2 -- the same shape as the earlier missing offset increment.",
+    "Excluding comptime constants from the loop WITHOUT importing them left seven axis_registry arms at \"use of unknown declaration 'CASCADE_WIDTH'\". A half-done fix is its own defect.",
+    "A mirror taking a String parameter cannot be enumerated over an integer domain; five arms read NOT_RUN for that. Reporting a tool's inapplicability as the subject's defect is the error this whole plane was built after.",
+    "B5 first tried to GUESS which line of the subject the oracle cared about. It reported 4 SURVIVED on verification_plane_oracle, and emptying the same subject by hand moved the receipt PASS -> WORLD_FAIL: the verdicts meant 'I mutated a line that carries nothing' and read as 'the oracle is blind'.",
+    "THE OVERLAY. B5 first ran each mutant in a scratch overlay of symlinks. grep -r DOES NOT TRAVERSE A SYMLINKED DIRECTORY, so every recursive capture read almost nothing: km_census measured inline 1 fenced 0 where the real tree has 1097 and 75. The DETERMINISM control still passed, because two degenerate runs agree with each other. I was one step from reporting an environment's blindness as an oracle's. The missing control was FIDELITY -- compare the overlay baseline to the REAL baseline -- and the fix was to delete the overlay and mutate the real tree under a verified restore.",
+    "The specificity control first DELETED a cold line. It fired 7 times and every firing was correct: deleting any line changes a file's line count, and an oracle that counts theorems is supposed to notice. The control was measuring its own operator. Now whitespace-only, and ungated because a digest arm may legitimately respond to bytes.",
+    "Per-mutant gating would have failed a correct mirror: quoted_examples is `i + in_fenced`, the twin declares inFencedCode := 0, so `+ -> -` is SEMANTICALLY EQUIVALENT and unkillable. I believed it was a real finding once before checking the declared value. Fixed by aggregating per mirror AND by generating every applicable operator per line, since `+ -> *` is killable where `+ -> -` is not.",
+    "declared_subject keyed on the FIRST Receipt( in the file. verification_plane builds FIXTURE receipts first, so five of sixteen oracles fell through to an ungated observation while the summary said 'KILLED 11' without saying 11 OF WHAT. A 400-character window also picked a path out of a LATER capture command for language_conformance -- a wrong subject, worse than none.",
+    "The force-include condition required the declared path to appear as a WHOLE string literal, so twin_coverage -- whose subject is concatenated across two source lines -- could never satisfy it and was never mutated. That hid F-B5-01's fourth instance. Membership in a list built by a different rule was not the question; being a readable file was."
+  ],
+
+  "predictions_scored": [
+    {"prediction": "At least 2 oracles will have a subject mutant that survives", "outcome": "CORRECT", "detail": "4 did, across two defect classes"},
+    {"prediction": "Mirror mutation will kill most mirrors but at least one will survive", "outcome": "CORRECT", "detail": "12 covered, 6 uncovered"},
+    {"prediction": "The determinism precondition will fail for at least one oracle", "outcome": "FAILED", "detail": "0 NONDET in every sweep; the receipt carries no clock"},
+    {"prediction": "FIXED_VECTOR will be about 38 arms, as previously measured", "outcome": "FAILED", "detail": "60. The 38 figure was a gross count taken before comptime constants were recognised as literals-with-a-name"}
+  ],
+
+  "verified_state": {
+    "falsifiability": "enumerated 86 | FALSIFIABLE 80 | UNFALSIFIABLE 6 (all planted controls) | NOT_RUN 0 | FIXED_VECTOR 60 (52 corroborated, 8 open) | NOT_ANALYSED 44",
+    "mutation_subject": "147 mutants | KILLED 15 | SURVIVED 0 | NOT_RUN 0 | specificity 37 held 0 fired | NONDET 0 | exit 0",
+    "mutation_mirror": "18 mirrors | COVERED 12 | UNCOVERED 6",
+    "substrate_selftest": "10 verdict paths, exit codes 0,3,4,2,4,4,4,4,2,4",
+    "lean": "UosVerificationPlaneTwin, UosOntologyAtlas, UosAgentCapabilityProfile all CLEAN at 4.33.0",
+    "preflight": "PASS (33 checks)",
+    "differential": "16 pairs: 8 PASS / 1 BLIND / 6 WORLD_FAIL / 1 DIVERGENT (unchanged -- no regression from the four new arms)",
+    "robustness_harness": "PASS",
+    "mutation_hygiene": "no stale var/mutation/IN_FLIGHT.json and no .mutbak anywhere after every sweep"
+  },
+
+  "still_open": [
+    "6 UNCOVERED mirrors: base_url, classify_archetype, classify_regime, quoted, span_timings_monotonic, status_for. Each needs an arm that observes it, or the mirror is dead weight.",
+    "8 FIXED_VECTOR arms remain OPEN because they call an uncovered mirror. They are no worse than the NOT_ANALYSED state they came from, and no better.",
+    "44 arms remain NOT_ANALYSED: a world call, a field access, an index, or a mirror whose parameters are not Int or Bool.",
+    "proof_plane_guard_oracle.mojo is not covered by the L1 gate: its declared subject is a glob, so there is no single file to empty. A different operator is needed.",
+    "provenance_ceiling_impact_oracle.mojo mirrors are UNMEASURED by --mirror: another writer's file, not edited even transiently.",
+    "B6 (12 permanently-BLIND arms each needing a named closing instrument), B7 (author in .uos-workspaces/fable-l0 per SC-WORKSPACE-ISO-001), B9 (OCaml instruments are a standing exception to 'only lean+mojo code'), B10 (smtml-solver-substrate as the upgrade path from bounded enumeration).",
+    "Operator decisions unchanged and not agent-fixable: cascade index-1, the two inverted integer encodings, index-8 taxonomy adjudication, the mandate's unsatisfiable cocycle invariant, SC-INTENT-ATLAS-001 citing a true && true = true theorem, the blanket 18/18 checklist, THM_PROV_TWIN_17 proving true = true 24 times."
+  ],
+
+  "honest_boundary": "KILLED says the receipt moved when the subject moved. It does NOT say the arm measures the RIGHT property, only that it measures something depending on the subject. SURVIVED is the strong finding. An operator producing a semantically equivalent file reports a false SURVIVED; the operators are chosen to reduce that and per-mirror aggregation absorbs it, but it is not excluded. Bounded enumeration is evidence from a sampled domain, not a proof. This is specification and instrument evidence at one candidate. It is not runtime admission, it completes no Sa-plan task by itself, and it grants no authority.",
+
+  "files": {
+    "new": ["tools/mojo_mutation_dataplane.ml"],
+    "changed": [
+      "tools/mojo_arm_falsifiability.ml",
+      "formal/mojo/km_census_oracle.mojo",
+      "formal/mojo/monitoring_governance_oracle.mojo",
+      "formal/mojo/mcp_name_ownership_oracle.mojo",
+      "formal/mojo/ontology_atlas_oracle.mojo",
+      "formal/mojo/twin_coverage_oracle.mojo",
+      "formal/mojo/axis_registry_oracle.mojo"
+    ],
+    "evidence": ["var/mutation/subject.json", "var/mutation/subject.log",
+                 "var/mutation/mirror.json", "var/mutation/mirror.log"],
+    "not_touched": ["formal/mojo/provenance_ceiling_impact_oracle.mojo"]
+  }
+}

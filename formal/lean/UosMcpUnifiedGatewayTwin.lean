@@ -421,8 +421,21 @@ def gatewayAligned (e : GatewayExpectation) (o : UnifiedGatewayObservation) : Bo
   && o.readFileSourceOk
   && o.readFileSecretRefused
 
-def observationNow : UnifiedGatewayObservation :=
-  { observedUtc             := "2026-11-05T21:05:00Z"
+/-- The reading a FULLY ALIGNED gateway would produce -- a synthetic ideal,
+    not a reading anyone took.
+
+    It replaces `observationNow`, which carried `observedUtc :=
+    "2026-11-05T21:05:00Z"` and `publicTools := 59`, with a theorem
+    `THM_RUN_01_aligned_now` proving the gateway healthy from it `by decide`.
+    A hardcoded constant cannot go stale in the kernel.s eyes, so that proof
+    would have stayed green through any outage. The companion file
+    `UosMcpNameOwnershipTwin.lean` carried the same shape and its subject went
+    false at 2026-11-05T22:20Z while the theorem stayed green.
+
+    The claim about the present is now made by
+    `formal/mojo/mcp_gateway_oracle.mojo`, at the moment of asking. -/
+def idealReading : UnifiedGatewayObservation :=
+  { observedUtc             := "<synthetic: no observation recorded in the proof plane>"
   , pointerMatchesCapsule   := true
   , writerAllowlistOk       := true
   , allTwelveConfigsAligned := true
@@ -434,24 +447,24 @@ def observationNow : UnifiedGatewayObservation :=
   , readFileSourceOk        := true
   , readFileSecretRefused   := true }
 
-theorem THM_RUN_01_aligned_now :
-    gatewayAligned canonicalExpectation observationNow = true := by decide
+theorem THM_RUN_01_ideal_reading_aligns :
+    gatewayAligned canonicalExpectation idealReading = true := by decide
 
 theorem THM_RUN_02_legacy_name_forces_divergence :
     gatewayAligned canonicalExpectation
-      { observationNow with legacyNamesFound := 1 } = false := by decide
+      { idealReading with legacyNamesFound := 1 } = false := by decide
 
 theorem THM_RUN_03_pin_drift_forces_divergence :
     gatewayAligned canonicalExpectation
-      { observationNow with auditDistinctBindings := 2 } = false := by decide
+      { idealReading with auditDistinctBindings := 2 } = false := by decide
 
 theorem THM_RUN_04_secret_leak_forces_divergence :
     gatewayAligned canonicalExpectation
-      { observationNow with readFileSecretRefused := false } = false := by decide
+      { idealReading with readFileSecretRefused := false } = false := by decide
 
 theorem THM_RUN_05_fail_closed_on_no_evidence :
     gatewayAligned canonicalExpectation
-      { observationNow with
+      { idealReading with
         pointerMatchesCapsule   := false
       , writerAllowlistOk       := false
       , allTwelveConfigsAligned := false
@@ -461,152 +474,56 @@ theorem THM_RUN_05_fail_closed_on_no_evidence :
       , gatewayHandshakeOk      := false
       , publicTools             := 0 } = false := by decide
 
-/-! ## 5. EXECUTABLE LIVE RUNTIME PROBER -/
+/-! ## 5. RUNTIME CLAIMS, UNIVERSALLY QUANTIFIED
 
-def runCap (cmd : String) (args : Array String) : IO (UInt32 × String) := do
-  try
-    let out ← IO.Process.output { cmd := cmd, args := args }
-    return (out.exitCode, out.stdout.trimAscii.toString)
-  catch _ =>
-    return (127, "")
+    THM_RUN_01..05 bind `gatewayAligned` to the synthetic `idealReading`. The
+    arms below are stated for EVERY observation, so no system change can
+    outlive them. -/
 
-def allClientConfigPaths : List String :=
-  unifiedRegistrations.map (fun r => r.path)
+/-- A pointer that does not match its capsule forces divergence, whatever
+    else holds. This is the release-integrity arm. -/
+theorem THM_RUN_06_pointer_mismatch_forces_divergence
+    (o : UnifiedGatewayObservation) (h : o.pointerMatchesCapsule = false) :
+    gatewayAligned canonicalExpectation o = false := by
+  simp [gatewayAligned, h]
 
-/-- Verify a client config carries the converged capsule + payload digest, declares
-    `uos-harness`, and contains zero occurrences of legacy names (`uos-gleam`,
-    `uos_gleam`, `uos_development`). -/
-def readTextFast (path : String) : IO (Option String) := do
-  try
-    let s ← IO.FS.readFile path
-    return some s
-  catch _ =>
-    return none
+/-- Any legacy name at all forces divergence. Stated over every count, so it
+    holds for the 2 underscore names the companion twin tracks and for any
+    number a future config might introduce. -/
+theorem THM_RUN_07_any_legacy_name_forces_divergence
+    (o : UnifiedGatewayObservation) (h : o.legacyNamesFound ≠ 0) :
+    gatewayAligned canonicalExpectation o = false := by
+  simp [gatewayAligned, h]
 
-def inspectClientConfig (path : String) : IO (Bool × Bool × Nat) := do
-  let some body ← readTextFast path | return (false, false, 1)
-  let pinOk :=
-    (body.splitOn convergedCapsuleId).length > 1
-    && (body.splitOn convergedPayloadSha256).length > 1
-  let legacyCount :=
-    ((body.splitOn "uos-gleam").length - 1)
-    + ((body.splitOn "uos_gleam").length - 1)
-    + ((body.splitOn "uos_development").length - 1)
-  let canonicalOk :=
-    (body.splitOn "uos-harness").length > 1 && legacyCount == 0
-  return (pinOk, canonicalOk, legacyCount)
+/-- A refused secret read is mandatory, not incidental: if the gateway ever
+    serves `var/harness/mcp-transport-secrets.env`, the twin diverges. -/
+theorem THM_RUN_08_secret_must_stay_refused
+    (o : UnifiedGatewayObservation) (h : o.readFileSecretRefused = false) :
+    gatewayAligned canonicalExpectation o = false := by
+  simp [gatewayAligned, h]
 
-def checkPointerFile (path : String) : IO Bool := do
-  let some out ← readTextFast path | return false
-  return (out.splitOn convergedCapsuleId).length > 1
+/-- A failed handshake forces divergence: a declared route is not a connected
+    route (`SC-HARNESS-MCP-001`). -/
+theorem THM_RUN_09_failed_handshake_forces_divergence
+    (o : UnifiedGatewayObservation) (h : o.gatewayHandshakeOk = false) :
+    gatewayAligned canonicalExpectation o = false := by
+  simp [gatewayAligned, h]
 
-def checkWriterAllowlist : IO Bool := do
-  let some body ← readTextFast "tools/ecology_pin_edit.ml" | return false
-  return (body.splitOn "\"uos-harness\"").length > 1
-      && (body.splitOn "\"uos-harness-dev\"").length > 1
+/-- Alignment is decidable for every expectation and observation, which is
+    what lets the Mojo oracle evaluate the identical relation concretely. -/
+theorem THM_RUN_10_alignment_decidable
+    (e : GatewayExpectation) (o : UnifiedGatewayObservation) :
+    gatewayAligned e o = true ∨ gatewayAligned e o = false := by
+  cases gatewayAligned e o <;> simp
 
-/-- Fast-path native Lean 4 pin-audit verifier across all 12 catalog targets (zero OCaml/dune subprocess overhead), with optional full OCaml auditor cross-check when `UOS_TWIN_FULL_OCAML_AUDIT=1`. -/
-def checkAuditPins (allTwelveConfigsAligned : Bool) (totalLegacy : Nat) : IO (Nat × Nat × Bool) := do
-  let fullOcaml ← IO.getEnv "UOS_TWIN_FULL_OCAML_AUDIT"
-  if fullOcaml == some "1" then
-    let (c, out) ← runCap "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml"
-      #["/home/an/NAS-setup/uos/tools/ecology_release.ml", "audit-pins", "/home/an/NAS-setup/uos"]
-    if c != 0 then return (0, 0, false)
-    let statusOk := (out.splitOn "\"status\": \"OBSERVED_CONSISTENT_PINS_ONLY\"").length > 1
-    let obs12    := (out.splitOn "\"observed_targets\": 12").length > 1
-    let bind1    := (out.splitOn "\"distinct_observed_bindings\": 1").length > 1
-    return (if obs12 then 12 else 0, if bind1 then 1 else 0, statusOk)
-  else
-    let auditOk ← readTextFast "tools/ecology_pin_audit.ml"
-    let has12Catalog := match auditOk with
-      | some body => (body.splitOn "workspace_deepseek_mcp").length > 1
-      | none      => false
-    if allTwelveConfigsAligned && totalLegacy == 0 && has12Catalog then
-      return (12, 1, true)
-    else
-      return (0, 0, false)
+/-! ## 6. OBSERVATION PLANE — deliberately absent
 
-def checkGatewayHandshake : IO Bool := do
-  let fullRpc ← IO.getEnv "UOS_TWIN_LIVE_STDIO_HANDSHAKE"
-  if fullRpc == some "1" then
-    let (c, out) ← runCap "bash"
-      #["-c", "printf '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"lean-twin\",\"version\":\"1.0\"}}}\n' | /home/an/NAS-setup/uos/tools/uos-mcp-stdio"]
-    return c == 0 && (out.splitOn "\"name\":\"uos-mcp-unified-gateway\"").length > 1
-  else
-    let manifestPath := s!"var/releases/ecology/{convergedCapsuleId}/release-manifest.json"
-    let some manifestBody ← readTextFast manifestPath | return false
-    let manifestOk := (manifestBody.splitOn convergedPayloadSha256).length > 1
-    let some stdioBody ← readTextFast "tools/uos-mcp-stdio" | return false
-    let wrapperOk := (stdioBody.splitOn "cepaf_gleam@mcp@runtime_gateway").length > 1 && (stdioBody.splitOn "stdio_main").length > 1
-    return manifestOk && wrapperOk
+    The live JSON-RPC prober that stood here until `20261106-0108` has moved
+    to `formal/mojo/mcp_gateway_oracle.mojo`. The two planes are run together
+    by `tools/lean_mojo_differential.ml`, which fails closed when they
+    disagree.
 
-def main : IO UInt32 := do
-  IO.println "=== UOS MCP Unified Gateway & Name-Ownership Digital Twin ==="
-  IO.println s!"candidate : {twinCandidateId}"
-  IO.println s!"EV ceiling: {admittedEvCeiling} (EV-94..109 NOT_ADMITTED)"
-  let (_, now) ← runCap "date" #["-u", "+%Y-%m-%dT%H:%M:%SZ"]
-  IO.println s!"probe time: {now}"
-  IO.println ""
-
-  IO.println "--- 1. ONTOLOGY (proved) ---"
-  IO.println s!"  gateway wrapper      : {theGateway.wrapper}"
-  IO.println s!"  gateway entry        : {theGateway.entrySymbol} (OTP {theGateway.otpRelease})"
-  IO.println s!"  names modelled       : {allServerNames.length} -> 1 gateway implementation"
-  IO.println s!"  canonical names      : uos-harness (public), uos-harness-dev (successor/dev)"
-  IO.println s!"  route scopes         : {allRouteScopes.length} (declared={declaredTotal}, observed={observedTotal})"
-
-  IO.println ""
-  IO.println "--- 2. STRUCTURE (as-is -> unified) ---"
-  IO.println s!"  total client targets : {unifiedRegistrations.length} (5 in-repo + 7 home)"
-  IO.println s!"  audit catalog targets: {(catalogTargets unifiedRegistrations).length} ({slotCount (catalogTargets unifiedRegistrations)} server slots)"
-  IO.println s!"  total server slots   : {slotCount unifiedRegistrations} (12 uos-harness + 2 uos-harness-dev)"
-  IO.println s!"  unowned slots        : {unownedSlotsBefore asIsRegistrations} -> {unownedSlotsBefore unifiedRegistrations}"
-  IO.println s!"  release lifecycle    : {releaseFlow.length} steps (repinClients between verify and restartServices)"
-
-  IO.println ""
-  IO.println "--- 3. RUNTIME VERIFICATION (live probes) ---"
-  let ptrMcp ← checkPointerFile "var/releases/ecology/current-mcp-release"
-  let ptrRel ← checkPointerFile "var/releases/ecology/current-release"
-  let ptrOk  := ptrMcp && ptrRel
-  let wlOk   ← checkWriterAllowlist
-  IO.println s!"  pointers converged   : {ptrOk} ({convergedCapsuleId})"
-  IO.println s!"  writer allowlist     : {wlOk} (tools/ecology_pin_edit.ml)"
-
-  let mut allConfigsOk := true
-  let mut totalLegacy  : Nat := 0
-  for r in unifiedRegistrations do
-    let (pinOk, canOk, legCount) ← inspectClientConfig r.path
-    if !pinOk || !canOk then allConfigsOk := false
-    totalLegacy := totalLegacy + legCount
-    IO.println s!"  [{if r.inRepo then "repo" else "home"}] {r.targetId} ({r.path}) : pinOk={pinOk} canonical={canOk} legacy={legCount}"
-
-  let (obsTargets, distBindings, auditPass) ← checkAuditPins allConfigsOk totalLegacy
-  let hsOk ← checkGatewayHandshake
-  IO.println s!"  ecology audit-pins   : pass={auditPass} observed={obsTargets}/12 distinctBindings={distBindings}"
-  IO.println s!"  stdio JSON-RPC init  : {hsOk} (uos-mcp-unified-gateway 1.0.0)"
-
-  let obs : UnifiedGatewayObservation :=
-    { observationNow with
-      observedUtc             := now
-    , pointerMatchesCapsule   := ptrOk
-    , writerAllowlistOk       := wlOk
-    , allTwelveConfigsAligned := allConfigsOk
-    , legacyNamesFound        := totalLegacy
-    , auditCatalogObserved    := obsTargets
-    , auditDistinctBindings   := distBindings
-    , gatewayHandshakeOk      := hsOk }
-
-  let ok := gatewayAligned canonicalExpectation obs && auditPass
-  IO.println ""
-  IO.println s!"GATEWAY & NAME-OWNERSHIP TWIN : {if ok then "MATCHES TWIN (22/22 THEOREMS, 12/12 CONFIGS, LIVE HANDSHAKE GREEN)" else "DIVERGENT"}"
-  IO.println "(specification + live runtime evidence at this candidate; not system admission)"
-
-  if ok then return 0
-  else
-    IO.eprintln "FAIL-CLOSED: MCP gateway surface diverges from the unified digital twin."
-    return 1
+    This file has no `def main`. A `lean` exit code from it means the algebra
+    is consistent; it is not an observation of the gateway. -/
 
 end UOS.McpGatewayTwin
-
-/-- Top-level entry point for `lean --run`. -/
-def main : IO UInt32 := UOS.McpGatewayTwin.main
