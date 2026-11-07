@@ -82,23 +82,41 @@ struct VerificationData {
 
 /// Count running containers via `podman ps`. `None` when podman cannot be
 /// observed: an unobserved fleet is never reported as healthy.
+/// BEAM-safe under `SIGCHLD = SIG_IGN`: reads piped stdout to EOF before
+/// calling `child.wait()`, accepting `ECHILD` (`os error 10`) when the kernel
+/// has auto-reaped the exited child.
 fn count_containers() -> Option<(usize, usize)> {
-    let output = Command::new("podman")
+    use std::io::Read;
+    use std::process::Stdio;
+    let mut child = Command::new("podman")
         .args(["ps", "--format", "{{.Status}}", "--no-trunc"])
-        .output();
-    match output {
-        Ok(out) => {
-            let text = String::from_utf8_lossy(&out.stdout);
-            let lines: Vec<&str> = text.lines().filter(|l| !l.is_empty()).collect();
-            let total = lines.len();
-            let healthy = lines
-                .iter()
-                .filter(|l| l.contains("Up") || l.contains("healthy"))
-                .count();
-            Some((total, healthy))
-        }
-        Err(_) => None
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .ok()?;
+    let mut text = String::new();
+    if let Some(mut stdout) = child.stdout.take() {
+        let _ = stdout.read_to_string(&mut text);
     }
+    let mut err_text = String::new();
+    if let Some(mut stderr) = child.stderr.take() {
+        let _ = stderr.read_to_string(&mut err_text);
+    }
+    let ok = match child.wait() {
+        Ok(status) => status.success(),
+        Err(e) if e.raw_os_error() == Some(10) => err_text.is_empty(),
+        Err(_) => false,
+    };
+    if !ok {
+        return None;
+    }
+    let lines: Vec<&str> = text.lines().filter(|l| !l.is_empty()).collect();
+    let total = lines.len();
+    let healthy = lines
+        .iter()
+        .filter(|l| l.contains("Up") || l.contains("healthy"))
+        .count();
+    Some((total, healthy))
 }
 
 /// TCP probe to check if a Zenoh router is reachable.

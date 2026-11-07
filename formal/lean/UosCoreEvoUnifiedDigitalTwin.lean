@@ -987,7 +987,7 @@ structure StructuralExpectation where
   deriving DecidableEq, Repr
 
 def canonicalExpectation : StructuralExpectation :=
-  { requiredRoutes := 69, requiredModules := 7, requiredCastes := 5, requiredServices := 8
+  { requiredRoutes := 69, requiredModules := 8, requiredCastes := 5, requiredServices := 8
   , requiredFppActors := 40, requiredZenohTopics := 12, requiredScc := 1
   , minA2ui := 233, maxCanonicalBroken := 0 }
 
@@ -1005,7 +1005,7 @@ def idealReading : RuntimeObservation :=
   , cockpitHttpBound := true, cockpitHttpsBound := true
   , saPlanBound := true, zenohBound := true
   , routesProbed := 69, routes200 := 69
-  , moduleCount := 7, casteCount := 5, serviceCount := 8
+  , moduleCount := 8, casteCount := 5, serviceCount := 8
   , fppActorsAlive := 40, fppSupervisorRunning := true
   , zenohTopics := 12, sccCount := 1, a2uiComponents := 239
   , canonicalBroken := 0 }

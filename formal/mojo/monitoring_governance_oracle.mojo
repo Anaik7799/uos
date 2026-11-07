@@ -254,28 +254,56 @@ def main() raises:
     r.world_or_blind(String("a2ui-meets-the-floor"),
                      a2ui_n >= 0, a2ui_n >= MIN_A2UI)
 
-    # Unified live structural measurement via tools/link_tracker_verifier.exe --json
+    # Unified live structural measurement via tools/link_tracker_verifier.exe --json.
+    #
+    # SHARED CACHE, NOT A PER-ORACLE TEMP FILE. The verifier walks the whole
+    # tree and costs ~7.8 s. Every oracle in the sweep asked it the SAME
+    # question, each paid the full walk, and each then deleted the answer with
+    # `rm -f`. /tmp/uos-ltv-cache.json is written at most once and is
+    # deliberately NOT removed at the end: the next oracle, and the next clean
+    # run, read it in ~0.01 s. The write is guarded by `test ! -s`, so a
+    # present-and-non-empty cache is reused rather than regenerated.
+    #
+    # GREP IS THE GATE, ON THE WRITE AND ON EVERY READ. Under the adverse PATH
+    # in robustness_harness.mojo the world tools are shadowed or absent, and
+    # with no `grep` the JSON cannot be parsed AT ALL -- so paying 7.8 s for
+    # the verifier would buy nothing. `command -v grep` fails closed FIRST:
+    # the exe is never invoked, each read returns empty, `count()` yields -1,
+    # and the arms go BLIND in ~0.01 s. BLIND is the honest verdict there --
+    # the probe could not obtain its evidence -- and it is now reached at the
+    # cost of a `command -v` instead of a full structural walk.
+    var ltv_gate = String("command -v grep >/dev/null 2>&1")
+    var ltv_cache = String("/tmp/uos-ltv-cache.json")
+    _ = capture(
+        ltv_gate + " && test ! -s " + ltv_cache
+        + " && ./tools/link_tracker_verifier.exe --json > " + ltv_cache
+        + " 2>/dev/null"
+    )
     var ltv_status = capture(
-        "./tools/link_tracker_verifier.exe --json > /tmp/uos-ltv-oracle.json 2>/dev/null"
-        " && grep -oE '\"status\":[[:space:]]*\"[^\"]+\"' /tmp/uos-ltv-oracle.json"
+        ltv_gate
+        + " && grep -oE '\"status\":[[:space:]]*\"[^\"]+\"' " + ltv_cache
+        + " 2>/dev/null | head -1"
     )
     var ltv_total = count(
-        "grep -oE '\"total_endpoints\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
-        " | grep -oE '[0-9]+$'"
+        ltv_gate
+        + " && grep -oE '\"total_endpoints\":[[:space:]]*[0-9]+' " + ltv_cache
+        + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
     )
     var ltv_passed = count(
-        "grep -oE '\"passed\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
-        " | head -1 | grep -oE '[0-9]+$'"
+        ltv_gate
+        + " && grep -oE '\"passed\":[[:space:]]*[0-9]+' " + ltv_cache
+        + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
     )
     var ltv_scc = count(
-        "grep -oE '\"scc_count\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
-        " | grep -oE '[0-9]+$'"
+        ltv_gate
+        + " && grep -oE '\"scc_count\":[[:space:]]*[0-9]+' " + ltv_cache
+        + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
     )
     var ltv_broken = count(
-        "grep -oE '\"canonical_broken_transclusions\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
-        " | grep -oE '[0-9]+$'"
+        ltv_gate
+        + " && grep -oE '\"canonical_broken_transclusions\":[[:space:]]*[0-9]+' "
+        + ltv_cache + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
     )
-    _ = capture("rm -f /tmp/uos-ltv-oracle.json")
     var ltv_ran = (
         ltv_status.byte_length() > 0
         and ltv_total >= 0

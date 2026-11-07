@@ -486,18 +486,22 @@ def main() raises:
     var gleam_deepseek_in_02 = count(
         "grep -A2 'caste_id: \"CASTE-02\"' " + gleam_api
         + " 2>/dev/null | grep -ci 'deepseek'")
+    var gleam_deepseek_in_05 = count(
+        "grep -A2 'caste_id: \"CASTE-05\"' " + gleam_api
+        + " 2>/dev/null | grep -ci 'deepseek'")
     r.observe_int(String("gleam-caste-slots"), gleam_slots)
     r.observe_int(String("gleam-caste05-is-a-nonagent"), gleam_nonagent)
     r.observe_int(String("gleam-caste02-names-deepseek"), gleam_deepseek_in_02)
+    r.observe_int(String("gleam-caste05-names-deepseek"), gleam_deepseek_in_05)
     if gleam_slots > 0:
-        # ATLAS-24: five slots, four agents.
-        r.algebra(String("atlas24-five-slots-with-a-nonagent-among-them"),
-                  gleam_slots == 5 and gleam_nonagent > 0)
-        # ATLAS-26: DeepSeek has two homes — its own hive caste, and inside
-        # the Gleam CASTE-02 row.
-        r.algebra(String("atlas26-deepseek-occupies-two-positions"),
-                  gleam_deepseek_in_02 > 0)
-    # ATLAS-25: the charts do not glue. A world check, because it is a fact
+        # ATLAS-24 (unified): five slots, zero non-agent occupants.
+        r.algebra(String("atlas24-five-slots-with-all-agents"),
+                  gleam_slots == 5 and gleam_nonagent == 0)
+        # ATLAS-26 (unified): DeepSeek occupies its canonical CASTE-05 home
+        # and is no longer duplicated inside CASTE-02.
+        r.algebra(String("atlas26-deepseek-occupies-canonical-caste05"),
+                  gleam_deepseek_in_05 > 0 and gleam_deepseek_in_02 == 0)
+    # ATLAS-25: the charts glue. A world check, because it is a fact
     # about the live Gleam source rather than about the algebra.
     r.world_count(String("every-gleam-caste-slot-holds-an-agent"),
                   gleam_nonagent, 0)

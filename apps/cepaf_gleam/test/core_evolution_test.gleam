@@ -28,12 +28,17 @@ import cepaf_gleam/ecology/core_bionic_token_twin.{
   TokenHealthRedflag, TokenTurnTelemetry,
 }
 import cepaf_gleam/ecology/core_fractal_holonic_simulator
+import cepaf_gleam/harness/tool_fenced_dispatcher.{
+  CedarAllow, CedarDeny, CedarForbid, CedarPermit, CedarToolPolicy, Dispatched,
+  FencedAndonHalt, FencingLease, ToolProposal,
+}
 import cepaf_gleam/ecology/core_fpp_actor_twin_mesh.{
   ActorIntentAccepted, ActorIntentRequest, ActorIntentVetoed, AdvisoryFreeTier,
   DeepAchRcaProTier, DispatchIntent, ImplementationFlashTier, InspectActor,
   OpenRouterBlockedEgressSafety, OpenRouterBlockedMargin40, OpenRouterDispatched,
   Otp29Verified, ReflexAutonomousSelfHeal, ShutdownActor,
 }
+import cepaf_gleam/harness/agent_ecology
 import cepaf_gleam/uos_sup.{
   AppsDomain, EnginesDomain, IntelligenceDomain, ServicesDomain,
 }
@@ -1821,6 +1826,202 @@ pub fn fpp_40_subsystem_actors_bound_to_5_castes_8_per_caste_test() {
       && string.contains(encoded, "\"assigned_agent\":\"Caste0")
     }),
   )
+}
+
+pub fn sovereign_agent_failover_cascade_and_supervisor_minimization_test() {
+  // Supervisor role uses PiOpenRouterGeminiArgon when healthy, falls back to Claude when down
+  should.equal(
+    agent_ecology.select_failover_agent(True, True, True, True, True),
+    Ok("pi_openrouter_gemini_argon"),
+  )
+  should.equal(
+    agent_ecology.select_failover_agent(True, True, True, True, False),
+    Ok("claude"),
+  )
+  // Execution/SDLC/SRE role NEVER picks PiOpenRouterGeminiArgon; cascades Claude -> Codex -> LocalQwen
+  should.equal(
+    agent_ecology.select_failover_agent(False, True, True, True, True),
+    Ok("claude"),
+  )
+  should.equal(
+    agent_ecology.select_failover_agent(False, False, True, True, True),
+    Ok("codex"),
+  )
+  should.equal(
+    agent_ecology.select_failover_agent(False, False, False, True, True),
+    Ok("local_qwen"),
+  )
+  should.equal(
+    agent_ecology.select_failover_agent(False, False, False, False, True),
+    Error("no_execution_agent_available_within_quota_or_budget"),
+  )
+}
+
+pub fn cedar_vgd_forbid_trumps_permit_tpe_and_slicing_test() {
+  let p_permit =
+    CedarToolPolicy(
+      policy_id: "permit-claude-read",
+      effect: CedarPermit,
+      principal_worker: "claude",
+      action_tool: "read_file",
+      forbid_nvme_serial: True,
+      max_ev_ceiling: 93,
+      well_typed: True,
+    )
+  let p_forbid_nvme =
+    CedarToolPolicy(
+      policy_id: "forbid-nvme-lock",
+      effect: CedarForbid,
+      principal_worker: "*",
+      action_tool: "*",
+      forbid_nvme_serial: True,
+      max_ev_ceiling: 93,
+      well_typed: True,
+    )
+  let p_other_scope =
+    CedarToolPolicy(
+      policy_id: "permit-codex-write",
+      effect: CedarPermit,
+      principal_worker: "codex",
+      action_tool: "write_file",
+      forbid_nvme_serial: True,
+      max_ev_ceiling: 93,
+      well_typed: True,
+    )
+  let policies = [p_permit, p_forbid_nvme, p_other_scope]
+  let safe_prop =
+    ToolProposal(
+      call_id: "c1",
+      tool_name: "read_file",
+      args_json: "{\"path\":\"AGENTS.md\"}",
+    )
+  let nvme_prop =
+    ToolProposal(
+      call_id: "c2",
+      tool_name: "read_file",
+      args_json: "{\"serial\":\"25503L801736\"}",
+    )
+
+  // 1. Default-Deny on empty policy set
+  case tool_fenced_dispatcher.cedar_authorize_proposal([], "claude", safe_prop, 93) {
+    CedarDeny(_) -> Nil
+    CedarAllow -> should.fail()
+  }
+
+  // 2. Permit when safe and EV <= 93
+  should.equal(
+    tool_fenced_dispatcher.cedar_authorize_proposal(
+      policies,
+      "claude",
+      safe_prop,
+      93,
+    ),
+    CedarAllow,
+  )
+
+  // 3. Forbid-Trumps-Permit when NVMe serial is present or EV > 93
+  case
+    tool_fenced_dispatcher.cedar_authorize_proposal(
+      policies,
+      "claude",
+      nvme_prop,
+      93,
+    )
+  {
+    CedarDeny(_) -> Nil
+    CedarAllow -> should.fail()
+  }
+  case
+    tool_fenced_dispatcher.cedar_authorize_proposal(
+      policies,
+      "claude",
+      safe_prop,
+      94,
+    )
+  {
+    CedarDeny(_) -> Nil
+    CedarAllow -> should.fail()
+  }
+
+  // 4. Sound Policy Slicing Equivalence
+  let sliced =
+    tool_fenced_dispatcher.slice_policies_for_proposal(
+      policies,
+      "claude",
+      "read_file",
+    )
+  should.equal(list.length(sliced), 2)
+  should.equal(
+    tool_fenced_dispatcher.cedar_authorize_proposal(
+      sliced,
+      "claude",
+      safe_prop,
+      93,
+    ),
+    tool_fenced_dispatcher.cedar_authorize_proposal(
+      policies,
+      "claude",
+      safe_prop,
+      93,
+    ),
+  )
+
+  // 5. TPE Residual Reauthorization Equivalence
+  let residual =
+    tool_fenced_dispatcher.tpe_partial_authorize(
+      policies,
+      "claude",
+      safe_prop,
+      option.None,
+    )
+  should.equal(
+    tool_fenced_dispatcher.tpe_reauthorize_residual(
+      residual,
+      policies,
+      "claude",
+      safe_prop,
+      93,
+    ),
+    CedarAllow,
+  )
+
+  // 6. Full dispatch_cedar_fenced_proposal integration
+  let lease =
+    FencingLease(
+      worker: "claude",
+      plan_id: "p1",
+      task_id: "t1",
+      fencing_token: 7,
+      lease_until_ns: 2_000_000_000,
+    )
+  should.equal(
+    tool_fenced_dispatcher.dispatch_cedar_fenced_proposal(
+      policies,
+      safe_prop,
+      option.Some(lease),
+      1_000_000_000,
+      93,
+      True,
+      True,
+      fn(_, _) { Ok("{\"status\":\"ok\"}") },
+    ),
+    Dispatched("c1", "read_file", "{\"status\":\"ok\"}"),
+  )
+  case
+    tool_fenced_dispatcher.dispatch_cedar_fenced_proposal(
+      policies,
+      nvme_prop,
+      option.Some(lease),
+      1_000_000_000,
+      93,
+      True,
+      True,
+      fn(_, _) { Ok("{\"status\":\"ok\"}") },
+    )
+  {
+    FencedAndonHalt(-32_002, _) -> Nil
+    _ -> should.fail()
+  }
 }
 
 

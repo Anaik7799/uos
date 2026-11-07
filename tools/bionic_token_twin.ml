@@ -16,7 +16,8 @@ type content_type =
 
 let content_type_name = function
   | 0 -> "CT_JSON_STRUCT" | 1 -> "CT_LOG_STREAM" | 2 -> "CT_SOURCE_AST" | 3 -> "CT_UNIFIED_DIFF"
-  | 4 -> "CT_TABULAR_CSV" | 5 -> "CT_HIGH_ENTROPY" | 6 -> "CT_FORMAL_SPEC" | _ -> "CT_PROSE_MD"
+  | 4 -> "CT_TABULAR_CSV" | 5 -> "CT_HIGH_ENTROPY" | 6 -> "CT_FORMAL_SPEC" | 7 -> "CT_PROSE_MD"
+  | _ -> "CT_INVALID_ARCHETYPE_CODE"
 
 type model_spec = {
   name : string;

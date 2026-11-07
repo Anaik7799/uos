@@ -34,20 +34,35 @@ pub fn verification_run() -> NifResult<String> {
         "/home/an/dev/ver/c3i/lib/cepaf_gleam"
     };
 
-    let output = Command::new("gleam")
+    use std::io::Read;
+    use std::process::Stdio;
+    let spawn_res = Command::new("gleam")
         .arg("check")
         .current_dir(gleam_dir)
-        .output();
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn();
 
-    match output {
-        Ok(out) => {
-            let stdout = String::from_utf8_lossy(&out.stdout).to_string();
-            let stderr = String::from_utf8_lossy(&out.stderr).to_string();
+    match spawn_res {
+        Ok(mut child) => {
+            let mut stdout = String::new();
+            let mut stderr = String::new();
+            if let Some(mut out_pipe) = child.stdout.take() {
+                let _ = out_pipe.read_to_string(&mut stdout);
+            }
+            if let Some(mut err_pipe) = child.stderr.take() {
+                let _ = err_pipe.read_to_string(&mut stderr);
+            }
             let combined = format!("{}\n{}", stdout, stderr);
             let warnings = combined.matches("warning:").count();
             let errors = combined.matches("error:").count();
+            let wait_ok = match child.wait() {
+                Ok(status) => status.success(),
+                Err(e) if e.raw_os_error() == Some(10) => errors == 0,
+                Err(_) => false,
+            };
             let data = VerificationResult {
-                ok: out.status.success(),
+                ok: wait_ok && errors == 0,
                 output: combined.chars().take(2000).collect(),
                 warnings,
                 errors,

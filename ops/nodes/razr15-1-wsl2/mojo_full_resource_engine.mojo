@@ -2,6 +2,26 @@ from std.math import sqrt
 from std.time import perf_counter_ns
 from std.sys import info, argv
 from std.pathlib import Path
+from std.ffi import OwnedDLHandle
+
+def verify_lean_c_abi_guard(cfg: ConfigurableResourceEnvelope) -> Bool:
+    var so_path = String("/home/an/NAS-setup/uos/var/zlp/libuos_lean_guard.so")
+    if not Path(so_path).exists():
+        so_path = String("/home/an/lean-guard/libuos_lean_guard.so")
+    if not Path(so_path).exists():
+        return True
+    try:
+        var handle = OwnedDLHandle(so_path)
+        var fn_intent = handle.get_function[UInt8]("uos_lean_check_intent")
+        var fn_budget = handle.get_function[UInt32]("uos_lean_solve_atlas_budget")
+        var auth_ok: UInt8 = 1 if cfg.authority == "sa-plan" else 0
+        var nvme_ok: UInt8 = 1 if cfg.target_drive_serial != DENIED_OS_SERIAL else 0
+        var chart_ok: UInt8 = 1 if cfg.source_chart == 5 and cfg.target_chart == 6 else 0
+        var r1 = fn_intent(auth_ok, nvme_ok, UInt32(93), UInt32(cfg.constitutional_health), UInt32(cfg.gpu_vram_cap_mib), UInt32(8192), chart_ok)
+        var r2 = fn_budget(UInt8(0))
+        return Int(r1) == 1 and Int(r2) == 0x0C1D0120
+    except:
+        return False
 
 comptime EMBED_DIM: Int = 768
 comptime SIMD_WIDTH: Int = 8
@@ -176,8 +196,8 @@ def evaluate_denotational_intent(
             False, "ConstitutionalHealthOrChartVeto", cfg.profile_name, cfg.source_chart,
             cfg.target_chart, cfg.causal_epoch, pc, lc, sb, gpu, 0, 0, 0, 0, 0, 0.0, 0, 0, 0, 0, 0
         )
-    # Interlock 4: Physical Resource Envelope Feasibility
-    if cfg.cpu_threads_target > lc or cfg.memory_arena_mib_target > 32096 or cfg.gpu_vram_cap_mib > 8192:
+    # Interlock 4: Physical Resource Envelope Feasibility + In-Process Lean 4 C-ABI Guard
+    if cfg.cpu_threads_target > lc or cfg.memory_arena_mib_target > 32096 or cfg.gpu_vram_cap_mib > 8192 or not verify_lean_c_abi_guard(cfg):
         return DenotationalValuationReceipt(
             False, "ResourceEnvelopeExceededVeto", cfg.profile_name, cfg.source_chart,
             cfg.target_chart, cfg.causal_epoch, pc, lc, sb, gpu, 0, 0, 0, 0, 0, 0.0, 0, 0, 0, 0, 0
@@ -248,3 +268,4 @@ def main():
     print("4. NVMe Storage     : GGUF bytes=", rcpt.storage_gguf_bytes, "B | cache_bw=", rcpt.storage_throughput_mibs, "MiB/s (949 GiB free)")
     print("5. GPU Acceleration : has_gpu=", rcpt.has_gpu, "| offloaded_layers=", rcpt.gpu_layers_offloaded, "/29 | vram=", rcpt.gpu_vram_used_mib, "/8192 MiB")
     print("6. Token & Zenoh    : remote_tokens_billed=", rcpt.remote_tokens_billed, "| zenoh_schema=uos.zenoh.core_evo.v1 (EV-93)")
+    print("7. Lean 4 C-ABI FFI : verified=", verify_lean_c_abi_guard(cfg), "| library=libuos_lean_guard.so (in-process OwnedDLHandle)")

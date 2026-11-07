@@ -223,8 +223,8 @@ pub fn get_castes() -> List(CoreEvoCasteRecord) {
     ),
     CoreEvoCasteRecord(
       caste_id: "CASTE-02",
-      role_name: "Builder Pi+DeepSeek/Argon (ForagerBuilder & NurseDiagnostician)",
-      bound_engine: "pi+openrouter:deepseek-v4-flash/pro & pi+google:gemini-4-argon ($0-flash)",
+      role_name: "Builder Pi+Argon (ForagerBuilder)",
+      bound_engine: "pi+google:gemini-4-argon ($0-flash) & openrouter",
       token_share: "~46%",
       heijunka_wip_limit: 4,
       mcp_slice: "ImplRole (9 routes) & RcaTpsRole (10 routes)",
@@ -250,12 +250,12 @@ pub fn get_castes() -> List(CoreEvoCasteRecord) {
     ),
     CoreEvoCasteRecord(
       caste_id: "CASTE-05",
-      role_name: "Kernel Tier-0 Binaries (Deterministic Verifiers)",
-      bound_engine: "tier0:otp29_lean4_zlp_v3_hermes_ocaml_zigvm",
-      token_share: "~46% (compute share, $0 LLM tokens)",
+      role_name: "Specialist DeepSeek DSH (NurseDiagnostician & BionicVerifier)",
+      bound_engine: "deepseek-dsh:cordis-v4-pro/flash",
+      token_share: "~46% (substrate compute share, $0 remote LLM tokens)",
       heijunka_wip_limit: 8,
-      mcp_slice: "Native C-ABI / Port / CLI Verifiers",
-      responsibility: "Zero-token deterministic execution: UOS-ZLP-v3 Lean 4.33.0/Zig 0.16.0 AVX-512, Hermes OCaml, km-gate, risk-priority-check",
+      mcp_slice: "BionicRcaRole & Tier-0 Native Verifiers",
+      responsibility: "DeepSeek DSH local/bionic verification & zero-token substrate execution: UOS-ZLP-v3 Lean 4.33.0/Zig 0.16.0 AVX-512, Hermes OCaml, km-gate",
     ),
   ]
 }

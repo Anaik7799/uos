@@ -698,6 +698,24 @@ let () =
         (Filename.basename a.file) a.line a.name)) pinned
   end;
 
+  (* ---- SC-VP-06: bare r.world() calls without world_or_blind ----------
+     A bare r.world() call has no presence predicate, so an absent file or
+     unreadable command output cannot degrade to BLIND (FM-06b). Count every
+     r.world( call across the inspected files so verification_plane_simulate
+     and CI gates can detect bare world arms statically. *)
+  let bare_world_count =
+    List.fold_left (fun acc f ->
+      let lines = String.split_on_char '\n' (read_file f) in
+      let n = List.fold_left (fun k l ->
+        match find_sub l "r.world(" 0 with
+        | Some _ -> k + 1
+        | None -> k) 0 lines in
+      acc + n) 0 files in
+  if bare_world_count > 0 then
+    prerr_endline (Printf.sprintf
+      "  SC-VP-06 BARE_WORLD -- %d bare r.world() arm(s) without world_or_blind"
+      bare_world_count);
+
   let unfalsifiable = ref [] in
   let wide_unconfirmed = ref [] in
   let not_run = ref [] in
@@ -782,12 +800,12 @@ let () =
      evidence, not a proof.";
   Printf.printf
     "{\"schema\":\"uos.mojo-arm-falsifiability.v1\",\"enumerated\":%d,\
-     \"unfalsifiable\":%d,\"pinned_probes\":%d,\
+     \"unfalsifiable\":%d,\"pinned_probes\":%d,\"bare_world_arms\":%d,\
      \"fixed_vector\":%d,\"fixed_vector_corroborated\":%d,\
      \"fixed_vector_open\":%d,\
      \"not_analysed_call\":%d,\"not_analysed_wide\":%d,\
      \"arms\":["
-    (List.length enumerable) (List.length unf) (List.length pinned)
+    (List.length enumerable) (List.length unf) (List.length pinned) bare_world_count
     (List.length fixed_vector) (List.length fv_corrob) (List.length fv_open)
     (List.length unanalysed)
     (List.length too_wide + List.length !not_run);

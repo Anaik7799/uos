@@ -272,6 +272,13 @@ let () =
 
   let base = Filename.concat uos_root "var/watchdog" in
   write_file (Filename.concat base "latest.json") receipt;
+  let compact_history =
+    Printf.sprintf
+      "{\"schema\":\"uos.web-watchdog.v1\",\"utc\":%s,\"status\":%s,\"listeners_ok\":%s,\"routes_ok\":%d,\"routes_total\":%d,\"deep_health_ok\":%s,\"admitted_ev_ceiling\":93}\n"
+      (jstr now) (jstr (if degraded then "degraded" else "healthy"))
+      (jbool listeners_healthy) routes_ok routes_total (jbool deep_ok)
+  in
+  append_file (Filename.concat base "history.jsonl") compact_history;
 
   if degraded then begin
     let andon =

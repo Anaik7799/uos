@@ -76,10 +76,10 @@ let modes = [
     fixture = "sim_fm06_algebra_only.mojo"; detector = "substrate";
     expect = "\"status\":\"BLIND\""; outcome = "PREVENTED";
     severity = 5; occurrence = 3 };
-  (* Residual open gap: bare world() without world_or_blind *)
-  { id = "FM-06b"; title = "world() on an absent subject without world_or_blind";
-    fixture = "sim_fm06.mojo"; detector = "substrate";
-    expect = "\"status\":\"PASS\""; outcome = "MANIFESTS";
+  (* Detected by SC-VP-06 bare_world_arms static check in mojo_arm_falsifiability.ml *)
+  { id = "FM-06b"; title = "world() on an absent subject without world_or_blind (Detected by SC-VP-06)";
+    fixture = "sim_fm06.mojo"; detector = "falsify";
+    expect = "\"bare_world_arms\":1"; outcome = "DETECTED";
     severity = 5; occurrence = 3 };
 ]
 

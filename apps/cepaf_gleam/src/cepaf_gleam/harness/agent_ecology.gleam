@@ -103,6 +103,217 @@ pub type AgentProfile {
   )
 }
 
+/// Canonical per-agent capability record binding each of the 6 sovereign
+/// AgentId constructors (`agy`, `pi`, `codex`, `claude`, `deepseek`, `argon`)
+/// to all 17 system aspects, all 10 fractal holarchy layers, all 6 FPP
+/// services, all 4 bionic faculties, and both `zenoh` and `mcp` transports.
+pub type SovereignAgentCapabilityRecord {
+  SovereignAgentCapabilityRecord(
+    agent_id: String,
+    holarchy_layers: List(FractalLayer),
+    assigned_aspects: List(SystemAspect),
+    fpp_services: List(String),
+    bionic_faculties: List(String),
+    declared_transports: List(String),
+    intelligence_mode: String,
+  )
+}
+
+/// Enumerates all 10 canonical Fractal Layers in UOS.
+pub fn all_fractal_layers() -> List(FractalLayer) {
+  [
+    L0Constitutional,
+    L1Atomic,
+    L2ComponentState,
+    L3TransactionHistory,
+    L4SystemRuntime,
+    L5CognitiveReasoning,
+    L6SwarmEcosystem,
+    L7FederationEgress,
+    L8LivingKnowledge,
+    L9SREHomeostasis,
+  ]
+}
+
+/// Deterministic Multi-Agent Quota/Budget/Outage Failover Selector (SC-MODEL-ROLE-TWIN-001).
+/// Enforces Supervisor Minimization (OpenRouter+Gemini+Argon used ONLY when is_supervisor_task == True)
+/// and cascades Claude -> Codex -> LocalQwen on outage, timeout, or quota/budget exhaustion.
+pub fn select_failover_agent(
+  is_supervisor_task: Bool,
+  claude_ok: Bool,
+  codex_ok: Bool,
+  qwen_ok: Bool,
+  sup_ok: Bool,
+) -> Result(String, String) {
+  case is_supervisor_task {
+    True ->
+      case sup_ok, claude_ok, codex_ok, qwen_ok {
+        True, _, _, _ -> Ok("pi_openrouter_gemini_argon")
+        False, True, _, _ -> Ok("claude")
+        False, False, True, _ -> Ok("codex")
+        False, False, False, True -> Ok("local_qwen")
+        False, False, False, False ->
+          Error("no_supervisor_or_failover_agent_available")
+      }
+    False ->
+      case claude_ok, codex_ok, qwen_ok {
+        True, _, _ -> Ok("claude")
+        False, True, _ -> Ok("codex")
+        False, False, True -> Ok("local_qwen")
+        False, False, False ->
+          Error("no_execution_agent_available_within_quota_or_budget")
+      }
+  }
+}
+
+/// Returns the 6 canonical SovereignAgentCapabilityRecord entries matching
+/// `formal/lean/UosAgentCapabilityProfile.lean` (`AgentId`).
+pub fn all_sovereign_agent_capabilities() -> List(SovereignAgentCapabilityRecord) {
+  [
+    SovereignAgentCapabilityRecord(
+      agent_id: "agy",
+      holarchy_layers: all_fractal_layers(),
+      assigned_aspects: all_system_aspects(),
+      fpp_services: [
+        "fpp_supervision",
+        "fpp_telemetry",
+        "fpp_command",
+        "fpp_health",
+        "fpp_sequencing",
+        "fpp_parameter",
+      ],
+      bionic_faculties: [
+        "metabolic_regime",
+        "immune_circuit",
+        "archetype_dispatch",
+        "lyapunov_contraction",
+      ],
+      declared_transports: ["zenoh", "mcp"],
+      intelligence_mode: "embedded",
+    ),
+    SovereignAgentCapabilityRecord(
+      agent_id: "pi",
+      holarchy_layers: all_fractal_layers(),
+      assigned_aspects: all_system_aspects(),
+      fpp_services: [
+        "fpp_supervision",
+        "fpp_telemetry",
+        "fpp_command",
+        "fpp_health",
+        "fpp_sequencing",
+        "fpp_parameter",
+      ],
+      bionic_faculties: [
+        "metabolic_regime",
+        "immune_circuit",
+        "archetype_dispatch",
+        "lyapunov_contraction",
+      ],
+      declared_transports: ["zenoh", "mcp"],
+      intelligence_mode: "embedded",
+    ),
+    SovereignAgentCapabilityRecord(
+      agent_id: "codex",
+      holarchy_layers: all_fractal_layers(),
+      assigned_aspects: all_system_aspects(),
+      fpp_services: [
+        "fpp_supervision",
+        "fpp_telemetry",
+        "fpp_command",
+        "fpp_health",
+        "fpp_sequencing",
+        "fpp_parameter",
+      ],
+      bionic_faculties: [
+        "metabolic_regime",
+        "immune_circuit",
+        "archetype_dispatch",
+        "lyapunov_contraction",
+      ],
+      declared_transports: ["zenoh", "mcp"],
+      intelligence_mode: "embedded",
+    ),
+    SovereignAgentCapabilityRecord(
+      agent_id: "claude",
+      holarchy_layers: all_fractal_layers(),
+      assigned_aspects: all_system_aspects(),
+      fpp_services: [
+        "fpp_supervision",
+        "fpp_telemetry",
+        "fpp_command",
+        "fpp_health",
+        "fpp_sequencing",
+        "fpp_parameter",
+      ],
+      bionic_faculties: [
+        "metabolic_regime",
+        "immune_circuit",
+        "archetype_dispatch",
+        "lyapunov_contraction",
+      ],
+      declared_transports: ["zenoh", "mcp"],
+      intelligence_mode: "embedded",
+    ),
+    SovereignAgentCapabilityRecord(
+      agent_id: "deepseek",
+      holarchy_layers: all_fractal_layers(),
+      assigned_aspects: all_system_aspects(),
+      fpp_services: [
+        "fpp_supervision",
+        "fpp_telemetry",
+        "fpp_command",
+        "fpp_health",
+        "fpp_sequencing",
+        "fpp_parameter",
+      ],
+      bionic_faculties: [
+        "metabolic_regime",
+        "immune_circuit",
+        "archetype_dispatch",
+        "lyapunov_contraction",
+      ],
+      declared_transports: ["zenoh", "mcp"],
+      intelligence_mode: "delegated",
+    ),
+    SovereignAgentCapabilityRecord(
+      agent_id: "argon",
+      holarchy_layers: all_fractal_layers(),
+      assigned_aspects: all_system_aspects(),
+      fpp_services: [
+        "fpp_supervision",
+        "fpp_telemetry",
+        "fpp_command",
+        "fpp_health",
+        "fpp_sequencing",
+        "fpp_parameter",
+      ],
+      bionic_faculties: [
+        "metabolic_regime",
+        "immune_circuit",
+        "archetype_dispatch",
+        "lyapunov_contraction",
+      ],
+      declared_transports: ["zenoh", "mcp"],
+      intelligence_mode: "delegated",
+    ),
+  ]
+}
+
+/// Per-agent bionic faculty lookup (metabolic, immune, archetype, lyapunov).
+pub fn metabolic_bionic_faculties_for_agent(
+  agent_id: String,
+) -> List(String) {
+  let target = string.lowercase(string.trim(agent_id))
+  case
+    list.find(all_sovereign_agent_capabilities(), fn(rec) {
+      rec.agent_id == target
+    })
+  {
+    Ok(rec) -> rec.bionic_faculties
+    Error(_) -> []
+  }
+}
+
 /// Enumerates all 17 canonical System Aspects in UOS.
 pub fn all_system_aspects() -> List(SystemAspect) {
   [

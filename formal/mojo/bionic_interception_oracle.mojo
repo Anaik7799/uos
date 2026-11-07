@@ -551,9 +551,9 @@ def main() raises:
     # is taken from the wildcard and labelled as such, because calling a
     # catch-all an explicit agreement would overstate it.
     var ocaml_code7 = capture(
-        "grep -oE '\\| _ -> \"CT_[A-Z_]*\"' " + ocaml_src
+        "grep -oE '\\| (7|_) -> \"CT_[A-Z_]*\"' " + ocaml_src
         + " 2>/dev/null | grep -oE 'CT_[A-Z_]*' | head -1")
-    r.observe(String("ocaml-archetype-index-7-comes-from-a-catch-all"),
+    r.observe(String("ocaml-archetype-index-7-explicit-match"),
               String("True"))
     r.observe(String("lean-archetype-code-0"), lean_arch0)
     r.observe(String("lean-archetype-code-7"), lean_arch7)

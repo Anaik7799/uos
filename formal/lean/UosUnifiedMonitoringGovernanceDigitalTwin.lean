@@ -333,18 +333,18 @@ def incident20261105WikiCensus : Census := { raw := 1015, inInlineCode := 737, i
 def incident20261105ZkCensus   : Census := { raw := 1308, inInlineCode := 990, inFencedCode := 0 }
 
 /-- Independent census over AGENTS.md, GEMINI.md, docs/**, contracts/**,
-    measured 2026-11-07T06:15Z. -/
-def wikiCensus : Census := { raw := 1478, inInlineCode := 1097, inFencedCode := 75 }
-def zkCensus   : Census := { raw := 1853, inInlineCode := 1432, inFencedCode := 76 }
+    measured 2026-11-07T07:55Z (post-canonical-rule synchronization). -/
+def wikiCensus : Census := { raw := 1479, inInlineCode := 1098, inFencedCode := 75 }
+def zkCensus   : Census := { raw := 1854, inInlineCode := 1433, inFencedCode := 76 }
 
 def totalQuotedExamples : Nat := wikiCensus.quotedExamples + zkCensus.quotedExamples
 
-/-- THE COUNT. 2,680 transclusion tokens in the current corpus are quoted examples
-    (1,172 wiki + 1,508 zk). -/
+/-- THE COUNT. 2,682 transclusion tokens in the current corpus are quoted examples
+    (1,173 wiki + 1,509 zk). -/
 theorem THM_KM_02_quoted_example_count :
-    totalQuotedExamples = 2680
-  ∧ wikiCensus.quotedExamples = 1172
-  ∧ zkCensus.quotedExamples = 1508 := by decide
+    totalQuotedExamples = 2682
+  ∧ wikiCensus.quotedExamples = 1173
+  ∧ zkCensus.quotedExamples = 1509 := by decide
 
 theorem THM_KM_03_live_counts :
     wikiCensus.live = 306 ∧ zkCensus.live = 345 := by decide
@@ -373,10 +373,10 @@ def scannerCounts : ScannerVariant → Census → Nat
   | .stripInlineAndFenced, c => c.raw - c.inInlineCode - c.inFencedCode
 
 /-- The pre-fix scanner overcounted wiki transclusions by 737 on the incident
-    fixture and by 1,097 on the current corpus. -/
+    fixture and by 1,098 on the current corpus. -/
 theorem THM_SCAN_01_raw_scanner_overcounts :
     scannerCounts .rawLines incident20261105WikiCensus - scannerCounts .stripInline incident20261105WikiCensus = 737
-  ∧ scannerCounts .rawLines wikiCensus - scannerCounts .stripInline wikiCensus = 1097
+  ∧ scannerCounts .rawLines wikiCensus - scannerCounts .stripInline wikiCensus = 1098
     := by decide
 
 /-- Fence stripping bought nothing over inline stripping on the 2026-11-05

@@ -24,7 +24,7 @@ from oracle_substrate import Receipt, capture, contains
 from oracle_substrate import json_flag, json_int, json_norm
 
 # --- canonicalExpectation, Lean :988 -------------------------------------
-comptime REQ_MODULES = 7
+comptime REQ_MODULES = 8
 comptime REQ_CASTES = 5
 comptime REQ_SERVICES = 8
 comptime REQ_FPP_ACTORS = 40
@@ -204,25 +204,18 @@ def main() raises:
     var health = capture(
         "curl -s --max-time 6 http://127.0.0.1:4100/api/health 2>/dev/null"
     )
+    var core_status = capture(
+        "curl -s --max-time 6 http://127.0.0.1:4100/api/v1/core-evo/status 2>/dev/null"
+    )
+    var zenoh_json = capture(
+        "curl -s --max-time 6 http://127.0.0.1:4100/api/v1/zenoh 2>/dev/null"
+    )
     r.observe(String("deep-health"), health)
-    # The pinned capsule may not emit these keys at all. Absent key => BLIND,
-    # never a manufactured outage and never a silent pass.
-    # F4, 20261106. These matched the COLON-ADJACENT form
-    # `"fpp_supervisor_running":true` while detecting presence with the bare
-    # key, and that asymmetry GUARANTEES the wrong verdict the moment the
-    # endpoint pretty-prints: presence True, value False, so
-    # `world_or_blind` records a real world FAILURE rather than BLIND.
-    #
-    # This is the razr15 incident reproduced one file over. The substrate's
-    # own post-mortem (:108-121) records that an endpoint emitting
-    # `"all_data_plane_slos_pass": true` -- with a space -- caused a probe to
-    # score the field FALSE and manufacture six outages on a healthy node,
-    # and the three-valued readers were made mandatory "so an author could
-    # not get it wrong again". This file imported only Receipt/capture/
-    # contains and opted out of the type. The defect is the opt-out, not
-    # today's serializer.
-    var sup_flag = json_flag(health, String("fpp_supervisor_running"))
-    var actors_n = json_int(health, String("fpp_live_actors_alive"))
+    var sup_flag = json_flag(core_status, String("fpp_supervisor_running"))
+    var actors_n = json_int(core_status, String("fpp_live_actors_alive"))
+    var mods_n = json_int(core_status, String("module_count"))
+    var svcs_n = json_int(core_status, String("service_count"))
+    var ztopics_n = json_int(zenoh_json, String("topics_active"))
     r.world_json(String("fpp-supervisor-running"), sup_flag, True)
     r.world_count(String("fpp-40-actors-alive"), actors_n, REQ_FPP_ACTORS)
     var sup_present = sup_flag >= 0
@@ -231,10 +224,7 @@ def main() raises:
     var actors40 = actors_n == REQ_FPP_ACTORS
 
     # The cockpit self-report is its own observation, separate from whether
-    # it answers routes. It currently answers 7/7 while calling itself
-    # unavailable, and that contradiction is worth surfacing rather than
-    # averaging away.
-    # F4: whitespace-normalised before matching, same reason as above.
+    # it answers routes.
     var health_n = json_norm(health)
     var self_ok = contains(health_n, String("\"status\":\"ok\""))
     r.world_or_blind(String("cockpit-self-report-ok"),
@@ -364,44 +354,76 @@ def main() raises:
     r.world_or_blind(String("a2ui-meets-the-floor"),
                      a2ui_n >= 0, a2ui_n >= MIN_A2UI)
 
-    # Not observable by this instrument. Stated, not guessed, not defaulted.
-    r.world_or_blind(String("modules-count"), False, False)
-    r.world_or_blind(String("services-count"), False, False)
-    r.world_or_blind(String("zenoh-topic-count"), False, False)
-    r.world_or_blind(String("module-graph-scc"), False, False)
-    r.world_or_blind(String("canonical-broken-links"), False, False)
-    # The twin requires 69 routes; this oracle probes 7 and says so. Passing
-    # `probed` as `req_routes` made the conjunct `probed >= probed`, which
-    # dressed the scoping decision up as a satisfied requirement.
-    r.world_or_blind(String("sixty-nine-route-requirement"), False, False)
-    # What IS observed about routes: every route probed answered 200.
-    # R2 FIX, 20261106-1230 (found by the robustness harness). This arm
-    # MANUFACTURED A FAILURE when `curl` was present but broken: with a stub
-    # exiting 127 every route returns an empty code, ok200 drops to 0, and the
-    # oracle reported "no route serves" -- indistinguishable from the cockpit
-    # being down. `command -v curl` does not help, because it checks
-    # EXISTENCE and not USABILITY: that is "a declared route is not a
-    # connected route", one level down.
+    # Measured from /api/v1/core-evo/status, /api/v1/zenoh, and link_tracker_verifier.exe --json.
     #
-    # The instrument counts as usable only if it PRODUCED something. A sweep
-    # where every probe came back empty saw nothing, and BLIND is honest.
+    # SHARED CACHE, NOT A PER-ORACLE TEMP FILE. The verifier costs ~7.8 s and
+    # monitoring_governance_oracle.mojo asked it the identical question, so the
+    # pair paid ~15.6 s for one answer and then each deleted it.
+    # /tmp/uos-ltv-cache.json is written at most once, guarded by `test ! -s`,
+    # and is deliberately NOT removed: whichever oracle runs second -- and
+    # every subsequent clean run -- reads it in ~0.01 s.
+    #
+    # GREP IS THE GATE, ON THE WRITE AND ON EVERY READ. Under the adverse PATH
+    # in robustness_harness.mojo the world tools are shadowed or absent, and
+    # with no `grep` this JSON cannot be parsed AT ALL -- so paying 7.8 s for
+    # the verifier would buy nothing. `command -v grep` fails closed FIRST:
+    # the exe is never invoked, each read returns empty, `count()` yields -1,
+    # and the arms go BLIND in ~0.01 s. BLIND is the honest verdict there --
+    # the probe could not obtain its evidence -- and it is now reached at the
+    # cost of a `command -v` instead of a full structural walk.
+    var ltv_gate = String("command -v grep >/dev/null 2>&1")
+    var ltv_cache = String("/tmp/uos-ltv-cache.json")
+    _ = capture(
+        ltv_gate + " && test ! -s " + ltv_cache
+        + " && ./tools/link_tracker_verifier.exe --json > " + ltv_cache
+        + " 2>/dev/null"
+    )
+    var ltv_status = capture(
+        ltv_gate + " && grep -oE '\"status\": *\"[a-z_]+\"' " + ltv_cache
+        + " 2>/dev/null | head -1"
+    )
+    var ltv_total = count(
+        ltv_gate + " && grep -oE '\"total_endpoints\": *[0-9]+' " + ltv_cache
+        + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
+    )
+    var ltv_passed = count(
+        ltv_gate + " && grep -oE '\"passed\": *[0-9]+' " + ltv_cache
+        + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
+    )
+    var ltv_scc = count(
+        ltv_gate + " && grep -oE '\"scc_count\": *[0-9]+' " + ltv_cache
+        + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
+    )
+    var ltv_broken = count(
+        ltv_gate + " && grep -oE '\"canonical_broken_transclusions\": *[0-9]+' "
+        + ltv_cache + " 2>/dev/null | head -1 | grep -oE '[0-9]+$'"
+    )
+    var ltv_ran = (
+        ltv_status.byte_length() > 0
+        and ltv_total >= 0
+        and ltv_passed >= 0
+        and ltv_scc >= 0
+        and ltv_broken >= 0
+    )
+
+    r.world_count(String("modules-count"), mods_n, REQ_MODULES)
+    r.world_count(String("services-count"), svcs_n, REQ_SERVICES)
+    r.world_count(String("zenoh-topic-count"), ztopics_n, REQ_ZENOH_TOPICS)
+    r.world_or_blind(String("module-graph-scc"), ltv_ran, ltv_scc == REQ_SCC)
+    r.world_or_blind(String("canonical-broken-links"), ltv_ran, ltv_broken <= MAX_CANONICAL_BROKEN)
+    r.world_or_blind(String("sixty-nine-route-requirement"), ltv_ran, ltv_total >= RR and ltv_passed == ltv_total)
     r.world_or_blind(String("every-probed-route-answers-200"),
                      probed > 0 and answered > 0, ok200 == probed)
 
-    # The relation, over the observed conjuncts only. Unobserved structural
-    # fields are supplied from the expectation ONLY so the call typechecks;
-    # they are reported BLIND above and this arm's name says what it covers.
     var live = runtime_aligned(
-        c_http, c_https, sa, zh, probed, ok200, probed,
-        REQ_MODULES, castes_n, REQ_SERVICES,
+        c_http, c_https, sa, zh, ltv_total, ltv_passed, RR,
+        mods_n, castes_n, svcs_n,
         actors_n if actors_present else -1, sup,
-        REQ_ZENOH_TOPICS, REQ_SCC, a2ui_n, 0,
+        ztopics_n, ltv_scc, a2ui_n, ltv_broken,
     )
-    # If any input to the relation was unobservable, the aggregate verdict is
-    # BLIND too. Feeding 0 actors into the relation because the key was
-    # absent would manufacture a divergence the system never exhibited.
     r.world_or_blind(String("live-alignment-over-observed-conjuncts"),
-        sup_present and actors_present and ss_ran
+        sup_present and actors_present and ss_ran and answered > 0
+        and mods_n >= 0 and svcs_n >= 0 and ztopics_n >= 0 and ltv_ran
         and castes_n >= 0 and a2ui_n >= 0, live)
 
     print("# probe time :", now)

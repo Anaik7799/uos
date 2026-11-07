@@ -69,11 +69,11 @@ from oracle_substrate import Receipt, capture, contains
 comptime SCOPE = "read from the twin's census docstring at run time"
 
 # The census the Lean twin freezes, for comparison only.
-comptime DECLARED_WIKI_RAW = 1478
-comptime DECLARED_WIKI_INLINE = 1097
-comptime DECLARED_ZK_RAW = 1853
-comptime DECLARED_ZK_INLINE = 1432
-comptime DECLARED_TOTAL_QUOTED = 2680
+comptime DECLARED_WIKI_RAW = 1479
+comptime DECLARED_WIKI_INLINE = 1098
+comptime DECLARED_ZK_RAW = 1854
+comptime DECLARED_ZK_INLINE = 1433
+comptime DECLARED_TOTAL_QUOTED = 2682
 
 
 def count(cmd: String) -> Int:

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+UOS_ROOT="/home/an/NAS-setup/uos"
+source "${UOS_ROOT}/tools/lib/uos-toolchain.sh"
+OCAML_BIN="$(uos_tool_path ocaml)"
+exec "${OCAML_BIN}" -I +unix unix.cma "${UOS_ROOT}/tools/uos-agent-failover.ml" "$@"

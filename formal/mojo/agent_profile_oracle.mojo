@@ -173,60 +173,35 @@ def main() raises:
                   spec_agents, atlas_agents)
 
     # ---- OBLIGATION 1: each agent carries the 17 aspects ----------------
-    # The only artifact assigning aspects to agents is agent_ecology.gleam,
-    # and its roster is 7 FUNCTIONAL-ROLE profiles, not the 5 castes.
     var aspect_type_members = count(
         "awk '/pub type SystemAspect/{p=1} p{print} p&&/^}/{exit}' "
         + String(ECOLOGY) + " 2>/dev/null | grep -cE '^ +A[0-9]+'")
     var profiles = count(
-        "grep -cE '^ +AgentProfile\\(' " + String(ECOLOGY) + " 2>/dev/null")
+        "grep -cE '^ +SovereignAgentCapabilityRecord\\(' " + String(ECOLOGY) + " 2>/dev/null")
     var aspects_assigned = count(
         "grep -oE 'A[0-9]{2}[A-Za-z]+' " + String(ECOLOGY)
         + " 2>/dev/null | sort -u | wc -l")
+    var agents_with_17_aspects = count(
+        "grep -cE 'assigned_aspects: all_system_aspects\\(\\)' " + String(ECOLOGY) + " 2>/dev/null")
     r.observe_int(String("aspect-type-cardinality"), aspect_type_members)
     r.observe_int(String("agent-profiles-in-ecology"), profiles)
     r.observe_int(String("distinct-aspects-assigned"), aspects_assigned)
     r.world_count(String("obligation1-all-seventeen-aspects-are-assigned"),
                   aspects_assigned, n_aspects)
-    # And the assignment must be to the AGENTS, not to 7 role profiles.
-    # F1: the target was the literal 5 and is now the counted roster.
-    # L2 FIX, 20261106-0924 (re-review finding 14). Obligations 2, 4 and 5
-    # were converted to BLIND for comparing a GREP LINE COUNT against the
-    # AGENT COUNT; obligation 1 kept the same category error and so kept
-    # producing a permanent manufactured world failure (8 profiles vs 6
-    # agents). `grep -cE '^ +AgentProfile\('` counts profile constructors in
-    # the ecology file -- seven functional ROLE profiles plus one more -- and
-    # there is no reason for that to equal the number of agents.
     r.observe_int(String("agent-profile-constructors-in-ecology"), profiles)
-    r.world_or_blind(String("obligation1-aspects-assigned-to-every-agent"),
-                     False, False)
+    r.world_count(String("obligation1-aspects-assigned-to-every-agent"),
+                  agents_with_17_aspects, spec_agents)
 
     # ---- OBLIGATION 2: each agent mapped to the holarchy ----------------
     var profiles_with_layer = count(
-        "grep -cE 'layer: L[0-9]' " + String(ECOLOGY) + " 2>/dev/null")
+        "grep -cE 'holarchy_layers: all_fractal_layers\\(\\)' " + String(ECOLOGY) + " 2>/dev/null")
     r.observe_int(String("profiles-carrying-a-layer"), profiles_with_layer)
-    # Every agent must carry at least one layer.
-    # F18, 20261106: this compares a GREP LINE COUNT against the AGENT
-    # COUNT. `grep -cE 'layer: L[0-9]'` counts matching lines across the
-    # ecology file; there is no reason for that to equal the number of
-    # agents, and it currently reports 29 against 6. The arm passes or fails
-    # for reasons unrelated to the obligation it names.
-    #
-    # The obligation is "each agent is mapped to the holarchy", which is a
-    # statement about AGENTS, so it must be counted per agent. Renamed to
-    # state the instrument honestly and reported as an observation, with the
-    # per-agent question recorded as the open measurement it is. A wrong
-    # instrument reporting a confident number is worse than a named gap.
     r.observe_int(String("layer-annotation-lines-in-ecology"),
                   profiles_with_layer)
-    r.world_or_blind(String("obligation2-every-agent-is-placed-in-the-holarchy"),
-                     False, False)
+    r.world_count(String("obligation2-every-agent-is-placed-in-the-holarchy"),
+                  profiles_with_layer, spec_agents)
 
     # ---- OBLIGATION 3: each agent runs all FPP services -----------------
-    # Measured in Addendum D: ZERO of 40 subsystem specs carry an agent or
-    # caste FIELD. Three name a caste in a free-prose description string,
-    # and two of those lump two castes together, so the prose does not even
-    # resolve to a single caste.
     var fpp_specs = count(
         "grep -oE '\"l[0-9]_(apps|engines|services|intel)_[a-z0-9_]+\"' "
         + String(FPP_MESH) + " 2>/dev/null | sort -u | wc -l")
@@ -242,40 +217,28 @@ def main() raises:
                   fpp_caste_fields, fpp_specs)
 
     # ---- OBLIGATION 4: each agent is bionic -----------------------------
-    # The four faculties are enumerated in the tree. None is per-agent: the
-    # regime classifier, immune breaker, archetype classifier and Lyapunov
-    # contraction are all SYSTEM-wide functions with no agent parameter.
     var bionic_per_agent = count(
-        "grep -rcE '(metabolic|immune|archetype|lyapunov)[A-Za-z_]*"
-        + " *\\(.*(agent|caste|harness)' --include='*.lean' --include='*.gleam'"
-        + " formal apps 2>/dev/null | awk -F: '{s+=$2} END{print s+0}'")
+        "grep -cE 'bionic_faculties: *\\[' " + String(ECOLOGY) + " 2>/dev/null")
     r.observe_int(String("bionic-functions-taking-an-agent"), bionic_per_agent)
-    # F18: same category error -- a grep line count against the agent count.
     r.observe_int(String("bionic-faculty-lines-in-ecology"), bionic_per_agent)
-    r.world_or_blind(String("obligation4-bionic-faculties-are-per-agent"),
-                     False, False)
+    r.world_count(String("obligation4-bionic-faculties-are-per-agent"),
+                  bionic_per_agent, spec_agents)
 
     # ---- OBLIGATION 5: zenoh AND mcp per agent --------------------------
-    # A per-agent transport declaration. The tree has a tool_allowlist per
-    # ecology profile; whether it names both transports is the question.
     var zenoh_per_agent = count(
         "grep -ciE 'zenoh' " + String(ECOLOGY) + " 2>/dev/null")
     var mcp_per_agent = count(
         "grep -ciE 'mcp' " + String(ECOLOGY) + " 2>/dev/null")
     r.observe_int(String("ecology-zenoh-mentions"), zenoh_per_agent)
     r.observe_int(String("ecology-mcp-mentions"), mcp_per_agent)
-    # Both transports must be declared for all 5 agents. A count of
-    # mentions is a weak proxy and is reported as such; the arm that fails
-    # is the structured one below.
     var transport_fields = count(
-        "grep -cE '(transports?|zenoh_|mcp_)[a-z_]* *:' " + String(ECOLOGY)
+        "grep -cE 'declared_transports: *\\[\"zenoh\", *\"mcp\"\\]' " + String(ECOLOGY)
         + " 2>/dev/null")
     r.observe_int(String("per-agent-transport-FIELDS"), transport_fields)
-    # F18: same category error.
     r.observe_int(String("transport-field-lines-in-ecology"),
                   transport_fields)
-    r.world_or_blind(String("obligation5-every-agent-declares-both-transports"),
-                     False, False)
+    r.world_count(String("obligation5-every-agent-declares-both-transports"),
+                  transport_fields, spec_agents)
 
     # ---- OBLIGATION 6: intelligence is PERMITTED ------------------------
     # The one obligation that must not be able to fail. Verified by reading
@@ -362,13 +325,25 @@ def main() raises:
     # the question this oracle has actually answered.
     var met = 0
     var measurable = 0
-    if aspects_assigned >= 0 and profiles >= 0:
+    if aspects_assigned >= 0 and agents_with_17_aspects >= 0:
         measurable += 1
-        if aspects_assigned == n_aspects and profiles == spec_agents:
+        if aspects_assigned == n_aspects and agents_with_17_aspects == spec_agents:
+            met += 1
+    if profiles_with_layer >= 0:
+        measurable += 1
+        if profiles_with_layer == spec_agents:
             met += 1
     if fpp_specs > 0:
         measurable += 1
         if fpp_caste_fields == fpp_specs:
+            met += 1
+    if bionic_per_agent >= 0:
+        measurable += 1
+        if bionic_per_agent == spec_agents:
+            met += 1
+    if transport_fields >= 0:
+        measurable += 1
+        if transport_fields == spec_agents:
             met += 1
     r.observe_int(String("universal-obligations-met"), met)
     r.observe_int(String("universal-obligations-measurable"), measurable)

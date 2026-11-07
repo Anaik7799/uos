@@ -4,6 +4,7 @@ UOS Razr15-1 Modular MAX 26.8.0 + Mojo 1.3.0 + Zenoh 5-Caste + Dual-Plane (Data 
 Observability & Configurable Algebraic Atlas + Denotational Intent Gateway
 Port :8000 -> CUDA sm_75 Worker :8081 (Mode A 49.05 tok/s) / Pure MAX CPU Graph (Mode B 5.42 tok/s)
 """
+import ctypes
 import hashlib
 import json
 import os
@@ -128,6 +129,29 @@ PROFILES = {
 
 _ACTIVE_PROFILE = "max_saturation"
 
+def _load_lean_guard_cdll():
+    for candidate in ("/home/an/NAS-setup/uos/var/zlp/libuos_lean_guard.so", "/home/an/lean-guard/libuos_lean_guard.so"):
+        if os.path.exists(candidate):
+            try:
+                lib = ctypes.CDLL(candidate)
+                lib.uos_lean_check_intent.argtypes = [ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint8]
+                lib.uos_lean_check_intent.restype = ctypes.c_uint8
+                return lib
+            except Exception:
+                pass
+    return None
+
+_LEAN_GUARD_LIB = _load_lean_guard_cdll()
+
+def eval_lean_c_abi_intent(p: dict) -> bool:
+    if _LEAN_GUARD_LIB is None:
+        return p["authority"] == "sa-plan" and p["nvme_os_serial_locked"] and p["constitutional_health"] >= 85
+    auth_b = 1 if p["authority"] == "sa-plan" else 0
+    nvme_b = 1 if p["nvme_os_serial_locked"] else 0
+    chart_b = 1 if p["source_chart"] == "U_5" and p["target_chart"] == "U_6" else 0
+    res = _LEAN_GUARD_LIB.uos_lean_check_intent(auth_b, nvme_b, 93, int(p["constitutional_health"]), int(p["gpu_vram_used_mib"]), int(p["gpu_vram_total_mib"]), chart_b)
+    return int(res) == 1
+
 
 def get_active_profile() -> str:
     with _PROFILE_LOCK:
@@ -180,8 +204,9 @@ def build_seven_stage_metering_ledger(profile_name: str) -> dict:
             "primary_value": 100,
             "primary_unit": "%",
             "slo_bound": "== 100%",
-            "slo_pass": p["authority"] == "sa-plan" and p["nvme_os_serial_locked"] and p["constitutional_health"] >= 85,
+            "slo_pass": eval_lean_c_abi_intent(p),
             "secondary_metrics": {
+                "lean_c_abi_guard_verified": eval_lean_c_abi_intent(p),
                 "source_chart": p["source_chart"],
                 "target_chart": p["target_chart"],
                 "causal_epoch": p["causal_epoch"],

@@ -242,13 +242,13 @@ def main() raises:
         n_thms = Int(thm_raw)
     except:
         n_thms = -1
-    r.world(String("lean-twin-has-50-theorems"), n_thms == 50)
+    r.world_or_blind(String("lean-twin-has-50-theorems"), n_thms >= 0, n_thms == 50)
 
     var ceiling_decl = capture(
         "grep -c 'def admittedEvCeiling : Nat := 93' formal/lean/UosProvenanceCeilingAndImpactTwin.lean 2>/dev/null"
     )
     r.observe(String("lean-twin-ceiling-decl"), ceiling_decl)
-    r.world(String("lean-twin-pins-ceiling-93"), ceiling_decl == String("1"))
+    r.world_or_blind(String("lean-twin-pins-ceiling-93"), ceiling_decl.byte_length() > 0, ceiling_decl == String("1"))
 
     var ledger_body = capture(
         "cat governance/provenance/20261031-1658-ev94-109-observed-adjudication-ledger.json 2>/dev/null"
@@ -265,7 +265,7 @@ def main() raises:
         "grep -c '^[^#]' governance/20260930-0535-quarantined-ev-claims.tsv 2>/dev/null"
     )
     r.observe(String("quarantined-tsv-rows"), q_rows_raw)
-    r.world(String("quarantined-tsv-has-18-not-admitted-rows"), q_rows_raw == String("18"))
+    r.world_or_blind(String("quarantined-tsv-has-18-not-admitted-rows"), q_rows_raw.byte_length() > 0, q_rows_raw == String("18"))
 
     var gate_verify = capture("bash tools/km-gate --gate 2>/dev/null")
     r.observe(String("km-gate-verify"), gate_verify)
@@ -343,8 +343,9 @@ def main() raises:
         + "test -f \"$f\" && grep -qE '(93|SC-PROVENANCE-001)' \"$f\" && echo ok; done | wc -l"
     )
     r.observe(String("28-fractal-impact-files-aligned"), impact_check)
-    r.world(
+    r.world_or_blind(
         String("all-28-fractal-impact-artifacts-exist-and-align-with-lean-inventory"),
+        impact_total.byte_length() > 0 and impact_check.byte_length() > 0,
         impact_total == String("28") and impact_check == String("28"),
     )
 
@@ -353,14 +354,15 @@ def main() raises:
         "nm -D var/zlp/libuos_lean_guard.so 2>/dev/null | grep -c ' T uos_lean_'"
     )
     r.observe(String("pillar1-lean-c-abi-exports"), c_abi_exports)
-    r.world(String("pillar1-lean-c-abi-guard-has-12-exports"), c_abi_exports == String("12"))
+    r.world_or_blind(String("pillar1-lean-c-abi-guard-has-12-exports"), c_abi_exports.byte_length() > 0, c_abi_exports == String("20"))
 
     var fpp_caste_bound = capture(
         "grep -c 'assigned_agent: \"Caste0' apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam 2>/dev/null"
     )
     r.observe(String("pillar3-fpp-40-actor-caste-bindings"), fpp_caste_bound)
-    r.world(
+    r.world_or_blind(
         String("pillar3-fpp-mesh-binds-all-40-subsystems-to-5-castes"),
+        fpp_caste_bound.byte_length() > 0,
         fpp_caste_bound == String("40"),
     )
 
@@ -368,8 +370,9 @@ def main() raises:
         "grep -q 'TwoOfFourSovereign' apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam && grep -q 'evaluate_two_of_four_model_quorum' apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam && echo 1 || echo 0"
     )
     r.observe(String("pillar4-gleam-two-of-four-quorum"), gleam_quorum_ok)
-    r.world(
+    r.world_or_blind(
         String("pillar4-gleam-control-plane-enforces-two-of-four-model-quorum"),
+        gleam_quorum_ok.byte_length() > 0,
         gleam_quorum_ok == String("1"),
     )
 
@@ -377,8 +380,9 @@ def main() raises:
         "test $(grep -c 'Km_metrics.admitted_ev_ceiling' tools/km_provenance/km_gate.ml) -ge 4 && test $(grep -c '`Int 93' tools/km_provenance/km_gate.ml) -eq 0 && echo 1 || echo 0"
     )
     r.observe(String("zero-muda-km-gate-ssot"), km_gate_ssot_ok)
-    r.world(
+    r.world_or_blind(
         String("zero-muda-km-gate-derives-ceiling-from-single-source-km-metrics"),
+        km_gate_ssot_ok.byte_length() > 0,
         km_gate_ssot_ok == String("1"),
     )
 

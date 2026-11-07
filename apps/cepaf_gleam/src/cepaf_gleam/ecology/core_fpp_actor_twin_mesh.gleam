@@ -2719,6 +2719,7 @@ pub fn encode_spec_json(spec: SubsystemFppActorSpec) -> json.Json {
     #("assigned_aspects", json.array(spec.assigned_aspects, json.int)),
     #("intelligence_focus", json.string(spec.intelligence_focus)),
     #("owner_caste_id", json.string(spec.owner_caste_id)),
+    #("assigned_agent", json.string(spec.owner_caste_id)),
   ])
 }
 
