@@ -46,6 +46,22 @@ Under **Claude GUI Design (`uos-gui-design`)** and **Code Superpowers (`uos-ui-s
 +-------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => CoverClosed: Init
+    CoverClosed => CoverOpen: Click(FlipCover)
+    CoverOpen => Actuated: Click(ConfirmTrigger & TokenValid)
+    CoverOpen => CoverClosed: Timeout(5000ms Elapsed)
+    CoverOpen => CoverClosed: Click(Cancel / ClickOutside)
+    Actuated => CoolingDown: ActionDispatched
+    CoolingDown => CoverClosed: Timeout(2000ms)
+```
+
 ```mermaid
 stateDiagram-v2
     [*] --> CoverClosed: Init
@@ -121,6 +137,22 @@ pub type SpringCoverButtonProps {
 +-------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => Idle: Init
+    Idle => Key1Signed: Sign(Sovereign_1)
+    Key1Signed => Consensual: Sign(Sovereign_2 & Within30s)
+    Key1Signed => Idle: Timeout(30s Window Elapsed)
+    Key1Signed => Aborted: Trigger(Veto)
+    Consensual => Executed: Dispatch(SignedToken)
+    Executed => (*)
+```
+
 ```mermaid
 stateDiagram-v2
     [*] --> Idle: Init
@@ -190,6 +222,21 @@ pub type TwoManInterlockProps {
 +====================================================================================================+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => Armed: SystemBoot
+    Armed => Tripped: Trigger(PullCordClick or JidokaError)
+    Tripped => Acknowledged: Click(AcknowledgeAlarm)
+    Acknowledged => TwoKeyResume: Click(RequestResume)
+    TwoKeyResume => Armed: QuorumMet(TwoManSignatures)
+    Tripped => Armed: AutoClear(NonFatalCanaryRecovered)
+```
+
 ```mermaid
 stateDiagram-v2
     [*] --> Armed: SystemBoot
@@ -253,6 +300,16 @@ pub type AndonCordProps {
 |                                                                         |
 |  STATUS: HARD-FENCED AGAINST ACCIDENTAL DISK WIPING OR POOL ALLOCATION  |
 +-------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Hardware Sentry Probe Sysfs /sys/block/*/serial] --> [Serial == '25503L801736'?]
+[Serial == '25503L801736'?] --> [HARD FENCE ACTIVE Block Device Locked Status: GREEN PADLOCK SEALED]
+[Serial == '25503L801736'?] --> [Non-Root Device OSD Allocation Allowed Status: NORMAL]
+[HARD FENCE ACTIVE Block Device Locked Status: GREEN PADLOCK SEALED] --> [Attempted Ceph Wipe / Format?]
+[Attempted Ceph Wipe / Format?] --> [FAIL-CLOSED ABORT Trip Andon Line Signal SIL-6 Hazard Alert]
 ```
 
 ```mermaid
@@ -320,6 +377,21 @@ pub type DriveSentryProps {
 +-------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => StronglyStable: Init(λ <= -0.30)
+    StronglyStable => MarginallyStable: Perturbation(-0.30 < λ <= 0.05)
+    MarginallyStable => StronglyStable: Damping(λ <= -0.30)
+    MarginallyStable => DivergentRisk: Cascade(λ > 0.05)
+    DivergentRisk => FailSafeHalt: Tripwire(λ > 0.10 or dλ/dt > 0.05)
+    DivergentRisk => MarginallyStable: AdaptivePID(ThrottlingEngaged)
+```
+
 ```mermaid
 stateDiagram-v2
     [*] --> StronglyStable: Init[λ <= -0.30]
@@ -380,6 +452,19 @@ pub type LyapunovDialProps {
 |  BEAM 2 (Lower: Physical Reductions): 18.5k Red/Sec  (BEAM Scheduler)   |
 |  SEMIOTIC DIVERGENCE: [ 1.2% (NOMINAL) ]   PHASE ALIGNMENT: [ IN-SYNC ] |
 +-------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Discrete Symbolic Intent Gospel Contracts, Intent JSON, Tokens] --> [--- Epistemic Cut Boundary ---]
+[--- Epistemic Cut Boundary ---] --> [Continuous Physical Execution BEAM Reductions, Zenoh Packets, Joules]
+[Discrete Symbolic Intent Gospel Contracts, Intent JSON, Tokens] --> [Upper CRT Trace Square Wave]
+[Continuous Physical Execution BEAM Reductions, Zenoh Packets, Joules] --> [Lower CRT Trace Analog Waveform]
+[Upper CRT Trace Square Wave] --> [Phase Comparator |ΔPhase| < 10%?]
+[Lower CRT Trace Analog Waveform] --> [Phase Comparator |ΔPhase| < 10%?]
+[Phase Comparator |ΔPhase| < 10%?] --> [STATUS: PHASE-LOCKED Semiotic Harmony]
+[Phase Comparator |ΔPhase| < 10%?] --> [STATUS: PHASE-DRIFT Investigate Actor Lag]
 ```
 
 ```mermaid
@@ -445,6 +530,21 @@ pub type RochaScopeProps {
 +-------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Work Intake Backlog Priority] --> [T-Shirt Sizing Effort Evaluator]
+[T-Shirt Sizing Effort Evaluator] --> [Rack Bin: SMALL S]
+[T-Shirt Sizing Effort Evaluator] --> [Rack Bin: MEDIUM M]
+[T-Shirt Sizing Effort Evaluator] --> [Rack Bin: LARGE L]
+[Rack Bin: SMALL S] --> [Worker Pull Lease sa-plan task claim]
+[Rack Bin: MEDIUM M] --> [Worker Pull Lease sa-plan task claim]
+[Rack Bin: LARGE L] --> [Worker Pull Lease sa-plan task claim]
+[Worker Pull Lease sa-plan task claim] --> [Task Executing Countdown Timer Active]
+[Task Executing Countdown Timer Active] --> [Task Completed Result Ledgered]
+[Task Executing Countdown Timer Active] --> [Lease Evicted Returned to Pull Rack]
+```
+
 ```mermaid
 flowchart LR
     Intake["Work Intake<br/>(Backlog Priority)"] --> Sizer{"T-Shirt Sizing<br/>Effort Evaluator"}
@@ -492,6 +592,17 @@ flowchart LR
 +-------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Open Knowledge Covers: {U_i, U_j, U_k}] --> [Restriction: f_i | U_i ∩ U_j]
+[Open Knowledge Covers: {U_i, U_j, U_k}] --> [Restriction: f_j | U_i ∩ U_j]
+[Restriction: f_i | U_i ∩ U_j] --> [f_i | U_i ∩ U_j == f_j | U_i ∩ U_j?]
+[Restriction: f_j | U_i ∩ U_j] --> [f_i | U_i ∩ U_j == f_j | U_i ∩ U_j?]
+[f_i | U_i ∩ U_j == f_j | U_i ∩ U_j?] --> [Gluing Property Satisfied Global Section s ∈ FU Exists Unique]
+[f_i | U_i ∩ U_j == f_j | U_i ∩ U_j?] --> [Topological Contradiction Flagged Mark Inconsistency in ZK ADR]
+```
+
 ```mermaid
 flowchart TD
     subgraph S_SHEAF ["Presheaf Gluing Condition"]
@@ -523,3 +634,4 @@ The entire visual specification and F Prime component architecture adheres 100% 
 - **Domain 5: Tri-Sovereign Governance & VCS Purity**: `CHK-17-SOV` (Tri-sovereign consensus), `CHK-18-JJ` (Standalone Jujutsu `.jj/` with 0 native git mutations).
 
 All 48 web endpoints are running live, serving over the Tailnet at [http://nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100), with 100.0% reachable status and Tarjan SCC = 1.
+

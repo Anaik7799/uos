@@ -53,6 +53,15 @@ Prior to executing these 5 evolutionary cycles:
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[C1] --> [C2]
+[C2] --> [C3]
+[C3] --> [C4]
+[C4] --> [C5]
+```
+
 ```mermaid
 flowchart LR
     subgraph C1 ["C357 / EV-C109: Tactile Safety"]
@@ -238,3 +247,4 @@ Executed `tools/link_tracker_verifier.exe`:
 ## 13. Conclusion
 
 The 5 consecutive evolutionary cycles (`C357` through `C361` / `EV-C109` through `EV-C113`) have been successfully executed, machine-verified in Lean 4, recorded in `sa-plan`, cryptographically committed to `var/km/provenance-cycles.sqlite3`, and validated against the live 48-endpoint cybernetic cockpit. The system stands in full homeostatic equilibrium under BEAM OTP 29 supervision.
+

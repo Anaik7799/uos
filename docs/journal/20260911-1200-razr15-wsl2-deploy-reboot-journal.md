@@ -72,6 +72,36 @@ Operator directive: *"run this on the laptop and initiate a reboot"*.
 +---------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    participant Op as Operator / Admin PowerShell
+    participant Win as Windows 11 Host
+    participant WSL as WSL2 Ubuntu VM
+    participant NAS as Instance 0 (nas-1)
+
+    Op=>Win: Run deploy-and-reboot.ps1 (As Administrator)
+    Win=>Win: Write .wslconfig (vmIdleTimeout=-1)
+    Win=>Win: Write administrators_authorized_keys + icacls
+    Win=>Win: Restart-Service sshd
+    Win=>WSL: wsl -u root (Inject /etc/wsl.conf & entrypoint.sh)
+    Win=>WSL: Inject keys & start sshd (:22 & :2222)
+    Win=>Win: Netsh portproxy add 0.0.0.0:2222 => WSL2:2222
+    Win=>Win: Register ScheduledTask UOS_WSL2_ColdBoot_Autostart (SYSTEM)
+    Win=>Win: Restart-Computer -Force
+    Note over Win,WSL: System Reboots (Cold Boot)
+    Win=>WSL: SYSTEM Task fires AtStartup => wsl.exe boot-entrypoint.sh
+    WSL=>WSL: Setup /dev/net/tun & start tailscaled (razr15-wsl2)
+    WSL=>WSL: Start sshd & self-healing watchdog
+    NAS=>Win: SSH abhij@100.114.9.28:22 (Verified PASS)
+    NAS=>WSL: SSH an@razr15-wsl2:22 (Verified PASS)
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -189,3 +219,4 @@ The division of responsibility between Windows 11 host and WSL2 Ubuntu container
 ## 13. Conclusion
 
 The self-contained turnkey orchestrator ([`deploy-and-reboot.ps1`](file:///home/an/NAS-setup/uos/ops/nodes/razr15-1-wsl2/deploy-and-reboot.ps1)) establishes complete autonomous survival for `razr15-1` across cold reboots, resolves all Windows OpenSSH ACL restrictions, and provides seamless remote control from `nas-1`.
+

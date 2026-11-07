@@ -138,6 +138,33 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Coordinator as Swarm Mesh Coordinator
+    participant AGY as AGY (Antigravity)
+    participant Claude as Claude (Anthropic)
+    participant Codex as Codex (OpenAI)
+
+    Operator=>Coordinator: @agy @claude @codex: Review Plan
+    Coordinator=>AGY: Dispatch ACL Intent
+    Coordinator=>Claude: Dispatch ACL Intent
+    Coordinator=>Codex: Dispatch ACL Intent
+    par Independent Peer Review
+        AGY=>Coordinator: Verdict: PASS (NIF & Memory Safe)
+        Claude=>Coordinator: Verdict: PASS (STPA Interlocks Hold)
+        Codex=>Coordinator: Verdict: PASS (Formal Proofs Ratified)
+    end
+    Note over Coordinator: 2oo3 Sovereign Quorum Consensus Check
+    Coordinator=>Operator: Consolidated Tri-Agent Synthesis Report
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -223,3 +250,4 @@ Evolutionary Cycle 7: L6 Decentralized Multi-Agent Swarm Summoning (@agy, @claud
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

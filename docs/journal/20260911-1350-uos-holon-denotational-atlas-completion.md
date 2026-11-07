@@ -38,6 +38,20 @@
 +====================================================================================================+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[BM & WSL & CONT & VM & AIR] --> [VFS Descriptor Probe /proc, /sys, /dev]
+[VFS Descriptor Probe /proc, /sys, /dev] --> [Multi-Substrate Classifier]
+[Multi-Substrate Classifier] --> [Scott Domain CPO Lattice D_S Rank 0..4, Top = Ratified]
+[Scott Domain CPO Lattice D_S Rank 0..4, Top = Ratified] --> [Lyapunov Evaluator Vs Asymptotic Stability Delta V <= 0]
+[Lyapunov Evaluator Vs Asymptotic Stability Delta V <= 0] --> [OTP 29 Root Supervisor uos_holon_sup.erl]
+[OTP 29 Root Supervisor uos_holon_sup.erl] --> [Holon GenServer uos_holon_node.erl]
+[Holon GenServer uos_holon_node.erl] --> [Port Hunter 8088 -> 8089 -> 8090 -> 0]
+[Port Hunter 8088 -> 8089 -> 8090 -> 0] --> [HTTP REST Gateway /health, /substrate, /lyapunov, /scott_domain]
+[HTTP REST Gateway /health, /substrate, /lyapunov, /scott_domain] --> [LEAN & QUINT & MOJO & OCAML & OTP]
+```
+
 ```mermaid
 flowchart TD
     subgraph Substrates["Heterogeneous Remote Substrates"]
@@ -215,3 +229,4 @@ flowchart TD
 
 ## 13. Conclusion
 The UOS Multi-Substrate Resilient Holon is fully operational, ratifying all denotational semantics, domain theory lattices, category theory morphisms, and runtime supervision requirements. The system is resilient, self-healing, mathematically sound, and ready for continuous distributed hive expansion.
+

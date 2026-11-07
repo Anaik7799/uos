@@ -138,6 +138,28 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Gleam as Gleam Worker (BEAM)
+    participant Hermes as Hermes Wiki Engine
+    participant ZK as Zettelkasten (102 ADRs)
+
+    Operator=>Gleam: /zk 100 OR /search (topic)
+    Gleam=>Hermes: Query Knowledge Sheaf
+    Hermes=>ZK: Resolve Transclusion ((zk:ADR-100))
+    Note over ZK: Evaluates Gospel Contracts & Markdown AST
+    ZK=>Hermes: Full Structured Record & Metadata
+    Hermes=>Gleam: Transcluded Summary + Clickable Tailscale Links
+    Gleam=>Operator: Formatted Telegram Markdown with Direct Links
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -218,3 +240,4 @@ Evolutionary Cycle 9: L8 Zero-Latency Semantic Search & Holographic ZK Recall ha
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

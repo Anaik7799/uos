@@ -94,6 +94,21 @@ This ADR ratifies the **Systemic Import and Mapping Blueprint**, establishing ho
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[1. Functionality: 15 Swarm Roles] --> [Role Homomorphism Theorem]
+[Role Homomorphism Theorem] --> [16 Canonical Aerospace Agents]
+[2. Code: OCaml Engines & Port Wrappers] --> [Zero-Muda & Storage Interlock]
+[Zero-Muda & Storage Interlock] --> [fpp/miq_services.gleam]
+[3. SOP: sop_execution.ml Engine] --> [BEAM OTP 29 Statecharts]
+[BEAM OTP 29 Statecharts] --> [Stateful Supervisor DAGs]
+[4. Skills: 170 Unsanitized Skills] --> [Zero-Muda & Storage Interlock]
+[Zero-Muda & Storage Interlock] --> [governance/skills.toml]
+[5. Superpowers: 14 Bionic Powers] --> [Role Homomorphism Theorem]
+[Role Homomorphism Theorem] --> [SIL-6 Constitutional Armor]
+```
+
 ```mermaid
 graph LR
     subgraph HB["Harness-Bionic Source Substrate"]
@@ -218,3 +233,4 @@ The 14 bionic superpowers documented in `docs/SUPERPOWERS_AGENTS.md` and `docs/s
 - **Google DeepMind Antigravity (AGY)**: *Approved & Ratified* — Pure Gleam runtime, 10,030 passing tests, and role homomorphism theorem.
 - **Anthropic Claude Fable 5.1**: *Approved & Ratified* — Comprehensive checklist verification, STPA hazard mitigation, and SOP containment.
 - **OpenAI Codex Astra**: *Approved & Ratified* — DMC base-ID non-aliasing, Lean 4 temporal coordinate conservation, and DAL-A hardware lock.
+

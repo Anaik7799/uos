@@ -65,6 +65,23 @@ Prior to this evolutionary cycle:
 +-------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Claude Code\nEmpirical Layout, WCAG AAA, 4 Viewports] --> [Test Effectiveness Execution Pipeline]
+[OpenAI Codex\nMetamorphic Relations, 46 Mutants, Lean 4] --> [Test Effectiveness Execution Pipeline]
+[Antigravity\n23 EUnit Suites, Sa-Plan Jidoka, Zero-Muda] --> [Test Effectiveness Execution Pipeline]
+[Stage 1: 23 BEAM EUnit Suites\n182 Tests, >71k Assertions, 1.9s] --> [Stage 2: Chrome DOM Layout & Accessibility\n2,219 Text Nodes, CLS=0.0]
+[Stage 2: Chrome DOM Layout & Accessibility\n2,219 Text Nodes, CLS=0.0] --> [Stage 3: Perceptual dHash, BBox & 4 Viewports\n167 Cards, 0 Collisions, WCAG AAA]
+[Stage 3: Perceptual dHash, BBox & 4 Viewports\n167 Cards, 0 Collisions, WCAG AAA] --> [Stage 4: Persistent Golden Hash Ledger\nD_H <= 2 bits, 0 Drift]
+[Stage 4: Persistent Golden Hash Ledger\nD_H <= 2 bits, 0 Drift] --> [Stage 5: 46-Mutant Killing & 200-Worker WAL\n100% Mutation Score, 17,731 tx/s]
+[Stage 5: 46-Mutant Killing & 200-Worker WAL\n100% Mutation Score, 17,731 tx/s] --> [Stage 6: 5-Domain 18-Checkpoint Evaluator\nSC-CHECKLIST-001 100% Green]
+[Stage 6: 5-Domain 18-Checkpoint Evaluator\nSC-CHECKLIST-001 100% Green] --> [Sa-Plan Store\nvar/sa-plan/uos.sqlite3]
+[Stage 6: 5-Domain 18-Checkpoint Evaluator\nSC-CHECKLIST-001 100% Green] --> [Provenance Ledger\nvar/km/provenance-cycles.sqlite3]
+[Stage 6: 5-Domain 18-Checkpoint Evaluator\nSC-CHECKLIST-001 100% Green] --> [Coordinator Log\nvar/coordination/tri-agent/coordinator.sqlite3]
+[Test Effectiveness Execution Pipeline] --> [Gate G-TEST-EFFECTIVENESS\n100% SOUND PASS]
+```
+
 ```mermaid
 flowchart TD
     subgraph Sovereigns["Tri-Sovereign Multi-Agent Consensus"]
@@ -258,3 +275,4 @@ A  docs/journal/20260919-1245-uos-test-suite-effectiveness-superpowers-and-sa-pl
 ## 13. Conclusion
 
 The comprehensive test suite review, visual verification harness, metamorphic mutation testing, and `sa-plan` operational implementation have been successfully synthesized, implemented, verified, and admitted under Tri-Sovereign consensus. Gate `G-TEST-EFFECTIVENESS` is 100% green and sound.
+

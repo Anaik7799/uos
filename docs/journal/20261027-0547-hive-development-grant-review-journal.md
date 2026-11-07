@@ -33,12 +33,12 @@ Trigger: Codex requested an independent peer review of an immutable development 
 
 ```mermaid
 flowchart TD
-    clock --> proposal
+    clock["clock.json"] --> proposal
     proposal --> review
-    controlids --> review
-    manifest --> review
+    controlids["control-ids.json"] --> review
+    manifest["source-manifest"] --> review
     review --> grant
-    admission --> grant
+    admission["admission.gleam"] --> grant
 ```
 
 Twelve findings recorded: ten PASS, one PASS_WITH_LIMIT, one OBSERVED_CORRECT.

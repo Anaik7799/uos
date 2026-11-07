@@ -97,6 +97,49 @@ Under the unified sovereign architecture:
 
 ### 2.1 State Transitions and Verification Invariants
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => S0_Bootstrap
+    S0_Bootstrap => S1_EdgePollWait: Environment & DB Ready
+    
+    S1_EdgePollWait => S2_IngestionParse: HTTP Long-Poll Inbound
+    S2_IngestionParse => S3_DedupLedgerCheck: JSON Validated
+    
+    S3_DedupLedgerCheck => S14_Quarantine: Duplicate ID
+    S14_Quarantine => S1_EdgePollWait: Ack and Drop
+    
+    S3_DedupLedgerCheck => S4_AckReactionDispatch: Novel ID Recorded
+    S4_AckReactionDispatch => S5_BeamHarnessDispatch: Reaction Sent
+    
+    S5_BeamHarnessDispatch => S6_DirectiveEval: Starts with "/"
+    S5_BeamHarnessDispatch => S7_IdentityEval: Matches Identity NLP
+    S5_BeamHarnessDispatch => S10_CognitiveDelegate: Free-form text
+    
+    S6_DirectiveEval => S8_PlanInspection: /plan
+    S6_DirectiveEval => S9_ZigvmDeterministicExec: /zigvm
+    S6_DirectiveEval => S11_ResponseSynthesis: /status, /sutra, /cockpit, /help
+    
+    S8_PlanInspection => S11_ResponseSynthesis: Sa-Plan Result
+    S9_ZigvmDeterministicExec => S11_ResponseSynthesis: ZigVM Result
+    S7_IdentityEval => S11_ResponseSynthesis: Sovereign Card
+    S10_CognitiveDelegate => S11_ResponseSynthesis: Zenoh Intent Queued
+    
+    S11_ResponseSynthesis => S12_OutboundTransmit: JSON Formatted
+    S12_OutboundTransmit => S13_TelemetryPublish: Delivered to Telegram
+    S13_TelemetryPublish => S1_EdgePollWait: OTel Span Published
+    
+    S5_BeamHarnessDispatch => S15_DegradedCockpit: Dispatch Timeout (>5s)
+    S15_DegradedCockpit => S12_OutboundTransmit: Fallback Status Card
+    
+    (*) => S16_WalReplayRecovery: Cold Boot After Crash
+    S16_WalReplayRecovery => S1_EdgePollWait: WAL Journal Reconciled
+```
+
 ```mermaid
 stateDiagram-v2
     [*] --> S0_Bootstrap
@@ -165,6 +208,17 @@ Universal telemetry is maintained across all states via structured C3I JSON logg
 +---------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Inbound Telegram Event] --> [OCaml Edge Transport]
+[OCaml Edge Transport] --> [Gleam Sovereign Harness]
+[Gleam Sovereign Harness] --> [Zenoh Router / OTel Collector]
+[Zenoh Router / OTel Collector] --> [Live AG-UI Stream :4100/ag-ui/events]
+[Zenoh Router / OTel Collector] --> [SQLite Audit Ledger var/sa-plan/uos.sqlite3]
+[Zenoh Router / OTel Collector] --> [Prometheus Metrics :4100/metrics]
+```
+
 ```mermaid
 graph TD
     A[Inbound Telegram Event] --> B[OCaml Edge Transport]
@@ -209,3 +263,4 @@ Every Telegram lifecycle event produces a canonical 13-field C3I JSON record:
 2. **Pure Functional Routing**: Gleam routing contains no unmanaged global mutable state. State updates are explicitly passed and returned in the `HarnessState` record.
 3. **Storage NVMe Safety (`HARD_DENIED_SYSTEM_OS_SERIAL`)**: The root OS drive `25503L801736` is permanently locked against any destructive disk actions initiated via Telegram commands.
 4. **Resilient Message Transmit**: All Markdown formatted messages that encounter parsing rejections from Telegram API are automatically retried with escaped plaintext.
+

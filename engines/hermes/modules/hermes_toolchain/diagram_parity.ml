@@ -216,6 +216,16 @@ let strip_edge_label l =
      | None -> l
      | Some j -> String.sub l 0 bar ^ " " ^ String.sub l (j + 1) (n - j - 1))
 
+(* One strip removes ONE label. A chained line carries one per arrow --
+   `A -->|x| B -->|y| C` -- so a single pass leaves the second label in place
+   and the chain splitter then reads `|y|` as part of a node id. Repeat to a
+   fixed point. MEASURED 2026-11-07 on
+   docs/journal/20260908-2025-...-triadic-unification-and-complete-migration-journal.md,
+   whose whole graph is one labelled chain and which extracted ZERO edges. *)
+let rec strip_edge_labels l =
+  let s = strip_edge_label l in
+  if s = l then l else strip_edge_labels s
+
 let split_on_arrow l =
   let l = strip_edge_label l in
   let arrows = [ " --> "; " ---> "; " ==> "; " -.-> "; " --- "; " -> " ] in
@@ -304,27 +314,130 @@ let split_bidi l =
   in
   try_m bidi_markers
 
+(* MEASURED 2026-11-07, the fourth and fifth defects this checker's own corpus
+   run found -- both of them UNDER-counting, which is the direction that hides
+   drift rather than inventing it.
+
+   (4) A mermaid edge may span LINES. Mermaid joins a line that begins with an
+       arrow to the one before it, so
+
+         I["Intelitor v5.2"]
+         -->|"Cybernetic Refinement"| C["C3I Framework"]
+         -->|"Distributed Fabric"| IND["Indrajaal Mesh"]
+
+       is a three-node chain. Read line by line it is one declaration and two
+       lines whose text before the arrow is EMPTY: zero edges. Three documents
+       in docs/ and contracts/ were reported as having a mermaid diagram with
+       no extractable topology for exactly this reason.
+
+   (5) A single line may carry a CHAIN. `A --> B --> C` is two edges;
+       `split_on_arrow` returns the FIRST split only, so the tail `B --> C`
+       was swallowed into the target's node id and the B-to-C edge vanished.
+       contracts/rules/20261026-0220-telegram-journey-acceptance.md was
+       reported as a topology MISMATCH on that missing edge, against an ASCII
+       arrow list that had always been correct -- the ASCII side has chained
+       since `bracket_chain`, and only the mermaid side had not.
+
+   Both are fixed here, in the extractor the generator and the checker share,
+   so neither can drift from the other. Joining is deliberately conservative:
+   a line is a continuation only when it STARTS with an arrow, or the previous
+   line ENDS with one. *)
+let arrow_edge_markers =
+  [ "<-.->"; "<-->"; "<==>"; "--->"; "-.->"; "-->"; "==>"; "---"; "->" ]
+
+let ends_with suf s =
+  let sl = String.length suf and n = String.length s in
+  sl <= n && String.sub s (n - sl) sl = suf
+
+let logical_lines block =
+  let rec go acc = function
+    | [] -> List.rev acc
+    | l :: rest ->
+      let t = String.trim l in
+      let starts_arrow = List.exists (fun m -> starts_with m t) arrow_edge_markers in
+      (match acc with
+       | prev :: more
+         when t <> ""
+              && String.trim prev <> ""
+              && (starts_arrow
+                  || List.exists (fun m -> ends_with m (String.trim prev))
+                       arrow_edge_markers) ->
+         go ((String.trim prev ^ " " ^ t) :: more) rest
+       | _ -> go (t :: acc) rest)
+  in
+  go [] (lines block)
+
+(* Split a logical line into segments at every arrow, recording whether the
+   arrow that FOLLOWS each segment is bidirectional. Longest markers first so
+   ` <--> ` is never read as ` <-- ` plus a stray glyph. *)
+let arrow_specs =
+  [ (" <-.-> ", true); (" <--> ", true); (" <==> ", true);
+    (" ---> ", false); (" -.-> ", false); (" --> ", false);
+    (" ==> ", false); (" --- ", false); (" -> ", false) ]
+
+(* An arrow INSIDE a label is not an arrow. MEASURED 2026-11-07, and measured
+   as a defect in the first cut of this very splitter: the node
+
+     OODA["Continuous OODA Wavefront<br/>Observe -> Orient -> Decide -> Act"]
+
+   was split at the label's own ` -> ` glyphs, inventing four edges
+   (`ooda --> orient`, `orient --> decide`, ...) that no diagram declares, and
+   reporting two journals as mismatches against arrow lists derived from
+   themselves. Chain splitting therefore only fires at bracket depth 0 and
+   outside quotes -- the same discipline fenced_blocks applies to fences.
+   Inventing an edge is worse than missing one: a missed edge under-reports,
+   an invented edge accuses a correct document. *)
+let chain_split l =
+  let n = String.length l in
+  let rec go i start depth inq acc =
+    if i >= n then List.rev ((String.sub l start (n - start), false) :: acc)
+    else
+      let c = l.[i] in
+      if inq then go (i + 1) start depth (c <> '"') acc
+      else if c = '"' then go (i + 1) start depth true acc
+      else if c = '[' || c = '(' || c = '{' then
+        go (i + 1) start (depth + 1) false acc
+      else if c = ']' || c = ')' || c = '}' then
+        go (i + 1) start (max 0 (depth - 1)) false acc
+      else if depth > 0 then go (i + 1) start depth false acc
+      else
+        match
+          List.find_opt
+            (fun (a, _) ->
+               let al = String.length a in
+               i + al <= n && String.sub l i al = a)
+            arrow_specs
+        with
+        | Some (a, bidi) ->
+          let al = String.length a in
+          go (i + al) (i + al) 0 false ((String.sub l start (i - start), bidi) :: acc)
+        | None -> go (i + 1) start depth false acc
+  in
+  go 0 0 0 false []
+
 let mermaid_edges block =
   if not (is_graphlike block) then []
   else
-  lines block
-  |> List.concat_map (fun l ->
-      let t = String.trim l in
+  logical_lines block
+  |> List.concat_map (fun t ->
       if t = "" || starts_with "%%" t || starts_with "style " t
          || starts_with "classDef " t || starts_with "subgraph " t
          || t = "end" || starts_with "graph " t || starts_with "flowchart " t
       then []
       else
-        match split_bidi t with
-        | Some (a, b) ->
-          let a = node_id a and b = node_id b in
-          if a = "" || b = "" then [] else [ (a, b); (b, a) ]
-        | None ->
-          (match split_on_arrow t with
-           | None -> []
-           | Some (a, b) ->
-             let a = node_id a and b = node_id b in
-             if a = "" || b = "" then [] else [ (a, b) ]))
+        let segs = chain_split (strip_edge_labels t) in
+        let rec walk = function
+          | (a, bidi) :: ((b, _) :: _ as rest) ->
+            let x = node_id a and y = node_id b in
+            let here =
+              if x = "" || y = "" then []
+              else if bidi then [ (x, y); (y, x) ]
+              else [ (x, y) ]
+            in
+            here @ walk rest
+          | _ -> []
+        in
+        walk segs)
 
 (* Arrow-list ASCII edges: `[A label] --> [B label]`. Identity is the
    FIRST token inside the bracket, matching the generator's convention in
@@ -402,6 +515,18 @@ let rec pairs = function
   | a :: (b :: _ as rest) -> (a, b) :: pairs rest
   | _ -> []
 
+(* MEASURED 2026-11-07, the sixth defect: the two sides were normalised
+   ASYMMETRICALLY. `strip_decorations` ran on mermaid labels only, so a node
+   the author wrote identically in both forms --
+
+     ASCII    [executor (not built)]
+     mermaid  X["executor (not built)"]
+
+   -- compared as `executor (not built)` against `executor not built` and the
+   document was reported as a topology MISMATCH against itself. Two documents
+   failed on parentheses alone. Normalisation must be a function of the LABEL,
+   not of which notation it was read from; otherwise the checker's own
+   asymmetry is indistinguishable from author drift. *)
 let arrow_list_edges block =
   lines block
   |> List.concat_map (fun l ->
@@ -409,7 +534,7 @@ let arrow_list_edges block =
       if not (List.exists (fun m -> contains t m) arrow_list_markers) then []
       else
         bracket_chain t
-        |> List.map norm_label
+        |> List.map (fun s -> norm_label (strip_decorations s))
         |> List.filter (fun s -> s <> "")
         |> pairs)
 
@@ -495,10 +620,19 @@ let check (body : string) : verdict =
         List.concat_map
           (fun b ->
              let labels = mermaid_labels_norm b in
+             (* An UNLABELLED node falls back to its id, and that id must be
+                normalised the same way a label is. MEASURED 2026-11-07 on the
+                four jidoka documents, which write mermaid's MIDDLE-label edge
+                form -- a QUOTED label sitting between the two halves of the
+                arrow. There is no bracket, so the whole quoted fragment IS
+                the id, and leaving its quote glyphs in place while the ASCII
+                side had them stripped reported a mismatch over two
+                punctuation characters. Same rule both
+                sides, or the checker's own asymmetry masquerades as drift. *)
              let lbl id =
                match List.assoc_opt id labels with
                | Some l when l <> "" -> l
-               | _ -> norm_label id
+               | _ -> norm_label (strip_decorations id)
              in
              List.map (fun (x, y) -> (lbl x, lbl y)) (mermaid_edges b))
           mers

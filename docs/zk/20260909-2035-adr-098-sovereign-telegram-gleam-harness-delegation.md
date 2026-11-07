@@ -90,6 +90,28 @@ Telegram User        OCaml Transport (Edge)        Gleam Harness (BEAM)        S
 ```
 
 ### 5.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor User as Telegram User
+    participant Edge as OCaml Transport (Edge)
+    participant Harness as Gleam Harness (BEAM)
+    participant Backplane as Sa-Plan / Zenoh
+
+    User=>Edge: Inbound Msg (Command or Chat)
+    Edge=>User: Immediate Visual Reaction (⚡/👍)
+    Edge=>Harness: Stdin JSON (tools/telegram-harness-dispatch)
+    Harness=>Backplane: Query SQLite or Publish Intent
+    Backplane=>Harness: Telemetry / Plan Data
+    Harness=>Edge: Stdout JSON (OutboundResponse)
+    Edge=>User: Outbound Telegram Message
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -145,3 +167,4 @@ sequenceDiagram
 - `[[wiki:20260909-2035-uos-telegram-gleam-harness-architecture]]`
 - `contracts/rules/comprehensive-checklist-contract.md` (`SC-CHECKLIST-001`)
 - `contracts/rules/tailscale-web-fqdn-mandate.md` (`SC-TAILSCALE-WEB-001`)
+

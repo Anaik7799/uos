@@ -53,6 +53,15 @@ Prior to this evolutionary cycle:
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[C1] --> [C2]
+[C2] --> [C3]
+[C3] --> [C4]
+[C4] --> [C5]
+```
+
 ```mermaid
 flowchart LR
     subgraph C1 ["C362 / EV-C114: Scott Lattice"]
@@ -237,3 +246,4 @@ Executed `tools/link_tracker_verifier.exe`:
 ## 13. Conclusion
 
 The 5 consecutive evolutionary cycles (`C362` through `C366` / `EV-C114` through `EV-C118`) have been executed, machine-verified in Lean 4, recorded in `sa-plan`, cryptographically committed to `var/km/provenance-cycles.sqlite3`, and validated against the live 48-endpoint cybernetic cockpit. The formal denotational component atlas and NASA JPL F Prime statechart architecture stand fully ratified under BEAM OTP 29 supervision.
+

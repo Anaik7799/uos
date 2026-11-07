@@ -118,6 +118,29 @@ We implement the aerospace agent lifecycle on pure BEAM / Gleam OTP 29 with zero
 ## 4. Hierarchical State Machine (HSM) Execution Semantics
 
 Each agent instantiated by the factory contains an explicit hierarchical statechart with mathematical LCA transitions:
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => Standby
+    state Standby {
+        (*) => Uncalibrated
+        Uncalibrated => Calibrated : Signal(Calibrate)
+    }
+    Standby => Operational : Signal(Engage)
+    state Operational {
+        (*) => Nominal
+        Nominal => Degraded : Signal(FaultDetected)
+        Degraded => Nominal : Signal(ClearFault)
+        Degraded => Contingency : Signal(Escalate)
+    }
+    Operational => SafeHold : Signal(EmergencyStop)
+    SafeHold => Standby : Signal(Reset)
+```
+
 ```mermaid
 stateDiagram-v2
     [*] --> Standby
@@ -170,3 +193,4 @@ Before execution, the intent is evaluated by `check_hardware_safety_interlock`:
 - **Google DeepMind Antigravity (AGY)**: *Approved & Ratified* — Verification of pure Gleam runtime, DMC disjointness, and 10,023 passing tests.
 - **Anthropic Claude Fable 5.1**: *Approved & Ratified* — Comprehensive checklist verification, STPA hazard mitigation, and 6D systemic matrix closure.
 - **OpenAI Codex Astra**: *Approved & Ratified* — Lean 4 temporal coordinate conservation, DMC base-ID non-aliasing, and zero-defect gatekeeping.
+

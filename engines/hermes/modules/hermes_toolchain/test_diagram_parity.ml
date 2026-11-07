@@ -298,7 +298,79 @@ let () =
            ^ ascii_of [ ("A", "B"); ("C", "D") ])
       with
       | Edges_match 2 -> true
-      | _ -> false)
+      | _ -> false);
+
+  (* ---------------------------------------------------------------- *)
+  (* MEASURED 2026-11-07. Six defects found by running this gate over  *)
+  (* the whole corpus and reading every one of its 49 failures. Five   *)
+  (* were the CHECKER's, not the documents'. Each law below is one of  *)
+  (* them, written so the repair cannot be undone quietly.             *)
+  (* ---------------------------------------------------------------- *)
+
+  law "L47 REGRESSION: a mermaid CHAIN on one line is every edge in it. \
+       `A --> B --> C` is two edges; keeping only the first swallowed the \
+       tail into a node id and reported a correct contract as a mismatch"
+    (fun () ->
+       uniq_sorted (List.map show_edge (mermaid_edges "flowchart LR\n  A --> B --> C"))
+       = [ "A --> B"; "B --> C" ]);
+
+  law "L48 REGRESSION: a mermaid edge may span LINES. Mermaid joins a line \
+       that starts with an arrow to the one before it, and reading such a \
+       block line by line found ZERO edges in a three-node chain"
+    (fun () ->
+       uniq_sorted
+         (List.map show_edge
+            (mermaid_edges
+               "graph LR\n  I[\"one\"]\n  -->|\"why\"| C[\"two\"]\n  -->|\"how\"| D[\"three\"]"))
+       = [ "C --> D"; "I --> C" ]);
+
+  law "L49 REGRESSION: an arrow INSIDE a label is not an arrow. The first \
+       cut of chain splitting cut a node labelled \
+       `Observe -> Orient -> Decide` into four invented edges and accused \
+       two correct journals. Inventing an edge is worse than missing one"
+    (fun () ->
+       mermaid_edges
+         "flowchart TD\n  CLK --> OODA[\"Wavefront<br/>Observe -> Orient -> Decide\"]"
+       = [ ("CLK", "OODA") ]);
+
+  law "L50 REGRESSION: normalisation is symmetric. A node written \
+       identically in both forms must compare equal, so parentheses are \
+       stripped from the ASCII label too -- two documents failed over \
+       `(not built)` against `not built`"
+    (fun () ->
+       match
+         v
+           ("```mermaid\nflowchart LR\n  A[\"loader\"] --> X[\"executor (not built)\"]\n```\n"
+            ^ "```text\n[loader] --> [executor (not built)]\n```\n")
+       with
+       | Edges_match 1 -> true
+       | _ -> false);
+
+  law "L51 REGRESSION: an UNLABELLED node falls back to its id, normalised \
+       the same way a label is. Mermaid's middle-label form \
+       `check -- \"claim\" --> cli` has no bracket, so the quoted fragment \
+       IS the id; four documents failed over two quote glyphs"
+    (fun () ->
+       match
+         v
+           ("```mermaid\nflowchart LR\n  check -- \"legitimate claim\" --> cli\n```\n"
+            ^ "```text\n[check -- legitimate claim] --> [cli]\n```\n")
+       with
+       | Edges_match 1 -> true
+       | _ -> false);
+
+  law "L52 a label carrying arrow syntax round-trips through the ASCII \
+       arrow-list form, because the reader extracts bracket CONTENT and \
+       never splits a bracketed segment: refusing such labels cost 11 \
+       documents their ASCII source for a hazard that is not there"
+    (fun () ->
+       match
+         v
+           ("```mermaid\nflowchart LR\n  A[\"Port Hunter 8088 -> 8089 -> 0\"] --> B[\"next\"]\n```\n"
+            ^ "```text\n[Port Hunter 8088 -> 8089 -> 0] --> [next]\n```\n")
+       with
+       | Edges_match 1 -> true
+       | _ -> false)
 
 let () =
   Printf.printf "diagram_parity: %d passed, %d failed\n" !passed !failed;

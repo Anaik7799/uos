@@ -93,6 +93,21 @@ L1 atomic predicate decidable  ──gates──▶ L2 arm names honest
              L5 instrument OUTSIDE the system  (built FIRST, gates all)
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[L5 instrument outside the system tools/mojo_arm_falsifiability.ml] --> [L1 predicate has a falsifying assignment]
+[L1 predicate has a falsifying assignment] --> [L2 arm name = arm body]
+[L2 arm name = arm body] --> [L3 control survives a legitimate change]
+[L3 control survives a legitimate change] --> [L4 verdict function sound]
+[L4 verdict function sound] --> [L6 ledger attribution true]
+[L4 verdict function sound] --> [L7 planes do not assert both sides]
+[L7 planes do not assert both sides] --> [L8 arm holds under remediation]
+[L6 ledger attribution true] --> [L8 arm holds under remediation]
+[L8 arm holds under remediation] --> [L9 no admission on unfalsifiable evidence]
+[L0 mandate invariant satisfiable] --> [L9 no admission on unfalsifiable evidence]
+```
+
 ```mermaid
 graph TD
   L5["L5 instrument outside the system<br/>tools/mojo_arm_falsifiability.ml"] --> L1
@@ -346,3 +361,4 @@ as though this one will not is the error that produced the other two.
 **UOS footer**: document and component evidence do not grant system admission.
 Sa-plan is the sole execution authority. EV ceiling 93; `EV-94..109`
 `NOT_ADMITTED`.
+

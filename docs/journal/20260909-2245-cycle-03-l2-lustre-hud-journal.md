@@ -138,6 +138,32 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Gleam as Gleam Worker (BEAM)
+    participant STM as Two-Lattice STM (L_obs)
+    participant API as Telegram Bot API
+
+    Operator=>Gleam: Send /cockpit Command
+    Gleam=>STM: Query Monotonic Metrics
+    Note over STM: Non-Interference: Zero Lock Contention
+    STM=>Gleam: Live Telemetry Snapshot
+    Gleam=>API: sendMessage(Initial HUD)
+    API=>Operator: Display Cockpit HUD
+    loop Every 500ms
+        Gleam=>STM: Poll Delta
+        Gleam=>API: editMessageText(Updated ASCII Sparklines & Metrics)
+        API=>Operator: Live Visual Update
+    end
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -222,3 +248,4 @@ Evolutionary Cycle 3: L2 Component State & Live Auto-Editing Telegram Lustre Mir
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

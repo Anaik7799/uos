@@ -142,6 +142,31 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Edge as OCaml Edge Client
+    participant Mojo as Mojo SIMD Whisper
+    participant Gleam as Gleam Worker (BEAM)
+    participant Spooler as 50ms Mutex Outbound Spooler
+
+    Operator=>Edge: Send Voice Note (OGG/Opus)
+    Edge=>Mojo: Stream Raw Audio
+    Note over Mojo: AVX-512 SIMD Speech-to-Text (< 250ms)
+    Mojo=>Edge: Transcribed Text Intent
+    Edge=>Gleam: Ingest Canonical Intent via Zenoh
+    Note over Gleam: Evaluates OODA Loop & Generates Response
+    Gleam=>Spooler: Enqueue Outbound Response
+    Note over Spooler: Dedicated 50ms Mutex Tick (Decoupled)
+    Spooler=>Operator: Instant Delivery to Chat (< 50ms)
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -225,3 +250,4 @@ Evolutionary Cycle 8: L7 Voice-to-OODA Streaming Intent Dispatch & 50ms Mutex Sp
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

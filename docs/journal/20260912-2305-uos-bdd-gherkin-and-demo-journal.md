@@ -81,6 +81,39 @@ Authored [`formal/lean/Five_BDD_Demo_Evolutionary_Cycles.lean`](file:///home/an/
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    participant Op as Human Operator
+    participant Lustre as Lustre MVU SSR
+    participant BEAM as BEAM OTP 29
+    participant Sentry as Storage Sentry Lock
+    participant Andon as Jidoka Andon Bus
+
+    Op=>Lustre: ToggleSpringCover
+    Lustre=>BEAM: update(model, ToggleSpringCover)
+    BEAM=>Lustre: spring_cover_open=True, timer=5000ms
+    Lustre=>Op: Render Cover OPEN, Countdown Active
+
+    Op=>Lustre: ConfirmSpringActuate
+    Lustre=>BEAM: update(model, ConfirmSpringActuate)
+    BEAM=>Sentry: Validate target disk serial != 25503L801736
+    Sentry=>BEAM: Approved (NVMe 25503L801736 untouched)
+    BEAM=>Lustre: Command dispatched, cover snaps CLOSED
+    Lustre=>Op: Render Cover CLOSED, Audit Log Appended
+
+    Op=>Lustre: PullAndonCord("Ceph Quorum Loss")
+    Lustre=>BEAM: update(model, PullAndonCord)
+    BEAM=>Andon: Broadcast -32002 Fail-Closed Halt
+    BEAM=>Lustre: andon_tripped=True, strobe flashing
+    Lustre=>Op: Render Flashing Amber Strobe, Stop Line Active
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -211,3 +244,4 @@ The implementation strictly satisfies STAMP/STPA safety constraints:
 ## 13. Conclusion
 
 Cycles `C377`..`C381` (`EV-C129`..`EV-C133`) have been formally proved in Lean 4, verified via EUnit tests, demonstrated in pure Gleam Lustre SSR, cryptographically ledgered in `var/km/provenance-cycles.sqlite3` with Merkle Head `39052788c91fb65735a08e716b0c885b9bdf0885c0aced60bc31386e7220d985`, and co-signed under tri-sovereign authority in `var/sa-plan/uos.sqlite3`. All 18 checkpoints of `SC-CHECKLIST-001` remain 100% Green.
+

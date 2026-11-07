@@ -42,6 +42,16 @@ Under **Claude GUI Design (`uos-gui-design`)** and **Code Superpowers (`uos-ui-s
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Top Status HUD SIL-6, Storage Lock, Checklist 18/18]
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Right Telemetry & OODA Inspector]
+[Sa-Plan SQLite Ledger var/sa-plan/uos.sqlite3] --> [Bottom Andon Stop Line & Event Ticker]
+[Gleam / BEAM OTP 29 Root Supervisor] --> [Center Tactical Canvas Lustre MVU SSR]
+[Hermes OCaml Gospel/Z3 Engine] --> [Center Tactical Canvas Lustre MVU SSR]
+```
+
 ```mermaid
 flowchart TD
     subgraph S_SHELL ["Universal 5-Pane Control Center Shell"]
@@ -107,6 +117,21 @@ The interface state space is modeled as a presheaf $\mathcal{F}$ over the topolo
 |         │                       │                      │                      │                       ▼            |
 | [U9: L9 Sovereign] ◄─φ89─ [U8: L8 Verif] ◄─φ78─ [U7: L7 Feder] ◄─φ67─ [U6: L6 Swarm] ◄─φ56─ [U5: L5 Cogn]        |
 +--------------------------------------------------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[U0: L0 Constitutional] --> [U1: L1 Atomic Kernel]
+[U1: L1 Atomic Kernel] --> [U2: L2 Homeostasis]
+[U2: L2 Homeostasis] --> [U3: L3 Transactions]
+[U3: L3 Transactions] --> [U4: L4 System Daemons]
+[U4: L4 System Daemons] --> [U5: L5 Cognitive OODA]
+[U5: L5 Cognitive OODA] --> [U6: L6 Swarm Mesh]
+[U6: L6 Swarm Mesh] --> [U7: L7 Federation]
+[U7: L7 Federation] --> [U8: L8 Verification]
+[U8: L8 Verification] --> [U9: L9 Sovereignty]
+[U9: L9 Sovereignty] --> [U0: L0 Constitutional]
 ```
 
 ```mermaid
@@ -196,6 +221,24 @@ Every control center component adheres to the NASA JPL F Prime flight software a
 |               |  +--------------------+       guard[tripwire]         +------------------------+  |                 |
 |               +----------------------------------------------------------------------------------+                 |
 +--------------------------------------------------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => Idle: Init
+    Idle => Armed: guard(lease_valid & preflight_pass)
+    Armed => Active: trigger(two_man_key_turn)
+    Armed => Idle: timeout(30s elapsed)
+    Active => Degraded: guard(λ > -0.30)
+    Degraded => Active: guard(λ <= -0.30 & damped)
+    Degraded => FailSafe: guard(λ > 0.05 or UCA detected)
+    Active => FailSafe: guard(Andon Cord Tripped or Hardware Lock Breach)
+    FailSafe => (*): Operator Physical Reset
 ```
 
 ```mermaid
@@ -423,3 +466,4 @@ The entire operational architecture complies 100% with the 5 verification domain
 - **Domain 5: Tri-Sovereign Governance & VCS Purity**: `CHK-17-SOV` (Tri-sovereign consensus), `CHK-18-JJ` (Standalone Jujutsu `.jj/` with 0 native git mutations).
 
 All 48 web endpoints are running live, serving over the Tailnet at [http://nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100), with 100.0% reachable status and Tarjan SCC = 1.
+

@@ -71,6 +71,14 @@ The genealogy of the Unified Operational System spans four distinct evolutionary
 +-------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Intelitor v5.2 • Podman Containers • Elixir Phoenix Port 4000 • F# Prajna CLI • Postgres / Redis] --> [C3I Framework • STAMP/STPA Safety • 13D Trace Algebra • Prajna Circuit Breakers • Auto-FMEA Matrix]
+[C3I Framework • STAMP/STPA Safety • 13D Trace Algebra • Prajna Circuit Breakers • Auto-FMEA Matrix] --> [Indrajaal Mesh • Zenoh Pub/Sub indrajaal/** • OTel-over-Zenoh OoZ • MCP-over-Zenoh MoZ • Lustre Web Cockpit Port 4100]
+[Indrajaal Mesh • Zenoh Pub/Sub indrajaal/** • OTel-over-Zenoh OoZ • MCP-over-Zenoh MoZ • Lustre Web Cockpit Port 4100] --> [UOS Monorepo • Standalone Jujutsu .jj/ • Pure Erlang/OTP 29 Runtime • ZigVM Deterministic Kernel • Hermes OCaml Formal Evidence • Modular MAX Isolated AI Tier • Zero-Muda & Storage Safety]
+```
+
 ```mermaid
 graph LR
     I["Intelitor v5.2<br/>• Podman Containers<br/>• Elixir Phoenix (Port 4000)<br/>• F# Prajna CLI<br/>• Postgres / Redis"]
@@ -110,6 +118,22 @@ Per canonical repository policy (`AGENTS.md` §3 and `SC-C3I-MIRROR-001`), exter
 |  /home/an/dev/ver/c3i              Strip secrets/WAL       Gleam / Zig / OCaml / Mojo              |
 |                                    Zero-Muda check         Two-Key Runtime & Formal Verification   |
 +----------------------------------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[F# Prajna CLI Scripts sa-mesh, sa-up.fsx] --> [Quarantine Secrets, Live WAL & Model Weights]
+[Elixir Phoenix LiveView Port 4000, lib/indrajaal] --> [Quarantine Secrets, Live WAL & Model Weights]
+[Rust ZMOF & Swarm Crates lib/rust/*] --> [Quarantine Secrets, Live WAL & Model Weights]
+[Podman Container Specs containers/*] --> [Quarantine Secrets, Live WAL & Model Weights]
+[Quarantine Secrets, Live WAL & Model Weights] --> [Zero-Muda Enforcement: 0 Bevy, 0 Graphite, 0 NIFs]
+[Zero-Muda Enforcement: 0 Bevy, 0 Graphite, 0 NIFs] --> [Two-Key Verification: Fresh Runtime + Formal Math]
+[Two-Key Verification: Fresh Runtime + Formal Math] --> [apps/cepaf_gleam: Pure Gleam Homeostasis, Swarm, 13D Trace]
+[Two-Key Verification: Fresh Runtime + Formal Math] --> [apps/indrajaal_gleam_web: Lustre 5.6+ Cockpit Port 4100]
+[Two-Key Verification: Fresh Runtime + Formal Math] --> [engines/zigvm: Pure Zig Deterministic Kernel & VFS]
+[Two-Key Verification: Fresh Runtime + Formal Math] --> [engines/hermes: OCaml Gospel, Z3, TyXML Wiki Engine]
+[Two-Key Verification: Fresh Runtime + Formal Math] --> [services/inference/max: Quarantined MAX/Mojo Inference Tier]
 ```
 
 ```mermaid
@@ -183,3 +207,4 @@ graph TD
 - `[[zk:20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine]]` — ADR-094
 - `contracts/rules/20260908-0950-c3i-indrajaal-functional-mirroring-and-harmony-contract.md` — Contract `SC-C3I-MIRROR-001`
 - `contracts/rules/comprehensive-checklist-contract.md` — Contract `SC-CHECKLIST-001`
+

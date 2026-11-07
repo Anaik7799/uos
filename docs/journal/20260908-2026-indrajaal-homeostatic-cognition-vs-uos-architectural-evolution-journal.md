@@ -75,6 +75,20 @@ The contrast between Indrajaal and legacy UOS stemmed from two opposing software
 +-----------------------------------------------+-------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Metabolic Timer 100ms Tick] --> [Sensory Intake Zenoh]
+[Sensory Intake Zenoh] --> [Homeostatic PID |e| < 0.05]
+[Homeostatic PID |e| < 0.05] --> [Gemma/Claude Cognitive Routing]
+[Gemma/Claude Cognitive Routing] --> [Autonomic Motor Dispatch]
+[Autonomic Motor Dispatch] --> [Metabolic Timer 100ms Tick]
+[SQLite sa-plan DB] --> [Awaiting Operator / Agent Claim]
+[Awaiting Operator / Agent Claim] --> [Single Task Execution]
+[Single Task Execution] --> [Process Exit / Idle State]
+[Process Exit / Idle State] --> [SQLite sa-plan DB]
+```
+
 ```mermaid
 graph TD
     subgraph Indrajaal_Continuous_Loop ["Indrajaal: Continuous Metabolic Mesh"]
@@ -143,6 +157,17 @@ To bridge this gap without degrading UOS's constitutional safety, we executed a 
 |  4. Cybernetic Singing Engine  -->  Just Intonation polyphonic vocalization in Rāga Durgā          |
 |  5. Port 4100 Streaming        -->  Real-time /ecology, /song, and /spectrogram.svg endpoints      |
 +----------------------------------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Pure Erlang/OTP 29 Root Supervisor] --> [living_swarm_actor.gleam Continuous GenServer Loop]
+[living_swarm_actor.gleam Continuous GenServer Loop] --> [16-Beat Teentaal Heartbeat Dha-Dhin-Dhin-Dha...]
+[16-Beat Teentaal Heartbeat Dha-Dhin-Dhin-Dha...] --> [Continuous OODA Wavefront Observe -> Orient -> Decide -> Act -> Reflect]
+[Continuous OODA Wavefront Observe -> Orient -> Decide -> Act -> Reflect] --> [21 Active Holons across 7 Planes • Cognitive Hive Mind, Rete-UL, Lean4, MAX SIMD • Autonomic Prajna Homeostasis, Lyapunov • Sensory Zenoh Mesh, AG-UI Stream • Epistemic, Actuator, Immune, Sovereign]
+[21 Active Holons across 7 Planes • Cognitive Hive Mind, Rete-UL, Lean4, MAX SIMD • Autonomic Prajna Homeostasis, Lyapunov • Sensory Zenoh Mesh, AG-UI Stream • Epistemic, Actuator, Immune, Sovereign] --> [cybernetic_singing.gleam • 22 Shrutis Just Intonation • Rāga Durgā Pentatonic • Harmonic Consonance Score]
+[cybernetic_singing.gleam • 22 Shrutis Just Intonation • Rāga Durgā Pentatonic • Harmonic Consonance Score] --> [Port 4100 Live Web Cockpit • /ecology Dashboard • /api/v1/ecology/song • /api/v1/ecology/spectrogram.svg]
 ```
 
 ```mermaid
@@ -273,3 +298,4 @@ By unifying Indrajaal's dynamic homeostasis with UOS's formal mathematical rigor
 ## 13. Conclusion
 
 The question *"why is uos not able to do so"* identified the exact evolutionary turning point of the system. Legacy UOS was dormant because it was designed solely as a transactional ledger. By introducing the **Living Swarm BEAM Actor**, the **21-Holon 7-Plane Ecology**, the **11-Capability Substrate**, and the **Cybernetic Singing Harmony Engine**, UOS now possesses Indrajaal's continuous homeostatic pulse and adaptive cognition—elevated to the highest standard of formal verification, Zero-Muda purity, and standalone Jujutsu governance.
+

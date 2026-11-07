@@ -32,7 +32,7 @@ $$\forall x \in \text{Extensions}_{167}, \quad \text{VisualParity}(x) \wedge \te
 +-----------------------------------------------------------------------------+
 |               SCIVIZ COMPREHENSIVE BDD HARNESS TOPOLOGY                     |
 +-----------------------------------------------------------------------------+
-|  [Multi-Mode Runner] --> [tools/webui_bdd_runner.exe (OCaml 5.5 Native)]    |
+|  (Multi-Mode Runner) --> (tools/webui_bdd_runner.exe, OCaml 5.5 Native)     |
 |         |                                 |                                 |
 |         v                                 v                                 |
 |  [5 Feature Suites]             [WebSocket RFC 6455]                        |
@@ -45,6 +45,23 @@ $$\forall x \in \text{Extensions}_{167}, \quad \text{VisualParity}(x) \wedge \te
 |         v                                 |                                 |
 |  [542 Scenarios Pass] <------- [DOM SSR Verification]                       |
 +-----------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Multi-Mode Runner scripts/run_sciviz_all_aspects.sh] --> [tools/webui_bdd_runner.exe OCaml 5.5 Native]
+[Multi-Mode Runner scripts/run_sciviz_all_aspects.sh] --> [5 Feature Suites test/features/15..19]
+[5 Feature Suites test/features/15..19] --> [F15: Visual Parity 167]
+[5 Feature Suites test/features/15..19] --> [F16: Features Offered 167]
+[5 Feature Suites test/features/15..19] --> [F17: Fractal Specs 167]
+[5 Feature Suites test/features/15..19] --> [F18: Categories 31]
+[5 Feature Suites test/features/15..19] --> [F19: Cockpit Invariants 10]
+[tools/webui_bdd_runner.exe OCaml 5.5 Native] --> [WebSocket RFC 6455 Client]
+[WebSocket RFC 6455 Client] --> [Chrome Headless CDP :9222]
+[Chrome Headless CDP :9222] --> [BEAM Gleam Lustre WebUI :4100]
+[BEAM Gleam Lustre WebUI :4100] --> [DOM SSR Verification]
+[DOM SSR Verification] --> [542 Scenarios Pass 100% Green]
 ```
 
 ```mermaid
@@ -198,4 +215,5 @@ The SciViz and 167 ggplot2 extensions verification harness has been successfully
 - **Target Horizon Epoch**: 2026-09-19.
 - **Hypothesis**: The 542-scenario SciViz BDD test suite will maintain a 100% green pass rate in continuous CDP execution with zero regressions across all 167 extensions and 9 modalities.
 - **Admission Gate**: Granted. All gates (`G-CHECKLIST`, `G-PREFLIGHT`, `G-JOURNAL`) pass.
+
 

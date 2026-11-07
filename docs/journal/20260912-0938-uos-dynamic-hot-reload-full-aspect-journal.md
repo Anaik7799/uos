@@ -85,6 +85,21 @@ ASCII ARCHITECTURAL TOPOLOGY: ZERO-C WATCHER & HOT-RELOAD PIPELINE
                                └────────────────────────────────┘
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[uos/apps/cepaf_gleam/src] --> [Pure Zig 0.16.0 Kernel tools/c3i_watcher_kernel.zig 0 C, 0 Python, 0 Node.js]
+[c3i/lib/cepaf_gleam/src] --> [Pure Zig 0.16.0 Kernel tools/c3i_watcher_kernel.zig 0 C, 0 Python, 0 Node.js]
+[Pure Zig 0.16.0 Kernel tools/c3i_watcher_kernel.zig 0 C, 0 Python, 0 Node.js] --> [Zig CAMLprim Object tools/c3i_watcher_ocaml.o]
+[Pure Zig 0.16.0 Kernel tools/c3i_watcher_kernel.zig 0 C, 0 Python, 0 Node.js] --> [Zig Shared Library tools/libc3i_watcher.so]
+[Zig CAMLprim Object tools/c3i_watcher_ocaml.o] --> [Native OCaml 5.5 Watcher tools/c3i_page_watcher.exe 1.7 MB RSS, Active Systemd Daemon]
+[Zig Shared Library tools/libc3i_watcher.so] --> [Modular MAX Mojo 1.0.0 Watcher tools/c3i_page_watcher_mojo.exe 21 KB ELF, 13 MB RSS]
+[Native OCaml 5.5 Watcher tools/c3i_page_watcher.exe 1.7 MB RSS, Active Systemd Daemon] --> [Direct TCP Socket: GET /api/v1/reload]
+[Modular MAX Mojo 1.0.0 Watcher tools/c3i_page_watcher_mojo.exe 21 KB ELF, 13 MB RSS] --> [Direct TCP Socket: GET /api/v1/reload]
+[Direct TCP Socket: GET /api/v1/reload] --> [BEAM code_server GenServer soft_purge -> load_file -> late dispatch]
+[BEAM code_server GenServer soft_purge -> load_file -> late dispatch] --> [Zero-Downtime Live WebUI Pages /, /checklist, /cortex, /planning]
+```
+
 ```mermaid
 flowchart TD
     subgraph Filesystem["Observed Filesystem Topologies"]
@@ -328,3 +343,4 @@ The operator's mandate for **dynamic zero-downtime page hot-reloading**, **pure 
        UOS / C3I DYNAMIC HOT-RELOAD ASPECT RATIFICATION COMPLETE
 ===============================================================================
 ```
+

@@ -80,6 +80,18 @@ This specification provides:
 +-------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[l0_constitutional.gleam • Psi-0..Psi-13 Invariants • 2oo3 Guardian Consensus] --> [indrajaal/holon.gleam • Holon Lifecycle & Coords • Monotonic Fencing Leases]
+[hook_latency.gleam • Hook Latency & Entropy • Continuous Agent Surveillance] --> [indrajaal/holon.gleam • Holon Lifecycle & Coords • Monotonic Fencing Leases]
+[indrajaal/holon.gleam • Holon Lifecycle & Coords • Monotonic Fencing Leases] --> [sa-plan var/sa-plan/uos.sqlite3 • SC-JIDOKA-001 Sole Authority • Fail-Closed Andon Halt -32002]
+[sa-plan var/sa-plan/uos.sqlite3 • SC-JIDOKA-001 Sole Authority • Fail-Closed Andon Halt -32002] --> [ZigVM Kernel & OS Port os_port.zig • Local MAX Fabric Orchestrator • Fuel-Bounded Subprocess Pipes]
+[ZigVM Kernel & OS Port os_port.zig • Local MAX Fabric Orchestrator • Fuel-Bounded Subprocess Pipes] --> [MOJO & RETE]
+[ZigVM Kernel & OS Port os_port.zig • Local MAX Fabric Orchestrator • Fuel-Bounded Subprocess Pipes] --> [living_swarm_actor.gleam • 21-Holon Living Ecology • Teentaal 16-Beat Rhythmic Cycle]
+[living_swarm_actor.gleam • 21-Holon Living Ecology • Teentaal 16-Beat Rhythmic Cycle] --> [indrajaal_native_zenoh.erl • indrajaal/** Pub/Sub Mesh • OTel-over-Zenoh OoZ]
+```
+
 ```mermaid
 flowchart TD
     subgraph L0_L1["L0/L1 Constitutional & Atomic Timing"]
@@ -183,6 +195,31 @@ To eliminate external cloud dependencies for critical defense operations, the sy
 
 To maintain safety and trust across all agent swarms, all activities performed by **Claude, AGY, and Codex** are continuously monitored, audited, and evaluated locally:
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    participant Agent as Claude / AGY / Codex
+    participant Hook as Hermes Dispatch Hook
+    participant Monitor as Tri-Agent Surveillance Actor
+    participant Ledger as SQLite Coordinator Ledger
+    participant Kernel as ZigVM / OTP 29 Core
+
+    Agent=>Hook: Propose Action / Tool Call / Code Edit
+    Hook=>Hook: SHA-256 Digest & Payload Inspection
+    alt Malformed / SQL Injection / Barred Path
+        Hook=>Agent: Fail-Closed Interception (-2 / -3)
+    else Payload Valid
+        Hook=>Monitor: Stream Telemetry Record
+        Monitor=>Ledger: Append Monotonic Event
+        Monitor=>Kernel: Request Authorization Gate
+        Kernel=>Agent: Authorized Execution
+    end
+```
+
 ```mermaid
 sequenceDiagram
     participant Agent as Claude / AGY / Codex
@@ -231,3 +268,4 @@ The following constitutional guidelines are hereby ratified across the Unified O
 - `[[wiki:20260905-1801-uos-zk-km-corpus-index]]` — Wiki Master Corpus Index
 - `contracts/rules/20260907-0653-tri-agent-coordination.md` — Shared Agent Coordination Contract (`SYNC-01`..`SYNC-14`)
 - `docs/design/20260911-0655-safety-critical-defense-cybernetics-spec.md` — Defense Cybernetics Specification
+

@@ -49,6 +49,27 @@ Where:
        └─────────────────────────────┘ └─────────────────────────────┘
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[/dashboard Root] --> [/planning]
+[/planning] --> [/dashboard Root]
+[/dashboard Root] --> [/checklist]
+[/checklist] --> [/dashboard Root]
+[/dashboard Root] --> [/prajna]
+[/prajna] --> [/dashboard Root]
+[/dashboard Root] --> [/telemetry]
+[/telemetry] --> [/dashboard Root]
+[/dashboard Root] --> [/cortex]
+[/cortex] --> [/dashboard Root]
+[/planning] --> [... Other 27 Canonical Pages ...]
+[... Other 27 Canonical Pages ...] --> [/planning]
+[/checklist] --> [... Other 27 Canonical Pages ...]
+[... Other 27 Canonical Pages ...] --> [/checklist]
+[Canonical Lustre Cluster |V|=33, SCC=1] --> [Wisp REST Endpoints]
+[Canonical Lustre Cluster |V|=33, SCC=1] --> [Documentation & Knowledge Plane]
+```
+
 ```mermaid
 graph TD
     subgraph Canonical_Cluster["Canonical Lustre Cluster (|V|=33, SCC=1)"]
@@ -133,6 +154,27 @@ Following STAMP/STPA guidelines, the link tracking and verification control loop
 └─────────────────────────────────────────────────────────────┘
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    participant Ctrl as Link Verifier Engine
+    participant Web as Gleam Web Cockpit (Port 4100)
+    participant Kernel as Safety Kernel & Sa-Plan
+
+    Ctrl=>Web: GET /<route> (User-Agent: UOS-Link-Probe)
+    Web=>Ctrl: HTTP 200 OK + Body + Timing
+    Ctrl=>Ctrl: Validate Status, Content-Type, DOM Checklist Marker
+    alt Invariant Violations (404, 500, Broken SCC)
+        Ctrl=>Kernel: Trip Andon Stop Line (Code -32002)
+    else All Checks Pass
+        Ctrl=>Kernel: Ledger Verification Proof (SHA-256 Digest)
+    end
+```
+
 ```mermaid
 sequenceDiagram
     participant Ctrl as Link Verifier Engine
@@ -195,3 +237,4 @@ val verify_endpoint : string -> int -> float -> bool -> bool
 - **Primary URL:** [http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260912-1030-uos-link-tracker-graph-analyser-verifier-specification.md](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260912-1030-uos-link-tracker-graph-analyser-verifier-specification.md)
 - **Checklist Verification:** [http://nas-1.tail55d152.ts.net:4100/checklist](http://nas-1.tail55d152.ts.net:4100/checklist)
 - **Sa-Plan Authority:** `uos/link-tracker-verifier/20260912-1028`
+

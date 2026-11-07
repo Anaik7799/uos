@@ -90,6 +90,14 @@ This journal records the complete, permanent synthesis of:
 +-------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Intelitor v5.2 • Podman Containers • Elixir Phoenix Port 4000 • F# Prajna CLI • Postgres / Redis] --> [C3I Framework • STAMP/STPA Safety • 13D Trace Algebra • Prajna Circuit Breakers • Auto-FMEA Matrix]
+[C3I Framework • STAMP/STPA Safety • 13D Trace Algebra • Prajna Circuit Breakers • Auto-FMEA Matrix] --> [Indrajaal Mesh • Zenoh Pub/Sub indrajaal/** • OTel-over-Zenoh OoZ • MCP-over-Zenoh MoZ • Lustre Web Cockpit Port 4100]
+[Indrajaal Mesh • Zenoh Pub/Sub indrajaal/** • OTel-over-Zenoh OoZ • MCP-over-Zenoh MoZ • Lustre Web Cockpit Port 4100] --> [UOS Monorepo • Standalone Jujutsu .jj/ • Pure Erlang/OTP 29 Runtime • ZigVM Deterministic Kernel • Hermes OCaml Formal Evidence • Modular MAX Isolated AI Tier • Zero-Muda & Storage Safety]
+```
+
 ```mermaid
 graph LR
     I["Intelitor v5.2<br/>• Podman Containers<br/>• Elixir Phoenix (Port 4000)<br/>• F# Prajna CLI<br/>• Postgres / Redis"]
@@ -140,6 +148,17 @@ The operator asked why Indrajaal ran in homeostasis and evolved intelligence whi
 |  4. Cybernetic Singing Engine  -->  Just Intonation polyphonic vocalization in Rāga Durgā          |
 |  5. Port 4100 Streaming        -->  Real-time /ecology, /song, and /spectrogram.svg endpoints      |
 +----------------------------------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Pure Erlang/OTP 29 Root Supervisor] --> [living_swarm_actor.gleam Continuous GenServer Loop]
+[living_swarm_actor.gleam Continuous GenServer Loop] --> [16-Beat Teentaal Heartbeat Dha-Dhin-Dhin-Dha...]
+[16-Beat Teentaal Heartbeat Dha-Dhin-Dhin-Dha...] --> [Continuous OODA Wavefront Observe -> Orient -> Decide -> Act -> Reflect]
+[Continuous OODA Wavefront Observe -> Orient -> Decide -> Act -> Reflect] --> [21 Active Holons across 7 Planes • Cognitive, Autonomic, Sensory, Epistemic, Actuator, Immune, Sovereign]
+[21 Active Holons across 7 Planes • Cognitive, Autonomic, Sensory, Epistemic, Actuator, Immune, Sovereign] --> [cybernetic_singing.gleam • 22 Shrutis Just Intonation • Rāga Durgā Pentatonic • Harmonic Consonance Score]
+[cybernetic_singing.gleam • 22 Shrutis Just Intonation • Rāga Durgā Pentatonic • Harmonic Consonance Score] --> [Port 4100 Live Web Cockpit • /ecology Dashboard • /api/v1/ecology/song • /api/v1/ecology/spectrogram.svg]
 ```
 
 ```mermaid
@@ -242,3 +261,4 @@ The evolution from Intelitor to C3I, Indrajaal, and finally UOS represents a con
 ## 13. Conclusion
 
 The session directive *"save journal"* has been fulfilled. The complete comparison, migration, and homeostatic awakening of UOS is comprehensively documented, ratified in `ADR-095`, indexed across the KM Triad, and verified on the live port 4100 web cockpit under standalone Jujutsu.
+

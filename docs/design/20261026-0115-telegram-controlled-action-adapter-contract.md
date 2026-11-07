@@ -16,8 +16,8 @@ Status: development design under `uos/telegram-runtime/20261001-1150` COMMAND_IM
 
 ```text
 [literal + args] -> [adapter.parse] -> [adapter.preview (read-only)]
-[preview] -> [proposal: Intent targets a Sa-plan job] -> [/approval receipts]
-[approved] -> [service: fence check] -> [adapter.execute under guardian] -> [receipt]
+[adapter.preview (read-only)] -> [proposal: Intent targets a Sa-plan job] -> [/approval receipts]
+[/approval receipts] -> [service: fence check] -> [adapter.execute under guardian] -> [receipt]
 ```
 
 ```mermaid

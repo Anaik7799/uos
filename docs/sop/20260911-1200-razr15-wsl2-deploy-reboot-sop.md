@@ -40,6 +40,18 @@ This Standard Operating Procedure establishes the turnkey execution protocol to 
 +-----------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Instance 0 nas-1 100.87.7.78 Gleam / Hermes / C3I] --> [Windows 11 Host 100.114.9.28]
+[Instance 0 nas-1 100.87.7.78 Gleam / Hermes / C3I] --> [Tailscaled razr15-wsl2]
+[SYSTEM Scheduled Task UOS_WSL2_ColdBoot_Autostart] --> [/etc/wsl.conf boot]
+[/etc/wsl.conf boot] --> [WSL OpenSSH Ports 22 & 2222]
+[/etc/wsl.conf boot] --> [Tailscaled razr15-wsl2]
+[/etc/wsl.conf boot] --> [Modular MAX GPU Engine :8088]
+[Portproxy 0.0.0.0:2222 -> WSL2:2222] --> [WSL OpenSSH Ports 22 & 2222]
+```
+
 ```mermaid
 graph TD
     subgraph Mesh["Saṁvid Vajravyūha Triadic Mesh"]
@@ -224,3 +236,4 @@ Immediately after the laptop reboots, the following automated checks run from `n
 ## 20261101-0752 — Proposed model/code synchronization binding (DEVELOPMENT DRAFT / NOT_ADMITTED)
 
 Bind each deployment/reboot step to an authorized task, exact host/config/build identity, formal preconditions and actual postcondition/recovery evidence per the [proposed synchronization SOP — intended URL, live serving unverified](http://nas-1.tail55d152.ts.net:4100/files/docs/sop/20261101-0712-lean-model-code-synchronization-sop.md). A missing runtime identity or refinement obligation holds the scoped action; this appendix is guidance only and grants no host, deployment or restart authority.
+

@@ -139,6 +139,33 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant AGY as AGY Cognitive Parser
+    participant SaPlan as Sa-Plan Authority (SQLite)
+    participant Worker as Execution Worker Pool
+
+    Operator=>AGY: Send Natural Language Goal
+    Note over AGY: Decomposes Goal into DAG Tasks & Deps
+    AGY=>SaPlan: task create (Task 1, 2, 3)
+    SaPlan=>AGY: Tasks Registered in SQLite WAL
+    AGY=>Operator: Send DAG Confirmation & Plan ID
+    loop Heijunka Pull Queue Execution
+        Worker=>SaPlan: task claim (worker-agy)
+        SaPlan=>Worker: Lease Granted
+        Worker=>Worker: Execute Work & Gather Evidence
+        Worker=>SaPlan: task complete (result receipt)
+        Worker=>Operator: Send Live Task Progress
+    end
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -224,3 +251,4 @@ Evolutionary Cycle 4: L3 Natural Language to Sa-Plan Heijunka DAG Job Decomposit
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

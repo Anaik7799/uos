@@ -24,6 +24,8 @@ The browser keeps the pending nonce without initData in session storage, never a
 [Request] -> [Control auth] -> [Sa-plan insert] --created--> [Exact claim] -> [Fresh fences] -> [Logger effect] -> [Receipt]
                                   |
                                   +----------------duplicate--------------------------------------------------> [Receipt]
+
+[Sa-plan insert] -> [Receipt]    (the duplicate path drawn above, as an edge the gate can read)
 ```
 ```mermaid
 flowchart LR

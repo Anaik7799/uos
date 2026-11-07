@@ -138,6 +138,33 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    participant System as UOS Host System
+    participant Prajna as Prajna Lyapunov Detector
+    participant Gleam as Gleam Worker (BEAM)
+    actor Operator as Telegram Operator
+
+    System=>Prajna: Stream Health & Memory Metrics
+    Note over Prajna: V_dot > 0 Detected (Divergence Trend)
+    Prajna=>Gleam: Trigger Instability Alert
+    Gleam=>Operator: Proactive Warning: Projected Crash in 4 mins
+    Operator=>Gleam: Send /dark Command
+    Note over Gleam: Dark Cockpit Protocol Initiated (<= 500µs)
+    par Emergency Freezing
+        Gleam=>System: Quiesce Background Jobs
+        Gleam=>System: Put Non-Essential Daemons to Sleep
+        Gleam=>System: Lock Read-Only Telemetry Enclave
+    end
+    Gleam=>Operator: 🌑 DARK COCKPIT ACTIVE (System Safe)
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -223,3 +250,4 @@ Evolutionary Cycle 10: L9 Sub-Millisecond Dark Cockpit Emergency Protocol & Pred
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

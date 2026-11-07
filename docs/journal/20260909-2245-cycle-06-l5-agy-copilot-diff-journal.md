@@ -139,6 +139,31 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant AGY as AGY Sovereign Agent
+    participant JJ as Jujutsu VCS (.jj/)
+    participant Test as Test Runner
+
+    Operator=>AGY: Report Bug / Ask for Fix
+    Note over AGY: 4-Phase OODA Reasoning (Lyapunov V_dot <= 0)
+    AGY=>AGY: Synthesize Minimal Unified Diff
+    AGY=>Operator: Display Diff with (Apply & Commit) Button
+    Operator=>AGY: Click (✅ Apply & Commit)
+    AGY=>Test: Run Regression Tests
+    Test=>AGY: 100% Tests Pass (Two-Key Verification)
+    AGY=>JJ: jj describe -m "fix(prajna): adjust breaker timeout"
+    JJ=>AGY: Commit Sealed
+    AGY=>Operator: Hot-Patch Committed into Mainline!
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -222,3 +247,4 @@ Evolutionary Cycle 6: L5 Multi-Turn AGY Sovereign Copilot & Hot-Patch Diff Engin
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

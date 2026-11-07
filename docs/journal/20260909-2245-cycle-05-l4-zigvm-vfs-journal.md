@@ -135,6 +135,29 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Gleam as Gleam Worker (BEAM)
+    participant ZigVM as ZigVM Kernel (engines/zigvm)
+    participant VFS as Descriptor-Relative VFS
+
+    Operator=>Gleam: /zigvm eval (expr) OR /zigvm vfs (path)
+    Gleam=>ZigVM: Send Execution Request
+    Note over ZigVM: Linear Memory Arena Allocation
+    ZigVM=>VFS: openat(dir_fd, path, O_NOFOLLOW)
+    Note over VFS: Race-Free, No Symlink Escapes
+    VFS=>ZigVM: File/Dir Descriptor Content
+    ZigVM=>Gleam: Deterministic Result + Memory Proof
+    Gleam=>Operator: Formatted Result with µs Execution Timings
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -216,3 +239,4 @@ Evolutionary Cycle 5: L4 Deterministic ZigVM Sandbox Kernel & Descriptor VFS Ins
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

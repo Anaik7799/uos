@@ -136,6 +136,28 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Gleam as Gleam Worker (BEAM)
+    participant NIF as Rust C-ABI NIF (c3i_nif)
+    participant Guard as NVMe Enclave Guard (spec.rs)
+
+    Operator=>Gleam: Send /storage Command
+    Gleam=>NIF: Direct C-ABI Query (< 500µs)
+    NIF=>Guard: Verify Hard-Denied Drive Serial
+    Note over Guard: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"
+    Guard=>NIF: Status: READ-ONLY ENCLAVE LOCKED
+    NIF=>Gleam: Storage Topology & Disk Metrics
+    Gleam=>Operator: Formatted Markdown with Drive Lock Badge
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -216,3 +238,4 @@ Evolutionary Cycle 2: L1 Native Kernel C-ABI & Hardware NVMe Enclave Guard has b
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

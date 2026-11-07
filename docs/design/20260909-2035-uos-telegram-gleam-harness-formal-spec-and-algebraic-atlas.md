@@ -377,6 +377,32 @@ User (Telegram)       OCaml Edge Client        Gleam Harness         Sa-Plan / Z
 ```
 
 ##### Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor User as User (Telegram)
+    participant Edge as OCaml Edge Client
+    participant Dedup as SQLite WAL Dedup
+    participant Harness as Gleam Harness (BEAM)
+    participant Subsys as Sa-Plan / ZigVM
+    participant Zenoh as Zenoh Telemetry Bus
+
+    User=>Edge: Send command (/status, /plan, /zigvm)
+    Edge=>Dedup: Check & record update_id
+    Edge=>User: Immediate reaction (⚡)
+    Edge=>Harness: Spawn tools/telegram-harness-dispatch (JSON)
+    Harness=>Subsys: Query active plans, VFS state, or system health
+    Subsys=>Harness: Telemetry / execution records
+    Harness=>Zenoh: Emit OTel span & intent event
+    Harness=>Edge: Return structured OutboundResponse JSON
+    Edge=>User: Send formatted message (MarkdownV2 / Plaintext)
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -421,6 +447,33 @@ User (Telegram)       OCaml Edge Client        Gleam Harness         Zenoh Cog T
 ```
 
 ##### Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor User as User (Telegram)
+    participant Edge as OCaml Edge Client
+    participant Harness as Gleam Harness (BEAM)
+    participant Zenoh as Zenoh Cog Bus
+    participant AI as Cognitive Worker (MAX/LLM)
+
+    User=>Edge: Free-form conversational message
+    Edge=>User: Immediate reaction (👍)
+    Edge=>Harness: Spawn tools/telegram-harness-dispatch
+    Harness=>Zenoh: Publish intent to indrajaal/l5/cog/intent/req
+    Harness=>Edge: Immediate interactive greeting & confirmation
+    Edge=>User: Deliver instant acknowledgement message
+    Zenoh=>AI: Deliver intent request payload
+    AI=>AI: Evaluate OODA loop / LLM inference
+    AI=>Zenoh: Publish synthesized answer to c3i/a2a/telegram/outbound
+    Zenoh=>Edge: Ingest outbound message from Zenoh subscription
+    Edge=>User: Deliver full cognitive AI response to Telegram chat
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -524,3 +577,4 @@ Summary: 9 passed, 0 failed, 100% passing.
 | | `CHK-16-OTEL` | Structured C3I JSON logging with microsecond UTC ending in `Z` | **PASS** |
 | **Domain 5** | `CHK-17-SOV` | Tri-sovereign consensus respected (AGY, Claude, Codex) | **PASS** |
 | | `CHK-18-JJ` | Standalone Jujutsu monorepo used; 0 native git mutations | **PASS** |
+

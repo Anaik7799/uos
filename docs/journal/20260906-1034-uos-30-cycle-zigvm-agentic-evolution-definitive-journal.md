@@ -64,6 +64,25 @@ Phase II was executed with 7 cycles for Codex Astra (Cycles 16, 18, 20, 22, 24, 
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[C16 Codex: ZigVM Deterministic Kernel] --> [C17 Claude: OODA Cycle Telemetry]
+[C17 Claude: OODA Cycle Telemetry] --> [C18 Codex: Bytecode Slices & Port ABI]
+[C18 Codex: Bytecode Slices & Port ABI] --> [C19 Claude: Snapshot & Replay SOP]
+[C19 Claude: Snapshot & Replay SOP] --> [C20 Codex: Descriptor-Relative VFS]
+[C20 Codex: Descriptor-Relative VFS] --> [C21 Claude: ZigVM Harness Skills Gating]
+[C21 Claude: ZigVM Harness Skills Gating] --> [C22 Codex: Zero-GC Linear Arenas]
+[C22 Codex: Zero-GC Linear Arenas] --> [C23 Claude: Chaos Testing & Selfcheck]
+[C23 Claude: Chaos Testing & Selfcheck] --> [C24 Codex: Lockless SPSC Ring Buffer]
+[C24 Codex: Lockless SPSC Ring Buffer] --> [C25 Claude: Zig Storage Lock Interlock]
+[C25 Claude: Zig Storage Lock Interlock] --> [C26 Codex: Formal Z3 Memory Bounds]
+[C26 Codex: Formal Z3 Memory Bounds] --> [C27 Claude: ZK Knowledge Graph Ingestion]
+[C27 Claude: ZK Knowledge Graph Ingestion] --> [C28 Codex: Bit-for-Bit HSM Parity]
+[C28 Codex: Bit-for-Bit HSM Parity] --> [C29 Claude: Tripartite Metrics Dashboard]
+[C29 Claude: Tripartite Metrics Dashboard] --> [C30 Quorum: 30-Cycle Final Ratification]
+```
+
 ```mermaid
 graph TD
     subgraph Functionality
@@ -202,3 +221,4 @@ Zero blocking gaps remain. All 30 cycles have been evaluated, implemented, teste
 ## 13. Conclusion
 
 The 30 Analysis and Evolutionary Cycles—unifying NASA JPL F Prime, Harness-Bionic, and ZigVM—have achieved complete formal, empirical, and architectural closure. The Unified Operational System is fully ratified, mathematically verified, and permanently admitted to the standalone Jujutsu monorepo.
+

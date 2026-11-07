@@ -89,6 +89,42 @@ Authored [`formal/lean/Five_Lustre_WebUI_Evolutionary_Cycles.lean`](file:///home
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    participant Browser as Browser Client (HTML/CSS Only)
+    participant Lustre as Lustre MVU SSR Engine
+    participant BEAM as BEAM OTP 29 Supervisor
+    participant Sentry as Hardware Storage Sentry
+    participant Jidoka as Andon Stop Line
+
+    Browser=>Lustre: GET / (SelectPage(CockpitPage))
+    Lustre=>BEAM: update(model, SelectPage)
+    BEAM=>Lustre: Active page updated
+    Lustre=>Browser: Render Pure HTML5 + SVG (0 Client JS)
+
+    Browser=>Lustre: POST /click (ToggleSpringCover)
+    Lustre=>BEAM: update(model, ToggleSpringCover)
+    BEAM=>Lustre: spring_cover_open=True, timer=5000ms
+    Lustre=>Browser: Render Armed State (Amber border)
+
+    Browser=>Lustre: POST /click (ConfirmSpringActuation)
+    Lustre=>Sentry: Check NVMe 25503L801736 invariant
+    Sentry=>Lustre: Hardware locked, command safe
+    Lustre=>BEAM: Dispatch command, snap cover CLOSED
+    Lustre=>Browser: Render Closed State & Audit Log
+
+    Browser=>Lustre: POST /click (PullAndonCord)
+    Lustre=>Jidoka: Trip Stop Line (Code -32002)
+    Jidoka=>BEAM: Freeze work-stealing queues
+    Lustre=>Browser: Render Flashing Strobe Banner & Halt State
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -223,3 +259,4 @@ The implementation enforces STAMP/STPA safety constraints:
 ## 13. Conclusion
 
 Cycles `C382`..`C386` (`EV-C134`..`EV-C138`) have been formally proved in Lean 4, verified via EUnit tests, demonstrated in pure Gleam Lustre WebUI SSR with zero client JavaScript, cryptographically ledgered in `var/km/provenance-cycles.sqlite3` with Merkle Head `d25c71e472cce69ce5b62da8ef208b0c5b0ccf803cd039357e0b2f5927ab2a1c`, and co-signed under tri-sovereign authority in `var/sa-plan/uos.sqlite3`. All 18 checkpoints of `SC-CHECKLIST-001` remain 100% Green.
+

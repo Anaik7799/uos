@@ -97,6 +97,21 @@ focusing exclusively on the three high-priority technical deliverables while def
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Solo5 0.13.0 Tenders hvt, spt, virtio-run] --> [tools/verification/solo5_toolchain.ml]
+[tools/verification/solo5_toolchain.ml] --> [var/mirage/receipts/solo5_0.13.0_acceptance.json]
+[13 Rust Sources native/nifs/rust/ferriskey_nif] --> [Cargo Build rustc 1.95.0, cdylib]
+[Cargo Build rustc 1.95.0, cdylib] --> [apps/cepaf_gleam/test/ferriskey_nif_load_evidence_test.gleam]
+[Neural Semantic Embedder GELU, LayerNorm, L2] --> [services/inference/max/max_worker.py v2.1.0]
+[22-Shruti Raga Durga Meend & Jawari Shimmer] --> [services/inference/max/max_worker.py v2.1.0]
+[Bounded Cognitive FMEA RPN Classifier] --> [services/inference/max/max_worker.py v2.1.0]
+[Item 1: Solo5 0.13.0 Toolchain & Mirage] --> [UOS Standalone Jujutsu Monorepo @ 4031958f]
+[Item 2: FerrisKey NIF R5 Security Review] --> [UOS Standalone Jujutsu Monorepo @ 4031958f]
+[Item 5: Modular MAX Authentic Local Models] --> [UOS Standalone Jujutsu Monorepo @ 4031958f]
+```
+
 ```mermaid
 flowchart TD
     subgraph Item1["Item 1: Solo5 0.13.0 Toolchain & Mirage"]
@@ -259,3 +274,4 @@ The operator directive **"do 1, 2 and 5 only"** has been executed to complete ma
 
 ---
 *UOS footer: End of Journal Record. Zero-Muda and Standalone Jujutsu monorepo discipline strictly enforced.*
+

@@ -77,6 +77,39 @@ Operator directive requested:
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Operator Browser
+    participant WebPrimary as Primary Cockpit (:4100)
+    participant HotReload as ha/hot_reload.gleam
+    participant BEAMCodeServer as BEAM code_server
+    participant WarmBackup as Warm Standby (:4102)
+    participant Board as Swarm Message Board
+
+    Operator=>WebPrimary: GET /docs/music/20260907-1052-swarm-durga-player.md
+    WebPrimary=>Operator: 200 OK (Rendered Markdown + Native HTML5 Audio Player)
+    Note over Operator: Audio playback at 80 BPM, Teentaal (H=0.5072)
+
+    Note over WebPrimary,BEAMCodeServer: Zero-Downtime Hot Upgrade Cycle
+    WebPrimary=>HotReload: reload_changed()
+    HotReload=>BEAMCodeServer: code:soft_purge(Module)
+    HotReload=>BEAMCodeServer: code:load_file(Module)
+    BEAMCodeServer=>HotReload: {module, Module} (Old code retired safely)
+
+    Note over WarmBackup: Warm Backup Standby (No Whole-System Shutdown)
+    Operator=>WarmBackup: Readiness Probe (GET :4102/api/health)
+    WarmBackup=>Operator: 200 OK (Read-Only Mode, Zero Writer Conflicts)
+
+    Note over Board: Single Concise Notification
+    WebPrimary=>Board: Post Report (Task: read_only_deployment_inventory, Seq: 45)
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -259,3 +292,4 @@ The operator's request has been fully satisfied:
 1. Web-playable Hindustani classical bandish in Rāga Durgā is attached to Tailscale links and playable via native browser player at [http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1052-swarm-durga-player.md](http://nas-1.tail55d152.ts.net:4100/docs/music/20260907-1052-swarm-durga-player.md).
 2. The bounded read-only deployment inventory for primary + warm backup, hot code loading, and zero-shutdown upgrades in UOS has been thoroughly documented with exact safe paths and commands.
 3. A single concise report has been posted to the swarm message board under authentic Herdr session `6e132c1c-7436-43ef-abb6-f3468e7fe87f`. All operations completed at $0.00 cost with zero process disruptions.
+

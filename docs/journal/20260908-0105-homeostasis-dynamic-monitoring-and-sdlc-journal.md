@@ -94,6 +94,32 @@ In [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`
 +-----------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    participant Actor as Gleam Homeostasis Actors
+    participant Bus as Zenoh / AG-UI Event Bus
+    participant Wisp as Wisp Router (/ag-ui/events/sse)
+    participant HUD as Lustre MVU Web HUD
+    participant DOM as Live Stream Table Body
+
+    Actor=>Bus: Emit Telemetry ((HOMEO-PID), (PRAJNA), (WATCHDOG))
+    Bus=>Wisp: Multiplex into 32-Event Stream
+    HUD=>Wisp: GET /ag-ui/events/sse (EventSource connection)
+    Wisp=>HUD: HTTP 200 text/event-stream
+    loop Continuous Real-Time Updates
+        Bus=>Wisp: Next Telemetry Event
+        Wisp=>HUD: data: {"event_type":"HOMEO","preview":"V(e)=0.0000125"}
+        HUD=>DOM: Prepend new <tr> row dynamically
+        Note over DOM: FIFO buffer maintains last 50 entries
+    end
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -243,3 +269,4 @@ The dual-mode NASA JPL F Prime state machine abstraction (`homeostasis_fprime.gl
 ## 13. Conclusion
 
 The Homeostasis Monitoring lifecycle is fully specified, architected, implemented, and verified. The system delivers complete 6-dimensional coverage across Information, Functionality, Behavior, Visualization, Tests, and Screen Descriptions. Screen elements are rigorously mapped to their underlying components and F Prime state machines, and real-time dynamic log and message streaming is active and operational over Tailscale.
+

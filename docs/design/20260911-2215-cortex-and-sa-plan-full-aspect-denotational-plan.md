@@ -140,6 +140,22 @@ UOS is specifically engineered for this convergence:
 +===================================================================================================+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Natural Language / Web / Telegram Intent] --> [Intent Ingestion & PII Scrubbing]
+[Intent Ingestion & PII Scrubbing] --> [cortex_saplan_coordinator.gleam]
+[cortex_saplan_coordinator.gleam] --> [poodavr_actor.gleam 7-Stage Loop]
+[cortex_saplan_coordinator.gleam] --> [Hermes OCaml\ncortex_saplan_contract.ml]
+[cortex_saplan_coordinator.gleam] --> [Rust C-ABI NIF\ncortex_nif / lib.rs]
+[cortex_saplan_coordinator.gleam] --> [Modular MAX / Mojo\ncortex_simd_ranker.mojo]
+[Hermes OCaml\ncortex_saplan_contract.ml] --> [All Contracts\nPassed?]
+[Rust C-ABI NIF\ncortex_nif / lib.rs] --> [All Contracts\nPassed?]
+[Modular MAX / Mojo\ncortex_simd_ranker.mojo] --> [All Contracts\nPassed?]
+[All Contracts\nPassed?] --> [var/sa-plan/uos.sqlite3\nOban Jobs & Temporal Workflows]
+[All Contracts\nPassed?] --> [ConstitutionalHalt\nAndon Stop Line -32002]
+```
+
 ```mermaid
 graph TD
     subgraph CognitivePlane["C3I Cortex Cognitive Plane"]
@@ -211,6 +227,30 @@ The POODAVR loop evolves the classical Boyd OODA loop into a 7-stage determinist
            +-------+------+
                    |
                    +------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: stateDiagram-v2. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+stateDiagram-v2
+    (*) => Predict
+    Predict => Observe : Telemetry Ingest
+    Observe => Orient : Synthesize Context
+    
+    Orient => Decide : Safe Intent & sa-plan Ledgered
+    Orient => ConstitutionalHalt : Hazard Detected / Unsafe Disk (-32002)
+    
+    Decide => Act : Lease Granted
+    Act => Verify : Action Dispatched
+    
+    Verify => Reflect : Verification Passed (+1 Causal Epoch)
+    Verify => ConstitutionalHalt : Verification Failed (-32003)
+    
+    Reflect => Predict : Homeostatic Loop Recirculation
+    ConstitutionalHalt => (*) : Andon Intervention Required
 ```
 
 ```mermaid
@@ -430,3 +470,4 @@ To guarantee mathematical dependability, zero regressions, and SIL-6 fault conta
 - Hermes Wiki Master Index: [http://nas-1.tail55d152.ts.net:8100/wiki](http://nas-1.tail55d152.ts.net:8100/wiki)
 - ZigVM ZK Master MOC: [http://nas-1.tail55d152.ts.net:8100/zk](http://nas-1.tail55d152.ts.net:8100/zk)
 - Peer Runtime Host: [http://vm-1.tail55d152.ts.net:8088](http://vm-1.tail55d152.ts.net:8088)
+

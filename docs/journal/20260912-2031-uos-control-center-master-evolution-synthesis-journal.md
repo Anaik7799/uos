@@ -70,6 +70,16 @@ To serve mission-critical operations (nuclear command, orbital operations, auton
 +--------------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Top Status HUD SIL-6, Storage Lock, Checklist 18/18]
+[Zenoh Pub/Sub Mesh OoZ & MoZ] --> [Right Telemetry & OODA Inspector]
+[Sa-Plan SQLite Ledger var/sa-plan/uos.sqlite3] --> [Bottom Andon Stop Line & Event Ticker]
+[Gleam / BEAM OTP 29 Root Supervisor] --> [Center Tactical Canvas Lustre MVU SSR]
+[Hermes OCaml Gospel/Z3 Engine] --> [Center Tactical Canvas Lustre MVU SSR]
+```
+
 ```mermaid
 flowchart TD
     subgraph S_SHELL ["Universal 5-Pane Control Center Shell"]
@@ -116,6 +126,15 @@ flowchart TD
 |  • Two-Man Interlock        • Dual-Beam CRT Scope          • Depth-8 Transclusion      • Arena Calipers   • Ratify |
 |  • NVMe Padlock Lock        • Two-Lattice STM Cube         • 13D Coordinate Maps       • BEAM Run Queues  • SIL-6  |
 +--------------------------------------------------------------------------------------------------------------------+
+```
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[C1] --> [C2]
+[C2] --> [C3]
+[C3] --> [C4]
+[C4] --> [C5]
 ```
 
 ```mermaid
@@ -351,3 +370,4 @@ Exit code 0, 0 axioms, 0 sorry.
 ## 13. Conclusion
 
 The Master Synthesis of the Control Center Component Architecture, Widget Review, and 5 Consecutive Evolutionary Cycles is complete, verified, and ratified. All 48 endpoints stand fully operational over Tailscale port 4100 under BEAM OTP 29 root supervision. The system is in robust homeostatic equilibrium.
+

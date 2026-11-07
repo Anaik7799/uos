@@ -94,6 +94,14 @@ Plan `uos-c3i-indrajaal-unification` (`uos/unification`) was registered in `var/
 +-------------------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Intelitor v5.2 • Podman Containers • Elixir Phoenix Port 4000 • F# Prajna CLI • Postgres / Redis] --> [C3I Framework • STAMP/STPA Safety • 13D Trace Algebra • Prajna Circuit Breakers • Auto-FMEA Matrix]
+[C3I Framework • STAMP/STPA Safety • 13D Trace Algebra • Prajna Circuit Breakers • Auto-FMEA Matrix] --> [Indrajaal Mesh • Zenoh Pub/Sub indrajaal/** • OTel-over-Zenoh OoZ • MCP-over-Zenoh MoZ • Lustre Web Cockpit Port 4100]
+[Indrajaal Mesh • Zenoh Pub/Sub indrajaal/** • OTel-over-Zenoh OoZ • MCP-over-Zenoh MoZ • Lustre Web Cockpit Port 4100] --> [UOS Monorepo • Standalone Jujutsu .jj/ • Pure Erlang/OTP 29 Runtime • ZigVM Deterministic Kernel • Hermes OCaml Formal Evidence • Modular MAX Isolated AI Tier • Zero-Muda & Storage Safety]
+```
+
 ```mermaid
 graph LR
     I["Intelitor v5.2<br/>• Podman Containers<br/>• Elixir Phoenix (Port 4000)<br/>• F# Prajna CLI<br/>• Postgres / Redis"]
@@ -211,3 +219,4 @@ The migration from C3I and Indrajaal into UOS represents an orders-of-magnitude 
 ## 13. Conclusion
 
 The triadic comparison between Intelitor, C3I, Indrajaal, and UOS establishes the architectural supremacy and purity of the Unified Operational System monorepo. All legacy capabilities from `/home/an/dev/ver/c3i` have been cleanly ingested, sanitized, and unified in pure Gleam/OTP 29, ZigVM, Hermes OCaml, and Modular MAX. The live system on port 4100 is fully operational, singing in cybernetic harmony, and governed by standalone Jujutsu.
+

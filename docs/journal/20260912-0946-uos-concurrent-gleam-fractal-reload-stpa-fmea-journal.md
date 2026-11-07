@@ -91,6 +91,17 @@ ASCII ARCHITECTURAL OVERVIEW: CONCURRENT FRACTAL CHAIN RELOADER
    └─────────────────────────────────────────────────────────────┘
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Inotify / Watcher Reload Trigger GET /api/v1/reload] --> [Parallel MD5 Checksum Scanner BEAM spawn_monitor Worker Pool]
+[Parallel MD5 Checksum Scanner BEAM spawn_monitor Worker Pool] --> [L0 Constitutional Barrier Gate Fail-Closed 2oo3 Invariant Check]
+[L0 Constitutional Barrier Gate Fail-Closed 2oo3 Invariant Check] --> [Substrate Reloader Worker Tiers L1, L2, L3, L4 in Parallel]
+[L0 Constitutional Barrier Gate Fail-Closed 2oo3 Invariant Check] --> [Cognitive Reloader Worker Tiers L5, L6, L7, L8, L9 in Parallel]
+[Substrate Reloader Worker Tiers L1, L2, L3, L4 in Parallel] --> [Parallel Invalidation Actors ETS Cache + Zenoh OTel + AG-UI Bus]
+[Cognitive Reloader Worker Tiers L5, L6, L7, L8, L9 in Parallel] --> [Parallel Invalidation Actors ETS Cache + Zenoh OTel + AG-UI Bus]
+```
+
 ```mermaid
 flowchart TD
     TRIGGER["Inotify / Watcher Reload Trigger<br/>(GET /api/v1/reload)"]
@@ -266,6 +277,13 @@ The question of whether Gleam/BEAM can be made concurrent during hot reload boil
          16 Concurrent Sockets: 21.03 ms                                    ==> 3.52x SLOWER (Contention!)
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Where Concurrency Delivers Massive Speedups] --> [Single-Threaded Kernel Drain + 300ms Debounce + Synchronous L0 Barrier + Parallel Substrate/Cognitive Reload]
+[Where Concurrency Degrades Throughput Pitfalls] --> [Single-Threaded Kernel Drain + 300ms Debounce + Synchronous L0 Barrier + Parallel Substrate/Cognitive Reload]
+```
+
 ```mermaid
 flowchart TD
     subgraph Gains["Where Concurrency Delivers Massive Speedups"]
@@ -336,6 +354,13 @@ flowchart TD
 ---
 
 ### 9.4 Contention Pitfalls: Where Naive Concurrency Degrades Performance
+
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[1 Thread: 3.14 ms Optimal] --> [8 Threads: 4.72 ms Cache line bouncing]
+[1 Request: 5.97 ms Immediate execution] --> [16 Requests: 21.03 ms Queue serialization]
+```
 
 ```mermaid
 flowchart LR
@@ -427,3 +452,4 @@ The operator's directive to **save the performance benchmarking analysis in the 
   PERFORMANCE BENCHMARKING ANALYSIS PERMANENTLY SAVED IN CANONICAL JOURNAL
 ===============================================================================
 ```
+

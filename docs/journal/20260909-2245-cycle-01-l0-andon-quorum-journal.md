@@ -134,6 +134,35 @@ Historically, command-and-control surfaces suffered from:
 
 
 ### 9.2 Mermaid Diagram
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Telegram Operator
+    participant Gleam as L0 Guardian (BEAM)
+    participant Quorum as 2oo3 Consensus Engine
+    participant Andon as Andon Freeze Latch
+
+    Operator=>Gleam: Send Destructive Command (/storage wipe, /reboot)
+    Note over Gleam: Evaluates Psi-0..10 & Omega-0 Invariants
+    Gleam=>Operator: Send Interactive Inline Keyboard
+    alt Quorum Approval Path
+        Operator=>Quorum: Click (Approve: Operator)
+        Note over Quorum: Quorum >= 2/3 Achieved (AGY + Operator)
+        Quorum=>Gleam: Issue 64-bit Epoch Lease Token
+        Gleam=>Operator: Execute & Report Success
+    else Andon Halt Triggered
+        Operator=>Andon: Click (🛑 ANDON HALT)
+        Note over Andon: SC-JIDOKA-001 Fail-Closed Freeze (<= 50µs)
+        Andon=>Gleam: Halt All Workers & Pipeline
+        Gleam=>Operator: Emergency Freeze Active. Manual reset required.
+    end
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -221,3 +250,4 @@ Evolutionary Cycle 1: L0 Constitutional Andon Halt & 2oo3 Quorum Approval Keyboa
 - [x] **CHK-18-JJ** — Standalone Jujutsu monorepo (`.jj/`) with 0 native Git mutations.
 
 </details>
+

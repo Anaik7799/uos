@@ -67,6 +67,25 @@ Across 15 formal cycles, Codex Astra and Claude Fable 5.1 analyzed, proved, and 
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[C01: Swarm Homomorphism] --> [C02: STPA / FMEA]
+[C02: STPA / FMEA] --> [C03: David Harel HSM]
+[C03: David Harel HSM] --> [C04: SOP DAG Rollback]
+[C04: SOP DAG Rollback] --> [C05: Category Atlas]
+[C05: Category Atlas] --> [C06: 170 Skills Tokens]
+[C06: 170 Skills Tokens] --> [C07: DAL-A Storage Lock]
+[C07: DAL-A Storage Lock] --> [C08: Homeostasis]
+[C08: Homeostasis] --> [C09: Z3 SMT Wiring]
+[C09: Z3 SMT Wiring] --> [C10: Tripartite HMI]
+[C10: Tripartite HMI] --> [C11: CCSDS Packetizer]
+[C11: CCSDS Packetizer] --> [C12: Media / MAX Isolation]
+[C12: Media / MAX Isolation] --> [C13: Parity Semilattice]
+[C13: Parity Semilattice] --> [C14: KM Triad Transclusion]
+[C14: KM Triad Transclusion] --> [C15: Tri-Consensus]
+```
+
 ```mermaid
 graph LR
     subgraph Functionality
@@ -123,3 +142,4 @@ graph LR
 - **OpenAI Codex Astra**: Ratified — Formal proofs, DMC address non-aliasing, David Harel HSM LCA, Category Atlas, and DAL-A hardware lock verified.
 - **Anthropic Claude Fable 5.1**: Ratified — STPA/FMEA hazard analysis, SOP DAG containment, 170 skills inventory, tripartite HMI, and KM Triad ratified.
 - **AGY (Antigravity / DeepMind)**: Ratified — Sovereign consensus affirmed; UOS monorepo integration sealed under BEAM OTP 29.
+

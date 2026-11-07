@@ -27,6 +27,34 @@
 +----------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, as a transcription.
+Kind: sequenceDiagram. Arrows are written => and brackets as parentheses, because this is
+the diagram as text and NOT an extractable edge list: SC-DIAGRAM-001 topology
+parity stays UNVERIFIED for this document.
+
+sequenceDiagram
+    autonumber
+    actor Operator as Operator / User
+    participant Laptop as Laptop (razr15-1 WSL2)
+    participant Port8999 as NAS-1 Port 8999 Server
+    participant BEAM as Erlang/OTP 29 BEAM Node
+    participant Mesh as UOS Saṁvid Vajravyūha Mesh
+
+    Operator=>Laptop: Execute: curl -fsSL http://192.168.1.220:8999/run | bash
+    Laptop=>Port8999: GET /run
+    Port8999=>Laptop: 200 OK (run.sh launcher)
+    Laptop=>Port8999: GET /uos-otp29-runtime.tar.gz
+    Port8999=>Laptop: 200 OK (78 MB self-contained Nix closure)
+    Laptop=>Laptop: Unpack OTP 29 to /nix/store
+    Laptop=>Port8999: GET /uos_instance2.beam
+    Port8999=>Laptop: 200 OK (Compiled Bytecode)
+    Laptop=>BEAM: erl -name instance2@192.168.1.177 -setcookie uos_vajravyuh_cookie -s uos_instance2
+    BEAM=>BEAM: Start TCP HTTP Health Responder on port 8088
+    BEAM=>Mesh: net_adm:ping('uos_primary@192.168.1.220')
+    Mesh=>BEAM: pong (Clustered)
+```
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -124,3 +152,4 @@ sequenceDiagram
 
 ## 13. Conclusion
 UOS Distributed Instance 2 deployment package is complete, compiled, packaged, and active on web access port 8999. The operator can run `curl -fsSL http://192.168.1.220:8999/run | bash` on the laptop to launch the pure OTP 29 distributed node.
+
