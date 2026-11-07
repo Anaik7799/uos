@@ -19,10 +19,9 @@ def verify_lean_c_abi_guard(cfg: ConfigurableResourceEnvelope) -> Bool:
         var fn_sim_rt = handle.get_function[UInt8]("uos_lean_verify_simulator_realtime_parity")
         var auth_ok: UInt8 = 1 if cfg.authority == "sa-plan" else 0
         var nvme_ok: UInt8 = 1 if cfg.target_drive_serial != DENIED_OS_SERIAL else 0
-        var chart_ok: UInt8 = 1 if cfg.source_chart == 5 and cfg.target_chart == 6 else 0
         var r1 = fn_intent(auth_ok, nvme_ok, UInt32(93), UInt32(cfg.constitutional_health), UInt32(cfg.gpu_vram_cap_mib))
         var r2 = fn_budget(UInt8(0))
-        var r3 = fn_cedar(UInt8(0), UInt8(1), UInt8(93), UInt8(0), auth_ok, UInt8(1))
+        var r3 = fn_cedar(auth_ok, UInt8(0), nvme_ok, UInt32(93))
         var r4 = fn_fcp(UInt16(1023), UInt8(0), UInt8(9), UInt32(0))
         var r5 = fn_sim_rt(UInt8(1), UInt8(1), r3, r3, UInt8(1), UInt8(1), auth_ok, auth_ok, r4, r4)
         return Int(r1) == 1 and Int(r2) == 0x0C1D0120 and Int(r3) == 1 and Int(r4) == 1 and Int(r5) == 1

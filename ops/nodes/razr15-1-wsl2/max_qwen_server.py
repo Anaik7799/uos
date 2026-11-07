@@ -136,7 +136,7 @@ def _load_lean_guard_cdll():
                 lib = ctypes.CDLL(candidate)
                 lib.uos_lean_check_intent.argtypes = [ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32]
                 lib.uos_lean_check_intent.restype = ctypes.c_uint8
-                lib.uos_lean_cedar_authorize_mcp.argtypes = [ctypes.c_uint8] * 6
+                lib.uos_lean_cedar_authorize_mcp.argtypes = [ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32]
                 lib.uos_lean_cedar_authorize_mcp.restype = ctypes.c_uint8
                 lib.uos_lean_verify_fractal_context_chain.argtypes = [ctypes.c_uint16, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32]
                 lib.uos_lean_verify_fractal_context_chain.restype = ctypes.c_uint8
@@ -155,7 +155,7 @@ def eval_lean_c_abi_intent(p: dict) -> bool:
     auth_b = 1 if p["authority"] == "sa-plan" else 0
     nvme_b = 1 if p["nvme_os_serial_locked"] else 0
     res = _LEAN_GUARD_LIB.uos_lean_check_intent(auth_b, nvme_b, 93, int(p["constitutional_health"]), int(p["gpu_vram_used_mib"]))
-    cedar_ok = _LEAN_GUARD_LIB.uos_lean_cedar_authorize_mcp(0, 1, 93, 0, auth_b, 1)
+    cedar_ok = _LEAN_GUARD_LIB.uos_lean_cedar_authorize_mcp(auth_b, 0, nvme_b, 93)
     fcp_ok = _LEAN_GUARD_LIB.uos_lean_verify_fractal_context_chain(1023, 0, 9, 0)
     sim_rt_ok = _LEAN_GUARD_LIB.uos_lean_verify_simulator_realtime_parity(1, 1, cedar_ok, cedar_ok, 1, 1, auth_b, auth_b, fcp_ok, fcp_ok)
     return int(res) == 1 and int(cedar_ok) == 1 and int(fcp_ok) == 1 and int(sim_rt_ok) == 1
