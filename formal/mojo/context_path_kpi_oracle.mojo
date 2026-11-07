@@ -166,6 +166,36 @@ def main() raises:
     r.algebra(String("budget:predicate-rejects-p99-over-budget"),
               not span_within_budget(100, 1001, 1000, 16, 16, 9, 1, 0, 64))
 
+    # BOUNDARY ARMS, added 20261107-2147, finding F-W-19.
+    #
+    # The mirror mutation sweep killed every `and -> or` and `== -> !=` flip
+    # on these two mirrors but THREE `<= -> <` flips SURVIVED, at lines 72,
+    # 73 and 91. The reason is that every existing call passes strictly
+    # separated values -- ideal_span() is span_within_budget(100, 200, 1000,
+    # ...), and the negative arms above use 1001 against 1000 -- so no input
+    # ever sat ON the bound, and `<=` and `<` agree everywhere except there.
+    # Interior test points leave every comparison-operator flip alive. Same
+    # defect class as F-W-04, which was closed for classify_archetype and
+    # classify_regime earlier today and is now closed here.
+    #
+    # Each arm isolates ONE comparison by putting exactly one argument on the
+    # bound and keeping the other strictly inside it, so a survivor names the
+    # line it belongs to instead of being absorbed by a neighbour.
+    r.algebra(String("bound:observed-exactly-at-budget-is-within"),
+              span_within_budget(1000, 500, 1000, 16, 16, 9, 1, 0, 64))
+    r.algebra(String("bound:observed-one-over-budget-is-not"),
+              not span_within_budget(1001, 500, 1000, 16, 16, 9, 1, 0, 64))
+    r.algebra(String("bound:p99-exactly-at-budget-is-within"),
+              span_within_budget(100, 1000, 1000, 16, 16, 9, 1, 0, 64))
+    r.algebra(String("bound:monotonic-allows-observed-equal-to-p99"),
+              span_timings_monotonic(100, 100, 500))
+    r.algebra(String("bound:monotonic-allows-p99-equal-to-budget"),
+              span_timings_monotonic(100, 500, 500))
+    r.algebra(String("bound:monotonic-allows-all-three-equal"),
+              span_timings_monotonic(500, 500, 500))
+    r.algebra(String("bound:monotonic-rejects-observed-one-over-p99"),
+              not span_timings_monotonic(101, 100, 500))
+
     # F8, 20261106: the positive control is kept, as an OBSERVATION where it
     # belongs, and a real negative control is added. Routing a positive
     # control through `mutation_probe` spent the one slot reserved for the
@@ -214,8 +244,14 @@ def main() raises:
         "test -f " + jsonl + " && echo $(( ( $(date +%s)"
         + " - $(stat -c %Y " + jsonl + ") ) / 60 ))")
     r.observe_int(String("otel-jsonl-age-minutes"), jsonl_age)
-    r.world_or_blind(String("otel-jsonl-is-fresh"),
-        jsonl_age >= 0, jsonl_age <= MAX_ARTIFACT_AGE_MIN)
+    # FIXED 20261107-2140, finding F-W-14. This was
+    #   world_or_blind(name, jsonl_age >= 0, jsonl_age <= MAX)
+    # and `world_or_blind`'s first parameter is FIELD PRESENCE. A stale age is
+    # present, just large, so the arm reported WORLD_FAIL -- contradicting the
+    # F5 comment directly above, which says BLIND. `world_fresh` scores stale
+    # and unknowable ages as BLIND, which is what this file always claimed.
+    r.world_fresh(String("otel-jsonl-is-fresh"),
+                  jsonl_age, MAX_ARTIFACT_AGE_MIN)
 
     var existing = capture("wc -l < " + jsonl + " 2>/dev/null")
     r.observe(String("otel-jsonl-readback"), existing)
@@ -240,8 +276,14 @@ def main() raises:
         "test -f " + analytics + " && echo $(( ( $(date +%s)"
         + " - $(stat -c %Y " + analytics + ") ) / 60 ))")
     r.observe_int(String("analytics-age-minutes"), an_age)
-    r.world_or_blind(String("analytics-is-fresh"),
-        an_age >= 0, an_age <= MAX_ARTIFACT_AGE_MIN)
+    # FIXED 20261107-2140, finding F-W-14 -- same defect as otel-jsonl-is-fresh
+    # above. This arm is what actually produced the PASS -> WORLD_FAIL -> PASS
+    # oscillation: at 04:00Z the analytics file was 1600 minutes old against a
+    # 1440 bound, and a WORLD_FAIL was recorded for a file nobody had
+    # re-rendered. Stale is now BLIND, in this arm and in the arm that reads
+    # the file's contents.
+    r.world_fresh(String("analytics-is-fresh"),
+                  an_age, MAX_ARTIFACT_AGE_MIN)
     # F18, 20261106: this arm was named "...-declares-twelve-catalog-targets"
     # and tested `contains(an_body, "l5_mcp_catalog_observed")` -- the
     # presence of a KEY NAME, not the number twelve. Presence-as-evidence:
@@ -250,8 +292,21 @@ def main() raises:
     var catalog_observed = json_int(an_body, String("l5_mcp_catalog_observed"))
     r.observe_int(String("analytics-l5-mcp-catalog-observed"),
                   catalog_observed)
-    r.world_count(String("analytics-declares-twelve-catalog-targets"),
-                  catalog_observed, EXP_CATALOG_TARGETS)
+    # FIXED 20261107-2145, finding F-W-14. This was `world_count`, a HARD
+    # world arm, reading a value out of the analytics file whose freshness is
+    # bounded by a DIFFERENT arm (`analytics-is-fresh`, above). The age bound
+    # was honest and reported BLIND; this arm, independently, reported
+    # `world:...:got-N-want-12` from the very same stale bytes. The guard and
+    # the read it licenses were in separate arms, so the guard gated nothing.
+    #
+    # Consequence, measured on this host: PASS yesterday -> WORLD_FAIL at
+    # ~04:00Z today (age 1600 min against MAX_ARTIFACT_AGE_MIN 1440, crossing
+    # ~01:34Z) -> PASS again at 20:36Z (age 31 min; the renderer ran 20:05Z).
+    # No code changed on either side. A stale artifact is now BLIND here, in
+    # the same arm that reads it.
+    r.world_count_fresh(String("analytics-declares-twelve-catalog-targets"),
+                        catalog_observed, EXP_CATALOG_TARGETS,
+                        an_age, MAX_ARTIFACT_AGE_MIN)
 
     # The sa-plan store must NOT have been written by this plane. Report the
     # open question rather than performing or claiming the sync.

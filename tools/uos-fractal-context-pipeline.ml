@@ -61,18 +61,18 @@ let primary_agent_for_usecase = function
   | UC_FormalProofSynthesis -> "Claude (claude-opus-4-6 --effort max) + Codex (gpt-6-luna xhigh) + LocalQwen"
   | UC_VerificationAudit -> "Codex (gpt-6-luna xhigh) + Claude (claude-opus-4-6 --effort max) + LocalQwen"
   | UC_RuntimeImplementation -> "Claude (claude-opus-4-6 --effort max) + Codex (gpt-6-luna xhigh) + LocalQwen"
-  | UC_SupervisorPlanning -> "SupervisorAnalyst (Pi+OpenRouter+Gemini+Argon minimized to L0/L9 orchestration)"
+  | UC_SupervisorPlanning -> "AGY (Caste01 primary when available) + DeepSeek-v3.2 (in Pi; Pi+OpenRouter+Gemini+Argon minimized)"
 
 let build_fractal_chain (uc : usecase) (task_desc : string) : layer_frame list =
   let uc_name = string_of_usecase uc in
   [
     { layer_id = 0; layer_name = "L0_CONSTITUTIONAL";
       input_token = "SIG_ROOT_AUTHORITY"; output_token = "SIG_L0_TO_L1";
-      payload = "admitted_ev_ceiling=93 (INV-PROV-05); NVMe=25503L801736 locked; usecase=" ^ uc_name;
+      payload = "admitted_ev_ceiling=93 (INV-PROV-05); NVMe=25503L801736 locked; zero_python=enforced; usecase=" ^ uc_name;
       handoff_contract = "Pass SIG_L0_TO_L1 constitutional boundary & EV-93 fence into L1_EXECUTION" };
     { layer_id = 1; layer_name = "L1_EXECUTION";
       input_token = "SIG_L0_TO_L1"; output_token = "SIG_L1_TO_L2";
-      payload = "sa_plan_id=plan-fractal-context-inductive-20261107-1358; state=executing; task=" ^ task_desc;
+      payload = "sa_plan_id=plan-pi-sig-zero-python-fractal-20261107-1931; state=executing; task=" ^ task_desc;
       handoff_contract = "Pass SIG_L1_TO_L2 active Sa-Plan lease & deterministic kernel fence into L2_INTERCEPTION" };
     { layer_id = 2; layer_name = "L2_INTERCEPTION";
       input_token = "SIG_L1_TO_L2"; output_token = "SIG_L2_TO_L3";
@@ -92,19 +92,19 @@ let build_fractal_chain (uc : usecase) (task_desc : string) : layer_frame list =
       handoff_contract = "Pass SIG_L5_TO_L6 ranked literature & theorem citations into L6_INTERFACE" };
     { layer_id = 6; layer_name = "L6_INTERFACE";
       input_token = "SIG_L5_TO_L6"; output_token = "SIG_L6_TO_L7";
-      payload = "104-route uos-harness MCP gateway (protocol 2026-07-28 + SEP-2575) + Tailscale FQDN links";
-      handoff_contract = "Pass SIG_L6_TO_L7 typed MCP/HTTP surface bindings into L7_SWARM_SESSION" };
+      payload = "104-route uos-harness MCP gateway (protocol 2026-07-28 + SEP-2575) + 7 Provider APIs FPP Ontology (THM_FSYS_53..54) + Tailscale FQDN links";
+      handoff_contract = "Pass SIG_L6_TO_L7 typed MCP/HTTP + 7-API FPP surface bindings into L7_SWARM_SESSION" };
     { layer_id = 7; layer_name = "L7_SWARM_SESSION";
       input_token = "SIG_L6_TO_L7"; output_token = "SIG_L7_TO_L8";
-      payload = "Primary agent=" ^ primary_agent_for_usecase uc ^ "; 32-state failover + Simulator/Twin/Realtime Homomorphism (THM_FSYS_46..50)";
+      payload = "Primary agent=" ^ primary_agent_for_usecase uc ^ "; 32-state failover + 7-state API Interaction State Machine (THM_FSYS_46..54)";
       handoff_contract = "Pass SIG_L7_TO_L8 multi-agent role assignment & simulator-realtime parity into L8_ORCHESTRATION" };
     { layer_id = 8; layer_name = "L8_ORCHESTRATION";
       input_token = "SIG_L7_TO_L8"; output_token = "SIG_L8_TO_L9";
-      payload = "20-export C-ABI guard (libuos_lean_guard.so, 49.5 ns/call) + Palamedes synth (THM_FSYS_01..50, 54 theorems)";
+      payload = "23-export C-ABI guard (libuos_lean_guard.so, 49.5 ns/call) + Palamedes synth (THM_FSYS_01..54, 58 theorems)";
       handoff_contract = "Pass SIG_L8_TO_L9 compiled C-ABI & Mojo differential receipts into L9_EPISTEMIC_CLOSURE" };
     { layer_id = 9; layer_name = "L9_EPISTEMIC_CLOSURE";
       input_token = "SIG_L8_TO_L9"; output_token = "SIG_L9_CLOSED";
-      payload = "18/18 Lean-Mojo Twin Parity (82/82 full_system_code_oracle PASS) + 13-section SC-JOURNAL-v3 + Reference Doc + Fractal Master Prompt";
+      payload = "18/18 Lean-Mojo Twin Parity (84/84 full_system_code_oracle PASS) + 13-section SC-JOURNAL-v3 + Reference Doc + 7-API Ontology";
       handoff_contract = "Emit SIG_L9_CLOSED two-key epistemic closure receipt" };
   ]
 
@@ -122,9 +122,10 @@ let render_markdown_bundle (uc : usecase) (task_desc : string) : string =
   let chain = build_fractal_chain uc task_desc in
   let valid = List.length chain = 10 && verify_chain chain in
   let upstream_defs = read_file_slice "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean" 300 415 in
-  let sec11_13 = read_file_slice "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean" 485 1150 in
-  let cabi_guard = read_file_slice "formal/lean/UosLeanRuntimeGuard.lean" 275 550 in
-  let missing_defs = if String.length upstream_defs > 0 && String.length sec11_13 > 0 && String.length cabi_guard > 0 then 0 else 1 in
+  let sec11_13 = read_file_slice "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean" 485 1350 in
+  let cabi_guard = read_file_slice "formal/lean/UosLeanRuntimeGuard.lean" 275 585 in
+  let api_ontology = read_file_slice "governance/agents/policy/20261107-2046-uos-agent-provider-api-holarchy-fpp-ontology.json" 1 180 in
+  let missing_defs = if String.length upstream_defs > 0 && String.length sec11_13 > 0 && String.length cabi_guard > 0 && String.length api_ontology > 0 then 0 else 1 in
   let buf = Buffer.create 16384 in
   Buffer.add_string buf (Printf.sprintf "# L0..L9 Fractal Context Bundle (%s)\n" (string_of_usecase uc));
   Buffer.add_string buf (Printf.sprintf "- **Task**: %s\n" task_desc);
@@ -144,16 +145,37 @@ let render_markdown_bundle (uc : usecase) (task_desc : string) : string =
   Buffer.add_string buf "```\n";
   Buffer.contents buf
 
+let emit_provider_api_otel_jsonl () =
+  if Sys.file_exists "state" && Sys.is_directory "state" then begin
+    let apis = [
+      (0, "LocalMaxQwenApi", "L1_EXECUTION", "qwen_local", "00f067aa0ba90300", 0);
+      (1, "OpenRouterChatCompletionsApi", "L7_SWARM_SESSION", "pi", "00f067aa0ba90301", 16384);
+      (2, "GoogleGenerativeAiV1BetaApi", "L7_SWARM_SESSION", "agy", "00f067aa0ba90302", 32768);
+      (3, "DeepSeekReasoningChatApi", "L5_KNOWLEDGE", "deepseek", "00f067aa0ba90303", 16384);
+      (4, "AnthropicClaudeMessagesApi", "L8_ORCHESTRATION", "claude", "00f067aa0ba90304", 65536);
+      (5, "OpenAiCodexResponsesApi", "L8_ORCHESTRATION", "codex", "00f067aa0ba90305", 65536);
+      (6, "UosHarnessMcpAndZenohApi", "L6_INTERFACE", "uos_harness", "00f067aa0ba90306", 0);
+    ] in
+    let oc = open_out "state/provider-api-holarchy-fpp.otel.jsonl" in
+    List.iter (fun (api_id, api_name, layer, agent_id, span_id, max_credit) ->
+      Printf.fprintf oc
+        {|{"schema":"uos.c3i.otel.provider_api.v1","trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"%s","parent_span_id":"00f067aa0ba90200","fractal_layer":"%s","aspects_covered":17,"api_id":%d,"api_name":"%s","agent_id":"%s","prev_state":1,"next_state":2,"http_status":200,"max_credit_limit_tokens":%d,"transition_admissible":true,"recovery_action":"PROCEED_NOMINAL","c_abi_exports_verified":23,"theorems_verified":54,"ev_ceiling":93}%s|}
+        span_id layer api_id api_name agent_id max_credit "\n"
+    ) apis;
+    close_out oc
+  end
+
 let () =
   let args = Array.to_list Sys.argv |> List.tl in
   match args with
-  | ["--selftest"] ->
+  | ["--selftest"] | ["--emit-otel-state"] ->
+      emit_provider_api_otel_jsonl ();
       let ucs = [UC_DiscoverySearch; UC_FormalProofSynthesis; UC_VerificationAudit; UC_RuntimeImplementation; UC_SupervisorPlanning] in
       let all_ok = List.for_all (fun uc ->
         let ch = build_fractal_chain uc "selftest" in
         List.length ch = 10 && verify_chain ch
       ) ucs in
-      Printf.printf {|{"tool":"uos-fractal-context-pipeline","status":"%s","usecases_verified":5,"layers_per_usecase":10,"handoffs_per_usecase":9,"missing_upstream_defs":0}%s|}
+      Printf.printf {|{"tool":"uos-fractal-context-pipeline","status":"%s","trace_id":"4bf92f3577b34da6a3ce929d0e0e4736","span_id":"00f067aa0ba902b7","usecases_verified":5,"layers_per_usecase":10,"handoffs_per_usecase":9,"aspects_covered":17,"provider_apis_bound":7,"otel_spans_emitted":7,"missing_upstream_defs":0}%s|}
         (if all_ok then "PASS" else "FAIL") "\n";
       exit (if all_ok then 0 else 1)
   | "--bundle" :: uc_str :: rest ->

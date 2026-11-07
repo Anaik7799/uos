@@ -618,4 +618,310 @@ def gemma_transformer_layer(
         
     return x_final^
 
+# ------------------------------------------------------------------------------
+# 15. High-Utility Model 10: GGUF K-Quant Super-Block Dequantization (Q4_K & Q6_K)
+#     Brings sm_75 / Turing compatibility to pure Mojo/MAX kernel pipelines.
+# ------------------------------------------------------------------------------
+
+def simd_dequantize_q4_k_block(
+    d: Float32,
+    dmin: Float32,
+    scales: List[UInt8],
+    quants: List[UInt8]
+) -> List[Float32]:
+    """
+    Dequantizes one Q4_K super-block of 256 weights.
+    d: super-block scale factor (float16/float32)
+    dmin: super-block minimum scale factor (float16/float32)
+    scales: 12 bytes containing packed 6-bit scales and 6-bit mins for 8 sub-blocks of 32 weights.
+    quants: 128 bytes containing 256 4-bit quantized values (packed 2 per byte).
+    """
+    var out = List[Float32]()
+    var sc = List[Float32]()
+    var m = List[Float32]()
+
+    # Extract 6-bit scales and mins for the 8 sub-blocks (32 weights each = 256 weights)
+    # GGUF Q4_K layout packs scales in the first 12 bytes:
+    # 8 scales (6 bits) and 8 minimums (6 bits).
+    for j in range(8):
+        var s_val: Float32 = 1.0
+        var m_val: Float32 = 0.0
+        if len(scales) >= 12:
+            if j < 4:
+                s_val = Float32(scales[j] & 63)
+                m_val = Float32(scales[j + 4] & 63)
+            else:
+                var s_high = (scales[j + 4] & 0xF0) >> 4
+                s_val = Float32((scales[j - 4] >> 6) | (s_high << 2))
+                var m_high = scales[j + 4] & 0x0F
+                m_val = Float32((scales[j] >> 6) | (m_high << 2))
+        sc.append(d * s_val)
+        m.append(dmin * m_val)
+
+    # Dequantize 8 sub-blocks of 32 weights (16 bytes per sub-block = 128 bytes total)
+    for sb in range(8):
+        var sub_scale = sc[sb]
+        var sub_min = m[sb]
+        var byte_offset = sb * 16
+        for b in range(16):
+            if byte_offset + b < len(quants):
+                var byte_val = quants[byte_offset + b]
+                var q0 = Float32(byte_val & 0x0F)
+                var q1 = Float32((byte_val >> 4) & 0x0F)
+                out.append(sub_scale * q0 - sub_min)
+                out.append(sub_scale * q1 - sub_min)
+            else:
+                out.append(0.0)
+                out.append(0.0)
+
+    return out^
+
+def simd_dequantize_q6_k_block(
+    d: Float32,
+    scales: List[Int8],
+    ql: List[UInt8],
+    qh: List[UInt8]
+) -> List[Float32]:
+    """
+    Dequantizes one Q6_K super-block of 256 weights.
+    d: super-block scale factor (float16/float32)
+    scales: 16 int8 sub-block scale values (16 sub-blocks of 16 weights = 256 weights)
+    ql: 128 bytes containing low 4 bits of the 256 quants
+    qh: 64 bytes containing high 2 bits of the 256 quants
+    """
+    var out = List[Float32]()
+    
+    # Each sub-block has 16 weights; 16 sub-blocks = 256 weights
+    for sb in range(16):
+        var sc: Float32 = 1.0
+        if sb < len(scales):
+            sc = d * Float32(scales[sb])
+            
+        var ql_offset = sb * 8 # 8 bytes = 16 4-bit nibbles
+        var qh_offset = sb * 4 # 4 bytes = 16 2-bit values
+        
+        for i in range(16):
+            var low_byte_idx = ql_offset + (i // 2)
+            var low_nibble: UInt8 = 0
+            if low_byte_idx < len(ql):
+                var raw_ql = ql[low_byte_idx]
+                if (i % 2) == 0:
+                    low_nibble = raw_ql & 0x0F
+                else:
+                    low_nibble = (raw_ql >> 4) & 0x0F
+                    
+            var high_byte_idx = qh_offset + (i // 4)
+            var high_2bits: UInt8 = 0
+            if high_byte_idx < len(qh):
+                var raw_qh = qh[high_byte_idx]
+                var shift = UInt8((i % 4) * 2)
+                high_2bits = (raw_qh >> shift) & 0x03
+                
+            var q6 = Int(low_nibble | (high_2bits << 4)) - 32
+            out.append(sc * Float32(q6))
+            
+    return out^
+
+def qwen2_transformer_layer(
+    x: List[Float32],
+    w_q: List[List[Float32]],
+    w_k: List[List[Float32]],
+    w_v: List[List[Float32]],
+    w_o: List[List[Float32]],
+    gamma_attn: List[Float32],
+    w_gate: List[List[Float32]],
+    w_up: List[List[Float32]],
+    w_down: List[List[Float32]],
+    gamma_ffn: List[Float32],
+    pos: Int,
+    d_k: Float32
+) -> List[Float32]:
+    """
+    Executes a complete single Qwen2 / Qwen2.5 transformer block:
+    RMSNorm -> Attention(Q, K, V with RoPE) -> Output Proj -> Residual Add
+    -> RMSNorm -> SwiGLU MLP(Gate, Up, Down) -> Residual Add.
+    Uses standard Qwen2 RMSNorm epsilon (1e-6) without post-norm scaling.
+    """
+    var dim = len(x)
+    if dim == 0:
+        return List[Float32]()
+
+    # 1. Pre-attention RMSNorm
+    var x_norm_attn = rmsnorm_tensor(x, gamma_attn, 0.000001)
+
+    # 2. Linear projections
+    var q = matvec_mul(w_q, x_norm_attn)
+    var k = matvec_mul(w_k, x_norm_attn)
+    var v = matvec_mul(w_v, x_norm_attn)
+
+    # 3. Rotary Position Embedding (RoPE)
+    var q_rope = simd_rotary_position_embedding(q, 10000.0, pos)
+    var k_rope = simd_rotary_position_embedding(k, 10000.0, pos)
+
+    # 4. Scaled Dot-Product Attention
+    var keys = List[List[Float32]]()
+    keys.append(k_rope.copy())
+    var values = List[List[Float32]]()
+    values.append(v.copy())
+    var attn_out = simd_scaled_dot_product_attention(q_rope, keys, values, d_k)
+
+    # 5. Attention Output Projection and First Residual Add
+    var attn_proj = matvec_mul(w_o, attn_out)
+    var x_mid = List[Float32]()
+    for i in range(dim):
+        var p: Float32 = 0.0
+        if i < len(attn_proj):
+            p = attn_proj[i]
+        x_mid.append(x[i] + p)
+
+    # 6. Pre-FFN RMSNorm
+    var x_norm_ffn = rmsnorm_tensor(x_mid, gamma_ffn, 0.000001)
+
+    # 7. SwiGLU Feed-Forward Network and Second Residual Add
+    var ffn_out = gemma_swiglu_mlp(x_norm_ffn, w_gate, w_up, w_down)
+    var x_final = List[Float32]()
+    for i in range(dim):
+        var f: Float32 = 0.0
+        if i < len(ffn_out):
+            f = ffn_out[i]
+        x_final.append(x_mid[i] + f)
+
+    return x_final^
+
+# ------------------------------------------------------------------------------
+# 16. High-Utility Model 11: Turing sm_75 Tensor Core m16n8k8 Tiled MatVec
+#     & Warp Butterfly Reduction (`task-0`: Razr15 CUDA High-Throughput Calibration)
+# ------------------------------------------------------------------------------
+
+def turing_sm75_m16n8k8_matvec_tile(
+    weights_m16k8: List[List[Float32]],
+    activation_k8: List[Float32]
+) -> List[Float32]:
+    """
+    Executes a Turing sm_75 Tensor Core m16n8k8 tile reduction for matrix-vector
+    decode steps, accumulating 8-element K-fragments across 16 output rows with
+    deterministic butterfly tree reduction (modeling shfl.sync.bfly.b32).
+    """
+    var out = List[Float32]()
+    var rows = len(weights_m16k8)
+    for r in range(rows):
+        var row = weights_m16k8[r].copy()
+        var n = len(row)
+        if len(activation_k8) < n:
+            n = len(activation_k8)
+        # Partition into 8-wide Tensor Core K-tiles with butterfly reduction
+        var acc: Float32 = 0.0
+        var k = 0
+        while k + 8 <= n:
+            var l0 = row[k + 0] * activation_k8[k + 0] + row[k + 4] * activation_k8[k + 4]
+            var l1 = row[k + 1] * activation_k8[k + 1] + row[k + 5] * activation_k8[k + 5]
+            var l2 = row[k + 2] * activation_k8[k + 2] + row[k + 6] * activation_k8[k + 6]
+            var l3 = row[k + 3] * activation_k8[k + 3] + row[k + 7] * activation_k8[k + 7]
+            var s0 = l0 + l2
+            var s1 = l1 + l3
+            acc += s0 + s1
+            k += 8
+        while k < n:
+            acc += row[k] * activation_k8[k]
+            k += 1
+        out.append(acc)
+    return out^
+
+# ------------------------------------------------------------------------------
+# 17. High-Utility Model 12: Speculative Draft Model Decoding Pipeline
+#     (`task-1`: Speculative draft model decoding pipeline)
+# ------------------------------------------------------------------------------
+
+def speculative_draft_verify_step(
+    draft_tokens: List[Int],
+    draft_probs: List[Float32],
+    target_probs: List[Float32],
+    uniform_samples: List[Float32],
+    bonus_token: Int
+) -> List[Int]:
+    """
+    Executes lossless speculative decoding verification (Leviathan et al.):
+    For each draft token i in 0..gamma-1:
+      - Accepts token draft_tokens[i] if uniform_samples[i] <= min(1.0, target_probs[i] / draft_probs[i]).
+      - On first rejection at position i, halts draft acceptance and emits the resampled
+        fallback token (bonus_token) at position i, guaranteeing >= 1 token progress per step.
+      - If all gamma draft tokens are accepted, appends bonus_token for gamma + 1 tokens emitted.
+    """
+    var accepted = List[Int]()
+    var gamma = len(draft_tokens)
+    if len(draft_probs) < gamma:
+        gamma = len(draft_probs)
+    if len(target_probs) < gamma:
+        gamma = len(target_probs)
+    if len(uniform_samples) < gamma:
+        gamma = len(uniform_samples)
+
+    for i in range(gamma):
+        var q = draft_probs[i]
+        var p = target_probs[i]
+        var u = uniform_samples[i]
+        var ratio: Float32 = 1.0
+        if q > 1e-7:
+            ratio = p / q
+            if ratio > 1.0:
+                ratio = 1.0
+        elif p <= 0.0:
+            ratio = 0.0
+        if u <= ratio:
+            accepted.append(draft_tokens[i])
+        else:
+            accepted.append(bonus_token)
+            return accepted^
+
+    accepted.append(bonus_token)
+    return accepted^
+
+# ------------------------------------------------------------------------------
+# 18. High-Utility Model 13: Pure Mojo Grammar-Guided Constrained Decoding
+#     (`task-2`: Pure Mojo grammar-guided constrained decoding)
+# ------------------------------------------------------------------------------
+
+def grammar_constrained_logit_mask(
+    logits: List[Float32],
+    allowed_token_mask: List[Bool]
+) -> List[Float32]:
+    """
+    Applies a deterministic pushdown-automaton / EBNF grammar token mask to raw
+    vocabulary logits before softmax/argmax sampling:
+      - If allowed_token_mask[i] == True, preserves logits[i].
+      - If allowed_token_mask[i] == False, clamps logits[i] to -1.0e9 (-infinity),
+        ensuring zero probability mass on syntactically invalid tokens.
+    """
+    var masked = List[Float32]()
+    var n = len(logits)
+    for i in range(n):
+        var allowed = False
+        if i < len(allowed_token_mask):
+            allowed = allowed_token_mask[i]
+        if allowed:
+            masked.append(logits[i])
+        else:
+            masked.append(-1000000000.0)
+    return masked^
+
+def grammar_constrained_greedy_select(
+    logits: List[Float32],
+    allowed_token_mask: List[Bool]
+) -> Int:
+    """
+    Selects the highest-logit token ID permitted by the active grammar state.
+    Returns -1 if the vocabulary is empty or no token is permitted by the mask.
+    """
+    var masked = grammar_constrained_logit_mask(logits, allowed_token_mask)
+    var n = len(masked)
+    if n == 0:
+        return -1
+    var best_idx = -1
+    var best_val: Float32 = -1000000000.0
+    for i in range(n):
+        if i < len(allowed_token_mask) and allowed_token_mask[i]:
+            if best_idx == -1 or masked[i] > best_val:
+                best_val = masked[i]
+                best_idx = i
+    return best_idx
 

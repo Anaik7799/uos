@@ -60,6 +60,15 @@ def verify_lean_c_abi_14_exports() -> Bool:
         var cedar_symcc = handle.get_function[UInt8]("uos_lean_cedar_symcc_verify")
         var cedar_dag = handle.get_function[UInt8]("uos_lean_cedar_dag_enforcer_check")
         var palamedes_gen = handle.get_function[UInt8]("uos_lean_palamedes_synthesize_gen")
+        var verify_fcp = handle.get_function[UInt8]("uos_lean_verify_fractal_context_chain")
+        var verify_sim_rt = handle.get_function[UInt8]("uos_lean_verify_simulator_realtime_parity")
+        var verify_prov = handle.get_function[UInt8]("uos_lean_verify_tool_call_provenance")
+        var should_fold_v2 = handle.get_function[UInt8]("uos_lean_should_fold_context_v2")
+        var verify_api_tr = handle.get_function[UInt8]("uos_lean_verify_provider_api_transition")
+        var resolve_api_rec = handle.get_function[UInt8]("uos_lean_resolve_provider_api_recovery")
+        var verify_svc_mesh = handle.get_function[UInt8]("uos_lean_verify_service_mesh_binding")
+        var verify_sys_dir = handle.get_function[UInt8]("uos_lean_verify_system_directory_object")
+        var verify_sdlc_sre = handle.get_function[UInt8]("uos_lean_verify_sdlc_sre_feature_aspect_gate")
 
         var ok1 = check_intent(UInt8(1), UInt8(1), UInt32(93), UInt32(95), UInt32(5446), UInt32(8192), UInt8(1))
         var veto94 = check_intent(UInt8(1), UInt8(1), UInt32(94), UInt32(95), UInt32(5446), UInt32(8192), UInt8(1))
@@ -84,6 +93,23 @@ def verify_lean_c_abi_14_exports() -> Bool:
         var dag_ok = cedar_dag(UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(1))
         var dag_rep = cedar_dag(UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(0), UInt8(0), UInt8(1))
         var pal_ok = palamedes_gen(UInt8(0), UInt8(1), UInt8(1))
+        var fcp1 = verify_fcp(UInt32(1023), UInt32(0), UInt8(9), UInt32(0))
+        var sim1 = verify_sim_rt(UInt8(1), UInt8(1), UInt8(1), UInt8(1), UInt8(1), UInt8(1), UInt8(1), UInt8(1), UInt8(1), UInt8(1))
+        var prov0 = verify_prov(UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(1))
+        var prov1 = verify_prov(UInt8(1), UInt8(0), UInt8(1), UInt8(1), UInt8(1))
+        var fold_v2_ok = should_fold_v2(UInt32(5000), UInt32(4096), UInt8(1))
+        var fold_v2_veto = should_fold_v2(UInt32(5000), UInt32(4096), UInt8(0))
+        var api_tr_ok = verify_api_tr(UInt8(1), UInt8(2), UInt8(1), UInt8(1), UInt8(1))
+        var api_tr_veto = verify_api_tr(UInt8(0), UInt8(2), UInt8(1), UInt8(1), UInt8(1))
+        var api_rec_clamp = resolve_api_rec(UInt8(2), UInt8(1), UInt8(0), UInt8(1), UInt8(1))
+        var api_rec_google = resolve_api_rec(UInt8(2), UInt8(0), UInt8(0), UInt8(1), UInt8(1))
+        var api_rec_qwen = resolve_api_rec(UInt8(2), UInt8(0), UInt8(0), UInt8(0), UInt8(1))
+        var svc_mesh_ok = verify_svc_mesh(UInt8(0), UInt8(1), UInt8(1), UInt8(1), UInt8(1))
+        var svc_mesh_veto = verify_svc_mesh(UInt8(12), UInt8(1), UInt8(1), UInt8(1), UInt8(1))
+        var sys_dir_ok = verify_sys_dir(UInt8(0), UInt8(0), UInt8(1), UInt8(1), UInt8(1))
+        var sys_dir_veto = verify_sys_dir(UInt8(52), UInt8(4), UInt8(1), UInt8(1), UInt8(1))
+        var sdlc_sre_ok = verify_sdlc_sre(UInt8(4), UInt8(8), UInt8(1), UInt8(1), UInt8(1), UInt8(1))
+        var sdlc_sre_veto = verify_sdlc_sre(UInt8(6), UInt8(0), UInt8(1), UInt8(1), UInt8(1), UInt8(1))
 
         return (
             ok1 == 1 and veto94 == 0 and tier0 == 0 and stage14 == 1
@@ -92,6 +118,13 @@ def verify_lean_c_abi_14_exports() -> Bool:
             and otel1 == 1 and sla1 == 1 and fail_qwen == 3 and fsys1 == 1
             and c_allow == 1 and c_forbid == 0 and c_defdeny == 0 and sym_disj == 9
             and dag_ok == 3 and dag_rep == 2 and pal_ok == 7
+            and fcp1 == 1 and sim1 == 1 and prov0 == 0 and prov1 == 1
+            and fold_v2_ok == 1 and fold_v2_veto == 0
+            and api_tr_ok == 1 and api_tr_veto == 0
+            and api_rec_clamp == 1 and api_rec_google == 4 and api_rec_qwen == 5
+            and svc_mesh_ok == 1 and svc_mesh_veto == 0
+            and sys_dir_ok == 1 and sys_dir_veto == 0
+            and sdlc_sre_ok == 1 and sdlc_sre_veto == 0
         )
     except:
         return False
@@ -237,6 +270,158 @@ def verify_lean_mojo_simulator_realtime_parity() -> Int:
             var expected: UInt8 = 1 if (rt_ag == 1 and rt_cd == 1 and rt_dg == 1 and rt_ls == 1 and ctx_ok == 1) else 0
             if c_res == expected:
                 matched += 1
+        return matched
+    except:
+        return -1
+
+def verify_lean_mojo_tool_call_provenance_parity() -> Int:
+    try:
+        var handle = OwnedDLHandle(LEAN_GUARD_SO)
+        var verify_prov = handle.get_function[UInt8]("uos_lean_verify_tool_call_provenance")
+        var matched: Int = 0
+        for mask in range(32):
+            var has_tc = UInt8((mask >> 4) & 1)
+            var same_mod = UInt8((mask >> 3) & 1)
+            var has_sig = UInt8((mask >> 2) & 1)
+            var has_waiver = UInt8((mask >> 1) & 1)
+            var req_sig = UInt8(mask & 1)
+            var c_res = verify_prov(has_tc, same_mod, has_sig, has_waiver, req_sig)
+            var expected: UInt8 = 1 if (has_tc == 0 or req_sig == 0 or (same_mod == 1 and has_sig == 1) or has_waiver == 1) else 0
+            if c_res == expected:
+                matched += 1
+        return matched
+    except:
+        return -1
+
+def verify_lean_mojo_provider_api_transition_parity() -> Int:
+    try:
+        var handle = OwnedDLHandle(LEAN_GUARD_SO)
+        var verify_api = handle.get_function[UInt8]("uos_lean_verify_provider_api_transition")
+        var matched: Int = 0
+        for prev_s in range(7):
+            for next_s in range(7):
+                for mask in range(8):
+                    var req_alt = UInt8((mask >> 2) & 1)
+                    var prov_ok = UInt8((mask >> 1) & 1)
+                    var cap_ok = UInt8(mask & 1)
+                    var c_res = verify_api(UInt8(prev_s), UInt8(next_s), req_alt, prov_ok, cap_ok)
+                    var expected: UInt8
+                    if cap_ok == 0:
+                        expected = 1 if next_s == 6 else 0
+                    elif next_s == 2:
+                        expected = 1 if (prov_ok == 1 and (req_alt == 0 or prev_s == 1 or prev_s == 3)) else 0
+                    elif next_s == 3:
+                        expected = 1 if prev_s == 2 else 0
+                    elif next_s == 5:
+                        expected = 1 if (prov_ok == 1 and (prev_s == 3 or prev_s == 1)) else 0
+                    else:
+                        expected = 1
+                    if c_res == expected:
+                        matched += 1
+        return matched
+    except:
+        return -1
+
+def verify_lean_mojo_provider_api_recovery_parity() -> Int:
+    try:
+        var handle = OwnedDLHandle(LEAN_GUARD_SO)
+        var resolve_rec = handle.get_function[UInt8]("uos_lean_resolve_provider_api_recovery")
+        var matched: Int = 0
+        for st_cls in range(4):
+            for mask in range(16):
+                var aff_ok = UInt8((mask >> 3) & 1)
+                var alt_vio = UInt8((mask >> 2) & 1)
+                var g_ok = UInt8((mask >> 1) & 1)
+                var q_ok = UInt8(mask & 1)
+                var c_res = resolve_rec(UInt8(st_cls), aff_ok, alt_vio, g_ok, q_ok)
+                var expected: UInt8
+                if st_cls == 0:
+                    expected = 0
+                elif st_cls == 1:
+                    expected = 3 if alt_vio == 1 else 2
+                elif st_cls == 2 and aff_ok == 1:
+                    expected = 1
+                elif g_ok == 1:
+                    expected = 4
+                elif q_ok == 1:
+                    expected = 5
+                else:
+                    expected = 6
+                if c_res == expected:
+                    matched += 1
+        return matched
+    except:
+        return -1
+
+def verify_lean_mojo_service_mesh_binding_parity() -> Int:
+    try:
+        var handle = OwnedDLHandle(LEAN_GUARD_SO)
+        var verify_svc = handle.get_function[UInt8]("uos_lean_verify_service_mesh_binding")
+        var matched: Int = 0
+        for svc_id in range(12):
+            for mask in range(16):
+                var fpp_ok = UInt8((mask >> 3) & 1)
+                var zenoh_ok = UInt8((mask >> 2) & 1)
+                var mcp_ok = UInt8((mask >> 1) & 1)
+                var cabi_ok = UInt8(mask & 1)
+                var c_res = verify_svc(UInt8(svc_id), fpp_ok, zenoh_ok, mcp_ok, cabi_ok)
+                var expected: UInt8 = 1 if (svc_id < 12 and fpp_ok == 1 and zenoh_ok == 1 and mcp_ok == 1 and cabi_ok == 1) else 0
+                if c_res == expected:
+                    matched += 1
+        return matched
+    except:
+        return -1
+
+def expected_dir_kind_mojo(dir_id: Int) -> UInt8:
+    if dir_id < 12:
+        return 0
+    elif dir_id < 19:
+        return 1
+    elif dir_id < 25:
+        return 2
+    elif dir_id < 35:
+        return 3
+    elif dir_id < 52:
+        return 4
+    else:
+        return 255
+
+def verify_lean_mojo_system_directory_parity() -> Int:
+    try:
+        var handle = OwnedDLHandle(LEAN_GUARD_SO)
+        var verify_dir = handle.get_function[UInt8]("uos_lean_verify_system_directory_object")
+        var matched: Int = 0
+        for dir_id in range(52):
+            var exp_kind = expected_dir_kind_mojo(dir_id)
+            for kind_id in range(5):
+                for mask in range(8):
+                    var hol_ok = UInt8((mask >> 2) & 1)
+                    var fzmo_ok = UInt8((mask >> 1) & 1)
+                    var asp_ok = UInt8(mask & 1)
+                    var c_res = verify_dir(UInt8(dir_id), UInt8(kind_id), hol_ok, fzmo_ok, asp_ok)
+                    var expected: UInt8 = 1 if (UInt8(kind_id) == exp_kind and hol_ok == 1 and fzmo_ok == 1 and asp_ok == 1) else 0
+                    if c_res == expected:
+                        matched += 1
+        return matched
+    except:
+        return -1
+
+def verify_lean_mojo_sdlc_sre_17_aspect_parity() -> Int:
+    try:
+        var handle = OwnedDLHandle(LEAN_GUARD_SO)
+        var verify_gate = handle.get_function[UInt8]("uos_lean_verify_sdlc_sre_feature_aspect_gate")
+        var matched: Int = 0
+        for feat_id in range(6):
+            for asp_id in range(17):
+                for mask in range(16):
+                    var sdlc_ok = UInt8((mask >> 3) & 1)
+                    var sre_ok = UInt8((mask >> 2) & 1)
+                    var claude_ok = UInt8((mask >> 1) & 1)
+                    var codex_ok = UInt8(mask & 1)
+                    var c_res = verify_gate(UInt8(feat_id), UInt8(asp_id), sdlc_ok, sre_ok, claude_ok, codex_ok)
+                    var expected: UInt8 = 1 if (feat_id < 6 and asp_id < 17 and sdlc_ok == 1 and sre_ok == 1 and claude_ok == 1 and codex_ok == 1) else 0
+                    if c_res == expected:
+                        matched += 1
         return matched
     except:
         return -1

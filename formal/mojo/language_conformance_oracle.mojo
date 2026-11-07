@@ -168,6 +168,18 @@ def main() raises:
     r.world_count(String("no-unsanctioned-python-inside-a-gate"),
                   py_gate_unsanctioned, 0)
 
+    # ---- ZERO-PYTHON IN AGENT FAILOVER & MOJO TOOLS (THM_FSYS_52) -------
+    var py_in_failover = count(
+        "grep -i 'python' tools/uos-agent-failover.ml 2>/dev/null | wc -l")
+    var py_in_mojo_tools = count(
+        "grep -l 'std.python' tools/*.mojo 2>/dev/null | wc -l")
+    r.observe_int(String("python-in-agent-failover-controller"), py_in_failover)
+    r.observe_int(String("std-python-in-mojo-tools"), py_in_mojo_tools)
+    r.world_count(String("no-python-in-agent-failover-controller"),
+                  py_in_failover, 0)
+    r.world_count(String("no-std-python-in-mojo-tools"),
+                  py_in_mojo_tools, 0)
+
     # ---- FILE PRESENCE AS EVIDENCE -- not a language defect -------------
     # Gates whose verdict is satisfied by a .py EXISTING. Converting those
     # files to OCaml would preserve the defect, so this arm is kept separate

@@ -1,5 +1,5 @@
 from std.sys import argv, exit
-from std.python import Python
+from std.ffi import external_call, c_int
 
 def main() raises:
     var args = argv()
@@ -19,13 +19,36 @@ def main() raises:
     if not own_path.endswith("evolution_cycles.mojo"):
         exit(2)
     var directory = own_path.replace("evolution_cycles.mojo", "")
-    var command: List[String] = ["/home/an/dev/ver/zigvm/_opam/bin/ocaml", "-I", directory, directory + "evolution_cycles.ml"]
-    for i in range(1, len(args)):
-        command.append(String(args[i]))
-    var builtins = Python.import_module("builtins")
-    var os = Python.import_module("os")
-    var forwarded = builtins.list()
-    for arg in command:
-        forwarded.append(arg)
-    os.execv(command[0], forwarded)
+    var ocaml = String("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml")
+    var flag_i = String("-I")
+    var backend = directory + "evolution_cycles.ml"
+    var a1 = String(args[1]) if len(args) > 1 else String("")
+    var a2 = String(args[2]) if len(args) > 2 else String("")
+    var a3 = String(args[3]) if len(args) > 3 else String("")
+    var ocaml_c = ocaml.as_c_string_slice()
+    var flag_i_c = flag_i.as_c_string_slice()
+    var dir_c = directory.as_c_string_slice()
+    var backend_c = backend.as_c_string_slice()
+    var a1_c = a1.as_c_string_slice()
+    var a2_c = a2.as_c_string_slice()
+    var a3_c = a3.as_c_string_slice()
+    if len(args) == 4:
+        _ = external_call["execl", c_int, num_fixed_args=2](
+            ocaml_c.unsafe_ptr(), ocaml_c.unsafe_ptr(),
+            flag_i_c.unsafe_ptr(), dir_c.unsafe_ptr(), backend_c.unsafe_ptr(),
+            a1_c.unsafe_ptr(), a2_c.unsafe_ptr(), a3_c.unsafe_ptr(), Int(0))
+    elif len(args) == 3:
+        _ = external_call["execl", c_int, num_fixed_args=2](
+            ocaml_c.unsafe_ptr(), ocaml_c.unsafe_ptr(),
+            flag_i_c.unsafe_ptr(), dir_c.unsafe_ptr(), backend_c.unsafe_ptr(),
+            a1_c.unsafe_ptr(), a2_c.unsafe_ptr(), Int(0))
+    elif len(args) == 2:
+        _ = external_call["execl", c_int, num_fixed_args=2](
+            ocaml_c.unsafe_ptr(), ocaml_c.unsafe_ptr(),
+            flag_i_c.unsafe_ptr(), dir_c.unsafe_ptr(), backend_c.unsafe_ptr(),
+            a1_c.unsafe_ptr(), Int(0))
+    else:
+        _ = external_call["execl", c_int, num_fixed_args=2](
+            ocaml_c.unsafe_ptr(), ocaml_c.unsafe_ptr(),
+            flag_i_c.unsafe_ptr(), dir_c.unsafe_ptr(), backend_c.unsafe_ptr(), Int(0))
     exit(125)

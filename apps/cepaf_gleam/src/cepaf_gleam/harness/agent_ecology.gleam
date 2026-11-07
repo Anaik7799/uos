@@ -166,6 +166,51 @@ pub fn select_failover_agent(
   }
 }
 
+/// Sovereign Operator Routing Selector: prioritizes AGY (Caste01) and DeepSeek-v3.2 over Pi+Argon
+/// for supervisor tasks, and maximizes Local Qwen + Claude + Codex for execution tasks.
+pub fn select_supervisor_or_failover_with_agy(
+  is_supervisor_task: Bool,
+  agy_ok: Bool,
+  deepseek_ok: Bool,
+  claude_ok: Bool,
+  codex_ok: Bool,
+  qwen_ok: Bool,
+  pi_argon_ok: Bool,
+) -> Result(String, String) {
+  case is_supervisor_task {
+    True ->
+      case agy_ok, deepseek_ok, claude_ok, codex_ok, qwen_ok, pi_argon_ok {
+        True, _, _, _, _, _ -> Ok("agy")
+        False, True, _, _, _, _ -> Ok("deepseek_v3_2")
+        False, False, True, _, _, _ -> Ok("claude")
+        False, False, False, True, _, _ -> Ok("codex")
+        False, False, False, False, True, _ -> Ok("local_qwen")
+        False, False, False, False, False, True ->
+          Ok("pi_openrouter_gemini_argon")
+        False, False, False, False, False, False ->
+          Error("no_supervisor_or_failover_agent_available")
+      }
+    False ->
+      select_failover_agent(False, claude_ok, codex_ok, qwen_ok, pi_argon_ok)
+  }
+}
+
+/// Pure Gleam mirror of `uos_lean_verify_tool_call_provenance` (C-ABI Export #21, THM_FSYS_51).
+pub fn verify_tool_call_provenance(
+  has_tool_calls: Bool,
+  same_model_origin: Bool,
+  has_thought_sig: Bool,
+  has_validator_waiver: Bool,
+  target_requires_sig: Bool,
+) -> Bool {
+  case has_tool_calls, target_requires_sig {
+    False, _ -> True
+    _, False -> True
+    True, True ->
+      { same_model_origin && has_thought_sig } || has_validator_waiver
+  }
+}
+
 /// Returns the 6 canonical SovereignAgentCapabilityRecord entries matching
 /// `formal/lean/UosAgentCapabilityProfile.lean` (`AgentId`).
 pub fn all_sovereign_agent_capabilities() -> List(SovereignAgentCapabilityRecord) {
@@ -1139,4 +1184,389 @@ pub fn format_profile_detail(agent_id: String) -> String {
       <> agent_id
       <> "`. Use `/ecology` to list all 7 canonical profiles."
   }
+}
+
+/// Canonical 7 Provider APIs used across the 6 UOS Agent Harnesses (THM_FSYS_53).
+pub type ProviderApiFppRecord {
+  ProviderApiFppRecord(
+    api_id: Int,
+    api_name: String,
+    endpoint_uri: String,
+    primary_holarchy_layer: String,
+    requires_strict_role_alternation: Bool,
+    requires_thought_sig_or_waiver: Bool,
+    supports_encrypted_reasoning: Bool,
+    max_credit_limit_tokens: Int,
+  )
+}
+
+pub fn canonical_provider_api_fpp_registry() -> List(ProviderApiFppRecord) {
+  [
+    ProviderApiFppRecord(
+      api_id: 0,
+      api_name: "LocalMaxQwenApi",
+      endpoint_uri: "http://razr15-1.tail55d152.ts.net:8000/v1/chat/completions",
+      primary_holarchy_layer: "L1_EXECUTION",
+      requires_strict_role_alternation: False,
+      requires_thought_sig_or_waiver: False,
+      supports_encrypted_reasoning: False,
+      max_credit_limit_tokens: 0,
+    ),
+    ProviderApiFppRecord(
+      api_id: 1,
+      api_name: "OpenRouterChatCompletionsApi",
+      endpoint_uri: "https://openrouter.ai/api/v1/chat/completions",
+      primary_holarchy_layer: "L7_SWARM_SESSION",
+      requires_strict_role_alternation: False,
+      requires_thought_sig_or_waiver: True,
+      supports_encrypted_reasoning: True,
+      max_credit_limit_tokens: 16_384,
+    ),
+    ProviderApiFppRecord(
+      api_id: 2,
+      api_name: "GoogleGenerativeAiV1BetaApi",
+      endpoint_uri: "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+      primary_holarchy_layer: "L7_SWARM_SESSION",
+      requires_strict_role_alternation: True,
+      requires_thought_sig_or_waiver: True,
+      supports_encrypted_reasoning: False,
+      max_credit_limit_tokens: 32_768,
+    ),
+    ProviderApiFppRecord(
+      api_id: 3,
+      api_name: "DeepSeekReasoningChatApi",
+      endpoint_uri: "https://openrouter.ai/api/v1/chat/completions#deepseek-v3.2",
+      primary_holarchy_layer: "L5_KNOWLEDGE",
+      requires_strict_role_alternation: False,
+      requires_thought_sig_or_waiver: False,
+      supports_encrypted_reasoning: True,
+      max_credit_limit_tokens: 16_384,
+    ),
+    ProviderApiFppRecord(
+      api_id: 4,
+      api_name: "AnthropicClaudeMessagesApi",
+      endpoint_uri: "https://api.anthropic.com/v1/messages",
+      primary_holarchy_layer: "L8_ORCHESTRATION",
+      requires_strict_role_alternation: True,
+      requires_thought_sig_or_waiver: False,
+      supports_encrypted_reasoning: True,
+      max_credit_limit_tokens: 65_536,
+    ),
+    ProviderApiFppRecord(
+      api_id: 5,
+      api_name: "OpenAiCodexResponsesApi",
+      endpoint_uri: "https://api.openai.com/v1/responses",
+      primary_holarchy_layer: "L8_ORCHESTRATION",
+      requires_strict_role_alternation: False,
+      requires_thought_sig_or_waiver: False,
+      supports_encrypted_reasoning: True,
+      max_credit_limit_tokens: 65_536,
+    ),
+    ProviderApiFppRecord(
+      api_id: 6,
+      api_name: "UosHarnessMcpAndZenohApi",
+      endpoint_uri: "http://nas-1.tail55d152.ts.net:4100/mcp",
+      primary_holarchy_layer: "L6_INTERFACE",
+      requires_strict_role_alternation: False,
+      requires_thought_sig_or_waiver: False,
+      supports_encrypted_reasoning: False,
+      max_credit_limit_tokens: 0,
+    ),
+  ]
+}
+
+/// Deterministic 7-state Provider API interaction transition guard (THM_FSYS_54 / THM_GUARD_23).
+/// States: 0=Idle, 1=PreflightOk, 2=ToolCallEmitted, 3=ToolResultAppended, 4=Compacting, 5=Completed, 6=FailClosed.
+pub fn verify_provider_api_transition(
+  prev_state: Int,
+  next_state: Int,
+  req_strict_alt: Bool,
+  prov_ok: Bool,
+  credit_cap_ok: Bool,
+) -> Bool {
+  case credit_cap_ok {
+    False -> next_state == 6
+    True ->
+      case next_state {
+        2 ->
+          prov_ok
+          && { !req_strict_alt || prev_state == 1 || prev_state == 3 }
+        3 -> prev_state == 2
+        5 -> prov_ok && { prev_state == 3 || prev_state == 1 }
+        _ -> True
+      }
+  }
+}
+
+/// Resilient Error-Recovery Protocol actions for Provider API interactions.
+pub type ProviderApiRecoveryAction {
+  ProceedNominal
+  InjectBase64ThoughtSigWaiver
+  SynthesizeAbortedToolResult
+  FailoverToLocalQwenOrDeepSeek
+  TripPrajnaCircuitBreakerAndRetry
+}
+
+pub fn recovery_action_to_string(action: ProviderApiRecoveryAction) -> String {
+  case action {
+    ProceedNominal -> "PROCEED_NOMINAL"
+    InjectBase64ThoughtSigWaiver -> "INJECT_BASE64_THOUGHT_SIG_WAIVER"
+    SynthesizeAbortedToolResult -> "SYNTHESIZE_ABORTED_TOOL_RESULT"
+    FailoverToLocalQwenOrDeepSeek -> "FAILOVER_TO_LOCAL_QWEN_OR_DEEPSEEK"
+    TripPrajnaCircuitBreakerAndRetry -> "TRIP_PRAJNA_CIRCUIT_BREAKER_AND_RETRY"
+  }
+}
+
+/// Data-driven error recovery decision across HTTP status codes and FPP state invariants.
+pub fn determine_provider_api_recovery_action(
+  prev_state: Int,
+  next_state: Int,
+  req_strict_alt: Bool,
+  prov_ok: Bool,
+  credit_cap_ok: Bool,
+  http_status: Int,
+) -> ProviderApiRecoveryAction {
+  case !credit_cap_ok || http_status == 402 {
+    True -> FailoverToLocalQwenOrDeepSeek
+    False ->
+      case !prov_ok || http_status == 400 {
+        True ->
+          case req_strict_alt && prev_state == 2 && next_state == 2 {
+            True -> SynthesizeAbortedToolResult
+            False -> InjectBase64ThoughtSigWaiver
+          }
+        False ->
+          case
+            http_status == 429
+            || http_status == 500
+            || http_status == 502
+            || http_status == 503
+            || http_status == 504
+          {
+            True -> TripPrajnaCircuitBreakerAndRetry
+            False ->
+              case
+                verify_provider_api_transition(
+                  prev_state,
+                  next_state,
+                  req_strict_alt,
+                  prov_ok,
+                  credit_cap_ok,
+                )
+              {
+                True -> ProceedNominal
+                False -> SynthesizeAbortedToolResult
+              }
+          }
+      }
+  }
+}
+
+/// Emits a structured W3C OTel (128-bit trace_id, 64-bit span_id) + L0..L9 Fractal + 17-Aspect JSON log record.
+pub fn emit_provider_api_otel_fractal_span(
+  api_id: Int,
+  agent_id: String,
+  prev_state: Int,
+  next_state: Int,
+  req_strict_alt: Bool,
+  prov_ok: Bool,
+  credit_cap_ok: Bool,
+  http_status: Int,
+  latency_us: Int,
+  trace_id: String,
+  span_id: String,
+) -> String {
+  let admissible =
+    verify_provider_api_transition(
+      prev_state,
+      next_state,
+      req_strict_alt,
+      prov_ok,
+      credit_cap_ok,
+    )
+  let action =
+    determine_provider_api_recovery_action(
+      prev_state,
+      next_state,
+      req_strict_alt,
+      prov_ok,
+      credit_cap_ok,
+      http_status,
+    )
+  let layer = case api_id {
+    0 -> "L1_EXECUTION"
+    1 -> "L7_SWARM_SESSION"
+    2 -> "L7_SWARM_SESSION"
+    3 -> "L5_KNOWLEDGE"
+    4 -> "L8_ORCHESTRATION"
+    5 -> "L8_ORCHESTRATION"
+    _ -> "L6_INTERFACE"
+  }
+  let adm_str = case admissible {
+    True -> "true"
+    False -> "false"
+  }
+  "{\"schema\":\"uos.c3i.otel.provider_api.v1\",\"trace_id\":\""
+  <> trace_id
+  <> "\",\"span_id\":\""
+  <> span_id
+  <> "\",\"fractal_layer\":\""
+  <> layer
+  <> "\",\"aspects_covered\":17,\"api_id\":"
+  <> int.to_string(api_id)
+  <> ",\"agent_id\":\""
+  <> agent_id
+  <> "\",\"prev_state\":"
+  <> int.to_string(prev_state)
+  <> ",\"next_state\":"
+  <> int.to_string(next_state)
+  <> ",\"http_status\":"
+  <> int.to_string(http_status)
+  <> ",\"latency_us\":"
+  <> int.to_string(latency_us)
+  <> ",\"transition_admissible\":"
+  <> adm_str
+  <> ",\"recovery_action\":\""
+  <> recovery_action_to_string(action)
+  <> "\",\"ev_ceiling\":93}"
+}
+
+/// Deterministic 64-state Provider API graceful error-recovery resolver (THM_FSYS_55 / THM_GUARD_24).
+/// Actions:
+///   0 = ProceedNominal
+///   1 = ClampMaxTokensAndRetry
+///   2 = InjectWaiverAndRetry
+///   3 = SynthesizeAbortedToolResultAndRetry
+///   4 = FailoverGoogleDirectV1Beta
+///   5 = FailoverLocalMaxQwen
+///   6 = FailClosedAndonHalt
+pub fn resolve_provider_api_recovery(
+  http_status_class: Int,
+  affordable_tokens_ge64: Bool,
+  strict_alt_violation: Bool,
+  google_direct_available: Bool,
+  local_qwen_available: Bool,
+) -> Int {
+  case http_status_class {
+    0 -> 0
+    1 ->
+      case strict_alt_violation {
+        True -> 3
+        False -> 2
+      }
+    2 ->
+      case affordable_tokens_ge64 {
+        True -> 1
+        False ->
+          case google_direct_available {
+            True -> 4
+            False ->
+              case local_qwen_available {
+                True -> 5
+                False -> 6
+              }
+          }
+      }
+    _ ->
+      case google_direct_available {
+        True -> 4
+        False ->
+          case local_qwen_available {
+            True -> 5
+            False -> 6
+          }
+      }
+  }
+}
+
+/// Deterministic 192-state UOS Service Mesh (Holarchy + Agents + FPP + Zenoh + MCP + OTel) binding verifier
+/// (`THM_FSYS_56..58` / `THM_GUARD_25`, Export #25 `uos_lean_verify_service_mesh_binding`).
+pub fn verify_uos_service_mesh_binding(
+  service_id: Int,
+  fpp_port_ready: Bool,
+  zenoh_connected: Bool,
+  mcp_authorized: Bool,
+  c_abi_guard_ok: Bool,
+) -> Bool {
+  service_id >= 0
+  && service_id < 12
+  && fpp_port_ready
+  && zenoh_connected
+  && mcp_authorized
+  && c_abi_guard_ok
+}
+
+/// Expected System Directory Object Kind ID (`0..4`) for `dir_id` (`0..51`):
+///   0 (`0..11`)  = SystemService (`Svc00..Svc11`)
+///   1 (`12..18`) = ProviderApi (`LocalMaxQwenApi..UosHarnessMcpAndZenohApi`)
+///   2 (`19..24`) = SovereignAgent (`agy..argon`)
+///   3 (`25..34`) = HolarchyLayer (`L0_Constitutional..L9_Sovereign`)
+///   4 (`35..51`) = SystemAspect (`A01..A17`)
+pub fn expected_system_directory_kind_id(dir_id: Int) -> Int {
+  case dir_id >= 0 && dir_id < 12 {
+    True -> 0
+    False ->
+      case dir_id >= 12 && dir_id < 19 {
+        True -> 1
+        False ->
+          case dir_id >= 19 && dir_id < 25 {
+            True -> 2
+            False ->
+              case dir_id >= 25 && dir_id < 35 {
+                True -> 3
+                False ->
+                  case dir_id >= 35 && dir_id < 52 {
+                    True -> 4
+                    False -> 255
+                  }
+              }
+          }
+      }
+  }
+}
+
+/// Deterministic 2,080-state UOS System Directory Service object verifier
+/// (`THM_FSYS_59..60` / `THM_GUARD_26`, Export #26 `uos_lean_verify_system_directory_object`).
+pub fn verify_system_directory_object(
+  dir_id: Int,
+  kind_id: Int,
+  holarchy_ok: Bool,
+  fpp_zenoh_mcp_otel_ok: Bool,
+  aspect_mask_17_ok: Bool,
+) -> Bool {
+  dir_id >= 0
+  && dir_id < 52
+  && kind_id == expected_system_directory_kind_id(dir_id)
+  && holarchy_ok
+  && fpp_zenoh_mcp_otel_ok
+  && aspect_mask_17_ok
+}
+
+/// Deterministic 1,632-state UOS 17-Aspect SDLC & SRE Feature Matrix gate verifier
+/// (`THM_FSYS_61..62` / `THM_GUARD_27`, Export #27 `uos_lean_verify_sdlc_sre_feature_aspect_gate`).
+pub fn verify_sdlc_sre_feature_aspect_gate(
+  feature_id: Int,
+  aspect_id: Int,
+  sdlc_12_ok: Bool,
+  sre_8_ok: Bool,
+  tri_agent_claude_ok: Bool,
+  tri_agent_codex_ok: Bool,
+) -> Bool {
+  feature_id >= 0
+  && feature_id < 6
+  && aspect_id >= 0
+  && aspect_id < 17
+  && sdlc_12_ok
+  && sre_8_ok
+  && tri_agent_claude_ok
+  && tri_agent_codex_ok
+}
+
+/// Canonical Hardware Storage Interlock Constant (`A01` / `SC-STORAGE-SAFETY-001`):
+/// Strictly locks the host OS NVMe serial against OSD wiping or allocation.
+pub const hard_denied_system_os_serial = "25503L801736"
+
+/// Returns `True` iff `candidate_serial` is non-empty and does NOT match `hard_denied_system_os_serial`.
+pub fn verify_nvme_interlock_serial(candidate_serial: String) -> Bool {
+  candidate_serial != "" && candidate_serial != hard_denied_system_os_serial
 }

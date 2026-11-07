@@ -74,8 +74,22 @@ def shell_quote(s: String) -> String:
     return out
 
 
-def capture(cmd: String) -> String:
+def capture(cmd: String, secs: Int = PROBE_TIMEOUT_SECS) -> String:
     """Run a BOUNDED shell command; trimmed stdout, or "" if it could not run.
+
+    `secs` added 20261107-2353, finding F-W-23. The bound was the fixed
+    `PROBE_TIMEOUT_SECS = 20` for every caller, and razr15-1:8000 takes
+    120.1 s to return its definite `502` (its own backend timeout is 120 s).
+    So NO arm built on this function could observe that answer: the outer
+    `timeout -k 5 20` killed the probe first, every HTTP arm against that
+    gateway was structurally BLIND, and a `curl --max-time 150` added at a
+    call site was inert because the smaller outer bound dominated. A fix that
+    looks right and changes nothing is worse than no fix, because it stops
+    the search.
+
+    20 s stays the default deliberately -- it is the guard that keeps an
+    oracle from inheriting its subject's hang -- and a caller that needs
+    longer must say so, and say why, at the call site.
 
     Every probe is wrapped in `timeout -k 5 <N>`. Without that an oracle
     inherits the hang of whatever it observes: a curl against a listener that
@@ -92,7 +106,8 @@ def capture(cmd: String) -> String:
         return String(
             String(
                 run(
-                    "timeout -k 5 " + String(PROBE_TIMEOUT_SECS)
+                    "timeout -k 5 " + String(secs if secs > 0
+                                             else PROBE_TIMEOUT_SECS)
                     + " sh -c " + shell_quote(cmd)
                 )
             ).strip()
@@ -250,6 +265,47 @@ def occurrences(hay: String, needle: String) -> Int:
         return 0
     return len(hay.split(needle)) - 1
 
+def last_line(s: String) -> String:
+    """The final non-empty line, which is where `curl -w` puts its field.
+
+    Returns "" for input with no non-empty line at all, and that empty
+    return is load-bearing: `world_status` reads it as "no status", i.e.
+    BLIND. A helper that invented "000" here would be indistinguishable
+    from a real timeout, and a helper that returned the whole blob would
+    make `http_code != "200"` true for every successful response.
+    """
+    var parts = s.split("\n")
+    var i = len(parts) - 1
+    while i >= 0:
+        var cand = String(String(parts[i]).strip())
+        if cand.byte_length() > 0:
+            return cand
+        i -= 1
+    return String("")
+
+
+def strip_last_line(s: String) -> String:
+    """`s` without the trailing field `last_line` returns -- i.e. the body.
+
+    Deliberately the exact complement of `last_line` over the same split, so
+    the two cannot disagree about where the boundary is. Splitting twice with
+    two different rules is how a body keeps its status code and a status code
+    keeps a fragment of body.
+    """
+    var parts = s.split("\n")
+    var keep = len(parts) - 1
+    while keep > 0:
+        if String(String(parts[keep]).strip()).byte_length() > 0:
+            break
+        keep -= 1
+    var out = String("")
+    for i in range(keep):
+        if i > 0:
+            out += String("\n")
+        out += String(parts[i])
+    return out
+
+
 struct Receipt(Copyable, Movable):
     """Accumulates one oracle run and emits a uos.oracle.v1 record."""
 
@@ -395,6 +451,158 @@ struct Receipt(Copyable, Movable):
             self._note(String("world:") + name + String(":got-")
                        + String(observed) + String("-want-")
                        + String(expected))
+
+    def world_fresh(mut self, name: String, age_min: Int, max_age_min: Int):
+        """Report an artifact's freshness, with STALE scored as BLIND.
+
+        Finding F-W-14, second and deeper half. The freshness arms in
+        context_path_kpi_oracle.mojo were written as
+
+            world_or_blind(name, age >= 0, age <= MAX)
+
+        and `world_or_blind`'s first parameter is FIELD PRESENCE, not
+        freshness. A stale age is present -- it is merely large -- so
+        `field_present` was true, `value_ok` was false, and the arm reported
+        WORLD_FAIL. Meanwhile the comment directly above it read: "BLIND, not
+        PASS: the property was not observable at this candidate because
+        nobody rendered it recently."
+
+        The prose said BLIND and the code manufactured an outage. That is the
+        whole PASS -> WORLD_FAIL -> PASS oscillation of 2026-11-07, with no
+        code change on any side, driven purely by an external renderer's
+        schedule. An oracle that does not render a file cannot report its
+        age as that file's failure.
+
+        Zero-muda: this delegates to `world_count_fresh` rather than
+        restating the three-way logic. The comparison 0 == 0 always holds, so
+        the arm's only outcomes are PASS (fresh) and BLIND (stale or
+        unknowable) -- which is exactly the claim being made. One
+        implementation of staleness in this substrate, not two that agree
+        until they drift.
+
+        Consequence for mutation coverage, stated rather than hidden: as a
+        one-line delegation this method has no operator the L1 mutation
+        instrument can apply, so it will report UNMEASURED, like `owned_in`.
+        Its behaviour is covered transitively through `world_count_fresh`.
+        """
+        self.world_count_fresh(name, 0, 0, age_min, max_age_min)
+
+    def world_count_fresh(mut self, name: String, observed: Int,
+                          expected: Int, age_min: Int, max_age_min: Int):
+        """`world_count` that knows STALE from BROKEN. Finding F-W-14.
+
+        `world_count` above distinguishes two cases: a value that could not be
+        counted (BLIND) and a value that disagrees (WORLD_FAIL). It has no
+        third case for a value that was read correctly out of a file too old
+        to describe anything current. So an oracle would bound an artifact's
+        age in ONE arm and read a value out of that same artifact in ANOTHER,
+        and a stale file produced `blind:...-is-fresh` beside
+        `world:...:got-N-want-M` -- an outage manufactured from an
+        observability gap, which is exactly what `world_or_blind` exists to
+        prevent for absent fields.
+
+        Observed, not theorised: context_path_kpi_oracle went
+        PASS -> WORLD_FAIL -> PASS across 2026-11-07 with NO code change on
+        any side, purely because an external renderer's output crossed
+        MAX_ARTIFACT_AGE_MIN (1440) at ~01:34Z and was re-rendered at 20:05Z.
+        A verdict that tracks a renderer's schedule is not evidence about the
+        candidate.
+
+        The general rule this encodes: an arm that READS a file is not an arm
+        that VALIDATED that file. The freshness predicate must gate the read
+        it licenses, in the same arm, or it gates nothing.
+
+        age_min < 0 means the age itself could not be determined, which is
+        BLIND for the same reason: a missing age is not a fresh age. A
+        max_age_min of 0 means "must be from this minute", which is legal and
+        strict, not a disabled check.
+        """
+        self.checks += 1
+        if observed < 0:
+            self.blind += 1
+            self._note(String("blind:") + name + String(":uncountable"))
+            return
+        if age_min < 0:
+            self.blind += 1
+            self._note(String("blind:") + name + String(":age-unknown"))
+            return
+        if age_min > max_age_min:
+            self.blind += 1
+            self._note(String("blind:") + name + String(":stale-")
+                       + String(age_min) + String("min-max-")
+                       + String(max_age_min))
+            return
+        self.world_checks += 1
+        if observed != expected:
+            self.world_failures += 1
+            self._note(String("world:") + name + String(":got-")
+                       + String(observed) + String("-want-")
+                       + String(expected))
+
+    def world_status(mut self, name: String, http_code: String,
+                     body_ok: Bool):
+        """Verdict for an HTTP probe, deciding on the ANSWER, not the budget.
+
+        Finding F-W-23, 20261107-2353. Two oracles probed the SAME broken
+        endpoint and returned two different verdicts:
+
+          razr15_max_qwen_oracle  `curl --max-time 12`  -> empty -> BLIND
+          model_evaluation_oracle `curl` (no cap)       -> 502   -> WORLD_FAIL
+
+        Exactly one can be right, and the one that was wrong was wrong for a
+        reason that has nothing to do with the subject: razr15-1:8000 answers
+        a definite `502 {"error":"<urlopen error timed out>"}` after 120s,
+        because its own backend timeout is 120s (max_qwen_server.py:602). A
+        12-second probe therefore cannot reach the answer, reads empty, and
+        calls a KNOWN, REPRODUCIBLE failure unobservable.
+
+        That is the mirror image of F-W-14. F-W-14 scored unobservability as
+        an outage (over-reporting); this scored an outage as unobservability
+        (under-reporting). Same root pathology both times: the verdict was
+        decided by the measuring apparatus instead of by the measurement.
+
+        So the discriminator is the STATUS, which `curl -w '%{http_code}'`
+        yields from the same request at no extra cost:
+
+          no status / "000"  the request did not complete inside the budget.
+                             Nothing was observed. BLIND -- and honestly so,
+                             because a longer budget might well answer.
+          status != expected the server ANSWERED, and its answer was a
+                             failure. That is an observation. WORLD_FAIL.
+          status == expected the transport worked; `body_ok` decides.
+
+        Note what this does NOT do: it does not lower a verdict. A caller
+        that reaches a definite error now reports WORLD_FAIL where it used to
+        report BLIND, so severity RISES. Proved as THM_PROBE_05 in
+        formal/lean/Razr15_Max_Qwen_Digital_Twin.lean, together with the
+        control that matters (THM_PROBE_03: a pass still requires both a
+        200 and a good body, so no failure can become a pass).
+
+        The budget remains the caller's business, with one rule: it must
+        exceed the subject's own failure latency, or this helper is handed
+        "000" forever and reports BLIND forever. A long budget costs nothing
+        on a healthy endpoint -- it returns in milliseconds -- and costs time
+        only when something is actually wrong, which is exactly when the
+        definite answer is worth waiting for.
+        """
+        self.checks += 1
+        # "000" is curl's no-answer code; "0" is what an Int-typed status
+        # field stringifies to when its parse never happened. Both mean the
+        # same thing -- no status was obtained -- and accepting only one of
+        # them would make the verdict depend on which caller did the parsing.
+        if (http_code.byte_length() == 0 or http_code == String("000")
+                or http_code == String("0")):
+            self.blind += 1
+            self._note(String("blind:") + name + String(":no-status-within-budget"))
+            return
+        self.world_checks += 1
+        if http_code != String("200"):
+            self.world_failures += 1
+            self._note(String("world:") + name + String(":http-") + http_code)
+            return
+        if not body_ok:
+            self.world_failures += 1
+            self._note(String("world:") + name + String(":http-200-bad-body"))
 
     def mutation_probe(mut self, name: String, wrong_is_rejected: Bool):
         """Negative control: a deliberately wrong evaluation MUST be rejected."""

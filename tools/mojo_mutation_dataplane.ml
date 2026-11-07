@@ -81,6 +81,9 @@
    authority NONE. EV ceiling 93.
    ========================================================================== *)
 
+#directory "tools";;
+#use "uos_plane_lock.ml";;
+
 let oracle_dir = "formal/mojo"
 let mojo = "./tools/mojo"
 
@@ -171,12 +174,73 @@ let journal = "var/mutation/IN_FLIGHT.json"
 
 let fatal msg = prerr_endline ("  FATAL: " ^ msg); exit 3
 
+(* FIXED 20261107-2006, finding F-W-18.
+
+   WHAT WAS OBSERVED
+   -----------------
+   A journal written 2026-11-07T08:35:54Z named `tools/uos-wait.ml`, whose
+   `.mutbak` was ABSENT. This instrument therefore refused every invocation
+   for roughly twelve hours, fail-closed, and nothing reported it. Worse, the
+   recovery it printed -- "Restore the path it names from its .mutbak" --
+   was impossible to follow, because that backup had already been deleted.
+
+   WHY THE JOURNAL SURVIVED ITS MUTATION
+   -------------------------------------
+   `with_mutation`'s restore path is ordered: write the original back, VERIFY
+   it byte for byte (fatal otherwise), remove the backup, remove the journal.
+   Both removes were `try ... with _ -> ()`, so a failure to unlink the
+   journal was silent. The backup being gone therefore PROVES the restore ran
+   and was verified -- the verify precedes the unlink, so the tree is sound.
+
+   THE DISCRIMINATION THIS GUARD NOW MAKES
+   ---------------------------------------
+     backup PRESENT -> a real interrupted mutation. The tree may hold mutant
+                       bytes. Refuse, and name the exact command that fixes
+                       it, because the backup exists to be copied back.
+     backup ABSENT  -> the restore completed and was verified; only the
+                       unlink failed. The journal is stale, not evidence of a
+                       corrupt tree. Say so and clear it, rather than demand
+                       a recovery step that cannot be performed.
+
+   A refusal whose instructions cannot be carried out is not fail-closed, it
+   is wedged: it stops the work without offering a way back. *)
 let refuse_if_in_flight () =
-  if Sys.file_exists journal then
-    fatal (Printf.sprintf
-      "%s exists: a previous run left a mutation in the tree. Restore the \
-       path it names from its .mutbak, delete both, and re-run. This run \
-       changes nothing." journal)
+  if Sys.file_exists journal then begin
+    let body = try read_file journal with _ -> "" in
+    let field k =
+      let pat = "\"" ^ k ^ "\":\"" in
+      match String.index_opt body '{' with
+      | _ ->
+        let n = String.length body and pn = String.length pat in
+        let rec go i =
+          if i + pn > n then None
+          else if String.sub body i pn = pat then
+            let j = i + pn in
+            (match String.index_from_opt body j '"' with
+             | Some e -> Some (String.sub body j (e - j))
+             | None -> None)
+          else go (i + 1) in
+        go 0 in
+    match field "backup" with
+    | Some bak when Sys.file_exists bak ->
+      let path = match field "path" with Some p -> p | None -> "<unknown>" in
+      fatal (Printf.sprintf
+        "%s names an INTERRUPTED mutation of %s and its backup %s is still \
+         present, so the tree may hold mutant bytes. Recover with exactly:\n\
+        \    cp %s %s && rm %s %s\n  This run changes nothing."
+        journal path bak bak path bak journal)
+    | _ ->
+      (* Stale. The backup is gone, which only happens after the restore was
+         written AND read back byte-identical. *)
+      prerr_endline (Printf.sprintf
+        "  NOTE: %s was stale -- it named a mutation whose backup is already \
+         gone, which means the restore completed and was verified and only \
+         the journal unlink failed. Clearing it and continuing." journal);
+      (try Sys.remove journal with e ->
+        fatal (Printf.sprintf
+          "could not clear the stale journal %s: %s. Remove it by hand."
+          journal (Printexc.to_string e)))
+  end
 
 (* Runs the oracle exactly as it is normally run: from the repository root,
    against the real tree. *)
@@ -190,7 +254,25 @@ let run_oracle (oracle : string) : string option =
   (try Sys.remove tmp with _ -> ());
   r
 
+(* FIXED 20261107-2034, finding F-W-13. The window between `write_file path
+   text` and `restore ()` below is a tree that never existed. The IN_FLIGHT
+   journal protects against THIS process crashing; it says nothing to a
+   concurrent READER. tools/lean_mojo_differential.ml hashes
+   `formal/mojo/*_oracle.mojo formal/mojo/oracle_substrate.mojo` for its
+   oracle_set digest, so a differential run landing in this window binds its
+   verdict to a revision nobody authored.
+
+   The whole mutate-run-restore cycle therefore holds the shared plane lock.
+   Per MUTANT, not per sweep: a sweep holds it for minutes, which would
+   starve the reader; a mutant holds it for one compile. Fail-closed -- if
+   the lock cannot be taken, nothing is mutated (see with_plane_lock). *)
 let with_mutation (path : string) (text : string) (f : unit -> 'a) : 'a =
+  (* Explicit, not inherited: finding F-W-20. This site was wired without a
+     timeout and inherited 120.0, which is SHORTER than the differential's
+     legitimate hold, so a re-sweep aborted rather than waited. The module
+     default is now 600.0 too; stating it here as well keeps the budget
+     visible at the site that actually mutates the tree. *)
+  with_plane_lock ~timeout:600.0 "formal-mojo" @@ fun () ->
   let orig = read_file path in
   let bak = path ^ ".mutbak" in
   write_file bak orig;
@@ -204,7 +286,18 @@ let with_mutation (path : string) (text : string) (f : unit -> 'a) : 'a =
         "restore of %s did not take. The original bytes are in %s. Nothing \
          further is attempted." path bak);
     (try Sys.remove bak with _ -> ());
-    (try Sys.remove journal with _ -> ()) in
+    (* FIXED 20261107-2006, finding F-W-18. This unlink was `try ... with _ ->
+       ()`. When it failed, the journal survived a COMPLETED and verified
+       restore, and refuse_if_in_flight then blocked every later run for
+       twelve hours while pointing at a .mutbak that no longer existed. The
+       failure is now reported. It is not fatal -- the restore itself already
+       succeeded and verified, so the tree is sound and aborting here would
+       lose a good result -- but it must not be silent. *)
+    (try Sys.remove journal with e ->
+      prerr_endline (Printf.sprintf
+        "  WARNING: restore of %s succeeded and verified, but %s could not be \
+         removed (%s). The next run will detect it as stale and clear it."
+        path journal (Printexc.to_string e))) in
   let r = (try write_file path text; f ()
            with e -> restore (); raise e) in
   restore ();

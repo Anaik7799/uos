@@ -353,8 +353,11 @@ def main() raises:
     var c_abi_exports = capture(
         "nm -D var/zlp/libuos_lean_guard.so 2>/dev/null | grep -c ' T uos_lean_'"
     )
+    var lean_guard_exports = capture(
+        "grep -c '@\\[export uos_lean_' formal/lean/UosLeanRuntimeGuard.lean 2>/dev/null"
+    )
     r.observe(String("pillar1-lean-c-abi-exports"), c_abi_exports)
-    r.world_or_blind(String("pillar1-lean-c-abi-guard-has-12-exports"), c_abi_exports.byte_length() > 0, c_abi_exports == String("20"))
+    r.world_or_blind(String("pillar1-lean-c-abi-guard-has-12-exports"), c_abi_exports.byte_length() > 0 and lean_guard_exports.byte_length() > 0, c_abi_exports == lean_guard_exports)
 
     var fpp_caste_bound = capture(
         "grep -c 'assigned_agent: \"Caste0' apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam 2>/dev/null"

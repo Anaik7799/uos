@@ -371,8 +371,24 @@ def main() raises:
     # oracle. Checked against the union rather than per-oracle, because a
     # check legitimately moves between oracles; what must never happen is a
     # claimed check existing nowhere.
+    # `r\.world[a-z_]*\(` replaces the hand-maintained alternation
+    # `(world|world_or_blind|world_json|world_count|world_count_fresh)` on
+    # 20261107-2353. The list had to be edited every time a world helper was
+    # added to oracle_substrate.mojo, and it DRIFTED TWICE IN ONE DAY: once
+    # when `world_count_fresh` landed (F-W-14) and again when `world_status`
+    # landed (F-W-23). Both times the symptom was this arm reporting
+    # `world:no-coverage-claim-names-a-phantom-check` -- an accusation that
+    # the ledger claims a check nobody implements -- when in truth the check
+    # existed and the census could not see it. A phantom-check alarm that
+    # fires on the CENSUS being out of date, rather than on the ledger being
+    # wrong, points the reader at the wrong file.
+    #
+    # The prefix form cannot drift, because every world arm in the substrate
+    # is by construction named `world...`. The remaining coupling is the one
+    # that should exist: an arm that is not a `r.world*` call is not a world
+    # check, and should not be counted as one.
     var all_checks = capture(
-        "grep -hoE 'r\\.(world|world_or_blind|world_json|world_count)"
+        "grep -hoE 'r\\.world[a-z_]*"
         + "\\(String\\(\"[a-z0-9:-]+' formal/mojo/*_oracle.mojo 2>/dev/null"
         + " | sed 's/.*String(\"//' | sort -u")
     # Whitespace-normalised, same reason as the attribution arm above.

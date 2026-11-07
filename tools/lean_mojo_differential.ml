@@ -54,6 +54,9 @@
 
    Run: ocaml -I +unix unix.cma tools/lean_mojo_differential.ml [--json] [--pair NAME] *)
 
+#directory "tools";;
+#use "uos_plane_lock.ml";;
+
 let root =
   try Sys.getenv "UOS_ROOT" with Not_found -> "/home/an/NAS-setup/uos"
 
@@ -131,11 +134,32 @@ let subject_of_oracle path =
   done;
   !res
 
+(* A file this instrument did not author and no human maintains. Prefix, not
+   suffix: the suffix is what collided in the first place. *)
+let is_generated (f : string) : bool =
+  String.length f >= 10 && String.sub f 0 10 = "generated_"
+
 let oracles () =
   if not (Sys.file_exists oracle_dir) then []
   else
+    (* FIXED 20261107-2048, finding F-W-15. `generated_falsify_<mod>.mojo`,
+       written into THIS directory by tools/mojo_arm_falsifiability.ml:603 and
+       removed only at its line 631, ends in `_oracle.mojo` and so matched
+       this glob. A falsifiability run killed before cleanup leaves one
+       behind; it then enumerates here as a pair with no Lean subject,
+       scores VACUOUS, and VACUOUS is lattice position 5 -- it DOMINATES
+       `overall` under worst-wins. Every later differential run would report
+       "VACUOUS" because of a stray file, and that reads as "your oracles are
+       vacuous" rather than "clean up formal/mojo". Demonstrated, not
+       theorised: a probe of that shape placed here produced
+       overall=VACUOUS with the 17 real pairs untouched.
+
+       This is NOT the same defect as the plane lock (F-W-13): no concurrency
+       is needed, only a crash, so a lock cannot fix it. Both controls are
+       required. *)
     Sys.readdir oracle_dir |> Array.to_list
     |> List.filter (fun f -> Filename.check_suffix f "_oracle.mojo")
+    |> List.filter (fun f -> not (is_generated f))
     |> List.sort compare
 
 (* ---------- verdict lattice ------------------------------------------- *)
@@ -357,7 +381,44 @@ let () =
     prerr_endline "lean_mojo_differential: no *_oracle.mojo found in formal/mojo";
     exit (exit_of No_oracle)
   end;
-  let results = List.map run_pair os in
+  (* FIXED 20261107-2034, finding F-W-13. This instrument RUNS every oracle
+     and then digests `formal/mojo/*_oracle.mojo formal/mojo/oracle_substrate.mojo`
+     into oracle_set_sha256_16. tools/mojo_mutation_dataplane.ml rewrites
+     those same files in place. Unsynchronised, the digest can describe a
+     mid-mutation tree -- a revision nobody authored -- and this record would
+     bind its verdict to it.
+
+     The lock spans [first oracle run .. digest] because that is exactly the
+     interval over which the two must agree; digesting under the lock while
+     running outside it would hash a consistent tree the oracles never saw. *)
+  (* The digest is taken INSIDE the lock, in the same critical section as the
+     runs. A first attempt locked only `List.map run_pair os` and digested
+     after releasing -- the mirror image of the error this comment warns
+     about, and the same shape as F-W-10 (two changes in one session that
+     cancel). `capture` cds to root, so these are the same commands the JSON
+     writer used, run at a point where no mutant can be on disk. *)
+  let oracle_sha_locked = ref "" in
+  let results = with_plane_lock ~timeout:600.0 "formal-mojo" @@ fun () ->
+    let rs = List.map run_pair os in
+    (* The digest excludes generated_* for the same reason the enumeration
+       does (F-W-15): a stray probe must not move the recorded hash of the
+       authored oracle set.
+
+       The file list is built in OCaml from `oracles ()`, which is ALREADY
+       filtered by `is_generated`, rather than by re-deriving it in shell.
+       Two attempts at a shell form failed first -- a `{ ...; }` group, which
+       timeout(1) cannot exec, and a `$(ls | grep -v ...)` substitution. One
+       source of truth for which files are in the oracle set, not two that
+       usually agree: a digest that silently became "" is still a digest the
+       record would have published. *)
+    let digest_files =
+      String.concat " "
+        (List.map (fun f -> Filename.quote (Filename.concat "formal/mojo" f))
+           (oracles () @ [ "oracle_substrate.mojo" ])) in
+    let _, out =
+      capture ("cat " ^ digest_files ^ " 2>/dev/null | sha256sum | cut -c1-16") in
+    oracle_sha_locked := String.trim out;
+    rs in
   let paired =
     List.filter_map
       (fun (_, s, _, _, _) -> if s = "<no subject declared>" then None else Some s)
@@ -421,11 +482,10 @@ let () =
        shell_capture
          "sha256sum tools/lean_proof_plane_scan.ml 2>/dev/null | cut -c1-16"
      in
-     let oracle_sha =
-       shell_capture
-         "cat formal/mojo/*_oracle.mojo formal/mojo/oracle_substrate.mojo \
-          2>/dev/null | sha256sum | cut -c1-16"
-     in
+     (* Read from the locked section above, NOT re-run here: re-running it
+        would digest the tree as it is now, which is not the tree the
+        oracles ran against. *)
+     let oracle_sha = !oracle_sha_locked in
      Printf.fprintf oc
        "{\"schema\":\"uos.lean_mojo_differential.v1\",\"observed_utc\":\"%04d-%02d-%02dT%02d:%02d:%02dZ\",\"revision\":%S,\"scanner_sha256_16\":%S,\"oracle_set_sha256_16\":%S,\"overall\":\"%s\",\"pairs\":%d,\"orphans\":%d,\"authority\":\"NONE\",\"ev_ceiling\":93,\"results\":["
        (t.Unix.tm_year + 1900) (t.Unix.tm_mon + 1) t.Unix.tm_mday

@@ -521,3 +521,31 @@ pub fn mark_forked(state: PiSessionState, timestamp: Int) -> PiSessionState {
     last_active: timestamp,
   )
 }
+
+/// Pure Gleam mirror of `uos_lean_verify_tool_call_provenance` (C-ABI Export #21, THM_FSYS_51).
+/// Enforces that any replayed tool-call turn targeting a signature-requiring model
+/// carries either a same-model `thoughtSignature` or the `"skip_thought_signature_validator"` waiver.
+pub fn verify_tool_call_provenance(
+  has_tool_calls: Bool,
+  same_model_origin: Bool,
+  has_thought_sig: Bool,
+  has_validator_waiver: Bool,
+  target_requires_sig: Bool,
+) -> Bool {
+  case has_tool_calls, target_requires_sig {
+    False, _ -> True
+    _, False -> True
+    True, True ->
+      { same_model_origin && has_thought_sig } || has_validator_waiver
+  }
+}
+
+/// Pure Gleam mirror of `uos_lean_should_fold_context_v2` (C-ABI Export #22, THM_GUARD_22).
+/// Folds context only when token budget is exceeded AND tool-call provenance is verified.
+pub fn should_fold_context_v2(
+  current_tokens: Int,
+  max_tokens: Int,
+  provenance_ok: Bool,
+) -> Bool {
+  max_tokens > 0 && current_tokens > max_tokens && provenance_ok
+}

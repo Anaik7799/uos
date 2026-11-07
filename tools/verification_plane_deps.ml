@@ -1,6 +1,9 @@
 (* Derive the verification plane's dependency DAG from the files themselves.
    No hand-drawn edges: every edge is read out of an import, a subject
    declaration, or a tool invocation. authority NONE. EV ceiling 93. *)
+#directory "tools";;
+#use "uos_plane_lock.ml";;
+
 let read p = let ic = open_in_bin p in let n = in_channel_length ic in
   let s = really_input_string ic n in close_in ic; s
 let contains h n =
@@ -20,9 +23,20 @@ let matches_all src re =
      done
    with Not_found -> ());
   List.sort_uniq compare !out
+(* FIXED 20261107-2048, findings F-W-13 and F-W-15. This instrument reads the
+   BYTES of every oracle (`let src = read path` below) to derive the plane's
+   dependency graph. Unsynchronised it can read a mid-mutation tree and emit a
+   DAG for a revision nobody authored; and, like lean_mojo_differential.ml did,
+   it enumerated `generated_falsify_*_oracle.mojo` as a real oracle because
+   that name ends in `_oracle.mojo`. Both controls, because only one of them is
+   about concurrency: the stray-file case needs no second process, only a
+   crash. *)
 let () =
+  with_plane_lock ~timeout:600.0 "formal-mojo" @@ fun () ->
   let oracles = Sys.readdir "formal/mojo" |> Array.to_list
     |> List.filter (fun f -> Filename.check_suffix f "_oracle.mojo")
+    |> List.filter (fun f ->
+         not (String.length f >= 10 && String.sub f 0 10 = "generated_"))
     |> List.sort compare in
   let shared = ["oracle_substrate.mojo"] in
   Printf.printf "digraph verification_plane {\n  rankdir=LR;\n";

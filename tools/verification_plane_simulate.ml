@@ -81,6 +81,31 @@ let modes = [
     fixture = "sim_fm06.mojo"; detector = "falsify";
     expect = "\"bare_world_arms\":1"; outcome = "DETECTED";
     severity = 5; occurrence = 3 };
+  (* Prevented by C-ABI Export #21 uos_lean_verify_tool_call_provenance (THM_FSYS_51) *)
+  { id = "FM-10"; title = "cross-model toolCall replay without thoughtSignature or waiver (Prevented by THM_FSYS_51)";
+    fixture = "sim_fm10.mojo"; detector = "substrate";
+    expect = "world:fm10-unwaived-cross-model-replay-refused:got-0-want-1"; outcome = "PREVENTED";
+    severity = 5; occurrence = 4 };
+  (* Prevented by SC-ZERO-PYTHON-001 & THM_FSYS_52 in language_conformance_oracle.mojo *)
+  { id = "FM-11"; title = "unsanctioned python3 in failover or std.python in Mojo tools (Prevented by THM_FSYS_52)";
+    fixture = "sim_fm11.mojo"; detector = "substrate";
+    expect = "world:fm11-unsanctioned-python-refused:got-1-want-0"; outcome = "PREVENTED";
+    severity = 5; occurrence = 3 };
+  (* Prevented by C-ABI Export #23 uos_lean_verify_provider_api_transition (THM_FSYS_54) *)
+  { id = "FM-12"; title = "provider API turn-order or HTTP 402 credit-cap transition violation (Prevented by THM_FSYS_54)";
+    fixture = "sim_fm12.mojo"; detector = "substrate";
+    expect = "world:fm12-illegal-provider-api-transition-refused:got-0-want-1"; outcome = "PREVENTED";
+    severity = 5; occurrence = 4 };
+  (* Prevented by C-ABI Export #24 uos_lean_resolve_provider_api_recovery (THM_FSYS_55) *)
+  { id = "FM-13"; title = "provider API unrecovered HTTP 402/429/5xx crash when failover is available (Prevented by THM_FSYS_55)";
+    fixture = "sim_fm13.mojo"; detector = "substrate";
+    expect = "world:fm13-unrecovered-crash-when-failover-available-refused:got-0-want-1"; outcome = "PREVENTED";
+    severity = 5; occurrence = 4 };
+  (* Prevented by C-ABI Export #27 uos_lean_verify_sdlc_sre_feature_aspect_gate (THM_FSYS_61..62) *)
+  { id = "FM-14"; title = "SDLC/SRE 17-aspect feature gate bypass without Codex+Claude or SRE masks (Prevented by THM_FSYS_61..62)";
+    fixture = "sim_fm14.mojo"; detector = "substrate";
+    expect = "world:fm14-unverified-sdlc-sre-aspect-bypass-refused:got-0-want-1"; outcome = "PREVENTED";
+    severity = 5; occurrence = 4 };
 ]
 
 let sh cmd =
@@ -112,13 +137,13 @@ let () =
           sh (Printf.sprintf
                 "./tools/mojo run -I formal/mojo -I formal/mojo/sim %s"
                 (Filename.quote path)) in
-      ignore rc;
+      let rc_ok = (m.detector = "falsify" || rc = 0) in
       (* The run must EXHIBIT what the mode claims. For DETECTED that is an
          instrument firing; for PREVENTED and MANIFESTS it is the substrate
          verdict. Classification is confirmed only if the expected string is
          present -- otherwise the mode did not reproduce and is UNCONFIRMED,
          which is reported as such rather than silently passing. *)
-      let shown = contains out m.expect in
+      let shown = rc_ok && contains out m.expect in
       let note =
         if not shown then "UNCONFIRMED"
         else m.outcome in

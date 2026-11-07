@@ -380,6 +380,35 @@ def main() raises:
         receipt_age >= 0 and receipt_age <= RECEIPT_MAX_AGE_MIN
         and receipt_is_full_run)
     r.observe(String("receipt-is-a-full-run"), String(receipt_is_full_run))
+    # CHECKED AND DISMISSED 20261107-2353 (candidate finding F-W-21, withdrawn).
+    #
+    # I read this arm as the F-W-14 shape -- an evidence-freshness condition
+    # sitting in the VALUE slot, so staleness scores WORLD_FAIL -- and started
+    # moving `receipt_fresh` into the presence slot to make it BLIND. That is
+    # wrong, and the way it is wrong is worth leaving written down.
+    #
+    # `receipt_fresh` is this arm's SUBJECT, not its precondition. The arm is
+    # named `differential-receipt-is-fresh-and-complete`: reporting a stale or
+    # partial receipt is the whole job. Putting the same expression in both
+    # slots makes `value_ok` true whenever `field_present` is true, so the arm
+    # could never fail -- a tautology (INV-FALSIFY) in the one arm whose
+    # purpose is catching stale evidence. I would have closed a WORLD_FAIL by
+    # making it unreportable.
+    #
+    # The sibling in agent_profile_oracle.mojo:303 is NOT a counterexample.
+    # It gates a DIFFERENT claim (`obligation6-subject-actually-elaborates`)
+    # on receipt quality, so for it freshness genuinely is a precondition and
+    # BLIND genuinely is right. Same expression, different role. That the two
+    # arms wire it differently is correct, not a disagreement.
+    #
+    # What was really observed stands as a real, non-defect fact: a peer added
+    # a 19th oracle while the newest receipt line was an 18-pair run, so
+    # `receipt_pairs >= oracles_on_disk` was false and this arm reported
+    # WORLD_FAIL at 20261107-2250Z and PASS at 2253Z with no code change --
+    # only a full differential between. That is the arm working. Adding an
+    # oracle really does mean the evidence base no longer covers the
+    # candidate, and "run the differential" is the actionable remedy it is
+    # pointing at.
     r.world_or_blind(String("differential-receipt-is-fresh-and-complete"),
                      receipt_age >= 0 and receipt_pairs > 0
                      and oracles_on_disk > 0,

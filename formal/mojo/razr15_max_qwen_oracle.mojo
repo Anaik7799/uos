@@ -40,7 +40,7 @@
 from std.sys import exit
 from oracle_substrate import (
     Receipt, capture, contains, json_flag, json_int, json_norm, occurrences,
-    shell_quote,
+    shell_quote, last_line, strip_last_line,
 )
 
 # F17, 20261106: this was the raw tailnet IP `100.114.9.28`.
@@ -367,16 +367,48 @@ def main() raises:
                  json_flag(ok_intent, String("approved")), True)
 
     # ---- WORLD: bounded inference, 16 tokens, temperature 0 -------------
-    var chat = capture(
-        "curl -s --max-time 12 -H 'Content-Type: application/json' "
+    #
+    # FIXED 20261107-2353, finding F-W-23. This arm was
+    #
+    #     curl -s --max-time 12 ...
+    #     world_or_blind(name, chat.byte_length() > 0, contains(chat, choices))
+    #
+    # and it reported BLIND `field-absent` while razr15-1:8000 was returning a
+    # perfectly definite `502 {"error":"<urlopen error timed out>"}`. The 502
+    # takes 120 seconds to arrive, because that is the backend timeout the
+    # gateway itself applies (max_qwen_server.py:602 `urlopen(req,
+    # timeout=120)`), and a 12-second probe cannot be there when it does. The
+    # arm was not measuring the gateway. It was measuring its own patience.
+    #
+    # Two things are therefore changed, and only these two:
+    #
+    #   1. `-w '\n%{http_code}'` so the status is read from the SAME request.
+    #      An unanswered probe gives "000"; the 502 gives "502". Without the
+    #      status, an empty body is ambiguous between "no answer yet" and
+    #      "answered, with nothing useful", and the arm resolved that
+    #      ambiguity in the direction that reports no problem.
+    #   2. `--max-time 150` > the gateway's own 120s. Measured, not guessed:
+    #      `time=120.105762` observed at 20261107-2259Z. On a HEALTHY gateway
+    #      this costs nothing -- the same probe returned in under 2s when the
+    #      backend was alive -- so the budget is paid only when something is
+    #      actually wrong, which is when a definite answer is worth having.
+    #
+    # The verdict itself now goes through `world_status`, which both this
+    # oracle and model_evaluation_oracle share, so the two cannot disagree
+    # about the same endpoint again (they did: WORLD_FAIL vs BLIND).
+    var chat_raw = capture(
+        "curl -s --max-time 150 -w '\\n%{http_code}' "
+        + "-H 'Content-Type: application/json' "
         + "-d '{\"model\":\"" + String(MODEL_ID)
         + "\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: OK\"}],"
         + "\"max_tokens\":16,\"temperature\":0.0}' "
-        + base_url() + "/v1/chat/completions")
+        + base_url() + "/v1/chat/completions", 150)
+    var chat_code = last_line(chat_raw)
+    var chat = strip_last_line(chat_raw)
     r.observe(String("chat-response"), chat)
-    r.world_or_blind(String("gateway-completes-a-bounded-chat"),
-                     chat.byte_length() > 0,
-                     contains(chat, String("\"choices\"")))
+    r.observe(String("chat-http-code"), chat_code)
+    r.world_status(String("gateway-completes-a-bounded-chat"), chat_code,
+                   contains(chat, String("\"choices\"")))
 
     # ---- WORLD: the node itself, over SSH -------------------------------
     # BatchMode so an unreachable node fails fast instead of prompting.

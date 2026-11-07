@@ -1,0 +1,444 @@
+{
+  "schema": "uos.ontology.agent_provider_api_holarchy_fpp.v1",
+  "observed_utc": "2026-11-07T19:46:00Z",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "canonical_sa_plan_id": "plan-provider-api-holarchy-fpp-twin-20261107-2046",
+  "purpose": "Canonical common ontology mapping all 7 AI/Control Provider APIs used across the 6 UOS Agent Harnesses (agy, pi, codex, claude, deepseek, argon), 10 Holarchy Concern Layers (L0..L9), 6 FPP Service Ports, deterministic Interaction State Machine transitions, reference code coordinates, and formal digital twins.",
+  "common_ontology": {
+    "agent_roster_axis": [
+      "agy",
+      "pi",
+      "codex",
+      "claude",
+      "deepseek",
+      "argon"
+    ],
+    "holarchy_concern_layers": [
+      "L0_Constitutional",
+      "L1_Atomic_Formal",
+      "L2_Component_Execution",
+      "L3_Transaction_Storage_Supervision",
+      "L4_System_Policy_Routing",
+      "L5_Cognitive_Scheduling",
+      "L6_Ecosystem_Provider_Runtime",
+      "L7_Federation_Mesh",
+      "L8_Evolutionary_Safety_SRE",
+      "L9_Sovereign_Verification_Swarm"
+    ],
+    "fpp_service_ports": [
+      "supervision",
+      "typedPort",
+      "companionMachine",
+      "mcpTool",
+      "taskRole",
+      "intelligenceFocus"
+    ],
+    "system_aspects_a01_to_a17": [
+      "A01_SubstrateHardwareSafety",
+      "A02_VersionControlDiscipline",
+      "A03_ZeroMudaPurity",
+      "A04_SupervisionActorHierarchy",
+      "A05_DeterministicRuntimeEngine",
+      "A06_FormalEvidenceAnalysis",
+      "A07_MathematicalAuthority",
+      "A08_FeedbackSemioticsHomeostasis",
+      "A09_QuarantinedAIInference",
+      "A10_MeshTelemetryObservability",
+      "A11_AgentEventBusProtocol",
+      "A12_DeclarativeUIComponentCatalog",
+      "A13_MultiInterfaceAccessibility",
+      "A14_UniversalTailscaleWebNavigation",
+      "A15_ComprehensiveVerificationChecklist",
+      "A16_KnowledgeManagementTriad",
+      "A17_DurableExecutionWorkflow"
+    ],
+    "api_interaction_states": [
+      {
+        "state_id": 0,
+        "name": "Idle",
+        "description": "Session initialized or ready before user turn ingress."
+      },
+      {
+        "state_id": 1,
+        "name": "UserTurn",
+        "description": "User or system prompt accepted; ready for model inference or tool-call generation."
+      },
+      {
+        "state_id": 2,
+        "name": "AssistantToolCall",
+        "description": "Assistant emitted one or more tool calls (requires thoughtSignature/reasoning_details provenance on Google/OpenRouter Gemini)."
+      },
+      {
+        "state_id": 3,
+        "name": "ToolResultTurn",
+        "description": "Tool execution completed and matched by tool_call_id; ready for continuation or compaction."
+      },
+      {
+        "state_id": 4,
+        "name": "AssistantFinal",
+        "description": "Assistant emitted terminal text response with stop_reason=stop."
+      },
+      {
+        "state_id": 5,
+        "name": "Compacting",
+        "description": "Context window >= 80% folded via default_api:compress with preserved or base64 skip_thought_signature_validator sentinel."
+      },
+      {
+        "state_id": 6,
+        "name": "FailoverOrVeto",
+        "description": "Fail-closed state on unsigned tool call, turn-order violation, or HTTP 402 credit-cap trigger; routes to Local MAX Qwen or DeepSeek-v3.2."
+      }
+    ],
+    "provider_apis": [
+      {
+        "api_id": 0,
+        "enum_name": "LocalMaxQwenApi",
+        "protocol_id": "openai-completions-local-max",
+        "endpoint_url": "http://razr15-1.tail55d152.ts.net:8000/v1/chat/completions",
+        "telemetry_url": "http://razr15-1.tail55d152.ts.net:8000/v1/telemetry/pipeline",
+        "models": [
+          "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF"
+        ],
+        "agents_bound": [
+          "agy",
+          "pi",
+          "codex",
+          "claude",
+          "deepseek"
+        ],
+        "holarchy_layers": [
+          "L2_Component_Execution",
+          "L4_System_Policy_Routing",
+          "L5_Cognitive_Scheduling",
+          "L6_Ecosystem_Provider_Runtime",
+          "L8_Evolutionary_Safety_SRE"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppLocalMaxChatRequestPort",
+          "output_port": "FppLocalMaxChatCompletionPort",
+          "companion_machine": "LocalMaxDualPlane14StageStateMachine",
+          "requires_thought_signature": false,
+          "requires_strict_turn_alternation": false,
+          "remote_tokens_billed": 0,
+          "credit_cap_prompt_tokens": 0
+        },
+        "reference_code": [
+          "ops/nodes/razr15-1-wsl2/max_qwen_server.py:129-225",
+          "tools/uos-agent-failover.ml:130-165",
+          "formal/lean/Razr15_Max_Qwen_Digital_Twin.lean:1-120",
+          "formal/mojo/razr15_max_qwen_oracle.mojo:1-120"
+        ],
+        "related_specs": [
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md",
+          "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean",
+          "formal/lean/UosLeanRuntimeGuard.lean"
+        ]
+      },
+      {
+        "api_id": 1,
+        "enum_name": "OpenRouterChatCompletionsApi",
+        "protocol_id": "openai-completions-openrouter",
+        "endpoint_url": "https://openrouter.ai/api/v1/chat/completions",
+        "models": [
+          "openrouter/deepseek/deepseek-v3.2",
+          "openrouter/deepseek/deepseek-v4.1-flash",
+          "openrouter/qwen/qwen3-coder-next",
+          "openrouter/google/gemini-3.5-flash-lite",
+          "openrouter/google/gemini-4-argon"
+        ],
+        "agents_bound": [
+          "pi",
+          "deepseek",
+          "argon",
+          "agy"
+        ],
+        "holarchy_layers": [
+          "L4_System_Policy_Routing",
+          "L6_Ecosystem_Provider_Runtime",
+          "L8_Evolutionary_Safety_SRE"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppOpenRouterChatRequestPort",
+          "output_port": "FppOpenRouterReasoningStreamPort",
+          "companion_machine": "OpenRouterReasoningDetailsStateMachine",
+          "requires_thought_signature": true,
+          "signature_transport": "reasoning_details[type=reasoning.encrypted,format=google-gemini-v1,data=base64]",
+          "cross_model_fallback_sentinel_b64": "c2tpcF90aG91Z2h0X3NpZ25hdHVyZV92YWxpZGF0b3I=",
+          "requires_strict_turn_alternation": true,
+          "credit_cap_prompt_tokens": 2879
+        },
+        "reference_code": [
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/openai-completions-EJNYB6IX.js:1-29500",
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/chunk-7O7QKK6A.js:14500-17500",
+          "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_session.gleam:204-261",
+          "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam:239-270"
+        ],
+        "related_specs": [
+          "https://openrouter.ai/docs/guides/best-practices/reasoning-tokens",
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md",
+          "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean"
+        ]
+      },
+      {
+        "api_id": 2,
+        "enum_name": "GoogleGenerativeAiV1BetaApi",
+        "protocol_id": "google-generative-ai",
+        "endpoint_url": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+        "models": [
+          "google/gemini-4-argon",
+          "google/gemini-flash-latest",
+          "google/gemini-3.5-flash"
+        ],
+        "agents_bound": [
+          "agy",
+          "pi",
+          "argon"
+        ],
+        "holarchy_layers": [
+          "L0_Constitutional",
+          "L5_Cognitive_Scheduling",
+          "L6_Ecosystem_Provider_Runtime",
+          "L8_Evolutionary_Safety_SRE"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppGoogleGenerateContentRequestPort",
+          "output_port": "FppGoogleCandidatePartsStreamPort",
+          "companion_machine": "GoogleThoughtSignatureAndTurnAlternationStateMachine",
+          "requires_thought_signature": true,
+          "signature_transport": "contents[].parts[].thoughtSignature (protobuf bytes base64)",
+          "cross_model_fallback_sentinel_b64": "c2tpcF90aG91Z2h0X3NpZ25hdHVyZV92YWxpZGF0b3I=",
+          "requires_strict_turn_alternation": true,
+          "credit_cap_prompt_tokens": 0
+        },
+        "reference_code": [
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/chunk-B46VJEHW.js:941500-946800",
+          "/home/an/.pi/agent/npm/node_modules/billion-context/dist/agent/pi-native.js:116000-118000",
+          "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_session.gleam:204-261"
+        ],
+        "related_specs": [
+          "https://ai.google.dev/gemini-api/docs/thought-signatures",
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md",
+          "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean"
+        ]
+      },
+      {
+        "api_id": 3,
+        "enum_name": "DeepSeekReasoningChatApi",
+        "protocol_id": "deepseek-chat-completions",
+        "endpoint_url": "https://openrouter.ai/api/v1/chat/completions",
+        "models": [
+          "openrouter/deepseek/deepseek-v3.2",
+          "openrouter/deepseek/deepseek-v4.1-flash"
+        ],
+        "agents_bound": [
+          "pi",
+          "deepseek"
+        ],
+        "holarchy_layers": [
+          "L4_System_Policy_Routing",
+          "L5_Cognitive_Scheduling",
+          "L6_Ecosystem_Provider_Runtime"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppDeepSeekChatRequestPort",
+          "output_port": "FppDeepSeekReasoningContentPort",
+          "companion_machine": "DeepSeekReasoningContentStateMachine",
+          "requires_thought_signature": false,
+          "signature_transport": "assistant.reasoning_content",
+          "requires_strict_turn_alternation": false,
+          "credit_cap_prompt_tokens": 0
+        },
+        "reference_code": [
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/openai-completions-EJNYB6IX.js:18000-28500",
+          "/home/an/.pi/agent/settings.json:1-35",
+          ".pi/acp.json:1-35"
+        ],
+        "related_specs": [
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md",
+          "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean"
+        ]
+      },
+      {
+        "api_id": 4,
+        "enum_name": "AnthropicClaudeMessagesApi",
+        "protocol_id": "anthropic-messages",
+        "endpoint_url": "https://api.anthropic.com/v1/messages",
+        "models": [
+          "claude-opus-4-6"
+        ],
+        "agents_bound": [
+          "claude",
+          "agy"
+        ],
+        "holarchy_layers": [
+          "L0_Constitutional",
+          "L1_Atomic_Formal",
+          "L3_Transaction_Storage_Supervision",
+          "L8_Evolutionary_Safety_SRE",
+          "L9_Sovereign_Verification_Swarm"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppAnthropicMessagesRequestPort",
+          "output_port": "FppAnthropicThinkingAndToolUsePort",
+          "companion_machine": "AnthropicSignedThinkingStateMachine",
+          "requires_thought_signature": true,
+          "signature_transport": "thinking.signature / redacted_thinking.data",
+          "requires_strict_turn_alternation": true,
+          "credit_cap_prompt_tokens": 0
+        },
+        "reference_code": [
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/anthropic-messages-BWGCKOF4.js:1-15000",
+          "tools/uos-agent-failover.ml:1-220",
+          "tools/uos-fractal-context-pipeline.ml:1-260"
+        ],
+        "related_specs": [
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md",
+          "formal/lean/UosAgentCapabilityProfile.lean"
+        ]
+      },
+      {
+        "api_id": 5,
+        "enum_name": "OpenAiCodexResponsesApi",
+        "protocol_id": "openai-responses",
+        "endpoint_url": "https://api.openai.com/v1/responses",
+        "models": [
+          "gpt-6-luna"
+        ],
+        "agents_bound": [
+          "codex",
+          "agy"
+        ],
+        "holarchy_layers": [
+          "L1_Atomic_Formal",
+          "L2_Component_Execution",
+          "L6_Ecosystem_Provider_Runtime",
+          "L8_Evolutionary_Safety_SRE",
+          "L9_Sovereign_Verification_Swarm"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppOpenAiResponsesRequestPort",
+          "output_port": "FppOpenAiEncryptedReasoningItemPort",
+          "companion_machine": "OpenAiResponses40CharToolCallIdStateMachine",
+          "requires_thought_signature": false,
+          "signature_transport": "reasoning.encrypted_content / 40-char normalized tool_call_id",
+          "requires_strict_turn_alternation": false,
+          "credit_cap_prompt_tokens": 0
+        },
+        "reference_code": [
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/openai-responses-MD3562FB.js:1-15000",
+          "/home/an/.pi/agent/runtime/pi-coding-agent/dist/bundle/chunks/openai-codex-responses-QAWLOQSN.js:1-15000",
+          "tools/uos-agent-failover.ml:1-220"
+        ],
+        "related_specs": [
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md",
+          "formal/lean/UosAgentCapabilityProfile.lean"
+        ]
+      },
+      {
+        "api_id": 6,
+        "enum_name": "UosHarnessMcpAndZenohApi",
+        "protocol_id": "uos-mcp-jsonrpc2-and-zenoh",
+        "endpoint_url": "http://nas-1.tail55d152.ts.net:4100/mcp",
+        "models": [
+          "deterministic-gleam-otp-29-rete-z3-lean4"
+        ],
+        "agents_bound": [
+          "agy",
+          "pi",
+          "codex",
+          "claude",
+          "deepseek",
+          "argon"
+        ],
+        "holarchy_layers": [
+          "L0_Constitutional",
+          "L1_Atomic_Formal",
+          "L2_Component_Execution",
+          "L3_Transaction_Storage_Supervision",
+          "L4_System_Policy_Routing",
+          "L5_Cognitive_Scheduling",
+          "L6_Ecosystem_Provider_Runtime",
+          "L7_Federation_Mesh",
+          "L8_Evolutionary_Safety_SRE",
+          "L9_Sovereign_Verification_Swarm"
+        ],
+        "fpp_port_contract": {
+          "input_port": "FppMcpJsonRpc2AndZenohIngressPort",
+          "output_port": "FppMcp104RouteAuditedReceiptPort",
+          "companion_machine": "GleamOtpSaPlanCedarGuardStateMachine",
+          "requires_thought_signature": false,
+          "signature_transport": "Cryptokit SHA-256 + Cedar VGD + Lean C-ABI 24-export guard",
+          "requires_strict_turn_alternation": false,
+          "credit_cap_prompt_tokens": 0
+        },
+        "reference_code": [
+          "tools/uos-mcp-stdio:1-120",
+          "formal/lean/UosMcpUnifiedGatewayTwin.lean:1-200",
+          "formal/mojo/mcp_gateway_oracle.mojo:1-150",
+          "apps/cepaf_gleam/src/cepaf_gleam/verification/core_fpp_actor_twin_mesh.gleam:350-450"
+        ],
+        "related_specs": [
+          "contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md",
+          "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "docs/design/20261107-2046-agent-provider-api-holarchy-fpp-state-machine-spec.md"
+        ]
+      }
+    ],
+    "graceful_error_recovery_lattice": {
+      "theorem": "THM_FSYS_55_resilient_graceful_error_recovery_total_and_terminating",
+      "c_abi_export": "uos_lean_resolve_provider_api_recovery (Export #24, THM_GUARD_24)",
+      "state_space_cardinality": 64,
+      "simulator_fixture": "FM-13 (formal/mojo/sim/sim_fm13.mojo)",
+      "actions": [
+        {"action_id": 0, "name": "ProceedNominal"},
+        {"action_id": 1, "name": "ClampMaxTokensAndRetry"},
+        {"action_id": 2, "name": "InjectWaiverAndRetry"},
+        {"action_id": 3, "name": "SynthesizeAbortedToolResultAndRetry"},
+        {"action_id": 4, "name": "FailoverGoogleDirectV1Beta"},
+        {"action_id": 5, "name": "FailoverLocalMaxQwen"},
+        {"action_id": 6, "name": "FailClosedAndonHalt"}
+      ]
+    },
+    "uos_system_services_mesh_svc00_to_svc11": {
+      "theorems": [
+        "THM_FSYS_56_all_12_system_services_bound_to_holarchy_agents_fpp_zenoh_mcp",
+        "THM_FSYS_57_service_mesh_zenoh_mcp_fpp_routing_total_and_fail_closed"
+      ],
+      "c_abi_export": "uos_lean_verify_service_mesh_binding (Export #25, THM_GUARD_25)",
+      "state_space_cardinality": 192,
+      "services": [
+        {"service_id": 0, "enum_name": "Svc00_GleamOtpRootSupervisor", "layer": 3, "fpp_component": "FppGleamOtpRootSupervisorComp", "zenoh_topic": "uos/svc/00/gleam_otp_supervisor", "mcp_route": "system_health"},
+        {"service_id": 1, "enum_name": "Svc01_ZigVmDeterministicKernel", "layer": 2, "fpp_component": "FppZigVmDeterministicKernelComp", "zenoh_topic": "uos/svc/01/zigvm_kernel", "mcp_route": "integrity_check"},
+        {"service_id": 2, "enum_name": "Svc02_HermesOcamlEvidenceInterceptor", "layer": 1, "fpp_component": "FppHermesOcamlInterceptorComp", "zenoh_topic": "uos/svc/02/hermes_interceptor", "mcp_route": "system_verification"},
+        {"service_id": 3, "enum_name": "Svc03_ModularMaxMojoInferenceDaemon", "layer": 5, "fpp_component": "FppModularMaxQwenDaemonComp", "zenoh_topic": "uos/svc/03/max_qwen_inference", "mcp_route": "metabolic_state"},
+        {"service_id": 4, "enum_name": "Svc04_ZenohMeshPubSubBus", "layer": 7, "fpp_component": "FppZenohMeshPubSubRouterComp", "zenoh_topic": "uos/svc/04/zenoh_mesh_bus", "mcp_route": "system_zenoh"},
+        {"service_id": 5, "enum_name": "Svc05_UosMcpStdio104RouteServer", "layer": 4, "fpp_component": "FppUosMcp104RouteGatewayComp", "zenoh_topic": "uos/svc/05/mcp_104_gateway", "mcp_route": "mcp_capability_inventory"},
+        {"service_id": 6, "enum_name": "Svc06_SaPlanCanonicalSqliteEngine", "layer": 3, "fpp_component": "FppSaPlanSqliteEngineComp", "zenoh_topic": "uos/svc/06/sa_plan_sqlite", "mcp_route": "sa_plan_status"},
+        {"service_id": 7, "enum_name": "Svc07_PiMultiAgentCliGateway", "layer": 6, "fpp_component": "FppPiMultiAgentCliGatewayComp", "zenoh_topic": "uos/svc/07/pi_agent_gateway", "mcp_route": "agent_hierarchy"},
+        {"service_id": 8, "enum_name": "Svc08_OtelFractalTelemetryCollector", "layer": 8, "fpp_component": "FppOtelFractalCollectorComp", "zenoh_topic": "uos/svc/08/otel_fractal_collector", "mcp_route": "evolution_metrics"},
+        {"service_id": 9, "enum_name": "Svc09_KmTriadWikiZkOntologyServer", "layer": 4, "fpp_component": "FppKmTriadWikiZkServerComp", "zenoh_topic": "uos/svc/09/km_triad_server", "mcp_route": "knowledge_search"},
+        {"service_id": 10, "enum_name": "Svc10_K8sRookCephStorageInterlock", "layer": 0, "fpp_component": "FppK8sStorageInterlockComp", "zenoh_topic": "uos/svc/10/k8s_storage_interlock", "mcp_route": "podman_containers"},
+        {"service_id": 11, "enum_name": "Svc11_CockpitLustreTuiTelegramSurface", "layer": 9, "fpp_component": "FppCockpitTripleSurfaceComp", "zenoh_topic": "uos/svc/11/cockpit_triple_surface", "mcp_route": "system_dashboard"}
+      ]
+    },
+    "uos_system_directory_service_52_objects": {
+      "contract": "SC-SYSTEM-DIRECTORY-SERVICE-001",
+      "theorems": [
+        "THM_FSYS_58_all_12_services_include_otel_128bit_and_17_aspects",
+        "THM_FSYS_59_system_directory_service_registers_all_52_canonical_objects",
+        "THM_FSYS_60_system_directory_lookup_and_guard_total_and_fail_closed"
+      ],
+      "c_abi_export": "uos_lean_verify_system_directory_object (Export #26, THM_GUARD_26)",
+      "total_directory_objects": 52,
+      "state_space_cardinality": 2080,
+      "partitions": [
+        {"kind_id": 0, "kind_name": "DirKind0_SystemService", "dir_id_range": "0..11", "count": 12, "binding": "Holarchy+Agents+FPP+Zenoh+MCP+OTel(128/64)+17Aspects(0x1FFFF)"},
+        {"kind_id": 1, "kind_name": "DirKind1_ProviderApi", "dir_id_range": "12..18", "count": 7, "binding": "Holarchy+Agents+FPP+Zenoh+MCP+OTel(128/64)+17Aspects(0x1FFFF)"},
+        {"kind_id": 2, "kind_name": "DirKind2_SovereignAgent", "dir_id_range": "19..24", "count": 6, "binding": "Holarchy+Agents+FPP+Zenoh+MCP+OTel(128/64)+17Aspects(0x1FFFF)"},
+        {"kind_id": 3, "kind_name": "DirKind3_HolarchyLayer", "dir_id_range": "25..34", "count": 10, "binding": "Holarchy+Agents+FPP+Zenoh+MCP+OTel(128/64)+17Aspects(0x1FFFF)"},
+        {"kind_id": 4, "kind_name": "DirKind4_SystemAspect", "dir_id_range": "35..51", "count": 17, "binding": "Holarchy+Agents+FPP+Zenoh+MCP+OTel(128/64)+17Aspects(0x1FFFF)"}
+      ]
+    }
+  }
+}

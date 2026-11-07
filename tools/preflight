@@ -281,6 +281,35 @@ else
   row parity ocaml-table FAIL "preflight command did not run"
 fi
 
+# --- arm 5c: shared code-plane lock (findings F-W-13 / F-W-15) ---------------
+# Cheap (sub-second, five forked controls), so it runs in the default sweep
+# rather than only under --full. Two things are checked, and they are
+# different questions:
+#
+#   exclusion  -- the lock actually excludes another PROCESS. A same-process
+#                 second lockf SUCCEEDS under POSIX, so the selftest forks;
+#                 an in-process check would report exclusion that is not there.
+#   hygiene    -- no generated_falsify_* file is sitting in formal/mojo. One
+#                 left by a crashed falsifiability run enumerates as a real
+#                 oracle pair, scores VACUOUS, and dominates the differential's
+#                 verdict under worst-wins. That needs no concurrency at all,
+#                 which is why the lock alone does not cover it.
+if out="$(cd "$PF_ROOT" && timeout 60 "$(uos_tool_path ocaml)" -I +unix unix.cma \
+          tools/uos-plane-lock.ml --selftest 2>&1)"; then
+  case "$out" in
+    *'failures 0 -- PASS'*) row plane lock-exclusion PASS "5 forked controls" ;;
+    *) row plane lock-exclusion FAIL "$(printf '%s' "$out" | grep FAIL | head -1 | cut -c1-80)" ;;
+  esac
+else
+  row plane lock-exclusion FAIL "selftest did not run"
+fi
+pf_stray="$(cd "$PF_ROOT" && ls formal/mojo/generated_* 2>/dev/null | wc -l | tr -d ' ')"
+if [ "$pf_stray" = 0 ]; then
+  row plane plane-hygiene PASS "no stray generated_* in formal/mojo"
+else
+  row plane plane-hygiene FAIL "$pf_stray stray generated_* file(s) -- would score VACUOUS"
+fi
+
 # --- arm 5b: Lean/Mojo differential (--full) ---------------------------------
 # Runs BOTH planes of every twin pair and fails closed when they DISAGREE.
 # Deliberately not fail-on-either-side: a Lean typecheck alone proves the

@@ -629,6 +629,254 @@ theorem t25_dual_plane_observability_and_intent_twin_verified :
     canonicalDualPlaneTwin.dataPlaneStageCount + canonicalDualPlaneTwin.controlPlaneStageCount = 14 := by
   decide
 
+/-! ## Section 8b: The probe verdict — finding F-W-23, 20261107-2353
+
+A probe that gives up before its subject answers does not observe a healthy
+subject and does not observe a broken one. It observes nothing, and the
+question is what verdict that earns.
+
+Observed: `razr15-1:8000/v1/chat/completions` returns a definite
+`502 {"error":"<urlopen error timed out>"}` after 120.1 s, because the
+gateway applies a 120 s timeout to its own CUDA backend on :8081, which is
+hung (TCP accepted, never answers; `http=000` after 20 s directly). The
+oracle probed with `curl --max-time 12`, read an empty body, and reported
+BLIND `field-absent`. A reproducible failure was recorded as unobservable.
+
+This section proves the fix raises severity rather than lowering it, which
+is the control that separates a fix from a cover-up. Compare
+`UosContextPathKpiOtelTwin.lean`'s `THM_FRESH_05`, where the F-W-14 fix
+*lowered* severity and needed the opposite control. -/
+
+/-- Probe verdict, ordered by severity as in the worst-wins lattice. -/
+inductive PV where
+  | pass
+  | blind
+  | worldFail
+  deriving DecidableEq, Repr
+
+def pvSev : PV → Nat
+  | .pass      => 0
+  | .blind     => 1
+  | .worldFail => 2
+
+/-- `status = 0` models "no status obtained": curl's `000`, or an unparsed
+Int field. `failLatency` is how long the subject takes to answer at all. -/
+def oldProbe (budget failLatency : Nat) (bodyOk : Bool) : PV :=
+  if budget < failLatency then PV.blind
+  else if bodyOk then PV.pass else PV.worldFail
+
+def newProbe (budget failLatency status : Nat) (bodyOk : Bool) : PV :=
+  if budget < failLatency then PV.blind
+  else if status = 0 then PV.blind
+  else if status = 200 then (if bodyOk then PV.pass else PV.worldFail)
+  else PV.worldFail
+
+/-- THM_PROBE_01 — THE DEFECT, STATED. Below the failure latency the verdict
+is BLIND for *every* subject state: a healthy endpoint and a 502 are
+indistinguishable. The verdict is a property of the budget, not the world. -/
+theorem THM_PROBE_01_short_budget_decides_the_verdict
+    (budget failLatency status : Nat) (h : budget < failLatency) :
+    ∀ bodyOk : Bool,
+      oldProbe budget failLatency bodyOk = PV.blind ∧
+      newProbe budget failLatency status bodyOk = PV.blind := by
+  intro bodyOk
+  constructor
+  · unfold oldProbe; rw [if_pos h]
+  · unfold newProbe; rw [if_pos h]
+
+/-- THM_PROBE_02 — with an adequate budget, a definite error status is a
+WORLD_FAIL and never BLIND. This is the arm the 12 s budget could not reach. -/
+theorem THM_PROBE_02_definite_error_is_a_world_failure
+    (budget failLatency status : Nat) (bodyOk : Bool)
+    (hb : ¬ budget < failLatency) (hs : status ≠ 0) (hs2 : status ≠ 200) :
+    newProbe budget failLatency status bodyOk = PV.worldFail := by
+  unfold newProbe
+  rw [if_neg hb, if_neg (by simpa using hs), if_neg (by simpa using hs2)]
+
+/-- THM_PROBE_03 — THE CONTROL THAT MATTERS. A pass still requires a 200 AND
+a good body, so no failure of any kind can become a pass. Without this the
+change would just be a louder way of not reporting problems. -/
+theorem THM_PROBE_03_pass_requires_200_and_a_good_body
+    (budget failLatency status : Nat) (bodyOk : Bool)
+    (h : newProbe budget failLatency status bodyOk = PV.pass) :
+    ¬ budget < failLatency ∧ status = 200 ∧ bodyOk = true := by
+  unfold newProbe at h
+  by_cases hb : budget < failLatency
+  · rw [if_pos hb] at h; exact absurd h (by decide)
+  · rw [if_neg hb] at h
+    by_cases hs : status = 0
+    · rw [if_pos hs] at h; exact absurd h (by decide)
+    · rw [if_neg hs] at h
+      by_cases hs2 : status = 200
+      · rw [if_pos hs2] at h
+        cases bodyOk with
+        | false => simp at h
+        | true  => exact ⟨hb, hs2, rfl⟩
+      · rw [if_neg hs2] at h; exact absurd h (by decide)
+
+/-- THM_PROBE_04 — NON-VACUITY. The two implementations really do disagree,
+on exactly the observed case: budget adequate, gateway answered 502. Without
+this witness THM_PROBE_03 could hold of a function identical to the old one. -/
+theorem THM_PROBE_04_old_and_new_disagree_on_the_observed_case :
+    oldProbe 150 121 false = PV.worldFail ∧
+    newProbe 150 121 502 false = PV.worldFail ∧
+    oldProbe 12 121 false = PV.blind ∧
+    newProbe 150 121 0 false = PV.blind := by
+  decide
+
+/-- THM_PROBE_05 — SEVERITY IS NEVER LOWERED **when a status was obtained**.
+So for every case in which the gateway actually answered, the fix cannot be
+a way to stop hearing bad news.
+
+The qualifier is not decoration, and I did not get it right first time: I
+stated this theorem without `status ≠ 0` and Lean refuted it. At `status = 0`
+with an empty body the old arm said WORLD_FAIL (severity 2) and the new one
+says BLIND (severity 1), so severity really does drop. That case is
+THM_PROBE_05b, where the drop is the point rather than a side effect. -/
+theorem THM_PROBE_05_reading_an_obtained_status_never_lowers_severity
+    (budget failLatency status : Nat) (bodyOk : Bool) (hs : status ≠ 0) :
+    pvSev (oldProbe budget failLatency bodyOk)
+      ≤ pvSev (newProbe budget failLatency status bodyOk) := by
+  -- `simp` with the branch hypotheses supplied, rather than a chain of
+  -- `rw [if_neg ...]`: the chain rewrote the OUTER guard and left the inner
+  -- `if status = 0` standing in two of four cases, which read as a proof
+  -- state about an unreduced match instead of about severity.
+  by_cases hb : budget < failLatency
+  · simp [oldProbe, newProbe, pvSev, hb]
+  · by_cases h2 : status = 200
+    -- `hs` is omitted here on purpose: `h2 : status = 200` already entails
+    -- `status ≠ 0`, so passing both makes one redundant and the linter says so.
+    · cases bodyOk <;> simp [oldProbe, newProbe, pvSev, hb, h2]
+    · cases bodyOk <;> simp [oldProbe, newProbe, pvSev, hb, hs, h2]
+
+/-- THM_PROBE_05b — the ONE case where severity drops, isolated and argued.
+No status was obtained, so nothing about the gateway was observed. The old
+arm nevertheless reported WORLD_FAIL, inferring an outage from the absence of
+a reply; that inference is exactly what `world_or_blind` exists to forbid.
+BLIND is the lower verdict and the correct one, and it stays nonpassing. -/
+theorem THM_PROBE_05b_no_status_lowers_to_blind_and_not_to_pass
+    (budget failLatency : Nat) (hb : ¬ budget < failLatency) :
+    newProbe budget failLatency 0 false = PV.blind ∧
+    oldProbe budget failLatency false = PV.worldFail ∧
+    pvSev (newProbe budget failLatency 0 false)
+      < pvSev (oldProbe budget failLatency false) ∧
+    newProbe budget failLatency 0 false ≠ PV.pass := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> simp [oldProbe, newProbe, pvSev, hb]
+
+/-- THM_PROBE_06 — the budget rule the helper's docstring states, as an
+obligation rather than advice: an adequate budget is NECESSARY for any
+verdict other than BLIND. A caller that keeps a 12 s budget gets BLIND
+forever however good the status handling is, so the two halves of the fix
+are not independent. -/
+theorem THM_PROBE_06_adequate_budget_is_necessary
+    (budget failLatency status : Nat) (bodyOk : Bool)
+    (h : newProbe budget failLatency status bodyOk ≠ PV.blind) :
+    ¬ budget < failLatency := by
+  intro hb
+  exact h (by unfold newProbe; rw [if_pos hb])
+
+/-! ## Section 8c: Non-Vacuous Dual-Plane Observation, GPU-to-CPU Failover & Speculative/Grammar Invariants
+    (`uos/razr15-qwen-opt/20261107-2242`: `task-0`..`task-3`) -/
+
+/-- Runtime observation record with NO default-true fields, closing the vacuity noted in `DualPlaneObservabilityTwinSpec`. -/
+structure DualPlaneObservation where
+  observed              : Bool
+  httpStatus            : Nat
+  dataPlaneStagesOk     : Nat
+  controlPlaneStagesOk  : Nat
+  profileLockThreadSafe : Bool
+  rogueAuthorityVetoed  : Bool
+  sanctionedApproved    : Bool
+  admittedEvCeiling     : Nat
+  remoteTokensBilled    : Nat
+  deriving DecidableEq, Repr
+
+def verifyDualPlaneObservation (obs : DualPlaneObservation) : Bool :=
+  obs.observed &&
+  obs.httpStatus == 200 &&
+  obs.dataPlaneStagesOk == 7 &&
+  obs.controlPlaneStagesOk == 7 &&
+  obs.profileLockThreadSafe &&
+  obs.rogueAuthorityVetoed &&
+  obs.sanctionedApproved &&
+  obs.admittedEvCeiling == 93 &&
+  obs.remoteTokensBilled == 0
+
+/-- THM_OBS_01: Fail-closed on unobserved or non-200 dual-plane telemetry. -/
+theorem THM_OBS_01_fail_closed_on_unobserved_dual_plane
+    (obs : DualPlaneObservation) (h : obs.observed = false) :
+    verifyDualPlaneObservation obs = false := by
+  unfold verifyDualPlaneObservation
+  simp [h]
+
+/-- THM_OBS_02: Soundness of `verifyDualPlaneObservation` — passing requires all 7+7 stages,
+    both positive (sanctioned approved) and negative (rogue vetoed) intent checks, and EV-93. -/
+theorem THM_OBS_02_verified_observation_entails_all_controls
+    (obs : DualPlaneObservation) (h : verifyDualPlaneObservation obs = true) :
+    obs.observed = true ∧
+    obs.httpStatus = 200 ∧
+    obs.dataPlaneStagesOk = 7 ∧
+    obs.controlPlaneStagesOk = 7 ∧
+    obs.rogueAuthorityVetoed = true ∧
+    obs.sanctionedApproved = true ∧
+    obs.admittedEvCeiling = 93 ∧
+    obs.remoteTokensBilled = 0 := by
+  unfold verifyDualPlaneObservation at h
+  simp only [Bool.and_eq_true, beq_iff_eq] at h
+  rcases h with ⟨⟨⟨⟨⟨⟨⟨⟨h1, h2⟩, h3⟩, h4⟩, _h5⟩, h6⟩, h7⟩, h8⟩, h9⟩
+  exact ⟨h1, h2, h3, h4, h6, h7, h8, h9⟩
+
+/-- Primary (`:8081` SM75 CUDA) vs Fallback (`:8082` AVX2 CPU) route selection with epoch fencing. -/
+inductive Razr15WorkerRoute where
+  | gpuCuda8081
+  | cpuAvx28082
+  deriving DecidableEq, Repr
+
+def selectWorkerRoute (gpuHealthy canaryPassed : Bool) (candidateEpoch activeEpoch : Nat) : Razr15WorkerRoute :=
+  if gpuHealthy && canaryPassed && activeEpoch ≤ candidateEpoch then
+    Razr15WorkerRoute.gpuCuda8081
+  else
+    Razr15WorkerRoute.cpuAvx28082
+
+/-- THM_FAILOVER_01: Any `:8081` health failure or canary failure deterministically fails over to `:8082`. -/
+theorem THM_FAILOVER_01_gpu_to_cpu_failover_bounded
+    (canaryPassed : Bool) (candidateEpoch activeEpoch : Nat) :
+    selectWorkerRoute false canaryPassed candidateEpoch activeEpoch = Razr15WorkerRoute.cpuAvx28082 ∧
+    selectWorkerRoute true false candidateEpoch activeEpoch = Razr15WorkerRoute.cpuAvx28082 := by
+  constructor <;> simp [selectWorkerRoute]
+
+/-- THM_FAILOVER_02: Epoch-fenced promotion refuses stale worker epochs (`candidateEpoch < activeEpoch`). -/
+theorem THM_FAILOVER_02_epoch_fenced_promotion
+    (candidateEpoch activeEpoch : Nat) (hStale : candidateEpoch < activeEpoch) :
+    selectWorkerRoute true true candidateEpoch activeEpoch = Razr15WorkerRoute.cpuAvx28082 := by
+  unfold selectWorkerRoute
+  have hNotLe : ¬ activeEpoch ≤ candidateEpoch := Nat.not_le_of_gt hStale
+  simp [hNotLe]
+
+/-- Speculative decoding step token count emitted for `acceptedDraftCount ≤ gamma`: always emits `acceptedDraftCount + 1` tokens (`≥ 1`). -/
+def speculativeEmittedTokens (acceptedDraftCount : Nat) : Nat :=
+  acceptedDraftCount + 1
+
+/-- THM_SPEC_DEC_01: Lossless speculative decoding guarantees strictly positive forward token progress (`≥ 1` token/step) and at most `gamma + 1` tokens. -/
+theorem THM_SPEC_DEC_01_speculative_verify_progress
+    (acceptedDraftCount gamma : Nat) (hBound : acceptedDraftCount ≤ gamma) :
+    1 ≤ speculativeEmittedTokens acceptedDraftCount ∧
+    speculativeEmittedTokens acceptedDraftCount ≤ gamma + 1 := by
+  unfold speculativeEmittedTokens
+  omega
+
+/-- Grammar-constrained decoding token admissibility predicate. -/
+def grammarMaskAdmits (allowedMask : List Bool) (tokenIdx : Nat) : Bool :=
+  allowedMask.getD tokenIdx false
+
+/-- THM_GRAMMAR_01: Any token rejected by the pushdown/EBNF grammar mask has `grammarMaskAdmits = false`. -/
+theorem THM_GRAMMAR_01_constrained_mask_sound
+    (allowedMask : List Bool) (tokenIdx : Nat)
+    (hDisallowed : allowedMask.getD tokenIdx false = false) :
+    grammarMaskAdmits allowedMask tokenIdx = false := by
+  unfold grammarMaskAdmits
+  exact hDisallowed
+
 end UOS.Razr15MaxQwen
 
 /-! ## Section 9: Observation plane — REMOVED 20261106, lives in Mojo

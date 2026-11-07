@@ -286,4 +286,158 @@ def renderAnalyticsSummaryJson : String :=
     The rendering functions and the 7 budget theorems above are unchanged:
     they are statements about the model and remain valid. -/
 
+/-!
+## Freshness as a three-valued verdict — finding F-W-14, 20261107-2140
+
+The oracle bounded an artifact's age and then read a value out of that same
+artifact in a DIFFERENT arm, and the age arm itself was written as
+
+    world_or_blind(name, age >= 0, age <= maxAge)
+
+whose first parameter is FIELD PRESENCE, not freshness. A stale age is
+present, merely large, so the arm reported WORLD_FAIL while the comment above
+it said BLIND. Measured consequence on this host: PASS -> WORLD_FAIL -> PASS
+across 2026-11-07 with no code change on any side, driven only by when an
+external renderer last ran.
+
+The theorems below are not decoration. `FRESH_03` is the one that decides
+whether the fix is an improvement or a cover-up: it says every surviving
+WORLD_FAIL is backed by evidence that was both readable AND fresh. `FRESH_04`
+says the fix never converts a failure into a pass. Without those two, scoring
+staleness as BLIND would just be a way to stop hearing bad news.
+-/
+
+/-- The three verdicts this arm can produce, ordered by the worst-wins
+    lattice used by `tools/lean_mojo_differential.ml`: PASS 0 < BLIND 1 <
+    WORLD_FAIL 2. -/
+inductive V where
+  | pass
+  | blind
+  | worldFail
+  deriving DecidableEq, Repr
+
+def sev : V → Nat
+  | .pass      => 0
+  | .blind     => 1
+  | .worldFail => 2
+
+/-- The freshness arm AS IT WAS: stale scored as a world failure. -/
+def oldFresh (age maxAge : Int) : V :=
+  if age < 0 then V.blind
+  else if age ≤ maxAge then V.pass
+  else V.worldFail
+
+/-- The freshness arm AS IT IS NOW (`world_fresh`): stale is BLIND. -/
+def newFresh (age maxAge : Int) : V :=
+  if age < 0 then V.blind
+  else if age ≤ maxAge then V.pass
+  else V.blind
+
+/-- The value arm AS IT WAS (`world_count`): knows unreadable, not stale. -/
+def oldCount (observed expected : Int) : V :=
+  if observed < 0 then V.blind
+  else if observed = expected then V.pass
+  else V.worldFail
+
+/-- The value arm AS IT IS NOW (`world_count_fresh`): the freshness predicate
+    gates the read it licenses, in the same arm. -/
+def newCountFresh (observed expected age maxAge : Int) : V :=
+  if observed < 0 then V.blind
+  else if age < 0 then V.blind
+  else if maxAge < age then V.blind
+  else if observed = expected then V.pass
+  else V.worldFail
+
+/-- ## THM_FRESH_01 — a stale artifact is BLIND, not an outage.
+    FALSIFIED BY: an oracle run over a stale artifact that reports
+    WORLD_FAIL. Observed before the fix at age 2063 against a 1440 bound. -/
+theorem THM_FRESH_01_stale_is_blind (age maxAge : Int)
+    (h0 : 0 ≤ age) (hs : maxAge < age) : newFresh age maxAge = V.blind := by
+  unfold newFresh
+  have h1 : ¬ (age < 0) := by omega
+  have h2 : ¬ (age ≤ maxAge) := by omega
+  simp [h1, h2]
+
+/-- ## THM_FRESH_02 — an age that could not be determined is BLIND.
+    Covers a missing file and a clock-skewed future mtime alike: a missing
+    age is not a fresh age.
+    FALSIFIED BY: a run on an absent or future-dated artifact that reports
+    PASS. Before the fix, a future mtime produced a false PASS. -/
+theorem THM_FRESH_02_unknowable_age_is_blind (age maxAge : Int) (h : age < 0) :
+    newFresh age maxAge = V.blind := by
+  unfold newFresh; simp [h]
+
+/-- ## THM_FRESH_03 — THE CONTROL THAT MATTERS. Every surviving WORLD_FAIL is
+    backed by evidence that was readable and fresh. Scoring staleness as BLIND
+    is only legitimate if it cannot also silence a real disagreement.
+    FALSIFIED BY: a WORLD_FAIL whose evidence was stale or unreadable -- i.e.
+    an outage reported from bytes nobody could vouch for. -/
+theorem THM_FRESH_03_world_fail_implies_fresh_readable_evidence
+    (observed expected age maxAge : Int)
+    (h : newCountFresh observed expected age maxAge = V.worldFail) :
+    0 ≤ observed ∧ 0 ≤ age ∧ age ≤ maxAge ∧ observed ≠ expected := by
+  -- Explicit `if_pos`/`if_neg` rather than `simp`: simp used the equation
+  -- `observed = expected` to rewrite one into the other and then stalled on
+  -- `(if expected < 0 then blind else pass) = worldFail`, which is true but
+  -- no longer mentions the hypothesis that closes it.
+  unfold newCountFresh at h
+  by_cases h1 : observed < 0
+  · rw [if_pos h1] at h; exact absurd h (by decide)
+  · rw [if_neg h1] at h
+    by_cases h2 : age < 0
+    · rw [if_pos h2] at h; exact absurd h (by decide)
+    · rw [if_neg h2] at h
+      by_cases h3 : maxAge < age
+      · rw [if_pos h3] at h; exact absurd h (by decide)
+      · rw [if_neg h3] at h
+        by_cases h4 : observed = expected
+        · rw [if_pos h4] at h; exact absurd h (by decide)
+        · exact ⟨by omega, by omega, by omega, h4⟩
+
+/-- ## THM_FRESH_04 — the fix never turns a failure into a pass.
+    A PASS from the new arm implies the old arm also passed, so no previously
+    detected disagreement has been hidden. This is the refinement claim.
+    FALSIFIED BY: an input on which the new arm passes and the old arm
+    reported WORLD_FAIL. -/
+theorem THM_FRESH_04_new_pass_implies_old_pass
+    (observed expected age maxAge : Int)
+    (h : newCountFresh observed expected age maxAge = V.pass) :
+    oldCount observed expected = V.pass := by
+  unfold newCountFresh at h
+  unfold oldCount
+  by_cases h1 : observed < 0
+  · rw [if_pos h1] at h; exact absurd h (by decide)
+  · rw [if_neg h1] at h
+    by_cases h2 : age < 0
+    · rw [if_pos h2] at h; exact absurd h (by decide)
+    · rw [if_neg h2] at h
+      by_cases h3 : maxAge < age
+      · rw [if_pos h3] at h; exact absurd h (by decide)
+      · rw [if_neg h3] at h
+        by_cases h4 : observed = expected
+        · rw [if_neg h1, if_pos h4]
+        · rw [if_neg h4] at h; exact absurd h (by decide)
+
+/-- ## THM_FRESH_05 — the new freshness arm is never MORE severe than the old
+    one. Taken with FRESH_03 and FRESH_04: strictly fewer manufactured
+    outages, and not one real failure lost.
+    FALSIFIED BY: any age at which the new arm is harsher than the old. -/
+theorem THM_FRESH_05_never_more_severe (age maxAge : Int) :
+    sev (newFresh age maxAge) ≤ sev (oldFresh age maxAge) := by
+  unfold newFresh oldFresh
+  by_cases h1 : age < 0
+  · simp [h1]
+  · by_cases h2 : age ≤ maxAge
+    · simp [h1, h2]
+    · simp [h1, h2, sev]
+
+/-- ## THM_FRESH_06 — BLIND is still NONPASSING.
+    The non-vacuity guard on the whole change: if BLIND collapsed into PASS,
+    every theorem above would be a way of not looking. It does not.
+    FALSIFIED BY: a lattice in which BLIND and PASS are interchangeable. -/
+theorem THM_FRESH_06_blind_is_not_pass : V.blind ≠ V.pass ∧ sev V.pass < sev V.blind := by
+  constructor
+  · decide
+  · decide
+
 end UOS.ContextPathKpiOtelTwin

@@ -11,9 +11,9 @@ export LD_PRELOAD="/home/an/uos-max/libcuda_shim.so"
 export MODULAR_NVPTX_COMPILER_PATH="/home/an/uos-max/ptxas_sm75_shim.sh"
 export LD_LIBRARY_PATH="/usr/lib/wsl/lib:/home/an/uos-max/.pixi/envs/default/lib:${LD_LIBRARY_PATH:-}"
 
-WIN_HOST=$(ip route | awk '/default via / {print $3; exit}')
-export RAZR1_WIN_HOST="${WIN_HOST:-100.114.9.28}"
-export MAX_QWEN_BACKEND_URL="http://${RAZR1_WIN_HOST}:8081"
+export RAZR1_WIN_HOST="100.114.9.28"
+export MAX_BACKEND_URL="http://100.114.9.28:8081"
+export MAX_QWEN_BACKEND_URL="http://100.114.9.28:8081"
 
 # 1. Reclaim VRAM if LM Studio GUI is running
 /mnt/c/Windows/System32/taskkill.exe /F /IM "LM Studio.exe" >/dev/null 2>&1 || true

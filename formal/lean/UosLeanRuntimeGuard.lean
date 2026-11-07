@@ -477,13 +477,14 @@ def uosLeanVerifySimulatorRealtimeParity
     (simDagOk         rtDagOk         : UInt8)
     (simLeaseOk       rtLeaseOk       : UInt8)
     (simContextOk     rtContextOk     : UInt8) : UInt8 :=
-  let twinCtxOk := uosLeanVerifyFractalContextChain (if simAgentCode <= 4 then 1023 else 0) 0 9 0
+  let twinCtxOk := uosLeanVerifyFractalContextChain (if simAgentCode <= 4 && rtContextOk == 1 then 1023 else 0) 0 9 0
   let twinDagOk : UInt8 := if (uosLeanCedarDagEnforcerCheck (if simAgentCode <= 4 then 1 else 0) 0 1 0 1 0 1 &&& 1) == 1 then 1 else 0
   if simAgentCode == rtAgentCode &&
      simCedarDecision == rtCedarDecision &&
      simDagOk == rtDagOk && simDagOk == twinDagOk &&
      simLeaseOk == rtLeaseOk &&
      simContextOk == rtContextOk &&
+     rtContextOk == 1 &&
      rtContextOk == twinCtxOk then 1
   else 0
 
@@ -495,8 +496,237 @@ theorem THM_GUARD_20_simulator_realtime_parity_sound :
   ∧ uosLeanVerifySimulatorRealtimeParity 1 1 1 1 1 1 1 0 1 1 = 0
   ∧ uosLeanVerifySimulatorRealtimeParity 1 1 1 1 1 1 1 1 0 0 = 0 := by decide
 
+/-- 21. Tool-Call Thought-Signature Provenance & Cross-Model Replay Guard
+    Returns 1 iff every toolCall turn in history satisfies thoughtSignature or validator-waiver admissibility
+    for the target model; returns 0 (fail-closed before HTTP 400 INVALID_ARGUMENT) otherwise. -/
+@[export uos_lean_verify_tool_call_provenance]
+def uosLeanVerifyToolCallProvenance
+    (hasToolCalls       : UInt8)
+    (sameModelOrigin    : UInt8)
+    (hasThoughtSig      : UInt8)
+    (hasValidatorWaiver : UInt8)
+    (targetRequiresSig  : UInt8) : UInt8 :=
+  if hasToolCalls == 0 || targetRequiresSig == 0 then 1
+  else if (sameModelOrigin == 1 && hasThoughtSig == 1) || hasValidatorWaiver == 1 then 1
+  else 0
+
+theorem THM_GUARD_21_tool_call_provenance_sound :
+    uosLeanVerifyToolCallProvenance 1 0 1 0 1 = 0
+  ∧ uosLeanVerifyToolCallProvenance 1 0 1 1 1 = 1
+  ∧ uosLeanVerifyToolCallProvenance 1 1 1 0 1 = 1
+  ∧ uosLeanVerifyToolCallProvenance 1 1 0 0 1 = 0
+  ∧ uosLeanVerifyToolCallProvenance 0 0 0 0 1 = 1
+  ∧ uosLeanVerifyToolCallProvenance 1 0 0 0 0 = 1 := by decide
+
+/-- 22. Provenance-Aware Context Folding Guard (v2)
+    Extends Export #6 (`uos_lean_should_fold_context`) with tool-call provenance verification:
+    folds context only when `currentTokens > maxTokens && maxTokens > 0 && provenanceOk == 1`. -/
+@[export uos_lean_should_fold_context_v2]
+def uosLeanShouldFoldContextV2
+    (currentTokens : UInt32)
+    (maxTokens     : UInt32)
+    (provenanceOk  : UInt8) : UInt8 :=
+  if maxTokens > 0 && currentTokens > maxTokens && provenanceOk == 1 then 1 else 0
+
+theorem THM_GUARD_22_should_fold_context_v2_sound :
+    uosLeanShouldFoldContextV2 5000 4096 1 = 1
+  ∧ uosLeanShouldFoldContextV2 5000 4096 0 = 0
+  ∧ uosLeanShouldFoldContextV2 3000 4096 1 = 0 := by decide
+
+/-- 23. Provider API Interaction State Machine & Credit-Cap Transition Verifier (`SC-PROVIDER-API-ONTOLOGY-001`)
+    Verifies whether a state transition `prevState -> nextState` on a Provider API (`apiId` 0..6) is admissible
+    given `requiresStrictAlternation`, `provenanceOk` (`thoughtSignature` / `reasoning_details`), and `withinCreditCap`.
+    Returns `1` if admissible, `0` if fail-closed veto/failover is required. -/
+@[export uos_lean_verify_provider_api_transition]
+def uosLeanVerifyProviderApiTransition
+    (prevState                 : UInt8)
+    (nextState                 : UInt8)
+    (requiresStrictAlternation : UInt8)
+    (provenanceOk              : UInt8)
+    (withinCreditCap           : UInt8) : UInt8 :=
+  if withinCreditCap == 0 then
+    if nextState == 6 then 1 else 0
+  else if nextState == 2 then
+    if provenanceOk == 1 && (requiresStrictAlternation == 0 || prevState == 1 || prevState == 3) then 1 else 0
+  else if nextState == 3 then
+    if prevState == 2 then 1 else 0
+  else if nextState == 5 then
+    if provenanceOk == 1 && (prevState == 3 || prevState == 1) then 1 else 0
+  else if nextState <= 6 then
+    1
+  else
+    0
+
+theorem THM_GUARD_23_provider_api_transition_sound :
+    uosLeanVerifyProviderApiTransition 1 2 1 1 0 = 0
+  ∧ uosLeanVerifyProviderApiTransition 1 6 1 1 0 = 1
+  ∧ uosLeanVerifyProviderApiTransition 0 2 1 1 1 = 0
+  ∧ uosLeanVerifyProviderApiTransition 1 2 1 0 1 = 0
+  ∧ uosLeanVerifyProviderApiTransition 1 2 1 1 1 = 1
+  ∧ uosLeanVerifyProviderApiTransition 3 2 1 1 1 = 1
+  ∧ uosLeanVerifyProviderApiTransition 2 3 1 1 1 = 1
+  ∧ uosLeanVerifyProviderApiTransition 3 5 1 1 1 = 1 := by decide
+
+/-- 24. Resilient Graceful Error-Recovery Resolver (`SC-PROVIDER-API-ONTOLOGY-001`, `THM_FSYS_55`)
+    Maps `(httpStatusClass, affordableTokensGe64, strictAltViolation, googleDirectAvailable, localQwenAvailable)`
+    to deterministic recovery action `0..6`. -/
+@[export uos_lean_resolve_provider_api_recovery]
+def uosLeanResolveProviderApiRecovery
+    (httpStatusClass       : UInt8)
+    (affordableTokensGe64  : UInt8)
+    (strictAltViolation    : UInt8)
+    (googleDirectAvailable : UInt8)
+    (localQwenAvailable    : UInt8) : UInt8 :=
+  if httpStatusClass == 0 then
+    0
+  else if httpStatusClass == 1 then
+    if strictAltViolation == 1 then 3 else 2
+  else if httpStatusClass == 2 && affordableTokensGe64 == 1 then
+    1
+  else if googleDirectAvailable == 1 then
+    4
+  else if localQwenAvailable == 1 then
+    5
+  else
+    6
+
+theorem THM_GUARD_24_provider_api_recovery_sound :
+    uosLeanResolveProviderApiRecovery 0 0 0 1 1 = 0
+  ∧ uosLeanResolveProviderApiRecovery 1 0 0 1 1 = 2
+  ∧ uosLeanResolveProviderApiRecovery 1 0 1 1 1 = 3
+  ∧ uosLeanResolveProviderApiRecovery 2 1 0 1 1 = 1
+  ∧ uosLeanResolveProviderApiRecovery 2 0 0 1 1 = 4
+  ∧ uosLeanResolveProviderApiRecovery 2 0 0 0 1 = 5
+  ∧ uosLeanResolveProviderApiRecovery 3 0 0 0 1 = 5
+  ∧ uosLeanResolveProviderApiRecovery 3 0 0 0 0 = 6 := by decide
+
+/-- 25. Unified 12-Service Holarchy + Agents + FPP + Zenoh + MCP Mesh Binding Guard
+    (`SC-SERVICE-MESH-HOLARCHY-FPP-ZENOH-MCP-001`, `THM_FSYS_56..57`)
+    Returns `1` iff `serviceId < 12` (`Svc00..Svc11`) and `fppPortReady`, `zenohConnected`,
+    `mcpAuthorized`, and `cAbiGuardOk` are all `1`. -/
+@[export uos_lean_verify_service_mesh_binding]
+def uosLeanVerifyServiceMeshBinding
+    (serviceId      : UInt8)
+    (fppPortReady   : UInt8)
+    (zenohConnected : UInt8)
+    (mcpAuthorized  : UInt8)
+    (cAbiGuardOk    : UInt8) : UInt8 :=
+  if serviceId < 12 && fppPortReady == 1 && zenohConnected == 1 && mcpAuthorized == 1 && cAbiGuardOk == 1 then
+    1
+  else
+    0
+
+theorem THM_GUARD_25_service_mesh_binding_sound :
+    uosLeanVerifyServiceMeshBinding 0 1 1 1 1 = 1
+  ∧ uosLeanVerifyServiceMeshBinding 8 1 1 1 1 = 1
+  ∧ uosLeanVerifyServiceMeshBinding 11 1 1 1 1 = 1
+  ∧ uosLeanVerifyServiceMeshBinding 12 1 1 1 1 = 0
+  ∧ uosLeanVerifyServiceMeshBinding 8 0 1 1 1 = 0
+  ∧ uosLeanVerifyServiceMeshBinding 8 1 0 1 1 = 0
+  ∧ uosLeanVerifyServiceMeshBinding 8 1 1 0 1 = 0
+  ∧ uosLeanVerifyServiceMeshBinding 8 1 1 1 0 = 0 := by decide
+
+/-- 26. Canonical 52-Object UOS System Directory Service Runtime Guard
+    (`SC-SYSTEM-DIRECTORY-SERVICE-001`, `THM_FSYS_58..60`)
+    Verifies that `dirId < 52` (`0..11` SystemService, `12..18` ProviderApi,
+    `19..24` SovereignAgent, `25..34` HolarchyLayer, `35..51` SystemAspect),
+    `kindId` matches the exact partition of `dirId`, and `holarchyOk == 1`,
+    `fppZenohMcpOtelOk == 1`, and `aspectMask17Ok == 1`. -/
+def expectedDirKindU8 (dirId : UInt8) : UInt8 :=
+  if dirId < 12 then 0
+  else if dirId < 19 then 1
+  else if dirId < 25 then 2
+  else if dirId < 35 then 3
+  else if dirId < 52 then 4
+  else 255
+
+@[export uos_lean_verify_system_directory_object]
+def uosLeanVerifySystemDirectoryObject
+    (dirId             : UInt8)
+    (kindId            : UInt8)
+    (holarchyOk        : UInt8)
+    (fppZenohMcpOtelOk : UInt8)
+    (aspectMask17Ok    : UInt8) : UInt8 :=
+  if dirId < 52 && kindId == expectedDirKindU8 dirId && holarchyOk == 1 && fppZenohMcpOtelOk == 1 && aspectMask17Ok == 1 then
+    1
+  else
+    0
+
+theorem THM_GUARD_26_system_directory_object_sound :
+    uosLeanVerifySystemDirectoryObject 0 0 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 11 0 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 12 1 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 19 2 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 25 3 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 35 4 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 51 4 1 1 1 = 1
+  ∧ uosLeanVerifySystemDirectoryObject 52 4 1 1 1 = 0
+  ∧ uosLeanVerifySystemDirectoryObject 12 0 1 1 1 = 0
+  ∧ uosLeanVerifySystemDirectoryObject 0 0 0 1 1 = 0
+  ∧ uosLeanVerifySystemDirectoryObject 0 0 1 0 1 = 0
+  ∧ uosLeanVerifySystemDirectoryObject 0 0 1 1 0 = 0 := by decide
+
+/-- 27. Canonical 17-Aspect SDLC & SRE Feature Matrix Runtime Guard
+    (`SC-SDLC-SRE-17-ASPECTS-ALL-FEATURES-001`, `THM_FSYS_61..62`)
+    Verifies that `featureId < 6` (`F0..F5`), `aspectId < 17` (`A01..A17`),
+    and `sdlc12Ok == 1`, `sre8Ok == 1`, `triAgentClaudeOk == 1`, and `triAgentCodexOk == 1`. -/
+@[export uos_lean_verify_sdlc_sre_feature_aspect_gate]
+def uosLeanVerifySdlcSreFeatureAspectGate
+    (featureId        : UInt8)
+    (aspectId         : UInt8)
+    (sdlc12Ok         : UInt8)
+    (sre8Ok           : UInt8)
+    (triAgentClaudeOk : UInt8)
+    (triAgentCodexOk  : UInt8) : UInt8 :=
+  if featureId < 6 && aspectId < 17 && sdlc12Ok == 1 && sre8Ok == 1 && triAgentClaudeOk == 1 && triAgentCodexOk == 1 then
+    1
+  else
+    0
+
+theorem THM_GUARD_27_sdlc_sre_feature_aspect_gate_sound :
+    uosLeanVerifySdlcSreFeatureAspectGate 0 0 1 1 1 1 = 1
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 4 8 1 1 1 1 = 1
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 5 16 1 1 1 1 = 1
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 6 0 1 1 1 1 = 0
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 0 17 1 1 1 1 = 0
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 0 0 0 1 1 1 = 0
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 0 0 1 0 1 1 = 0
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 0 0 1 1 0 1 = 0
+  ∧ uosLeanVerifySdlcSreFeatureAspectGate 0 0 1 1 1 0 = 0 := by decide
+
+/-- 28. Optimal Local Qwen 8-Pillar Holonic Execution Envelope Guard
+    (`SC-QWEN-8PILLAR-HOLONIC-STACK-001`, `THM_FSYS_63..64`)
+    Verifies that `holarchyLayer < 10` (`L0..L9`), `fppActorId < 40` (`40-actor` FPP mesh),
+    `fppActorId / 4 == holarchyLayer` (exact Holarchy-to-FPP layer-domain bijection),
+    `casteIdx < 5` (`Caste01..05`), and `mojoMaxSm75Ready == 1`, `leanCAbiAndMcpOk == 1`,
+    and `zenohAndOtel128Ok == 1`. -/
+@[export uos_lean_verify_qwen_holonic_execution_envelope]
+def uosLeanVerifyQwenHolonicExecutionEnvelope
+    (holarchyLayer     : UInt8)
+    (fppActorId        : UInt8)
+    (casteIdx          : UInt8)
+    (mojoMaxSm75Ready  : UInt8)
+    (leanCAbiAndMcpOk  : UInt8)
+    (zenohAndOtel128Ok : UInt8) : UInt8 :=
+  if holarchyLayer < 10 && fppActorId < 40 && (fppActorId / 4) == holarchyLayer && casteIdx < 5 && mojoMaxSm75Ready == 1 && leanCAbiAndMcpOk == 1 && zenohAndOtel128Ok == 1 then
+    1
+  else
+    0
+
+theorem THM_GUARD_28_qwen_holonic_execution_envelope_sound :
+    uosLeanVerifyQwenHolonicExecutionEnvelope 0 3 0 1 1 1 = 1
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 27 1 1 1 1 = 1
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 9 39 4 1 1 1 = 1
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 23 1 1 1 1 = 0
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 10 39 1 1 1 1 = 0
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 40 1 1 1 1 = 0
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 27 5 1 1 1 = 0
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 27 1 0 1 1 = 0
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 27 1 1 0 1 = 0
+  ∧ uosLeanVerifyQwenHolonicExecutionEnvelope 6 27 1 1 1 0 = 0 := by decide
+
 def main : IO UInt32 := do
-  IO.println "UOS_LEAN_RUNTIME_GUARD_20_THEOREMS_AND_20_C_ABI_EXPORTS=MODEL_CONSISTENT"
+  IO.println "UOS_LEAN_RUNTIME_GUARD_28_THEOREMS_AND_28_C_ABI_EXPORTS=MODEL_CONSISTENT"
   return 0
 
 end UOS.LeanRuntimeGuard

@@ -14,6 +14,12 @@ from max_kernel import (
     matvec_mul, simd_dequantize_q8_0, simd_dot_product_q8_0,
     simd_dequantize_q4_0, gemma_embedding_lookup,
     gemma_swiglu_mlp, gemma_transformer_layer,
+    simd_dequantize_q4_k_block, simd_dequantize_q6_k_block,
+    qwen2_transformer_layer,
+    turing_sm75_m16n8k8_matvec_tile,
+    speculative_draft_verify_step,
+    grammar_constrained_logit_mask,
+    grammar_constrained_greedy_select,
 )
 from std.math import sqrt
 
@@ -200,6 +206,76 @@ def main():
     )
     failures += check("gemma layer out len", Float32(len(gemma_out)), 4.0, 0.0)
     failures += check("gemma layer out[0]", gemma_out[0], 3.731058, 1e-3)
+
+    # 15. GGUF K-Quant Super-Block Dequantization Tests (Q4_K & Q6_K)
+    var q4k_scales = List[UInt8]()
+    for _ in range(12):
+        q4k_scales.append(UInt8(1))
+    var q4k_quants = List[UInt8]()
+    for _ in range(128):
+        q4k_quants.append(UInt8(0x22)) # 4-bit val = 2
+    var deq4k = simd_dequantize_q4_k_block(1.0, 0.0, q4k_scales, q4k_quants)
+    failures += check("q4_k dequant len", Float32(len(deq4k)), 256.0, 0.0)
+    failures += check("q4_k dequant[0]", deq4k[0], 2.0, 1e-4)
+
+    var q6k_scales = List[Int8]()
+    for _ in range(16):
+        q6k_scales.append(Int8(1))
+    var q6k_ql = List[UInt8]()
+    for _ in range(128):
+        q6k_ql.append(UInt8(0x00)) # low 4 bits = 0
+    var q6k_qh = List[UInt8]()
+    for _ in range(64):
+        q6k_qh.append(UInt8(0x55)) # 01010101b -> each 2-bit = 1 -> high 2 bits = 1 -> (1<<4) = 16 -> 16 - 32 = -16
+    var deq6k = simd_dequantize_q6_k_block(1.0, q6k_scales, q6k_ql, q6k_qh)
+    failures += check("q6_k dequant len", Float32(len(deq6k)), 256.0, 0.0)
+    failures += check("q6_k dequant[0]", deq6k[0], -16.0, 1e-4)
+
+    # 16. Qwen2 Single Transformer Block Layer Test
+    var qwen_out = qwen2_transformer_layer(
+        v_const, eye4, eye4, eye4, eye4, g_ones, eye4, eye4, eye4, g_ones, 0, 4.0
+    )
+    failures += check("qwen2 layer out len", Float32(len(qwen_out)), 4.0, 0.0)
+    failures += check("qwen2 layer out[0]", qwen_out[0], 3.731058, 1e-3)
+
+    # 17. Turing sm_75 Tensor Core m16n8k8 Tiled MatVec Test
+    var m16_weights = List[List[Float32]]()
+    var k8_act = List[Float32]()
+    for k in range(8):
+        k8_act.append(Float32(k + 1)) # sum 1..8 = 36
+    for _ in range(16):
+        var row8 = List[Float32]()
+        for _ in range(8):
+            row8.append(2.0)
+        m16_weights.append(row8.copy())
+    var tc_out = turing_sm75_m16n8k8_matvec_tile(m16_weights, k8_act)
+    failures += check("turing sm75 m16n8k8 len", Float32(len(tc_out)), 16.0, 0.0)
+    failures += check("turing sm75 m16n8k8[0]", tc_out[0], 72.0, 1e-4)
+
+    # 18. Speculative Draft Model Verification Pipeline Test
+    var draft_toks = List[Int]()
+    draft_toks.append(101); draft_toks.append(102); draft_toks.append(103)
+    var draft_p = List[Float32]()
+    draft_p.append(0.5); draft_p.append(0.8); draft_p.append(0.5)
+    var target_p = List[Float32]()
+    target_p.append(0.6); target_p.append(0.2); target_p.append(0.9)
+    var u_samples = List[Float32]()
+    u_samples.append(0.9); u_samples.append(0.5); u_samples.append(0.1)
+    # Token 0 accepted (0.9 <= min(1, 0.6/0.5)=1.0), Token 1 rejected (0.5 > 0.2/0.8=0.25) -> emits [101, 999]
+    var spec_out = speculative_draft_verify_step(draft_toks, draft_p, target_p, u_samples, 999)
+    failures += check("speculative verify len", Float32(len(spec_out)), 2.0, 0.0)
+    failures += check("speculative verify[0]", Float32(spec_out[0]), 101.0, 0.0)
+    failures += check("speculative verify[1] bonus", Float32(spec_out[1]), 999.0, 0.0)
+
+    # 19. Pure Mojo Grammar-Guided Constrained Decoding Test
+    var raw_logits = List[Float32]()
+    raw_logits.append(12.5); raw_logits.append(4.2); raw_logits.append(8.9)
+    var gram_mask = List[Bool]()
+    gram_mask.append(False); gram_mask.append(True); gram_mask.append(True)
+    var masked_logits = grammar_constrained_logit_mask(raw_logits, gram_mask)
+    var best_tok = grammar_constrained_greedy_select(raw_logits, gram_mask)
+    failures += check("grammar masked disallowed[0]", masked_logits[0], -1000000000.0, 1.0)
+    failures += check("grammar greedy select token 2", Float32(best_tok), 2.0, 0.0)
 
     print("")
     if failures == 0:

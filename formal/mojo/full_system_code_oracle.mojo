@@ -19,6 +19,11 @@ from lean_ffi_bridge import (
     verify_lean_mojo_dag_and_palamedes_parity,
     verify_lean_mojo_fractal_context_chain_parity,
     verify_lean_mojo_simulator_realtime_parity,
+    verify_lean_mojo_provider_api_transition_parity,
+    verify_lean_mojo_provider_api_recovery_parity,
+    verify_lean_mojo_service_mesh_binding_parity,
+    verify_lean_mojo_system_directory_parity,
+    verify_lean_mojo_sdlc_sre_17_aspect_parity,
 )
 from fractal_context_pipeline import verify_fractal_context_pipeline_5_usecases
 from palamedes_cedar_synthesis_lib import (
@@ -313,6 +318,12 @@ def main() raises:
     var fcp_ffi_8 = verify_lean_mojo_fractal_context_chain_parity()
     var fcp_usecases_5 = verify_fractal_context_pipeline_5_usecases()
     var sim_rt_32 = verify_lean_mojo_simulator_realtime_parity()
+    var api_trans_392 = verify_lean_mojo_provider_api_transition_parity()
+    var api_rec_64 = verify_lean_mojo_provider_api_recovery_parity()
+    var svc_mesh_192 = verify_lean_mojo_service_mesh_binding_parity()
+    var sys_dir_2080 = verify_lean_mojo_system_directory_parity()
+    var sdlc_sre_1632 = verify_lean_mojo_sdlc_sre_17_aspect_parity()
+    var api_ontology_7 = count("grep -c '\"api_id\":' governance/agents/policy/20261107-2046-uos-agent-provider-api-holarchy-fpp-ontology.json 2>/dev/null")
     r.observe_int(String("agent-failover-selftest-pass"), failover_selftest_ok)
     r.observe_int(String("lean-mojo-ffi-32-failover-states"), lean_mojo_32_states)
     r.observe_int(String("cedar-symcc-ffi-24-states"), cedar_symcc_24_states)
@@ -321,6 +332,12 @@ def main() raises:
     r.observe_int(String("fractal-context-ffi-8-states"), fcp_ffi_8)
     r.observe_int(String("fractal-context-usecases-5"), fcp_usecases_5)
     r.observe_int(String("simulator-realtime-ffi-32-states"), sim_rt_32)
+    r.observe_int(String("provider-api-transition-ffi-392-states"), api_trans_392)
+    r.observe_int(String("provider-api-recovery-ffi-64-states"), api_rec_64)
+    r.observe_int(String("service-mesh-binding-ffi-192-states"), svc_mesh_192)
+    r.observe_int(String("system-directory-ffi-2080-states"), sys_dir_2080)
+    r.observe_int(String("sdlc-sre-17-aspect-ffi-1632-states"), sdlc_sre_1632)
+    r.world_or_blind(String("provider-api-7-ontology-and-392-state-c-abi-verified"), api_ontology_7 >= 0 and api_trans_392 >= 0 and api_rec_64 >= 0 and svc_mesh_192 >= 0 and sys_dir_2080 >= 0 and sdlc_sre_1632 >= 0, api_ontology_7 == 7 and api_trans_392 == 392 and api_rec_64 == 64 and svc_mesh_192 == 192 and sys_dir_2080 == 2080 and sdlc_sre_1632 == 1632)
     r.world_or_blind(String("agent-failover-controller-and-gleam-present"), failover_selftest_ok >= 0 and gleam_failover_fn >= 0, failover_selftest_ok == 1 and gleam_failover_fn >= 1)
     r.world_or_blind(String("in-process-lean-mojo-c-abi-14-exports-verified"), lean_mojo_32_states >= 0 and cedar_symcc_24_states >= 0 and dag_palamedes_72_states >= 0, lean_c_abi_14_ok and lean_mojo_32_states == 32 and cedar_symcc_24_states == 24 and dag_palamedes_72_states == 72 and palamedes_synth_ok == 1)
 
@@ -352,10 +369,10 @@ def main() raises:
             mono_16 == 16 and expr_4 == 4 and dag_palamedes_72_states == 72)
         r.algebra(
             String("fsys-evo15-batched-tpe-and-palamedes-bst-laws"),
-            batch_tpe_36 == 36 and bst_10 == 10 and twin_thms == 50)
+            batch_tpe_36 == 36 and bst_10 == 10 and twin_thms == 62)
         r.algebra(
             String("fsys-fractal-context-pipeline-and-inductive-closure"),
-            fcp_ffi_8 == 16 and fcp_usecases_5 == 5 and sim_rt_32 == 32 and twin_thms == 50)
+            fcp_ffi_8 == 16 and fcp_usecases_5 == 5 and sim_rt_32 == 32 and api_rec_64 == 64 and svc_mesh_192 == 192 and sys_dir_2080 == 2080 and sdlc_sre_1632 == 1632 and twin_thms == 62)
 
     # ── 5. Negative Controls (SC-VP-04: instrument & boundary discrimination) ─
     r.mutation_probe(

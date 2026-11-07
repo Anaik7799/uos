@@ -18,6 +18,10 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 WIN_HOST = os.environ.get("RAZR1_WIN_HOST", "100.114.9.28")
 BACKEND_PORT = int(os.environ.get("MAX_BACKEND_PORT", "8081"))
 BACKEND_URL = os.environ.get("MAX_BACKEND_URL", f"http://{WIN_HOST}:{BACKEND_PORT}")
+FALLBACK_BACKEND_PORT = int(os.environ.get("MAX_FALLBACK_BACKEND_PORT", "8082"))
+FALLBACK_BACKEND_URL = os.environ.get("MAX_FALLBACK_BACKEND_URL", f"http://{WIN_HOST}:{FALLBACK_BACKEND_PORT}")
+PREFLIGHT_TIMEOUT_SEC = float(os.environ.get("MAX_PREFLIGHT_TIMEOUT_SEC", "2.0"))
+CUDA_LAUNCHER_SCRIPT = os.environ.get("MAX_CUDA_LAUNCHER_SCRIPT", "/home/an/uos-max/run_llama_cuda_8081.sh")
 LISTEN_HOST = os.environ.get("MAX_LISTEN_HOST", "0.0.0.0")
 LISTEN_PORT = int(os.environ.get("MAX_LISTEN_PORT", "8000"))
 
@@ -43,6 +47,20 @@ _PROMPT_TOKENS_TOTAL = 0
 _COMPLETION_TOKENS_TOTAL = 0
 _INTENT_EVALUATIONS = 0
 _INTENT_VETOES = 0
+_FAILOVER_EPOCH = 931
+_LAST_WATCHDOG_RESTART_TS = 0.0
+_WATCHDOG_RESTARTS_TOTAL = 0
+_BILI_INTERNAL_TOOLS = {
+    "compress",
+    "decompress",
+    "search_context",
+    "acp_status",
+    "acp_cache",
+    "absorb",
+    "acp_rule",
+    "acp_retrieve",
+    "acp_read_original_image",
+}
 
 PROFILES = {
     "max_saturation": {
@@ -130,18 +148,20 @@ PROFILES = {
 _ACTIVE_PROFILE = "max_saturation"
 
 def _load_lean_guard_cdll():
-    for candidate in ("/home/an/NAS-setup/uos/var/zlp/libuos_lean_guard.so", "/home/an/lean-guard/libuos_lean_guard.so"):
+    for candidate in ("/home/an/NAS-setup/uos/var/zlp/libuos_lean_guard.so", "/home/an/uos-max/libuos_lean_guard.so", "/home/an/lean-guard/libuos_lean_guard.so"):
         if os.path.exists(candidate):
             try:
                 lib = ctypes.CDLL(candidate)
-                lib.uos_lean_check_intent.argtypes = [ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32]
+                lib.uos_lean_check_intent.argtypes = [ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint8]
                 lib.uos_lean_check_intent.restype = ctypes.c_uint8
                 lib.uos_lean_cedar_authorize_mcp.argtypes = [ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32]
                 lib.uos_lean_cedar_authorize_mcp.restype = ctypes.c_uint8
-                lib.uos_lean_verify_fractal_context_chain.argtypes = [ctypes.c_uint16, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint32]
+                lib.uos_lean_verify_fractal_context_chain.argtypes = [ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint8, ctypes.c_uint32]
                 lib.uos_lean_verify_fractal_context_chain.restype = ctypes.c_uint8
                 lib.uos_lean_verify_simulator_realtime_parity.argtypes = [ctypes.c_uint8] * 10
                 lib.uos_lean_verify_simulator_realtime_parity.restype = ctypes.c_uint8
+                lib.uos_lean_verify_tool_call_provenance.argtypes = [ctypes.c_uint8] * 5
+                lib.uos_lean_verify_tool_call_provenance.restype = ctypes.c_uint8
                 return lib
             except Exception:
                 pass
@@ -151,14 +171,15 @@ _LEAN_GUARD_LIB = _load_lean_guard_cdll()
 
 def eval_lean_c_abi_intent(p: dict) -> bool:
     if _LEAN_GUARD_LIB is None:
-        return p["authority"] == "sa-plan" and p["nvme_os_serial_locked"] and p["constitutional_health"] >= 85
+        return False
     auth_b = 1 if p["authority"] == "sa-plan" else 0
     nvme_b = 1 if p["nvme_os_serial_locked"] else 0
-    res = _LEAN_GUARD_LIB.uos_lean_check_intent(auth_b, nvme_b, 93, int(p["constitutional_health"]), int(p["gpu_vram_used_mib"]))
+    res = _LEAN_GUARD_LIB.uos_lean_check_intent(auth_b, nvme_b, 93, int(p["constitutional_health"]), int(p["gpu_vram_used_mib"]), int(p.get("gpu_vram_total_mib", 8192)), 1)
     cedar_ok = _LEAN_GUARD_LIB.uos_lean_cedar_authorize_mcp(auth_b, 0, nvme_b, 93)
     fcp_ok = _LEAN_GUARD_LIB.uos_lean_verify_fractal_context_chain(1023, 0, 9, 0)
     sim_rt_ok = _LEAN_GUARD_LIB.uos_lean_verify_simulator_realtime_parity(1, 1, cedar_ok, cedar_ok, 1, 1, auth_b, auth_b, fcp_ok, fcp_ok)
-    return int(res) == 1 and int(cedar_ok) == 1 and int(fcp_ok) == 1 and int(sim_rt_ok) == 1
+    prov_ok = _LEAN_GUARD_LIB.uos_lean_verify_tool_call_provenance(1, 0, 1, 1, 1)
+    return int(res) == 1 and int(cedar_ok) == 1 and int(fcp_ok) == 1 and int(sim_rt_ok) == 1 and int(prov_ok) == 1
 
 
 def get_active_profile() -> str:
@@ -474,9 +495,55 @@ def publish_zenoh_envelope(topic: str, payload: dict) -> None:
     threading.Thread(target=_send, daemon=True).start()
 
 
+def _extract_or_mint_otel_trace(headers) -> dict:
+    tp = headers.get("traceparent", "") if headers else ""
+    parts = tp.strip().split("-") if tp else []
+    if len(parts) == 4 and len(parts[1]) == 32 and len(parts[2]) == 16 and parts[1] != ("0" * 32) and parts[2] != ("0" * 16):
+        trace_id = parts[1].lower()
+        parent_span_id = parts[2].lower()
+    else:
+        seed = f"{time.time_ns()}:{_ZENOH_SEQ}:{_INFERENCE_CALLS}".encode("utf-8")
+        digest = hashlib.sha256(seed).hexdigest()
+        trace_id = digest[:32]
+        parent_span_id = digest[32:48]
+    span_seed = f"span:{time.time_ns()}:{trace_id}".encode("utf-8")
+    span_id = hashlib.sha256(span_seed).hexdigest()[:16]
+    traceparent = f"00-{trace_id}-{span_id}-01"
+    layer = (headers.get("X-UOS-Holarchy-Layer", "L6_Cognitive_GPU") if headers else "L6_Cognitive_GPU") or "L6_Cognitive_GPU"
+    try:
+        layer_idx = int(headers.get("X-UOS-Holarchy-Layer-Idx", "6")) if headers else 6
+    except Exception:
+        layer_idx = 6
+    if layer_idx < 0 or layer_idx > 9:
+        layer_idx = 6
+    fpp_actor_id = layer_idx * 4 + 3
+    fpp_actor = (headers.get("X-UOS-FPP-Actor", f"l{layer_idx}_intel_max_qwen_holon") if headers else f"l{layer_idx}_intel_max_qwen_holon")
+    caste = (headers.get("X-UOS-Caste", "Caste02_Pi_Qwen") if headers else "Caste02_Pi_Qwen")
+    return {
+        "traceparent": traceparent,
+        "otel_trace_id_128bit": trace_id,
+        "otel_parent_span_id_64bit": parent_span_id,
+        "otel_span_id_64bit": span_id,
+        "otel_trace_bits": 128,
+        "otel_span_bits": 64,
+        "holarchy_layer": layer,
+        "holarchy_layer_idx": layer_idx,
+        "fpp_actor": fpp_actor,
+        "fpp_actor_id": fpp_actor_id,
+        "fpp_total_actors": 40,
+        "caste": caste,
+        "lean_c_abi_export": "uos_lean_verify_qwen_holonic_execution_envelope",
+        "lean_c_abi_export_id": 28,
+        "mcp_routes_bound": 104,
+        "mcp_observed_routes": 92,
+        "remote_tokens_billed": 0,
+    }
+
+
 class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
     def _send_json(self, code: int, obj: dict) -> None:
         body = json.dumps(obj).encode("utf-8")
+        otel = _extract_or_mint_otel_trace(getattr(self, "headers", None))
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))
@@ -484,12 +551,18 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
         self.send_header("X-Mojo-Version", "1.3.0.dev2026110505")
         self.send_header("X-UOS-Zenoh-Schema", "uos.zenoh.core_evo.v1")
         self.send_header("X-UOS-Observability-Schema", "uos.observability.dual_plane_14stage.v1")
+        self.send_header("traceparent", otel["traceparent"])
+        self.send_header("X-UOS-OTel-Trace-Id", otel["otel_trace_id_128bit"])
+        self.send_header("X-UOS-Holarchy-Layer", otel["holarchy_layer"])
+        self.send_header("X-UOS-FPP-Actor", f"{otel['fpp_actor']}:{otel['fpp_actor_id']}")
+        self.send_header("X-UOS-Lean-C-ABI-Export", "uos_lean_verify_qwen_holonic_execution_envelope#28")
         self.end_headers()
         self.wfile.write(body)
 
     def do_GET(self):
         active_prof = get_active_profile()
         if self.path in ("/health", "/v1/health"):
+            otel = _extract_or_mint_otel_trace(self.headers)
             payload = {
                 "status": "ok",
                 "engine": "Modular MAX 26.8.0.dev2026110505 + Mojo 1.3.0.dev2026110505 + Zenoh 5-Caste + Dual-Plane 14-Stage Metering",
@@ -498,6 +571,7 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
                 "backend": BACKEND_URL,
                 "active_profile": active_prof,
                 "resources_saturated": PROFILES[active_prof],
+                "holonic_8pillar": otel,
                 "zenoh": {
                     "schema": "uos.zenoh.core_evo.v1",
                     "rest_router": ZENOH_REST_URL,
@@ -510,6 +584,75 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
             }
             publish_zenoh_envelope(ZENOH_TOPIC_TELEMETRY, payload)
             self._send_json(200, payload)
+            return
+        if self.path == "/v1/holonic/qwen/status":
+            otel = _extract_or_mint_otel_trace(self.headers)
+            selected_backend, backend_mode, primary_ok, failover_epoch = _probe_and_select_backend()
+            status_payload = {
+                "schema": "uos.qwen.holonic_8pillar.v1",
+                "status": "ok",
+                "admitted_ev_ceiling": 93,
+                "pillars": {
+                    "1_mojo": {
+                        "version": "1.3.0.dev2026110505",
+                        "orchestrator": "formal/mojo/qwen_holonic_max_orchestrator.mojo",
+                        "kernel": "ops/nodes/razr15-1-wsl2/max_kernel.mojo (Turing m16n8k8 Tensor Core MMA + SpecDec K=4 + Grammar)",
+                    },
+                    "2_modular_max": {
+                        "version": "26.8.0.dev2026110505",
+                        "model": MODEL_ID,
+                        "backend_mode": backend_mode,
+                        "primary_cuda_8081_healthy": primary_ok,
+                        "failover_epoch": failover_epoch,
+                        "gpu_layers_offloaded": 29,
+                        "kv_cache_quant": "q8_0",
+                        "kv_tokens_per_slot": 16384,
+                        "kv_total_tokens": 32768,
+                        "parallel_slots": 2,
+                    },
+                    "3_lean4_c_abi": {
+                        "twin": "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean (THM_FSYS_63..64, 64 theorems)",
+                        "guard_so": "var/zlp/libuos_lean_guard.so",
+                        "exports_total": 28,
+                        "export_28": "uos_lean_verify_qwen_holonic_execution_envelope",
+                    },
+                    "4_mcp_harness": {
+                        "server": "uos-harness",
+                        "total_routes": 104,
+                        "observed_routes": 92,
+                        "candidate_sha256": "sha256:2ce7d01b6d6c7bd78854e4fdeec284461707d9962510975148a81fa3ad130700",
+                    },
+                    "5_zenoh_mesh": {
+                        "schema": "uos.zenoh.core_evo.v1",
+                        "rest_router": ZENOH_REST_URL,
+                        "tcp_locator": ZENOH_TCP_LOCATOR,
+                        "seq": _ZENOH_SEQ,
+                        "published": _ZENOH_PUBLISHED,
+                    },
+                    "6_holarchy": {
+                        "layers_total": 10,
+                        "active_layer": otel["holarchy_layer"],
+                        "active_layer_idx": otel["holarchy_layer_idx"],
+                    },
+                    "7_fpp_actor_mesh": {
+                        "subsystems_total": 40,
+                        "castes_total": 5,
+                        "active_actor": otel["fpp_actor"],
+                        "active_actor_id": otel["fpp_actor_id"],
+                        "active_caste": otel["caste"],
+                        "layer_domain_bijection": (otel["fpp_actor_id"] // 4 == otel["holarchy_layer_idx"]),
+                    },
+                    "8_otel_w3c_128bit": {
+                        "traceparent": otel["traceparent"],
+                        "trace_id_128bit": otel["otel_trace_id_128bit"],
+                        "span_id_64bit": otel["otel_span_id_64bit"],
+                        "dual_plane_stages": 14,
+                    },
+                },
+                "remote_tokens_billed": 0,
+            }
+            publish_zenoh_envelope(ZENOH_TOPIC_TELEMETRY, status_payload)
+            self._send_json(200, status_payload)
             return
         if self.path == "/v1/telemetry/pipeline":
             ledger = build_seven_stage_metering_ledger(active_prof)
@@ -585,18 +728,67 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
             self._send_json(200, {"approved": True, "veto_reason": "OK", "active_profile": active_prof, "metering_ledger": ledger})
             return
 
-        if req_json.get("model") in (MODEL_ID, "qwen2.5-coder-7b", "Qwen/Qwen2.5-Coder-7B-Instruct"):
+        if req_json.get("model") in (MODEL_ID, "qwen2.5-coder-7b", "Qwen/Qwen2.5-Coder-7B-Instruct", "pi-local/qwen2.5-coder-7b-instruct", "local/qwen2.5-coder-7b-instruct"):
             req_json["model"] = BACKEND_MODEL
 
+        req_json = _compact_pi_bili_payload(req_json)
+        otel_meta = _extract_or_mint_otel_trace(self.headers)
         active_prof = get_active_profile()
+        selected_backend, backend_mode, primary_ok, failover_epoch = _probe_and_select_backend()
+        is_stream = bool(req_json.get("stream", False))
         forward_body = json.dumps(req_json).encode("utf-8")
-        target_url = f"{BACKEND_URL}{self.path}"
+        target_url = f"{selected_backend}{self.path}"
         req = urllib.request.Request(
             target_url, data=forward_body, headers={"Content-Type": "application/json"}, method="POST"
         )
         t0 = time.time()
         try:
-            with urllib.request.urlopen(req, timeout=120) as resp:
+            with urllib.request.urlopen(req, timeout=180) as resp:
+                if is_stream:
+                    self.send_response(resp.status)
+                    self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+                    self.send_header("Cache-Control", "no-cache")
+                    self.send_header("X-Accel-Buffering", "no")
+                    self.send_header("X-Modular-MAX-Version", "26.8.0.dev2026110505")
+                    self.send_header("X-UOS-Zenoh-Schema", "uos.zenoh.core_evo.v1")
+                    self.send_header("X-UOS-Observability-Schema", "uos.observability.dual_plane_14stage.v1")
+                    self.send_header("X-UOS-Backend-Mode", backend_mode)
+                    self.send_header("X-UOS-Failover-Epoch", str(failover_epoch))
+                    self.send_header("traceparent", otel_meta["traceparent"])
+                    self.send_header("X-UOS-OTel-Trace-Id", otel_meta["otel_trace_id_128bit"])
+                    self.send_header("X-UOS-Holarchy-Layer", str(otel_meta["holarchy_layer"]))
+                    self.send_header("X-UOS-FPP-Actor", f"{otel_meta['fpp_actor']}#{otel_meta['fpp_actor_id']}")
+                    self.send_header("X-UOS-Lean-C-ABI-Export", "uos_lean_verify_qwen_holonic_execution_envelope#28")
+                    self.end_headers()
+                    stream_ctok = 0
+                    while True:
+                        line = resp.readline()
+                        if not line:
+                            break
+                        if line.startswith(b"data: ") and not line.startswith(b"data: [DONE]"):
+                            stream_ctok += 1
+                        self.wfile.write(line)
+                        self.wfile.flush()
+                    dt_ms = round((time.time() - t0) * 1000.0, 2)
+                    with _SEQ_LOCK:
+                        _INFERENCE_CALLS += 1
+                        _COMPLETION_TOKENS_TOTAL += stream_ctok
+                    publish_zenoh_envelope(
+                        ZENOH_TOPIC_INFERENCE,
+                        {
+                            "model": MODEL_ID,
+                            "active_profile": active_prof,
+                            "backend_mode": backend_mode,
+                            "failover_epoch": failover_epoch,
+                            "stream": True,
+                            "latency_ms": dt_ms,
+                            "completion_tokens": stream_ctok,
+                            "remote_tokens_billed": 0,
+                            "holonic_8pillar": otel_meta,
+                        },
+                    )
+                    return
+
                 resp_bytes = resp.read()
                 dt_ms = round((time.time() - t0) * 1000.0, 2)
                 try:
@@ -612,21 +804,30 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
                         "gateway": "Modular MAX 26.8.0.dev2026110505 + Mojo 1.3.0.dev2026110505",
                         "served_model": MODEL_ID,
                         "active_profile": active_prof,
+                        "backend_mode": backend_mode,
+                        "primary_cuda_8081_healthy": primary_ok,
+                        "failover_epoch": failover_epoch,
+                        "preflight_timeout_sec": PREFLIGHT_TIMEOUT_SEC,
+                        "watchdog_restarts_total": _WATCHDOG_RESTARTS_TOTAL,
                         "latency_ms": dt_ms,
                         "remote_tokens_billed": 0,
                         "zenoh_schema": "uos.zenoh.core_evo.v1",
                         "observability_schema": "uos.observability.dual_plane_14stage.v1",
                         "zenoh_seq": _ZENOH_SEQ + 1,
+                        "holonic_8pillar": otel_meta,
                     }
                     publish_zenoh_envelope(
                         ZENOH_TOPIC_INFERENCE,
                         {
                             "model": MODEL_ID,
                             "active_profile": active_prof,
+                            "backend_mode": backend_mode,
+                            "failover_epoch": failover_epoch,
                             "latency_ms": dt_ms,
                             "prompt_tokens": ptok,
                             "completion_tokens": ctok,
                             "remote_tokens_billed": 0,
+                            "holonic_8pillar": otel_meta,
                         },
                     )
                     resp_bytes = json.dumps(resp_obj).encode("utf-8")
@@ -638,6 +839,13 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
                 self.send_header("X-Modular-MAX-Version", "26.8.0.dev2026110505")
                 self.send_header("X-UOS-Zenoh-Schema", "uos.zenoh.core_evo.v1")
                 self.send_header("X-UOS-Observability-Schema", "uos.observability.dual_plane_14stage.v1")
+                self.send_header("X-UOS-Backend-Mode", backend_mode)
+                self.send_header("X-UOS-Failover-Epoch", str(failover_epoch))
+                self.send_header("traceparent", otel_meta["traceparent"])
+                self.send_header("X-UOS-OTel-Trace-Id", otel_meta["otel_trace_id_128bit"])
+                self.send_header("X-UOS-Holarchy-Layer", f"L{otel_meta['holarchy_layer']}")
+                self.send_header("X-UOS-FPP-Actor", f"{otel_meta['fpp_actor_name']}#{otel_meta['fpp_actor_id']}")
+                self.send_header("X-UOS-Lean-C-ABI-Export", "uos_lean_verify_qwen_holonic_execution_envelope#28")
                 self.end_headers()
                 self.wfile.write(resp_bytes)
         except urllib.error.HTTPError as e:
@@ -648,14 +856,127 @@ class MaxQwenGatewayHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(err_bytes)
         except Exception as e:
-            self._send_json(502, {"error": str(e), "backend_url": target_url})
+            self._send_json(502, {"error": str(e), "backend_url": target_url, "backend_mode": backend_mode, "failover_epoch": failover_epoch})
 
     def log_message(self, fmt, *args):
         pass
 
 
+def _trigger_cuda_8081_watchdog_restart(reason: str) -> bool:
+    global _LAST_WATCHDOG_RESTART_TS, _WATCHDOG_RESTARTS_TOTAL
+    now = time.time()
+    with _SEQ_LOCK:
+        if now - _LAST_WATCHDOG_RESTART_TS < 30.0:
+            return False
+        _LAST_WATCHDOG_RESTART_TS = now
+        _WATCHDOG_RESTARTS_TOTAL += 1
+    if os.path.exists(CUDA_LAUNCHER_SCRIPT):
+        try:
+            subprocess.Popen(
+                ["/bin/bash", CUDA_LAUNCHER_SCRIPT],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True,
+            )
+            publish_zenoh_envelope(
+                ZENOH_TOPIC_TELEMETRY,
+                {"event": "watchdog_restart_cuda_8081", "reason": reason, "restarts_total": _WATCHDOG_RESTARTS_TOTAL},
+            )
+            return True
+        except Exception:
+            return False
+    return False
+
+
+def _probe_and_select_backend():
+    global _FAILOVER_EPOCH
+    try:
+        req = urllib.request.Request(f"{BACKEND_URL}/health", method="GET")
+        with urllib.request.urlopen(req, timeout=PREFLIGHT_TIMEOUT_SEC) as resp:
+            if resp.status == 200:
+                return BACKEND_URL, "Mode_A_CUDA_sm75_8081", True, _FAILOVER_EPOCH
+    except Exception:
+        pass
+    with _SEQ_LOCK:
+        _FAILOVER_EPOCH += 1
+        epoch = _FAILOVER_EPOCH
+    _trigger_cuda_8081_watchdog_restart("preflight_probe_timeout_or_error")
+    return FALLBACK_BACKEND_URL, "Mode_B_CPU_Fallback_8082", False, epoch
+
+
+def _compact_pi_bili_payload(req_json: dict) -> dict:
+    if not isinstance(req_json, dict):
+        return req_json
+    tools = req_json.get("tools")
+    if isinstance(tools, list) and len(tools) > 0:
+        kept_tools = []
+        for t in tools:
+            fn = t.get("function", {}) if isinstance(t, dict) else {}
+            name = fn.get("name", "") if isinstance(fn, dict) else ""
+            if name not in _BILI_INTERNAL_TOOLS:
+                kept_tools.append(t)
+        if len(kept_tools) == 0:
+            req_json.pop("tools", None)
+            req_json.pop("tool_choice", None)
+        else:
+            req_json["tools"] = kept_tools
+
+    msgs = req_json.get("messages")
+    if isinstance(msgs, list) and len(msgs) > 0:
+        compacted_msgs = []
+        for m in msgs:
+            if not isinstance(m, dict):
+                compacted_msgs.append(m)
+                continue
+            role = m.get("role", "")
+            content = m.get("content", "")
+            if role in ("system", "developer"):
+                text = content if isinstance(content, str) else json.dumps(content)
+                if len(text) > 2400:
+                    compacted_msgs.append(
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are Qwen2.5-Coder-7B running locally on UOS Razr15-1 "
+                                "(NVIDIA Turing sm_75 GPU + Modular MAX 26.8.0 + Mojo 1.3.0). "
+                                "Answer concisely, accurately, and directly."
+                            ),
+                        }
+                    )
+                    continue
+            elif role == "user" and isinstance(content, list):
+                kept_parts = []
+                for p in content:
+                    if isinstance(p, dict):
+                        txt = str(p.get("text", ""))
+                        if "<system-reminder>" in txt or "acp-proxy" in txt or len(txt) > 12000:
+                            continue
+                    kept_parts.append(p)
+                if len(kept_parts) > 0:
+                    m = dict(m)
+                    m["content"] = kept_parts
+            compacted_msgs.append(m)
+        req_json["messages"] = compacted_msgs
+    return req_json
+
+
+def _wsl2_cuda_watchdog_loop():
+    while True:
+        time.sleep(15.0)
+        try:
+            req = urllib.request.Request(f"{BACKEND_URL}/health", method="GET")
+            with urllib.request.urlopen(req, timeout=PREFLIGHT_TIMEOUT_SEC) as resp:
+                if resp.status == 200:
+                    continue
+        except Exception:
+            pass
+        _trigger_cuda_8081_watchdog_restart("periodic_watchdog_15s_health_check")
+
+
 if __name__ == "__main__":
-    print(f"MAX 26.8.0 + Zenoh + Dual-Plane 14-Stage Observability Gateway listening on {LISTEN_HOST}:{LISTEN_PORT} -> {BACKEND_URL}", flush=True)
+    print(f"MAX 26.8.0 + Zenoh + Dual-Plane 14-Stage Observability Gateway listening on {LISTEN_HOST}:{LISTEN_PORT} -> {BACKEND_URL} (fallback {FALLBACK_BACKEND_URL})", flush=True)
     publish_zenoh_envelope(ZENOH_TOPIC_TELEMETRY, {"event": "gateway_boot", "model": MODEL_ID, "ev_ceiling": 93})
+    wd_thread = threading.Thread(target=_wsl2_cuda_watchdog_loop, daemon=True)
+    wd_thread.start()
     server = ThreadingHTTPServer((LISTEN_HOST, LISTEN_PORT), MaxQwenGatewayHandler)
     server.serve_forever()

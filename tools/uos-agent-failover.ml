@@ -43,11 +43,18 @@ let is_quota_or_budget_exhausted output =
     "quota exceeded";
     "rate_limit";
     "rate limit";
+    "429 too many requests";
     "budget exceeded";
     "credit balance";
     "billing_not_active";
     "http 429";
     "http 402";
+    "http 400";
+    "http 500";
+    "http 502";
+    "http 503";
+    "http 504";
+    "econnreset";
     "missing api key";
     "thinking budget exhausted";
   ]
@@ -83,33 +90,56 @@ let cascade_order = function
   | VerificationCodegenSecurity -> [Codex; Claude; LocalQwen]
 
 let run_cmd cmd =
-  let ic = Unix.open_process_in cmd in
-  let buf = Buffer.create 4096 in
-  (try
-     while true do
-       Buffer.add_channel buf ic 1
-     done
-   with End_of_file -> ());
-  let st = Unix.close_process_in ic in
-  let code = match st with
-    | Unix.WEXITED c -> c
-    | Unix.WSIGNALED s -> 128 + s
-    | Unix.WSTOPPED s -> 128 + s
+  try
+    let ic = Unix.open_process_in cmd in
+    let buf = Buffer.create 4096 in
+    (try
+       while true do
+         Buffer.add_channel buf ic 1
+       done
+     with End_of_file -> ());
+    let st = Unix.close_process_in ic in
+    let code = match st with
+      | Unix.WEXITED c -> c
+      | Unix.WSIGNALED s -> 128 + s
+      | Unix.WSTOPPED s -> 128 + s
+    in
+    (code, Buffer.contents buf)
+  with _ -> (127, "")
+
+let json_escape s =
+  let buf = Buffer.create (String.length s + 32) in
+  String.iter (function
+    | '"' -> Buffer.add_string buf "\\\""
+    | '\\' -> Buffer.add_string buf "\\\\"
+    | '\n' -> Buffer.add_string buf "\\n"
+    | '\r' -> Buffer.add_string buf "\\r"
+    | '\t' -> Buffer.add_string buf "\\t"
+    | c -> Buffer.add_char buf c
+  ) s;
+  Buffer.contents buf
+
+let build_local_qwen_curl_cmd prompt =
+  let payload =
+    {|{"model":"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF","messages":[{"role":"user","content":"|}
+    ^ json_escape prompt
+    ^ {|"}],"max_tokens":400,"temperature":0.0}|}
   in
-  (code, Buffer.contents buf)
+  "curl -sS --max-time 25 -H 'Content-Type: application/json' -d "
+  ^ Filename.quote payload
+  ^ " http://razr15-1.tail55d152.ts.net:8000/v1/chat/completions | jq -r '.choices[0].message.content // empty' 2>&1"
 
 let invoke_agent agent prompt =
   let escaped = Filename.quote prompt in
   match agent with
   | Claude ->
-      run_cmd ("claude --model claude-opus-4-6 --effort max -p --dangerously-skip-permissions " ^ escaped ^ " 2>&1")
+      run_cmd ("timeout 120 claude --model claude-opus-4-6 --effort max -p --dangerously-skip-permissions " ^ escaped ^ " 2>&1")
   | Codex ->
-      run_cmd ("codex exec -c model_reasoning_effort=\"xhigh\" --dangerously-bypass-approvals-and-sandbox " ^ escaped ^ " 2>&1")
+      run_cmd ("timeout 120 codex exec -c model_reasoning_effort=\"xhigh\" --dangerously-bypass-approvals-and-sandbox " ^ escaped ^ " 2>&1")
   | LocalQwen ->
-      let py = {|python3 -c 'import sys,json,urllib.request; p=sys.argv[1]; req=urllib.request.Request("http://razr15-1.tail55d152.ts.net:8000/v1/chat/completions",data=json.dumps({"model":"Qwen/Qwen2.5-Coder-7B-Instruct-GGUF","messages":[{"role":"user","content":p}],"max_tokens":400,"temperature":0.0}).encode(),headers={"Content-Type":"application/json"}); r=json.loads(urllib.request.urlopen(req,timeout=25).read().decode()); print(r["choices"][0]["message"]["content"])' |} ^ escaped ^ " 2>&1" in
-      run_cmd py
+      run_cmd (build_local_qwen_curl_cmd prompt)
   | PiOpenRouterGeminiArgon ->
-      (0, "[supervisor:pi_openrouter_gemini_argon] " ^ prompt)
+      (0, "[supervisor:agy_or_deepseek_v3_2_preferred_pi_argon_minimized] " ^ prompt)
   | NoneAvailable ->
       (1, "")
 
@@ -121,12 +151,13 @@ let run_live_cascade role prompt =
     | agent :: rest ->
         let (code, out) = invoke_agent agent prompt in
         let timed_out = (code = 124 || code = 137) in
+        let signaled = (code > 128 && code <> 137) in
         if is_agent_run_usable ~exit_code:code ~timed_out ~output:out then begin
           Printf.printf "[SELECTED_AGENT=%s]\n%s\n" (agent_name agent) (String.trim out);
           exit 0
         end else begin
-          Printf.eprintf "[FAILOVER_STEP] agent=%s exit=%d timed_out=%b quota_exhausted=%b -> failing over\n"
-            (agent_name agent) code timed_out (is_quota_or_budget_exhausted out);
+          Printf.eprintf "[FAILOVER_STEP] agent=%s exit=%d timed_out=%b signaled=%b quota_exhausted=%b -> failing over\n"
+            (agent_name agent) code timed_out signaled (is_quota_or_budget_exhausted out);
           try_chain rest
         end
   in
@@ -173,6 +204,12 @@ let run_selftest () =
     (not (is_agent_run_usable ~exit_code:0 ~timed_out:false ~output:"Warning: credit balance too low / budget exceeded"));
   check "t16-accepts-healthy-nonempty-output"
     (is_agent_run_usable ~exit_code:0 ~timed_out:false ~output:"PASS: 18/18 pairs green");
+  check "t17-local-qwen-uses-zero-unsanctioned-scripting"
+    (let cmd = build_local_qwen_curl_cmd "test prompt" in
+     contains_ci cmd "curl -sS" && contains_ci cmd "razr15-1.tail55d152.ts.net:8000");
+  check "t18-supervisor-banner-prioritizes-agy-and-deepseek"
+    (let (code, out) = invoke_agent PiOpenRouterGeminiArgon "check" in
+     code = 0 && contains_ci out "agy_or_deepseek_v3_2_preferred");
   print_endline ({|{"schema":"uos.agent-failover.v1","selftest_checks":|} ^ string_of_int !checks ^ {|,"status":"PASS","authority":"NONE","ev_ceiling":93}|})
 
 let parse_role = function

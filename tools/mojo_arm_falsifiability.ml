@@ -40,6 +40,9 @@
    authority NONE. EV ceiling 93.
    ========================================================================== *)
 
+#directory "tools";;
+#use "uos_plane_lock.ml";;
+
 let oracle_dir = "formal/mojo"
 
 (* ---------- source hygiene: strip comments and string literals ---------- *)
@@ -594,6 +597,22 @@ let () =
     let mine = List.filter (fun a -> a.file = f)
                  (List.filteri (fun _ _ -> true) enumerable) in
     if mine <> [] then begin
+      (* FIXED 20261107-2048, findings F-W-13 and F-W-15. This block WRITES
+         `formal/mojo/generated_falsify_<mod>.mojo` and then has Mojo import
+         the real oracle mirrors out of the same directory, so it is both a
+         writer and a reader of the shared plane. Two separate hazards:
+
+           - a concurrent mutation sweep can have a mutant on disk while
+             these arms import it, and the falsifiability verdicts would
+             describe a tree nobody authored (F-W-13);
+           - the file it writes ends in `_oracle.mojo`, so until the
+             companion fix in lean_mojo_differential.ml it entered that
+             instrument's pair set and scored VACUOUS, dominating the
+             verdict lattice (F-W-15).
+
+         The lock is taken PER FILE, not for the whole sweep, so a concurrent
+         reader waits one probe rather than the full run. *)
+      with_plane_lock ~timeout:600.0 "formal-mojo" @@ fun () ->
       let modname = Filename.remove_extension (Filename.basename f) in
       (* only import the pure functions this file's arms actually call *)
       let used = List.filter (fun fn ->
