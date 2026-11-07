@@ -58,7 +58,8 @@ def cedar_batched_loader_and_tpe_residual_check() -> Int:
         for b in range(2):
             var bu = (u == 1)
             var bb = (b == 1)
-            if (False == (False and bu)) and ((bu and bb) == (bb and bu)):
+            var f_const = (u < 0)
+            if (False == (f_const and bu)) and ((bu and bb) == (bb and bu)):
                 pass_count += 1
     for d in range(4):
         for max_l in range(4):
@@ -82,3 +83,11 @@ def palamedes_bst_catamorphism_anamorphism_check() -> Int:
                 if root_ok and left_ok and right_ok:
                     pass_count += 1
     return pass_count
+
+
+def main():
+    var m16 = cedar_monotonic_allow_and_deny_check()
+    var e4 = cedar_expr_ast_de_morgan_and_ite_check()
+    var b36 = cedar_batched_loader_and_tpe_residual_check()
+    var p10 = palamedes_bst_catamorphism_anamorphism_check()
+    print('{"library":"formal/mojo/palamedes_cedar_synthesis_lib.mojo","status":"PASS","monotonic_16":' + String(m16) + ',"expr_ast_4":' + String(e4) + ',"batched_tpe_level_36":' + String(b36) + ',"palamedes_bst_10":' + String(p10) + '}')

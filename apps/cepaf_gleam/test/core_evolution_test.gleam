@@ -2025,3 +2025,75 @@ pub fn cedar_vgd_forbid_trumps_permit_tpe_and_slicing_test() {
 }
 
 
+
+pub fn simulator_digital_twin_and_realtime_agentic_parity_test() {
+  // THM_FSYS_46..50: Verify Simulator <-> Digital Twin <-> Realtime Agentic Behavior Parity
+  let exec_sim =
+    agent_ecology.select_failover_agent(False, False, True, True, True)
+  should.equal(exec_sim, Ok("codex"))
+
+  let verif_sim =
+    agent_ecology.select_failover_agent(False, True, False, True, True)
+  should.equal(verif_sim, Ok("claude"))
+
+  let p_permit =
+    CedarToolPolicy(
+      policy_id: "permit-claude-read",
+      effect: CedarPermit,
+      principal_worker: "claude",
+      action_tool: "read_file",
+      forbid_nvme_serial: True,
+      max_ev_ceiling: 93,
+      well_typed: True,
+    )
+  let p_forbid_nvme =
+    CedarToolPolicy(
+      policy_id: "forbid-nvme-lock",
+      effect: CedarForbid,
+      principal_worker: "*",
+      action_tool: "*",
+      forbid_nvme_serial: True,
+      max_ev_ceiling: 93,
+      well_typed: True,
+    )
+  let policies = [p_permit, p_forbid_nvme]
+  let prop =
+    ToolProposal(
+      call_id: "sim-rt-1",
+      tool_name: "read_file",
+      args_json: "{\"path\":\"formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean\"}",
+    )
+  let sim_decision =
+    tool_fenced_dispatcher.cedar_authorize_proposal(policies, "claude", prop, 93)
+  let sliced_policies =
+    tool_fenced_dispatcher.slice_policies_for_proposal(
+      policies,
+      "claude",
+      "read_file",
+    )
+  let twin_decision =
+    tool_fenced_dispatcher.cedar_authorize_proposal(
+      sliced_policies,
+      "claude",
+      prop,
+      93,
+    )
+  let tpe_res =
+    tool_fenced_dispatcher.tpe_partial_authorize(
+      policies,
+      "claude",
+      prop,
+      None,
+    )
+  let rt_decision =
+    tool_fenced_dispatcher.tpe_reauthorize_residual(
+      tpe_res,
+      policies,
+      "claude",
+      prop,
+      93,
+    )
+  should.equal(sim_decision, twin_decision)
+  should.equal(twin_decision, rt_decision)
+  should.equal(rt_decision, CedarAllow)
+}
