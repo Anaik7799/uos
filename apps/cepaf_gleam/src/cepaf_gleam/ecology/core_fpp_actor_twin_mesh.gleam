@@ -351,6 +351,7 @@ pub type SubsystemFppActorSpec {
     zenoh_topic: String,
     assigned_aspects: List(Int),
     intelligence_focus: String,
+    owner_caste_id: String,
   )
 }
 
@@ -403,6 +404,7 @@ fn build_spec(
   primary_mcp_tool: String,
   role: TaskRole,
   intelligence_focus: String,
+  assigned_agent owner_caste_id: String,
 ) -> SubsystemFppActorSpec {
   let #(dom, dom_name, dom_slug) = domain_for_slot(domain_slot)
   let layer_short = "L" <> int.to_string(layer_index)
@@ -424,6 +426,7 @@ fn build_spec(
     zenoh_topic: "uos/v1/core_evo/fpp_" <> dom_slug <> "/" <> actor_id,
     assigned_aspects: aspects_for_actor_index(actor_index, layer_index),
     intelligence_focus: intelligence_focus,
+    owner_caste_id: owner_caste_id,
   )
 }
 
@@ -443,6 +446,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "preflight_check",
       SovereignGateRole,
       "2oo3 HITL approval arbitration, bearer session guard & zero-privilege escalation veto",
+      assigned_agent: "Caste01_AGY",
     ),
     build_spec(
       1,
@@ -455,6 +459,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "integrity_check",
       SovereignGateRole,
       "Cryptokit SHA-256 payload digest verification, NUL-byte (-2) & SQLi (-3) fail-closed trap",
+      assigned_agent: "Caste03_Codex",
     ),
     build_spec(
       2,
@@ -467,6 +472,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "sa_plan_status_for",
       SovereignGateRole,
       "Enforces admitted_ev_ceiling == 93 and blocks quarantined EV-94..109 / ADR-071..086 claims",
+      assigned_agent: "Caste01_AGY",
     ),
     build_spec(
       3,
@@ -479,6 +485,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "stpa_fmea_hazard",
       FmeaFormalRole,
       "2oo3 constitutional quorum voting, 4-UCA STPA hazard veto & emergency MoZ stop-line",
+      assigned_agent: "Caste04_Claude",
     ),
     // L1 Atomic Kernels, VFS, Hardware Interlocks & Hyperplane (4..7)
     build_spec(
@@ -492,6 +499,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "integrity_check",
       ImplRole,
       "Pure Gleam/BEAM & Hermes OCaml vector/graph transforms enforcing 0 Bevy & 0 Graphite",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     build_spec(
       5,
@@ -504,6 +512,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Race-free descriptor-relative VFS, linear allocation arenas & lockless ring buffers",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       6,
@@ -516,6 +525,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "preflight_check",
       SovereignGateRole,
       "Hard-locks [REDACTED_SYSTEM_OS_SERIAL] against OSD wipe, formatting or raw block mutation",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       7,
@@ -528,6 +538,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_verification",
       FmeaFormalRole,
       "OS-isolated OTP 29 Two-Lane Port pool with 21 zero-sorry Lean theorems & <10us AVX-512 lane",
+      assigned_agent: "Caste03_Codex",
     ),
     // L2 Homeostasis, Circuit Breakers, Watchdogs & Metabolic ATP (8..11)
     build_spec(
@@ -541,6 +552,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       RcaTpsRole,
       "Closed <-> HalfOpen <-> Open fault isolation with exponential backoff & canary healing",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     build_spec(
       9,
@@ -553,6 +565,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "ast_anomaly_detect",
       RcaTpsRole,
       "Continuous precision-weighted Kalman innovation tracking & PID damping control u_k",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       10,
@@ -565,6 +578,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       SovereignGateRole,
       "Chrony NTP drift (<2s nominal, >10s halt), 20m Zenoh lease heartbeats & zombie PID checks",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       11,
@@ -577,6 +591,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "lyapunov_trend_predict",
       FmeaFormalRole,
       "Proves discrete dV/dt <= 0 convergence & enforces 40.0% untouched quota margin + $0-OR shift",
+      assigned_agent: "Caste03_Codex",
     ),
     // L3 Durable Transactions, Leases, Vault KMS & Effect Fencing (12..15)
     build_spec(
@@ -590,6 +605,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "integrity_check",
       ImplRole,
       "Lock-free persistent_term Ed25519 session key generation & zero-secret-leakage redaction",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       13,
@@ -602,6 +618,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "integrity_check",
       ImplRole,
       "Hex64 O_EXCL journaled file transactions, go-w traversal checks & SHA-256 crash rollback",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       14,
@@ -614,6 +631,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "sa_plan_status_for",
       ImplRole,
       "Sole SC-SA-PLAN-001 execution authority with append-only triggers & 4h Heijunka pull leases",
+      assigned_agent: "Caste01_AGY",
     ),
     build_spec(
       15,
@@ -626,6 +644,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "preflight_check",
       SovereignGateRole,
       "Re-verifies active worker lease, candidate SHA-256, oi07<-oi02 order & 0 mixed readers at effect time",
+      assigned_agent: "Caste03_Codex",
     ),
     // L4 Supervised System Daemons & Immutable Capsules (16..19)
     build_spec(
@@ -639,6 +658,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Supervises c3i-gleam-server.service (+S 8:8 +SDio 6 +A 6) & zero-downtime capsule health",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       17,
@@ -651,6 +671,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Supervises isolated unikernel/native C-ABI port lifecycles with restart budget intensity 5/60s",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       18,
@@ -663,6 +684,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_zenoh",
       ImplRole,
       "Supervises uos-ecology@<capsule>.service (:4110) & continuous swarm state projection",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     build_spec(
       19,
@@ -675,6 +697,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "ooda_decide",
       RcaTpsRole,
       "Quarantines Python strictly to length-delimited JSON-RPC stdio pipes under OTP supervision",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     // L5 Cognitive POODAVR, Formal Solvers, Rete-UL & Ruliad (20..23)
     build_spec(
@@ -688,6 +711,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "ooda_decide",
       RcaTpsRole,
       "Streams real-time POODAVR & HITL cognitive events over /ag-ui/events & /cortex",
+      assigned_agent: "Caste01_AGY",
     ),
     build_spec(
       21,
@@ -700,6 +724,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "verification_run",
       ImplRole,
       "Runs isolated timeout-reaped Z3 workers, Gospel postconditions & parity algebra oracles",
+      assigned_agent: "Caste03_Codex",
     ),
     build_spec(
       22,
@@ -712,6 +737,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "rete_rule_conflict",
       RcaTpsRole,
       "Evaluates 11-domain Rete-UL production rules with conflict detection & salience arbitration",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       23,
@@ -724,6 +750,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "ooda_decide",
       FmeaFormalRole,
       "Closes Predict->Observe->Orient->Decide->Act->Verify->Reflect loop with Ruliad causal invariance",
+      assigned_agent: "Caste01_AGY",
     ),
     // L6 Holonic Hive, 5 Castes & 3-Attempt Jidoka Self-Healing (24..27)
     build_spec(
@@ -737,6 +764,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "verification_run",
       ImplRole,
       "Steps 10x17 = 170 Janus Holons across 24 epochs = 4,080 states proving INV-HOLON-01..12",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       25,
@@ -749,6 +777,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "integrity_check",
       ImplRole,
       "Offloads ~46% compute share at $0 LLM cost to OTP 29, OCaml, Lean 4.33.0 & Zig 0.16.0 binaries",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       26,
@@ -761,6 +790,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "sa_plan_status_for",
       ImplRole,
       "Zero-npm-bloat isolated sibling-JJ builders with automatic $4.50 -> $0 Google Argon shift",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     build_spec(
       27,
@@ -773,6 +803,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "harness_execution_progress",
       SovereignGateRole,
       "<=512B AGY conductor digests + 60m->90m(ACH RCA)->120m(STPA Pivot)->Jidoka Andon HOLD",
+      assigned_agent: "Caste01_AGY",
     ),
     // L7 Transport, 101-Route MCP, Ed25519 Zenoh & Tailnet/OTel Mesh (28..31)
     build_spec(
@@ -786,6 +817,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Guards all HTTP/JSON routes via SC-SIL4-001 request_guard, module_guard & error-budget SLOs",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       29,
@@ -798,6 +830,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_zenoh",
       ImplRole,
       "Signs uos/v1/** envelopes in RAM, quarantines legacy :4200 c3i/** & blocks non-monotonic replays",
+      assigned_agent: "Caste05_Deterministic_Tier0",
     ),
     build_spec(
       30,
@@ -810,6 +843,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Pre-sealed <10ms stdio/HTTP MCP gateway enforcing 8-10 role-whitelisted tools per worker",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     build_spec(
       31,
@@ -822,6 +856,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_zenoh",
       RcaTpsRole,
       "Propagates 128-bit W3C traceparent spans & Tailnet FQDN correlation across L0..L9",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     // L8 Living Knowledge Triad (#km-triad), Risk Gates & Formal Proofs (32..35)
     build_spec(
@@ -835,6 +870,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "knowledge_search",
       ImplRole,
       "Zero-cache descriptor-relative disk projection serving /wiki, /zk, /km & /files in <20ms p99",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       33,
@@ -847,6 +883,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "zk_transclude",
       ImplRole,
       "Verifies 1,921+ Markdown files, reciprocal [[wiki:...]]/[[zk:...]] SCC cohesion & 0 broken links",
+      assigned_agent: "Caste03_Codex",
     ),
     build_spec(
       34,
@@ -859,6 +896,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "stpa_fmea_hazard",
       FmeaFormalRole,
       "Validates chrony clock offset, SHA-256 evidence freshness, raw FMEA RPN & all 4 STPA UCAs",
+      assigned_agent: "Caste03_Codex",
     ),
     build_spec(
       35,
@@ -871,6 +909,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_verification",
       FmeaFormalRole,
       "Binds 13 zero-sorry Lean 4 proofs (13D Trace, Two-Lattice STM, Ruliad, ZLP) & 9 test modalities",
+      assigned_agent: "Caste03_Codex",
     ),
     // L9 Operator Surfaces, UX & Tri-Sovereign Release Governance (36..39)
     build_spec(
@@ -884,6 +923,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Renders responsive WCAG-AA dark cockpits with XSS escaping & 18-obligation verification accordion",
+      assigned_agent: "Caste04_Claude",
     ),
     build_spec(
       37,
@@ -896,6 +936,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "system_health",
       ImplRole,
       "Renders keyboard/CLI ANSI & colorless dashboards stripping 100% of untrusted C0/DEL/C1 bytes",
+      assigned_agent: "Caste02_Pi_Argon",
     ),
     build_spec(
       38,
@@ -908,6 +949,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "ooda_decide",
       RcaTpsRole,
       "Executes security-incident, HA-defence & critical-responder operator journeys fail-closed",
+      assigned_agent: "Caste01_AGY",
     ),
     build_spec(
       39,
@@ -920,6 +962,7 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
       "harness_execution_progress",
       SovereignGateRole,
       "Governs candidate-bound two-key verification, immutable capsule sealing & system_admitted=false truth",
+      assigned_agent: "Caste01_AGY",
     ),
   ]
 }
@@ -2675,6 +2718,7 @@ pub fn encode_spec_json(spec: SubsystemFppActorSpec) -> json.Json {
     #("zenoh_topic", json.string(spec.zenoh_topic)),
     #("assigned_aspects", json.array(spec.assigned_aspects, json.int)),
     #("intelligence_focus", json.string(spec.intelligence_focus)),
+    #("owner_caste_id", json.string(spec.owner_caste_id)),
   ])
 }
 
@@ -2740,6 +2784,7 @@ pub fn encode_live_actor_json(
     #("zenoh_topic", json.string(spec.zenoh_topic)),
     #("assigned_aspects", json.array(spec.assigned_aspects, json.int)),
     #("intelligence_focus", json.string(spec.intelligence_focus)),
+    #("owner_caste_id", json.string(spec.owner_caste_id)),
     #("process_alive", json.bool(alive)),
     #(
       "supervised_by",

@@ -3153,6 +3153,7 @@ fn view_for_route(route: String) -> types.AccessView {
 
 fn profile_for(version: String) -> types.ProtocolProfile {
   case version {
+    "2026-07-28" -> types.Modern20260728
     "2024-11-05" -> types.Legacy20241105
     _ -> types.Modern20260728
   }
@@ -3160,8 +3161,8 @@ fn profile_for(version: String) -> types.ProtocolProfile {
 
 fn protocol_version(profile: types.ProtocolProfile) -> String {
   case profile {
-    types.Legacy20241105 -> "2024-11-05"
     types.Modern20260728 -> "2026-07-28"
+    types.Legacy20241105 -> "2024-11-05"
   }
 }
 
@@ -3620,7 +3621,7 @@ fn dispatch_non_private(
       ),
       state,
     )
-    "initialize" -> {
+    "initialize" | "server/discover" -> {
       let requested =
         raw_string(
           raw,

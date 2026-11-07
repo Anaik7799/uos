@@ -40,6 +40,7 @@
 from std.sys import exit
 from oracle_substrate import (
     Receipt, capture, contains, json_flag, json_int, json_norm, occurrences,
+    shell_quote,
 )
 
 # F17, 20261106: this was the raw tailnet IP `100.114.9.28`.
@@ -54,6 +55,11 @@ from oracle_substrate import (
 # itself and the capture survives to record it.
 comptime HOST = "razr15-1.tail55d152.ts.net"
 comptime PORT = 8000
+# The runtime's own declaration of this node's authority, by another author
+# in another language. `node_to_string(Razr15MaxQwen)` is the second key for
+# `endpoint:runtime-adapter-declares-the-same-authority`.
+comptime ADAPTER = (
+    "apps/cepaf_gleam/src/cepaf_gleam/ai/tailnet_llm_adapter.gleam")
 comptime MODEL_ID = "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF"
 comptime DUAL_PLANE_SCHEMA = "uos.observability.dual_plane_14stage.v1"
 # The stage total the dual-plane schema name commits to, parsed from the
@@ -142,6 +148,36 @@ def main() raises:
     # it did.
     r.world_count(String("endpoint:probed-port-matches-the-proxy-listener"),
                   proxy_port, PORT)
+    # ---- the address this oracle dials is the address the runtime dials --
+    # ADDED 20261107-0331, found by B5 mirror mutation. `base_url` is used
+    # ONLY inside `capture("curl ... " + base_url() + path)`, so its value
+    # reached the receipt only through the network. Emptying its scheme
+    # literal -- turning "http://host:8000" into "host:8000" -- returned a
+    # byte-identical receipt. Every endpoint arm in this file would read the
+    # same whether the URL had a scheme or not, because a curl that cannot
+    # parse its argument and a service that is down are indistinguishable
+    # here. A mirror observed only through a failing world call is not
+    # observed.
+    #
+    # KEY 1 (world, independent provenance): the Gleam adapter that actually
+    # dials this model declares its own host:port, written by another hand
+    # in another language. If either side moves, this fires.
+    var adapter_hits = count(
+        "grep -cF " + shell_quote(String(HOST) + ":" + String(PORT)) + " "
+        + String(ADAPTER) + " 2>/dev/null")
+    r.world_or_blind(
+        String("endpoint:runtime-adapter-declares-the-same-authority"),
+        adapter_hits >= 0, adapter_hits > 0)
+    # KEY 2 (algebra): the composed URL is absolute. Exactly one scheme
+    # separator, and the scheme sits immediately before the host rather than
+    # anywhere in the string. This is a necessary property, not a restated
+    # definition: it does not fix what the authority is, which is KEY 1's
+    # job, and it is falsified by the mutant that KEY 1 cannot see.
+    var u = base_url()
+    r.algebra(String("endpoint:composed-url-is-absolute"),
+              occurrences(u, String("://")) == 1
+              and contains(u, String("http://") + String(HOST) + String(":")))
+
     # A real differential: the twin's ceiling against the ROOT POLICY's,
     # which is a separate artifact with a separate author.
     if twin_ceiling >= 0 and policy_ceiling >= 0:

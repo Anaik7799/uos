@@ -327,26 +327,34 @@ structure Census where
 def Census.quotedExamples (c : Census) : Nat := c.inInlineCode + c.inFencedCode
 def Census.live (c : Census) : Nat := c.raw - c.quotedExamples
 
+/-- Historical 2026-11-05T16:44Z incident fixture over AGENTS.md, GEMINI.md,
+    docs/**, contracts/** when the inline-code scanner bug was isolated. -/
+def incident20261105WikiCensus : Census := { raw := 1015, inInlineCode := 737, inFencedCode := 0 }
+def incident20261105ZkCensus   : Census := { raw := 1308, inInlineCode := 990, inFencedCode := 0 }
+
 /-- Independent census over AGENTS.md, GEMINI.md, docs/**, contracts/**,
-    measured 2026-11-05T16:44Z. -/
-def wikiCensus : Census := { raw := 1015, inInlineCode := 737, inFencedCode := 0 }
-def zkCensus   : Census := { raw := 1308, inInlineCode := 990, inFencedCode := 0 }
+    measured 2026-11-07T06:15Z. -/
+def wikiCensus : Census := { raw := 1478, inInlineCode := 1097, inFencedCode := 75 }
+def zkCensus   : Census := { raw := 1853, inInlineCode := 1432, inFencedCode := 76 }
 
 def totalQuotedExamples : Nat := wikiCensus.quotedExamples + zkCensus.quotedExamples
 
-/-- THE COUNT. 1,727 transclusion tokens in the corpus are quoted examples. -/
+/-- THE COUNT. 2,680 transclusion tokens in the current corpus are quoted examples
+    (1,172 wiki + 1,508 zk). -/
 theorem THM_KM_02_quoted_example_count :
-    totalQuotedExamples = 1727
-  ∧ wikiCensus.quotedExamples = 737
-  ∧ zkCensus.quotedExamples = 990 := by decide
+    totalQuotedExamples = 2680
+  ∧ wikiCensus.quotedExamples = 1172
+  ∧ zkCensus.quotedExamples = 1508 := by decide
 
 theorem THM_KM_03_live_counts :
-    wikiCensus.live = 278 ∧ zkCensus.live = 318 := by decide
+    wikiCensus.live = 306 ∧ zkCensus.live = 345 := by decide
 
-/-- Every quoted example sits in an inline span; none in a fenced block. This
-    is what makes inline-only stripping the minimal correct fix. -/
+/-- On the 2026-11-05 incident fixture, every quoted example sat in an inline span
+    and none in a fenced block; in the current corpus both inline and fenced code
+    spans contain quoted examples (75 wiki, 76 zk). -/
 theorem THM_KM_04_no_quoted_examples_in_fenced_blocks :
-    wikiCensus.inFencedCode = 0 ∧ zkCensus.inFencedCode = 0 := by decide
+    incident20261105WikiCensus.inFencedCode = 0 ∧ incident20261105ZkCensus.inFencedCode = 0
+  ∧ wikiCensus.inFencedCode = 75 ∧ zkCensus.inFencedCode = 76 := by decide
 
 /-! ### 4.1 The scanner defect -/
 
@@ -364,16 +372,20 @@ def scannerCounts : ScannerVariant → Census → Nat
   | .stripInline,          c => c.raw - c.inInlineCode
   | .stripInlineAndFenced, c => c.raw - c.inInlineCode - c.inFencedCode
 
-/-- The pre-fix scanner overcounted wiki transclusions by 737. -/
+/-- The pre-fix scanner overcounted wiki transclusions by 737 on the incident
+    fixture and by 1,097 on the current corpus. -/
 theorem THM_SCAN_01_raw_scanner_overcounts :
-    scannerCounts .rawLines wikiCensus - scannerCounts .stripInline wikiCensus = 737
+    scannerCounts .rawLines incident20261105WikiCensus - scannerCounts .stripInline incident20261105WikiCensus = 737
+  ∧ scannerCounts .rawLines wikiCensus - scannerCounts .stripInline wikiCensus = 1097
     := by decide
 
-/-- Fence stripping buys nothing over inline stripping on this corpus, so the
-    minimal fix is the complete fix. -/
+/-- Fence stripping bought nothing over inline stripping on the 2026-11-05
+    incident fixture, and removes the 75/76 fenced-block examples on the current corpus. -/
 theorem THM_SCAN_02_fence_stripping_is_redundant :
-    scannerCounts .stripInline wikiCensus = scannerCounts .stripInlineAndFenced wikiCensus
-  ∧ scannerCounts .stripInline zkCensus = scannerCounts .stripInlineAndFenced zkCensus
+    scannerCounts .stripInline incident20261105WikiCensus = scannerCounts .stripInlineAndFenced incident20261105WikiCensus
+  ∧ scannerCounts .stripInline incident20261105ZkCensus = scannerCounts .stripInlineAndFenced incident20261105ZkCensus
+  ∧ scannerCounts .stripInline wikiCensus - scannerCounts .stripInlineAndFenced wikiCensus = 75
+  ∧ scannerCounts .stripInline zkCensus - scannerCounts .stripInlineAndFenced zkCensus = 76
     := by decide
 
 /-- THE THIRD FAULT. One quoted example in a post-cutoff journal was classified

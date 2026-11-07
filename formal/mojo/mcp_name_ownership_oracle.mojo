@@ -193,6 +193,42 @@ def main() raises:
         owned_in(json_allow, 2) and not owned_in(toml_allow, 2)
         and owned_in(toml_allow, 3) and not owned_in(json_allow, 3))
 
+    # ---- ALGEBRA: the quoting is what makes ownership decidable ---------
+    # ADDED 20261107-0331, found by B5 mirror mutation. Emptying the quote
+    # literal in `quoted` -- so that it searches for a BARE name -- returned
+    # a byte-identical receipt. Every arm above survived the change, because
+    # each of them asks about an allowlist that contains both `uos-harness`
+    # and `uos-harness-dev`, where a substring search happens to agree with
+    # an exact one.
+    #
+    # `quoted`'s own docstring states the hazard exactly: "a bare
+    # `uos-harness` also occurs inside `uos-harness-dev`, so an unquoted
+    # search cannot tell the two apart." So the file already knew the
+    # property, asserted it in prose, and measured it nowhere.
+    #
+    # This arm is the discriminating case the others cannot be: an allowlist
+    # carrying ONLY the dev name. Exact-quoted ownership says name 0 is
+    # absent; substring ownership says it is present. The two answers
+    # differ, which is the entire point of the quotes.
+    # CORRECTED 20261107-0415. The first version of this arm used only the
+    # prefix case below, and the mutation SURVIVED anyway: `literal->empty`
+    # empties the FIRST literal on the line, so it drops the LEADING quote
+    # and leaves the trailing one. `uos-harness"` is still not a substring of
+    # `"uos-harness-dev"`, so the prefix case could not tell the difference.
+    # One arm pinned one half of a two-sided property and read as closure.
+    #
+    # Each case is blind to the mutant the other catches:
+    #   prefix   -- a trailing quote stops `uos-harness` matching inside
+    #               `uos-harness-dev`
+    #   embedded -- a leading quote stops `uos-harness` matching inside
+    #               `xuos-harness`
+    var only_dev = String("  \"uos-harness-dev\"\n")
+    var only_embedded = String("  \"xuos-harness\"\n")
+    r.algebra(String("own:quoting-separates-a-name-from-its-prefix-use"),
+        owned_in(only_dev, 1) and not owned_in(only_dev, 0))
+    r.algebra(String("own:quoting-separates-a-name-from-its-embedded-use"),
+        not owned_in(only_embedded, 0))
+
     # ---- NEGATIVE CONTROL: mutate a real input -------------------------
     # Narrow the JSON allowlist by removing uos-harness. The derivation must
     # see the change. A control that merely restates the allowlist and

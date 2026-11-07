@@ -1,0 +1,257 @@
+{
+  "schema": "uos.governance-source.v1",
+  "id": "20261107-0348-busy-wait-rca-waiter-twin-and-mirror-closure",
+  "observed_utc": "2026-11-07T03:51:43Z",
+  "clock_basis": "host `date -u`, read immediately before this file was written",
+  "author": "claude (Caste04)",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "ev_note": "EV-94..109 and ADR-071..086 remain NOT_ADMITTED. No new EV minted.",
+
+  "scope": {
+    "requested": [
+      "close the 6 uncovered mirrors",
+      "did this cause cpu and token burn",
+      "lean+mojo+fpp digital twin, controller, shutdown logic, minimum token burn",
+      "full fractal RCA, fractal TPS, comprehensive sweep, implications",
+      "as-is, to-be, FMEA, STPA, forecast, predictive",
+      "explain issue, rca, fix"
+    ],
+    "not_touched": [
+      "formal/mojo/provenance_ceiling_impact_oracle.mojo (another writer's file, 4 recorded defects, excluded by contract)"
+    ]
+  },
+
+  "issue": {
+    "one_line": "Eight background shells waited on a pattern that described themselves, so they could not stop, and burned ~8 of 24 cores for about seven hours after the work they were waiting for had finished.",
+    "shape": "while pgrep -f \"dataplane.ml --subject\" >/dev/null; do :; done",
+    "why_it_cannot_terminate": "`pgrep -f` matches the full command line of every process. The waiter's own command line CONTAINS the pattern, because the pattern was passed to it as an argument. The guard is therefore a predicate the guard's own evaluator satisfies: the observed set is never empty while the observer is in it. Work completion is irrelevant to it.",
+    "detection": "Not detected by any instrument. Found only because the user asked `what is happening` and the session's own background-task reminders listed eight shells still running.",
+    "duration_bound": "work finished 2026-11-06T21:28Z (subject.log) / 21:34Z (mirror.log); waiters stopped 2026-11-07T04:28:54-57 local (+0100) = 03:28:54-57Z. Lower bound ~6h55m for the newest, longer for the rest.",
+    "measured_not_assumed": {
+      "fork_rate_per_waiter_per_sec": 56,
+      "fork_rate_method": "tools-measured on this host 2026-11-07, 1.005s bounded, OCaml probe forking pgrep against a pattern matching no process",
+      "implied_process_creations": "8 waiters x 7h x 56/s = 1.1e7",
+      "load_average_at_kill": [2.94, 7.42, 9.64],
+      "load_average_reading": "1/5/15-minute, read at the moment of the kill. The 15-minute figure 9.64 against 24 cores is the clearest single piece of evidence: it still carried the eight spinners, while the 1-minute figure had already decayed to 2.94 because they were gone.",
+      "cores": 24
+    }
+  },
+
+  "burn_answer": {
+    "cpu": "YES, and severe. ~8 cores pinned out of 24 for ~7 hours, approximately 56 core-hours, plus ~1.1e7 process creations each of which walks all of /proc. This is a derived figure from a measured rate and a bounded duration, not a per-process accounting: the processes were killed before I thought to read their CPU time, and Linux keeps no accounting for a dead process. Stated as an estimate because that is what it is.",
+    "tokens_direct": "NEAR ZERO. Each waiter emitted output only AFTER its loop, and no loop ever exited, so none of them ever wrote a byte into the conversation.",
+    "tokens_indirect": "SMALL BUT STRUCTURAL. Eight standing background-task reminders rode in the system context of every request for the remainder of the session, roughly 90 tokens each, roughly 700 tokens per request, paid on every turn rather than once.",
+    "tokens_not_attributable": "The context exhaustion and compaction in the prior session was caused by the actual work -- oracle sources, mutation logs, sweep output. I have no evidence the waiters contributed materially and do not claim they did.",
+    "asymmetry_and_why_it_matters": "The CPU cost was large and the token cost was small. That asymmetry is the design input: a waiter must be optimised hard for process cost and modestly for output cost, which is exactly what `admissible` encodes -- a mandatory interval (CPU) and silence until exit (tokens)."
+  },
+
+  "fractal_rca": {
+    "method": "The same defect, named at each layer it occupies. Not nine restatements of one cause: each layer is a place the defect could have been stopped and was not.",
+    "L0_constitutional": "INV-FALSIFY was satisfied in letter and broken in spirit. The waiter's guard COULD be false in principle, so nothing flagged it; but on the actual argument it was a tautology. An assertion that cannot fail is not evidence, and neither is a guard that cannot go false.",
+    "L1_atomic": "`pgrep -f PAT` is self-referential when PAT is in the caller's own argv. The primitive is unsafe at this call site and has no safe default.",
+    "L2_component": "The waiter had no deadline. `while` was the wrong control structure; a bounded `for` cannot fail to terminate.",
+    "L3_transaction": "No lease, no budget, no completion receipt on the wait itself. Sa-plan governs tasks; nothing governed the waiting.",
+    "L4_system": "No supervisor. Eight unsupervised shells outlived their purpose on a 24-core host and nothing noticed, for seven hours.",
+    "L5_cognitive": "I reached for a busy-wait at all. The harness re-invokes on background-task exit, so the correct action was to start the sweep as a tracked task and be notified -- zero polls. I wrote a poller for work that already had a notifier.",
+    "L6_ecosystem": "The failure was already recorded. `pgrep-pattern-kills-own-shell` sits in this project's memory index. I had written the lesson down and then wrote the defect again, which means the memory was not consulted at the moment of authoring.",
+    "L7_federation": "Host-local. No peer, Zenoh topic or coordinator event was affected; no cross-node claim is made.",
+    "L8_evolutionary": "The shape propagated by copy. Eight waiters are one mistake pasted eight times, each time with a slightly different pattern string, so each looked like fresh work rather than a repeat.",
+    "L9_sovereign": "No admission consequence. No gate passed or failed on this, which is itself the finding: seven hours of a pinned core crossed no threshold anywhere.",
+    "deepest_cause": "Not the pgrep idiom. It is that the waiting was treated as too trivial to specify. Every instrument in this round exists because a measurement was specified; the wait was improvised, and improvised control flow is where a tautological guard hides."
+  },
+
+  "fractal_tps": {
+    "muda_identified": [
+      {"type": "waiting", "instance": "the loops themselves: pure waiting, converted into CPU"},
+      {"type": "overprocessing", "instance": "1.1e7 pgrep invocations to answer a question `wait`/`kill 0` answers once per second"},
+      {"type": "motion", "instance": "each pgrep walks the whole of /proc to test one predicate"},
+      {"type": "defects", "instance": "a guard that cannot go false; three later arms that measured prose"},
+      {"type": "inventory", "instance": "eight standing background-task reminders carried in every request's context"}
+    ],
+    "jidoka": "The line did not stop, which is the real failure. A busy-wait on a 24-core host has no Andon. `uos-wait --scan` is now that stop line: it reads /proc and exits nonzero if any inadmissible waiter is alive, and `background_waiter_oracle` executes it.",
+    "poka_yoke": [
+      "There is NO pattern mode in tools/uos-wait. Not a discouraged flag -- absent. A flag that re-enables a defect gets used.",
+      "--timeout is mandatory. A missing deadline is a refusal with exit 2, not a default of forever.",
+      "--interval must be > 0. Busy-wait is unreachable by argument.",
+      "The wait is a bounded for over a precomputed poll count, so it terminates even if the host lies on every poll.",
+      "--lint strips comments and reports the shape AUTHORED anywhere under a directory, so the next author cannot paste it back in unnoticed."
+    ],
+    "genchi_genbutsu": "The fork rate was measured on this host rather than guessed, and the twin's THM_WAIT_09 is stated AT the measured number 56, so re-measuring without updating the twin fails an arm.",
+    "zero_muda_note": "The eight stopped waiters were not deleted from the record. The incident is preserved in the twin's header, the controller's header and this file, because the defect's documentation is what makes the lint arm necessary."
+  },
+
+  "stpa": {
+    "losses": [
+      "L-1: compute capacity consumed by processes doing no work, unavailable to the sweeps that needed it",
+      "L-2: an agent session that cannot tell finished work from running work",
+      "L-3: operator attention spent asking what is happening"
+    ],
+    "hazards": [
+      "H-1: a background process outlives its purpose with no deadline and no supervisor",
+      "H-2: a guard intended to detect completion is satisfied by the detector",
+      "H-3: a measurement reports a subject clean because the measurement read nothing"
+    ],
+    "control_structure": "Controller: the agent session. Actuator: the shell. Controlled process: the mutation sweep. Feedback: pgrep over /proc. The feedback channel was corrupted by the controller's own presence in it -- the sensor could see the observer.",
+    "unsafe_control_actions": [
+      {"type": "provided-but-unsafe", "uca": "The session provided a wait whose guard includes the waiter", "hazard": "H-2", "constraint": "SC-WAIT-01: a wait must test identity (a pid), never a description that could match the waiter", "status": "ENFORCED by tools/uos-wait having no pattern mode"},
+      {"type": "not-provided", "uca": "No deadline was provided", "hazard": "H-1", "constraint": "SC-WAIT-02: every wait carries a deadline; absence is a refusal", "status": "ENFORCED, exit 2"},
+      {"type": "too-long", "uca": "The wait continued for ~7h after the work finished", "hazard": "H-1", "constraint": "SC-WAIT-03: stopping the waiter must also account for what it waited on", "status": "ENFORCED by --kill-on-timeout, verified by reading liveness after the signal"},
+      {"type": "wrong-timing", "uca": "The poll was issued at the host's maximum rate", "hazard": "H-1", "constraint": "SC-WAIT-04: interval > 0, so the fork rate is bounded by arithmetic", "status": "ENFORCED, exit 2"},
+      {"type": "provided-but-unsafe", "uca": "A scanner reported zero suspects after reading zero bytes", "hazard": "H-3", "constraint": "SC-WAIT-05: a scan must prove it can see; its own command line is the positive control", "status": "ENFORCED by selftest rule R4, which found this defect"}
+    ],
+    "residual": "The controller governs waits that go through it. Nothing prevents a future session from writing a raw `while` in a Bash call, because the agent's shell is not behind the controller. --lint covers authored files in the tree; it cannot cover a one-off command line. That boundary is real and is not closed."
+  },
+
+  "fmea": {
+    "note": "S/O/Det each 1-5 per contracts/rules/20260907-1559-risk-prioritization-sop.md. RPN = S x O x Det. F = max(S, rpn_band(RPN)). Occurrence is stated against an observed population, not invented.",
+    "modes": [
+      {"id": "FM-01", "mode": "self-matching wait never terminates", "cause": "pattern passed as argv is matched against own cmdline", "local_effect": "one core pinned", "system_effect": "n cores pinned for the session's lifetime", "S": 3, "O": 5, "Det": 5, "RPN": 75, "F": 5, "O_basis": "8 of 8 waiters written this way in one session; reproduces on ordinary use of the idiom", "Det_basis": "silent: no output, no gate, no alarm; found by a human asking", "control_before": "none", "control_after": "no pattern mode exists; bounded for; --scan stop line; --lint authored-shape gate", "residual_S": 3, "residual_O": 1, "residual_Det": 2, "residual_RPN": 6, "residual_F": 3},
+      {"id": "FM-02", "mode": "scanner reports clean after reading nothing", "cause": "in_channel_length is 0 for every procfs file", "local_effect": "--scan always answers 0", "system_effect": "the stop line is decorative and reports safety", "S": 5, "O": 5, "Det": 4, "RPN": 100, "F": 5, "O_basis": "100% of procfs reads in the first implementation", "Det_basis": "would have passed forever; found only by the R4 self-control", "control_before": "none", "control_after": "read-to-EOF; R4 asserts the scanner can see its own command line", "residual_S": 5, "residual_O": 1, "residual_Det": 2, "residual_RPN": 10, "residual_F": 5},
+      {"id": "FM-03", "mode": "liveness check treats a zombie as alive", "cause": "kill(pid,0) succeeds on an unreaped child", "local_effect": "a wait on a finished child never completes", "system_effect": "the controller reproduces the very defect it exists to prevent, for child targets", "S": 4, "O": 3, "Det": 2, "RPN": 24, "F": 4, "O_basis": "every child target; never for a non-child, which is the main use", "Det_basis": "caught immediately by selftest R1/R3", "control_before": "none", "control_after": "/proc/pid/stat state field is authoritative, kill(0) is fallback", "residual_S": 4, "residual_O": 1, "residual_Det": 1, "residual_RPN": 4, "residual_F": 4},
+      {"id": "FM-04", "mode": "mutation operator mutates prose and the survivors are counted as blindness", "cause": "no code/comment discriminator; per-mirror budget spent on certain survivors", "local_effect": "guaranteed-SURVIVED mutants", "system_effect": "a fabricated UNCOVERED verdict against a sound oracle, and real mutants crowded out by the cap", "S": 4, "O": 4, "Det": 4, "RPN": 64, "F": 4, "O_basis": "2 of 6 UNCOVERED verdicts were entirely artifacts; 3 of 18 mirrors affected", "Det_basis": "found by reading the surviving mutants' line numbers, not by any gate", "control_before": "none", "control_after": "code_lines strips docstrings and comments; code_part excludes inline comments; <=2 mutants per line; UNMEASURED reported separately from UNCOVERED", "residual_S": 4, "residual_O": 1, "residual_Det": 2, "residual_RPN": 8, "residual_F": 4},
+      {"id": "FM-05", "mode": "grep-based world arm measures documentation as implementation", "cause": "a grep over source cannot distinguish prose from code", "local_effect": "false world failure, or false pass", "system_effect": "arms whose verdict is driven by their own file's comments", "S": 3, "O": 5, "Det": 3, "RPN": 45, "F": 4, "O_basis": "3 of 10 world arms in the new oracle's FIRST run; the fix's own header text caused two of them", "Det_basis": "visible as a failure, so detected, but the failure named the wrong cause", "control_before": "none", "control_after": "whitespace-bounded patterns for Lean terms; --lint strips comments before searching", "residual_S": 3, "residual_O": 2, "residual_Det": 2, "residual_RPN": 12, "residual_F": 3},
+      {"id": "FM-06", "mode": "boundary-blind arm calls a mirror and would not notice it changing", "cause": "test vectors are interior points of every branch", "local_effect": "operator flips at boundaries survive", "system_effect": "an arm that looks like coverage and is not; 'an arm calls it' read as 'an arm observes it'", "S": 4, "O": 4, "Det": 5, "RPN": 80, "F": 5, "O_basis": "classify_archetype 8/8 vectors interior; classify_regime 4/4 interior", "Det_basis": "invisible to any static reader and to the arm's own passing status", "control_before": "none", "control_after": "15-row boundary table for classify_archetype, 6-point boundary arm for classify_regime, both derived from branch ORDER not from the mirror body", "residual_S": 4, "residual_O": 1, "residual_Det": 2, "residual_RPN": 8, "residual_F": 4}
+    ],
+    "highest_residual": "FM-02 at residual F 5. Severity does not decay: a stop line that can report safety after reading nothing is the worst available failure here, and the control is one self-check. It keeps the severity floor by design."
+  },
+
+  "as_is_to_be": {
+    "as_is": {
+      "waiting": "improvised `while pgrep` in a Bash call; no deadline, no interval, no supervisor, no stop line",
+      "mirror_coverage": "6 UNCOVERED of 18, of which 2 were instrument artifacts and 4 real; 5 mirrors invisible to the report entirely",
+      "mutation_operators": "comparison, boolean and arithmetic only; applied to any line including prose; flat cap of 4 per mirror",
+      "mirror_verdicts": "COVERED or UNCOVERED; no way to say nothing looked",
+      "boundary_testing": "none; arms used interior vectors and read as coverage",
+      "waiter_specification": "none in any language"
+    },
+    "to_be": {
+      "waiting": "tools/uos-wait: pid identity, mandatory deadline, mandatory interval, one line of output, verified reap; --scan as the live stop line and --lint as the authored-shape gate",
+      "mirror_coverage": "see results.mirror below",
+      "mutation_operators": "comparison, boolean, arithmetic, literal->empty for String mirrors, ints+1 for table and constant mirrors; prose excluded; <=2 per line and <=6 per mirror so the budget spreads across a function",
+      "mirror_verdicts": "COVERED, UNCOVERED, or UNMEASURED named out loud with its reason",
+      "boundary_testing": "boundary rows for both classifiers, expectations derived from branch order",
+      "waiter_specification": "formal/lean/UosBackgroundWaiterTwin.lean, 15 theorems, no sorry/axiom, CLEAN at 4.33.0; formal/mojo/background_waiter_oracle.mojo measures the tree against it"
+    }
+  },
+
+  "deliverables": {
+    "lean_twin": {
+      "path": "formal/lean/UosBackgroundWaiterTwin.lean",
+      "theorems": 15,
+      "sorry_or_axiom": 0,
+      "status": "CLEAN at Lean 4.33.0",
+      "falsifiability_design": "THM_WAIT_01 proves the shape that actually ran does not terminate and THM_WAIT_ADM_02 proves that same shape is inadmissible under the file's own rule. If either were vacuous the incident would typecheck as acceptable. THM_WAIT_08 is the stated converse of THM_WAIT_07, so the minimum-token claim is not vacuous."
+    },
+    "mojo_oracle": {
+      "path": "formal/mojo/background_waiter_oracle.mojo",
+      "pattern": "modelled on the FppService pair UosAgentCapabilityProfile.lean + agent_profile_oracle.mojo",
+      "checks": 25, "algebra_checks": 12, "world_checks": 10, "failures": 0,
+      "status": "PASS",
+      "positive_control": "twin emptied to zero bytes -> PASS becomes WORLD_FAIL naming world:declared-twin-is-readable and world:declared-twin-carries-every-cited-theorem; restore verified byte-identical by md5. The declared subject is a READ subject, per F-B5-01."
+    },
+    "controller": {
+      "path": "tools/uos-wait.ml",
+      "modes": ["--pid", "--marker", "--scan", "--lint", "--selftest"],
+      "refusals": "exit 2 for no target, no timeout, interval 0, own pid, and for any --pattern argument (unknown flag)",
+      "shutdown_logic": "--kill-on-timeout sends TERM, waits 1s, sends KILL, then VERIFIES by reading liveness rather than trusting the signal's return. THM_WAIT_11: clean shutdown is both conditions.",
+      "minimum_token_burn": "exactly one line is ever printed, guarded by a `said` latch. THM_WAIT_07 proves the cost is then independent of duration.",
+      "prefer_not_to_wait": "stated in the header and in this record: if the work can be started as a harness-tracked background task, the harness re-invokes on exit and the correct number of polls is zero. This tool is for work the harness cannot track."
+    }
+  },
+
+  "findings": [
+    {"id": "F-W-01", "severity": "high", "title": "Mutation operators mutated docstrings and comments, fabricating UNCOVERED verdicts", "detail": "status_for's four mutants were at lines 62, 67, 68 and 68 -- one docstring and two # comments. It had NO executable operator, so its UNCOVERED verdict was manufactured entirely from its own documentation. span_timings_monotonic spent 3 of 4 slots on the prose citing its twin. A mutated comment cannot change behaviour, so it is a guaranteed survivor; the per-mirror budget was spent on certain survivors and real operators never got a slot. Same polarity error as the symlink overlay: a defect in the apparatus, published as a defect in the subject.", "fix": "code_lines + code_part in tools/mojo_mutation_dataplane.ml", "status": "FIXED, verified: status_for and span_timings_monotonic are now COVERED"},
+    {"id": "F-W-02", "severity": "medium", "title": "A mirror with no applicable operator was silently absent from the report", "detail": "5 mirrors (route_tier, route_base_cost, target_ratio_x10, ideal_span, owned_in) produced zero mutants and therefore appeared in neither COVERED nor UNCOVERED. Silence is the shape F-B5-02 was.", "fix": "UNMEASURED reported by name with its reason; ints+1 operator added for table and constant mirrors", "status": "FIXED"},
+    {"id": "F-W-03", "severity": "medium", "title": "String-returning mirrors had only uncompilable mutants, which gated red while proving nothing", "detail": "`+ -> -` on a concatenation does not compile. base_url, quoted and field_total yielded only NOT_RUN. An operator that cannot compile is not evidence of blindness.", "fix": "literal->empty operator", "status": "FIXED"},
+    {"id": "F-W-04", "severity": "high", "title": "Arms called a mirror at interior points only, so every boundary flip survived", "detail": "classify_archetype's 8 canonical vectors and classify_regime's 4 points are all interior. `h > 5650 -> >=`, `s > 700 -> >=`, `s <= 150 -> <`, `and -> or`, `> 5500 -> >=`, `>= 4500 -> >` all returned byte-identical receipts. The mirrors were CALLED by passing arms and still unobserved at every edge they have. 'An arm calls it' was never the same claim as 'an arm would notice if it changed'.", "fix": "15-row boundary table and a 6-point regime arm in bionic_interception_oracle", "status": "FIXED"},
+    {"id": "F-W-05", "severity": "high", "title": "quoted's own docstring named a hazard the file measured nowhere", "detail": "Emptying the quote literal, so ownership searched for a BARE name, returned a byte-identical receipt. quoted's docstring states exactly why that is wrong: 'a bare uos-harness also occurs inside uos-harness-dev, so an unquoted search cannot tell the two apart.' Every existing arm asked about allowlists containing both names, where substring and exact search agree. The property was asserted in prose and checked nowhere.", "fix": "own:quoting-separates-a-name-from-its-prefix-use, an allowlist carrying only the dev name", "status": "FIXED"},
+    {"id": "F-W-06", "severity": "medium", "title": "base_url reached the receipt only through a failing network call", "detail": "base_url is used only inside capture(\"curl ... \"). Emptying its scheme literal returned a byte-identical receipt, because a curl that cannot parse its argument and a service that is down are indistinguishable at that arm. A mirror observed only through a failing world call is not observed.", "fix": "two arms -- a world arm against the Gleam adapter's own node_to_string declaration (independent author, independent language) and an algebra arm requiring an absolute URL", "status": "FIXED"},
+    {"id": "F-W-07", "severity": "high", "title": "The new scanner reported zero suspects after reading zero bytes", "detail": "in_channel_length answers 0 for every file in /proc, so every procfs read returned the empty string. --scan examined nothing and reported 'inadmissible waiters alive=0'. A clean verdict from a degenerate read -- the symlink overlay again, in a tool written to prevent a different degenerate read. Caught by the selftest's R4 control, which asserts the scanner can see its OWN command line.", "fix": "read-to-EOF; R4 retained as the standing positive control", "status": "FIXED"},
+    {"id": "F-W-08", "severity": "medium", "title": "kill(pid,0) succeeds on a zombie, so the controller would not notice a finished child", "detail": "An exited-but-unreaped child reads as alive forever. For the tool's main use -- someone else's pid -- it never shows up, which is why it needed a control. The controller briefly reproduced the defect it exists to prevent.", "fix": "/proc/pid/stat state field is authoritative; kill(0) is the fallback", "status": "FIXED"},
+    {"id": "F-W-09", "severity": "medium", "title": "Three of ten world arms in the new oracle measured prose on their first run", "detail": "twin-carries-no-sorry-and-no-axiom matched the twin's header line 'No `sorry`, no `axiom`'. no-busy-wait-shape-in-tools matched uos-wait.ml line 8, the header comment that QUOTES the incident in order to explain it. Both arms reported a defect present because the fix documents the defect. Same class as F-W-01, rediscovered within an hour in a different tool and a different language.", "fix": "whitespace-bounded patterns for Lean terms; --lint strips comment markers before searching", "status": "FIXED"}
+  ],
+
+  "results": {
+    "mirror_mutation": {
+      "before_today": {"mutants": 62, "mirrors": 18, "COVERED": 12, "UNCOVERED": 6, "UNMEASURED": "not reported -- 5 mirrors were invisible"},
+      "after_prose_fix": {"mutants": 97, "mirrors": 22, "COVERED": 19, "UNCOVERED": 3, "UNMEASURED": 1},
+      "final_full_sweep": {"mutants": 116, "mirrors": 29, "KILLED": 91, "SURVIVED": 24, "NOT_RUN": 1, "COVERED": 28, "UNCOVERED": 1, "UNMEASURED": 1, "exit": 1},
+      "final_targeted_mcp_sweep": {"mutants": 7, "KILLED": 7, "SURVIVED": 0, "NOT_RUN": 0, "COVERED": 2, "UNCOVERED": 0, "note": "quoted:literal->empty now KILLED after the two-sided quoting arm"},
+      "mirror_count_rose": "18 -> 29 because ints+1 gave mutants to five previously-UNMEASURED mirrors and the new background_waiter_oracle contributed seven"
+    },
+    "the_six_mirrors": {
+      "status_for": "COVERED -- was a PHANTOM: all four mutants were in a docstring and two # comments",
+      "span_timings_monotonic": "COVERED -- was a PHANTOM: 3 of 4 slots spent on the prose citing its twin",
+      "classify_archetype": "COVERED -- closed by a 17-row boundary table",
+      "classify_regime": "COVERED -- closed by a 6-point boundary arm",
+      "base_url": "COVERED -- closed by a world arm against the Gleam adapter's node_to_string plus an absolute-URL algebra arm",
+      "quoted": "COVERED -- needed TWO corrections; see F-W-10",
+      "also_closed": "target_ratio_x10 -- surfaced only once an integer operator existed, closed by a differential against the twin's targetRatioX10OfArchetype",
+      "remaining": "owned_in UNMEASURED: `return contains(allowlist, quoted(n))` has no integer literal and no flippable operator. Both functions it delegates to are now COVERED, which is an argument, not evidence."
+    },
+    "subject_mutation": {"mutants": 159, "KILLED": 16, "SURVIVED": 0, "NOT_RUN": 0, "MOVED": 69, "INSENSITIVE": 34, "specificity_held": 40, "specificity_fired": 0, "NONDET": 0, "exit": 0},
+    "falsifiability": {"enumerated": 87, "FALSIFIABLE": 81, "UNFALSIFIABLE": 6, "unfalsifiable_identity": "exactly the six planted controls in control_falsify_probe.mojo", "NOT_RUN": 0, "FIXED_VECTOR": 73, "fixed_vector_corroborated": 73, "fixed_vector_open": 0, "NOT_ANALYSED": 47, "note": "OPEN went 8 -> 12 -> 0. It rose first because the new oracle's seven mirrors had no corroboration until a mirror sweep included them."},
+    "differential": {"pairs": 17, "PASS": 8, "BLIND": 1, "WORLD_FAIL": 7, "DIVERGENT": 1, "overall": "DIVERGENT", "exit": 3, "new_pair": "UosBackgroundWaiterTwin.lean <-> background_waiter_oracle.mojo = PASS", "regression_analysis": "Yesterday was 16 pairs 8/1/6/1. Adding one PASS pair should have given 9 PASS, so one pair moved PASS -> WORLD_FAIL. It is context_path_kpi, and the cause is NOT any edit made today: its two failing arms are `otel-jsonl-is-fresh` and `analytics-is-fresh`. MAX_ARTIFACT_AGE_MIN is 1440; state/context-fastpath-l0-l9.otel.jsonl is dated 2026-11-06T01:34:05Z and measured 1600 minutes old. It crossed the threshold at approximately 2026-11-07T01:34Z. Yesterday's 20:49 run saw it at about 1155 minutes.", "implication": "That pair's PASS had a 24-hour shelf life and nothing recorded it as perishable. A green verdict that expires on a wall clock, with no renewal and no warning, is indistinguishable from a durable one in the tally."},
+    "lean": {"checked": 5, "CLEAN": 5, "includes": "UosBackgroundWaiterTwin at 4.33.0"},
+    "preflight": {"status": "PASS", "checks": 33},
+    "waiter_plane": {"oracle_status": "PASS", "checks": 25, "algebra": 12, "world": 10, "failures": 0, "scan": "inadmissible waiters alive=0", "lint": "busy-wait shapes authored in code=0", "load_average_after": [2.92, 3.61, 4.40]},
+    "mutation_hygiene": {"IN_FLIGHT_journal": "absent", "mutbak_files": 0, "note": "The accidentally-started subject sweep was killed by SIGPIPE mid-run and left neither a journal nor a backup, which is incidental evidence that the restore path holds under abrupt death."}
+  },
+
+  "findings_added_after_the_sweep": [
+    {"id": "F-W-10", "severity": "high", "title": "Two corrections made in the same session silently cancelled each other", "detail": "`literal->empty` was added so String-returning mirrors would have a compiling mutant. The <=2-per-line budget was added so one busy line could not consume a mirror's whole allowance. On `return String('\"') + name_of(n) + String('\"')` the two uncompilable arithmetic flips came FIRST in the operator list, so the budget kept exactly those two and discarded the `literal->empty` mutant added to fix that line. base_url and quoted were still reported UNCOVERED, by the sweep that contained both of their fixes.", "fix": "arithmetic operators are suppressed on any line containing String( or a quote character", "status": "FIXED, verified KILLED"},
+    {"id": "F-W-11", "severity": "high", "title": "UNCOVERED was computed as 'no KILLED mutant', conflating never-compiled with ran-and-unnoticed", "detail": "base_url and quoted were reported 'every mutant of this mirror survived, so no arm observes it' when in fact every mutant had failed to compile and nothing had run. UNCOVERED is a claim about an ARM and requires a mutant that executed. This is UNRUN being read as a verdict, which is the one thing the lattice exists to prevent.", "fix": "three-way split: KILLED -> COVERED; else SURVIVED present -> UNCOVERED; else -> UNMEASURED named with 'every mutant failed to compile'", "status": "FIXED"},
+    {"id": "F-W-12", "severity": "medium", "title": "An arm pinned one half of a two-sided property and read as closure", "detail": "The first quoting arm used only the prefix case, an allowlist holding `\"uos-harness-dev\"`. `literal->empty` empties the FIRST literal on the line, dropping the LEADING quote and leaving the trailing one, so `uos-harness\"` is still not a substring of `\"uos-harness-dev\"` and the mutant survived a fix written specifically to kill it. Each case is blind to the mutant the other catches.", "fix": "a second arm with an allowlist holding `\"xuos-harness\"`, where only the leading quote discriminates", "status": "FIXED, verified KILLED"},
+    {"id": "F-W-13", "severity": "medium", "title": "The mutation instrument mutates shared files with no cross-agent lock", "detail": "During this sweep a peer agent was concurrently running provenance_ceiling_impact_oracle and lean_mojo_differential against formal/mojo. The IN_FLIGHT journal protects against MY crash, not against a concurrent reader, and lean_mojo_differential hashes `formal/mojo/*_oracle.mojo` for its oracle_set digest -- so it can hash a tree that is mid-mutation and attribute the result to a revision that never existed.", "fix": "NOT FIXED. A lock file honoured by both the mutation instrument and the differential is the obvious control; neither has one.", "status": "OPEN"},
+    {"id": "F-W-14", "severity": "medium", "title": "A pair's PASS silently expired on a 24-hour wall clock", "detail": "context_path_kpi moved PASS -> WORLD_FAIL with no code change on either side, because MAX_ARTIFACT_AGE_MIN is 1440 minutes and its evidence artifact aged past it overnight. Nothing in the differential tally distinguishes a durable PASS from one with hours left.", "fix": "NOT FIXED. The freshness arm behaves correctly; what is missing is that a perishable PASS is not marked as perishable where it is read.", "status": "OPEN"}
+  ],
+
+  "forecast_scored": {
+    "method": "Brier, outcome in {0,1}, mean squared error over 10 precommitted forecasts.",
+    "F1": {"p": 0.90, "outcome": 0, "note": "FAILED. 3 of 4 closed on the sweep that carried all four fixes; quoted needed a second correction. I was 90% confident and had not considered that two fixes written in the same hour could cancel (F-W-10). The single largest contributor to the score."},
+    "F2": {"p": 0.75, "outcome": 1, "note": "CORRECT, including the specific identity: UNMEASURED 1 = owned_in."},
+    "F3": {"p": 0.70, "outcome": 1, "note": "CORRECT. target_ratio_x10 and classify_archetype:ints+1 at line 73 both surfaced on newly-probed lines."},
+    "F4": {"p": 0.60, "outcome": 1, "note": "CORRECT. 97 then 116, both inside 90-130."},
+    "F5": {"p": 0.85, "outcome": 1, "note": "CORRECT. 159 mutants, SURVIVED 0, exit 0."},
+    "F6": {"p": 0.80, "outcome": 1, "note": "CORRECT, and by more than predicted: 0, not <=4. The path was not monotonic -- it rose to 12 first."},
+    "F7": {"p": 0.50, "outcome": 1, "note": "CORRECT. Nothing read the ratio table's values."},
+    "F8": {"p": 0.95, "outcome": 1, "note": "CORRECT. 5/5 Lean CLEAN, preflight PASS 33."},
+    "F9": {"p": 0.65, "outcome": 0, "note": "FAILED as stated. The scan did report 0 alive, but the predicted structural gap IN THE TREE did not materialise: the three failures on first run were defects in my own new oracle, not findings about the repository. Scoring the conjunction honestly means scoring it false."},
+    "F10": {"p": 0.40, "outcome": 0, "note": "Correctly low. All 17 boundary rows were right first time; bionic ran with algebra_failures 0."},
+    "brier_score": 0.202,
+    "calibration_note": "0.202 against a 0.25 coin-flip baseline is weak. Two forecasts carry 1.23 of the 2.02 total error, and both failed the same way: I was confident about the OUTCOME of a fix without accounting for the fix's own defect rate. Today produced 14 findings, 9 of them in instruments I had written, which is the base rate my confidences should have been drawn from and were not."
+  },
+
+  "forecast_precommitted": {
+    "note": "Written before the comprehensive sweep ran; scored after. A confidence without a scored outcome is a mood, not a forecast.",
+    "F1": {"p": 0.90, "claim": "all four genuinely-UNCOVERED mirrors return COVERED"},
+    "F2": {"p": 0.75, "claim": "UNMEASURED falls from 5 to exactly 1, that one being owned_in"},
+    "F3": {"p": 0.70, "claim": "the new budget and operators surface at least one NEW survivor on a previously-COVERED mirror"},
+    "F4": {"p": 0.60, "claim": "total mirror mutants lands between 90 and 130, up from 62"},
+    "F5": {"p": 0.85, "claim": "the subject sweep stays exit 0 with SURVIVED 0"},
+    "F6": {"p": 0.80, "claim": "FIXED_VECTOR OPEN arms fall from 8 to 4 or fewer"},
+    "F7": {"p": 0.50, "claim": "at least one newly-probed line yields a real gap rather than an equivalent-mutant survivor"},
+    "F8": {"p": 0.95, "claim": "all Lean files including the new twin stay CLEAN; preflight stays PASS"},
+    "F9": {"p": 0.65, "claim": "the waiter oracle reports 0 inadmissible waiters alive AND at least one structural gap"},
+    "F10": {"p": 0.40, "claim": "at least one of the 15 classifier boundary rows is wrong on first run"}
+  },
+
+  "implications": {
+    "generalised_lesson": "The round's standing lesson was 'a declared subject is not a read subject'. Today it generalises twice. First: AN ARM THAT CALLS A MIRROR IS NOT AN ARM THAT OBSERVES IT -- calling is necessary and nowhere near sufficient, and only mutation separates the two. Second: PROSE IS NOT CODE. Three instruments in two languages in one session drew a verdict about a subject from that subject's own documentation, and in every case the verdict read as a defect in the subject.",
+    "on_self_reference": "Both halves of today -- the waiter and the prose-mutation -- are the same error. A measurement whose predicate includes the measurer cannot discriminate. The waiter was in its own pattern; the mutation operator was in its own documentation; the scanner was in its own /proc scan and could not see it. The control that works is always the same: require the instrument to demonstrate it can see something it is NOT part of.",
+    "on_the_instrument_hierarchy": "Every finding today came from an instrument built in a previous step, and every instrument defect came from a control built in the step before that. The mutation tool found the boundary-blind arms; the selftest's R4 found the blind scanner; the fidelity control found the overlay yesterday. The leverage is not in the measurements, it is in the controls on the measurements.",
+    "cost_discipline": "The CPU/token asymmetry is worth carrying forward: agent-side waste is overwhelmingly CPU and wall-clock, not tokens. An improvised poll costs ~56 core-hours and ~0 tokens; the reminders cost ~700 tokens per request and ~0 CPU. Optimising the visible resource would have optimised the wrong one."
+  },
+
+  "still_open": [
+    "owned_in is expected to stay UNMEASURED: `return contains(allowlist, quoted(n))` carries no integer literal and no flippable operator. It is a one-line delegation to two functions that are themselves measured, which is an argument, not evidence.",
+    "proof_plane_guard_oracle's declared subject is a glob with prose, so the L1 single-file operator cannot cover it. Needs a different operator.",
+    "The controller governs waits that go through it. A raw `while` typed into a one-off Bash call is outside both --lint and --scan at authoring time; --scan catches it only once it is already running.",
+    "formal/mojo/provenance_ceiling_impact_oracle.mojo mirrors remain UNMEASURED by contract.",
+    "B6 (12 permanently-BLIND arms), B7 (.uos-workspaces/fable-l0 authoring), B10 (smtml as the upgrade path from bounded enumeration) remain unstarted.",
+    "The ~56 core-hour figure is derived from a measured rate and a bounded duration, not from per-process accounting, which no longer exists for those pids."
+  ],
+
+  "honest_boundary": "This is specification and instrument evidence at one candidate revision. The twin is a model with its termination and cost conditions proved over that model; it is not a claim that anything other than tools/uos-wait satisfies it. The oracles report fresh behaviour at one revision. Nothing here is runtime admission, nothing grants authority, and the Sa-plan ledger remains the sole execution authority."
+}

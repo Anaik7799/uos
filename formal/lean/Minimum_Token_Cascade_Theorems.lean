@@ -79,7 +79,7 @@ theorem global_token_conservation
 /-- Cascade Tier Enumeration matching Gleam CascadeTier (local_first_cascade.gleam) -/
 inductive CascadeTier
   | Tier0Simd     -- Mojo 1.3 AVX2 256-bit 768-dim prefilter (265 ns/op)
-  | Tier1Rete     -- Hermes OCaml Rete-UL 64-rule forward-chaining oracle
+  | Tier1Compress -- Hermes OCaml Rete-UL & bounded compressor oracle (matching Gleam Tier1Compress)
   | Tier2Max      -- Tailnet Local LLM (razr15-1 100.114.9.28:8000 Qwen2.5-Coder-7B Q4_K_M)
   | Tier3Free     -- Remote free-tier advisory (MCIP-pinned, grant-bound)
   | Tier4Paid     -- Remote paid-tier escalation (MCIP-pinned, explicit budget)
@@ -87,20 +87,20 @@ inductive CascadeTier
 
 /-- Predicate: whether a cascade tier executes strictly within the sovereign local/Tailnet boundary -/
 def isSovereignLocalTier : CascadeTier → Bool
-  | .Tier0Simd => true
-  | .Tier1Rete => true
-  | .Tier2Max  => true
-  | .Tier3Free => false
-  | .Tier4Paid => false
+  | .Tier0Simd     => true
+  | .Tier1Compress => true
+  | .Tier2Max      => true
+  | .Tier3Free     => false
+  | .Tier4Paid     => false
 
 /-- Remote API token expenditure induced by a cascade tier resolution -/
 def tierRemoteTokenCost (tier : CascadeTier) (prompt_tokens completion_tokens : Nat) : Nat :=
   match tier with
-  | .Tier0Simd => 0
-  | .Tier1Rete => 0
-  | .Tier2Max  => 0
-  | .Tier3Free => prompt_tokens + completion_tokens
-  | .Tier4Paid => prompt_tokens + completion_tokens
+  | .Tier0Simd     => 0
+  | .Tier1Compress => 0
+  | .Tier2Max      => 0
+  | .Tier3Free     => prompt_tokens + completion_tokens
+  | .Tier4Paid     => prompt_tokens + completion_tokens
 
 /-- Theorem 5 (c6): Tier2Max Tailnet Local LLM execution on razr15-1 (100.114.9.28:8000)
     is sovereign-local, incurs 0 remote API tokens for any prompt/completion length,

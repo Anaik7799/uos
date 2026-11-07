@@ -61,18 +61,25 @@ let modes = [
     fixture = "sim_fm07.mojo"; detector = "substrate";
     expect = "VACUOUS"; outcome = "PREVENTED";
     severity = 5; occurrence = 2 };
-  (* Reproduce and NOTHING catches them. Found by reading, not by a tool. *)
-  { id = "FM-04"; title = "control pins a subject value (VACUOUS on change)";
-    fixture = "sim_fm04.mojo"; detector = "substrate";
-    expect = "VACUOUS"; outcome = "MANIFESTS";
+  (* Caught by SC-VP-04 in tools/mojo_arm_falsifiability.ml *)
+  { id = "FM-04"; title = "control pins a subject value (Caught by SC-VP-04)";
+    fixture = "sim_fm04.mojo"; detector = "falsify";
+    expect = "\"pinned_probes\":1"; outcome = "DETECTED";
     severity = 4; occurrence = 3 };
-  { id = "FM-05"; title = "world() on an absent instrument (manufactured outage)";
+  (* Made unreachable by SC-VP-02 in oracle_substrate.mojo *)
+  { id = "FM-05"; title = "world() on an absent instrument (Prevented by SC-VP-02)";
     fixture = "sim_fm05.mojo"; detector = "substrate";
-    expect = "WORLD_FAIL"; outcome = "MANIFESTS";
+    expect = "\"status\":\"VACUOUS\""; outcome = "PREVENTED";
     severity = 4; occurrence = 4 };
-  { id = "FM-06"; title = "world() on an absent subject (silent pass)";
+  (* Made unreachable by SC-VP-01 in oracle_substrate.mojo *)
+  { id = "FM-06a"; title = "algebra-only run with 0 world checks (Prevented by SC-VP-01)";
+    fixture = "sim_fm06_algebra_only.mojo"; detector = "substrate";
+    expect = "\"status\":\"BLIND\""; outcome = "PREVENTED";
+    severity = 5; occurrence = 3 };
+  (* Residual open gap: bare world() without world_or_blind *)
+  { id = "FM-06b"; title = "world() on an absent subject without world_or_blind";
     fixture = "sim_fm06.mojo"; detector = "substrate";
-    expect = "PASS"; outcome = "MANIFESTS";
+    expect = "\"status\":\"PASS\""; outcome = "MANIFESTS";
     severity = 5; occurrence = 3 };
 ]
 

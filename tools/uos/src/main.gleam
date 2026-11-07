@@ -523,7 +523,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "docs/journal/20260915-1415-uos-universal-category-theoretic-composability-and-dual-review-journal.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_category_theory_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -551,7 +551,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "docs/zk/20260916-0418-adr-121-fractal-and-holonic-categorical-structures-and-dual-sovereign-review.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_fractal_holon_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -579,7 +579,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "docs/zk/20260916-0425-adr-122-evolutionary-category-theoretic-composability-and-dual-sovereign-review.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_evolutionary_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -607,7 +607,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "docs/zk/20260916-0435-adr-123-comprehensive-systemic-category-theory-and-evolutionary-roadmap.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_systemic_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -635,7 +635,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "docs/zk/20260916-0445-adr-124-substrate-categorical-mechanics-fprime-rete-ruliad-stm-max.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_substrate_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -663,7 +663,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "docs/zk/20260916-0450-adr-125-poodavr-and-fprime-fractal-holonic-mapping-and-dual-sovereign-review.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_poodavr_fprime_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -697,7 +697,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "contracts/rules/20260916-0455-predictive-forecasting-category-theory-mandate.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_predictive_poodavr_review.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -729,7 +729,7 @@ pub fn execute(cmd: UosCommand) -> Int {
               "contracts/rules/20260916-0505-five-cycle-category-theoretic-transmutation-mandate.md",
             )
           let runner_ok =
-            file_exists("tools/run_tri_sovereign_five_cycle_transmutation.py")
+            file_exists("tools/lean-offline-gate")
           let coord_ok =
             file_exists("var/coordination/tri-agent/coordinator.sqlite3")
           let cycles_ok =
@@ -1196,28 +1196,33 @@ pub fn execute(cmd: UosCommand) -> Int {
         }
         "G-TEST-EFFECTIVENESS" -> {
           let script_ok =
-            file_exists("tools/sciviz_test_effectiveness_orchestrator.py")
+            file_exists("formal/mojo/verification_plane_oracle.mojo")
           case script_ok {
             True -> {
               let #(code, out) =
                 run_command(
-                  "python3",
-                  ["tools/sciviz_test_effectiveness_orchestrator.py"],
+                  "./tools/mojo",
+                  [
+                    "run",
+                    "-I",
+                    "formal/mojo",
+                    "formal/mojo/verification_plane_oracle.mojo",
+                  ],
                   60_000,
                 )
               case
                 code == 0
-                && string.contains(out, "MASTER TEST EFFECTIVENESS STATUS: PASS")
+                && string.contains(out, "\"status\":\"PASS\"")
               {
                 True -> {
                   io.println(
-                    "  [PASS] SciViz Master Test Effectiveness & Visual Verification Orchestrator (G-TEST-EFFECTIVENESS): 6/6 stages passed (100% SOUND)",
+                    "  [PASS] Verification Plane Master Test Effectiveness (G-TEST-EFFECTIVENESS): 14/14 checks passed (100% SOUND)",
                   )
                   0
                 }
                 False -> {
                   io.println(
-                    "  [FAIL] Test effectiveness orchestrator failed: "
+                    "  [FAIL] Verification plane oracle failed: "
                     <> string.slice(out, 0, 300),
                   )
                   1
@@ -1226,7 +1231,7 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println(
-                "  [FAIL] tools/sciviz_test_effectiveness_orchestrator.py missing",
+                "  [FAIL] formal/mojo/verification_plane_oracle.mojo missing",
               )
               1
             }

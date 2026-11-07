@@ -444,17 +444,34 @@ def main() raises:
         #     BLIND arm for the hardcoded conjuncts.
         var twelve_aligned = (catalog_observed == EXP_CATALOG_TARGETS)
         var read_source_ok = writer.byte_length() > 0
+        var secret_resp = capture(
+            "printf '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":"
+            + "\"initialize\",\"params\":{\"protocolVersion\":\""
+            + probe_rev + "\",\"capabilities\":{},\"clientInfo\":"
+            + "{\"name\":\"mojo-oracle\",\"version\":\"1.0\"}}}\\n"
+            + "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/call\","
+            + "\"params\":{\"name\":\"read_file\",\"arguments\":{\"path\":\".env\"}}}\\n'"
+            + " | ./tools/uos-mcp-stdio 2>/dev/null"
+            + " | grep '\"id\":2' | head -1")
+        var secret_refused = (
+            contains(secret_resp, String("\"isError\":true"))
+            and contains(secret_resp, String("PATH_SECURITY_VIOLATION")))
         r.observe(String("twelve-configs-aligned"), String(twelve_aligned))
         r.observe(String("writer-source-readable"), String(read_source_ok))
-        # Not observable by this instrument. Stated, not assumed.
+        r.observe(String("secret-read-file-response"), secret_resp)
         r.world_or_blind(String("gateway-refuses-to-serve-a-secret"),
-                         False, False)
+                         stdio_present == String("yes")
+                         and secret_resp.byte_length() > 0,
+                         secret_refused)
         var live = gateway_aligned(
             pointer_matches, writer_ok, twelve_aligned, legacy,
             catalog_observed, distinct_bindings, handshake_ok, public_tools,
-            read_source_ok, True)
+            read_source_ok, secret_refused)
         r.observe(String("live-gateway-aligned"), String(live))
-        r.world(String("gateway-aligned-on-the-live-reading"), live)
+        r.world_or_blind(String("gateway-aligned-on-the-live-reading"),
+                         stdio_present == String("yes")
+                         and secret_resp.byte_length() > 0,
+                         live)
     else:
         r.observe(String("live-gateway-aligned"),
                   String("unread: relation not evaluated"))

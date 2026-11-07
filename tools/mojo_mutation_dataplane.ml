@@ -488,6 +488,59 @@ let world_contact = ["capture"; "count"; "http_code"; "http_body";
                      "regime_b_index"; "lean_arch_ctor"; "sev_rank";
                      "exit_rank"; "status_for"; "status_for_obs"]
 
+(* ---- prose is not code -------------------------------------------------
+
+   FOUND 20261107-0331, by reading the surviving mutants instead of trusting
+   their count. `status_for`'s four mutants sat at lines 62, 67, 68 and 68:
+   one docstring line and two `#` comment lines. `span_timings_monotonic`
+   spent three of its four slots on the prose that cites its twin -- the
+   sentence "The twin proves `observedNs <= p99Ns" carries a `<=`, and
+   "and this plane had no counterpart" carries an `and`.
+
+   A mutated comment cannot change behaviour, so it is GUARANTEED to survive.
+   Two harms follow and the second is the serious one. The per-mirror mutant
+   budget (4) is spent on certain survivors, so real operators never get a
+   slot; then per-mirror aggregation reads "every mutant survived" and reports
+   UNCOVERED. For `status_for` there was no executable operator at all, so its
+   UNCOVERED verdict was manufactured entirely out of its own documentation.
+   The instrument was measuring my prose and reporting it as the oracle's
+   blindness. Same polarity error as the overlay: a defect in the measuring
+   apparatus, published as a defect in the subject. *)
+let code_part (l : string) : string =
+  (* The code portion, dropping a trailing `#` comment outside quotes, so an
+     inline comment cannot absorb the one substitution this line gets. *)
+  let n = String.length l in
+  let rec go i q =
+    if i >= n then l
+    else match l.[i], q with
+      | '\\', Some _ -> go (i + 2) q
+      | ('"' | '\''), None -> go (i + 1) (Some l.[i])
+      | c, Some qc when c = qc -> go (i + 1) None
+      | '#', None -> String.sub l 0 i
+      | _ -> go (i + 1) q in
+  go 0 None
+
+let triple_marks (t : string) : int =
+  let n = String.length t and c = ref 0 and k = ref 0 in
+  while !k + 3 <= n do
+    if String.sub t !k 3 = "\"\"\"" then (incr c; k := !k + 3) else incr k
+  done; !c
+
+(* Body line indices with comment and docstring lines removed. *)
+let code_lines (ls : string array) (body : int list) : int list =
+  let in_doc = ref false in
+  List.filter (fun i ->
+    let t = String.trim ls.(i) in
+    let marks = triple_marks t in
+    let opens_here = (not !in_doc) && marks > 0 in
+    let keep =
+      (not !in_doc) && (not opens_here)
+      && String.length t > 0 && t.[0] <> '#'
+      && String.trim (code_part ls.(i)) <> "" in
+    if marks mod 2 = 1 then in_doc := not !in_doc;
+    keep)
+    body
+
 (* Returns (fn name, first mutable body line index, body line indices). *)
 let mirror_defs (src : string) : (string * int list) list =
   let ls = Array.of_list (lines_of src) in
@@ -521,8 +574,11 @@ let mirror_defs (src : string) : (string * int list) list =
       let impure = List.exists (fun k ->
         List.exists (fun w -> contains_sub ls.(k) (w ^ "(")) world_contact)
         body_idx in
+      (* A prose-only mirror stays in the list with an EMPTY code list rather
+         than being dropped: the driver must be able to say "no valid mutant"
+         out loud. Dropping it is the silent-skip shape that F-B5-02 was. *)
       if nm <> "" && not impure && body_idx <> [] then
-        out := (nm, body_idx) :: !out;
+        out := (nm, code_lines ls body_idx) :: !out;
       i := !j
     end else incr i
   done;
@@ -540,29 +596,116 @@ let mirror_defs (src : string) : (string * int list) list =
    line now yields its own mutant. `+ -> *` is killable where `+ -> -` is not,
    because `i * 0` is 0 and `i + 0` is i. *)
 let flips_of (l : string) : (string * string) list =
+  (* Substitutions apply to the CODE part only. An inline `# ... and ...`
+     comment would otherwise win the single substitution this line gets. *)
+  let code = code_part l in
+  let nc = String.length code in
+  let tail = String.sub l nc (String.length l - nc) in
   let subst a b =
-    if contains_sub l a then begin
-      let la = String.length a and n = String.length l in
-      let buf = Buffer.create n in
+    if contains_sub code a then begin
+      let la = String.length a in
+      let buf = Buffer.create nc in
       let i = ref 0 and done_ = ref false in
-      while !i < n do
-        if (not !done_) && !i + la <= n && String.sub l !i la = a then begin
+      while !i < nc do
+        if (not !done_) && !i + la <= nc && String.sub code !i la = a then begin
           Buffer.add_string buf b; i := !i + la; done_ := true
-        end else (Buffer.add_char buf l.[!i]; incr i)
+        end else (Buffer.add_char buf code.[!i]; incr i)
       done;
-      Some (Buffer.contents buf)
+      Some (Buffer.contents buf ^ tail)
     end else None in
+  (* A String-returning mirror has no arithmetic to flip, and `+ -> -` on a
+     concatenation DOES NOT COMPILE: `base_url`, `quoted` and `field_total`
+     yielded only NOT_RUN, which gated red while saying nothing whatever about
+     the oracle. An operator that cannot compile is not evidence of blindness,
+     it is an inapplicable operator. Emptying the first non-empty literal on
+     the line compiles, changes the value, and dies to any arm that reads the
+     result. *)
+  let empty_first_literal () =
+    let rec go i =
+      if i >= nc then None
+      else if code.[i] = '"' || code.[i] = '\'' then begin
+        let q = code.[i] in
+        let j = ref (i + 1) in
+        while !j < nc && code.[!j] <> q do
+          if code.[!j] = '\\' then j := !j + 2 else incr j done;
+        if !j >= nc then None
+        else if !j > i + 1 then
+          Some (String.sub code 0 (i + 1) ^ String.sub code !j (nc - !j) ^ tail)
+        else go (!j + 1)
+      end else go (i + 1) in
+    go 0 in
+  (* Five mirrors reported UNMEASURED on the first corrected sweep because
+     no operator above applies to them: `route_tier` is `return 0`,
+     `target_ratio_x10` is a table lookup, `ideal_span` is a call on nine
+     literals. Those are exactly the places a number rots unnoticed, so
+     perturbing every integer literal outside quotes gives each one a
+     mutant. Digits inside a string are left alone: bumping a path or a
+     schema version produces a mutant that cannot run, which is noise, not
+     evidence. *)
+  let bump_ints () =
+    let buf = Buffer.create (nc + 8) in
+    let changed = ref false and q = ref None and i = ref 0 in
+    let is_id c =
+      (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c = '_' in
+    while !i < nc do
+      let c = code.[!i] in
+      (match !q with
+       | Some qc ->
+         Buffer.add_char buf c;
+         if c = '\\' && !i + 1 < nc then
+           (Buffer.add_char buf code.[!i + 1]; i := !i + 2)
+         else (if c = qc then q := None; incr i)
+       | None ->
+         if c = '"' || c = '\'' then
+           (q := Some c; Buffer.add_char buf c; incr i)
+         else if c >= '0' && c <= '9'
+                 && not (!i > 0 && is_id code.[!i - 1]) then begin
+           let j = ref !i in
+           while !j < nc && code.[!j] >= '0' && code.[!j] <= '9' do incr j done;
+           if !j < nc && (is_id code.[!j] || code.[!j] = '.') then
+             (Buffer.add_string buf (String.sub code !i (!j - !i)); i := !j)
+           else begin
+             match int_of_string_opt (String.sub code !i (!j - !i)) with
+             | Some v ->
+               Buffer.add_string buf (string_of_int (v + 1));
+               changed := true; i := !j
+             | None ->
+               Buffer.add_string buf (String.sub code !i (!j - !i)); i := !j
+           end
+         end else (Buffer.add_char buf c; incr i))
+    done;
+    if !changed then Some (Buffer.contents buf ^ tail) else None in
+  (* FIXED 20261107-0415. `+ -> -` cannot compile on a String concatenation,
+     and emitting it anyway cost twice: the mutant came back NOT_RUN, and --
+     after the <=2-per-line budget was introduced -- the two uncompilable
+     arithmetic flips on `return String('"') + name_of(n) + String('"')`
+     CONSUMED that line's whole budget and discarded the `literal->empty`
+     mutant added in the same session to fix exactly those mirrors. Two
+     corrections in one sweep, silently cancelling each other. A line that
+     concatenates strings gets no arithmetic operator. *)
+  let stringy =
+    contains_sub code "String(" || contains_sub code "\""
+    || contains_sub code "'" in
+  let arith =
+    if stringy then []
+    else [(" + ", " - "); (" + ", " * "); (" - ", " + "); (" - ", " * ");
+          (" * ", " + ")] in
   List.filter_map (fun (a, b) ->
     match subst a b with
     | Some r when r <> l -> Some (r, a ^ "->" ^ b)
     | _ -> None)
-    [(" == ", " != "); (" != ", " == "); (" >= ", " > "); (" <= ", " < ");
-     (" and ", " or "); ("True", "False"); ("False", "True"); (" > ", " >= ");
+    ([(" == ", " != "); (" != ", " == "); (" >= ", " > "); (" <= ", " < ");
+      (" and ", " or "); ("True", "False"); ("False", "True"); (" > ", " >= ")]
      (* Arithmetic mirrors have no comparison to flip. km_census's
         `quoted_examples` is `return in_inline + in_fenced` and produced ZERO
         mutants until these were added. *)
-     (" + ", " - "); (" + ", " * "); (" - ", " + "); (" - ", " * ");
-     (" * ", " + ")]
+     @ arith)
+  @ (match empty_first_literal () with
+     | Some r when r <> l -> [ (r, "literal->empty") ]
+     | _ -> [])
+  @ (match bump_ints () with
+     | Some r when r <> l -> [ (r, "ints+1") ]
+     | _ -> [])
 
 let mutants_for_mirror (path : string) (src : string)
       (fn : string) (body : int list) : mutant list =
@@ -573,12 +716,19 @@ let mutants_for_mirror (path : string) (src : string)
   (* At least two and at most four mutants per mirror (AK-47-05 asks for >= 2).
      A mirror that yields fewer is reported with what it yielded, never
      padded, and a mirror that yields none is UNMEASURED rather than covered. *)
+  (* At most TWO per line, at most six per mirror. A flat "first four" let
+     one busy line consume the whole budget: `classify_archetype`'s line 71
+     alone yields three operators, so lines 75 and 79 never got a mutant and
+     their boundaries went unprobed. Spreading the budget across lines is
+     what makes the budget mean coverage of the function rather than of its
+     first conditional. *)
   let cands = List.concat_map (fun i ->
-    List.map (fun (repl, op) ->
-      { m_path = path; m_line = i + 1; m_op = fn ^ ":" ^ op;
-        m_class = "must-kill"; m_text = rebuild i repl }) (flips_of ls.(i)))
+    List.filteri (fun k _ -> k < 2)
+      (List.map (fun (repl, op) ->
+        { m_path = path; m_line = i + 1; m_op = fn ^ ":" ^ op;
+          m_class = "must-kill"; m_text = rebuild i repl }) (flips_of ls.(i))))
     body in
-  List.filteri (fun k _ -> k < 4) cands
+  List.filteri (fun k _ -> k < 6) cands
 
 (* ---------- driver ------------------------------------------------------ *)
 
@@ -618,6 +768,7 @@ let () =
   let results = ref [] in
   let nondet = ref [] in
   let no_subject = ref [] in
+  let no_mutant = ref [] in
   List.iter (fun oracle ->
     let base_name = Filename.basename oracle in
     let src = read_file oracle in
@@ -630,7 +781,14 @@ let () =
        let muts =
          if mode = "--mirror" then
            List.concat_map (fun (fn, body) ->
-             mutants_for_mirror oracle src fn body) (mirror_defs src)
+             let ms = mutants_for_mirror oracle src fn body in
+             (* UNMEASURED, said out loud. A mirror no operator applies to is
+                not covered and is not uncovered: nothing looked. Silence here
+                is what let `status_for` be reported UNCOVERED on the strength
+                of four mutated comments. *)
+             if ms = [] then
+               no_mutant := (base_name ^ ":" ^ fn) :: !no_mutant;
+             ms) (mirror_defs src)
          else begin
            (* A located subject is NOT a covered subject. proof_plane_guard
               declares "formal/lean/*.lean (tree-wide proof-plane guard)" --
@@ -786,9 +944,22 @@ let () =
     else begin
       let names = List.sort_uniq compare
                     (List.map (fun r -> mirror_name r.r_mut.m_op) rs) in
+      let has nm v =
+        List.exists (fun r -> mirror_name r.r_mut.m_op = nm
+                              && r.r_verdict = v) rs in
+      (* FIXED 20261107-0415. This was "no KILLED mutant exists", which put
+         a mirror whose every mutant FAILED TO COMPILE in the same bucket as
+         one whose mutants ran and moved nothing. `base_url` and `quoted`
+         were reported "no arm observes it" when the truth was that nothing
+         had run. UNCOVERED is a claim about an ARM; it needs a mutant that
+         executed. Three-way: killed -> COVERED; else ran-and-survived ->
+         UNCOVERED; else nothing ran -> UNMEASURED. *)
       let bad = List.filter (fun nm ->
-        not (List.exists (fun r -> mirror_name r.r_mut.m_op = nm
-                                   && r.r_verdict = "KILLED") rs)) names in
+        not (has nm "KILLED") && has nm "SURVIVED") names in
+      List.iter (fun nm ->
+        if not (has nm "KILLED") && not (has nm "SURVIVED") then
+          no_mutant := (nm ^ " (every mutant failed to compile)")
+                       :: !no_mutant) names;
       prerr_endline (Printf.sprintf
         "\n  mirrors with a mutant: %d | COVERED %d | UNCOVERED %d"
         (List.length names) (List.length names - List.length bad)
@@ -799,6 +970,16 @@ let () =
            observes it.\n  A FIXED_VECTOR arm calling one of these has no \
            evidence behind it:";
         List.iter (fun nm -> prerr_endline ("    " ^ nm)) bad
+      end;
+      if !no_mutant <> [] then begin
+        prerr_endline (Printf.sprintf
+          "  UNMEASURED %d -- no operator in this instrument applies to these \
+           mirrors.\n  NOT covered and NOT uncovered: nothing looked at them. \
+           A FIXED_VECTOR arm\n  calling one stays OPEN, which is the correct \
+           propagation, not a pass:"
+          (List.length !no_mutant));
+        List.iter (fun nm -> prerr_endline ("    " ^ nm))
+          (List.sort compare !no_mutant)
       end;
       bad
     end in

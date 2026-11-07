@@ -1,0 +1,12 @@
+[Unit]
+Description=UOS Website SOP Verification Oneshot Unit (Stratum S1)
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/an/NAS-setup/uos
+ExecStart=/home/an/NAS-setup/uos/tools/verify_website_sop.sh
+RemainAfterExit=no
+
+[Install]
+WantedBy=default.target

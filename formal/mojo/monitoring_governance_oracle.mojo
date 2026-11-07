@@ -253,44 +253,69 @@ def main() raises:
     r.observe_int(String("a2ui-components-counted-from-the-catalogs"), a2ui_n)
     r.world_or_blind(String("a2ui-meets-the-floor"),
                      a2ui_n >= 0, a2ui_n >= MIN_A2UI)
-    r.world_or_blind(String("module-graph-scc"), False, False)
-    r.world_or_blind(String("canonical-broken-links"), False, False)
-    r.world_or_blind(String("sixty-nine-route-requirement"), False, False)
 
-    # L4 FIX, 20261106-0924 (re-review finding 3). The previous call was
-    # `aligned(listeners_ok, probed, ok200, 0, REQ_SCC, a2ui_n, probed)`,
-    # which left THREE of six conjuncts self-satisfying:
-    # `routes_probed >= req_routes` as `probed >= probed`,
-    # `canonical_broken <= MAX_CANONICAL_BROKEN` as `0 <= 0`, and
-    # `scc == REQ_SCC` as `REQ_SCC == REQ_SCC`. Only `listeners_ok`,
-    # `ok200 == probed` and `a2ui_n >= 233` were measured.
-    #
-    # Worse, the comment above claimed scc, canonical_broken and the 69-route
-    # requirement "are recorded BLIND RATHER THAN handed the constant they
-    # are tested against". They were recorded BLIND *and* handed the
-    # constant, so one run asserted the relation held and reported three of
-    # its inputs unobservable -- under an arm named
-    # `live-alignment-over-observed-conjuncts`, which claimed exactly the
-    # coverage it lacked. Of the four self-comparisons the comment
-    # identified, only `a2ui` had actually been converted.
-    #
-    # `core_evo` gets this right and is the model followed here: it feeds
-    # satisfying values ONLY so the call typechecks, and routes the aggregate
-    # through `world_or_blind` gated on every input having been observed, so
-    # the verdict is BLIND whenever any conjunct was not seen. The three
-    # unobservable conjuncts are now in that gate, so this arm can no longer
-    # assert alignment while declaring its inputs unknown.
-    var live = aligned(listeners_ok, probed, ok200, 0, REQ_SCC, a2ui_n,
-                       probed)
-    r.observe(String("conjuncts-fed-to-typecheck-only"),
-              String("scc, canonical_broken, req_routes -- see the BLIND "
-                     "arms above; they are NOT measured by this oracle"))
-    r.world_or_blind(String("live-alignment-over-observed-conjuncts"),
-                     False, False)
-    # What IS measured, as its own arm, so the file still carries a live
-    # verdict rather than only a declaration of ignorance.
+    # Unified live structural measurement via tools/link_tracker_verifier.exe --json
+    var ltv_status = capture(
+        "./tools/link_tracker_verifier.exe --json > /tmp/uos-ltv-oracle.json 2>/dev/null"
+        " && grep -oE '\"status\":[[:space:]]*\"[^\"]+\"' /tmp/uos-ltv-oracle.json"
+    )
+    var ltv_total = count(
+        "grep -oE '\"total_endpoints\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
+        " | grep -oE '[0-9]+$'"
+    )
+    var ltv_passed = count(
+        "grep -oE '\"passed\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
+        " | head -1 | grep -oE '[0-9]+$'"
+    )
+    var ltv_scc = count(
+        "grep -oE '\"scc_count\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
+        " | grep -oE '[0-9]+$'"
+    )
+    var ltv_broken = count(
+        "grep -oE '\"canonical_broken_transclusions\":[[:space:]]*[0-9]+' /tmp/uos-ltv-oracle.json 2>/dev/null"
+        " | grep -oE '[0-9]+$'"
+    )
+    _ = capture("rm -f /tmp/uos-ltv-oracle.json")
+    var ltv_ran = (
+        ltv_status.byte_length() > 0
+        and ltv_total >= 0
+        and ltv_passed >= 0
+        and ltv_scc >= 0
+        and ltv_broken >= 0
+    )
+    r.observe_int(String("ltv-total-endpoints"), ltv_total)
+    r.observe_int(String("ltv-passed-endpoints"), ltv_passed)
+    r.observe_int(String("ltv-scc-count"), ltv_scc)
+    r.observe_int(String("ltv-canonical-broken"), ltv_broken)
+
+    r.world_or_blind(String("module-graph-scc"), ltv_ran, ltv_scc == REQ_SCC)
+    r.world_or_blind(
+        String("canonical-broken-links"),
+        ltv_ran,
+        ltv_broken <= MAX_CANONICAL_BROKEN,
+    )
+    r.world_or_blind(
+        String("sixty-nine-route-requirement"),
+        ltv_ran,
+        ltv_total >= REQ_ROUTES and ltv_passed == ltv_total,
+    )
+
+    var live = aligned(
+        listeners_ok,
+        ltv_total,
+        ltv_passed,
+        ltv_broken,
+        ltv_scc,
+        a2ui_n,
+        REQ_ROUTES,
+    )
+    r.world_or_blind(
+        String("live-alignment-over-observed-conjuncts"),
+        ss_ran and answered > 0 and ltv_ran and a2ui_n >= 0,
+        live,
+    )
     r.world_or_blind(String("measured-conjuncts-align"),
-                     ss_ran and a2ui_n >= 0 and probed > 0,
+                     ss_ran and a2ui_n >= 0 and probed > 0 and answered > 0,
                      listeners_ok and ok200 == probed
                      and a2ui_n >= MIN_A2UI)
 

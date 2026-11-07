@@ -186,6 +186,41 @@ def main() raises:
             break
     r.algebra(String("property:strict-monotonicity-across-16-contiguous-prefixes"), monotone_ok == 1)
 
+    # Zero-Muda 9-to-3 Engine Collapse & 4-Pillar Digital Twin Algebra (Lean + Mojo + FPP + AI Agent)
+    # 9 engines: [Lean4(16ms,hot), Mojo(18ms,hot), AK47_SQLite(2ms,hot), OCaml_Rete(45ms,cli), Z3(650ms,unbounded), STPA(400ms,design), FMEA(350ms,design), Ruliad(920ms,merge), Stan(1800ms,async)]
+    # Derive engine count, hot-path latency sum, total latency sum, and SSOT muda savings directly from Lean twin source
+    var lean_hot_count_raw = capture(
+        "grep -c '=> .HotPath_EveryChange' formal/lean/UosProvenanceCeilingAndImpactTwin.lean 2>/dev/null"
+    )
+    var lean_hot_sum_raw = capture(
+        "awk '/def engineSyncLatencyMs/,/^def totalLatencyMs/' formal/lean/UosProvenanceCeilingAndImpactTwin.lean | grep -E '(Lean4_Kernel|Mojo_Differential_Oracle|AK47_SaPlan_SQLite)' | awk -F '=> ' '{s += $2} END {print s+0}'"
+    )
+    var lean_all_sum_raw = capture(
+        "awk '/def engineSyncLatencyMs/,/^def totalLatencyMs/' formal/lean/UosProvenanceCeilingAndImpactTwin.lean | grep '=> ' | awk -F '=> ' '{s += $2} END {print s+0}'"
+    )
+    var lean_inv_count_raw = capture(
+        "sed -n 's/.*artifactPath := \"\\([^\"]*\\)\".*/\\1/p' formal/lean/UosProvenanceCeilingAndImpactTwin.lean | wc -l"
+    )
+    var hot_engine_count: Int
+    var hot_latency_ms: Int
+    var all_latency_ms: Int
+    var inv_count_int: Int
+    try:
+        hot_engine_count = Int(lean_hot_count_raw)
+        hot_latency_ms = Int(lean_hot_sum_raw)
+        all_latency_ms = Int(lean_all_sum_raw)
+        inv_count_int = Int(lean_inv_count_raw)
+    except:
+        hot_engine_count = -1
+        hot_latency_ms = -1
+        all_latency_ms = -1
+        inv_count_int = -1
+    var ssot_muda_saved = inv_count_int - 1
+    r.algebra(
+        String("zero-muda:9-engines-collapse-to-36ms-hot-path-vs-4201ms-and-ssot-saves-27-edits"),
+        hot_engine_count == 3 and hot_latency_ms == 36 and all_latency_ms == 4201 and ssot_muda_saved == 27,
+    )
+
     var q_missing_op = transition_allowed_ceiling(
         True, True, True, True, True, True, True, False, True
     )
@@ -207,7 +242,7 @@ def main() raises:
         n_thms = Int(thm_raw)
     except:
         n_thms = -1
-    r.world(String("lean-twin-has-44-theorems"), n_thms == 44)
+    r.world(String("lean-twin-has-50-theorems"), n_thms == 50)
 
     var ceiling_decl = capture(
         "grep -c 'def admittedEvCeiling : Nat := 93' formal/lean/UosProvenanceCeilingAndImpactTwin.lean 2>/dev/null"
@@ -313,8 +348,42 @@ def main() raises:
         impact_total == String("28") and impact_check == String("28"),
     )
 
+    # 4-Pillar Digital Twin Empirical World Checks (Lean C-ABI + Mojo + FPP 40-Actor Mesh + AK-47 2-of-4 Swarm + SSOT)
+    var c_abi_exports = capture(
+        "nm -D var/zlp/libuos_lean_guard.so 2>/dev/null | grep -c ' T uos_lean_'"
+    )
+    r.observe(String("pillar1-lean-c-abi-exports"), c_abi_exports)
+    r.world(String("pillar1-lean-c-abi-guard-has-12-exports"), c_abi_exports == String("12"))
+
+    var fpp_caste_bound = capture(
+        "grep -c 'assigned_agent: \"Caste0' apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam 2>/dev/null"
+    )
+    r.observe(String("pillar3-fpp-40-actor-caste-bindings"), fpp_caste_bound)
+    r.world(
+        String("pillar3-fpp-mesh-binds-all-40-subsystems-to-5-castes"),
+        fpp_caste_bound == String("40"),
+    )
+
+    var gleam_quorum_ok = capture(
+        "grep -q 'TwoOfFourSovereign' apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam && grep -q 'evaluate_two_of_four_model_quorum' apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam && echo 1 || echo 0"
+    )
+    r.observe(String("pillar4-gleam-two-of-four-quorum"), gleam_quorum_ok)
+    r.world(
+        String("pillar4-gleam-control-plane-enforces-two-of-four-model-quorum"),
+        gleam_quorum_ok == String("1"),
+    )
+
+    var km_gate_ssot_ok = capture(
+        "test $(grep -c 'Km_metrics.admitted_ev_ceiling' tools/km_provenance/km_gate.ml) -ge 4 && test $(grep -c '`Int 93' tools/km_provenance/km_gate.ml) -eq 0 && echo 1 || echo 0"
+    )
+    r.observe(String("zero-muda-km-gate-ssot"), km_gate_ssot_ok)
+    r.world(
+        String("zero-muda-km-gate-derives-ceiling-from-single-source-km-metrics"),
+        km_gate_ssot_ok == String("1"),
+    )
+
     print("# probe time                 :", now)
-    print("# lean twin theorems         :", n_thms, "(expected 44)")
+    print("# lean twin theorems         :", n_thms, "(expected 50)")
     print("# quarantined tsv rows       :", q_rows_raw, "(expected 18)")
     print("# fractal impact items synced:", impact_check, "/", impact_total)
     print("# (specification evidence at one candidate; not runtime admission)")

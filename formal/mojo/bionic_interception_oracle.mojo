@@ -57,6 +57,11 @@ from oracle_substrate import json_has, json_signed
 comptime UOS_ROOT = "/home/an/NAS-setup/uos"
 # The holon total the holarchy commits to: layers x aspects.
 comptime HOLARCHY_HOLONS = 170
+# The twin, for the ratio-table differential below. Separate artifact,
+# separate author, separate language -- which is what makes it a second key
+# rather than a restatement.
+comptime TWIN_SRC = (
+    "formal/lean/BionicMojoLeanHighPerformanceInterception.lean")
 
 # Archetype codes: 0 HIGH_ENTROPY 1 JSON_STRUCT 2 TABULAR_CSV 3 LOG_STREAM
 #                  4 UNIFIED_DIFF 5 FORMAL_SPEC 6 SOURCE_AST 7 PROSE_MD
@@ -244,6 +249,67 @@ def main() raises:
     r.algebra(String("bml02:eight-archetypes-classify-to-themselves"),
               arch_hits == 8)
 
+    # ---- ALGEBRA: THM_BML_02 at the boundaries --------------------------
+    # ADDED 20261107-0331, found by B5 mirror mutation. The eight canonical
+    # vectors above are all INTERIOR points of their branches, so every
+    # boundary flip in `classify_archetype` survived mutation and returned a
+    # byte-identical receipt: `h > 5650` -> `h >= 5650`, `s > 700` ->
+    # `s >= 700`, `s <= 150` -> `s < 150`, and `and` -> `or` on the first
+    # conditional. The mirror was CALLED by an arm and still unobserved at
+    # every edge it has, which is the uncomfortable part -- "an arm calls it"
+    # was never the same claim as "an arm would notice if it changed".
+    #
+    # Each row below sits ON one comparison's boundary, where the operator
+    # and its flip disagree by construction. The expected values are derived
+    # from the branch ORDER, not from the mirror: row 9 is 7 and not 2
+    # because s=160 fails `s <= 150` and then x=1800 fails `x > 1800`, so it
+    # falls through every branch. A row whose expectation were read off the
+    # code it tests would be the self-definition defect F-B5-03 again.
+    var bh = [5650, 6000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4800, 4800, 0,
+              0, 5651]
+    var bs = [0, 0, 0, 700, 150, 150, 150, 0, 160, 250, 200, 350, 481, 480,
+              350, 701, 0]
+    var bx = [7000, 6500, 7000, 0, 2000, 1500, 2000, 2000, 1800, 0, 0, 0, 0,
+              0, 0, 0, 6501]
+    var bnl = [0, 0, 0, 0, 220, 300, 300, 120, 300, 180, 300, 300, 0, 0, 0,
+               0, 0]
+    # Rows 16-17 added 20261107-0415: the `ints+1` operator survived on
+    # `elif s > 700` because every row above pins the LOW side of a
+    # threshold and none pins the high side. `s > 701` and `s > 700` agree
+    # at s=700 and differ only at s=701.
+    var bwant = [7, 7, 7, 6, 3, 7, 2, 7, 7, 7, 4, 4, 5, 6, 7, 1, 0]
+    var bhits = 0
+    for i in range(len(bwant)):
+        if classify_archetype(bh[i], bs[i], bx[i], bnl[i]) == bwant[i]:
+            bhits += 1
+    r.algebra(String("bml02:classifier-boundaries-are-pinned"),
+              bhits == len(bwant))
+
+    # ---- WORLD: the ratio table against the twin's own declaration ------
+    # ADDED 20261107-0415. `target_ratio_x10` was invisible to the mutation
+    # instrument until an integer-perturbation operator existed; with one,
+    # bumping every entry of `[920, 145, ...]` returned a byte-identical
+    # receipt. Nothing in this file read the table's VALUES -- `optimize`
+    # consumes the ratio and the arms on `optimize` are insensitive to it.
+    #
+    # Asserting the list against the same eight literals would restate this
+    # file's own body, which is the F-B5-03 defect. So the second key is the
+    # Lean twin: a separate artifact, separate author, separate language,
+    # grepped for each constructor-to-value line using the MIRROR's value.
+    # Either side drifting fires this arm.
+    var ctors = [String("CT_HIGH_ENTROPY"), String("CT_JSON_STRUCT"),
+                 String("CT_TABULAR_CSV"), String("CT_LOG_STREAM"),
+                 String("CT_UNIFIED_DIFF"), String("CT_FORMAL_SPEC"),
+                 String("CT_SOURCE_AST"), String("CT_PROSE_MD")]
+    var ratio_agree = 0
+    for i in range(len(ctors)):
+        if count("grep -cE '[|] [.]" + ctors[i] + " +=> "
+                 + String(target_ratio_x10(i)) + "$' " + String(TWIN_SRC)
+                 + " 2>/dev/null") > 0:
+            ratio_agree += 1
+    r.world_count(String("bml02:ratio-table-agrees-with-the-twin"),
+                  ratio_agree, len(ctors))
+
     # ---- ALGEBRA: THM_BML_03, routing law -------------------------------
     r.algebra(String("bml03:recurrent-ai-is-local-and-free"),
               route_tier(True, False) == 0
@@ -259,6 +325,15 @@ def main() raises:
     r.algebra(String("bml05:four-metabolic-regimes"),
               classify_regime(7500) == 0 and classify_regime(5000) == 1
               and classify_regime(4200) == 2 and classify_regime(3500) == 3)
+    # ADDED 20261107-0331, same finding. 7500/5000/4200/3500 are interior,
+    # so `> 5500 -> >= 5500` and `>= 4500 -> > 4500` both survived: at 5500
+    # and at 4500 the four tested points cannot tell the operators apart.
+    # 4000 and 4500 are the two thresholds the twin names; 3999, 4499 and
+    # 5500 are the last values on the wrong side of a boundary.
+    r.algebra(String("bml05:regime-boundaries-are-pinned"),
+              classify_regime(3999) == 3 and classify_regime(4000) == 2
+              and classify_regime(4499) == 2 and classify_regime(4500) == 1
+              and classify_regime(5500) == 1 and classify_regime(5501) == 0)
     r.algebra(String("bml05:six-antigen-classes"),
               immune_breaker(0, 0, 0) == 0 and immune_breaker(1, 0, 0) == 1
               and immune_breaker(2, 0, 95) == 2 and immune_breaker(3, 0, 0) == 2

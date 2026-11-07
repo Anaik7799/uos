@@ -415,7 +415,7 @@ def main() raises:
     var claim_word = capture(
         "grep -ioE '(zero|one|two|three|four|five|six|seven|eight|nine|ten|"
         + "eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|"
-        + "eighteen|nineteen|twenty|thirty|thirty-six|forty)"
+        + "eighteen|nineteen|twenty|thirty|thirty-six|thirty-seven|forty)"
         + " records carry' " + String(CONTRACT) + " 2>/dev/null"
         + " | head -1 | sed -E 's/ records carry//' | tr 'A-Z' 'a-z'")
     var contract_claim = claim_digits
@@ -436,6 +436,8 @@ def main() raises:
             contract_claim = 30
         if w == String("thirty-six"):
             contract_claim = 36
+        if w == String("thirty-seven"):
+            contract_claim = 37
         if w == String("forty"):
             contract_claim = 40
     r.observe_int(String("out-of-range-tag-files"), oor_files)

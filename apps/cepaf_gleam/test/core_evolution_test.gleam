@@ -1799,3 +1799,28 @@ pub fn bionic_token_twin_mcip_v1_and_digital_twin_mirroring_test() {
   ))
 }
 
+pub fn fpp_40_subsystem_actors_bound_to_5_castes_8_per_caste_test() {
+  let specs = core_fpp_actor_twin_mesh.all_40_subsystem_fpp_actor_specs()
+  should.equal(list.length(specs), 40)
+
+  let count_for = fn(caste_id: String) {
+    list.filter(specs, fn(s) { s.owner_caste_id == caste_id })
+    |> list.length
+  }
+
+  should.equal(count_for("Caste01_AGY"), 8)
+  should.equal(count_for("Caste02_Pi_Argon"), 8)
+  should.equal(count_for("Caste03_Codex"), 8)
+  should.equal(count_for("Caste04_Claude"), 8)
+  should.equal(count_for("Caste05_Deterministic_Tier0"), 8)
+
+  should.be_true(
+    list.all(specs, fn(s) {
+      let encoded = json.to_string(core_fpp_actor_twin_mesh.encode_spec_json(s))
+      string.contains(encoded, "\"owner_caste_id\":\"Caste0")
+      && string.contains(encoded, "\"assigned_agent\":\"Caste0")
+    }),
+  )
+}
+
+

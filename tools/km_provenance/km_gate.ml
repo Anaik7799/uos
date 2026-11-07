@@ -317,7 +317,8 @@ let rete_facts () =
                 "completeness", N r.Km_metrics.completeness;
                 "marking", N r.Km_metrics.marking] }) reports in
   let ceiling_fact =
-    { kind = "ceiling"; fields = ["policy", N 93.0; "machine", N 92.0] } in
+    { kind = "ceiling";
+      fields = ["policy", N (float_of_int Km_metrics.admitted_ev_ceiling); "machine", N 92.0] } in
   let chain_fact =
     { kind = "chain"; fields = ["rows", N (float_of_int rows);
                                 "intact", B (defects = [])] } in
@@ -853,7 +854,7 @@ let adjudication_report ?(observed=false) () =
     print_endline (Yojson.Safe.to_string (`Assoc [
       "status", `String "HOLD"; "authority", `String "NONE";
       "rule", `String "KMP-ADJUDICATION-INVALID"; "detail", `String msg;
-      "admitted_ev_ceiling", `Int 93; "application_admitted", `Bool false;
+      "admitted_ev_ceiling", `Int Km_metrics.admitted_ev_ceiling; "application_admitted", `Bool false;
       "system_admitted", `Bool false; "readback_verified", `Bool false]));
     2 in
   set_binary_mode_in stdin true;
@@ -890,7 +891,7 @@ let adjudication_scan () =
   | Error msg ->
       print_endline (Yojson.Safe.to_string (`Assoc ["status", `String "HOLD";
         "authority", `String "NONE"; "detail", `String ("generated observed schema: " ^ msg);
-        "admitted_ev_ceiling", `Int 93; "application_admitted", `Bool false;
+        "admitted_ev_ceiling", `Int Km_metrics.admitted_ev_ceiling; "application_admitted", `Bool false;
         "system_admitted", `Bool false; "readback_verified", `Bool false])); 2
 
 let () =
@@ -920,7 +921,7 @@ let () =
         print_json (`Assoc ["status", `String "HOLD"; "authority", `String "NONE";
           "rule", `String "KMP-ADJUDICATION-INVALID";
           "detail", `String "--adjudication-report accepts bounded stdin, --scan or --validate-observed";
-          "admitted_ev_ceiling", `Int 93; "application_admitted", `Bool false;
+          "admitted_ev_ceiling", `Int Km_metrics.admitted_ev_ceiling; "application_admitted", `Bool false;
           "system_admitted", `Bool false; "readback_verified", `Bool false]);
         exit 2
     | [_; "--metrics-selftest"] -> exit (metrics_selftest ())

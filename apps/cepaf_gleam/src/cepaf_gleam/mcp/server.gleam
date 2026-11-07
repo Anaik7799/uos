@@ -518,7 +518,7 @@ fn initialize_response(id: Option(json.Json)) -> String {
   success_response(
     id,
     json.object([
-      #("protocolVersion", json.string("2024-11-05")),
+      #("protocolVersion", json.string("2026-07-28")),
       #("capabilities", json.object([#("tools", json.object([]))])),
       #(
         "serverInfo",

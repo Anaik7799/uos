@@ -53,7 +53,7 @@ absence from `full-symbiosis.md` is why `km_layers.ml` invented archetype vocabu
 for them that matched neither reading — its L9 vocabulary corresponded to this table's
 **L8**, and its L8 vocabulary to nothing.
 
-`#fractal-l10` and above **do not exist**. Eleven records carry `#fractal-l10`; it names
+`#fractal-l10` and above **do not exist**. Thirty-seven records carry `#fractal-l10`; it names
 no layer and is counted as none. `Km_corpus.all_layers` enforces this with a digit-boundary
 test pinned by laws `E9`/`E10` — before that fix a fixed-width read silently folded it into
 `#fractal-l1`.
