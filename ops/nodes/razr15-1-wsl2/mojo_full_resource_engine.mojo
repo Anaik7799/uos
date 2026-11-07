@@ -20,7 +20,7 @@ def verify_lean_c_abi_guard(cfg: ConfigurableResourceEnvelope) -> Bool:
         var auth_ok: UInt8 = 1 if cfg.authority == "sa-plan" else 0
         var nvme_ok: UInt8 = 1 if cfg.target_drive_serial != DENIED_OS_SERIAL else 0
         var chart_ok: UInt8 = 1 if cfg.source_chart == 5 and cfg.target_chart == 6 else 0
-        var r1 = fn_intent(auth_ok, nvme_ok, UInt32(93), UInt32(cfg.constitutional_health), UInt32(cfg.gpu_vram_cap_mib), UInt32(8192), chart_ok)
+        var r1 = fn_intent(auth_ok, nvme_ok, UInt32(93), UInt32(cfg.constitutional_health), UInt32(cfg.gpu_vram_cap_mib))
         var r2 = fn_budget(UInt8(0))
         var r3 = fn_cedar(UInt8(0), UInt8(1), UInt8(93), UInt8(0), auth_ok, UInt8(1))
         var r4 = fn_fcp(UInt16(1023), UInt8(0), UInt8(9), UInt32(0))
