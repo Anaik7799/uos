@@ -240,11 +240,12 @@ def main() raises:
     # And the twin must remain axiom-free: a `decide` that silently acquired
     # `propext` is a different claim from a decided one.
     var axiom_free = count(
-        "cp " + String(TWIN) + " /tmp/vp_ax.lean 2>/dev/null"
+        "t=$(mktemp /tmp/vp_ax.XXXXXX.lean 2>/dev/null); trap 'rm -f \"$t\"' EXIT;"
+        + " cp " + String(TWIN) + " \"$t\" 2>/dev/null"
         + " && grep -o 'theorem THM_VP_[A-Za-z0-9_]*' " + String(TWIN)
         + " | sed 's|theorem |#print axioms UOS.VerificationPlaneTwin.|'"
-        + " >> /tmp/vp_ax.lean"
-        + " && ./tools/lean /tmp/vp_ax.lean 2>&1"
+        + " >> \"$t\""
+        + " && ./tools/lean \"$t\" 2>&1"
         + " | grep -c 'does not depend on any axioms'")
     r.observe_int(String("twin-axiom-free-theorems"), axiom_free)
     r.world_or_blind(String("every-twin-theorem-is-axiom-free"),

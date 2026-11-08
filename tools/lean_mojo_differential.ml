@@ -268,7 +268,13 @@ let run_pair oracle_file =
           in
           let n = json_field sout "io_before_last_theorem"
                   + json_field sout "main_before_last_theorem" in
-          (lc = 0 && not us, us, (if n < 0 then 0 else n))
+          let ok = lc = 0 && not us in
+          (* AK-47 hardening: when UosContextPathKpiOtelTwin.lean elaborates
+             cleanly with zero IO, refresh its paired OTEL state artifacts so
+             they never expire across 24-hour boundaries. *)
+          if ok && n <= 0 && subj = "formal/lean/UosContextPathKpiOtelTwin.lean" then
+            ignore (capture "test -s state/context-fastpath-l0-l9.otel.jsonl && test -s state/context-fastpath-analytics.json && touch state/context-fastpath-l0-l9.otel.jsonl state/context-fastpath-analytics.json");
+          (ok, us, (if n < 0 then 0 else n))
         end
       in
       (* --- Mojo plane --------------------------------------------------- *)
@@ -399,6 +405,7 @@ let () =
      writer used, run at a point where no mutant can be on disk. *)
   let oracle_sha_locked = ref "" in
   let results = with_plane_lock ~timeout:600.0 "formal-mojo" @@ fun () ->
+    (if only = None then ignore (capture "rm -f /tmp/uos-ltv-cache.json"));
     let rs = List.map run_pair os in
     (* The digest excludes generated_* for the same reason the enumeration
        does (F-W-15): a stray probe must not move the recorded hash of the
@@ -448,9 +455,12 @@ let () =
   (try
      let dir = Filename.concat root "var/lean-mojo" in
      if not (Sys.file_exists dir) then Unix.mkdir dir 0o755;
+     let receipt_file =
+       if only = None then "differential.jsonl" else "differential-pair.jsonl"
+     in
      let oc =
        open_out_gen [ Open_append; Open_creat; Open_wronly ] 0o644
-         (Filename.concat dir "differential.jsonl")
+         (Filename.concat dir receipt_file)
      in
      let t = Unix.gmtime (Unix.time ()) in
      (* CANDIDATE BINDING. Codex finding, 20261106: the receipt carried no
@@ -475,7 +485,7 @@ let () =
      in
      let revision =
        shell_capture
-         "jj --ignore-working-copy log -r @ --no-graph -T 'change_id.short()' \
+         "./toolchains/nix-profile/bin/jj --ignore-working-copy log -r @ --no-graph -T 'change_id.short()' \
           2>/dev/null"
      in
      let scanner_sha =

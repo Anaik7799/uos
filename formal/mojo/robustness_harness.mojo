@@ -95,56 +95,40 @@ def main() raises:
             if f.byte_length() == 0:
                 continue
             total += 1
-            # R1 + R5 clean: a parseable receipt carrying a lattice verdict.
-            var v_clean = capture(
-                "timeout 120 ./tools/mojo run -I formal/mojo " + f
-                + " 2>/dev/null | grep -oE '\"status\":\"[A-Z_]+\"'"
-                + " | head -1")
-            if v_clean.byte_length() > 0:
-                ok_clean += 1
-            # R3: did it terminate inside the bound?
-            var rc = capture(
-                "timeout 120 ./tools/mojo run -I formal/mojo " + f
-                + " >/dev/null 2>&1; echo $?")
-            if contains(rc, String("124")):
-                timed_out += 1
-            # R2 + R4 adverse: a broken-but-present instrument.
-            var v_adv = capture(
-                "PATH=" + stub + ":$PATH timeout 120 ./tools/mojo run"
-                + " -I formal/mojo " + f + " 2>/dev/null"
-                + " | grep -oE '\"status\":\"[A-Z_]+\"' | head -1")
-            if v_adv.byte_length() > 0:
-                ok_adverse += 1
-            # R2 sharp, CORRECTED. The first criterion was "any WORLD_FAIL
-            # under the adverse condition is manufactured", and that is
-            # WRONG: stubbing `ss` and `curl` leaves `grep` and `awk`
-            # working, so every source-reading arm can still observe and can
-            # still legitimately fail. It reported 5 manufactured failures
-            # that were all genuine source-grep findings -- the criterion
-            # was manufacturing its own finding.
-            #
-            # The correct test is a SET DIFFERENCE. A failing arm present in
-            # BOTH runs is instrument-independent and its failure is real. An
-            # arm that fails ONLY when the tools are broken was failing
-            # BECAUSE they are broken, and that is the manufactured outage.
-            # POSIX temp files, not `<(...)`: `capture` runs under `sh`,
-            # which has no process substitution, and the bash form produced
-            # `Syntax error: "(" unexpected` -- an instrument failing on the
-            # shell it actually runs in.
-            var only_adverse = count(
+            # AK-47 simplification: run each oracle ONCE clean and ONCE adverse
+            # with explicit `secs=180` (instead of 5 separate runs truncated by
+            # the 20s default capture bound).
+            var res = capture(
                 "c=$(mktemp); a=$(mktemp);"
                 + " timeout 120 ./tools/mojo run -I formal/mojo " + f
-                + " 2>/dev/null | grep -oE 'world:[a-z0-9:-]+'"
-                + " | sort -u > \"$c\";"
+                + " >\"$c\" 2>/dev/null; rc=$?;"
                 + " PATH=" + stub + ":$PATH timeout 120 ./tools/mojo run"
-                + " -I formal/mojo " + f + " 2>/dev/null"
-                + " | grep -oE 'world:[a-z0-9:-]+' | sort -u > \"$a\";"
-                + " n=$(comm -13 \"$c\" \"$a\" | grep -c 'world:');"
-                + " rm -f \"$c\" \"$a\"; echo $n")
-            if only_adverse > 0:
-                manufactured += only_adverse
-                manufactured_names += f + String("(") + String(only_adverse)
-                manufactured_names += String(") ")
+                + " -I formal/mojo " + f + " >\"$a\" 2>/dev/null;"
+                + " vc=$(grep -oE '\"status\":\"[A-Z_]+\"' \"$c\" | head -1);"
+                + " va=$(grep -oE '\"status\":\"[A-Z_]+\"' \"$a\" | head -1);"
+                + " grep -oE 'world:[a-z0-9:-]+' \"$c\" | sort -u > \"$c.w\";"
+                + " grep -oE 'world:[a-z0-9:-]+' \"$a\" | sort -u > \"$a.w\";"
+                + " diff_n=$(comm -13 \"$c.w\" \"$a.w\" | grep -c 'world:');"
+                + " rm -f \"$c\" \"$a\" \"$c.w\" \"$a.w\";"
+                + " printf '%s|%s|%s|%s\\n' \"$vc\" \"$rc\" \"$va\" \"$diff_n\"",
+                secs=180)
+            var parts = res.split(String("|"))
+            if len(parts) == 4:
+                if String(parts[0]).strip().byte_length() > 0:
+                    ok_clean += 1
+                if String(parts[1]).strip() == String("124"):
+                    timed_out += 1
+                if String(parts[2]).strip().byte_length() > 0:
+                    ok_adverse += 1
+                var only_adverse = 0
+                try:
+                    only_adverse = Int(String(parts[3]).strip())
+                except:
+                    only_adverse = 0
+                if only_adverse > 0:
+                    manufactured += only_adverse
+                    manufactured_names += f + String("(") + String(only_adverse)
+                    manufactured_names += String(") ")
 
     _ = capture("rm -rf " + stub)
 

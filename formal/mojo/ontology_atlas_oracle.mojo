@@ -347,11 +347,11 @@ def main() raises:
         "test -f " + String(RECEIPT) + " && echo $(( ( $(date +%s)"
         + " - $(stat -c %Y " + String(RECEIPT) + ") ) / 60 ))")
     var receipt_pairs = count(
-        "tail -1 " + String(RECEIPT) + " 2>/dev/null"
-        + " | grep -oE '\"pairs\":[0-9]+' | grep -oE '[0-9]+'")
+        "grep -v '\"pairs\":1,' " + String(RECEIPT) + " 2>/dev/null"
+        + " | tail -1 | grep -oE '\"pairs\":[0-9]+' | grep -oE '[0-9]+'")
     var lean_failures = count(
-        "tail -1 " + String(RECEIPT) + " 2>/dev/null"
-        + " | grep -oE '\"verdict\":\"LEAN_FAIL\"' | wc -l")
+        "grep -v '\"pairs\":1,' " + String(RECEIPT) + " 2>/dev/null"
+        + " | tail -1 | grep -oE '\"verdict\":\"LEAN_FAIL\"' | wc -l")
     r.observe_int(String("differential-receipt-age-minutes"), receipt_age)
     r.observe_int(String("differential-receipt-pairs"), receipt_pairs)
     r.observe_int(String("differential-lean-failures"), lean_failures)

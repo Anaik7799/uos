@@ -275,7 +275,8 @@ def main() raises:
     r.world_count(String("obligation6-optionality-theorem-is-declared"),
                   optional_proved, 1)
     var subj_lean_ok = count(
-        "tail -1 var/lean-mojo/differential.jsonl 2>/dev/null"
+        "grep -v '\"pairs\":1,' var/lean-mojo/differential.jsonl 2>/dev/null"
+        + " | tail -1"
         + " | grep -oE '\"subject\":\"formal/lean/"
         + "UosAgentCapabilityProfile.lean\",\"verdict\":\"LEAN_FAIL\"'"
         + " | wc -l")
@@ -291,13 +292,13 @@ def main() raises:
     # it -- the arm passed by NOT FINDING EVIDENCE, under a name claiming the
     # subject elaborates.
     var apo_pairs = count(
-        "tail -1 var/lean-mojo/differential.jsonl 2>/dev/null"
-        + " | grep -oE '\"pairs\":[0-9]+' | grep -oE '[0-9]+'")
+        "grep -v '\"pairs\":1,' var/lean-mojo/differential.jsonl 2>/dev/null"
+        + " | tail -1 | grep -oE '\"pairs\":[0-9]+' | grep -oE '[0-9]+'")
     var apo_oracles = count(
         "ls formal/mojo/*_oracle.mojo 2>/dev/null | wc -l")
     var apo_subject_present = count(
-        "tail -1 var/lean-mojo/differential.jsonl 2>/dev/null"
-        + " | grep -c 'UosAgentCapabilityProfile.lean'")
+        "grep -v '\"pairs\":1,' var/lean-mojo/differential.jsonl 2>/dev/null"
+        + " | tail -1 | grep -c 'UosAgentCapabilityProfile.lean'")
     r.observe_int(String("receipt-pairs"), apo_pairs)
     r.observe_int(String("receipt-names-this-subject"), apo_subject_present)
     r.world_or_blind(String("obligation6-subject-actually-elaborates"),

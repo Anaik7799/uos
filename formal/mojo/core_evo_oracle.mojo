@@ -374,9 +374,11 @@ def main() raises:
     var ltv_gate = String("command -v grep >/dev/null 2>&1")
     var ltv_cache = String("/tmp/uos-ltv-cache.json")
     _ = capture(
-        ltv_gate + " && test ! -s " + ltv_cache
-        + " && ./tools/link_tracker_verifier.exe --json > " + ltv_cache
-        + " 2>/dev/null"
+        ltv_gate
+        + " && (test ! -s " + ltv_cache
+        + " || test -z \"$(find " + ltv_cache + " -mmin -5 2>/dev/null)\")"
+        + " && ./tools/link_tracker_verifier.exe --json > " + ltv_cache + ".$$"
+        + " 2>/dev/null && mv -f " + ltv_cache + ".$$ " + ltv_cache
     )
     var ltv_status = capture(
         ltv_gate + " && grep -oE '\"status\": *\"[a-z_]+\"' " + ltv_cache

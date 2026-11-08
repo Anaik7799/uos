@@ -9,5 +9,5 @@ cd "$ROOT"
 if [[ "${1:-}" == "--list-tests" || "${1:-}" == "-N" ]]; then
   exec ./tools/uos-mtest --list-tests
 fi
-lean formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean
+./tools/lean formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean
 exec ./tools/uos-mtest "$@"
