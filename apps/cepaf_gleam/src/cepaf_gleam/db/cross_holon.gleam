@@ -47,7 +47,7 @@ pub fn send_request(
   req: CrossHolonRequest,
 ) -> Result(CrossHolonResponse, String) {
   let _ = req
-  panic as "NYI: requires Zenoh FFI (SC-HOLON-003)"
+  Error("NYI: requires Zenoh FFI (SC-HOLON-003)")
 }
 
 pub fn compare_and_swap(
@@ -60,7 +60,7 @@ pub fn compare_and_swap(
   let _ = key
   let _ = expected
   let _ = value
-  panic as "NYI: requires FFI (SC-HOLON-003)"
+  Error("NYI: requires FFI (SC-HOLON-003)")
 }
 
 pub fn resolve_conflict(
@@ -68,10 +68,11 @@ pub fn resolve_conflict(
   b: String,
   strategy: ConflictResolution,
 ) -> String {
-  let _ = a
-  let _ = b
-  let _ = strategy
-  panic as "NYI: requires merge logic (SC-HOLON-003)"
+  case strategy {
+    LastWriterWins -> b
+    FirstWriterWins -> a
+    MergeAll -> a <> "\n" <> b
+  }
 }
 
 pub fn broadcast_state(
@@ -80,17 +81,17 @@ pub fn broadcast_state(
 ) -> Result(Nil, String) {
   let _ = holon_id
   let _ = state_json
-  panic as "NYI: requires Zenoh (SC-HOLON-003)"
+  Error("NYI: requires Zenoh (SC-HOLON-003)")
 }
 
 pub fn subscribe_updates(holon_id: String) -> Result(Nil, String) {
   let _ = holon_id
-  panic as "NYI: requires Zenoh (SC-HOLON-003)"
+  Error("NYI: requires Zenoh (SC-HOLON-003)")
 }
 
 pub fn get_remote_state(holon_id: String) -> Result(String, String) {
   let _ = holon_id
-  panic as "NYI: requires Zenoh (SC-HOLON-003)"
+  Error("NYI: requires Zenoh (SC-HOLON-003)")
 }
 
 // =============================================================================

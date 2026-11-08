@@ -177,9 +177,13 @@ fn history(
           }
         }),
       )
-      let assert [started, ..] = rows
-      use input <- result.try(text(started, "payload"))
-      Ok(Some(#(input, list.length(rows) == 2)))
+      case rows {
+        [started, ..] -> {
+          use input <- result.try(text(started, "payload"))
+          Ok(Some(#(input, list.length(rows) == 2)))
+        }
+        [] -> Ok(None)
+      }
     }
   }
 }

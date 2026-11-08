@@ -128,12 +128,14 @@ fn on_message(
 
 fn start_collector() -> actor.StartResult(process.Subject(Message)) {
   // Executed by supervisor on every restart, not captured at first startup.
-  let assert Ok(initial) =
-    state.new(random_hex(16), mono(Microsecond), wall(Second))
-  actor.new(initial)
-  |> actor.on_message(on_message)
-  |> actor.named(name(UosTelegramMiniTelemetry))
-  |> actor.start
+  case state.new(random_hex(16), mono(Microsecond), wall(Second)) {
+    Error(_) -> Error(actor.InitFailed("telemetry_state_init_failed"))
+    Ok(initial) ->
+      actor.new(initial)
+      |> actor.on_message(on_message)
+      |> actor.named(name(UosTelegramMiniTelemetry))
+      |> actor.start
+  }
 }
 
 fn start_restart_supervisor() -> actor.StartResult(sup.Supervisor) {

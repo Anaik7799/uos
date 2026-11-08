@@ -27,7 +27,6 @@
 ////
 //// STAMP: SC-BIO-EVO-001..007, SC-MOKSHA-001, SC-MUDA-001
 
-import gleam/float
 import gleam/int
 import gleam/list
 
@@ -454,6 +453,5 @@ fn cell(
 }
 
 fn int_to_float(n: Int) -> Float {
-  let assert Ok(f) = float.parse(int.to_string(n) <> ".0")
-  f
+  int.to_float(n)
 }

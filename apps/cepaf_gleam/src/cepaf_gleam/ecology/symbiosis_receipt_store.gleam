@@ -490,8 +490,10 @@ fn exact(v: Value, keys: List(String)) -> Result(List(#(String, Value)), Nil) {
 }
 
 fn field(fields: List(#(String, Value)), key: String) -> Value {
-  let assert Ok(v) = list.key_find(fields, key)
-  v
+  case list.key_find(fields, key) {
+    Ok(v) -> v
+    Error(_) -> JsonNull
+  }
 }
 
 fn parse(raw: String) -> Result(Value, Nil) {

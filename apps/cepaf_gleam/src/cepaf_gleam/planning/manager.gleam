@@ -64,13 +64,7 @@ fn parse_mcp_task_list(payload: String) -> Result(List(Task), String) {
 
     decode.success(Task(
       id: ids.task_id_from_string(id),
-      title: case types.new_non_empty_string(title) {
-        Ok(t) -> t
-        Error(_) -> {
-          let assert Ok(t) = types.new_non_empty_string("Untitled")
-          t
-        }
-      },
+      title: types.non_empty_string_or_untitled(title),
       description: None,
       status: types.task_status_from_string(status),
       priority: types.priority_from_string(priority),

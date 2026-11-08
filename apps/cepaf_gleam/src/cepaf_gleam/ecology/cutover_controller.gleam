@@ -545,13 +545,19 @@ fn execute(
         native_observation(config, t, command, reply)
       }
       p.ReplaceFile(_) | p.RestoreFile(_) -> {
-        let assert Some(#(operation, payload)) = native_operation(command)
+        use #(operation, payload) <- result.try(option.to_result(
+          native_operation(command),
+          "invalid_native_operation",
+        ))
         use _ <- result.try(authorize(config, boundary, t, command, deadline))
         use reply <- result.try(exchange(config, t, operation, payload))
         native_observation(config, t, command, reply)
       }
       p.VerifyCandidate | p.VerifyPrevious -> {
-        let assert Some(#(operation, payload)) = native_operation(command)
+        use #(operation, payload) <- result.try(option.to_result(
+          native_operation(command),
+          "invalid_native_operation",
+        ))
         use _ <- result.try(authorize(config, boundary, t, command, deadline))
         let files = exchange(config, t, operation, payload)
         case files {
@@ -703,7 +709,10 @@ fn reconcile(
         use observation <- result.try(case command {
           p.StageFiles -> native_observation(config, t, command, reply)
           p.ReplaceFile(_) | p.RestoreFile(_) -> {
-            let assert Some(#(operation, _)) = native_operation(command)
+            use #(operation, _) <- result.try(option.to_result(
+              native_operation(command),
+              "invalid_native_operation",
+            ))
             use native <- result.try(
               list.find(reply.records, fn(r) {
                 r.operation == operation

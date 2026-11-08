@@ -580,18 +580,9 @@ fn sample_task_cards() -> List(planning_dashboard.TaskCard) {
 }
 
 fn sample_domain_tasks() -> List(domain.Task) {
-  let title_1 = case types.new_non_empty_string("OODA Controller") {
-    Ok(t) -> t
-    Error(_) -> panic as "unreachable: non-empty string"
-  }
-  let title_2 = case types.new_non_empty_string("Safety Kernel") {
-    Ok(t) -> t
-    Error(_) -> panic as "unreachable: non-empty string"
-  }
-  let title_3 = case types.new_non_empty_string("Graph Verification") {
-    Ok(t) -> t
-    Error(_) -> panic as "unreachable: non-empty string"
-  }
+  let title_1 = types.non_empty_string_or_untitled("OODA Controller")
+  let title_2 = types.non_empty_string_or_untitled("Safety Kernel")
+  let title_3 = types.non_empty_string_or_untitled("Graph Verification")
   [
     domain.Task(
       id: ids.task_id_from_string("1.1"),

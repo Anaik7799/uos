@@ -32,16 +32,11 @@ import gleam/regexp
 import gleam/set
 import gleam/string
 
-pub fn main_todo_regex() -> regexp.Regexp {
-  let assert Ok(re) =
-    regexp.from_string("^##\\s*([\\d\\.]+)\\s*-\\s*(.*?)\\s*\\[(.*?)\\]$")
-  re
-}
+@external(erlang, "planning_regex_ffi", "main_todo_regex")
+pub fn main_todo_regex() -> regexp.Regexp
 
-pub fn priority_regex() -> regexp.Regexp {
-  let assert Ok(re) = regexp.from_string("\\((P\\d)\\)")
-  re
-}
+@external(erlang, "planning_regex_ffi", "priority_regex")
+pub fn priority_regex() -> regexp.Regexp
 
 /// [C3I-SIL6] ATOMIC CONTRACT
 /// <c3i-atomic>
@@ -60,16 +55,18 @@ pub fn parse_todolist(content: String) -> List(Task) {
       let trimmed_line = string.trim(line)
 
       // Skip empty lines only; let regex handle the ## matching
-      case trimmed_line == "" {
-        True -> Ok(acc)
-        False -> {
-          case regexp.scan(main_todo_regex(), trimmed_line) {
+      case
+        trimmed_line == "",
+        regexp.from_string("^##\\s*([\\d\\.]+)\\s*-\\s*(.*?)\\s*\\[(.*?)\\]$"),
+        regexp.from_string("\\((P\\d)\\)")
+      {
+        True, _, _ | False, Error(_), _ | False, _, Error(_) -> Ok(acc)
+        False, Ok(todo_re), Ok(prio_re) -> {
+          case regexp.scan(todo_re, trimmed_line) {
             [match] -> {
               case match.submatches {
                 [Some(id_str), Some(full_desc), Some(status_str)] -> {
-                  let priority_str = case
-                    regexp.scan(priority_regex(), full_desc)
-                  {
+                  let priority_str = case regexp.scan(prio_re, full_desc) {
                     [p_match] -> {
                       case p_match.submatches {
                         [Some(p)] -> p
@@ -84,13 +81,7 @@ pub fn parse_todolist(content: String) -> List(Task) {
                     |> string.trim()
 
                   let id = ids.task_id_from_string(id_str)
-                  let title = case types.new_non_empty_string(desc_clean) {
-                    Ok(t) -> t
-                    Error(_) -> {
-                      let assert Ok(t) = types.new_non_empty_string("Untitled")
-                      t
-                    }
-                  }
+                  let title = types.non_empty_string_or_untitled(desc_clean)
 
                   let task =
                     Task(
@@ -141,13 +132,7 @@ pub fn parse_todolist_sqlite_output(content: String) -> List(Task) {
       [id, title, status, priority, created, parent_id, owner] -> {
         Ok(Task(
           id: ids.task_id_from_string(id),
-          title: case types.new_non_empty_string(title) {
-            Ok(t) -> t
-            Error(_) -> {
-              let assert Ok(t) = types.new_non_empty_string("Untitled")
-              t
-            }
-          },
+          title: types.non_empty_string_or_untitled(title),
           description: None,
           status: types.task_status_from_string(status),
           priority: types.priority_from_string(priority),

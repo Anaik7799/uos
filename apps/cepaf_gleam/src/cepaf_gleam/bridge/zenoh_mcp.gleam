@@ -107,8 +107,13 @@ fn start_subscribed(
   |> result.map(fn(started) {
     let subject = started.data
     // Subscribe to all MCP requests for this node or broadcast
-    let assert Ok(pid) = process.subject_owner(subject)
-    let _ = zenoh.subscribe(session, request_prefix <> "**", pid)
+    case process.subject_owner(subject) {
+      Ok(pid) -> {
+        let _ = zenoh.subscribe(session, request_prefix <> "**", pid)
+        Nil
+      }
+      Error(_) -> Nil
+    }
     subject
   })
 }

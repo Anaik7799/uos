@@ -976,6 +976,29 @@ pub fn all_40_subsystem_fpp_actor_specs() -> List(SubsystemFppActorSpec) {
   ]
 }
 
+pub fn default_l0_subsystem_spec() -> SubsystemFppActorSpec {
+  SubsystemFppActorSpec(
+    actor_index: 0,
+    actor_id: "l0_apps_iam_guardian_gate",
+    subsystem_name: "IAM Supervisor & Guardian HITL Approval Gate",
+    domain: AppsDomainFpp,
+    domain_name: "AppsSupervisor",
+    domain_slug: "apps",
+    layer_index: 0,
+    layer_short: "L0",
+    chart: L0Constitutional,
+    supervision_child_id: "iam_supervisor",
+    companion_kind: CompanionEvolutionGate,
+    companion_fpp_name: "EvolutionGateFPrime",
+    primary_mcp_tool: "preflight_check",
+    role: SovereignGateRole,
+    zenoh_topic: "uos/v1/core_evo/fpp_apps/l0_apps_iam_guardian_gate",
+    assigned_aspects: [1],
+    intelligence_focus: "2oo3 HITL approval arbitration, bearer session guard & zero-privilege escalation veto",
+    owner_caste_id: "Caste01" <> "_AGY",
+  )
+}
+
 pub fn spec_for_actor_index(actor_idx: Int) -> SubsystemFppActorSpec {
   let normalized = case actor_idx < 0 {
     True -> 0
@@ -983,10 +1006,7 @@ pub fn spec_for_actor_index(actor_idx: Int) -> SubsystemFppActorSpec {
   }
   all_40_subsystem_fpp_actor_specs()
   |> list.find(fn(s) { s.actor_index == normalized })
-  |> result.lazy_unwrap(fn() {
-    let assert Ok(first) = list.first(all_40_subsystem_fpp_actor_specs())
-    first
-  })
+  |> result.lazy_unwrap(default_l0_subsystem_spec)
 }
 
 pub fn find_spec_by_actor_id(
@@ -2275,42 +2295,45 @@ pub fn supervised_subsystem_fpp_actor(
       True -> now_ms
       False -> current_system_time_ms()
     }
-    let assert Ok(init_st) = init_subsystem_fpp_actor_state(spec, boot_ms)
-    case
-      actor.new(init_st)
-      |> actor.on_message(handle_actor_message)
-      |> actor.start()
-    {
-      Error(err) -> Error(err)
-      Ok(started) -> {
-        let next_chart = chart_for_layer_index({ spec.layer_index + 1 } % 10)
-        let boot_req =
-          ActorIntentRequest(
-            intent_id: "supervised_boot_" <> spec.actor_id,
-            authority: "sa-plan",
-            target_drive_serial: "NVME-DATA-POOL-01",
-            criticality: "DAL-B",
-            guardian_approved: True,
-            ev_cycle: 93,
-            target_chart: next_chart,
-            action: "supervised_boot_poodavr_handshake",
-            mcp_route: spec.primary_mcp_tool,
-            role: spec.role,
-            openrouter_tier: AdvisoryFreeTier,
-            embedded_prompt: "Bootstrap supervised OTP 29 FPP actor "
-              <> spec.actor_id,
-            parent_trace: None,
-            observed_health: 0.99,
-            quota: core_evolution.QuotaSnapshot(900, 1100, 1400, 0),
-            now_ms: boot_ms + spec.actor_index,
-          )
-        let _ =
-          process.call(started.data, 5000, fn(reply_to) {
-            DispatchIntent(boot_req, reply_to)
-          })
-        ffi_register_live_fpp_actor(spec.actor_index, started.data)
-        Ok(started)
-      }
+    case init_subsystem_fpp_actor_state(spec, boot_ms) {
+      Error(reason) -> Error(actor.InitFailed(reason))
+      Ok(init_st) ->
+        case
+          actor.new(init_st)
+          |> actor.on_message(handle_actor_message)
+          |> actor.start()
+        {
+          Error(err) -> Error(err)
+          Ok(started) -> {
+            let next_chart = chart_for_layer_index({ spec.layer_index + 1 } % 10)
+            let boot_req =
+              ActorIntentRequest(
+                intent_id: "supervised_boot_" <> spec.actor_id,
+                authority: "sa-plan",
+                target_drive_serial: "NVME-DATA-POOL-01",
+                criticality: "DAL-B",
+                guardian_approved: True,
+                ev_cycle: 93,
+                target_chart: next_chart,
+                action: "supervised_boot_poodavr_handshake",
+                mcp_route: spec.primary_mcp_tool,
+                role: spec.role,
+                openrouter_tier: AdvisoryFreeTier,
+                embedded_prompt: "Bootstrap supervised OTP 29 FPP actor "
+                  <> spec.actor_id,
+                parent_trace: None,
+                observed_health: 0.99,
+                quota: core_evolution.QuotaSnapshot(900, 1100, 1400, 0),
+                now_ms: boot_ms + spec.actor_index,
+              )
+            let _ =
+              process.call(started.data, 5000, fn(reply_to) {
+                DispatchIntent(boot_req, reply_to)
+              })
+            ffi_register_live_fpp_actor(spec.actor_index, started.data)
+            Ok(started)
+          }
+        }
     }
   })
 }
@@ -2320,10 +2343,13 @@ pub fn supervised_fpp_holon_actor(
   now_ms: Int,
 ) -> supervision.ChildSpecification(Subject(FppHolonActorMessage)) {
   supervision.worker(fn() {
-    let assert Ok(init_st) = init_fpp_holon_actor_state(layer_idx, now_ms)
-    actor.new(init_st)
-    |> actor.on_message(handle_actor_message)
-    |> actor.start()
+    case init_fpp_holon_actor_state(layer_idx, now_ms) {
+      Error(reason) -> Error(actor.InitFailed(reason))
+      Ok(init_st) ->
+        actor.new(init_st)
+        |> actor.on_message(handle_actor_message)
+        |> actor.start()
+    }
   })
 }
 
@@ -2535,10 +2561,12 @@ pub fn execute_and_verify_otp29_fpp_actor_mesh(
     })
 
   // 3. Test Autonomous Cybernetic Intelligence Reflexes (PID Damping, Autonomous Self-Heal, Quarantine Breaker)
-  let assert Ok(#(prajna_spec, prajna_subj)) =
+  use #(prajna_spec, prajna_subj) <- result.try(
     list.find(started_actors, fn(p) {
       { p.0 }.actor_id == "l2_apps_prajna_circuit_breaker"
     })
+    |> result.replace_error("missing_l2_apps_prajna_circuit_breaker_actor"),
+  )
 
   // 3a. Mild degradation (0.84) -> ReflexPidDampingTune
   let pid_req =
@@ -2605,7 +2633,10 @@ pub fn execute_and_verify_otp29_fpp_actor_mesh(
     process.call(prajna_subj, 5000, fn(r) { HealTwinDrift(now_ms + 450, r) })
 
   // 4. Verify fail-closed FPP `ConstitutionalHalt` on OS NVMe serial & EV-94, plus Digital Twin drift healing
-  let assert Ok(#(l0_spec, l0_subj)) = list.first(started_actors)
+  use #(l0_spec, l0_subj) <- result.try(
+    list.first(started_actors)
+    |> result.replace_error("missing_l0_actor_in_started_mesh"),
+  )
   let bad_nvme_req =
     ActorIntentRequest(
       intent_id: "veto_nvme",

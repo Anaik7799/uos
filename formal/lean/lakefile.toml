@@ -42,6 +42,9 @@ name = "uosformal"
 defaultTargets = ["UosFormal"]
 packagesDir = "ruliad/.lake/packages"
 
+[leanOptions]
+autoImplicit = false
+
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"

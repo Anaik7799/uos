@@ -83,12 +83,12 @@ pub type HolonDbStats {
 
 pub fn open(config: HolonDbConfig) -> Result(String, String) {
   let _ = config
-  panic as "NYI: requires SQLite/DuckDB FFI (SC-HOLON-002)"
+  Error("NYI: requires SQLite/DuckDB FFI (SC-HOLON-002)")
 }
 
 pub fn close(handle: String) -> Result(Nil, String) {
   let _ = handle
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn execute(
@@ -99,7 +99,7 @@ pub fn execute(
   let _ = handle
   let _ = query
   let _ = params
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn query(
@@ -110,7 +110,7 @@ pub fn query(
   let _ = handle
   let _ = sql
   let _ = params
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn begin_transaction(
@@ -119,27 +119,27 @@ pub fn begin_transaction(
 ) -> Result(String, String) {
   let _ = handle
   let _ = level
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn commit(tx_handle: String) -> Result(Nil, String) {
   let _ = tx_handle
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn rollback(tx_handle: String) -> Result(Nil, String) {
   let _ = tx_handle
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn get_stats(handle: String) -> Result(HolonDbStats, String) {
   let _ = handle
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 pub fn vacuum(handle: String) -> Result(Nil, String) {
   let _ = handle
-  panic as "NYI: requires FFI (SC-HOLON-002)"
+  Error("NYI: requires FFI (SC-HOLON-002)")
 }
 
 // =============================================================================

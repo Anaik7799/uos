@@ -32,11 +32,14 @@ fn name(value: Name) -> process.Name(Message)
 fn safe_call(call: fn() -> a) -> Result(a,Nil)
 
 pub fn start(io: alerts.Io,instance: String,expires: Int) -> actor.StartResult(process.Subject(Message)) {
-  let assert Ok(initial)=state.new(instance)
-  actor.new(Owner(io,initial,expires,None))
-  |> actor.named(name(UosMiniAlertOwner))
-  |> actor.on_message(receive)
-  |> actor.start
+  case state.new(instance) {
+    Error(reason) -> Error(actor.InitFailed(reason))
+    Ok(initial) ->
+      actor.new(Owner(io,initial,expires,None))
+      |> actor.named(name(UosMiniAlertOwner))
+      |> actor.on_message(receive)
+      |> actor.start
+  }
 }
 fn reconcile(o: Owner) -> #(Owner,Result(Nil,String)) {
   case o.pending {
@@ -97,14 +100,19 @@ fn entry_json(e: state.Entry) -> json.Json {
   ])
 }
 fn project(o: Owner,snapshot: alerts.Snapshot) -> api.Observation {
-  let assert api.Observed(at,source,fields)=alerts.project(snapshot)
-  let fields=dict.insert(fields,"Acknowledgement","Review only; conditions remain visible. Restart or an observation gap over 60 seconds requires re-review; historical receipts remain.")
-  let fields=dict.insert(fields,"Episode set SHA256",state.set_digest(o.state))
-  let fields=dict.insert(fields,"Owner incarnation",state.incarnation(o.state))
-  let encoded=list.index_map(state.entries(o.state),fn(e,i){#("Alert "<>int.to_string(i+1),json.to_string(entry_json(e)))})
-  case list.all(encoded,fn(p){string.byte_size(p.1)<=2048}) {
-    True -> api.Observed(at,source,dict.merge(fields,dict.from_list(encoded)))
-    False -> api.Unavailable("alert_review_projection_bound")
+  case alerts.project(snapshot) {
+    api.Forbidden -> api.Forbidden
+    api.Unavailable(reason) -> api.Unavailable(reason)
+    api.Observed(at,source,fields) -> {
+      let fields=dict.insert(fields,"Acknowledgement","Review only; conditions remain visible. Restart or an observation gap over 60 seconds requires re-review; historical receipts remain.")
+      let fields=dict.insert(fields,"Episode set SHA256",state.set_digest(o.state))
+      let fields=dict.insert(fields,"Owner incarnation",state.incarnation(o.state))
+      let encoded=list.index_map(state.entries(o.state),fn(e,i){#("Alert "<>int.to_string(i+1),json.to_string(entry_json(e)))})
+      case list.all(encoded,fn(p){string.byte_size(p.1)<=2048}) {
+        True -> api.Observed(at,source,dict.merge(fields,dict.from_list(encoded)))
+        False -> api.Unavailable("alert_review_projection_bound")
+      }
+    }
   }
 }
 fn receive(o: Owner,message: Message) -> actor.Next(Owner,Message) {

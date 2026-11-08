@@ -31,7 +31,7 @@ pub type SimilarityResult {
 
 pub fn generate_embedding(text: String) -> Result(Embedding, String) {
   let _ = text
-  panic as "NYI: requires LLM API (SC-SMRITI-002)"
+  Error("NYI: requires LLM API (SC-SMRITI-002)")
 }
 
 pub fn store_embedding(
@@ -40,7 +40,7 @@ pub fn store_embedding(
 ) -> Result(Nil, String) {
   let _ = id
   let _ = embedding
-  panic as "NYI: requires vector DB (SC-SMRITI-002)"
+  Error("NYI: requires vector DB (SC-SMRITI-002)")
 }
 
 pub fn search_similar(
@@ -49,7 +49,7 @@ pub fn search_similar(
 ) -> Result(List(SimilarityResult), String) {
   let _ = query_embedding
   let _ = top_k
-  panic as "NYI: requires vector DB (SC-SMRITI-002)"
+  Error("NYI: requires vector DB (SC-SMRITI-002)")
 }
 
 // =============================================================================

@@ -114,15 +114,11 @@ fn state_machine(input: String) -> Result(Computation, String) {
     "tolerance" -> Ok(fprime.tolerance_envelope_fprime())
     _ -> Error("unknown FPP machine")
   })
-  let assert domain.InternalMachine(
-    _,
-    declared_signals,
-    declared_guards,
-    _,
-    _,
-    _,
-    _,
-  ) = machine
+  use #(declared_signals, declared_guards) <- result.try(case machine {
+    domain.InternalMachine(_, declared_signals, declared_guards, _, _, _, _) ->
+      Ok(#(declared_signals, declared_guards))
+    _ -> Error("expected internal FPP machine")
+  })
   case
     list.is_empty(signals)
     || list.length(signals) > 64
@@ -486,7 +482,10 @@ fn chart_gluing(input: String) -> Result(Computation, String) {
         }),
       )
       use charts <- result.try(list.try_map(path, atlas.int_to_chart))
-      let assert [first, ..rest] = charts
+      use #(first, rest) <- result.try(case charts {
+        [first, ..rest] -> Ok(#(first, rest))
+        [] -> Error("empty chart path")
+      })
       use composition <- result.try(
         list.try_fold(rest, atlas.identity_morphism(first), fn(m, target) {
           atlas.compose_morphisms(

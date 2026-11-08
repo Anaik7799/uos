@@ -41,8 +41,7 @@ fn log2(x: Float) -> Float {
 }
 
 fn to_float(n: Int) -> Float {
-  let assert Ok(f) = float.parse(int.to_string(n) <> ".0")
-  f
+  int.to_float(n)
 }
 
 // =============================================================================

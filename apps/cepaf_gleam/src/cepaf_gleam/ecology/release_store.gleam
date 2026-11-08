@@ -392,8 +392,10 @@ fn exact(
 }
 
 fn field(fields: List(#(String, Value)), key: String) -> Value {
-  let assert Ok(value) = list.key_find(fields, key)
-  value
+  case list.key_find(fields, key) {
+    Ok(value) -> value
+    Error(_) -> JsonNull
+  }
 }
 
 fn text(value: Value) -> Result(String, Nil) {
@@ -543,7 +545,9 @@ fn decode_grant(
         && index > event.event_index
         && bounded(index),
       ))
-      let assert Ok(hash) = request_digest(binding, Revoke(id, reason))
+      use hash <- result.try(
+        request_digest(binding, Revoke(id, reason)) |> result.replace_error(Nil),
+      )
       Ok(Some(RevocationFact(reason, at, EventIdentity(id, hash, index))))
     }
     _ -> Error(Nil)

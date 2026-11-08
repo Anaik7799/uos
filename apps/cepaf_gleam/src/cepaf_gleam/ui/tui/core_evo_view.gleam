@@ -162,21 +162,24 @@ fn render_service_row(s: CoreEvoServiceRecord) -> String {
 /// and 8-bit C1 control characters (0x80..0x9f including CSI \u{009b} and OSC
 /// \u{009d}) so untrusted strings retain zero C0/DEL/C1 control bytes.
 pub fn sanitize_terminal_text(input: String) -> String {
-  let assert Ok(space_cp) = string.utf_codepoint(32)
-  input
-  |> string.to_utf_codepoints
-  |> list.filter_map(fn(cp) {
-    let code = string.utf_codepoint_to_int(cp)
-    case code == 9 || code == 10 || code == 13 {
-      True -> Ok(space_cp)
-      False ->
-        case code >= 32 && code != 127 && { code < 128 || code > 159 } {
-          True -> Ok(cp)
-          False -> Error(Nil)
+  case string.utf_codepoint(32) {
+    Error(_) -> input
+    Ok(space_cp) ->
+      input
+      |> string.to_utf_codepoints
+      |> list.filter_map(fn(cp) {
+        let code = string.utf_codepoint_to_int(cp)
+        case code == 9 || code == 10 || code == 13 {
+          True -> Ok(space_cp)
+          False ->
+            case code >= 32 && code != 127 && { code < 128 || code > 159 } {
+              True -> Ok(cp)
+              False -> Error(Nil)
+            }
         }
-    }
-  })
-  |> string.from_utf_codepoints
+      })
+      |> string.from_utf_codepoints
+  }
 }
 
 fn ansi(enabled: Bool, seq: String) -> String {

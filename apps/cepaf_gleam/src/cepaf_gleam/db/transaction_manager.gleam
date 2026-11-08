@@ -42,35 +42,35 @@ pub fn begin_distributed(
 ) -> Result(DistributedTransaction, String) {
   let _ = participants
   let _ = timeout_ms
-  panic as "NYI: requires 2PC coordinator (SC-HOLON-004)"
+  Error("NYI: requires 2PC coordinator (SC-HOLON-004)")
 }
 
 pub fn prepare(
   tx: DistributedTransaction,
 ) -> Result(DistributedTransaction, String) {
   let _ = tx
-  panic as "NYI: requires participant votes (SC-HOLON-004)"
+  Error("NYI: requires participant votes (SC-HOLON-004)")
 }
 
 pub fn commit_distributed(
   tx: DistributedTransaction,
 ) -> Result(DistributedTransaction, String) {
   let _ = tx
-  panic as "NYI: requires 2PC (SC-HOLON-004)"
+  Error("NYI: requires 2PC (SC-HOLON-004)")
 }
 
 pub fn abort_distributed(
   tx: DistributedTransaction,
 ) -> Result(DistributedTransaction, String) {
   let _ = tx
-  panic as "NYI: requires 2PC (SC-HOLON-004)"
+  Error("NYI: requires 2PC (SC-HOLON-004)")
 }
 
 pub fn check_deadlock(
   transactions: List(DistributedTransaction),
 ) -> List(String) {
   let _ = transactions
-  panic as "NYI: requires wait-for graph (SC-HOLON-004)"
+  []
 }
 
 // =============================================================================

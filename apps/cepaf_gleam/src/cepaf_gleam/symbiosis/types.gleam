@@ -212,8 +212,7 @@ fn recompute(index: SymbiosisIndex) -> SymbiosisIndex {
 }
 
 fn int_to_float(n: Int) -> Float {
-  let assert Ok(f) = float.parse(int.to_string(n) <> ".0")
-  f
+  int.to_float(n)
 }
 
 fn float_round(f: Float, _decimals: Int) -> Float {

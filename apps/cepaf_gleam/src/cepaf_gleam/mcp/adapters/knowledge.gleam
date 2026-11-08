@@ -398,11 +398,11 @@ fn fallback_matches(
 fn utf8_prefix(bytes: BitArray) -> String {
   case bit_array.to_string(bytes) {
     Ok(text) -> text
-    Error(_) -> {
-      let assert Ok(shorter) =
-        bit_array.slice(bytes, 0, bit_array.byte_size(bytes) - 1)
-      utf8_prefix(shorter)
-    }
+    Error(_) ->
+      case bit_array.slice(bytes, 0, bit_array.byte_size(bytes) - 1) {
+        Ok(shorter) -> utf8_prefix(shorter)
+        Error(_) -> ""
+      }
   }
 }
 
@@ -412,9 +412,12 @@ fn relevance_score(
   lowered: String,
   words: List(String),
 ) -> Int {
-  let assert Ok(header_bytes) =
+  let header = case
     bit_array.slice(<<body:utf8>>, 0, int.min(400, string.byte_size(body)))
-  let header = utf8_prefix(header_bytes)
+  {
+    Ok(header_bytes) -> utf8_prefix(header_bytes)
+    Error(_) -> ""
+  }
   let base = case string.contains(path, lowered) {
     True -> 100
     False -> 0

@@ -27,6 +27,13 @@ pub fn new_non_empty_string(value: String) -> Result(NonEmptyString, String) {
   }
 }
 
+pub fn non_empty_string_or_untitled(value: String) -> NonEmptyString {
+  case string.trim(value) == "" {
+    True -> NonEmptyString("Untitled")
+    False -> NonEmptyString(value)
+  }
+}
+
 pub fn non_empty_string_value(nes: NonEmptyString) -> String {
   let NonEmptyString(value) = nes
   value
