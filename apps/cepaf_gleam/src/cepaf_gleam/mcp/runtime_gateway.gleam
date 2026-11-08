@@ -342,6 +342,31 @@ pub fn zenoh_subscriber_state() -> String
 @external(erlang, "mcp_stdio_ffi", "zenoh_subscriber_last_activity_age_ms")
 pub fn zenoh_subscriber_last_activity_age_ms() -> Int
 
+@external(erlang, "mcp_stdio_ffi", "zenoh_subscriber_lock_port")
+fn zenoh_subscriber_lock_port() -> Int
+
+/// Subscriber ownership is node-local: `zenoh_subscriber_alive` reads only this
+/// node's atomics, and `zenoh_subscriber_enabled` deliberately refuses to let an
+/// ephemeral stdio entrypoint own the subscriber. Reporting that designed
+/// absence through `zenoh_subscriber_state` made every stdio session publish
+/// `stopped` for a subscriber that was never meant to run here — and, when the
+/// long-lived owner node is healthy, for one that is in fact running. Two
+/// different claims, kept apart:
+///
+///   - enabled here -> this node's observed state, freshness included
+///   - not enabled  -> `disabled`, the designed state for this node, not a fault
+///
+/// `disabled` deliberately says nothing about whether some other node owns a
+/// live subscriber. That question is answerable only from the owner's own health
+/// surface; see the reverted owner-probe note in `mcp_stdio_ffi` for why it is
+/// not answered by inspecting the mutex from here.
+pub fn zenoh_subscriber_report() -> String {
+  case zenoh_subscriber_enabled() {
+    True -> zenoh_subscriber_state()
+    False -> "disabled"
+  }
+}
+
 @external(erlang, "mcp_stdio_ffi", "isolate_zenoh_supervisor_start")
 fn isolate_zenoh_supervisor_start(
   start: fn() -> Result(process.Pid, String),
@@ -394,7 +419,7 @@ fn start_production_zenoh_subscriber() -> Bool {
             8080,
             env("UOS_MCP_ZENOH_SHARED_SECRET", ""),
             True,
-            41_199,
+            zenoh_subscriber_lock_port(),
             30_000,
           )
         {
@@ -546,10 +571,7 @@ fn health_json(running: Bool, candidate: String) -> json.Json {
     #("zenoh_subscriber_alive", json.bool(zenoh_subscriber_alive())),
     #(
       "zenoh_subscriber_state",
-      json.string(case zenoh_subscriber_enabled() {
-        False -> "disabled"
-        True -> zenoh_subscriber_state()
-      }),
+      json.string(zenoh_subscriber_report()),
     ),
     #(
       "zenoh_subscriber_last_activity_age_ms",
@@ -1034,7 +1056,7 @@ fn observation_probe(
   let metrics = case net_tool {
     True ->
       metrics
-      |> dict.insert("zenoh_subscriber_status", zenoh_subscriber_state())
+      |> dict.insert("zenoh_subscriber_status", zenoh_subscriber_report())
       |> dict.insert("zenoh_rest_reachable", case rest {
         True -> "true"
         False -> "false"
@@ -1109,9 +1131,19 @@ fn observation_probe(
   let status = case tool {
     "kms_catalog" -> None
     "system_zenoh" | "mesh_topology" ->
-      Some(case rest && tcp && zenoh_subscriber_alive() {
-        True -> "connected"
+      // `degraded` is reserved for an actual fault: an unreachable mesh, or a
+      // subscriber this node owns and cannot keep alive. A subscriber disabled
+      // by design here, or owned by a node whose freshness is unobservable from
+      // here, is neither `connected` nor broken, and must not be published as
+      // either.
+      Some(case rest && tcp {
         False -> "degraded"
+        True ->
+          case zenoh_subscriber_report() {
+            "connected_fresh" -> "connected"
+            "disabled" -> "subscriber_not_local"
+            _ -> "degraded"
+          }
       })
     "system_verification" | "fractal_status" | "evolution_metrics" ->
       Some(case healthy && counts != Error(Nil) && age >= 0 && age <= 900 {

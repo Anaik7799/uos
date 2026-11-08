@@ -36,7 +36,8 @@
       "what_it_would_prove": "Admission is a LOCAL judgment per source. The sheaf condition states exactly when local admissions glue into a global one. The quarantine is then not a policy exception but a descent FAILURE: events 422-432 and 437 are a non-matching family, so no global section exists over the cover that includes them, and the 2-of-4 ratification requirement becomes the demand for a cover on which they do match.",
       "what_fails_today": "The ceiling is enforced as a hardcoded constant (93) repeated across many files; nothing states WHY local evidence fails to compose, so each new quarantine is adjudicated by hand.",
       "falsifier": "If a forged-evidence case can be constructed that satisfies the sheaf condition and is still inadmissible, gluing is not the right invariant.",
-      "status": "NEEDS_CATEGORY_INSTANCE",
+      "status": "PARTIAL_PROVED",
+      "proved_today": ["UosStacksDescent.ST_02_quarantined_events_422_432_437_do_not_descend"],
       "prerequisite": "A category of evidence sources with restriction along provenance edges."
     },
     {
@@ -47,7 +48,8 @@
       "what_it_would_prove": "k-of-n ratification IS a coverage: {2-element subsets} covers the sovereign object. The coverage axioms (stability under base change, composition) are precisely the questions 'does a ratification survive a change of candidate?' and 'does a ratification of a ratification ratify?' -- both currently unanswered in the contracts. Sheafification gives the canonical closure of a verdict set under quorum.",
       "what_fails_today": "Quorum is a counting rule. Nothing says whether two overlapping quorums must agree, so two disjoint 2-of-4 quorums can in principle ratify contradictory claims and no rule detects it.",
       "falsifier": "If overlapping quorums are permitted to disagree by design, the sheaf condition is the wrong model and the structure is a mere cover with no gluing.",
-      "status": "FEASIBLE_NOW",
+      "status": "PARTIAL_PROVED",
+      "proved_today": ["UosStacksDescent.ST_16_ratification_cover_glues"],
       "prerequisite": "Finite coverage on a 4-element set; Mathlib Precoverage suffices."
     },
     {
@@ -58,7 +60,8 @@
       "what_it_would_prove": "Ownership is a local section over a time cover. The cocycle condition on overlaps is exactly the fencing requirement; a non-trivial cohomology class is exactly a split-brain handover. That turns 'recheck ownership before effects' from a procedure into an invariant with a counterexample theory.",
       "what_fails_today": "Fencing is checked procedurally at each effect boundary. The SOP itself records the gap: 'a generic claim-next call does not prove this policy ordering'.",
       "falsifier": "If every observed lease history is cohomologically trivial, the machinery adds nothing over a monotonic counter.",
-      "status": "FEASIBLE_NOW",
+      "status": "PARTIAL_PROVED",
+      "proved_today": ["UosStacksDescent.ST_06_lease_cocycle_of_epochs", "UosStacksDescent.ST_06_broken_cocycle_detects_split_brain"],
       "prerequisite": "Lease intervals as a site over time; transfer as the structure group."
     },
     {
@@ -69,7 +72,8 @@
       "what_it_would_prove": "Which of the two sheaf axioms a given corruption violates: separatedness (two different ledgers restrict to the same history -> an undetectable rewrite) versus gluing (consistent fragments with no global history -> a detectable break). Today both are reported as 'chainIntact = false'.",
       "what_fails_today": "verifyKmChainStep checks adjacent rows only. A globally inconsistent but locally valid chain is not excluded by a pairwise predicate -- the same existential-versus-universal defect class as finding F-W-28.",
       "falsifier": "If no locally-valid-but-globally-inconsistent chain can exist given the digest construction, the pairwise check is already complete and the sheaf framing is redundant.",
-      "status": "FEASIBLE_NOW",
+      "status": "PARTIAL_PROVED",
+      "proved_today": ["UosStacksDescent.ST_14_adjacent_links_glue_to_global_chain", "UosStacksDescent.ST_14_single_tamper_breaks_chain"],
       "prerequisite": "None beyond Mathlib; the time site is a linear order."
     },
     {
@@ -78,10 +82,10 @@
       "uos_surface": ["formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean", "formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo", "allSixPlanesEpochAligned"],
       "stacks_notion": "Matching family on the overlap graph of a cover; gluing to a global section; the Andon line as the descent obstruction made operational",
       "what_it_would_prove": "Already partly proved today in formal/lean/ruliad/UosStacksDescent.lean: glue_of_chain (5 declared overlaps glue to all 15 pairs), chain_link_not_redundant (the overlap graph is a spanning tree -- no check is deletable), singletons_do_not_glue (a cover with no declared overlaps says nothing).",
-      "what_fails_today": "The Mojo arm evidences 6-plane sync by counting 6 files that MENTION the twin. Cross-reference count is not a matching family: it does not check that any two planes agree about anything.",
+      "what_fails_today": "Closed in veil_km_wiki_zk_continuous_sync_checker.mojo via st01-five-chain-overlaps-agree-on-ev93-section and ruliad-veil-cslib-11-and-stacks-descent-12-theorems-present.",
       "falsifier": "Exhibit two planes that cross-reference each other and still carry different epochs while the checker reports PASS. That would show the current arm measures mentions, not descent.",
       "status": "PARTIAL_PROVED",
-      "proved_today": ["UosStacksDescent.glue_of_chain", "UosStacksDescent.chain_link_not_redundant", "UosStacksDescent.singletons_do_not_glue"]
+      "proved_today": ["UosStacksDescent.glue_of_chain", "UosStacksDescent.chain_link_not_redundant", "UosStacksDescent.singletons_do_not_glue", "UosStacksDescent.glues_iff_const"]
     },
     {
       "rank": 6, "id": "ST-11", "score": 1280, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 5,
@@ -91,7 +95,8 @@
       "what_it_would_prove": "Sheafification is the formal name for 'reconcile declared against probed, then keep only what survives'. The unit map eta: P -> P^sheaf makes the honest route list canonical rather than a hand-maintained table, and THM_VEIL_12 (a row with neither declaration nor probe is refused) becomes the separatedness axiom.",
       "what_fails_today": "Reconciliation is implemented per-key in OCaml. Nothing proves the reconciled result is unique or universal, so two reconcilers can disagree.",
       "falsifier": "If the observation presheaf is already a sheaf, sheafification is the identity and buys nothing.",
-      "status": "FEASIBLE_NOW",
+      "status": "PARTIAL_PROVED",
+      "proved_today": ["UosStacksDescent.ST_11_reconcileRoute_idempotent", "UosStacksDescent.ST_11_hollow_declaration_is_exact_kernel"],
       "prerequisite": "Route space as a site; Mathlib ConcreteSheafification applies."
     },
     {
@@ -243,9 +248,9 @@
     "count": 20,
     "score_range": [72, 2500],
     "by_status": {
-      "PARTIAL_PROVED": ["ST-01"],
-      "FEASIBLE_NOW": ["ST-16", "ST-06", "ST-14", "ST-11", "ST-03", "ST-07", "ST-20", "ST-04", "ST-19", "ST-09", "ST-05", "ST-15"],
-      "NEEDS_CATEGORY_INSTANCE": ["ST-02", "ST-10", "ST-12"],
+      "PARTIAL_PROVED": ["ST-02", "ST-16", "ST-06", "ST-14", "ST-01", "ST-11"],
+      "FEASIBLE_NOW": ["ST-03", "ST-07", "ST-20", "ST-04", "ST-19", "ST-09", "ST-05", "ST-15"],
+      "NEEDS_CATEGORY_INSTANCE": ["ST-10", "ST-12"],
       "SPECULATIVE": ["ST-08", "ST-13", "ST-17", "ST-18"]
     },
     "recommended_first_slice": "ST-14 (hash-chain sheaf). Highest score among areas needing no new category instance and no blocked dependency, it attacks a defect class already observed twice this week (pairwise predicate standing in for a global invariant: F-W-28, and km_chain adjacent-row-only), and its falsifier is cheap to attempt.",

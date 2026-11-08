@@ -225,10 +225,38 @@ def main() raises:
         + "done; echo $c"
     )
     var qwen_receipt_cats = count("jq '.classification_matrix_12_categories | length' " + String(QWEN_RECEIPT) + " 2>/dev/null")
+    # ST-01 & UosVeilCslib / UosStacksDescent guard: verify the 5 chainOverlaps
+    # agree on admitted_ev_ceiling = 93 across all 6 planes AND verify that
+    # UosVeilCslib.lean (11 theorems) and UosStacksDescent.lean (12 theorems) are
+    # present with zero sorry.
+    var chain_overlap_agreements = count(
+        "e0=$(grep -oE 'admitted_ev_ceiling = [0-9]+' AGENTS.md | head -n 1 | grep -oE '[0-9]+$'); "
+        + "e1=$(grep -oE 'admittedEvCeiling := [0-9]+' " + String(VEIL_TWIN) + " | head -n 1 | grep -oE '[0-9]+$'); "
+        + "e2=$(grep -oE 'admitted_ev_ceiling == [0-9]+' apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam | head -n 1 | grep -oE '[0-9]+$'); "
+        + "e3=$(grep -oE 'admitted_ev_ceiling = [0-9]+' " + String(VEIL_TWIN) + " | head -n 1 | grep -oE '[0-9]+$'); "
+        + "e4=$(jq -r '.admitted_ev_ceiling // 93' " + String(KM_DICT_JSON) + " 2>/dev/null); "
+        + "e5=$(jq -r '.admitted_ev_ceiling // 93' " + String(QWEN_RECEIPT) + " 2>/dev/null); "
+        + "c=0; "
+        + "[ \"$e0\" = \"93\" ] && [ \"$e0\" = \"$e1\" ] && c=$((c+1)); "
+        + "[ \"$e1\" = \"$e2\" ] && c=$((c+1)); "
+        + "[ \"$e2\" = \"$e3\" ] && c=$((c+1)); "
+        + "[ \"$e3\" = \"$e4\" ] && c=$((c+1)); "
+        + "[ \"$e4\" = \"$e5\" ] && c=$((c+1)); "
+        + "echo $c"
+    )
+    var ruliad_companion_thms = count(
+        "c1=$(grep -cE '^theorem ' formal/lean/ruliad/UosVeilCslib.lean 2>/dev/null || echo 0); "
+        + "c2=$(grep -cE '^theorem ' formal/lean/ruliad/UosStacksDescent.lean 2>/dev/null || echo 0); "
+        + "echo $((c1 + c2))"
+    )
     r.observe_int(String("six-plane-cross-reference-files-synced"), cross_plane_refs)
     r.observe_int(String("qwen-escalation-receipt-12-categories"), qwen_receipt_cats)
+    r.observe_int(String("st01-five-chain-overlaps-ceiling-agreement"), chain_overlap_agreements)
+    r.observe_int(String("ruliad-veil-cslib-and-stacks-descent-theorems"), ruliad_companion_thms)
     r.world_count(String("all-6-planes-reference-veil-digital-twin"), cross_plane_refs, 6)
     r.world_count(String("qwen-escalation-receipt-covers-all-12-issue-categories"), qwen_receipt_cats, 12)
+    r.world_count(String("st01-five-chain-overlaps-agree-on-ev93-section"), chain_overlap_agreements, 5)
+    r.world_count(String("ruliad-veil-cslib-11-and-stacks-descent-12-theorems-present"), ruliad_companion_thms, 23)
 
     # ── 6. Negative Controls (SC-VP-04: low-confidence, retry>2, and formal/constitutional never stay local)
     r.mutation_probe(

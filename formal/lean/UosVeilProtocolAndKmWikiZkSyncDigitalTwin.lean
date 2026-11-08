@@ -22,7 +22,7 @@ classifier across 20 evolutionary cycles (`EVOL-VEIL-01..20`, Cumulative Cycles 
 set_option maxRecDepth 200000
 set_option maxHeartbeats 2000000
 
-namespace UosVeilProtocolAndKmWikiZkSyncDigitalTwin
+namespace UOS.VeilProtocolAndKmWikiZkSyncDigitalTwin
 
 -- ============================================================================
 -- 1. VEIL (`verse-lab/veil`) 6-PLANE RELATIONAL TRANSITION SYSTEM & LOOM SEMANTICS
@@ -654,4 +654,4 @@ theorem THM_VEIL_20_exhaustive_6400_veil_km_sync_and_escalation :
     exhaustive6400VeilKmSyncAndEscalationCheck = true := by
   decide
 
-end UosVeilProtocolAndKmWikiZkSyncDigitalTwin
+end UOS.VeilProtocolAndKmWikiZkSyncDigitalTwin

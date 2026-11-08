@@ -5,21 +5,20 @@ Companion to `formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean`
 (20 theorems, `THM_VEIL_01..20`). That file is **not edited and not imported**,
 for two reasons that are both mechanical rather than stylistic:
 
-1. It is checked by `tools/lean`, which resolves Lean **4.33.0**. cslib is
-   pinned at `0b1e3680` and requires Mathlib `v4.35.0`, so a cslib import
-   inside that file would break `tools/uos-veil-sync-check --with-lean`
-   immediately. The pin is recorded in `SC-NIX-DEVENV-001` invariant 7.
+1. `tools/lean` and `formal/lean/ruliad` are now unified on Lean **4.35.0**
+   (`toolchains/lean-4.35.0`), with `cslib` pinned at `0b1e3680` and Mathlib
+   `v4.35.0`. `UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean` remains a fast
+   standalone zero-import twin checked by `tools/lean`, while this module is
+   built in the Lake package alongside `Ruliad` and `UosStacksDescent`.
 2. It is another writer's artifact (stamped `20261108-1632`). Marking is
    additive here, never by rewriting.
 
-So the definitions below are a **restatement**, and that restatement is the one
-real hazard this file carries: two copies of `veilStep` can drift apart. It is
-not hidden — `veil_mirror_agrees_with_decide_bound` re-runs the same exhaustive
-`20 x 10 x 32` bound the 4.33.0 file proves, so a divergence in the copied
-transition function shows up as a failed `decide` here rather than as a silent
-disagreement. Marking the residual risk rather than hiding it:
-No Mojo arm guards it yet: the peer-authored sync checker is not edited here, so
-the mirror is guarded by the `decide` bound below and by nothing else.
+So the definitions below are a **restatement**, and that restatement is guarded
+in two places: `veil_mirror_agrees_with_decide_bound` re-runs the same exhaustive
+`20 x 10 x 32` bound the standalone twin proves, and
+`formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo` verifies that both
+`UosVeilCslib.lean` and `UosStacksDescent.lean` carry their full theorem rosters
+and zero `sorry` in lockstep with the 5 `chainOverlaps` of the 6-plane cover.
 
 ## What cslib buys that `decide` cannot
 

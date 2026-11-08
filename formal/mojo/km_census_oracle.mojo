@@ -236,12 +236,16 @@ def main() raises:
 
     # Occurrences inside a FENCED block. A line inside ``` is code; the
     # transclusion in it is an example of the syntax, not a link.
+    # Summed across xargs batches (`| awk '{s+=$1} END{print s+0}'`) so a
+    # corpus exceeding ARG_MAX does not emit multiple lines and fail Int().
     var wiki_fenced_s = capture(
         "find " + scope_paths + " -name '*.md' -print0 2>/dev/null | xargs -0 -r awk"
-        + " '/^[ \\t]*```/{f=!f; next} f && /\\[\\[wiki:/{n++} END{print n+0}'")
+        + " '/^[ \\t]*```/{f=!f; next} f && /\\[\\[wiki:/{n++} END{print n+0}'"
+        + " | awk '{s+=$1} END{print s+0}'")
     var zk_fenced_s = capture(
         "find " + scope_paths + " -name '*.md' -print0 2>/dev/null | xargs -0 -r awk"
-        + " '/^[ \\t]*```/{f=!f; next} f && /\\[\\[zk:/{n++} END{print n+0}'")
+        + " '/^[ \\t]*```/{f=!f; next} f && /\\[\\[zk:/{n++} END{print n+0}'"
+        + " | awk '{s+=$1} END{print s+0}'")
     r.observe(String("wiki-fenced-scan"), wiki_fenced_s)
     r.observe(String("zk-fenced-scan"), zk_fenced_s)
 
@@ -251,11 +255,11 @@ def main() raises:
     var wiki_inline_s = capture(
         "find " + scope_paths + " -name '*.md' -print0 2>/dev/null | xargs -0 -r awk"
         + " '/^[ \\t]*```/{f=!f; next} !f{n+=gsub(/`[^`]*\\[\\[wiki:[^`]*`/,\"\")}"
-        + " END{print n+0}'")
+        + " END{print n+0}' | awk '{s+=$1} END{print s+0}'")
     var zk_inline_s = capture(
         "find " + scope_paths + " -name '*.md' -print0 2>/dev/null | xargs -0 -r awk"
         + " '/^[ \\t]*```/{f=!f; next} !f{n+=gsub(/`[^`]*\\[\\[zk:[^`]*`/,\"\")}"
-        + " END{print n+0}'")
+        + " END{print n+0}' | awk '{s+=$1} END{print s+0}'")
     r.observe(String("wiki-inline-scan"), wiki_inline_s)
     r.observe(String("zk-inline-scan"), zk_inline_s)
 

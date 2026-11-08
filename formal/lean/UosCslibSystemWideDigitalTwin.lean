@@ -16,7 +16,7 @@
 
 set_option maxHeartbeats 2000000
 
-namespace UosCslibSystemWideDigitalTwin
+namespace UOS.CslibSystemWideDigitalTwin
 
 -- ============================================================================
 -- 1. THE 8 CSLIB COMPUTER SCIENCE DOMAINS IN UOS (`leanprover/cslib`)
@@ -379,4 +379,4 @@ theorem THM_CSLIB_20_EXHAUSTIVE_6400_STATE_GATE :
     exhaustive6400CslibSystemWideCheck = true := by
   decide
 
-end UosCslibSystemWideDigitalTwin
+end UOS.CslibSystemWideDigitalTwin

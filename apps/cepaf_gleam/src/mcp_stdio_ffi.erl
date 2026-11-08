@@ -4,6 +4,7 @@
          with_private_route_lock/1, start_zenoh_sse_subscriber/7,
          with_zenoh_boot_lock/1, isolate_zenoh_supervisor_start/1, register_or_keep_zenoh_supervisor/1,
          zenoh_supervisor_running/0, zenoh_subscriber_state/0,
+         zenoh_subscriber_lock_port/0,
          zenoh_subscriber_last_activity_age_ms/0,
          stop_zenoh_sse_subscriber/1, zenoh_subscriber_alive/0, zenoh_sse_loopback_fixture/4,
          mark_stdio_gateway/0, stdio_gateway/0,
@@ -22,6 +23,11 @@
 -define(MAX_LINE_BYTES, 1048576).
 -define(OUTPUT_LIMIT, 1048576).
 -define(UNOBSERVED_ACTIVITY, -9223372036854775808).
+%% Sole source of the SSE subscriber mutex port. The subscriber registers a
+%% loopback listen socket here as a cross-process lock (sse_lock/1), so the
+%% socket's presence is the only evidence another node owns the subscriber:
+%% zenoh_subscriber_alive/0 reads THIS node's atomics and cannot see it.
+-define(ZENOH_SUBSCRIBER_LOCK_PORT, 41199).
 
 %% Native OTP JSON callbacks retain one bounded structural stack. Object keys
 %% are checked after unescaping, before any map/association-list projection.
@@ -1476,6 +1482,29 @@ loopback_probe(Port) when Port=:=8080; Port=:=7447 ->
         {ok,S}->gen_tcp:close(S),true;
         _->false
     end.
+
+zenoh_subscriber_lock_port() -> ?ZENOH_SUBSCRIBER_LOCK_PORT.
+
+%% DELIBERATELY ABSENT: an owner-presence probe.
+%%
+%% Connecting to the mutex port to learn whether another node owns the
+%% subscriber was tried and reverted. The lock socket's owner never calls
+%% accept/1 — the listen socket exists only to hold the port — so every probe
+%% connection stays queued and consumes one of the 5 default backlog slots
+%% permanently. Measured: six probes drove the socket to
+%% `LISTEN Recv-Q=6 Send-Q=5` with six CLOSE-WAIT entries, after which the probe
+%% itself began failing and silently reported the owner as absent. An
+%% observation that degrades what it observes, and whose answer depends on how
+%% many times it has been called, is not an observation.
+%%
+%% Binding the port instead (treating eaddrinuse as presence) is also rejected:
+%% when no owner exists the bind succeeds, and that microsecond of ownership can
+%% make a legitimate sse_lock/1 return `subscriber_already_active` and stop the
+%% real subscriber from starting. A read must not be able to deny the thing it
+%% is reading.
+%%
+%% Cross-node subscriber health therefore belongs to the owner's own health
+%% surface, not to a poke at its lock.
 coordination_metrics(Root) ->
     bounded_local(fun()->
         {ok,Text}=session_store_cli:run([<<Root/binary,"/var/coordination/tri-agent/coordinator.sqlite3">>,<<"status">>]),

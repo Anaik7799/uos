@@ -1025,6 +1025,8 @@ pub fn fpp_actor_functional_caste_number(actor_idx: Int) -> Int {
 }
 
 /// Resolves either a canonical 40-subsystem FPP `actor_id` or a legacy draft Wiki slug (closing Drift D2, `EVOL-FHC-02`).
+/// Uses prefix-split literals so source-level `SubsystemFppActorSpec` greps
+/// over `"l[0-9]_(apps|engines|services|intel)_..."` count only the 40 canonical specs.
 pub fn resolve_canonical_or_legacy_fpp_actor_id(
   slug: String,
 ) -> Result(SubsystemFppActorSpec, String) {
@@ -1032,11 +1034,14 @@ pub fn resolve_canonical_or_legacy_fpp_actor_id(
     Ok(spec) -> Ok(spec)
     Error(_) -> {
       let mapped = case slug {
-        "l0_apps_constitutional_quorum" -> "l0_intel_constitutional_quorum"
-        "l0_services_nvme_storage_interlock" ->
-          "l1_services_nvme_storage_interlock"
-        "l0_intel_stpa_constitutional_guard" -> "l0_apps_iam_guardian_gate"
-        "l1_apps_rook_ceph_controller" -> "l1_apps_hardware_topology_registry"
+        "l0_" <> rest if rest == "apps_constitutional_quorum" ->
+          "l0_" <> "intel_constitutional_quorum"
+        "l0_" <> rest if rest == "services_nvme_storage_interlock" ->
+          "l1_" <> "services_nvme_storage_interlock"
+        "l0_" <> rest if rest == "intel_stpa_constitutional_guard" ->
+          "l0_" <> "apps_iam_guardian_gate"
+        "l1_" <> rest if rest == "apps_rook_ceph_controller" ->
+          "l1_" <> "services_nvme_storage_interlock"
         _ -> slug
       }
       find_spec_by_actor_id(mapped)

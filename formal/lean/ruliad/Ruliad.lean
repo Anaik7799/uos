@@ -81,6 +81,8 @@ import Ruliad.Bridge
 import Ruliad.Render
 import Ruliad.Service
 import Ruliad.UosCslibSystemWideIntegration
+import UosVeilCslib
+import UosStacksDescent
 
 namespace Ruliad
 

@@ -10,7 +10,7 @@
 # formal/lean/*.lean (all 116 standalone files, including Ruliad.lean) and
 # tools/{lean,lake,leanc} are now unified on the same Lean 4.35.0 toolchain.
 name = "ruliad"
-defaultTargets = ["Ruliad"]
+defaultTargets = ["Ruliad", "UosVeilCslib", "UosStacksDescent"]
 
 [[require]]
 name = "mathlib"

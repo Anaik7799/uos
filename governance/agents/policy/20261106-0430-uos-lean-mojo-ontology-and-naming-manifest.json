@@ -44,8 +44,18 @@
     "sanctioned_additional_roots": [
       {
         "root": "Ruliad",
-        "files": 18,
-        "sanction": "A self-contained ruliology library (formal/lean/Ruliad.lean and formal/lean/ruliad/Ruliad/*.lean) with its own coherent `Ruliad.<Module>` hierarchy. It is a library namespace, not drift: every one of its 18 files agrees with the others, and folding it under UOS would rename a complete, internally consistent tree to no benefit."
+        "files": 19,
+        "sanction": "A self-contained ruliology library (formal/lean/Ruliad.lean and formal/lean/ruliad/Ruliad/*.lean) with its own coherent `Ruliad.<Module>` hierarchy. It is a library namespace, not drift: every one of its files agrees with the others, and folding it under UOS would rename a complete, internally consistent tree to no benefit."
+      },
+      {
+        "root": "UosVeilCslib",
+        "files": 1,
+        "sanction": "Standalone `[[lean_lib]]` root in `formal/lean/ruliad/lakefile.toml` (`formal/lean/ruliad/UosVeilCslib.lean`) matching its Lake library target name."
+      },
+      {
+        "root": "UosStacksDescent",
+        "files": 1,
+        "sanction": "Standalone `[[lean_lib]]` root in `formal/lean/ruliad/lakefile.toml` (`formal/lean/ruliad/UosStacksDescent.lean`) matching its Lake library target name."
       }
     ],
     "declared_legacy_roots_not_renamed": [
