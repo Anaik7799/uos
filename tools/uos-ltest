@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# uos-ltest — 42-Test Lean 4 + Mojo Differential, C-ABI (44,380 States) &
+# 12-Loop Qwen Control/Data/Observability Test Runner (CTest/ETest style)
+# ==============================================================================
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+if [[ "${1:-}" == "--list-tests" || "${1:-}" == "-N" ]]; then
+  exec ./tools/uos-mtest --list-tests
+fi
+lean formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean
+exec ./tools/uos-mtest "$@"

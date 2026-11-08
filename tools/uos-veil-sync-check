@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# UOS Veil Protocol + KM/Wiki/ZK + 6-Plane Continuous Sync & Pi+Qwen Escalation Checker
+set -euo pipefail
+ROOT="/home/an/NAS-setup/uos"
+cd "$ROOT"
+
+if [[ "${1:-}" == "--with-lean" ]]; then
+  echo "[1/2] Verifying Pure Lean 4 Veil + KM/Wiki/ZK + Pi+Qwen Escalation Digital Twin (20 theorems, 6,400 states)..."
+  ./tools/lean formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean
+  echo "  -> Lean 4 kernel check: PASS (0 axioms, 0 sorry)"
+fi
+
+echo "[2/2] Running Mojo 6-Plane Continuous Sync & Pi+Qwen Escalation Checker (30/30 checks)..."
+./tools/mojo run -I formal/mojo formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo

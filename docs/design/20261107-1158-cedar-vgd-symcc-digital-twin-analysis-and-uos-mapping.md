@@ -49,6 +49,17 @@ Per explicit Operator Directive, model responsibilities are strictly partitioned
 +---------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Supervisor & Analyst ONLY: OpenRouter + Gemini + Argon Caste02 Pi] --> [Claude Opus 4.6 Caste04: Analysis, Architecture, Prompts, Journals]
+[Supervisor & Analyst ONLY: OpenRouter + Gemini + Argon Caste02 Pi] --> [Codex GPT-5.4 Caste03: Codegen, Lean+Mojo Unification, SDLC, SRE, Tests]
+[Supervisor & Analyst ONLY: OpenRouter + Gemini + Argon Caste02 Pi] --> [Local Qwen2.5-Coder-7B Caste05 :8000: Zero-Burn Code & KPI Verification]
+[Claude Opus 4.6 Caste04: Analysis, Architecture, Prompts, Journals] --> [3-Gate AK-47 Hot Path 36ms: Lean4_Kernel 16ms + Mojo_Oracle 18ms + SaPlan_SQLite 2ms]
+[Codex GPT-5.4 Caste03: Codegen, Lean+Mojo Unification, SDLC, SRE, Tests] --> [3-Gate AK-47 Hot Path 36ms: Lean4_Kernel 16ms + Mojo_Oracle 18ms + SaPlan_SQLite 2ms]
+[Local Qwen2.5-Coder-7B Caste05 :8000: Zero-Burn Code & KPI Verification] --> [3-Gate AK-47 Hot Path 36ms: Lean4_Kernel 16ms + Mojo_Oracle 18ms + SaPlan_SQLite 2ms]
+```
+
 ```mermaid
 graph TD
   Sup["Supervisor & Analyst ONLY: OpenRouter + Gemini + Argon (Caste02 Pi)"]
@@ -246,3 +257,4 @@ The UOS Full-System-Code Unified Lean 4 + Mojo + FPP + AI Agent Digital Twin is 
 | **EVO-08..10** (`THM_FSYS_32..34`, `THM_FSYS_43`) | Palamedes Deductive Synthesis (`Gen α`, `support`, `CorrectGen P`, universal AST-inductive `optimizePalamedesGen`) — `arXiv:2511.12253`, `10.1145/3808329`, `hgoldstein95/palamedes-lean` | `formal/lean/UosDeductiveSynthesisAndPalamedes.lean` (`THM_PALAMEDES_01..04`) | `tools/uos-palamedes-synth` + C-ABI Export `#18` (`uos_lean_palamedes_synth_verify`) | Local Qwen + Claude Opus 4.6 (`max`) | `PASS` |
 | **EVO-11..13** (`THM_FSYS_35..37`) | Palamedes BST Catamorphism/Anamorphism (`BoundedTree`), Tactic-Synthesized Artifacts, and Multi-Modal Vericoding (`arXiv:2604.16584`) | `formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean` | `palamedes_bst_catamorphism_anamorphism_check` (`10/10` states) | Local Qwen + Claude Opus 4.6 (`max`) + Codex (`xhigh`) | `PASS` |
 | **EVO-14..15 + Simulator Parity** (`THM_FSYS_38..50`) | `L0..L9` Usecase-Driven Fractal Context Continuity + Simulator ↔ Digital Twin ↔ Realtime Agentic Homomorphism (`CompositeAgentOutcome` with `leasePostState : EcologyLeaseSnapshot`) | `formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean` (`50` `THM_FSYS` + `4` inductive helpers = `54` theorems) | C-ABI Exports `#19` & `#20` (`32/32` states) + `tools/uos-fractal-context-pipeline` | Local Qwen + Claude Opus 4.6 (`max`) + Codex (`xhigh`) | `PASS` |
+

@@ -57,6 +57,17 @@ This single collated master ledger consolidates **all work, diagnostics, formal 
 +---------------------------------------------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[Pi Caste02 + Claude Caste04 max + Codex Caste03 xhigh] --> [uos-harness OTP 29 / 104 Routes]
+[Pi Caste02 + Claude Caste04 max + Codex Caste03 xhigh] --> [Zenoh Router nas-1:8080 / c3i/a2a/**]
+[Pi Caste02 + Claude Caste04 max + Codex Caste03 xhigh] --> [razr15-1 RTX 2070 sm_75 :8000/:8081/:8082]
+[uos-harness OTP 29 / 104 Routes] --> [31 Lean 4 Theorems 0 sorry + Mojo Oracles 14/14 & 3/3 PASS + Collated Master Journal]
+[Zenoh Router nas-1:8080 / c3i/a2a/**] --> [31 Lean 4 Theorems 0 sorry + Mojo Oracles 14/14 & 3/3 PASS + Collated Master Journal]
+[razr15-1 RTX 2070 sm_75 :8000/:8081/:8082] --> [31 Lean 4 Theorems 0 sorry + Mojo Oracles 14/14 & 3/3 PASS + Collated Master Journal]
+```
+
 ```mermaid
 graph TD
     H["Pi Caste02 + Claude Caste04 (max) + Codex Caste03 (xhigh)"] -->|"16 MCP Tool Calls"| M["uos-harness (OTP 29 / 104 Routes)"]
@@ -356,3 +367,4 @@ Commutativity holds ($\pi_{\text{Oracle}} \circ \text{Exec}_{\text{SM75}} = \tex
 1. **Prediction 1 (Horizon: 24h, Target Brier Score $B \le 0.0025$)**: With `run_llama_cuda_8081.sh` launching from `/mnt/c/Users/abhij` and `libcuda_shim.so` + `ptxas_sm75_shim.sh` synced on `razr15-1`, `formal/mojo/razr15_max_qwen_oracle.mojo` will sustain `14/14 PASS` with decode throughput $\ge 45.0\text{ tok/s}$ and VRAM utilization $\le 6,500\text{ MiB}$ across the next 50 consecutive health sweeps ($P = 0.96$).
 2. **Prediction 2 (Horizon: 48h, Target Brier Score $B \le 0.0040$)**: Adding the 2-second `:8081/health` preflight check in `max_qwen_server.py` will reduce worst-case `:8081`->`:8082` failover latency from `120,000 ms` to $< 2,100\text{ ms}$ ($P = 0.95$).
 3. **Prediction 3 (Horizon: 72h, Target Brier Score $B \le 0.0100$)**: Lowering `max_kernel.mojo` Q4_K_M matvec to Turing `mma.sync.aligned.m16n8k8` Tensor Core instructions will improve native Mojo GPU matvec throughput on `sm_75` by $\ge 1.35\times$ ($P = 0.90$).
+

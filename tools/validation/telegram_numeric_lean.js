@@ -5,11 +5,11 @@ if(!out||!path.isAbsolute(out)||!out.startsWith(root+'/var/recovery-runtime/')||
 if(start===0){if(fs.existsSync(out))throw Error('new output required');fs.mkdirSync(out,{recursive:true});}else if(!fs.existsSync(out+'/results.json'))throw Error('previous batch required');
 const files=fs.readdirSync(ws+'/formal/lean').filter(x=>x.endsWith('.lean')).sort((a,b)=>a==='Telegram_Numeric_Counterexamples.lean'?1:b==='Telegram_Numeric_Counterexamples.lean'?-1:a.localeCompare(b));
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
-let results=start===0?{scope:'Kernel elaboration of exact listed candidate sources; no system admission',toolchain_sha256:sha(root+'/toolchains/lean-4.33.0/bin/lean'),files,calls:[]}:JSON.parse(fs.readFileSync(out+'/results.json'));
+let results=start===0?{scope:'Kernel elaboration of exact listed candidate sources; no system admission',toolchain_sha256:sha(root+'/toolchains/lean-4.35.0/bin/lean'),files,calls:[]}:JSON.parse(fs.readFileSync(out+'/results.json'));
 if(JSON.stringify(results.files)!==JSON.stringify(files)||results.calls.length!==start)throw Error('ordered corpus changed or batch out of sequence');
 for(const name of files.slice(start,start+6)){
  const source=ws+'/formal/lean/'+name,source_sha256=sha(source),args=['-o',out+'/'+name.replace(/\.lean$/,'.olean'),source];
- const r=cp.spawnSync(root+'/toolchains/lean-4.33.0/bin/lean',args,{cwd:root,env:{...process.env,LEAN_PATH:out},encoding:'utf8',timeout:7000,killSignal:'SIGKILL',maxBuffer:1048576});
+ const r=cp.spawnSync(root+'/toolchains/lean-4.35.0/bin/lean',args,{cwd:root,env:{...process.env,LEAN_PATH:out},encoding:'utf8',timeout:7000,killSignal:'SIGKILL',maxBuffer:1048576});
  const after=sha(source);if(after!==source_sha256)throw Error('source changed during proof');
  fs.writeFileSync(out+'/'+name+'.log',(r.stdout||'')+(r.stderr||''));
  results.calls.push({name,source,source_sha256,olean_sha256:r.status===0?sha(args[1]):null,status:r.status,error:r.error?.message||null,signal:r.signal||null,log:name+'.log',log_sha256:sha(out+'/'+name+'.log'),observed_at:new Date().toISOString()});

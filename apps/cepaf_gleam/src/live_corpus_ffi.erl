@@ -239,10 +239,16 @@ scan_clean_children(Root, DirRel) ->
 
 has_allowed_ext(Lower) ->
     Sz = byte_size(Lower),
+    (Sz >= 2 andalso (
+        binary:part(Lower, Sz - 2, 2) =:= <<".c">> orelse
+        binary:part(Lower, Sz - 2, 2) =:= <<".h">>
+    )) orelse
     (Sz >= 3 andalso (
         binary:part(Lower, Sz - 3, 3) =:= <<".md">> orelse
         binary:part(Lower, Sz - 3, 3) =:= <<".ml">> orelse
-        binary:part(Lower, Sz - 3, 3) =:= <<".sh">>
+        binary:part(Lower, Sz - 3, 3) =:= <<".sh">> orelse
+        binary:part(Lower, Sz - 3, 3) =:= <<".rs">> orelse
+        binary:part(Lower, Sz - 3, 3) =:= <<".py">>
     )) orelse
     (Sz >= 4 andalso (
         binary:part(Lower, Sz - 4, 4) =:= <<".qnt">> orelse
@@ -250,16 +256,30 @@ has_allowed_ext(Lower) ->
         binary:part(Lower, Sz - 4, 4) =:= <<".mli">> orelse
         binary:part(Lower, Sz - 4, 4) =:= <<".zig">> orelse
         binary:part(Lower, Sz - 4, 4) =:= <<".sql">> orelse
-        binary:part(Lower, Sz - 4, 4) =:= <<".svg">>
+        binary:part(Lower, Sz - 4, 4) =:= <<".svg">> orelse
+        binary:part(Lower, Sz - 4, 4) =:= <<".fpp">> orelse
+        binary:part(Lower, Sz - 4, 4) =:= <<".erl">> orelse
+        binary:part(Lower, Sz - 4, 4) =:= <<".nix">>
     )) orelse
     (Sz >= 5 andalso (
         binary:part(Lower, Sz - 5, 5) =:= <<".toml">> orelse
         binary:part(Lower, Sz - 5, 5) =:= <<".json">> orelse
         binary:part(Lower, Sz - 5, 5) =:= <<".lean">> orelse
-        binary:part(Lower, Sz - 5, 5) =:= <<".html">>
+        binary:part(Lower, Sz - 5, 5) =:= <<".html">> orelse
+        binary:part(Lower, Sz - 5, 5) =:= <<".mojo">> orelse
+        binary:part(Lower, Sz - 5, 5) =:= <<".stan">> orelse
+        binary:part(Lower, Sz - 5, 5) =:= <<".conf">>
     )) orelse
-    (Sz >= 6 andalso binary:part(Lower, Sz - 6, 6) =:= <<".gleam">>) orelse
-    (Sz >= 7 andalso binary:part(Lower, Sz - 7, 7) =:= <<".allium">>).
+    (Sz >= 6 andalso (
+        binary:part(Lower, Sz - 6, 6) =:= <<".gleam">> orelse
+        binary:part(Lower, Sz - 6, 6) =:= <<".timer">>
+    )) orelse
+    (Sz >= 7 andalso (
+        binary:part(Lower, Sz - 7, 7) =:= <<".allium">> orelse
+        binary:part(Lower, Sz - 7, 7) =:= <<".socket">> orelse
+        binary:part(Lower, Sz - 7, 7) =:= <<".target">>
+    )) orelse
+    (Sz >= 8 andalso binary:part(Lower, Sz - 8, 8) =:= <<".service">>).
 
 allowed_tree_file_bin(ChildRel, NameBin, Lower) ->
     has_allowed_ext(Lower) andalso (

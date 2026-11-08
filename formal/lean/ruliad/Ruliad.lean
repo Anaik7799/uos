@@ -80,6 +80,7 @@ import Ruliad.Irreducibility
 import Ruliad.Bridge
 import Ruliad.Render
 import Ruliad.Service
+import Ruliad.UosCslibSystemWideIntegration
 
 namespace Ruliad
 

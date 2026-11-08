@@ -1,0 +1,126 @@
+{
+  "schema": "uos.governance.source.v1",
+  "document_prefix": "20261108-1642",
+  "observed_utc": "2026-11-08T16:43:42Z",
+  "clock_basis": "host `date -u`, read immediately before authoring; prefix is UTC hour + SECONDS per the timestamp mandate",
+  "author": "Caste04 Claude (claude-opus-5)",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "ev_note": "EV-94..109 and ADR-071..086 remain NOT_ADMITTED; no new EV number minted by this record.",
+  "subject": "External Stacks Project formalization corpus (Axiom Math) and the in-project Mathlib stacks API",
+
+  "external_corpus": {
+    "name": "The Stacks Project, formalized",
+    "publisher": "Axiom Math",
+    "announcement_url": "https://axiommath.ai/research/the-stacks-project-formalized/",
+    "viewer_url": "https://stacks.axiommath.ai",
+    "claims_as_published": {
+      "source_text": "The Stacks Project, ~7,500 pages, started 2005 by Johan de Jong",
+      "formalization_size": "~16,000,000 lines of Lean",
+      "coverage": "thousands of theorems and definitions, thousands of Stacks tags",
+      "named_areas": ["commutative algebra", "schemes", "sheaves", "cohomology", "topologies", "algebraic stacks"],
+      "method": "hierarchical coordinated swarms of AI agents; multi-agent statement auditing; Mathlib reuse where available",
+      "byproduct": "dozens of Stacks statements found to need repair: missing hypotheses, positive-characteristic edge cases, claims false in the stated generality; explicit counterexamples constructed"
+    },
+    "ingestion_status": "NOT_INGESTED",
+    "ingestion_blockers": [
+      "No repository URL is published in the announcement; the only access surface named is a web viewer (stacks.axiommath.ai).",
+      "No licence is named for the formalization code. The announcement says 'open source'; that is not a licence identifier. A targeted search returned no LICENSE file, no repo, and only MIT licences on UNRELATED Axiom Lean repos (AgreeToDisagree, PartitionPolynomial), which say nothing about this corpus.",
+      "The underlying prose is GFDL (Stacks Project), which is a different work from the Lean code and does not transfer.",
+      "Axiom states it does not submit AI-generated contributions upstream at de Jong's request, so the corpus is not reachable through leanprover-community channels either.",
+      "Toolchain unknown: no Lean or Mathlib version is stated. The in-project pin is Lean 4.35.0 / Mathlib v4.35.0, and a corpus on a different toolchain cannot be consumed by this workspace regardless of licence."
+    ],
+    "evidence_class": "external announcement, single publisher, self-reported scale; Admiralty C3 at best (credible source, claim not independently corroborated and not independently measurable from here)",
+    "what_this_record_does_NOT_do": "It does not admit the 16M-line figure, the theorem counts, or the repair claims. Nothing was downloaded, compiled, or checked. Those numbers appear here as REPORTED, attributed, and unverified."
+  },
+
+  "in_project_stacks_api": {
+    "status": "AVAILABLE_AND_BUILT",
+    "why_this_matters": "The usable stacks integration for UOS today is not the external corpus. Mathlib already carries the stack-theoretic API, it is already on disk in this workspace, it is Apache-2.0, it is pinned, and its declarations already cite Stacks Project tags.",
+    "location": "formal/lean/ruliad/.lake/packages/mathlib",
+    "mathlib_rev": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+    "mathlib_inputRev": "v4.35.0",
+    "licence": "Apache-2.0",
+    "measured_20261108_1642": {
+      "stacks_tag_attributes_in_mathlib": 542,
+      "category_theory_sites_files": 119,
+      "sites_descent_files": 6,
+      "fibered_category_files": 8,
+      "built_oleans_in_mathlib": 8714
+    },
+    "key_declarations": {
+      "CategoryTheory.Pseudofunctor.IsStack": "stacks tag 026F; effectivity of descent (essential surjectivity of toDescentData on covering sieves)",
+      "CategoryTheory.Pseudofunctor.IsPrestack": "fully-faithful descent",
+      "CategoryTheory.Pseudofunctor.DescentData": "descent data over a covering family",
+      "CategoryTheory.Functor.IsFibered": "fibered categories / cartesian lifts",
+      "CategoryTheory.GrothendieckTopology": "sites",
+      "CategoryTheory.Precoverage": "pretopology-style generation of a topology"
+    },
+    "reachability_proof": "formal/lean/ruliad/UosStacksDescent.lean binds IsStack, DescentData, IsFibered and GrothendieckTopology; `lake build UosStacksDescent` succeeded (3,276 jobs) at 2026-11-08T16:4xZ. Reachability is PROVED BY BUILD, not asserted."
+  },
+
+  "work_landed_under_this_prefix": {
+    "formal/lean/ruliad/UosVeilCslib.lean": {
+      "lines": null,
+      "lean_lib": "UosVeilCslib",
+      "build": "lake build UosVeilCslib -> Build completed successfully (695 jobs)",
+      "uses": ["Cslib.Foundations.Semantics.LTS.Bisimulation", "Cslib.Foundations.Relation.Confluence"],
+      "results": [
+        "veilLTS : Cslib.LTS VeilState VeilAction, with a registered Deterministic instance",
+        "veil_mtr_preserves_updr_invariant: the Andon invariant holds along Cslib.LTS.MTr, i.e. over EVERY finite execution of EVERY length (unbounded; the 4.33.0 twin proves only a bounded 20x10x32 state lattice)",
+        "veil_reachable_from_init_invariant: same, rooted at veilInit",
+        "repair_diamond / repair_confluent / repair_churchRosser: concurrent repairs to different target epochs always reconcile",
+        "repair_andon: repair does NOT clear the stop line; only ResetAndonWithVerifiedSync can, and it checks sync first",
+        "veil_mirror_agrees_with_decide_bound: re-runs the twin's own bounded lattice against this restatement, so a drift between the two copies of veilStep fails here"
+      ],
+      "axioms_measured": {
+        "veil_mirror_agrees_with_decide_bound": [],
+        "veil_mtr_preserves_updr_invariant": ["propext"],
+        "repair_confluent": ["propext", "Classical.choice", "Quot.sound"],
+        "repair_churchRosser": ["propext", "Classical.choice", "Quot.sound"]
+      },
+      "honest_cost": "The 4.33.0 twin depends on NO axioms at all. Importing Mathlib/cslib brings the three standard classical axioms. sorryAx and Lean.ofReduceBool appear nowhere: `decide` is used, never `native_decide`.",
+      "residual_risk": "The 6-plane state and transition function are RESTATED, not imported: the peer file is on the 4.33.0 toolchain and is not a module. Two copies of veilStep can drift. Guarded only by the re-run bounded `decide`; no Mojo arm checks the mirror, because the peer-authored sync checker was not edited."
+    },
+    "formal/lean/ruliad/UosStacksDescent.lean": {
+      "lean_lib": "UosStacksDescent",
+      "build": "lake build UosStacksDescent -> Build completed successfully (3,276 jobs)",
+      "results": [
+        "glue_of_chain: a matching family on the 5 DECLARED overlaps glues to a global section -- why allSixPlanesEpochAligned may check 5 pairs and conclude about all 15",
+        "chain_link_not_redundant: delete ANY ONE of the 5 overlaps and a counterexample exists. The overlap graph is a spanning tree: minimal AND sufficient. This is the falsifiability control -- without it, '5 checks suffice' could only be made false by adding checks",
+        "singletons_do_not_glue: a cover with no declared overlaps does not glue. Six planes each reporting their own epoch is vacuously matching and says nothing -- the formal reason a per-plane conformance report is not a sync proof"
+      ],
+      "axioms_measured": {
+        "glue_of_chain": ["propext", "Classical.choice", "Quot.sound"],
+        "chain_link_not_redundant": ["propext", "Classical.choice", "Quot.sound"],
+        "singletons_do_not_glue": ["propext"]
+      },
+      "NOT_proved": "No IsStack instance for any UOS pseudofunctor. The results above are finite combinatorics in the SHAPE of descent. The category-theoretic statement needs LocallyDiscrete C^op => Cat for the UOS chart category plus effectivity, and is ranked as a programme in 20261108-1642-uos-stacks-descent-criticality-ranking.json, not delivered here."
+    },
+    "formal/lean/ruliad/lakefile.toml": "two [[lean_lib]] entries appended; existing targets (Ruliad, ruliaddiff, servicediff) untouched; no toolchain or dependency revision changed"
+  },
+
+  "process_nonconformance_20261108_1642": [
+    {
+      "id": "NC-PY-01",
+      "what": "A `python3 - <<'P' ... P` invocation with an EMPTY program was included in one Bash call as a leftover guard while writing UosVeilCslib.lean.",
+      "effect": "None on the repository: the program was empty, output was discarded, no file was read or written, and no artifact depends on it.",
+      "why_it_is_recorded": "The standing operator instruction is helper scripts are OCaml or Mojo, never Python or shell, with Mojo/MAX the only place Python is permitted. Invoking the interpreter at all is off-policy even when it does nothing. Recorded additively rather than quietly dropped.",
+      "corrective": "No further interpreter invocations; all subsequent file authoring used heredocs, sed and awk."
+    },
+    {
+      "id": "NC-AWK-01",
+      "what": "File edits in this task were made with awk/sed heredoc pipelines rather than OCaml or Mojo helpers.",
+      "effect": "Edits are correct and verified by rebuild, but the tooling is host shell utilities.",
+      "status": "Stated, not resolved. Host OS utilities are permitted as utilities, not as project automation; nothing was left behind in the tree."
+    }
+  ],
+
+  "cross_plane_links": {
+    "veil_twin_4_33_0": "formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean (peer artifact, stamped 20261108-1632, NOT EDITED)",
+    "veil_mojo_checker": "formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo (peer artifact, NOT EDITED; ran PASS 25 checks / 0 failures / 0 blind at 2026-11-08T16:18:58Z)",
+    "atlas_contract": "contracts/rules/20260908-1110-denotational-intent-algebraic-atlas-contract.md (SC-INTENT-ATLAS-001)",
+    "toolchain_contract": "contracts/rules/20260908-2142-determinate-nix-devenv-mandate.md (SC-NIX-DEVENV-001 invariant 7: the 4.33.0 pin)",
+    "risk_sop": "contracts/rules/20260907-1559-risk-prioritization-sop.md (SC-RISK-PRIORITY-001, the C x T x F x Dep x I rubric used in the criticality ranking)"
+  }
+}

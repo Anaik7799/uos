@@ -67,10 +67,10 @@ uos_tool_path() {
     ocaml)      printf '%s\n' "$UOS_TC/opam-ocaml/bin/ocaml" ;;
     ocamlfind)  printf '%s\n' "$UOS_TC/opam-ocaml/bin/ocamlfind" ;;
     dune)       printf '%s\n' "$UOS_TC/opam-ocaml/bin/dune" ;;
-    # --- formal ---
-    lean)       printf '%s\n' "$UOS_TC/lean-4.33.0/bin/lean" ;;
-    lake)       printf '%s\n' "$UOS_TC/lean-4.33.0/bin/lake" ;;
-    leanc)      printf '%s\n' "$UOS_TC/lean-4.33.0/bin/leanc" ;;
+    # --- formal (synced to Lean 4.35.0 for Veil + leanprover/cslib) ---
+    lean)       printf '%s\n' "$UOS_TC/lean-4.35.0/bin/lean" ;;
+    lake)       printf '%s\n' "$UOS_TC/lean-4.35.0/bin/lake" ;;
+    leanc)      printf '%s\n' "$UOS_TC/lean-4.35.0/bin/leanc" ;;
     z3)         printf '%s\n' "$UOS_TC/nix-profile/bin/z3" ;;
     quint)      printf '%s\n' "$UOS_TC/nix-profile/bin/quint" ;;
     # --- version control (canonical policy 4: standalone Jujutsu is the sole VCS) ---
@@ -114,7 +114,7 @@ uos_tool() {
 # Export an in-project environment. Deliberately PREPENDS, and pins the BEAM and
 # OCaml roots, so a stray host erl/ocaml cannot win a PATH race.
 uos_env() {
-  export PATH="$UOS_TC/nix-profile/bin:$UOS_TC/gleam-1.16.0/bin:$UOS_TC/opam-ocaml/bin:$UOS_TC/lean-4.33.0/bin:$UOS_TC/cargo/bin:$PATH"
+  export PATH="$UOS_TC/nix-profile/bin:$UOS_TC/gleam-1.16.0/bin:$UOS_TC/opam-ocaml/bin:$UOS_TC/lean-4.35.0/bin:$UOS_TC/cargo/bin:$PATH"
   export OPAM_SWITCH_PREFIX="$UOS_TC/opam-ocaml"
   export CARGO_HOME="$UOS_TC/cargo"
   export RUSTUP_HOME="$UOS_TC/rustup"

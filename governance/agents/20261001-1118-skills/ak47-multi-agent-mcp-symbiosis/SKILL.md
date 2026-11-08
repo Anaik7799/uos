@@ -100,9 +100,10 @@ flowchart LR
 - **Deterministic Multi-Agent Quota/Budget/Outage Failover (`tools/uos-agent-failover`)**:
   - Proven across 32 boolean states in `formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean` (`THM_FSYS_13..16`), `formal/lean/UosLeanRuntimeGuard.lean` (`uos_lean_select_failover_agent`), `formal/mojo/lean_ffi_bridge.mojo`, `apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam` (`select_failover_agent`), and `tools/uos-agent-failover --selftest` (16/16 checks PASS).
   - If any primary agent is unavailable, times out, returns empty output, or exhausts quota/budget (`HTTP 429`, `HTTP 402`, `insufficient_quota`, `rate_limit`), execution automatically fails over down `Claude -> Codex -> Local Qwen2.5-Coder-7B` without routing execution workloads to the Supervisor.
-- **In-Process Lean 4 <-> Mojo C-ABI Interoperability**:
-  - `formal/lean/UosLeanRuntimeGuard.lean` compiles to `var/zlp/libuos_lean_guard.so` and `formal/lean/libuos_lean_guard.so` exporting 14 unboxed C-ABI functions (`THM_GUARD_01..14`).
-  - `formal/mojo/lean_ffi_bridge.mojo`, `formal/mojo/full_system_code_oracle.mojo`, `tools/bionic_custom_ai_engine.mojo`, `ops/nodes/razr15-1-wsl2/mojo_full_resource_engine.mojo`, and `ops/nodes/razr15-1-wsl2/max_qwen_server.py` load `libuos_lean_guard.so` in-process (`49.5 ns/call`).
+- **In-Process Lean 4 <-> Mojo C-ABI Interoperability & 12 Qwen Closed Loops (`SC-PI-QWEN-SYMBIOSIS-001`)**:
+  - `formal/lean/UosLeanRuntimeGuard.lean` compiles to `var/zlp/libuos_lean_guard.so` and `formal/lean/libuos_lean_guard.so` exporting 42 unboxed C-ABI functions (`THM_GUARD_01..42`, `44,380` states across Exports `#28..#42`), plus Section 42 (`THM_QLOOP_01..04`, `3,840` states across the **12 Qwen Control `C1..C4`, Data `D1..D4`, and Observability `O1..O4` Loops**).
+  - `formal/mojo/lean_ffi_bridge.mojo`, `formal/mojo/full_system_code_oracle.mojo` (`104/104` checks), `formal/mojo/uos_mtest_framework.mojo` (`42/42` tests, `100/100` checks), and `services/inference/max/max_qwen_server.py` load `libuos_lean_guard.so` in-process (`49.5 ns/call`).
+  - Inspect live Qwen Control/Data/Observability loops with `./tools/uos-qwen --loops`, actuate closed-loop `POODAVR` profiles with `./tools/uos-qwen --control-loop <layer_idx> <profile>`, and verify all 42 tests via `./tools/uos-ltest`.
 
 ## Comprehensive verification checklist
 

@@ -1,0 +1,225 @@
+{
+  "schema": "uos.ontology.fractal_holonic_semantic_equivalence_knowledge_map_and_dictionary.v1",
+  "document_id": "KM-DICT-FHC-20261108-1618",
+  "created_utc": "2026-11-08T15:21:00Z",
+  "admitted_ev_ceiling": 93,
+  "sa_plan_tracking": {
+    "database_path": "var/sa-plan/uos.sqlite3",
+    "plan_id": "uos-fhc-semantic-equivalence-20cycles-20261108-1616",
+    "plan_name": "uos/fhc-semantic-equivalence-20cycles/20261108-1616",
+    "veil_plan_id": "uos-veil-km-wiki-zk-sync-20cycles-20261108-1632",
+    "veil_plan_name": "uos/veil-km-wiki-zk-sync-20cycles/20261108-1632",
+    "tasks_total": 40,
+    "task_ids": [
+      "evol-fhc-01", "evol-fhc-02", "evol-fhc-03", "evol-fhc-04", "evol-fhc-05",
+      "evol-fhc-06", "evol-fhc-07", "evol-fhc-08", "evol-fhc-09", "evol-fhc-10",
+      "evol-fhc-11", "evol-fhc-12", "evol-fhc-13", "evol-fhc-14", "evol-fhc-15",
+      "evol-fhc-16", "evol-fhc-17", "evol-fhc-18", "evol-fhc-19", "evol-fhc-20",
+      "evol-veil-01", "evol-veil-02", "evol-veil-03", "evol-veil-04", "evol-veil-05",
+      "evol-veil-06", "evol-veil-07", "evol-veil-08", "evol-veil-09", "evol-veil-10",
+      "evol-veil-11", "evol-veil-12", "evol-veil-13", "evol-veil-14", "evol-veil-15",
+      "evol-veil-16", "evol-veil-17", "evol-veil-18", "evol-veil-19", "evol-veil-20"
+    ],
+    "cumulative_cycles_range": "41..80"
+  },
+  "formal_digital_twins": {
+    "unified_system_twin": {
+      "path": "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean",
+      "theorems_count": 117,
+      "verified_states": 52060
+    },
+    "semantic_equivalence_twin": {
+      "path": "formal/lean/UosFractalHolonicSemanticEquivalence20CycleDigitalTwin.lean",
+      "theorems_count": 20,
+      "verified_states": 6400
+    },
+    "veil_km_wiki_zk_sync_and_qwen_escalation_twin": {
+      "path": "formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean",
+      "theorems_count": 20,
+      "verified_states": 6400
+    },
+    "holonic_fpp_bionic_twin": {
+      "path": "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean",
+      "layers": 10,
+      "castes": 5,
+      "aspects": 17,
+      "holons": 170
+    },
+    "combined_formal_theorems": 157,
+    "combined_verified_states": 64860,
+    "mojo_semantic_equivalence_checker": "formal/mojo/fractal_holonic_semantic_equivalence_checker.mojo",
+    "mojo_veil_continuous_sync_checker": "formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo"
+  },
+  "canonical_dictionary": [
+    {
+      "term": "FPP Actor (40 Subsystem Actors)",
+      "cardinality": 40,
+      "formula": "4 Supervision Domains (Apps, Engines, Services, Intelligence) x 10 Fractal Layers (L0..L9) = 40 Actors (0..39)",
+      "semantic_definition": "Stateful OTP 29.0.5 process supervised under uos_sup.gleam (via core_fpp_actor_twin_mesh.gleam and fpp/actor.gleam), executing dual NASA F-Prime state machines (PoodavrLifecycleFPrime + companion F-Prime FSM), a 5-regime Kalman/PID/Lyapunov reflex kernel, role-whitelisted MCP tool routing, and RFC 8032 Ed25519-signed Zenoh telemetry.",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fpp_actor_twin_mesh.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/fpp/actor.gleam",
+        "formal/lean/UosFractalHolonicSemanticEquivalence20CycleDigitalTwin.lean"
+      ],
+      "km_links": [
+        "docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md",
+        "docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md"
+      ]
+    },
+    {
+      "term": "Janus Holon (170 State Vectors)",
+      "cardinality": 170,
+      "formula": "10 Fractal Layers (L0..L9) x 17 Systems-Engineering Aspects (A01..A17) = 170 Janus Holons (0..169)",
+      "semantic_definition": "Pure-functional state vector HolonStateVector x_{l,a}(t) carrying downward autonomy alpha_down in [0,1] (composed via min) and upward compliance gamma_up in {0,1} (composed via strict boolean AND in compose_holons_monoidal to prevent compliance greenwashing).",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_fractal_holonic_simulator.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/aspect_coverage_engine.gleam",
+        "formal/lean/HolonicFppBionicUnifiedLeanInfrastructureAndDigitalTwins.lean"
+      ],
+      "km_links": [
+        "governance/agents/policy/20261106-0428-uos-subsystem-twin-coverage-ledger.json",
+        "governance/agents/policy/20261107-2046-uos-agent-provider-api-holarchy-fpp-ontology.json"
+      ]
+    },
+    {
+      "term": "Agent Caste (5 Hive Castes / 6 AgentIds)",
+      "cardinality": 5,
+      "formula": "5 Hive Castes (CASTE-01..05) x 8 FPP Actors/Caste = 40 FPP Actors; backed by 6 AgentIds (agy, pi, codex, claude, deepseek + co-slot argon) and LocalMaxQwen (SM75 :8000->:8081)",
+      "semantic_definition": "Stigmergic Heijunka WIP pull-queue role (QueenConductor=1, ForagerBuilder=4, SovereignSentinel=2, ArchitectSynthesizer=2, NurseDiagnostician=8; sum=17 WIP slots) governed by 40% quota margin, 2oo3 sovereign quorum, and k=2 bounded retry -> escalation.",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_hive.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/core_evo_api.gleam",
+        "formal/lean/UosOntologyAtlas.lean"
+      ],
+      "km_links": [
+        "governance/agents/policy/20261106-0402-uos-indexed-axis-registry.json",
+        "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md"
+      ]
+    },
+    {
+      "term": "Rete-UL 11-Domain Forward Chainer",
+      "cardinality": 11,
+      "formula": "11 Salience-Weighted Production Rule Domains (D01..D11)",
+      "semantic_definition": "Pure functional forward-chaining production rule network (math/rete.gleam and Hermes OCaml) fusing token/alpha/beta memories with salience conflict resolution to advise and veto control actions.",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_systems_engineering.gleam"
+      ],
+      "km_links": [
+        "contracts/rules/20260907-1559-risk-prioritization-sop.md"
+      ]
+    },
+    {
+      "term": "STPA 4-UCA & STAMP Contagion Cellular Automata",
+      "cardinality": 4,
+      "formula": "4 Unsafe Control Action (UCA) classes + 10-layer STAMP cellular automata contagion damping",
+      "semantic_definition": "Evaluates UCA1 (Not Provided), UCA2 (Provided Causes Hazard), UCA3 (Wrong Timing/Order), and UCA4 (Stopped Too Soon/Applied Too Long) plus cross-layer fault contagion damping.",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/stamp_automata.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/core_systems_engineering.gleam"
+      ],
+      "km_links": [
+        "contracts/rules/20260907-1606-risk-checker-contract.md"
+      ]
+    },
+    {
+      "term": "Full L0..L9 FMEA Catalog (30 Entries)",
+      "cardinality": 30,
+      "formula": "20 Core L0..L7 Entries (generate_system_fmea) + 10 L0..L9 FPP-Holon-Caste-Qwen Entries = 30 Entries (generate_full_l0_to_l9_fhc_fmea)",
+      "semantic_definition": "Raw Risk Priority Number (RPN = Severity x Occurrence x Detection, 1..1000) catalog across all 10 fractal layers L0..L9 with P0 (>=200) Jidoka Andon stop-line enforcement.",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/fmea_generator.gleam"
+      ],
+      "km_links": [
+        "docs/design/20261108-1312-pi-harness-qwen-max-mojo-lean-fractal-holonic-control-observability-and-operational-sop.md",
+        "docs/journal/20261108-0522-qwen-8pillar-10usecase-runtime-engine-and-unified-ontology-fibration-journal.md"
+      ]
+    },
+    {
+      "term": "Veil 6-Plane Continuous Sync & KM/Wiki/ZK Verification Engine",
+      "cardinality": 6,
+      "formula": "6 Sync Planes (Plane0_Spec, Plane1_DigitalTwin, Plane2_Code, Plane3_CodeComments, Plane4_DocsWikiZk, Plane5_SystemMemory) + 5 OCaml/Lean KM/Wiki/ZK Algorithms (km_rete, km_metrics, km_chain, reconcile, wiki_lifecycle/fractal_diagnostic)",
+      "semantic_definition": "Veil-style (https://veil.dev/, verse-lab/veil) relational transition system, Lace explicit-state safety model checker, Lasso 2-step temporal liveness verifier, and #updr inductive invariant synthesizer unified with OCaml/Lean/Mojo KM/Wiki/ZK verification kernels.",
+      "code_sources": [
+        "formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean",
+        "formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo",
+        "tools/km_provenance/km_rete.ml",
+        "tools/km_provenance/km_metrics.ml",
+        "tools/km_provenance/km_chain.ml",
+        "engines/hermes/modules/hermes_wiki/src/reconcile/reconcile.ml"
+      ],
+      "km_links": [
+        "docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md",
+        "docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md"
+      ]
+    },
+    {
+      "term": "Pi + Local Qwen (Caste02) Review & Sovereign Escalation Classifier",
+      "cardinality": 12,
+      "formula": "12 Issue Categories (Issue00..Issue11) -> 4 Sovereign Review Routes (LocalPiQwenResolve_Caste02, EscalateCodexSovereignSentinel_Caste03, EscalateClaudeArchitectSynthesizer_Caste04, EscalateAgyQueenConductor_Caste01)",
+      "semantic_definition": "Deterministic local triage and escalation classifier: resolves Issue00..Issue04 locally on razr15-1 SM75 (:8000->:8081, $0) when confidencePct >= 85, retryCount <= 2, and blastRadius == LocalSingleFile; escalates formal/Veil/Rete/safety or retryCount > 2 to Codex (Caste03), multi-plane semantic/ontology drift or confidencePct < 85 to Claude (Caste04), and constitutional ceiling/supervisor/epoch desync to AGY (Caste01).",
+      "code_sources": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+        "formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean",
+        "formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo"
+      ],
+      "km_links": [
+        "var/telemetry/pi_qwen_veil_km_review_and_escalation_receipt.json"
+      ]
+    },
+    {
+      "term": "CSLib (leanprover/cslib) 8-Pillar System-Wide Formal Verification Engine",
+      "cardinality": 8,
+      "formula": "8 CSLib Domains (FLTS/LTS/Bisimulation, Relation.Confluence/Newman, Automata.DA/FinAcc/Buchi/Muller, Circuits.Circuit, Logics.HML, Logics.LinearLogic.CLL, Languages.Mech.Choreography, Algorithms.Lean.TimeM + PACLearning.VersionSpaceLattice + Probability.PMF) across EVOL-CSLIB-01..20 (Cumulative Cycles 81..100)",
+      "semantic_definition": "System-wide integration of The Lean Computer Science Library (leanprover/cslib, rev 0b1e3680b43ad9cd482a66f183764f33fc8a4e8f, Lean 4.35.0 + Mathlib v4.35.0) and its standalone Lean 4.33.0 Digital Twin mirror across all 40 NASA FPP actors (5 actors per CSLib pillar), 10 Holons, 5 Agent Castes, Veil 6-Plane Continuous Sync, OCaml KM/Wiki/ZK engines, and Pi+Qwen local review.",
+      "code_sources": [
+        "formal/lean/ruliad/Ruliad/UosCslibSystemWideIntegration.lean",
+        "formal/lean/UosCslibSystemWideDigitalTwin.lean",
+        "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean",
+        "formal/mojo/cslib_systemwide_verification_checker.mojo",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam",
+        "tools/lean-cslib",
+        "tools/uos-cslib-check"
+      ],
+      "km_links": [
+        "var/telemetry/pi_qwen_cslib_systemwide_verification_receipt.json",
+        "docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md",
+        "docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md"
+      ]
+    }
+  ],
+  "caste_to_fpp_actor_bijection_8x5": {
+    "CASTE-01_QueenConductor_AGY": [0, 2, 14, 20, 23, 27, 38, 39],
+    "CASTE-02_ForagerBuilder_PiArgonQwen": [4, 8, 18, 19, 26, 30, 31, 37],
+    "CASTE-03_SovereignSentinel_Codex": [1, 7, 11, 15, 21, 33, 34, 35],
+    "CASTE-04_ArchitectSynthesizer_Claude": [3, 9, 13, 16, 24, 28, 32, 36],
+    "CASTE-05_NurseDiagnostician_DeepSeekDSH": [5, 6, 10, 12, 17, 22, 25, 29]
+  },
+  "cslib_domain_to_fpp_actor_partition_8x5": {
+    "Pillar0_Cslib_FLTS_LTS_Bisimulation": [0, 8, 16, 24, 32],
+    "Pillar1_Cslib_Relation_Confluence_Newman": [1, 9, 17, 25, 33],
+    "Pillar2_Cslib_Automata_DA_FinAcc_Buchi_Muller": [2, 10, 18, 26, 34],
+    "Pillar3_Cslib_Circuits_Boolean_Wiring_Depth": [3, 11, 19, 27, 35],
+    "Pillar4_Cslib_Logics_HML_Modal": [4, 12, 20, 28, 36],
+    "Pillar5_Cslib_Logics_LinearLogic_CLL_Heijunka": [5, 13, 21, 29, 37],
+    "Pillar6_Cslib_Languages_Mech_Choreography": [6, 14, 22, 30, 38],
+    "Pillar7_Cslib_TimeM_PACLearning_PMF": [7, 15, 23, 31, 39]
+  },
+  "knowledge_map_links": {
+    "agents_policy": "AGENTS.md",
+    "gemini_adapter": "GEMINI.md",
+    "symbiosis_sop": "docs/sop/20261001-1117-uos-agent-symbiosis-operations.md",
+    "design_and_operational_guide": "docs/design/20261108-1312-pi-harness-qwen-max-mojo-lean-fractal-holonic-control-observability-and-operational-sop.md",
+    "hermes_wiki_40_fpp": "docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md",
+    "zigvm_zk_decision": "docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md",
+    "anticipatory_journal": "docs/journal/20261108-0522-qwen-8pillar-10usecase-runtime-engine-and-unified-ontology-fibration-journal.md",
+    "indexed_axis_registry": "governance/agents/policy/20261106-0402-uos-indexed-axis-registry.json",
+    "subsystem_twin_ledger": "governance/agents/policy/20261106-0428-uos-subsystem-twin-coverage-ledger.json",
+    "provider_api_holarchy_ontology": "governance/agents/policy/20261107-2046-uos-agent-provider-api-holarchy-fpp-ontology.json",
+    "lexical_system_ontology": "generated/20260909-0640-uos-system-ontology.json",
+    "tri_sovereign_review_telemetry": "var/telemetry/claude_codex_agy_fpp_holon_caste_20cycle_review.json",
+    "pi_qwen_veil_escalation_receipt": "var/telemetry/pi_qwen_veil_km_review_and_escalation_receipt.json",
+    "pi_qwen_cslib_verification_receipt": "var/telemetry/pi_qwen_cslib_systemwide_verification_receipt.json"
+  }
+}

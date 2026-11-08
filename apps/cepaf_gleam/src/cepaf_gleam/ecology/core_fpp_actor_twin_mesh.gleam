@@ -23,6 +23,15 @@
 ////    RFC 8032 Ed25519-signed Zenoh `uos/v1/**` envelopes (`core_bus`).
 //// 5. Propagates 128-bit W3C OTel `TraceContext` (`traceparent`), emits BEAM
 ////    `telemetry` spans, and records structured OTel fractal JSON logs.
+//// 6. Formally verified across 20 Evolutionary Cycles (`EVOL-FHC-01..20`, Cumulative Cycles `41..60`,
+////    `sa-plan` `uos-fhc-semantic-equivalence-20cycles-20261108-1616`):
+////    - Lean 4 Digital Twins: `formal/lean/UosFractalHolonicSemanticEquivalence20CycleDigitalTwin.lean`
+////      (`THM_FHC_EQ_01..20`, `6,400` states) & `formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean`
+////      (`Section 43`, `THM_FHC_01..06`, `117` theorems, `52,060` states -> `58,460` combined states).
+////    - Mojo Checker: `formal/mojo/fractal_holonic_semantic_equivalence_checker.mojo`.
+////    - Ontology & Dictionary: `governance/agents/policy/20261108-1618-uos-fractal-holonic-semantic-equivalence-knowledge-map-and-dictionary.json`.
+////    - Wiki & ZK: `docs/wiki/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-and-digital-twin-mesh-wiki.md`
+////      & `docs/zk/20261101-2248-universal-40-subsystem-intelligent-fpp-actor-mesh-decision.md`.
 //// 6. Aligned surjectively across all 17 UOS Aspects, 4 Supervision Domains,
 ////    Algebraic Atlas cocycle morphisms, Cech Sheaf gluing (`H^1 = 0`), and
 ////    Denotational Intent valuation `[[ I ]](sigma)`.
@@ -998,6 +1007,41 @@ pub fn specs_for_domain(
 pub fn specs_for_layer(layer_idx: Int) -> List(SubsystemFppActorSpec) {
   all_40_subsystem_fpp_actor_specs()
   |> list.filter(fn(s) { s.layer_index == layer_idx })
+}
+
+/// Explicit functional caste ownership index (`1..5` for `Caste01..Caste05`) for each of the 40 FPP Actors (`0..39`).
+/// Closes Drift D4 (`EVOL-FHC-04`, `THM_FHC_01`) by exposing the exact functional caste assignment in
+/// `all_40_subsystem_fpp_actor_specs()` alongside the coarse `layer_idx / 2` layer-band index.
+pub fn fpp_actor_functional_caste_number(actor_idx: Int) -> Int {
+  let spec = spec_for_actor_index(actor_idx)
+  case spec.owner_caste_id {
+    "Caste01_AGY" -> 1
+    "Caste02_Pi_Argon" | "Caste02_PiArgon" -> 2
+    "Caste03_Codex" -> 3
+    "Caste04_Claude" -> 4
+    "Caste05_Deterministic_Tier0" | "Caste05_DeepSeekDSH" -> 5
+    _ -> 1
+  }
+}
+
+/// Resolves either a canonical 40-subsystem FPP `actor_id` or a legacy draft Wiki slug (closing Drift D2, `EVOL-FHC-02`).
+pub fn resolve_canonical_or_legacy_fpp_actor_id(
+  slug: String,
+) -> Result(SubsystemFppActorSpec, String) {
+  case find_spec_by_actor_id(slug) {
+    Ok(spec) -> Ok(spec)
+    Error(_) -> {
+      let mapped = case slug {
+        "l0_apps_constitutional_quorum" -> "l0_intel_constitutional_quorum"
+        "l0_services_nvme_storage_interlock" ->
+          "l1_services_nvme_storage_interlock"
+        "l0_intel_stpa_constitutional_guard" -> "l0_apps_iam_guardian_gate"
+        "l1_apps_rook_ceph_controller" -> "l1_apps_hardware_topology_registry"
+        _ -> slug
+      }
+      find_spec_by_actor_id(mapped)
+    }
+  }
 }
 
 // =============================================================================

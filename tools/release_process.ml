@@ -41,7 +41,7 @@ let tool_path = function
  | "erl"|"erlc"|"escript"|"rebar3"|"cc"|"zig"|"z3"|"quint"|"jj"|"node"|"npm" as n -> Some(toolchains^"/nix-profile/bin/"^n)
  | "gleam" -> Some(toolchains^"/gleam-1.16.0/bin/gleam")
  | "ocaml"|"ocamlfind"|"dune" as n -> Some(toolchains^"/opam-ocaml/bin/"^n)
- | "lean"|"lake"|"leanc" as n -> Some(toolchains^"/lean-4.33.0/bin/"^n)
+ | "lean"|"lake"|"leanc" as n -> Some(toolchains^"/lean-4.35.0/bin/"^n)
  | "cargo"|"rustc"|"rustup" as n -> Some(toolchains^"/cargo/bin/"^n)
  | "pixi" -> Some(toolchains^"/pixi/bin/pixi")
  | "mojo" -> Some(uos_root^"/services/inference/max/.pixi/envs/default/bin/mojo")

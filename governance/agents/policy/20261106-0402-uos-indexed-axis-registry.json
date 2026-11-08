@@ -222,5 +222,21 @@
     }
   ],
 
+  "fpp_holon_caste_20cycle_unification_extension": {
+    "updated_utc": "2026-11-08T15:12:00Z",
+    "cycles": "EVOL-FHC-01..20 (Cumulative Cycles 41..60)",
+    "lean_twin_section": "formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean Section 43 (THM_FHC_01..06, 3,200 states -> 52,060 total verified states across 117 zero-axiom theorems)",
+    "fpp_40_actors_caste_partition": {
+      "Caste01_AGY": [0, 2, 14, 20, 23, 27, 38, 39],
+      "Caste02_PiArgon": [4, 8, 18, 19, 26, 30, 31, 37],
+      "Caste03_Codex": [1, 7, 11, 15, 21, 33, 34, 35],
+      "Caste04_Claude": [3, 9, 13, 16, 24, 28, 32, 36],
+      "Caste05_DeepSeekDSH": [5, 6, 10, 12, 17, 22, 25, 29],
+      "actors_per_caste": 8,
+      "total_actors": 40
+    },
+    "drifts_remediated": ["D1_HiveCaste_CASTE01_05_Bijection", "D2_Wiki_40Actor_Canonical_Slugs", "D3_17Aspect_SetA_SetB_Bijection", "D4_Explicit_40Actor_Caste_Ownership_8x5", "D5_L8_Evolutionary_L9_Sovereign_Morphism", "D6_Full_L0_L9_30Entry_FMEA_Rete11_STPA4_Gate"]
+  },
+
   "what_this_registry_does_not_do": "It does not rename any constructor. Indices 0..7 of the concern axis are already conformant everywhere; every deviation is at index 8 or 9, in files cited by immutable journals and the ZK corpus. Renaming would make today's snapshot conform and leave the root cause -- a contract no tool reads -- untouched, so a fourteenth enum would appear next month. The registry plus its guard arm is the first machine reader SC-FRACTAL-TAXONOMY-001 has had since it was written on 2026-09-09."
 }

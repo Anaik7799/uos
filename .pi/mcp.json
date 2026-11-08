@@ -12,6 +12,21 @@
         "UOS_COCKPIT_RELEASE": "/home/an/NAS-setup/uos/var/releases/ecology/20261105-2254-de32503b029a1181870744f4f66ddc3bdaac0f7a5fc4ef6441d9ae4909c8e907",
         "UOS_MCP_EXPECTED_PAYLOAD_SHA256": "6cc571d0f3be8a1213df96a8fda3cf85e04ebc1e3e0b2031dc0d8cad8d718447"
       },
+      "exposure": "codemode",
+      "toolExposure": {
+        "system_health": "direct",
+        "system_zenoh": "direct",
+        "sa_plan_status": "direct",
+        "sa_plan_list": "direct",
+        "knowledge_search": "direct",
+        "zk_transclude": "direct",
+        "read_file": "direct",
+        "ooda_phase": "direct",
+        "fractal_status": "direct",
+        "holon_status": "direct",
+        "swarm_status": "direct",
+        "preflight_check": "direct"
+      },
       "enabled": true
     }
   }

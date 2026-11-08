@@ -38,10 +38,10 @@ in
   enterShell = ''
     export UOS_ROOT="$DEVENV_ROOT"
     # Toolchains materialised in-project (Gleam 1.16.0 pinned by the project,
-    # the opam switch with its cryptokit/gospel/z3 package set, and Lean 4.33.0
-    # against which formal/lean/*.lean actually check) take priority over any
+    # the opam switch with its cryptokit/gospel/z3 package set, and Lean 4.35.0
+    # synced with Veil and leanprover/cslib) take priority over any
     # Nix or host equivalent.
-    export PATH="$UOS_ROOT/toolchains/gleam-1.16.0/bin:$UOS_ROOT/toolchains/opam-ocaml/bin:$UOS_ROOT/toolchains/lean-4.33.0/bin:$PATH"
+    export PATH="$UOS_ROOT/toolchains/gleam-1.16.0/bin:$UOS_ROOT/toolchains/opam-ocaml/bin:$UOS_ROOT/toolchains/lean-4.35.0/bin:$PATH"
     export OPAM_SWITCH_PREFIX="$UOS_ROOT/toolchains/opam-ocaml"
     export CARGO_HOME="$UOS_ROOT/toolchains/cargo"
     export RUSTUP_HOME="$UOS_ROOT/toolchains/rustup"

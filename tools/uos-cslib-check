@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Continuous Lean 4.35.0 (leanprover/cslib + standalone twin) + Mojo System-Wide CSLib Checker
+# (EVOL-CSLIB-01..20, Cumulative Cycles 81..100, Pair #23).
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+exec "$ROOT/tools/mojo" run -I "$ROOT/formal/mojo" "$ROOT/formal/mojo/cslib_systemwide_verification_checker.mojo" "$@"

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# uos-mtest / uos-ltest — 42-Test UOS Lean 4 + Mojo + Gleam Framework (CTest/ETest)
+# Supports: --list-tests (-N), --output-on-failure (-V), and full 9-modality
+# execution across 12 Qwen Control/Data/Observability Loops (C1..C4, D1..D4, O1..O4)
+# ==============================================================================
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+exec ./tools/mojo run -I "$ROOT/formal/mojo" "$ROOT/formal/mojo/uos_mtest_framework.mojo" "$@"

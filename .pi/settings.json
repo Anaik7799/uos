@@ -1,0 +1,28 @@
+{
+  "lastChangelogVersion": "1.5.0",
+  "defaultProvider": "local",
+  "defaultModel": "qwen2.5-coder-7b-instruct",
+  "defaultThinkingLevel": "low",
+  "showHardwareCursor": true,
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "steeringMode": "all",
+  "followUpMode": "all",
+  "showCacheMissNotices": true,
+  "collapseChangelog": false,
+  "models": [
+    "local/qwen2.5-coder-7b-instruct",
+    "openrouter/deepseek/deepseek-v3.2",
+    "openrouter/deepseek/deepseek-v4.1-flash",
+    "openrouter/qwen/qwen3-coder-next",
+    "openrouter/google/gemini-3.5-flash-lite",
+    "openrouter/google/gemini-4-argon",
+    "google/gemini-4-argon"
+  ],
+  "extensions": [
+    "+builtin:mcp",
+    "+builtin:tool-search"
+  ],
+  "hideThinkingBlock": false
+}

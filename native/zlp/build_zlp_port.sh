@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # native/zlp/build_zlp_port.sh
-# Reproducible UOS-ZLP-v3 Builder (Lean 4.33.0 + Zig 0.16.0 Zen 5 AVX-512)
+# Reproducible UOS-ZLP-v3 Builder (Lean 4.35.0 + Zig 0.16.0 Zen 5 AVX-512)
 # Emits untracked runtime binary to <workspace>/var/zlp/uos_zlp_v3_port so zero
 # build artifacts pollute tracked Jujutsu directories.
 # ==============================================================================
@@ -11,12 +11,12 @@ ZLP_DIR="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WS_ROOT="$(CDPATH= cd -- "$ZLP_DIR/../.." && pwd)"
 CANONICAL_ROOT="${UOS_CANONICAL_ROOT:-/home/an/NAS-setup/uos}"
 
-if [[ -d "$WS_ROOT/toolchains/lean-4.33.0" ]]; then
+if [[ -d "$WS_ROOT/toolchains/lean-4.35.0" ]]; then
   TOOLCHAIN_ROOT="$WS_ROOT"
-elif [[ -d "$CANONICAL_ROOT/toolchains/lean-4.33.0" ]]; then
+elif [[ -d "$CANONICAL_ROOT/toolchains/lean-4.35.0" ]]; then
   TOOLCHAIN_ROOT="$CANONICAL_ROOT"
 else
-  echo "ERROR: Lean 4.33.0 toolchain not found in $WS_ROOT or $CANONICAL_ROOT" >&2
+  echo "ERROR: Lean 4.35.0 toolchain not found in $WS_ROOT or $CANONICAL_ROOT" >&2
   exit 2
 fi
 
@@ -24,7 +24,7 @@ fi
 source "$TOOLCHAIN_ROOT/tools/lib/uos-toolchain.sh"
 uos_env
 
-LEAN_ROOT="$TOOLCHAIN_ROOT/toolchains/lean-4.33.0"
+LEAN_ROOT="$TOOLCHAIN_ROOT/toolchains/lean-4.35.0"
 LEAN_BIN="$LEAN_ROOT/bin/lean"
 LEAN_INC="$LEAN_ROOT/include"
 LEAN_LIB="$LEAN_ROOT/lib/lean"

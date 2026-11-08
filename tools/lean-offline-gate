@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Offline zero-sorry formal proof gate (OI04).
-# Toolchain: tools/lean, observed 4.33.0. The Lake package at formal/lean/ruliad
-# pins 4.35.0 with Mathlib SEPARATELY; these two toolchains are deliberately not
-# the same, and every target here must compile Mathlib-free under tools/lean.
+# Toolchain: tools/lean, unified on Lean 4.35.0 in sync with Veil and leanprover/cslib.
+# Every target here compiles Mathlib-free under tools/lean.
 # The gate reports the version it observed rather than asserting one.
 # Zero Python (AGENTS.md §5.4): pure POSIX/Bash + Lean + sha256sum + jq.
 set -euo pipefail

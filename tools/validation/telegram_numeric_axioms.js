@@ -4,7 +4,7 @@ const root='/home/an/NAS-setup/uos',ws=path.resolve(__dirname,'../..'),out=proce
 if(!out||!path.isAbsolute(out)||!out.startsWith(root+'/var/recovery-runtime/')||!Number.isInteger(start)||start<0)throw Error('private compiled output and ordered batch required');
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
 const compiled=JSON.parse(fs.readFileSync(out+'/results.json'));
-const lean=root+'/toolchains/lean-4.33.0/bin/lean';
+const lean=root+'/toolchains/lean-4.35.0/bin/lean';
 if(compiled.calls.length!==compiled.files.length||compiled.calls.some(x=>x.status!==0)||sha(lean)!==compiled.toolchain_sha256)throw Error('complete successful matching compilation required');
 const target=out+'/axiom-results.json';
 let results=start===0?{scope:'Actual compiled theorem axiom closures, including generated theorems; does not assert implementation correspondence',compile_manifest_sha256:sha(out+'/results.json'),calls:[]}:JSON.parse(fs.readFileSync(target));

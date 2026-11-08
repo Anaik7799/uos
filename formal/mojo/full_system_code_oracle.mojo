@@ -24,6 +24,26 @@ from lean_ffi_bridge import (
     verify_lean_mojo_service_mesh_binding_parity,
     verify_lean_mojo_system_directory_parity,
     verify_lean_mojo_sdlc_sre_17_aspect_parity,
+    verify_lean_mojo_qwen_holonic_envelope_parity,
+    verify_lean_mojo_qwen_usecase_router_parity,
+    verify_lean_mojo_unified_ontology_fibration_parity,
+    verify_lean_mojo_fractal_usecase_test_gate_parity,
+    verify_lean_mojo_qwen_profile_simulator_parity,
+    verify_lean_mojo_20_optimization_cycles_parity,
+    verify_lean_mojo_sm75_qwen_hardware_envelope_parity,
+    verify_lean_mojo_public_benchmark_gate_parity,
+    verify_lean_mojo_system_concepts_and_ontology_parity,
+    verify_lean_mojo_polyglot_language_optimization_parity,
+    verify_lean_mojo_polybench_sm75_language_tier_parity,
+    verify_lean_mojo_fractal_holarchy_full_alignment_parity,
+    verify_lean_mojo_evolutionary_wave2_convergence_parity,
+    verify_lean_mojo_full_system_artifact_aspect_component_wiring_parity,
+    verify_lean_mojo_pi_qwen_15cycle_symbiosis_parity,
+    verify_lean_mojo_qwen_12_loops_3840_parity,
+    verify_lean_mojo_qwen_stateful_step_and_lyapunov_640_parity,
+    verify_lean_mojo_fhc_20_cycles_3200_parity,
+    verify_lean_mojo_veil_20_cycles_3200_parity,
+    verify_lean_mojo_cslib_20_cycles_3200_parity,
 )
 from fractal_context_pipeline import verify_fractal_context_pipeline_5_usecases
 from palamedes_cedar_synthesis_lib import (
@@ -323,6 +343,30 @@ def main() raises:
     var svc_mesh_192 = verify_lean_mojo_service_mesh_binding_parity()
     var sys_dir_2080 = verify_lean_mojo_system_directory_parity()
     var sdlc_sre_1632 = verify_lean_mojo_sdlc_sre_17_aspect_parity()
+    var qwen_hol_3200 = verify_lean_mojo_qwen_holonic_envelope_parity()
+    var qwen_uc_1600 = verify_lean_mojo_qwen_usecase_router_parity()
+    var ont_fib_1500 = verify_lean_mojo_unified_ontology_fibration_parity()
+    var ftc_gate_3200 = verify_lean_mojo_fractal_usecase_test_gate_parity()
+    var sim_prof_1600 = verify_lean_mojo_qwen_profile_simulator_parity()
+    var opt_20_3200 = verify_lean_mojo_20_optimization_cycles_parity()
+    var sm75_sim_3840 = verify_lean_mojo_sm75_qwen_hardware_envelope_parity()
+    var pub_bm_2560 = verify_lean_mojo_public_benchmark_gate_parity()
+    var sys_ont_3200 = verify_lean_mojo_system_concepts_and_ontology_parity()
+    var poly_lang_3840 = verify_lean_mojo_polyglot_language_optimization_parity()
+    var polybench_sm75_3840 = verify_lean_mojo_polybench_sm75_language_tier_parity()
+    var frac_hol_3200 = verify_lean_mojo_fractal_holarchy_full_alignment_parity()
+    var wave2_conv_3200 = verify_lean_mojo_evolutionary_wave2_convergence_parity()
+    var wave3_wire_3200 = verify_lean_mojo_full_system_artifact_aspect_component_wiring_parity()
+    var wave4_sym_3200 = verify_lean_mojo_pi_qwen_15cycle_symbiosis_parity()
+    var qwen_loops_3840 = verify_lean_mojo_qwen_12_loops_3840_parity()
+    var qwen_step_lyapunov_640 = verify_lean_mojo_qwen_stateful_step_and_lyapunov_640_parity()
+    var fhc_20cycles_3200 = verify_lean_mojo_fhc_20_cycles_3200_parity()
+    var veil_20cycles_3200 = verify_lean_mojo_veil_20_cycles_3200_parity()
+    var cslib_20cycles_3200 = verify_lean_mojo_cslib_20_cycles_3200_parity()
+    var qloop_thms = count("grep -cE '^theorem THM_QLOOP_' " + String(TWIN) + " 2>/dev/null")
+    var fhc_thms = count("grep -cE '^theorem THM_FHC_' " + String(TWIN) + " 2>/dev/null")
+    var veil_bridge_thms = count("grep -cE '^theorem THM_VEIL_BRIDGE_' " + String(TWIN) + " 2>/dev/null")
+    var cslib_bridge_thms = count("grep -cE '^theorem THM_CSLIB_BRIDGE_' " + String(TWIN) + " 2>/dev/null")
     var api_ontology_7 = count("grep -c '\"api_id\":' governance/agents/policy/20261107-2046-uos-agent-provider-api-holarchy-fpp-ontology.json 2>/dev/null")
     r.observe_int(String("agent-failover-selftest-pass"), failover_selftest_ok)
     r.observe_int(String("lean-mojo-ffi-32-failover-states"), lean_mojo_32_states)
@@ -337,7 +381,26 @@ def main() raises:
     r.observe_int(String("service-mesh-binding-ffi-192-states"), svc_mesh_192)
     r.observe_int(String("system-directory-ffi-2080-states"), sys_dir_2080)
     r.observe_int(String("sdlc-sre-17-aspect-ffi-1632-states"), sdlc_sre_1632)
-    r.world_or_blind(String("provider-api-7-ontology-and-392-state-c-abi-verified"), api_ontology_7 >= 0 and api_trans_392 >= 0 and api_rec_64 >= 0 and svc_mesh_192 >= 0 and sys_dir_2080 >= 0 and sdlc_sre_1632 >= 0, api_ontology_7 == 7 and api_trans_392 == 392 and api_rec_64 == 64 and svc_mesh_192 == 192 and sys_dir_2080 == 2080 and sdlc_sre_1632 == 1632)
+    r.observe_int(String("qwen-holonic-envelope-ffi-3200-states"), qwen_hol_3200)
+    r.observe_int(String("qwen-usecase-router-ffi-1600-states"), qwen_uc_1600)
+    r.observe_int(String("unified-ontology-fibration-ffi-1500-states"), ont_fib_1500)
+    r.observe_int(String("fractal-usecase-test-gate-ffi-3200-states"), ftc_gate_3200)
+    r.observe_int(String("qwen-profile-simulator-ffi-1600-states"), sim_prof_1600)
+    r.observe_int(String("twenty-optimization-cycles-ffi-3200-states"), opt_20_3200)
+    r.observe_int(String("sm75-qwen-hardware-simulator-ffi-3840-states"), sm75_sim_3840)
+    r.observe_int(String("public-benchmark-gate-ffi-2560-states"), pub_bm_2560)
+    r.observe_int(String("system-concepts-ontology-ffi-3200-states"), sys_ont_3200)
+    r.observe_int(String("polyglot-language-optimization-ffi-3840-states"), poly_lang_3840)
+    r.observe_int(String("polybench-sm75-language-tier-ffi-3840-states"), polybench_sm75_3840)
+    r.observe_int(String("fractal-holarchy-full-alignment-ffi-3200-states"), frac_hol_3200)
+    r.observe_int(String("evolutionary-wave2-convergence-ffi-3200-states"), wave2_conv_3200)
+    r.observe_int(String("full-system-artifact-aspect-wiring-ffi-3200-states"), wave3_wire_3200)
+    r.observe_int(String("wave4-pi-qwen-15cycle-symbiosis-ffi-3200-states"), wave4_sym_3200)
+    r.observe_int(String("qwen-12-loops-control-data-obs-3840-states"), qwen_loops_3840 + qwen_step_lyapunov_640)
+    r.observe_int(String("fhc-20-cycles-40fpp-170holon-5caste-3200-states"), fhc_20cycles_3200)
+    r.observe_int(String("veil-20-cycles-6plane-km-qwen-escalation-3200-states"), veil_20cycles_3200)
+    r.observe_int(String("cslib-20-cycles-8pillar-systemwide-3200-states"), cslib_20cycles_3200)
+    r.world_or_blind(String("provider-api-7-ontology-and-392-state-c-abi-verified"), api_ontology_7 >= 0 and api_trans_392 >= 0 and api_rec_64 >= 0 and svc_mesh_192 >= 0 and sys_dir_2080 >= 0 and sdlc_sre_1632 >= 0 and qwen_hol_3200 >= 0 and qwen_uc_1600 >= 0 and ont_fib_1500 >= 0 and ftc_gate_3200 >= 0 and sim_prof_1600 >= 0 and opt_20_3200 >= 0 and sm75_sim_3840 >= 0 and pub_bm_2560 >= 0 and sys_ont_3200 >= 0 and poly_lang_3840 >= 0 and polybench_sm75_3840 >= 0 and frac_hol_3200 >= 0 and wave2_conv_3200 >= 0 and wave3_wire_3200 >= 0 and wave4_sym_3200 >= 0 and qwen_loops_3840 >= 0 and qwen_step_lyapunov_640 >= 0 and fhc_20cycles_3200 >= 0 and veil_20cycles_3200 >= 0 and cslib_20cycles_3200 >= 0 and qloop_thms >= 0 and fhc_thms >= 0 and veil_bridge_thms >= 0 and cslib_bridge_thms >= 0, api_ontology_7 == 7 and api_trans_392 == 392 and api_rec_64 == 64 and svc_mesh_192 == 192 and sys_dir_2080 == 2080 and sdlc_sre_1632 == 1632 and qwen_hol_3200 == 3200 and qwen_uc_1600 == 1600 and ont_fib_1500 == 1500 and ftc_gate_3200 == 3200 and sim_prof_1600 == 1600 and opt_20_3200 == 3200 and sm75_sim_3840 == 3840 and pub_bm_2560 == 2560 and sys_ont_3200 == 3200 and poly_lang_3840 == 3840 and polybench_sm75_3840 == 3840 and frac_hol_3200 == 3200 and wave2_conv_3200 == 3200 and wave3_wire_3200 == 3200 and wave4_sym_3200 == 3200 and qwen_loops_3840 == 3840 and qwen_step_lyapunov_640 == 640 and fhc_20cycles_3200 == 3200 and veil_20cycles_3200 == 3200 and cslib_20cycles_3200 == 3200 and qloop_thms == 5 and fhc_thms == 6 and veil_bridge_thms == 6 and cslib_bridge_thms == 6)
     r.world_or_blind(String("agent-failover-controller-and-gleam-present"), failover_selftest_ok >= 0 and gleam_failover_fn >= 0, failover_selftest_ok == 1 and gleam_failover_fn >= 1)
     r.world_or_blind(String("in-process-lean-mojo-c-abi-14-exports-verified"), lean_mojo_32_states >= 0 and cedar_symcc_24_states >= 0 and dag_palamedes_72_states >= 0, lean_c_abi_14_ok and lean_mojo_32_states == 32 and cedar_symcc_24_states == 24 and dag_palamedes_72_states == 72 and palamedes_synth_ok == 1)
 
@@ -369,10 +432,10 @@ def main() raises:
             mono_16 == 16 and expr_4 == 4 and dag_palamedes_72_states == 72)
         r.algebra(
             String("fsys-evo15-batched-tpe-and-palamedes-bst-laws"),
-            batch_tpe_36 == 36 and bst_10 == 10 and twin_thms == 62)
+            batch_tpe_36 == 36 and bst_10 == 10 and twin_thms == 106)
         r.algebra(
             String("fsys-fractal-context-pipeline-and-inductive-closure"),
-            fcp_ffi_8 == 16 and fcp_usecases_5 == 5 and sim_rt_32 == 32 and api_rec_64 == 64 and svc_mesh_192 == 192 and sys_dir_2080 == 2080 and sdlc_sre_1632 == 1632 and twin_thms == 62)
+            fcp_ffi_8 == 16 and fcp_usecases_5 == 5 and sim_rt_32 == 32 and api_rec_64 == 64 and svc_mesh_192 == 192 and sys_dir_2080 == 2080 and sdlc_sre_1632 == 1632 and qwen_hol_3200 == 3200 and qwen_uc_1600 == 1600 and ont_fib_1500 == 1500 and ftc_gate_3200 == 3200 and sim_prof_1600 == 1600 and opt_20_3200 == 3200 and sm75_sim_3840 == 3840 and pub_bm_2560 == 2560 and sys_ont_3200 == 3200 and poly_lang_3840 == 3840 and polybench_sm75_3840 == 3840 and frac_hol_3200 == 3200 and wave2_conv_3200 == 3200 and wave3_wire_3200 == 3200 and wave4_sym_3200 == 3200 and twin_thms == 106)
 
     # ── 5. Negative Controls (SC-VP-04: instrument & boundary discrimination) ─
     r.mutation_probe(

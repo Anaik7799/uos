@@ -296,16 +296,16 @@ theorem step_preserves (s : State) (h : Inv s) (event : Event) : Inv (step s eve
 
 theorem step_epoch_monotone (s : State) (event : Event) : s.epoch ≤ (step s event).epoch := by
   cases event <;>
-    simp [step, recordPacket, nominate, admitCandidate, acquire, release,
+    dsimp [step, recordPacket, nominate, admitCandidate, acquire, release,
       reserve, settle, applyAction, observe, tick]
-  all_goals split <;> (try split) <;> simp_all
+  all_goals (try split) <;> (try split) <;> (try dsimp) <;> omega
 
 theorem step_authority_unchanged (s : State) (event : Event) :
     (step s event).authority = s.authority := by
   cases event <;>
-    simp [step, recordPacket, nominate, admitCandidate, acquire, release,
+    dsimp [step, recordPacket, nominate, admitCandidate, acquire, release,
       reserve, settle, applyAction, observe, tick]
-  all_goals split <;> (try split) <;> simp_all
+  all_goals (try split) <;> (try split) <;> rfl
 
 def run (s : State) (events : List Event) : State := events.foldl step s
 

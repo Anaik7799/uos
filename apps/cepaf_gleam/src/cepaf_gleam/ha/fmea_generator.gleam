@@ -477,3 +477,101 @@ pub fn summary(entries: List(FmeaEntry)) -> String {
   <> " P3="
   <> int.to_string(p3)
 }
+
+/// Complete 10-Layer (`L0..L9`) FPP-Holon-Caste + LocalMaxQwen SM75 FMEA catalog (`30` entries, `EVOL-FHC-06`, `THM_FHC_05`).
+/// Extends `generate_system_fmea()` (`L0..L7`, `20` entries) with 10 FPP/Holon/Caste/Qwen entries across `L0..L9`
+/// including `L8_EVOLUTIONARY` and `L9_SOVEREIGN` while preserving `generate_system_fmea()` byte-for-byte.
+pub fn generate_full_l0_to_l9_fhc_fmea() -> List(FmeaEntry) {
+  list.append(generate_system_fmea(), [
+    entry(
+      "l0_services_provenance_ev93_fence (FPP #2 / Caste01)",
+      "Unadmitted EV>93 claim or forged coordinator event attempts admission bypass",
+      10,
+      2,
+      1,
+      "SC-PROVENANCE-001 admitted_ev_ceiling=93 hard gate + append-only SQLite triggers",
+      "L0_CONSTITUTIONAL",
+    ),
+    entry(
+      "l1_services_nvme_storage_interlock (FPP #6 / Caste05)",
+      "Rook-Ceph OSD allocation targets host OS NVMe serial 25503L801736",
+      10,
+      1,
+      1,
+      "HARD_DENIED_SYSTEM_OS_SERIAL compile-time and runtime FPP companion interlock",
+      "L1_PHYSICAL_STORAGE",
+    ),
+    entry(
+      "l2_engines_zlp_v3_lean_zig_hyperplane (FPP #9 / Caste04)",
+      "Cross-plane C-ABI Export #1..#43 parity mismatch or non-deterministic float drift",
+      8,
+      2,
+      1,
+      "28-vector C-ABI parity bridge + fixed-point basis-point arithmetic",
+      "L2_EXECUTION_VM",
+    ),
+    entry(
+      "l3_apps_otp_4domain_root_supervisor (FPP #12 / Caste05)",
+      "FPP actor mailbox saturation or companion FSM deadlock under burst telemetry",
+      7,
+      3,
+      2,
+      "Bounded OTP restart intensity + 5-regime Kalman/PID/Lyapunov reflex damping",
+      "L3_SUPERVISION_OTP",
+    ),
+    entry(
+      "l4_intel_fmea_stpa_rete_salience (FPP #19 / Caste02)",
+      "11-domain Rete-UL conflict set disagrees with 4-UCA STPA hazard or STAMP CA",
+      8,
+      2,
+      2,
+      "Salience-weighted Rete-UL + 4-UCA STPA + raw RPN >= 200 Jidoka HOLD veto",
+      "L4_CYBERNETIC_CONTROL",
+    ),
+    entry(
+      "l5_intel_17aspect_janus_holon_sim (FPP #23 / Caste01)",
+      "Anti-greenwashing monoidal Holon composition violated (gamma_up=0 masked)",
+      8,
+      2,
+      1,
+      "Strict boolean-AND upward compliance gamma_up and min(alpha_down) monoidal fold",
+      "L5_KNOWLEDGE_ONTOLOGY",
+    ),
+    entry(
+      "l6_intel_5caste_stigmergic_hive (FPP #27 / Caste01 + LocalMaxQwen SM75)",
+      "SM75 Qwen 7B draft fails compiler check after k=2 bounded retries or Caste WIP overflow",
+      6,
+      3,
+      1,
+      "Deterministic k=2 bounded diagnostic retry -> Sovereign escalation (Codex/Claude/AGY)",
+      "L6_SWARM_ORCHESTRATION",
+    ),
+    entry(
+      "l7_apps_lustre_wisp_cockpit_ui (FPP #28 / Caste04)",
+      "Dark Cockpit alert overload or stale SSE projection hides active P0 FMEA hazard",
+      6,
+      2,
+      2,
+      "Dark Cockpit quiet-by-default filter + live 18/18 checklist & FMEA badge",
+      "L7_INTERFACE_COCKPIT",
+    ),
+    entry(
+      "l8_intel_25cycle_evolution_engine (FPP #35 / Caste03)",
+      "Evolutionary wave mutation introduces cross-layer aspect or caste ownership drift",
+      8,
+      2,
+      1,
+      "THM_FHC_01..06 20-cycle FPP-Holon-Caste verification gate + Stan/Brier calibration",
+      "L8_EVOLUTIONARY",
+    ),
+    entry(
+      "l9_intel_tri_sovereign_release_authority (FPP #39 / Caste01)",
+      "Single-model or unverified release cutover attempted without 2oo3 sovereign quorum",
+      10,
+      1,
+      1,
+      "Tri-Sovereign 2oo3 quorum (AGY + Codex + Claude) + immutable capsule SHA-256 fence",
+      "L9_SOVEREIGN",
+    ),
+  ])
+}

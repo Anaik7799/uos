@@ -198,6 +198,14 @@ Equating their objects establishes strict containment with zero truncation leaka
 +-------------------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[B] --> [C]
+[C] --> [D]
+[D] --> [E]
+```
+
 ```mermaid
 flowchart TD
     subgraph NAS1["nas-1 (Harness Client)"]
@@ -253,3 +261,4 @@ flowchart TD
 [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk)
 
 UOS footer: document and component evidence do not grant system admission.
+

@@ -1,0 +1,354 @@
+
+==================================================
+ HARNESS <-> MODEL INTERACTION ONTOLOGY (measured)
+==================================================
+
+corpus
+  transcript files scanned             172
+  sessions with >=1 model call         164
+  api-request records (calls)         8087
+  api-request-blob records           16208
+  harness-local records (unclass)    77031
+  blobs over the 128 KB scan cap       211  (1.3%)
+
+facet A -- interaction kind
+  A2_user_turn                           3904   48.3%
+  A3_tool_continuation                   2679   33.1%
+  A4_subagent                            1340   16.6%
+  A1_bootstrap                            164    2.0%
+
+facet B -- context discipline (relational, 2 classes)
+  B1_full_prefix                         7906   97.8%
+  B4_prefix_break                         181    2.2%
+
+facet B independent flags (NOT classes -- standing config)
+  clear_thinking edit present         8087  100.0%
+  compaction edit present                0    0.0%
+
+facet C1 -- model
+  claude-opus-5                          4640   57.4%
+  claude-fable-5-1                       1667   20.6%
+  claude-sonnet-5-5                       841   10.4%
+  claude-opus-5-5                         837   10.3%
+  claude-opus-4-6                          99    1.2%
+  claude-haiku-5-5                          1    0.0%
+  claude-haiku-4-5                          1    0.0%
+  claude-sonnet-4-6                         1    0.0%
+
+facet C2 -- effort
+  medium                                 5165   63.9%
+  high                                   2501   30.9%
+  max                                     409    5.1%
+  low                                      11    0.1%
+  (unset)                                   1    0.0%
+
+facet C3 -- thinking mode
+  adaptive                               8086  100.0%
+  enabled                                   1    0.0%
+
+facet E -- response shape (per assistant blob)
+  E4_thinking_then_act                   2910   56.3%
+  E2_tool_single                         1699   32.9%
+  E3_tool_parallel                        540   10.5%
+  E1_text_only                             16    0.3%
+
+querySource
+  repl_main_thread                       5782   71.5%
+  agent:builtin:general-purpose          1372   17.0%
+  sdk                                     914   11.3%
+  agent:builtin:Explore                    19    0.2%
+
+max_tokens requested
+  64000                                  6406   79.2%
+  128000                                 1679   20.8%
+  32000                                     2    0.0%
+
+facet A x facet B co-occurrence
+  A2_user_turn x B1_full_prefix          3901   48.2%
+  A3_tool_continuation x B1_full_prefix     2667   33.0%
+  A4_subagent x B1_full_prefix           1338   16.5%
+  A1_bootstrap x B4_prefix_break          164    2.0%
+  A3_tool_continuation x B4_prefix_break       12    0.1%
+  A2_user_turn x B4_prefix_break            3    0.0%
+  A4_subagent x B4_prefix_break             2    0.0%
+
+tool invocations by name (closed allowlist)
+  Bash                                   5025   78.9%
+  Edit                                    570    8.9%
+  Read                                    482    7.6%
+  Grep                                    150    2.4%
+  Write                                    61    1.0%
+  Agent                                    19    0.3%
+  Glob                                     17    0.3%
+  SendMessage                              11    0.2%
+  ToolSearch                                9    0.1%
+  Artifact                                  7    0.1%
+  WebFetch                                  5    0.1%
+  Monitor                                   5    0.1%
+  AskUserQuestion                           4    0.1%
+  WebSearch                                 3    0.0%
+  Skill                                     1    0.0%
+
+tool-continuation run length (ping-pong depth)
+  1                                       223   39.3%
+  2                                        68   12.0%
+  3                                        59   10.4%
+  4                                        42    7.4%
+  5                                        30    5.3%
+  6                                        25    4.4%
+  7                                        15    2.6%
+  8                                        14    2.5%
+  10                                       13    2.3%
+  9                                        11    1.9%
+  11                                       11    1.9%
+  13                                        7    1.2%
+  14                                        6    1.1%
+  12                                        6    1.1%
+  17                                        6    1.1%
+  15                                        5    0.9%
+  16                                        5    0.9%
+  18                                        4    0.7%
+  19                                        3    0.5%
+  28                                        2    0.4%
+  24                                        2    0.4%
+  23                                        2    0.4%
+  20                                        2    0.4%
+  40                                        1    0.2%
+  30                                        1    0.2%
+  73                                        1    0.2%
+  34                                        1    0.2%
+  56                                        1    0.2%
+  21                                        1    0.2%
+  31                                        1    0.2%
+
+facet F -- subject domain, PRESENCE (multi-label, per blob)
+  F16_formal                             2846   15.1%
+  F12_vcs_jj                             2768   14.7%
+  F14_sa_plan                            2495   13.3%
+  F07_env_infra                          1585    8.4%
+  F06_sre                                1310    7.0%
+  F05_sdlc                               1160    6.2%
+  F04_journal                             929    4.9%
+  F08_agent_instruction                   903    4.8%
+  F10_skills                              815    4.3%
+  F09_optimization                        763    4.1%
+  F17_diagram                             661    3.5%
+  F13_gates                               519    2.8%
+  F15_provenance                          506    2.7%
+  F02_zk                                  438    2.3%
+  F01_km_triad                            425    2.3%
+  F03_wiki                                385    2.0%
+  F11_superpowers                         317    1.7%
+
+facet F -- subject domain, PRIMARY (densest marker set)
+  F00_none                               9689   59.8%
+  F12_vcs_jj                             1279    7.9%
+  F16_formal                             1271    7.8%
+  F14_sa_plan                             985    6.1%
+  F07_env_infra                           748    4.6%
+  F05_sdlc                                466    2.9%
+  F06_sre                                 450    2.8%
+  F04_journal                             279    1.7%
+  F10_skills                              254    1.6%
+  F08_agent_instruction                   252    1.6%
+  F11_superpowers                         153    0.9%
+  F09_optimization                        119    0.7%
+  F02_zk                                   68    0.4%
+  F13_gates                                54    0.3%
+  F01_km_triad                             52    0.3%
+  F17_diagram                              40    0.2%
+  F03_wiki                                 27    0.2%
+  F15_provenance                           22    0.1%
+
+facet F -- raw marker occurrences
+  F16_formal                             5067   14.6%
+  F14_sa_plan                            4499   13.0%
+  F12_vcs_jj                             3374    9.7%
+  F07_env_infra                          3371    9.7%
+  F06_sre                                2984    8.6%
+  F05_sdlc                               2077    6.0%
+  F08_agent_instruction                  2066    6.0%
+  F04_journal                            1588    4.6%
+  F09_optimization                       1456    4.2%
+  F10_skills                             1357    3.9%
+  F15_provenance                         1206    3.5%
+  F11_superpowers                        1150    3.3%
+  F17_diagram                            1067    3.1%
+  F01_km_triad                           1005    2.9%
+  F02_zk                                  971    2.8%
+  F13_gates                               849    2.5%
+  F03_wiki                                536    1.5%
+
+facet F x facet E -- which domains provoke which response shape
+  F16_formal x E4_thinking_then_act                  1407
+  F12_vcs_jj x U0_user_payload                       1265
+  F14_sa_plan x U0_user_payload                      1206
+  F12_vcs_jj x E4_thinking_then_act                   819
+  F06_sre x U0_user_payload                           757
+  F16_formal x U0_user_payload                        711
+  F14_sa_plan x E4_thinking_then_act                  683
+  F07_env_infra x U0_user_payload                     677
+  F05_sdlc x U0_user_payload                          669
+  F10_skills x U0_user_payload                        641
+  F08_agent_instruction x U0_user_payload             619
+  F09_optimization x U0_user_payload                  598
+  F04_journal x U0_user_payload                       575
+  F07_env_infra x E4_thinking_then_act                497
+  F16_formal x E2_tool_single                         495
+  F17_diagram x U0_user_payload                       472
+  F12_vcs_jj x E2_tool_single                         395
+  F14_sa_plan x E2_tool_single                        379
+  F13_gates x U0_user_payload                         378
+  F02_zk x U0_user_payload                            348
+  F15_provenance x U0_user_payload                    348
+  F01_km_triad x U0_user_payload                      341
+  F07_env_infra x E2_tool_single                      311
+  F03_wiki x U0_user_payload                          302
+  F12_vcs_jj x E3_tool_parallel                       284
+  F06_sre x E4_thinking_then_act                      277
+  F11_superpowers x U0_user_payload                   274
+  F05_sdlc x E4_thinking_then_act                     256
+
+facet F co-occurrence -- domains that travel together (top 24)
+  F12_vcs_jj + F14_sa_plan                               1177
+  F14_sa_plan + F16_formal                               1142
+  F05_sdlc + F14_sa_plan                                  945
+  F12_vcs_jj + F16_formal                                 910
+  F06_sre + F14_sa_plan                                   902
+  F07_env_infra + F16_formal                              871
+  F07_env_infra + F12_vcs_jj                              795
+  F07_env_infra + F14_sa_plan                             782
+  F06_sre + F12_vcs_jj                                    739
+  F05_sdlc + F12_vcs_jj                                   713
+  F06_sre + F16_formal                                    712
+  F04_journal + F14_sa_plan                               635
+  F06_sre + F07_env_infra                                 633
+  F08_agent_instruction + F14_sa_plan                     623
+  F05_sdlc + F07_env_infra                                606
+  F08_agent_instruction + F16_formal                      598
+  F10_skills + F12_vcs_jj                                 592
+  F04_journal + F12_vcs_jj                                577
+  F05_sdlc + F16_formal                                   562
+  F09_optimization + F14_sa_plan                          551
+  F04_journal + F06_sre                                   547
+  F04_journal + F16_formal                                542
+  F09_optimization + F16_formal                           539
+  F04_journal + F17_diagram                               531
+
+==================================================
+ AUTHORED CORPUS (what the exchanges produced)
+==================================================
+  files scanned                       5477
+  total bytes                       229301 KB
+
+authored files by tree
+  docs/reviews                           1616   29.5%
+  governance/planning                    1348   24.6%
+  docs/journal                            904   16.5%
+  docs/design                             382    7.0%
+  governance/agents                       293    5.3%
+  docs/wiki                               231    4.2%
+  docs/evidence                           198    3.6%
+  docs/zk                                 186    3.4%
+  contracts/rules                          81    1.5%
+  governance/sources                       71    1.3%
+  docs/plans                               34    0.6%
+  governance/capability-inventory          27    0.5%
+  docs/sop                                 21    0.4%
+  governance/testing                       12    0.2%
+  docs/archive                             11    0.2%
+  docs/handover                             9    0.2%
+  docs/superpowers                          5    0.1%
+  docs/reports                              3    0.1%
+  docs/sre                                  3    0.1%
+  docs/manual                               3    0.1%
+  contracts/evidence                        3    0.1%
+  contracts/mcp                             2    0.0%
+  docs/ontology                             2    0.0%
+  contracts/openclaw                        2    0.0%
+  contracts/inference                       2    0.0%
+  docs/prompts                              2    0.0%
+  docs/guides                               2    0.0%
+  governance/provenance                     2    0.0%
+  governance/prompts                        2    0.0%
+  contracts/spatiotemporal                  2    0.0%
+  docs/receipts                             2    0.0%
+  docs/music                                2    0.0%
+  docs/rules                                1    0.0%
+  governance/README.md                      1    0.0%
+  governance/vcs                            1    0.0%
+  docs/README.md                            1    0.0%
+  contracts/nif                             1    0.0%
+  contracts/vfs                             1    0.0%
+  contracts/README.md                       1    0.0%
+  contracts/safety                          1    0.0%
+  docs/hermes                               1    0.0%
+  contracts/api                             1    0.0%
+  contracts/zenoh                           1    0.0%
+  contracts/schemas                         1    0.0%
+  contracts/specs                           1    0.0%
+  governance/advisory                       1    0.0%
+
+facet F in authored corpus, PRESENCE
+  F14_sa_plan                            4112   14.7%
+  F05_sdlc                               2978   10.6%
+  F07_env_infra                          2637    9.4%
+  F16_formal                             2336    8.3%
+  F06_sre                                2269    8.1%
+  F12_vcs_jj                             1842    6.6%
+  F09_optimization                       1780    6.3%
+  F02_zk                                 1730    6.2%
+  F04_journal                            1282    4.6%
+  F08_agent_instruction                  1217    4.3%
+  F03_wiki                               1168    4.2%
+  F15_provenance                         1145    4.1%
+  F01_km_triad                           1114    4.0%
+  F13_gates                               882    3.1%
+  F17_diagram                             847    3.0%
+  F10_skills                              540    1.9%
+  F11_superpowers                         175    0.6%
+
+facet F in authored corpus, PRIMARY
+  F14_sa_plan                            1818   33.2%
+  F07_env_infra                           814   14.9%
+  F12_vcs_jj                              422    7.7%
+  F16_formal                              402    7.3%
+  F00_none                                354    6.5%
+  F05_sdlc                                333    6.1%
+  F06_sre                                 299    5.5%
+  F02_zk                                  254    4.6%
+  F09_optimization                        218    4.0%
+  F03_wiki                                175    3.2%
+  F08_agent_instruction                   120    2.2%
+  F10_skills                              115    2.1%
+  F04_journal                              85    1.6%
+  F13_gates                                32    0.6%
+  F01_km_triad                             14    0.3%
+  F15_provenance                           13    0.2%
+  F17_diagram                               7    0.1%
+  F11_superpowers                           2    0.0%
+
+facet D -- payload composition (ESTIMATED byte shares)
+  instruction/rule text              21300 KB   17.2%
+  tool schemas                        1881 KB    1.5%
+  conversation transcript            97290 KB   78.4%
+  injected <system-reminder>          3668 KB    3.0%
+  dominant class                  D3_transcript_heavy
+
+derived interaction metrics
+  calls per session (mean)            49.3
+  prefix breaks                        181  (2.2% of calls)
+  reused prefix blobs per call         3.4
+  cache breakpoints per call           3.0
+  1h-TTL breakpoints per call          2.5
+  global-scope breakpoints/call        0.8
+  reminder blocks per call             0.2
+  tool_use blocks per call            0.79
+  thinking blocks per call            0.44
+
+BOUNDARY: Claude-harness logs only. ~/.codex (9.8 GB) and
+~/.gemini/antigravity (5.1 GB) are presence-only private state
+per SC-PEER-ARTIFACTS-001 rule 4 and were NOT opened. No
+cross-harness claim is made. Byte shares are ESTIMATES from
+marker scanning, not exact tokenizer accounting.
+This measurement grants no admission. EV ceiling 93.

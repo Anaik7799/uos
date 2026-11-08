@@ -1570,3 +1570,845 @@ pub const hard_denied_system_os_serial = "25503L801736"
 pub fn verify_nvme_interlock_serial(candidate_serial: String) -> Bool {
   candidate_serial != "" && candidate_serial != hard_denied_system_os_serial
 }
+
+/// Deterministic 3,200-state Local Qwen 8-Pillar Holonic Execution Envelope verifier
+/// (`THM_FSYS_63..64` / `THM_GUARD_28`, Export #28 `uos_lean_verify_qwen_holonic_execution_envelope`).
+pub fn verify_qwen_holonic_execution_envelope(
+  holarchy_layer: Int,
+  fpp_actor_id: Int,
+  caste_idx: Int,
+  mojo_max_sm75_ready: Bool,
+  lean_c_abi_and_mcp_ok: Bool,
+  zenoh_and_otel_128_ok: Bool,
+) -> Bool {
+  holarchy_layer >= 0
+  && holarchy_layer < 10
+  && fpp_actor_id >= 0
+  && fpp_actor_id < 40
+  && fpp_actor_id / 4 == holarchy_layer
+  && caste_idx >= 0
+  && caste_idx < 5
+  && mojo_max_sm75_ready
+  && lean_c_abi_and_mcp_ok
+  && zenoh_and_otel_128_ok
+}
+
+/// Maps a canonical Local Qwen `usecase_id` (`0..9`, `UC00..UC09`) to its optimal
+/// runtime profile code (`1..5`: `P0_Deterministic_Grammar` .. `P4_LowLatency_SSE_Stream`),
+/// or `0` when out of bounds (`THM_FSYS_65..66` / `THM_GUARD_29`).
+pub fn expected_qwen_usecase_profile_code(usecase_id: Int) -> Int {
+  case usecase_id {
+    0 | 4 | 5 -> 1
+    1 | 2 | 3 -> 2
+    6 | 8 -> 3
+    7 -> 4
+    9 -> 5
+    _ -> 0
+  }
+}
+
+/// Maps a canonical Local Qwen `usecase_id` (`0..9`, `UC00..UC09`) to its exact
+/// Real-World UOS Model Assignment Code (`1..5`), or `0` when out of bounds (`THM_FSYS_65..66`):
+/// - `1` (`Qwen+AGY`): `UC00` (Pi Compaction & thoughtSignature), `UC04` (Fractal RCA/5-Whys/Sa-plan), `UC08` (KM Triad & SC-JOURNAL-v3 Collation)
+/// - `2` (`Qwen+Claude`): `UC01` (`sm_75` CUDA/PTX Shim & Mojo Tensor Core Kernel)
+/// - `3` (`Qwen+Codex`): `UC02` (Lean 4 Digital Twin & C-ABI Proving), `UC05` (`uos-harness` 104-Route MCP & Zenoh/OTel Mesh)
+/// - `4` (`Qwen+TriAgent`): `UC03` (Differential Mojo Oracles & Zero-Python), `UC06` (Gleam/OTP Supervision & 392-State Provider API), `UC07` (Tri-Agent 17-Aspect SDLC/SRE Dual-Slot Swarm)
+/// - `5` (`QwenAutonomous`): `UC09` (100% Autonomous `pi-local+qwen` CLI & Real-Time SSE Cockpit)
+pub fn expected_qwen_model_assignment_code(usecase_id: Int) -> Int {
+  case usecase_id {
+    0 | 4 | 8 -> 1
+    1 -> 2
+    2 | 5 -> 3
+    3 | 6 | 7 -> 4
+    9 -> 5
+    _ -> 0
+  }
+}
+
+/// Deterministic 1,600-state Local Qwen 10-Usecase Runtime Engine Router
+/// (`THM_FSYS_65..66` / `THM_GUARD_29`, Export #29 `uos_lean_route_optimal_qwen_usecase`).
+/// Returns the optimal profile code (`1..5`) or `0` (Fail-Closed Veto).
+pub fn route_optimal_qwen_usecase(
+  usecase_id: Int,
+  holarchy_layer: Int,
+  prompt_fits_16k_or_compacted: Bool,
+  backend_ready: Bool,
+  holonic_envelope_ok: Bool,
+  kv_prefix_cache_ok: Bool,
+) -> Int {
+  case
+    usecase_id >= 0
+    && usecase_id < 10
+    && holarchy_layer == usecase_id
+    && prompt_fits_16k_or_compacted
+    && backend_ready
+    && holonic_envelope_ok
+    && kv_prefix_cache_ok
+  {
+    True -> expected_qwen_usecase_profile_code(usecase_id)
+    False -> 0
+  }
+}
+
+/// Exact bijection `usecase_id (0..9) -> ontology_uc_id (1..10)` between `UC00..UC09`
+/// and the 10 Harness↔Model Interaction Ontology Optimization Use-Cases (`UC-1..UC-10`)
+/// (`THM_FSYS_67..68` / `THM_GUARD_30`):
+/// - `0 (UC00, L0 Constitutional)` -> `3 (UC-3: Prompt Prefix Layout Discipline)`
+/// - `1 (UC01, L1 Kinetic)`        -> `5 (UC-5: Read-Batching & Symbol-Index Hinting)`
+/// - `2 (UC02, L2 Structural)`     -> `9 (UC-9: Pre-Commit Formal Gate / Lean 4 Proofs)`
+/// - `3 (UC03, L3 Reflexive)`      -> `2 (UC-2: Thinking-Budget Cap by Facet A × Facet D)`
+/// - `4 (UC04, L4 Metabolic)`      -> `1 (UC-1: Reminder-Stripping & Delta Injection at A3)`
+/// - `5 (UC05, L5 Regulatory)`     -> `7 (UC-7: Tool-Failure Short-Circuit / Jidoka Triage)`
+/// - `6 (UC06, L6 Cognitive)`      -> `6 (UC-6: Proactive Compaction at 80% Context)`
+/// - `7 (UC07, L7 Societal)`       -> `8 (UC-8: Single-Flight #km-triad Bundle & Dual-Slot Swarm)`
+/// - `8 (UC08, L8 Evolutionary)`   -> `4 (UC-4: Tier Routing per SC-INTEL-ROUTING-001 R1/R2)`
+/// - `9 (UC09, L9 Sovereign)`      -> `10 (UC-10: Sovereign Subagent & Interactive SSE Cockpit)`
+pub fn expected_ontology_uc_id(usecase_id: Int) -> Int {
+  case usecase_id {
+    0 -> 3
+    1 -> 5
+    2 -> 9
+    3 -> 2
+    4 -> 1
+    5 -> 7
+    6 -> 6
+    7 -> 8
+    8 -> 4
+    9 -> 10
+    _ -> 0
+  }
+}
+
+/// Deterministic 1,500-state Unified Domain Ontology (`13 Axes`), Interaction Ontology (`UC-1..UC-10`),
+/// Fractal (`L0..L9`), and Holarchy (`40 FPP`, `170 Holons`, `52 Directory`) Fibration Guard
+/// (`THM_FSYS_67..68` / `THM_GUARD_30`, Export #30 `uos_lean_verify_unified_ontology_usecase_fibration`).
+pub fn verify_unified_ontology_usecase_fibration(
+  usecase_id: Int,
+  ontology_uc_id: Int,
+  fractal_layer: Int,
+  fpp_actor_id: Int,
+  cascade_tier: Int,
+  route_code: Int,
+) -> Bool {
+  usecase_id >= 0
+  && usecase_id < 10
+  && ontology_uc_id == expected_ontology_uc_id(usecase_id)
+  && fractal_layer == usecase_id
+  && fpp_actor_id == fractal_layer * 4 + 3
+  && { cascade_tier == 1 || cascade_tier == 2 }
+  && route_code >= 0
+  && route_code <= 2
+}
+
+/// Deterministic 3,200-state Fractal 10-Layer Use-Case Test Gate for Performance,
+/// 1st-Time Correctness & Context Optimization (`THM_FSYS_69..70` / `THM_GUARD_31`,
+/// Export #31 `uos_lean_eval_fractal_usecase_test_gate`).
+/// Returns the optimal profile code (`1..5`) or `0` (Fail-Closed Veto).
+pub fn eval_fractal_usecase_test_gate(
+  usecase_id: Int,
+  fractal_layer: Int,
+  perf_sla_ok: Bool,
+  first_time_correct_ok: Bool,
+  context_opt_ok: Bool,
+  ontology_fibration_ok: Bool,
+  holonic_envelope_ok: Bool,
+) -> Int {
+  case
+    usecase_id >= 0
+    && usecase_id < 10
+    && fractal_layer == usecase_id
+    && perf_sla_ok
+    && first_time_correct_ok
+    && context_opt_ok
+    && ontology_fibration_ok
+    && holonic_envelope_ok
+  {
+    True -> expected_qwen_usecase_profile_code(usecase_id)
+    False -> 0
+  }
+}
+
+/// Deterministic 3,840-state SM75 (Turing) Hardware + Modular MAX + Mojo + Qwen
+/// Simulator Envelope Gate (`THM_FSYS_75..76` / `THM_GUARD_34`, Export #34).
+pub fn simulate_sm75_qwen_hardware_envelope(
+  config_id: Int,
+  observed_vram_mib: Int,
+  observed_mbu_pct: Int,
+  observed_cached_ttft_ms: Int,
+  observed_grammar_penalty_pct: Int,
+  observed_schema_fail_pct: Int,
+) -> Int {
+  case
+    config_id >= 0
+    && config_id < 8
+    && observed_vram_mib > 0
+    && observed_vram_mib <= 8192
+    && observed_mbu_pct >= 75
+    && observed_mbu_pct <= 100
+    && observed_cached_ttft_ms > 0
+    && observed_cached_ttft_ms <= 150
+    && observed_grammar_penalty_pct >= 0
+    && observed_grammar_penalty_pct <= 5
+    && observed_schema_fail_pct >= 0
+    && observed_schema_fail_pct <= 1
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Deterministic 2,560-state Public Benchmark Reference Suite Gate (`THM_FSYS_77..78`
+/// / `THM_GUARD_35`, Export #35: BFCL-v3, tau-bench, RULER/NIAH, JSONSchemaBench/XGrammar,
+/// LLMPerf, llama-bench, vLLM/MAX Concurrency, EvalPlus).
+pub fn expected_benchmark_min_score_pct(benchmark_id: Int) -> Int {
+  case benchmark_id {
+    0 -> 98
+    1 -> 95
+    2 -> 96
+    3 -> 99
+    4 | 5 -> 75
+    6 -> 90
+    7 -> 95
+    _ -> 101
+  }
+}
+
+pub fn expected_benchmark_max_lat_or_pen(benchmark_id: Int) -> Int {
+  case benchmark_id {
+    0 -> 1200
+    1 -> 2500
+    2 -> 1500
+    3 -> 5
+    4 -> 150
+    5 -> 25
+    6 -> 1800
+    7 -> 1500
+    _ -> 0
+  }
+}
+
+pub fn verify_public_benchmark_gate(
+  benchmark_id: Int,
+  observed_score_pct: Int,
+  observed_lat_or_pen: Int,
+  zero_retries_ok: Bool,
+  zero_python_harness_ok: Bool,
+) -> Int {
+  case
+    benchmark_id >= 0
+    && benchmark_id < 8
+    && observed_score_pct >= expected_benchmark_min_score_pct(benchmark_id)
+    && observed_score_pct <= 100
+    && observed_lat_or_pen > 0
+    && observed_lat_or_pen <= expected_benchmark_max_lat_or_pen(benchmark_id)
+    && zero_retries_ok
+    && zero_python_harness_ok
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Deterministic 3,200-state UOS Core System Concepts & 3-Layer Unified Ontology
+/// Gate (`THM_FSYS_79..80` / `THM_GUARD_36`, Export #36).
+pub fn expected_concept_cardinality(concept_id: Int) -> Int {
+  case concept_id {
+    0 -> 399
+    1 -> 13
+    2 -> 52
+    3 -> 10
+    4 -> 7
+    5 -> 4
+    6 -> 3
+    7 -> 13
+    8 -> 10
+    9 -> 93
+    _ -> 0
+  }
+}
+
+pub fn expected_concept_min_coverage_pct(concept_id: Int) -> Int {
+  case concept_id {
+    0 | 2 | 4 | 5 | 6 | 7 | 8 -> 98
+    1 | 3 -> 95
+    9 -> 100
+    _ -> 101
+  }
+}
+
+pub fn verify_system_concepts_and_ontology_gate(
+  concept_id: Int,
+  observed_cardinality: Int,
+  observed_coverage_pct: Int,
+  type_separated_ok: Bool,
+  two_key_observed_ok: Bool,
+) -> Int {
+  case
+    concept_id >= 0
+    && concept_id < 10
+    && observed_cardinality == expected_concept_cardinality(concept_id)
+    && observed_coverage_pct >= expected_concept_min_coverage_pct(concept_id)
+    && observed_coverage_pct <= 100
+    && type_separated_ok
+    && two_key_observed_ok
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Deterministic 3,840-state 12-Language Polyglot SDLC/SRE Optimization Gate
+/// (`THM_FSYS_81..82` / `THM_GUARD_37`, Export #37: Lean 4, Mojo, MAX/SM75,
+/// OCaml/Hermes, Gleam/OTP 29, Stan/Stanc3/Posterior, Zig/ZigVM, Rust/C-ABI NIFs,
+/// Quint, NASA FPP/SysML, SQLite WAL/Rete-UL/Ruliad, Determinate Nix/Systemd).
+pub fn expected_language_min_artifact_count(lang_id: Int) -> Int {
+  case lang_id {
+    0 -> 110
+    1 -> 25
+    2 -> 12
+    3 -> 200
+    4 -> 1000
+    5 -> 120
+    6 -> 100
+    7 -> 11
+    8 -> 14
+    9 | 10 -> 40
+    11 -> 25
+    _ -> 99_999
+  }
+}
+
+pub fn expected_language_min_pass_pct(lang_id: Int) -> Int {
+  case lang_id {
+    0 | 5 | 7 | 9 | 10 -> 100
+    1 | 2 | 3 | 4 | 6 | 8 | 11 -> 98
+    _ -> 101
+  }
+}
+
+pub fn expected_language_max_latency_ms(lang_id: Int) -> Int {
+  case lang_id {
+    0 -> 2500
+    1 -> 1500
+    2 -> 150
+    3 | 4 -> 50
+    5 | 11 -> 100
+    6 | 10 -> 10
+    7 -> 5
+    8 -> 2000
+    9 -> 20
+    _ -> 0
+  }
+}
+
+pub fn verify_polyglot_language_optimization_gate(
+  lang_id: Int,
+  observed_artifact_count: Int,
+  observed_pass_rate_pct: Int,
+  observed_latency_ms: Int,
+  zero_muda_aligned_ok: Bool,
+  fail_closed_boundary_ok: Bool,
+) -> Int {
+  case
+    lang_id >= 0
+    && lang_id < 12
+    && observed_artifact_count >= expected_language_min_artifact_count(lang_id)
+    && observed_pass_rate_pct >= expected_language_min_pass_pct(lang_id)
+    && observed_pass_rate_pct <= 100
+    && observed_latency_ms > 0
+    && observed_latency_ms <= expected_language_max_latency_ms(lang_id)
+    && zero_muda_aligned_ok
+    && fail_closed_boundary_ok
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// PolyBench-SM75 Language 3 (Gleam) Tier 3 Seed: PacketState & RouterError
+pub type PolyBenchPacketState {
+  PolyBenchPacketState(seq: Int, retries: Int, payload: String)
+}
+
+pub type PolyBenchRouterError {
+  EmptyPayload
+  MaxRetriesExceeded
+}
+
+/// Railway-oriented packet advancement using `use` callback and Gleam record update
+pub fn advance_polybench_packet(
+  state: PolyBenchPacketState,
+) -> Result(PolyBenchPacketState, PolyBenchRouterError) {
+  use _ <- result.try(case state.payload {
+    "" -> Error(EmptyPayload)
+    _ -> Ok(Nil)
+  })
+  case state.retries {
+    r if r >= 3 -> Error(MaxRetriesExceeded)
+    r ->
+      Ok(PolyBenchPacketState(..state, seq: state.seq + 1, retries: r + 1))
+  }
+}
+
+/// Deterministic 3,840-state PolyBench-SM75 6-Language × 4-Tier Gate (`THM_FSYS_83..84`, Export `#38`)
+pub fn verify_polybench_sm75_language_tier_gate(
+  poly_lang_id: Int,
+  tier_id: Int,
+  well_formed_diff_pct: Int,
+  cached_turn2_ttft_ms: Int,
+  observed_mbu_pct: Int,
+  grammar_itl_overhead_pct: Int,
+  pass_at_2_ok: Bool,
+) -> Int {
+  case
+    poly_lang_id >= 0
+    && poly_lang_id < 6
+    && tier_id >= 1
+    && tier_id <= 4
+    && well_formed_diff_pct >= 95
+    && well_formed_diff_pct <= 100
+    && cached_turn2_ttft_ms > 0
+    && cached_turn2_ttft_ms <= 120
+    && observed_mbu_pct >= 72
+    && observed_mbu_pct <= 100
+    && grammar_itl_overhead_pct >= 0
+    && grammar_itl_overhead_pct <= 6
+    && pass_at_2_ok
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// PolyBench-SM75 3-Rule Diagnosis Matrix Classifier (`THM_FSYS_83`)
+pub fn diagnose_polybench_sm75_failure_mode(
+  rust_c_pass1_pct: Int,
+  mojo_gleam_pass1_pct: Int,
+  tier3_pass2_pct: Int,
+  well_formed_diff_pct: Int,
+) -> Int {
+  case well_formed_diff_pct < 95 {
+    True -> 3
+    False ->
+      case rust_c_pass1_pct >= 85 && mojo_gleam_pass1_pct < 70 {
+        True -> 1
+        False ->
+          case rust_c_pass1_pct >= 85 && tier3_pass2_pct < 75 {
+            True -> 2
+            False -> 0
+          }
+      }
+  }
+}
+
+/// Deterministic 3,200-state Fractal (L0..L9) & Holarchy (40 FPP Actors, 5 Castes, 170 Janus Holons, 52 Dir, 104 MCP, 13D) Gate (`THM_FSYS_85..86`, Export `#39`)
+pub fn verify_fractal_holarchy_full_alignment_gate(
+  layer_id: Int,
+  fpp_intel_actor_id: Int,
+  hive_caste_id: Int,
+  janus_holon_start: Int,
+  janus_holon_end: Int,
+  unified_dir_id: Int,
+  mcp_routes_total: Int,
+  trace_coords_total: Int,
+) -> Int {
+  case
+    layer_id >= 0
+    && layer_id < 10
+    && fpp_intel_actor_id == 4 * layer_id + 3
+    && hive_caste_id == layer_id / 2
+    && janus_holon_start == 17 * layer_id
+    && janus_holon_end == 17 * layer_id + 16
+    && unified_dir_id == 25 + layer_id
+    && mcp_routes_total == 104
+    && trace_coords_total == 13
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+pub fn expected_wave2_primary_layer_id(wave_cycle_id: Int) -> Int {
+  case wave_cycle_id {
+    0 -> 2
+    1 -> 3
+    2 -> 4
+    3 -> 6
+    4 -> 8
+    _ -> 99
+  }
+}
+
+/// Deterministic 3,200-state Evolutionary Wave 2 Convergence Gate (`Cycles 21..25`, `THM_FSYS_87..88`, Export `#40`)
+pub fn verify_evolutionary_wave2_convergence_gate(
+  wave_cycle_id: Int,
+  cycle_num: Int,
+  primary_layer_id: Int,
+  nif_symbols_verified: Int,
+  cabi_exports_verified: Int,
+  mtest_total_passed: Int,
+  diagonal_sweep_gates: Int,
+  live_probe_ok: Bool,
+) -> Int {
+  case
+    wave_cycle_id >= 0
+    && wave_cycle_id < 5
+    && cycle_num == 21 + wave_cycle_id
+    && primary_layer_id == expected_wave2_primary_layer_id(wave_cycle_id)
+    && nif_symbols_verified == 11
+    && cabi_exports_verified == 40
+    && mtest_total_passed == 34
+    && diagonal_sweep_gates == 9
+    && live_probe_ok
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Deterministic 3,200-state Full-System Artifact, Component & 17-Aspect Wiring Gate (`THM_FSYS_90..91`, Export `#41`)
+pub fn verify_full_system_artifact_aspect_component_wiring_gate(
+  layer_id: Int,
+  fpp_actor_base: Int,
+  hive_caste_id: Int,
+  aspect_slice_count: Int,
+  directory_total_entries: Int,
+  polyglot_domains_wired: Int,
+  mcp_and_live_corpus_routes: Int,
+  cross_plane_bridge_vectors: Int,
+) -> Int {
+  case
+    layer_id >= 0
+    && layer_id < 10
+    && fpp_actor_base == layer_id * 4
+    && hive_caste_id == layer_id / 2
+    && aspect_slice_count == 17
+    && directory_total_entries == 52
+    && polyglot_domains_wired == 12
+    && mcp_and_live_corpus_routes == 104
+    && cross_plane_bridge_vectors == 24
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Canonical 24-element Cross-Plane C-ABI (`Exports #28..#41`) <-> Gleam BEAM Bridge Parity Vector
+/// (`[1,0,3,0,1,0,3,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0]`).
+pub fn evaluate_cross_plane_bridge_vectors_28_to_41() -> List(Int) {
+  let b28_pos = case
+    verify_qwen_holonic_execution_envelope(6, 27, 1, True, True, True)
+  {
+    True -> 1
+    False -> 0
+  }
+  let b28_neg = case
+    verify_qwen_holonic_execution_envelope(6, 23, 1, True, True, True)
+  {
+    True -> 1
+    False -> 0
+  }
+  let b30_pos = case
+    verify_unified_ontology_usecase_fibration(6, 6, 6, 27, 2, 2)
+  {
+    True -> 1
+    False -> 0
+  }
+  let b30_neg = case
+    verify_unified_ontology_usecase_fibration(6, 6, 6, 27, 4, 2)
+  {
+    True -> 1
+    False -> 0
+  }
+  [
+    b28_pos,
+    b28_neg,
+    route_optimal_qwen_usecase(6, 6, True, True, True, True),
+    route_optimal_qwen_usecase(6, 5, True, True, True, True),
+    b30_pos,
+    b30_neg,
+    eval_fractal_usecase_test_gate(6, 6, True, True, True, True, True),
+    eval_fractal_usecase_test_gate(6, 6, False, True, True, True, True),
+    simulate_sm75_qwen_hardware_envelope(6, 7493, 79, 68, 2, 0),
+    simulate_sm75_qwen_hardware_envelope(8, 8333, 79, 68, 2, 0),
+    verify_public_benchmark_gate(4, 92, 68, True, True),
+    verify_public_benchmark_gate(4, 60, 68, True, True),
+    verify_system_concepts_and_ontology_gate(9, 93, 100, True, True),
+    verify_system_concepts_and_ontology_gate(9, 94, 100, True, True),
+    verify_polyglot_language_optimization_gate(5, 125, 100, 18, True, True),
+    verify_polyglot_language_optimization_gate(5, 110, 100, 18, True, True),
+    verify_polybench_sm75_language_tier_gate(0, 3, 100, 62, 81, 2, True),
+    verify_polybench_sm75_language_tier_gate(0, 3, 90, 62, 81, 2, True),
+    verify_fractal_holarchy_full_alignment_gate(6, 27, 3, 102, 118, 31, 104, 13),
+    verify_fractal_holarchy_full_alignment_gate(6, 27, 3, 102, 117, 31, 104, 13),
+    verify_evolutionary_wave2_convergence_gate(1, 22, 3, 11, 40, 34, 9, True),
+    verify_evolutionary_wave2_convergence_gate(1, 22, 2, 11, 40, 34, 9, True),
+    verify_full_system_artifact_aspect_component_wiring_gate(
+      6,
+      24,
+      3,
+      17,
+      52,
+      12,
+      104,
+      24,
+    ),
+    verify_full_system_artifact_aspect_component_wiring_gate(
+      6,
+      25,
+      3,
+      17,
+      52,
+      12,
+      104,
+      24,
+    ),
+  ]
+}
+
+/// Pure Total Wave-4 Pi+Harness+MAX+Mojo+Qwen 15-Cycle Symbiosis & Traffic Gate
+/// (Mirrors Lean 4 C-ABI Export #42 `uos_lean_verify_pi_qwen_15cycle_symbiosis_gate`).
+pub fn verify_pi_qwen_15cycle_symbiosis_gate(
+  w4_id: Int,
+  cycle_number: Int,
+  fpp_actor_id: Int,
+  holarchy_layer: Int,
+  procedural_quad_count: Int,
+  executable_tool_routes: Int,
+  total_mcp_and_pi_routes: Int,
+  traffic_class_code: Int,
+) -> Int {
+  case
+    w4_id >= 0
+    && w4_id < 15
+    && cycle_number == 26 + w4_id
+    && fpp_actor_id == 25 + w4_id
+    && holarchy_layer == w4_id % 10
+    && procedural_quad_count == 146
+    && executable_tool_routes == 60
+    && total_mcp_and_pi_routes == 111
+    && traffic_class_code == { w4_id % 6 } + 1
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Evaluates the 26-vector Cross-Plane Bridge across C-ABI Exports #28..#42 (`13` gates × `2` pass/veto vectors).
+pub fn evaluate_cross_plane_bridge_vectors_28_to_42() -> List(Int) {
+  list.append(evaluate_cross_plane_bridge_vectors_28_to_41(), [
+    verify_pi_qwen_15cycle_symbiosis_gate(5, 31, 30, 5, 146, 60, 111, 6),
+    verify_pi_qwen_15cycle_symbiosis_gate(5, 32, 30, 5, 146, 60, 111, 6),
+  ])
+}
+
+/// Explicit 40-actor functional caste owner (`1..5` for `Caste01..Caste05`) matching `core_fpp_actor_twin_mesh.gleam` (`THM_FHC_01`, Drift D4).
+pub fn fpp_actor_explicit_caste_owner(actor_idx: Int) -> Int {
+  case actor_idx {
+    0 | 2 | 14 | 20 | 23 | 27 | 38 | 39 -> 1
+    4 | 8 | 18 | 19 | 26 | 30 | 31 | 37 -> 2
+    1 | 7 | 11 | 15 | 21 | 33 | 34 | 35 -> 3
+    3 | 9 | 13 | 16 | 24 | 28 | 32 | 36 -> 4
+    5 | 6 | 10 | 12 | 17 | 22 | 25 | 29 -> 5
+    _ -> 0
+  }
+}
+
+/// Canonical 17-Aspect Set A (`aspect_coverage_engine.gleam` `0..16`) <-> Set B (`HolonicFppBionic...lean` `0..16`) bijection (`THM_FHC_02`, Drift D3).
+pub fn aspect_set_a_to_set_b_index(aspect_idx: Int) -> Int {
+  case aspect_idx >= 0 && aspect_idx < 17 {
+    True -> aspect_idx
+    False -> 99
+  }
+}
+
+/// Canonical `SC-FRACTAL-TAXONOMY-001` concern-layer name for `L0..L9` (`L8=Evolutionary`, `L9=Sovereign`) closing Drift D5 (`THM_FHC_03`).
+pub fn canonical_fractal_layer_concern(layer_id: Int) -> String {
+  case layer_id {
+    0 -> "L0_Constitutional"
+    1 -> "L1_Physical_Storage"
+    2 -> "L2_Execution_VM"
+    3 -> "L3_Supervision_OTP"
+    4 -> "L4_Cybernetic_Control"
+    5 -> "L5_Knowledge_Ontology"
+    6 -> "L6_Swarm_Orchestration"
+    7 -> "L7_Interface_Cockpit"
+    8 -> "L8_Evolutionary"
+    9 -> "L9_Sovereign"
+    _ -> "Unknown_Layer"
+  }
+}
+
+/// Pure Total 20-Cycle (`EVOL-FHC-01..20`, Cumulative Cycles `41..60`) FPP-Holon-Caste-Rete-STPA-FMEA Unification Gate
+/// (Mirrors Lean 4 `Section 43` `THM_FHC_01..06` and C-ABI Export `#43` `uos_lean_verify_fhc_20cycle_unification_gate`).
+pub fn verify_fhc_20cycle_unification_gate(
+  fhc_cycle_idx: Int,
+  cumulative_cycle_num: Int,
+  fpp_actor_idx: Int,
+  explicit_caste_num: Int,
+  janus_holon_count: Int,
+  rete_domain_count: Int,
+  stpa_uca_count: Int,
+  fmea_l0_l9_entries: Int,
+) -> Int {
+  let expected_actor = { fhc_cycle_idx * 2 } % 40
+  case
+    fhc_cycle_idx >= 0
+    && fhc_cycle_idx < 20
+    && cumulative_cycle_num == 41 + fhc_cycle_idx
+    && fpp_actor_idx == expected_actor
+    && explicit_caste_num == fpp_actor_explicit_caste_owner(expected_actor)
+    && janus_holon_count == 170
+    && rete_domain_count == 11
+    && stpa_uca_count == 4
+    && fmea_l0_l9_entries == 30
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Evaluates the 28-vector Cross-Plane Bridge across C-ABI Exports #28..#43 (`14` gates × `2` pass/veto vectors).
+pub fn evaluate_cross_plane_bridge_vectors_28_to_43() -> List(Int) {
+  list.append(evaluate_cross_plane_bridge_vectors_28_to_42(), [
+    verify_fhc_20cycle_unification_gate(0, 41, 0, 1, 170, 11, 4, 30),
+    verify_fhc_20cycle_unification_gate(0, 41, 0, 2, 170, 11, 4, 30),
+  ])
+}
+
+/// Deterministic Pi + Local Qwen (`7B Q4_K_M`, `Caste02`) Review, Confidence Judgement & Sovereign Escalation Classifier
+/// (`THM_VEIL_15..19` in `formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean`).
+/// - `issue_category_idx`: `0..11` (`0..4` bounded local, `5..7` formal/Veil/Rete/safety, `8..9` multi-plane/architecture, `10..11` constitutional/epoch).
+/// - `confidence_pct`: `0..100` (requires `>= 85` for local resolution).
+/// - `retry_count`: `0..3` (requires `<= 2` for local resolution; `> 2` escalates to `Caste03` Codex).
+/// - `blast_radius_code`: `0 = LocalSingleFile`, `1 = CrossModuleSubsystem`, `2 = ConstitutionalOrFormal`, `3 = MultiPlaneArchitecture`.
+pub fn classify_pi_qwen_review_and_escalation(
+  issue_category_idx: Int,
+  confidence_pct: Int,
+  retry_count: Int,
+  blast_radius_code: Int,
+) -> String {
+  case issue_category_idx % 12 {
+    10 | 11 -> "EscalateAgyQueenConductor_Caste01"
+    5 | 6 | 7 -> "EscalateCodexSovereignSentinel_Caste03"
+    8 | 9 -> "EscalateClaudeArchitectSynthesizer_Caste04"
+    _ -> {
+      case blast_radius_code == 0 {
+        False -> {
+          case blast_radius_code {
+            2 -> "EscalateCodexSovereignSentinel_Caste03"
+            _ -> "EscalateClaudeArchitectSynthesizer_Caste04"
+          }
+        }
+        True -> {
+          case retry_count > 2 {
+            True -> "EscalateCodexSovereignSentinel_Caste03"
+            False -> {
+              case confidence_pct < 85 {
+                True -> "EscalateClaudeArchitectSynthesizer_Caste04"
+                False -> "LocalPiQwenResolve_Caste02"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/// Pure Total 20-Cycle (`EVOL-VEIL-01..20`, Cumulative Cycles `61..80`) Veil + KM/Wiki/ZK Continuous 6-Plane Sync & Qwen Escalation Gate
+/// (Mirrors `formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean` `THM_VEIL_01..20` and C-ABI Export `#44`).
+pub fn verify_veil_km_wiki_zk_20cycle_sync_gate(
+  veil_cycle_idx: Int,
+  cumulative_cycle_num: Int,
+  all_six_planes_synced: Int,
+  admitted_ev_ceiling: Int,
+  rete_salience_r0: Int,
+  shannon_entropy_milli_bits: Int,
+  qwen_route_code: Int,
+) -> Int {
+  let expected_route = case veil_cycle_idx % 12 {
+    0 | 1 | 2 | 3 | 4 -> 2
+    5 | 6 | 7 -> 3
+    8 | 9 -> 4
+    _ -> 1
+  }
+  case
+    veil_cycle_idx >= 0
+    && veil_cycle_idx < 20
+    && cumulative_cycle_num == 61 + veil_cycle_idx
+    && all_six_planes_synced == 1
+    && admitted_ev_ceiling == 93
+    && rete_salience_r0 == 1000
+    && shannon_entropy_milli_bits >= 2500
+    && qwen_route_code == expected_route
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Evaluates the 30-vector Cross-Plane Bridge across C-ABI Exports #28..#44 (`15` gates × `2` pass/veto vectors).
+pub fn evaluate_cross_plane_bridge_vectors_28_to_44() -> List(Int) {
+  list.append(evaluate_cross_plane_bridge_vectors_28_to_43(), [
+    verify_veil_km_wiki_zk_20cycle_sync_gate(0, 61, 1, 93, 1000, 3310, 2),
+    verify_veil_km_wiki_zk_20cycle_sync_gate(0, 61, 0, 93, 1000, 3310, 2),
+  ])
+}
+
+/// Maps each of the 40 NASA FPP actors (`0..39`) to its primary `leanprover/cslib`
+/// Computer Science domain (`0..7`), assigning 5 FPP actors per CSLib pillar
+/// (`THM_CSLIB_BRIDGE_01` in `formal/lean/UosFullSystemCodeUnifiedDigitalTwin.lean`).
+pub fn cslib_domain_for_fpp_actor(actor_id: Int) -> Int {
+  actor_id % 8
+}
+
+/// Returns the canonical `leanprover/cslib` module pillar name for domain code `0..7`.
+pub fn cslib_domain_name(domain_code: Int) -> String {
+  case domain_code % 8 {
+    0 -> "Cslib.Foundations.Semantics.FLTS_LTS_Bisimulation"
+    1 -> "Cslib.Foundations.Relation.Confluence_Newman"
+    2 -> "Cslib.Computability.Automata.DA_FinAcc_Buchi_Muller"
+    3 -> "Cslib.Computability.Circuit.Boolean_Wiring_Depth"
+    4 -> "Cslib.Logics.HML_Modal_TheoryEq_Bisimilarity"
+    5 -> "Cslib.Logics.LinearLogic.CLL_Heijunka_Resource"
+    6 -> "Cslib.Languages.Mech.Choreography_5Caste"
+    _ -> "Cslib.Algorithms.Lean.TimeM_PACLearning_PMF"
+  }
+}
+
+/// Pure Total 20-Cycle (`EVOL-CSLIB-01..20`, Cumulative Cycles `81..100`) System-Wide `leanprover/cslib` 8-Pillar Verification Gate
+/// (Mirrors `formal/lean/ruliad/Ruliad/UosCslibSystemWideIntegration.lean`, `formal/lean/UosCslibSystemWideDigitalTwin.lean`, and C-ABI Export `#45`).
+pub fn verify_cslib_8pillar_systemwide_20cycle_gate(
+  cslib_cycle_idx: Int,
+  cumulative_cycle_num: Int,
+  flts_bisim_synced: Int,
+  rete_wiki_confluent: Int,
+  da_circuit_hml_ok: Int,
+  cll_heijunka_wip_total: Int,
+  timem_pipeline_cost: Int,
+  pac_pmf_entropy_milli_bits: Int,
+) -> Int {
+  case
+    cslib_cycle_idx >= 0
+    && cslib_cycle_idx < 20
+    && cumulative_cycle_num == 81 + cslib_cycle_idx
+    && flts_bisim_synced == 1
+    && rete_wiki_confluent == 1
+    && da_circuit_hml_ok == 1
+    && cll_heijunka_wip_total == 17
+    && timem_pipeline_cost == 249
+    && pac_pmf_entropy_milli_bits >= 2500
+  {
+    True -> 1
+    False -> 0
+  }
+}
+
+/// Evaluates the 32-vector Cross-Plane Bridge across C-ABI Exports #28..#45 (`16` gates × `2` pass/veto vectors).
+pub fn evaluate_cross_plane_bridge_vectors_28_to_45() -> List(Int) {
+  list.append(evaluate_cross_plane_bridge_vectors_28_to_44(), [
+    verify_cslib_8pillar_systemwide_20cycle_gate(0, 81, 1, 1, 1, 17, 249, 3310),
+    verify_cslib_8pillar_systemwide_20cycle_gate(0, 81, 0, 1, 1, 17, 249, 3310),
+  ])
+}

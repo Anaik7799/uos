@@ -7,8 +7,8 @@
 # commit still on 4.35.0. Its own lakefile requires mathlib v4.35.0, which is
 # what this file requires, so the workspace resolves one consistent Mathlib.
 #
-# formal/lean/*.lean (the 80 standalone files, including Ruliad.lean) remain on
-# the 4.33.0 toolchain and are unaffected: tools/lean still resolves 4.33.0.
+# formal/lean/*.lean (all 116 standalone files, including Ruliad.lean) and
+# tools/{lean,lake,leanc} are now unified on the same Lean 4.35.0 toolchain.
 name = "ruliad"
 defaultTargets = ["Ruliad"]
 
@@ -39,3 +39,18 @@ root = "RuliadDiff"
 [[lean_exe]]
 name = "servicediff"
 root = "ServiceDiff"
+
+# 20261108-1642 — cslib-backed companion to the 4.33.0 Veil twin.
+# Separate lean_lib rather than a module of `Ruliad`: it is UOS governance
+# material, not ruliology, and it must resolve the SAME cslib/Mathlib that this
+# package already has on disk rather than a second copy.
+[[lean_lib]]
+name = "UosVeilCslib"
+allowNonModules = true
+
+# 20261108-1642 — Mathlib Sites/Descent/FiberedCategory reachability + the
+# descent content of the 6-plane cover. See the file header for the boundary
+# between what is proved and what is named as future work.
+[[lean_lib]]
+name = "UosStacksDescent"
+allowNonModules = true

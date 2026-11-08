@@ -13,7 +13,7 @@ let tool = function
  | Gleam_case->tc^"/gleam-1.16.0/bin/gleam"
  | Ocaml_case|Stm_case|Bayesian_case|Rete_case|Stpa_case|Fmea_case->tc^"/opam-ocaml/bin/ocamlopt"
  | Mojo_case->root^"/services/inference/max/.pixi/envs/default/bin/mojo"
- | Lean_case->tc^"/lean-4.33.0/bin/lean"
+ | Lean_case->tc^"/lean-4.35.0/bin/lean"
  | Quint_case->tc^"/nix-profile/bin/quint"
 let status_name=function Passed->"passed"|Failed->"failed"|Unsupported->"unsupported"|Unrun->"unrun"|Not_required->"not_required"
 let requires_native=function Gleam_case|Ocaml_case|Mojo_case|Lean_case|Quint_case->true|Stm_case|Bayesian_case|Rete_case|Stpa_case|Fmea_case->false

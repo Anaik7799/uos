@@ -118,3 +118,11 @@ Skip any step = lying, not verifying
 - Paraphrases and synonyms
 - Implications of success
 - ANY communication suggesting completion/correctness
+
+## UOS 12-Loop Qwen Control/Data/Observability & 42-Test `uos-ltest` Verification Gate (`SC-PI-QWEN-SYMBIOSIS-001`)
+
+Before claiming completion on any UOS agentic, MCP, Zenoh, MAX/Mojo/Qwen, or Lean 4 Digital Twin task, run and verify fresh exit-0 output from:
+1. `./tools/uos-qwen --loops` — Verifies all 12 Qwen Closed Loops (`C1..C4` Control, `D1..D4` Data, `O1..O4` Observability; `var/telemetry/qwen_12_loops_status.json`).
+2. `./tools/uos-qwen --control-loop 6 P0_Deterministic_Grammar` — Verifies the 7-stage `POODAVR` closed loop and Zenoh `HTTP_200` pub/sub (`var/telemetry/max_mojo_qwen_fractal_control.json`).
+3. `./tools/uos-ltest` — Verifies all `42/42` tests (`100/100` checks, `44,380` C-ABI states + `3,840` 12-loop states, `0` failures, `0` blind).
+4. `./tools/preflight --receipt` — Verifies `35/35` toolchain and workspace hygiene checks (`var/preflight/latest.json`).

@@ -36,6 +36,7 @@ pub const canonical_artifacts = [
 pub const triad_manifest = "governance/capability-inventory/wiki-zk-km.toml"
 
 pub const brain_roots = [
+  "docs",
   "docs/zk",
   "docs/wiki",
   "docs/sop",
@@ -43,17 +44,25 @@ pub const brain_roots = [
   "docs/design",
   "docs/journal",
   "docs/architecture",
+  "contracts",
   "contracts/rules",
   "governance/capability-inventory",
   "governance/agents",
   "governance/planning",
+  "governance/sources",
+  "formal",
   "formal/lean",
   "formal/quint",
-  // Added 20261105-1748: brain_roots gates read_file via brain_file. Without
-  // these a reviewer could read formal/lean but never the tools and systemd
-  // units under review — the PATH_NOT_IN_CORPUS that Codex hit.
+  "formal/mojo",
+  "formal/polybench_sm75",
+  // Added 20261105-1748 & 20261108-0955: brain_roots gates read_file via brain_file.
+  // Includes all 12 polyglot code domains and 52 Unified System Directory roots.
   "tools",
   "ops",
+  "apps",
+  "engines",
+  "native",
+  "services",
 ]
 
 // 20261105-1745 — KM resource coverage fix.
@@ -72,8 +81,11 @@ const trees = [
   "governance/agents",
   "governance/planning",
   "governance/sources",
+  "formal",
   "formal/lean",
   "formal/quint",
+  "formal/mojo",
+  "formal/polybench_sm75",
   ".agents/skills",
   ".claude/rules",
   ".claude/skills",
@@ -117,6 +129,15 @@ const extensions = [
   ".target",
   ".conf",
   ".nix",
+  // Added 20261108-0955: polyglot code domain extensions (Mojo, Rust, C11, Stan, FPP, Erlang, isolated MAX Python).
+  ".mojo",
+  ".rs",
+  ".c",
+  ".h",
+  ".stan",
+  ".fpp",
+  ".erl",
+  ".py",
 ]
 
 const markers = [
@@ -316,6 +337,8 @@ pub fn brain_file(path: String) -> Bool {
     [
       ".md", ".toml", ".json", ".lean", ".qnt", ".ml", ".mli", ".gleam",
       ".service", ".timer", ".socket", ".target", ".conf", ".sh", ".zig",
+      ".mojo", ".rs", ".c", ".h", ".stan", ".fpp", ".erl", ".py", ".nix",
+      ".sql", ".txt", ".allium", ".html", ".svg",
     ],
     fn(e) { string.ends_with(path, e) },
   )

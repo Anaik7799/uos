@@ -66,6 +66,17 @@ Scope:
             +--------------------------------------------------+
 ```
 
+```text
+ASCII source generated from the mermaid block below, edge for edge (SC-DIAGRAM-001).
+
+[FormalModelEvaluationSuite.lean] --> [model_evaluation_oracle.mojo]
+[model_evaluation_suite_lib.mojo] --> [model_evaluation_oracle.mojo]
+[model_evaluation_oracle.mojo] --> [Lean 4 Compiler]
+[model_evaluation_oracle.mojo] --> [razr15-1:8000 Modular MAX]
+[model_evaluation_oracle.mojo] --> [~/.pi/agent/models.json]
+[model_evaluation_oracle.mojo] --> [uos.oracle.v1 PASS]
+```
+
 ```mermaid
 graph TD
     A[FormalModelEvaluationSuite.lean] -->|Algebraic Theorems & Bounds| C[model_evaluation_oracle.mojo]
@@ -198,3 +209,4 @@ The UOS model evaluation architecture adheres strictly to the Two-Lattice bounda
 - **Brier Score Calibration Target**: $B \le (0.98 - 1.0)^2 = 0.0004$.
 
 The reusable Formal Model Evaluation Suite has been successfully designed, implemented, and verified in pure Lean 4 and Mojo. Live execution against `razr15-1` confirmed that the backend is operational and that the calibrated settings ensure optimal generation quality and strict context safety.
+

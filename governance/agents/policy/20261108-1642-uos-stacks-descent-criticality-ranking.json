@@ -1,0 +1,255 @@
+{
+  "schema": "uos.stacks.criticality.ranking.v1",
+  "document_prefix": "20261108-1642",
+  "observed_utc": "2026-11-08T16:43:42Z",
+  "author": "Caste04 Claude (claude-opus-5)",
+  "authority": "NONE",
+  "ev_ceiling": 93,
+  "subject": "Twenty criticality-ranked areas where stack / descent / site theory applies to UOS",
+
+  "scoring_method": {
+    "rubric": "contracts/rules/20260907-1559-risk-prioritization-sop.md (SC-RISK-PRIORITY-001)",
+    "formula": "score = C x T x F x Dep x I, each factor 1..5, range 1..3125",
+    "factors": {
+      "C": "criticality / cost of delay",
+      "T": "STPA control exposure",
+      "F": "FMEA band, max over modes (severity floor applies)",
+      "Dep": "dependency importance",
+      "I": "benefit if the acceptance criteria succeed"
+    },
+    "epistemic_warning": "These are ORDINAL ANALYST JUDGMENTS by one model, not measured probabilities, not certified risk levels, and not an industry-standard STPA formula. C, T, F and I are correlated here, so the product is NOT an independent likelihood or an expected loss. Per the SOP, a high score grants no permission to execute: a score never waives a safety class, and none of these areas is claimed as a Sa-plan task. No task was claimed and nothing here is ledgered.",
+    "status_vocabulary": {
+      "PARTIAL_PROVED": "some descent content proved in Lean today, named below",
+      "FEASIBLE_NOW": "Mathlib's API suffices; the obstacle is work, not theory",
+      "NEEDS_CATEGORY_INSTANCE": "blocked until the UOS surface is given a genuine Category/Site instance",
+      "SPECULATIVE": "the analogy is suggestive but the payoff is unproved; may turn out to be technique-theatre"
+    },
+    "anti_theatre_control": "Each entry carries `falsifier`: what observation would show the stack framing is NOT buying anything. An area with no falsifier is decoration, and is marked SPECULATIVE."
+  },
+
+  "areas": [
+    {
+      "rank": 1, "id": "ST-02", "score": 2500, "C": 5, "T": 5, "F": 5, "Dep": 5, "I": 4,
+      "area": "Provenance and admission as a sheaf on the evidence site",
+      "uos_surface": ["SC-PROVENANCE-001", "admitted EV ceiling 93", "EV-94..109 NOT_ADMITTED", "quarantined coordinator events 422-432", "forged journal event 437"],
+      "stacks_notion": "Sheaf condition on a site of evidence sources; descent obstruction",
+      "what_it_would_prove": "Admission is a LOCAL judgment per source. The sheaf condition states exactly when local admissions glue into a global one. The quarantine is then not a policy exception but a descent FAILURE: events 422-432 and 437 are a non-matching family, so no global section exists over the cover that includes them, and the 2-of-4 ratification requirement becomes the demand for a cover on which they do match.",
+      "what_fails_today": "The ceiling is enforced as a hardcoded constant (93) repeated across many files; nothing states WHY local evidence fails to compose, so each new quarantine is adjudicated by hand.",
+      "falsifier": "If a forged-evidence case can be constructed that satisfies the sheaf condition and is still inadmissible, gluing is not the right invariant.",
+      "status": "NEEDS_CATEGORY_INSTANCE",
+      "prerequisite": "A category of evidence sources with restriction along provenance edges."
+    },
+    {
+      "rank": 2, "id": "ST-16", "score": 2500, "C": 5, "T": 5, "F": 4, "Dep": 5, "I": 5,
+      "area": "2-of-4 sovereign ratification as a covering family",
+      "uos_surface": ["SC-PROVENANCE-001 ratification by any 2 distinct model families of {codex, agy, claude, pi+openrouter+gemini+argon} plus Operator", "3-of-4 Byzantine quorum (SC-HIVE-SYNC-001)", "Pi+Qwen escalation classifier (THM_VEIL_15..19)"],
+      "stacks_notion": "Covering family / coverage axioms; gluing of verdicts; a verdict presheaf that is a sheaf iff quorum rules compose",
+      "what_it_would_prove": "k-of-n ratification IS a coverage: {2-element subsets} covers the sovereign object. The coverage axioms (stability under base change, composition) are precisely the questions 'does a ratification survive a change of candidate?' and 'does a ratification of a ratification ratify?' -- both currently unanswered in the contracts. Sheafification gives the canonical closure of a verdict set under quorum.",
+      "what_fails_today": "Quorum is a counting rule. Nothing says whether two overlapping quorums must agree, so two disjoint 2-of-4 quorums can in principle ratify contradictory claims and no rule detects it.",
+      "falsifier": "If overlapping quorums are permitted to disagree by design, the sheaf condition is the wrong model and the structure is a mere cover with no gluing.",
+      "status": "FEASIBLE_NOW",
+      "prerequisite": "Finite coverage on a 4-element set; Mathlib Precoverage suffices."
+    },
+    {
+      "rank": 3, "id": "ST-06", "score": 2000, "C": 5, "T": 5, "F": 4, "Dep": 5, "I": 4,
+      "area": "Sa-plan leases and fencing as a torsor / 1-cocycle",
+      "uos_surface": ["tools/sa-plan", "var/sa-plan/uos.sqlite3", "SC-SA-PLAN-001", "Jidoka Andon -32002 on un-ledgered execution", "expired same-worker claim preflight"],
+      "stacks_notion": "Torsor under the lease-transfer group; 1-cocycle condition on overlapping lease intervals; H^1 classifies the inequivalent handover histories",
+      "what_it_would_prove": "Ownership is a local section over a time cover. The cocycle condition on overlaps is exactly the fencing requirement; a non-trivial cohomology class is exactly a split-brain handover. That turns 'recheck ownership before effects' from a procedure into an invariant with a counterexample theory.",
+      "what_fails_today": "Fencing is checked procedurally at each effect boundary. The SOP itself records the gap: 'a generic claim-next call does not prove this policy ordering'.",
+      "falsifier": "If every observed lease history is cohomologically trivial, the machinery adds nothing over a monotonic counter.",
+      "status": "FEASIBLE_NOW",
+      "prerequisite": "Lease intervals as a site over time; transfer as the structure group."
+    },
+    {
+      "rank": 4, "id": "ST-14", "score": 1600, "C": 5, "T": 4, "F": 5, "Dep": 4, "I": 4,
+      "area": "Append-only hash-chain evidence ledgers as a sheaf on the time site",
+      "uos_surface": ["tools/km_provenance/km_chain.ml", "var/km/provenance-cycles.sqlite3", "SQLite WAL evidence ledgers (Hermes)", "THM_VEIL_10 chain append-only integrity"],
+      "stacks_notion": "Sheaf on the interval site; the chain is a filtered colimit of sections; a break is a failure of the gluing axiom (not of the identity axiom)",
+      "what_it_would_prove": "Which of the two sheaf axioms a given corruption violates: separatedness (two different ledgers restrict to the same history -> an undetectable rewrite) versus gluing (consistent fragments with no global history -> a detectable break). Today both are reported as 'chainIntact = false'.",
+      "what_fails_today": "verifyKmChainStep checks adjacent rows only. A globally inconsistent but locally valid chain is not excluded by a pairwise predicate -- the same existential-versus-universal defect class as finding F-W-28.",
+      "falsifier": "If no locally-valid-but-globally-inconsistent chain can exist given the digest construction, the pairwise check is already complete and the sheaf framing is redundant.",
+      "status": "FEASIBLE_NOW",
+      "prerequisite": "None beyond Mathlib; the time site is a linear order."
+    },
+    {
+      "rank": 5, "id": "ST-01", "score": 1280, "C": 4, "T": 4, "F": 4, "Dep": 5, "I": 4,
+      "area": "The 6-plane Veil sync as descent over a cover",
+      "uos_surface": ["formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean", "formal/mojo/veil_km_wiki_zk_continuous_sync_checker.mojo", "allSixPlanesEpochAligned"],
+      "stacks_notion": "Matching family on the overlap graph of a cover; gluing to a global section; the Andon line as the descent obstruction made operational",
+      "what_it_would_prove": "Already partly proved today in formal/lean/ruliad/UosStacksDescent.lean: glue_of_chain (5 declared overlaps glue to all 15 pairs), chain_link_not_redundant (the overlap graph is a spanning tree -- no check is deletable), singletons_do_not_glue (a cover with no declared overlaps says nothing).",
+      "what_fails_today": "The Mojo arm evidences 6-plane sync by counting 6 files that MENTION the twin. Cross-reference count is not a matching family: it does not check that any two planes agree about anything.",
+      "falsifier": "Exhibit two planes that cross-reference each other and still carry different epochs while the checker reports PASS. That would show the current arm measures mentions, not descent.",
+      "status": "PARTIAL_PROVED",
+      "proved_today": ["UosStacksDescent.glue_of_chain", "UosStacksDescent.chain_link_not_redundant", "UosStacksDescent.singletons_do_not_glue"]
+    },
+    {
+      "rank": 6, "id": "ST-11", "score": 1280, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 5,
+      "area": "Declared versus connected MCP routes: presheaf of declarations, sheaf of observations",
+      "uos_surface": ["SC-HARNESS-MCP-001", "tools/uos-mcp-stdio (104 declared routes)", "engines/hermes/.../reconcile/reconcile.ml", "'a declared route is not a connected route'"],
+      "stacks_notion": "Sheafification: the universal map from the presheaf of declarations to the sheaf of observations; the kernel of that map is precisely the set of hollow declarations",
+      "what_it_would_prove": "Sheafification is the formal name for 'reconcile declared against probed, then keep only what survives'. The unit map eta: P -> P^sheaf makes the honest route list canonical rather than a hand-maintained table, and THM_VEIL_12 (a row with neither declaration nor probe is refused) becomes the separatedness axiom.",
+      "what_fails_today": "Reconciliation is implemented per-key in OCaml. Nothing proves the reconciled result is unique or universal, so two reconcilers can disagree.",
+      "falsifier": "If the observation presheaf is already a sheaf, sheafification is the identity and buys nothing.",
+      "status": "FEASIBLE_NOW",
+      "prerequisite": "Route space as a site; Mathlib ConcreteSheafification applies."
+    },
+    {
+      "rank": 7, "id": "ST-03", "score": 1024, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 4,
+      "area": "The worst-wins verdict lattice as a sheaf of verdicts over the arm cover",
+      "uos_surface": ["formal/mojo/oracle_substrate.mojo", "PASS 0 < BLIND 1 < WORLD_FAIL 2 < DIVERGENT 3 < NO_ORACLE 4 < VACUOUS 5 < LEAN_FAIL 6 < UNRUN 7", "uos.oracle.v1 receipts"],
+      "stacks_notion": "Sheaf valued in a lattice; the receipt status is the MEET over the cover of arms; BLIND and VACUOUS are the two distinct ways a section fails to exist",
+      "what_it_would_prove": "Worst-wins is a limit, so it is forced rather than chosen. More usefully it separates the two degeneracies that the F-W-26 family keeps producing: a section that is absent (BLIND -- no restriction available) from a section that is vacuously present (VACUOUS -- List.all [] = true). The empty-cover case is where every one of those findings lived.",
+      "what_fails_today": "The lattice is a hand-written comparison chain duplicated in Lean and Mojo. The empty-subject pathology is handled per-arm by presence guards that each author must remember to add.",
+      "falsifier": "If a receipt status can be correct while differing from the meet over its arms, worst-wins is not a limit.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 8, "id": "ST-07", "score": 1024, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 4,
+      "area": "CRDT strong eventual consistency as gluing on the replica site",
+      "uos_surface": ["formal/lean/CRDT_Lattice_Algebra.lean", "formal/lean/CRDT_SEC.lean", "L7 federation CRDT delta reconciliation"],
+      "stacks_notion": "Sheaf on the site of replica sets; join-semilattice-valued sections; SEC is the statement that every matching family glues uniquely",
+      "what_it_would_prove": "SEC and the sheaf condition are the same statement in different vocabulary. Proving the identification gives convergence for free from descent, and more importantly tells you which cover SEC holds over -- it is not all of them.",
+      "what_fails_today": "SEC is proved for the lattice operations. Nothing relates it to the actual replica topology, so convergence is proved for merges that the network may never perform.",
+      "falsifier": "If SEC holds over every cover, the site structure is trivial and plain lattice theory suffices.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 9, "id": "ST-10", "score": 1024, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 4,
+      "area": "OTP supervision trees as a stack of local restart policies",
+      "uos_surface": ["apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam", "IamSupervisor one_for_all intensity=3 period=60s", "root supervisor one_for_one intensity=10"],
+      "stacks_notion": "Stack over the site of subsystem subsets; one_for_one and one_for_all are two DIFFERENT coverages on the same base; effectivity of descent = a local restart policy extends to a global one",
+      "what_it_would_prove": "Whether a tree of locally-correct restart strategies composes to a globally-correct one. The failure mode is precisely non-effective descent: each child supervisor is individually sound and the tree still thrashes. Restart intensity budgets are the obstruction's size.",
+      "what_fails_today": "Composition is argued by OTP convention. No artifact states when a one_for_all subtree under a one_for_one root preserves the parent's budget.",
+      "falsifier": "If restart composition is already total (any local policy extends), descent is automatic and the framing is decorative.",
+      "status": "NEEDS_CATEGORY_INSTANCE"
+    },
+    {
+      "rank": 10, "id": "ST-20", "score": 1024, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 4,
+      "area": "Risk-score aggregation across L0..L9 as a sheaf on the dependency DAG",
+      "uos_surface": ["SC-RISK-PRIORITY-001 section 5", "'recompute parent summaries from current child assessments; do not sum duplicate evidence or inherited scores across L0-L9'", "urgency propagation with origin IDs retained"],
+      "stacks_notion": "Sheaf on the DAG site; the no-double-counting rule IS the gluing axiom on overlaps; inherited urgency is a pushforward along the dependency map",
+      "what_it_would_prove": "The SOP's warning against double counting is currently prose. As a sheaf condition it is checkable: two parents sharing a child must agree on that child's contribution, and the global score is then unique. Urgency propagation becomes a functor, so cycles are excluded structurally rather than by a reminder.",
+      "what_fails_today": "Aggregation is report-only and unvalidated; the SOP states the DAG/arithmetic validator is required follow-up and not implemented.",
+      "falsifier": "If no two parents ever share a child in practice, overlaps are empty and the sheaf condition is vacuous -- the same vacuity that singletons_do_not_glue formalises.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 11, "id": "ST-04", "score": 768, "C": 4, "T": 3, "F": 4, "Dep": 4, "I": 4,
+      "area": "Lean <-> Mojo differential pairs as a fibered category",
+      "uos_surface": ["tools/lean_mojo_differential.ml", "18/18 then 22 declared pairs", "formal/mojo/robustness_harness.mojo"],
+      "stacks_notion": "CategoryTheory.Functor.IsFibered; base = subjects, fibre = plane implementations, cartesian lift = the differential pairing",
+      "what_it_would_prove": "That every subject has a canonical implementation pair, and that pairing is stable under base change (refining a subject refines its pair). A missing cartesian lift is exactly a subject with no oracle -- which the verdict lattice already has a name for (NO_ORACLE) but no structural account of.",
+      "what_fails_today": "Pairs are an enumerated list. proof_plane_guard_oracle.mojo has no single-file subject, so the L1 gate does not cover it -- a fibre with no base point, found by inspection rather than by a law.",
+      "falsifier": "If subjects admit no non-trivial morphisms, the base category is discrete and fibredness is content-free.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 12, "id": "ST-08", "score": 768, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 3,
+      "area": "Jujutsu workspace merge as descent; conflicts as the obstruction class",
+      "uos_surface": ["SC-WORKSPACE-ISO-001", ".uos-workspaces/*", "integration/main lease", "72 codex-*/agy-* workspaces"],
+      "stacks_notion": "Descent along the workspace cover; a merge conflict is a non-trivial element of H^1 of the overlap complex",
+      "what_it_would_prove": "Mergeability becomes a cohomological statement: pairwise-compatible workspaces glue iff the obstruction vanishes. It predicts the three-way conflict that no pairwise check sees -- A agrees with B, B with C, C with A, and no global merge exists.",
+      "what_fails_today": "Merge is mechanical (assigned to Codex under L-17). Pairwise conflict detection cannot see a cyclic obstruction.",
+      "falsifier": "Exhibit three workspaces, pairwise mergeable, with no global merge. If no such triple can exist under jj's model, the cohomology is trivial.",
+      "status": "SPECULATIVE",
+      "note": "Ranked high on criticality but flagged SPECULATIVE: the falsifier above has not been attempted and the obstruction may be identically zero for a tree-shaped history."
+    },
+    {
+      "rank": 13, "id": "ST-19", "score": 768, "C": 4, "T": 4, "F": 4, "Dep": 4, "I": 3,
+      "area": "Toolchain resolution as a presheaf over PATH; locality as a gluing condition",
+      "uos_surface": ["tools/lib/uos-toolchain.sh (uos_env, uos_tool_path, uos_toolchain_verify)", "SC-NIX-DEVENV-001 invariants 11 and 12", "'that report can read 19/19 PRESENT while the file under review uses none of those 19'"],
+      "stacks_notion": "Presheaf of resolutions over the PATH cover; the no-bypass invariant is the requirement that every local resolution is the restriction of ONE global resolution",
+      "what_it_would_prove": "A hardcoded absolute path is formally a local section that is not a restriction of the global one -- invisible to a report that only counts presence. Gluing makes 'no tool bypasses the resolver' a statement with a counterexample theory instead of a lint.",
+      "what_fails_today": "The contract already records the exact failure: a release-number check stayed green while a hardcoded /nix/store path sat in tools/release_process.ml. Presence does not imply use.",
+      "falsifier": "If every resolution site is forced to consult the resolver by construction, there is nothing to glue.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 14, "id": "ST-09", "score": 324, "C": 3, "T": 3, "F": 3, "Dep": 4, "I": 3,
+      "area": "The 10-chart algebraic atlas: upgrade the cocycle condition to a real site",
+      "uos_surface": ["SC-INTENT-ATLAS-001", "formal/lean/Algebraic_Atlas_Intent.lean", "phi_ii = id, phi_ji = phi_ij^{-1}, phi_jk . phi_ij = phi_ik", "apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam"],
+      "stacks_notion": "Descent datum on a cover: transition isomorphisms plus the 2-cocycle condition; this is the definition of a descent datum, not an analogy",
+      "what_it_would_prove": "The contract already asserts cocycle and sheaf gluing. Over genuine isomorphisms the laws are forced by functoriality rather than checked arithmetically, and the atlas becomes an object Mathlib can reason about.",
+      "what_fails_today": "Proved over hand-rolled Nat/Bool at 4.33.0 with no Mathlib, so phi_ij is not an isomorphism of anything and the cocycle condition is an equation between codes.",
+      "falsifier": "If the 10 charts have no non-identity transitions in practice, the atlas is a disjoint union and the cocycle condition is vacuous.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 15, "id": "ST-13", "score": 324, "C": 3, "T": 4, "F": 3, "Dep": 3, "I": 3,
+      "area": "Tailnet federation (L7) delta reconciliation as descent along the node cover",
+      "uos_surface": ["L7 federation 10m cadence", "Zenoh mesh nas-1:7447", "CRDT delta reconciliation", "Tailscale FQDN mandate"],
+      "stacks_notion": "Descent along an open cover of nodes; partition tolerance as a cover that fails to be jointly surjective",
+      "what_it_would_prove": "A partition is formally a cover that does not cover. Gluing then states exactly which global views are recoverable after healing, and which are not recoverable at all.",
+      "what_fails_today": "Reconciliation is periodic and best-effort; nothing states what is provably lost across a partition.",
+      "falsifier": "If the node cover is always jointly surjective in deployment, partitions are out of scope and this is theory for an absent failure.",
+      "status": "SPECULATIVE"
+    },
+    {
+      "rank": 16, "id": "ST-17", "score": 324, "C": 3, "T": 4, "F": 3, "Dep": 3, "I": 3,
+      "area": "Homeostasis: local-to-global stability certificates",
+      "uos_surface": ["|e(t)| < 0.05", "Lyapunov V(e) <= 0.001, Vdot <= 0", "L2 component homeostasis 2s cadence", "/api/v1/homeostasis"],
+      "stacks_notion": "Sheaf of Lyapunov certificates over the subsystem cover; gluing = local stability certificates compose to a global one",
+      "what_it_would_prove": "Whether per-component PID stability implies system stability. It generally does NOT, and the sheaf condition is where the counterexample lives: compatible local certificates with no global section is the formal shape of coupled-oscillation instability.",
+      "what_fails_today": "Homeostasis is asserted as a single global setpoint check. No artifact relates per-component errors to the aggregate.",
+      "falsifier": "If the subsystems are provably decoupled, local certificates glue trivially.",
+      "status": "SPECULATIVE"
+    },
+    {
+      "rank": 17, "id": "ST-05", "score": 243, "C": 3, "T": 3, "F": 3, "Dep": 3, "I": 3,
+      "area": "Mutation testing as effectivity of descent",
+      "uos_surface": ["tools mutation --subject (175 mutants, 18 killed, 0 survived)", "44 specificity controls", "oracle_substrate_selftest.mojo"],
+      "stacks_notion": "Effective descent: a mutant killed on every element of the cover must be killed globally; a survivor is a non-effective descent datum",
+      "what_it_would_prove": "Why 175 mutants reduce to 18 kills: most mutants are not in the fibre over any subject. Effectivity distinguishes 'not killed' from 'not coverable', which is the same distinction the verdict lattice draws between WORLD_FAIL and NO_ORACLE.",
+      "what_fails_today": "Mutation coverage is reported as counts. A subject with no single-file mutation target (proof_plane_guard_oracle.mojo) is simply absent from the census.",
+      "falsifier": "If every mutant lies in some fibre, effectivity is automatic.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 18, "id": "ST-12", "score": 243, "C": 3, "T": 3, "F": 3, "Dep": 3, "I": 3,
+      "area": "KM triad transclusion DAG as a site; broken links as cohomology",
+      "uos_surface": ["#km-triad (185 ZK + 231 wiki + 81 rules + 21 SOPs + 29 skills + 43 journals)", "zk_transclude", "wikiDagAcyclic (THM_VEIL_11..13)", "km_metrics Shannon entropy gate"],
+      "stacks_notion": "Site generated by transclusion; a sheaf of claims; acyclicity as the condition making the site well-founded",
+      "what_it_would_prove": "Transclusion is restriction. A claim asserted in a wiki page and contradicted in a transcluded ZK note is a non-matching family -- detectable by gluing rather than by reading both.",
+      "what_fails_today": "km_census_oracle is BLIND (blind:corpus-scan-completed:field-absent) and has been across runs, so the corpus is not currently measured at all.",
+      "falsifier": "If transclusion edges never carry contradictory claims, gluing finds nothing.",
+      "status": "NEEDS_CATEGORY_INSTANCE",
+      "blocked_by": "km_census_oracle BLIND (peer-side, pre-existing)"
+    },
+    {
+      "rank": 19, "id": "ST-15", "score": 216, "C": 3, "T": 2, "F": 3, "Dep": 4, "I": 3,
+      "area": "Fractal layer taxonomy L0..L9 as a site with a single source of truth",
+      "uos_surface": ["contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md", "#fractal-l0..l9 tags across every rule surface"],
+      "stacks_notion": "Site of layers with restriction along layer inclusion; single-source-of-truth = the taxonomy presheaf is separated (at most one global section)",
+      "what_it_would_prove": "Separatedness is the precise content of 'single source of truth': two taxonomies that agree locally are equal. Duplication becomes a provable violation instead of a convention.",
+      "what_fails_today": "The taxonomy is duplicated across dozens of rule surfaces; the lakefile records 651 lines of byte-identical declaration blocks and the EV ceiling written 14 times in 2 spellings.",
+      "falsifier": "If duplicated copies are permitted to differ by design (e.g. per-harness dialects), separatedness is the wrong requirement.",
+      "status": "FEASIBLE_NOW"
+    },
+    {
+      "rank": 20, "id": "ST-18", "score": 72, "C": 2, "T": 3, "F": 3, "Dep": 2, "I": 2,
+      "area": "Zenoh key-expression namespace as a topological site",
+      "uos_surface": ["indrajaal/l0/const/** .. indrajaal/l7/fed/**", "uos/v1/control/fractal_holarchy_fpp", "OoZ / MoZ transport"],
+      "stacks_notion": "Key expressions with wildcards form a basis for a topology; subscriptions are opens; delivery is a sheaf of messages on that space",
+      "what_it_would_prove": "Wildcard subscription semantics (which key patterns subsume which) is a lattice-of-opens question, and sheaf-theoretic delivery would make overlapping subscription guarantees precise.",
+      "what_fails_today": "Nothing is broken that this would fix; subsumption is handled by the Zenoh library.",
+      "falsifier": "Zenoh already implements and tests key-expression subsumption, so a UOS-side formalization may duplicate upstream work with no new guarantee.",
+      "status": "SPECULATIVE",
+      "note": "Ranked last deliberately. Included for completeness of the 20 rather than because it earns its place; a reader should read the falsifier as a recommendation NOT to start here."
+    }
+  ],
+
+  "summary": {
+    "count": 20,
+    "score_range": [72, 2500],
+    "by_status": {
+      "PARTIAL_PROVED": ["ST-01"],
+      "FEASIBLE_NOW": ["ST-16", "ST-06", "ST-14", "ST-11", "ST-03", "ST-07", "ST-20", "ST-04", "ST-19", "ST-09", "ST-05", "ST-15"],
+      "NEEDS_CATEGORY_INSTANCE": ["ST-02", "ST-10", "ST-12"],
+      "SPECULATIVE": ["ST-08", "ST-13", "ST-17", "ST-18"]
+    },
+    "recommended_first_slice": "ST-14 (hash-chain sheaf). Highest score among areas needing no new category instance and no blocked dependency, it attacks a defect class already observed twice this week (pairwise predicate standing in for a global invariant: F-W-28, and km_chain adjacent-row-only), and its falsifier is cheap to attempt.",
+    "do_not_start_with": "ST-18, and ST-08/ST-13/ST-17 until their falsifiers are attempted. An area whose falsifier has not been tried is a candidate for technique-theatre, which the formal-technique-selection discipline exists to prevent.",
+    "honest_boundary": "No Sa-plan task was claimed for any of these 20 areas and nothing here is ledgered. This is an analysis artifact. Four of the twenty are marked SPECULATIVE by the author; the ranking is one model's ordinal judgment and has had no peer review."
+  }
+}

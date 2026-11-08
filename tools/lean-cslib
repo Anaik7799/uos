@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# In-project Lean 4.35.0 + CSLib + Mathlib toolchain wrapper (SC-TOOLCHAIN-INPROJECT-001).
+# Resolves the prebuilt leanprover/cslib (rev 0b1e3680b43ad9cd482a66f183764f33fc8a4e8f) and
+# mathlib (v4.35.0) olean trees under formal/lean/ruliad/.lake/packages with zero network access.
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PKGS="$ROOT/formal/lean/ruliad/.lake/packages"
+LEAN_PATH="$ROOT/formal/lean/ruliad/.lake/build/lib/lean"
+for d in "$PKGS"/*/.lake/build/lib/lean; do
+  LEAN_PATH="$LEAN_PATH:$d"
+done
+export LEAN_PATH
+exec "$ROOT/toolchains/lean-4.35.0/bin/lean" -Dexperimental.module=true "$@"

@@ -232,7 +232,7 @@ pub fn get_castes() -> List(CoreEvoCasteRecord) {
     ),
     CoreEvoCasteRecord(
       caste_id: "CASTE-03",
-      role_name: "Verifier Codex (SovereignSentinel / GuardImmune)",
+      role_name: "Verifier Codex (SovereignSentinel)",
       bound_engine: "codex:gpt-6.1-terra ($0)",
       token_share: "~4%",
       heijunka_wip_limit: 2,
@@ -241,7 +241,7 @@ pub fn get_castes() -> List(CoreEvoCasteRecord) {
     ),
     CoreEvoCasteRecord(
       caste_id: "CASTE-04",
-      role_name: "Scholar Claude / ArchitectSynthesizer (ScoutExplorer)",
+      role_name: "Scholar Claude (ArchitectSynthesizer)",
       bound_engine: "claude-scholar / pi+google:gemini-4-argon",
       token_share: "~2%",
       heijunka_wip_limit: 2,

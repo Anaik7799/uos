@@ -1,0 +1,108 @@
+{
+  "$schema": "https://pi.dev/schemas/models.schema.json",
+  "providers": {
+    "local": {
+      "name": "Local Qwen (Modular MAX + Mojo + SM75 CUDA + Lean C-ABI + OTel + Zenoh)",
+      "baseUrl": "http://razr15-1.tail55d152.ts.net:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "dummy",
+      "models": [
+        {
+          "type": "chat",
+          "id": "qwen2.5-coder-7b-instruct",
+          "name": "Qwen 2.5 Coder 7B (Local sm_75 + MAX + Mojo + Zenoh)",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 65536,
+          "maxTokens": 2048,
+          "headers": {
+            "X-UOS-Holarchy-Layer": "L6_Cognitive_GPU",
+            "X-UOS-Holarchy-Layer-Idx": "6",
+            "X-UOS-FPP-Actor": "l6_intel_max_qwen_holon",
+            "X-UOS-Caste": "Caste02_Pi_Qwen",
+            "X-UOS-Pipeline": "pi+harness->max+mojo+local+qwen+otel+mcp+zenoh"
+          },
+          "compat": {
+            "maxTokensField": "max_tokens",
+            "supportsStore": false,
+            "supportsDeveloperRole": false,
+            "supportsStrictMode": false,
+            "sendSessionAffinityHeaders": true
+          }
+        },
+        {
+          "type": "chat",
+          "id": "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF",
+          "name": "Qwen 2.5 Coder 7B GGUF (Local sm_75)",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 65536,
+          "maxTokens": 2048,
+          "headers": {
+            "X-UOS-Holarchy-Layer": "L6_Cognitive_GPU",
+            "X-UOS-Holarchy-Layer-Idx": "6",
+            "X-UOS-FPP-Actor": "l6_intel_max_qwen_holon",
+            "X-UOS-Caste": "Caste02_Pi_Qwen",
+            "X-UOS-Pipeline": "pi+harness->max+mojo+local+qwen+otel+mcp+zenoh"
+          },
+          "compat": {
+            "maxTokensField": "max_tokens",
+            "supportsStore": false,
+            "supportsDeveloperRole": false,
+            "supportsStrictMode": false,
+            "sendSessionAffinityHeaders": true
+          }
+        }
+      ]
+    },
+    "pi-local": {
+      "name": "Pi-Local Qwen (Turing sm_75 + Modular MAX 26.8.0)",
+      "baseUrl": "http://razr15-1.tail55d152.ts.net:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "dummy",
+      "models": [
+        {
+          "type": "chat",
+          "id": "qwen2.5-coder-7b-instruct",
+          "name": "Qwen 2.5 Coder 7B (Pi-Local sm_75)",
+          "reasoning": false,
+          "input": ["text"],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 65536,
+          "maxTokens": 2048,
+          "headers": {
+            "X-UOS-Holarchy-Layer": "L6_Cognitive_GPU",
+            "X-UOS-Holarchy-Layer-Idx": "6",
+            "X-UOS-FPP-Actor": "l6_intel_max_qwen_holon",
+            "X-UOS-Caste": "Caste02_Pi_Qwen",
+            "X-UOS-Pipeline": "pi+harness->max+mojo+local+qwen+otel+mcp+zenoh"
+          },
+          "compat": {
+            "maxTokensField": "max_tokens",
+            "supportsStore": false,
+            "supportsDeveloperRole": false,
+            "supportsStrictMode": false,
+            "sendSessionAffinityHeaders": true
+          }
+        }
+      ]
+    }
+  }
+}

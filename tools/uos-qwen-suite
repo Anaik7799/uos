@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# UOS Local Qwen 10-Usecase Runtime Engine & Comprehensive Test Suite CLI
+# ==============================================================================
+set -euo pipefail
+UOS_ROOT="/home/an/NAS-setup/uos"
+cd "$UOS_ROOT"
+MOJO_BIN="${MOJO_BIN:-$(command -v mojo || echo /home/an/.local/bin/mojo)}"
+exec "$MOJO_BIN" run -I formal/mojo formal/mojo/qwen_usecase_runtime_engine_suite.mojo "$@"

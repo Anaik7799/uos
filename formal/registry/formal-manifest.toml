@@ -12,9 +12,9 @@ status = "BOUNDED_WORKER_ONLY"
 scope = "Satisfiability queries for state invariants"
 
 [authorities.lean]
-version = "4.33.0"
+version = "4.35.0"
 status = "PREPARED_ISOLATED"
-scope = "Lockstep freshness and kernel core theorems"
+scope = "Lockstep freshness, Veil 6-plane sync, leanprover/cslib structures, and kernel core theorems"
 
 [authorities.tla]
 status = "MODEL_CHECKER"

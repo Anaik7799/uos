@@ -10,6 +10,11 @@
 ////
 //// Coordinates stigmergically via signed Zenoh pheromone trails (`uos/v1/hive/**`)
 //// with half-life decay, Heijunka leveled WIP pull-queues, and 2oo3 quorum voting.
+//// Formally verified for 5x8=40 FPP Actor Caste Partition & `CASTE-01..05` Bijection in:
+//// - `formal/lean/UosFractalHolonicSemanticEquivalence20CycleDigitalTwin.lean` (`THM_FHC_EQ_03..04`)
+//// - `formal/mojo/fractal_holonic_semantic_equivalence_checker.mojo`
+//// - `governance/agents/policy/20261108-1618-uos-fractal-holonic-semantic-equivalence-knowledge-map-and-dictionary.json`
+//// - `sa-plan` Plan `uos-fhc-semantic-equivalence-20cycles-20261108-1616` (`evol-fhc-01..20`).
 
 import cepaf_gleam/ecology/core_evolution.{
   type Engine, type QuotaSnapshot, AgyThinConductor, CodexCli, PiArgonGoogle,
@@ -292,6 +297,67 @@ pub fn encode_hive_status_json(schedule: HeijunkaPullSchedule) -> String {
     #("blocked", json.array(schedule.blocked_tasks, json.string)),
   ])
   |> json.to_string
+}
+
+/// Canonical 5-Caste ID (`CASTE-01`..`CASTE-05`) bijection closing Drift D1 (`EVOL-FHC-01`, `THM_FHC_01`).
+/// Maps the 5 stigmergic `HiveCaste` roles in `core_hive.gleam` bijectively onto `CASTE-01..CASTE-05`
+/// in `core_evo_api.gleam`, `UosOntologyAtlas.lean` (`THM_ATLAS_25..26`), and `20261106-0402-uos-indexed-axis-registry.json`.
+pub fn canonical_caste_id(caste: HiveCaste) -> String {
+  case caste {
+    QueenConductor -> "CASTE-01"
+    ForagerBuilder -> "CASTE-02"
+    SovereignSentinel -> "CASTE-03"
+    ArchitectSynthesizer -> "CASTE-04"
+    NurseDiagnostician -> "CASTE-05"
+  }
+}
+
+/// Canonical numeric caste index (`1..5`) matching `owner_caste_id` in `core_fpp_actor_twin_mesh.gleam`.
+pub fn canonical_caste_number(caste: HiveCaste) -> Int {
+  case caste {
+    QueenConductor -> 1
+    ForagerBuilder -> 2
+    SovereignSentinel -> 3
+    ArchitectSynthesizer -> 4
+    NurseDiagnostician -> 5
+  }
+}
+
+/// Canonical FPP Actor assigned-agent tag (`Caste01_AGY`..`Caste05_DeepSeekDSH`).
+pub fn canonical_fpp_assigned_agent_tag(caste: HiveCaste) -> String {
+  case caste {
+    QueenConductor -> "Caste01_AGY"
+    ForagerBuilder -> "Caste02_PiArgon"
+    SovereignSentinel -> "Caste03_Codex"
+    ArchitectSynthesizer -> "Caste04_Claude"
+    NurseDiagnostician -> "Caste05_DeepSeekDSH"
+  }
+}
+
+/// Canonical primary `AgentId` string (`agy, pi, codex, claude, deepseek`) with `argon` as `CASTE-02` co-slot (`THM_ATLAS_25`).
+pub fn canonical_caste_primary_agent_id(caste: HiveCaste) -> String {
+  case caste {
+    QueenConductor -> "agy"
+    ForagerBuilder -> "pi"
+    SovereignSentinel -> "codex"
+    ArchitectSynthesizer -> "claude"
+    NurseDiagnostician -> "deepseek"
+  }
+}
+
+/// Verifies that all 5 `BeeCaste` roles form a strict 5-element bijection with `CASTE-01..CASTE-05` (`1..5`).
+pub fn verify_caste_api_bijection() -> Bool {
+  let castes = [
+    QueenConductor,
+    ForagerBuilder,
+    SovereignSentinel,
+    ArchitectSynthesizer,
+    NurseDiagnostician,
+  ]
+  let ids = list.map(castes, canonical_caste_id)
+  let nums = list.map(castes, canonical_caste_number)
+  ids == ["CASTE-01", "CASTE-02", "CASTE-03", "CASTE-04", "CASTE-05"]
+  && nums == [1, 2, 3, 4, 5]
 }
 
 fn effective_score(

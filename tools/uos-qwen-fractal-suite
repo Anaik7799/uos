@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# UOS Fractal 10-Layer Use-Case & 12-Loop Qwen Test Suite Runner (Performance,
+# 1st-Time Correctness & Context Optimization across L0..L9 / UC00..UC09 +
+# LTest/MTest 42-Test Suite + 40 Lean+Mojo+MAX Evolutionary Cycles)
+# Zero-Python Mandate (SC-ZERO-PYTHON-001)
+# ==============================================================================
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+./tools/mojo run -I "$ROOT/formal/mojo" "$ROOT/formal/mojo/qwen_usecase_runtime_engine_suite.mojo"
+exec ./tools/uos-mtest "$@"

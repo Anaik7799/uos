@@ -393,5 +393,157 @@
       "model_evaluation": "PASS after F-W-22 and F-W-23.",
       "twin_coverage": "Broken by my own world_status change and repaired under F-W-24. It is in this list because I broke it, not because it was carried in."
     }
+  },
+  "findings_20261108_0033": {
+    "F-W-27": {
+      "title": "razr15-1:8000 returns HTTP 200 with a zero-byte body for chat completions",
+      "status": "OBSERVED LIVE -- gateway-side, not fixed here",
+      "evidence": "Direct curl, independent of any oracle parsing: `HTTP=200 bytes=0 time=0.368490` at 20261108-0032Z, same host/model/payload that returned a 502 after 120.1s at 2259Z and a correct completion at 2325Z. The gateway is flapping between three distinct failure modes.",
+      "why_this_matters_most": "It is the DANGEROUS one. A 200 with an empty body is read as success by any arm of the form `status_code == 200` -- which is precisely what model_evaluation_oracle's three arms were before F-W-23. So the pre-fix code would now report a FALSE PASS on a gateway serving nothing, where it previously reported a spurious WORLD_FAIL. Same arm, both error directions, depending only on which way the backend happens to be broken.",
+      "fix_validated_by_it": "The three modes now separate cleanly through Receipt.world_status, and this third mode was not anticipated when the helper was written -- it appeared afterwards and the helper handled it: 502 after 120s -> WORLD_FAIL http-502 (was BLIND, wrong); no answer in budget -> BLIND no-status-within-budget (honest); 200 with empty body -> WORLD_FAIL http-200-bad-body (would have been a false PASS). The `body_ok` parameter earned itself on a case I did not foresee.",
+      "owner": "ops/nodes/razr15-1-wsl2 (gateway returning 200 on an empty backend result instead of 502 or 503)"
+    }
+  },
+  "tree_state_at_merge_20261108_0033": {
+    "merge_performed": "integration/main and main moved to yslquvwkowvy / 7276c392001f on explicit operator instruction, local bookmarks only, no push. No native git mutation; no .git marker.",
+    "green_at_verification": "The tip was verified green at 20261107-2330Z: Lean/Mojo differential 19/19 PASS, OVERALL PASS, receipt revision yslquvwkowvy; preflight PASS 35; mutation --subject 175 mutants / 17 killed / 1 survived -> fixed -> 0; four edited twins CLEAN, 0 sorry, 0 axiom.",
+    "not_green_now_and_why": "A peer ran a full 19-pair differential at 20261108-0011Z that returned WORLD_FAIL on two pairs I did not author -- provenance_ceiling_impact_oracle (WORLD_FAIL; the file I am barred from editing, and a peer changed its expected C-ABI export count from 20 to 26 in this same commit) and km_census_oracle (BLIND). A further single-pair run at 0013Z is now the newest receipt line, which re-triggers the documented non-defect under F-W-21: ontology_atlas WORLD_FAIL and agent_profile BLIND, both of which self-heal on the next full differential.",
+    "my_pairs_now": "twin_coverage PASS. razr15_max_qwen WORLD_FAIL http-200-bad-body and model_evaluation BLIND no-status-within-budget -- both are the instruments correctly reporting F-W-27, a live flapping backend, not regressions in the fix.",
+    "honest_statement": "Green was real when measured and is not a property the tip keeps, because four writers share this checkout and two of the verdicts depend on a mutable receipt artifact and a flapping remote node. A single green differential is evidence about one moment, not a standing attribute of main."
+  },
+  "findings_20261108_0702": {
+    "observed_utc": "2026-11-08T07:15:02Z",
+    "prefix_basis": "date -u +%Y%m%d-%H%S read at 07:15:02Z => 20261108-0702 (UTC hour + SECONDS, not minutes)",
+    "authority": "NONE",
+    "ev_ceiling": 93,
+    "requested_verbatim": "fix F-W-28, F-W-27 and F-W-25. full sweep, formal checks",
+    "F-W-25": {
+      "status": "FIXED_AND_VERIFIED",
+      "claim": "ModelProbeResult.remote_tokens_billed was declared, initialised to 0, read three times in calculate_utility_score, and never assigned anywhere in the tree, so `c_score = 100 if remote_billed == 0` was the constant 100 on every probe ever run.",
+      "why_it_matters": "That arm scores the zero-burn invariant of SC-MODEL-ROLE-TWIN-001 §1.4 (remote_tokens_billed = 0). It scored it with a tautology: an assertion that cannot fail is not evidence (INV-FALSIFY).",
+      "fix": [
+        "model_evaluation_suite_lib.mojo: REMOTE_BILLED_UNMEASURED = -1 sentinel plus an explicit remote_billed_measured flag; 0 cannot be the default because 0 is the value under test.",
+        "probe_openai_endpoint now reads the field from the response via json_has + json_int. razr15-1:8000 serves it in uos_max_meta and again in holonic_8pillar, so the measurement existed all along and was discarded.",
+        "calculate_utility_score takes the measured flag; credit requires measured AND zero.",
+        "model_evaluation_oracle.mojo: new world_or_blind arm `local-probe-burns-no-remote-tokens`. BLIND when unmeasured, because an unmeasured cost is not an observed remote burn.",
+        "FormalModelEvaluationSuite.lean: EmpiricalMetrics gains costMeasured : Bool (Nat cannot carry -1), cScore guarded, THM_COST_01..06."
+      ],
+      "sibling_defect_found_and_fixed": {
+        "claim": "total_time_ms was parsed from a key named \"total_time_ms\" that NO endpoint in this system emits, so l_score was 0 on every probe, healthy or not -- a quarter of the nominal weight permanently dark.",
+        "evidence": "A healthy 5323-byte gateway response observed 20261108-0702Z carries uos_max_meta.latency_ms = 299.95 and no total_time_ms anywhere.",
+        "relation_to_F_W_22": "The F-W-22 fix aligned the two planes' arithmetic at latencyMs = 0 and never asked why 0 was arriving. Agreeing on a degenerate input is not the same as not producing it.",
+        "fix": "curl -w %{time_total} supplies the client-observed round-trip; the server self-report is retained as a guarded fallback only when the measurement is absent."
+      },
+      "measured_after_fix": "remote_tokens_billed = 0, measured = True; scores moved from constant-c/zero-l to 1173 / 1696 / 1773 across the three profiles"
+    },
+    "F-W-27": {
+      "status": "REPRODUCED_UNDER_INJECTION__FIXED__VERIFIED_LOCALLY__NOT_DEPLOYED",
+      "correction_to_prior_record": "The prior record localised F-W-27 to the :8000 gateway while :8081 answered correctly, which was right, and implied a standing fault, which was wrong. At 20261108-0702Z the gateway answered 10/10 probes with a valid 5316-5323 byte completion. The fault is NOT currently reproducing in the wild. I did not conclude from that it was fixed, which would have repeated the razr15-was-down error in the opposite direction.",
+      "root_cause_located_structurally": [
+        "Non-streaming path: the enrichment block is wrapped in `except Exception: pass`, correct for telemetry, but it meant an EMPTY or NON-JSON backend body fell through to send_response(resp.status) and was relayed to the client as 200 with Content-Length: 0.",
+        "Streaming path: send_response and end_headers were called BEFORE reading any byte of the backend stream. A stream that opened and closed produced 200 with 0 bytes, and because the status line was already committed the `except` handler could no longer send its 502. The status was decided before the evidence for it existed.",
+        "Both are the third HTTP failure mode named in the F-W-23 analysis -- 200 with a bad or empty body -- the one a `status == 200` check reports as a FALSE PASS. F-W-23 fixed the oracle side; this fixes the producer side, so the mode stops being produced."
+      ],
+      "timing_evidence": "The observed failures were 0.07-0.37 s, far too fast for the 180 s backend timeout, i.e. a stream or body that terminated immediately rather than one that hung.",
+      "fix": [
+        "Streaming: first line hoisted above the headers; an empty stream becomes 502 with uos_finding F-W-27.",
+        "Non-streaming: explicit validation separate from enrichment -- empty body => 502, non-JSON => 502, and on the chat path only, JSON without `choices` => 502. The choices requirement is gated on the chat path because /v1/embeddings answers with `data` and demanding choices everywhere would 502 a healthy surface.",
+        "`except Exception: pass` => a recorded reason surfaced as X-UOS-Enrichment-Failed. The caller's verdict is unchanged; only the silence is removed. An unexplained absence of telemetry is indistinguishable from telemetry never configured."
+      ],
+      "language_boundary_stated": "ops/nodes/razr15-1-wsl2/max_qwen_server.py is the Modular MAX isolated-inference surface, which CLAUDE.md names as the only place Python is permitted. No new Python helper was authored; python3 was used to syntax-check and to RUN this permitted file.",
+      "verification_differential": {
+        "method": "socat served a canned HTTP/1.1 200 with Content-Length: 0 on 127.0.0.1:18099 as a fault injector (host OS utility, not an authored helper). The pre-edit gateway was recovered byte-exact from the working-copy commit via `jj --ignore-working-copy file show -r @` (1587 lines, 0 guards) and run against the SAME injector.",
+        "pre_fix_nonstreaming_vs_empty_backend": "HTTP 200, 0 bytes  <-- the false PASS",
+        "pre_fix_streaming_vs_empty_backend": "HTTP 200, 0 bytes",
+        "fixed_nonstreaming_vs_empty_backend": "HTTP 502, 236 bytes, uos_finding F-W-27",
+        "fixed_streaming_vs_empty_backend": "HTTP 502, 238 bytes, uos_finding F-W-27",
+        "fixed_nonstreaming_vs_live_backend": "HTTP 200, 5316 bytes, valid choices + uos_max_meta (no regression)",
+        "fixed_streaming_vs_live_backend": "HTTP 200, 2538 bytes SSE (no regression)",
+        "conclusion": "The fix is not inert and does not break the healthy path. Both controls were RUN, not argued."
+      },
+      "deployment_blocked": "ssh an@razr15-1.tail55d152.ts.net => Permission denied (publickey). The running node therefore still executes the pre-fix code. This fix is SOURCE-ONLY and UNDEPLOYED; the node's behaviour is unchanged until an operator with key access restarts it. Verification above was performed against a local instance of the fixed file, not against the node.",
+      "measured_backend_state": "razr15-1:8000 healthy 10/10; :8081 healthy; uos_max_meta.failover_epoch 931, watchdog_restarts_total 0"
+    },
+    "F-W-28": {
+      "status": "FIXED_AND_VERIFIED__NOW_REPORTS_A_REAL_VIOLATION",
+      "claim": "model_evaluation_oracle.mojo scored the context-window safety invariant with `contains(models_json, '\"contextWindow\": 8192')` -- an EXISTENTIAL check standing in for a UNIVERSAL invariant. isContextWindowSafe requires every declared client window to fit the physical one; the arm passed on the first compliant entry and never looked at the rest, so it could not be failed by adding a bad entry, only by deleting the good one.",
+      "live_violation_it_was_hiding": "~/.pi/agent/models.json at 20261108-0702Z: 3 model entries across 2 providers (local, pi-local), all pointing at the same razr15-1:8000/v1, declaring contextWindow 32768, 8192 and 32768. The arm passed on the single 8192 while two entries declared double the window the backend serves.",
+      "sharpest_point": "FormalModelEvaluationSuite.lean proves exactly that configuration unsafe in thm_oversized_client_context_rejected, whose counterexample is contextClient := 32768 against contextPhysical := 8192. The spec's own refuted case was live in the client config and its paired oracle scored it green.",
+      "second_defect_found_while_fixing": {
+        "claim": "The physical bound was a hardcoded 8192 on the authority side and it was WRONG.",
+        "measurement": "The llama.cpp backend at razr15-1:8081 reports \"n_ctx\": 16384 with \"n_ctx_train\": 131072 in its /v1/models metadata, observed 20261108-0702Z. :8000 /v1/models lists ids only and carries no n_ctx, which is why :8081 is now named in the oracle.",
+        "consequence": "The spec understated the real window twofold. A stale constant on the authority side can invent a violation or miss one; this one missed, while still passing.",
+        "fix": "The oracle now MEASURES n_ctx from the backend. canonicalRazr15LocalSpec.contextPhysical and the counterexample in thm_oversized_client_context_rejected were corrected 8192 -> 16384 so the Lean record states what was observed rather than defining it."
+      },
+      "fix": [
+        "model_evaluation_oracle.mojo: every \"contextWindow\" declaration is enumerated and compared against the MEASURED n_ctx; the verdict is the count of violations, not the existence of a compliant sibling.",
+        "The arm is world_or_blind with `n_ctx > 0 and declared > 0` as a PRESENCE condition, so an unreadable or emptied models.json is BLIND rather than green -- the F-W-26 empty-subject pathology, which THM_CTX_05 proves is real for List.all on [].",
+        "FormalModelEvaluationSuite.lean: allContextWindowsSafe / someContextWindowSafe, observedPiClientConfig as live data, THM_CTX_01..06."
+      ],
+      "measured_after_fix": "backend n_ctx 16384; client windows declared 3; oversized 2; max declared 32768; arm `every-client-context-window-within-physical` => WORLD_FAIL",
+      "the_world_fail_is_the_point": "The new arm reports a TRUE violation that the old arm scored green. The oracle defect is fixed; the CONFIG defect it exposes is a separate matter in a peer's file.",
+      "not_done_deliberately": "~/.pi/agent/models.json was NOT edited. It is Caste02 Pi's private harness config, and whether 32768 is wrong or the server should be launched with a larger -c is an operator decision, not something an oracle may close by rewriting its subject. Precedent: bionic_interception_oracle.mojo:505 -- 'Resolving it is an operator decision, not something an oracle can close.' The one-line operator fix is to set both 32768 entries to 16384 or lower, or to relaunch llama.cpp with n_ctx >= 32768."
+    }
+  },
+  "falsifiability_controls_run_20261108_0702": {
+    "F-W-25": "THM_COST_03 proves a MEASURED zero still earns full credit, so the fix is not a blanket penalty; THM_COST_05 proves the old and new rules disagree exactly on the unmeasured state every historical probe was in; THM_COST_06 proves the new rule never awards more. Runtime: measured = True observed against the live gateway.",
+    "F-W-27": "The pre-edit gateway was run against the same fault injector and produced 200/0 bytes on both paths, while the fixed gateway produced 502 on both; the fixed gateway was also run against the LIVE backend and produced valid 200s on both paths.",
+    "F-W-28": "THM_CTX_04 proves the universal reading is not a constant false; THM_CTX_03 proves the two readings disagree on observed data; THM_CTX_05 proves the empty-config vacuous pass that justifies the presence guard. Runtime: the arm went from PASS to WORLD_FAIL on unchanged input."
+  },
+  "process_nonconformance_20261108_0702": [
+    "I ran `pkill -f 'TCP-LISTEN:18099'`, whose pattern matched my own command line, and killed my own shell (exit 144). My memory file records this exact hazard: 'pgrep pattern kills own shell -- anchor pgrep -f patterns or kill explicit pids'. I had the note and did not apply it. Recovered by discovering listener pids via `ss -lntp` and killing them explicitly.",
+    "I double-backgrounded the differential (nohup & inside a run_in_background Bash call), so the wrapper exited immediately while the real process detached, and the completion notification reported the wrapper rather than the run.",
+    "Two socat fault-injector attempts failed before the third worked: the first emitted no readable response, and the second broke because \\r\\n inside a shell-quoted SYSTEM argument was expanded by the outer shell into real newlines, which split the command. Fixed by serving a canned response from a file written with printf."
+  ],
+  "F_W_27b_duplicate_gateway_copies_20261108_0702": {
+    "status": "FOUND_WHILE_FIXING__FIXED",
+    "claim": "The MAX gateway exists as TWO separate files in the tree, maintained as exact copies, and fixing one would have silently created a divergence.",
+    "paths": [
+      "ops/nodes/razr15-1-wsl2/max_qwen_server.py",
+      "services/inference/max/max_qwen_server.py"
+    ],
+    "evidence": "Before my edit both were md5 5fc26798e4e700ac54d0a487d0eeffd4 at 1587 lines, i.e. BYTE-IDENTICAL. `find` confirms exactly these two copies in the tree.",
+    "why_it_matters": "I had fixed only ops/ and was about to report F-W-27 closed. services/inference/max is the path CLAUDE.md and uos-governance.md name as the sole permitted home for Python ('Isolated Inference: Modular MAX/Mojo (services/inference/max - Python confined exclusively here)'), so there is a live possibility that the deployed artifact is the copy I had NOT touched. A fix in one of two maintained copies is not a fix; it is a new drift defect of exactly the kind this tree keeps finding.",
+    "fix": "The fixed file was copied over the second path; both are now md5 4a0f0a2bfc7692a4df389c1c98872276 with 7 F-W-27 guard references each, and both syntax-check. The byte-identity invariant that evidently held before is preserved rather than broken.",
+    "residual": "Which copy the running node executes is UNKNOWN from here (ssh is publickey-denied). Both now carry the fix, so the question no longer changes the outcome -- but the duplication itself has no declared single source of truth and should get one."
+  },
+  "full_sweep_20261108_0702": {
+    "observed_utc_start": "2026-11-08T07:15:02Z",
+    "lean_mojo_differential_run_1": {
+      "result": "15 PASS / 2 BLIND / 2 WORLD_FAIL, OVERALL WORLD_FAIL",
+      "note": "ontology_atlas and agent_profile appeared non-PASS mid-run and were measured PASS immediately afterwards, standalone. This is the documented perishable-pass condition: both read the newest differential receipt, and the receipt was mid-rewrite by the very run that was grading them. Not a defect introduced by this session's changes."
+    },
+    "lean_mojo_differential_run_2": {
+      "result": "17 PASS / 1 BLIND / 1 WORLD_FAIL, OVERALL WORLD_FAIL",
+      "blind": "km_census_oracle -- blind:corpus-scan-completed:field-absent. Peer-side, pre-existing, also BLIND in the peer run at 20261108-0011Z. Not touched.",
+      "world_fail": "model_evaluation_oracle -- world:every-client-context-window-within-physical. This is the arm ADDED this session by the F-W-28 fix, reporting a TRUE violation in ~/.pi/agent/models.json that the previous existential arm scored green. The tree is non-green because the system is genuinely misconfigured, not because the fix regressed anything.",
+      "honest_reading": "OVERALL WORLD_FAIL is the correct verdict for the tree as it stands. Making it green requires an operator decision on a peer's config, which an oracle may not take by rewriting its subject."
+    },
+    "preflight": "PASS (35 checks), including plane lock-exclusion (5 forked controls) and plane-hygiene (no stray generated_* in formal/mojo)",
+    "lean_plane": "formal/lean/FormalModelEvaluationSuite.lean elaborates CLEAN (exit 0, zero output); 0 sorry, 0 axiom; 18 theorems (6 pre-existing + 12 added: THM_COST_01..06, THM_CTX_01..06)",
+    "probe_level_control": "A Mojo control (scratchpad/probe_empty_body_test.mojo) ran probe_openai_endpoint against a 200/empty-body injector: status_code 200 (definite, NOT blind), total_time_ms 3, remote_tokens_billed -1, remote_billed_measured False. One control validating all three fixes at once.",
+    "mutation_subject_mode": "175 mutants | KILLED 18, SURVIVED 0, NOT_RUN 0 | 44 specificity controls held, 0 fired | 0 nondeterministic oracles. 18 killed vs 17 in the prior session: model_evaluation_oracle now genuinely depends on its subject, so the F-W-26 repair held and the new arms added real dependence.",
+    "mutation_caveat_quoted_from_the_tool": "KILLED means the receipt depends on the subject, NOT that the arm measures the right property. NOT_RUN is never a pass.",
+    "l1_gate_coverage_gap": "proof_plane_guard_oracle.mojo has NO declared single-file subject (formal/lean/*.lean, tree-wide), so the L1 gate does not cover it and its L1 result is an observation only. Pre-existing, unchanged.",
+    "hygiene": "0 stray generated_* in formal/mojo; 0 .mutbak; 0 plane locks held; 0 test listeners left on 18000-18002/18099; __pycache__ artifacts created by my own py_compile removed, peer artifacts from September left intact"
+  },
+  "self_caught_defect_in_my_own_fix_20261108_0702": {
+    "claim": "My first version of the probe parsing guarded on `len(lines) >= 3`, which is WRONG for the one case that matters most.",
+    "mechanism": "capture() strips its output, so a 200 response with an EMPTY body arrives as '<time>\\n<code>' -- two lines, not three. A >= 3 guard skips the parse block entirely and leaves status_code at its initial 0, which world_status reads as 'no status obtained' and scores BLIND.",
+    "why_it_matters": "That would have recreated F-W-23 from the producer side, in the same week it was fixed on the consumer side: a definite '200 with an empty body' reported as unobservability. The fix for a false PASS would have become a false BLIND.",
+    "caught_by": "Reading my own diff before claiming completion, then CONFIRMED empirically by the Mojo control above rather than by argument.",
+    "fix": "`>= 2` with a comment stating why two is the real floor."
+  },
+  "still_open_after_20261108_0702": {
+    "pi_models_json_context_window_violation": "~/.pi/agent/models.json declares contextWindow 32768 in 2 of 3 entries against a backend serving n_ctx 16384. OPERATOR DECISION: either lower both entries to <= 16384, or relaunch llama.cpp with n_ctx >= 32768. Not edited: it is Caste02's private harness config. This is what the new arm reports.",
+    "F_W_27_deployment": "Source fixed in both copies and verified locally; the running razr15-1 node still executes pre-fix code because ssh is publickey-denied. UNDEPLOYED.",
+    "km_census_oracle_blind": "blind:corpus-scan-completed:field-absent. Peer-side, pre-existing, untouched.",
+    "carried_from_prior_sessions": [
+      "Mojo binary reports 1.0.0 vs CLAUDE.md's pinned 0.26.2 (fifth session untouched)",
+      "scratchpad/lock-twin-spec.md stale",
+      "owned_in and world_fresh UNMEASURED (one-line delegations)",
+      "48 arms NOT_ANALYSED",
+      "B6 12 permanently-BLIND arms; B7 author in .uos-workspaces/fable-l0; B9 OCaml instruments standing exception; B10 smtml-solver-substrate"
+    ]
   }
 }

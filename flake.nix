@@ -108,7 +108,7 @@
         shellHook = ''
           export UOS_ROOT="$PWD"
           # Toolchains materialised in-project (not from Nix) still take priority.
-          export PATH="$UOS_ROOT/toolchains/gleam-1.16.0/bin:$UOS_ROOT/toolchains/opam-ocaml/bin:$UOS_ROOT/toolchains/lean-4.33.0/bin:$PATH"
+          export PATH="$UOS_ROOT/toolchains/gleam-1.16.0/bin:$UOS_ROOT/toolchains/opam-ocaml/bin:$UOS_ROOT/toolchains/lean-4.35.0/bin:$PATH"
           export OPAM_SWITCH_PREFIX="$UOS_ROOT/toolchains/opam-ocaml"
           export CARGO_HOME="$UOS_ROOT/toolchains/cargo"
           export RUSTUP_HOME="$UOS_ROOT/toolchains/rustup"

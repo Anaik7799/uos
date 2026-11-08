@@ -1,0 +1,128 @@
+{
+  "schema": "uos.model_interaction_ontology.v1",
+  "observed_utc": "2026-11-08T01:30:45Z",
+  "authority": "none. measurement evidence only; grants no admission",
+  "ev_ceiling": 93,
+  "producer": {
+    "tool": "tools/model_interaction_ontology.ml",
+    "tool_sha256_16": "b649d28713558f10",
+    "language": "OCaml 5.5.0",
+    "toolchain": "toolchains/opam-ocaml/bin/ocamlfind ocamlopt -package yojson,unix",
+    "runtime_seconds": 17.1,
+    "raw_output": "governance/sources/20261108-0145-harness-model-interaction-ontology-measurement.txt",
+    "raw_output_sha256_16": "9e82ec725843cac5"
+  },
+  "corpus": {
+    "claude_transcripts": {
+      "files": 172,
+      "bytes": 554696704,
+      "sessions_with_model_calls": 164,
+      "api_request_records": 8083,
+      "api_request_blob_records": 16197,
+      "harness_local_records_unclassified": 77000,
+      "blobs_over_128kb_scan_cap": 211
+    },
+    "authored_artifacts": { "files": 5477, "bytes_kb": 229301 },
+    "pi_session_stores": { "databases": 23, "session_events": 2574 },
+    "NOT_READ": {
+      "paths": ["~/.codex", "~/.gemini/antigravity"],
+      "bytes_approx": "9.8 GB + 5.1 GB",
+      "share_of_available_log_bytes": 0.59,
+      "reason": "SC-PEER-ARTIFACTS-001 rule 4: private home state, referenced presence-only",
+      "consequence": "every figure describes ONE of five harnesses; no cross-harness claim is made"
+    }
+  },
+  "ontology": {
+    "structure": "six facets; A-E single-label and total, F multi-label",
+    "facet_A_interaction_kind": {
+      "A2_user_turn": 3903, "A3_tool_continuation": 2676,
+      "A4_subagent": 1340, "A1_bootstrap": 164, "A5_meta": 0
+    },
+    "facet_B_context_discipline": {
+      "B1_full_prefix": 7902, "B4_prefix_break": 181,
+      "independent_flags": { "clear_thinking": 8083, "compaction_edit": 0 },
+      "correction": "first version classified on clear_thinking and reported 100% for it; that edit is standing configuration, not an event"
+    },
+    "facet_C_reasoning_mode": {
+      "model": { "claude-opus-5": 4636, "claude-fable-5-1": 1667,
+                 "claude-sonnet-5-5": 841, "claude-opus-5-5": 837,
+                 "claude-opus-4-6": 99, "claude-haiku-5-5": 1,
+                 "claude-haiku-4-5": 1, "claude-sonnet-4-6": 1 },
+      "effort": { "medium": 5161, "high": 2501, "max": 409, "low": 11, "unset": 1 },
+      "thinking": { "adaptive": 8082, "enabled": 1 }
+    },
+    "facet_D_payload_composition_ESTIMATED": {
+      "transcript_pct": 78.4, "instruction_pct": 17.2,
+      "reminder_pct": 3.0, "tool_schema_pct": 1.5,
+      "dominant": "D3_transcript_heavy",
+      "method": "marker-weighted byte scanning, NOT tokenizer accounting"
+    },
+    "facet_E_response_shape": {
+      "E4_thinking_then_act": 2908, "E2_tool_single": 1697,
+      "E3_tool_parallel": 540, "E1_text_only": 16,
+      "correction": "first version computed a response shape for user blobs, counting inputs as outputs"
+    },
+    "facet_F_subject_domain_presence": {
+      "F16_formal": 2845, "F12_vcs_jj": 2768, "F14_sa_plan": 2495,
+      "F07_env_infra": 1585, "F06_sre": 1310, "F05_sdlc": 1160,
+      "F04_journal": 929, "F08_agent_instruction": 903, "F10_skills": 814,
+      "F09_optimization": 762, "F17_diagram": 661, "F13_gates": 519,
+      "F15_provenance": 506, "F02_zk": 438, "F01_km_triad": 425,
+      "F03_wiki": 385, "F11_superpowers": 316
+    },
+    "facet_F_authored_corpus_primary": {
+      "F14_sa_plan": 1818, "F07_env_infra": 814, "F12_vcs_jj": 422,
+      "F16_formal": 402, "F00_none": 354, "F05_sdlc": 333, "F06_sre": 299,
+      "F02_zk": 254, "F09_optimization": 218, "F03_wiki": 175,
+      "F08_agent_instruction": 120, "F10_skills": 115, "F04_journal": 85,
+      "F13_gates": 32, "F01_km_triad": 14, "F15_provenance": 13,
+      "F17_diagram": 7, "F11_superpowers": 2
+    }
+  },
+  "patterns": [
+    { "id": "P1", "claim": "one tool per round trip, 3.14:1 over batching",
+      "evidence": "E2_tool_single 1697 vs E3_tool_parallel 540; 0.79 tool_use/call; continuation runs max depth 73" },
+    { "id": "P2", "claim": "Bash monoculture",
+      "evidence": "5022 of 6365 tool invocations (78.9%); Read 7.6%, Grep 2.4%",
+      "caveat": "partly policy-induced: an auto-mode instruction prefers Bash" },
+    { "id": "P3", "claim": "transcript dominates; instruction text does not, by 4.5x",
+      "evidence": "78.4% vs 17.2%; reminders 3.0%; schemas 1.5%" },
+    { "id": "P4", "claim": "request shape already near-optimal",
+      "evidence": "97.8% full prefix; 164 of 181 breaks are bootstraps; 17 controllable breaks in 7919 calls = 0.21%" },
+    { "id": "P5", "claim": "growth controlled by thinking-clearing, never compaction",
+      "evidence": "clear_thinking 8083/8083; compaction 0/8083; 49.3 calls/session" },
+    { "id": "P6", "claim": "SC-INTEL-ROUTING-001 R1/R2 not honored as measured",
+      "evidence": "Opus 67.8%, Haiku 2 calls (0.02%), effort low 11 calls (0.1%)" },
+    { "id": "P7", "claim": "subagent spawn costs ~72 model calls",
+      "evidence": "19 Agent invocations, 1372 agent:builtin:general-purpose calls" },
+    { "id": "P8", "claim": "Sa-plan is the vocabulary hub of both corpora",
+      "evidence": "top co-occurrences vcs_jj+sa_plan 1177, sa_plan+formal 1142; primary in 33.2% of authored files" },
+    { "id": "P9", "claim": "KM-triad mandate is not observable in the interaction log",
+      "evidence": "F01_km_triad presence 2.3%, primary 0.3%; authored 4.0%",
+      "caveat": "MCP-mediated triad checks may carry no markers; this UNDERCOUNTS by an unknown amount. Defensible claim is non-observability, not non-compliance" },
+    { "id": "P10", "claim": "a sibling harness measures context savings this one does not",
+      "evidence": "Pi bytes_avoided 457 KB vs bytes_returned 866 KB (34% reduction); 96 retry_detected, 122 error_tool, 103 error_resolved" }
+  ],
+  "optimization_use_cases": [
+    { "id": "UC-1", "class": "P2", "target": "E3:E2 ratio", "baseline": 0.32, "instrumented": true },
+    { "id": "UC-2", "class": "P2", "target": "Bash share", "baseline": 0.789, "instrumented": true },
+    { "id": "UC-3", "class": "P2", "target": "transcript byte share", "baseline": 0.784, "instrumented": "estimate only" },
+    { "id": "UC-4", "class": "P1", "target": "cheapest-adequate-tier share", "baseline": 0.0002, "instrumented": true,
+      "note": "unresolved conformance condition against an admitted contract, not an efficiency idea" },
+    { "id": "UC-5", "class": "P3", "target": "controllable shape breaks", "baseline": 17, "instrumented": true },
+    { "id": "UC-6", "class": "P2", "target": "avoided bytes accounting", "baseline": null, "instrumented": false },
+    { "id": "UC-7", "class": "P2", "target": "repeated-tool-call signal", "baseline": null, "instrumented": false },
+    { "id": "UC-8", "class": "P1", "target": "KM-triad observability", "baseline": "marker-only 2.3%", "instrumented": false },
+    { "id": "UC-9", "class": "P2", "target": "model calls per subagent spawn", "baseline": 72, "instrumented": true },
+    { "id": "UC-10", "class": "P3", "target": "compaction rate decision", "baseline": 0.0, "instrumented": true }
+  ],
+  "nonconformances": [
+    "59% of available log bytes were not read (barred private trees); single-harness scope",
+    "facet D byte shares are estimates, not token counts; the 3.0% reminder figure is not robust",
+    "facet F measures keyword presence, so it reflects what an exchange mentions, not what it achieved",
+    "facet A5_meta never fired: unobserved, not absent",
+    "no optimization implemented or A/B tested; every baseline is a baseline, not an improvement",
+    "no Sa-plan task claimed; no integration/main lease held",
+    "authored in the default jj workspace, which SC-WORKSPACE-ISO-001 reserves as nobody's work surface"
+  ]
+}

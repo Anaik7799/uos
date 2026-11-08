@@ -23,23 +23,14 @@
 #     correctly flagged the weakened form as proving facts about literals
 #     rather than about sets.
 #
-# WHAT IS AND IS NOT CHANGED HERE
-# -------------------------------
-# This file makes the libraries REACHABLE. It does not move the pinned
-# toolchain.
-#
-# `SC-NIX-DEVENV-001` invariant 7 records Lean 4.33.0 as a deliberate
-# version pin: "formal/lean/*.lean are verified to check at 4.33.0". The
-# already-built Mathlib on disk is v4.35.0 (7.4 GB, 8,714 oleans, under
-# formal/lean/ruliad/.lake/packages), pinned there for cslib. A 4.33.0 tree
-# cannot consume a 4.35.0 Mathlib.
-#
-# So the toolchain line below is 4.35.0 and that IS A CHANGE OF PIN FOR
-# LAKE-DRIVEN BUILDS ONLY -- `tools/lean` still resolves 4.33.0, and every
-# existing gate continues to use it. Whether the 4.33.0 pin should move for
-# the whole tree is an OPERATOR DECISION, and the evidence for it is the
-# compile census recorded in the journal: how many of the 108 files compile
-# at each toolchain, measured rather than assumed.
+# WHAT IS CHANGED HERE (2026-11-08 Operator Directive)
+# ----------------------------------------------------
+# Per explicit Operator Directive ("update lean version to sync with veil and
+# cslib"), the entire UOS repository (`tools/lean`, `tools/lake`, `tools/leanc`,
+# `formal/lean/*.lean` across all 116 standalone files, and `formal/lean/ruliad/`)
+# is now unified onto a single canonical toolchain:
+#   Lean 4.35.0 (`leanprover/lean4:v4.35.0`, `toolchains/lean-4.35.0`)
+# in lockstep with `leanprover/cslib` (rev `0b1e3680`) and `mathlib` (`v4.35.0`).
 #
 # Reusing the ruliad package set rather than resolving a second copy is
 # deliberate: a second Mathlib would be another 7.4 GB and could drift from
@@ -55,6 +46,11 @@ packagesDir = "ruliad/.lake/packages"
 name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.35.0"
+
+[[require]]
+name = "cslib"
+git = "https://github.com/leanprover/cslib"
+rev = "0b1e3680b43ad9cd482a66f183764f33fc8a4e8f"
 
 [[lean_lib]]
 name = "UosFormal"

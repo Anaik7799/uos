@@ -23,6 +23,11 @@
 ////    - Absorbing 3-attempt Markov chain (Flash -> Pro RCA -> Argon STPA -> HOLD)
 ////    - NASA JPL F' (`6/6` FSMs) + OMG SysML v2 (`satisfaction_ratio == 1.0`)
 ////    - Čech Sheaf H^1 = 0 global gluing + 13D Traceability conservation
+//// 3. 100% Semantic Equivalence across 20 Evolutionary Cycles (`EVOL-FHC-01..20`, Cycles `41..60`):
+////    - Lean 4 Twin: `formal/lean/UosFractalHolonicSemanticEquivalence20CycleDigitalTwin.lean` (`THM_FHC_EQ_05..07`).
+////    - Mojo Checker: `formal/mojo/fractal_holonic_semantic_equivalence_checker.mojo`.
+////    - Knowledge Map & Dictionary: `governance/agents/policy/20261108-1618-uos-fractal-holonic-semantic-equivalence-knowledge-map-and-dictionary.json`.
+////    - `sa-plan` Database Plan: `uos-fhc-semantic-equivalence-20cycles-20261108-1616` (`var/sa-plan/uos.sqlite3`).
 ////    - All 8 Bionic organs + ZLP-v3 monotonic `seq_id` signed Zenoh `uos/v1/**`
 //// 3. 12-Invariant Machine Verification Certificate (`INV-HOLON-01..12`).
 

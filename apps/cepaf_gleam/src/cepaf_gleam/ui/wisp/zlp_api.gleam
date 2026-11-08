@@ -87,7 +87,7 @@ pub fn status_json() -> json.Json {
     #("total_active_subscriptions", json.int(total_subs)),
     #("total_in_flight_heavy", json.int(total_heavy)),
     #("shards", json.array(shards, shard_observation_to_json)),
-    #("lean_version", json.string("4.33.0")),
+    #("lean_version", json.string("4.35.0")),
     #("zig_version", json.string("0.16.0")),
     #("otp_release", json.string("29")),
     #("lean_theorems_proved", json.int(20)),

@@ -484,6 +484,16 @@ def main() raises:
     r.mutation_probe(String("json-flag-reports-absence-as-absent"),
                      json_flag(tel, String("key_that_cannot_exist")) == -1)
 
+    var holonic_code = http_code(String("/v1/holonic/qwen/status"))
+    var holonic_body = json_norm(http_body(String("/v1/holonic/qwen/status")))
+    r.observe(String("holonic-8pillar-status-code"), holonic_code)
+    r.world_or_blind(
+        String("holonic-8pillar-qwen-status-healthy"),
+        holonic_code == String("200"),
+        holonic_code == String("200")
+        and contains(holonic_body, String('"schema":"uos.qwen.holonic_8pillar.v1"'))
+        and json_flag(holonic_body, String("primary_cuda_8081_healthy")) == 1)
+
     print("# probe time          :", now)
     print("# /v1/models          :", models_code)
     print("# /v1/telemetry       :", tel_code)
