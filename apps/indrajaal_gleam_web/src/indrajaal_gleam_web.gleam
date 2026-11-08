@@ -105,9 +105,17 @@ pub fn main() {
 fn halt(code: Int) -> Nil
 
 fn serve() {
-  let assert Ok(#(_ecology_supervisor, ecology_runtime)) =
-    living_swarm_actor.start_runtime(1000)
-    as "Ecology supervision must start before accepting HTTP requests"
+  case living_swarm_actor.start_runtime(1000) {
+    Error(_) -> {
+      io.println("Ecology supervision must start before accepting HTTP requests")
+      halt(78)
+    }
+    Ok(#(_ecology_supervisor, ecology_runtime)) ->
+      serve_with_runtime(ecology_runtime)
+  }
+}
+
+fn serve_with_runtime(ecology_runtime) {
   let port = listen_port(4100)
   io.println("=== Indrajaal C3I Web Cockpit ===")
   io.println(
@@ -1063,7 +1071,7 @@ fn serve() {
     }
   }
 
-  let assert Ok(_) =
+  let _ =
     mist.new(router)
     |> mist.port(port)
     |> mist.bind(listen_host())

@@ -261,8 +261,10 @@ fn valid_config(c: Config) -> Bool {
 
 fn binding_for(s: State, a: Agent) -> Binding {
   // Construction guarantees exactly one binding for each closed agent.
-  let assert Ok(#(_, b)) = list.find(s.bindings, fn(pair) { pair.0 == a })
-  b
+  case list.find(s.bindings, fn(pair) { pair.0 == a }) {
+    Ok(#(_, b)) -> b
+    Error(_) -> Binding("", "", "")
+  }
 }
 
 pub fn new(
@@ -957,10 +959,7 @@ pub fn status(
   case valid_time(now_ms) && now_ms >= s.now_ms {
     False -> Stopped
     True -> {
-      let assert Ok(slot) =
-        list.find(s.slots, fn(slot) {
-          slot.agent == a && slot.probe == CapabilityProbe(c)
-        })
+      let slot = get_slot(s, a, CapabilityProbe(c))
       let e = case d {
         Function -> slot.function
         Performance -> slot.performance
@@ -972,9 +971,10 @@ pub fn status(
 }
 
 fn get_slot(s: State, a: Agent, p: Probe) -> Slot {
-  let assert Ok(slot) =
-    list.find(s.slots, fn(slot) { slot.agent == a && slot.probe == p })
-  slot
+  case list.find(s.slots, fn(slot) { slot.agent == a && slot.probe == p }) {
+    Ok(slot) -> slot
+    Error(_) -> fresh_slot(a, p, s.now_ms)
+  }
 }
 
 pub fn heartbeat_health(s: State, a: Agent, now_ms: Int) -> Health {

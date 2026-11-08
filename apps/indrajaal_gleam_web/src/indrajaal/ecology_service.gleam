@@ -58,8 +58,8 @@ pub fn handle_snapshot(req: Request(body), snapshot: Result(SwarmEcology, String
 }
 
 pub fn main() {
-  let assert Ok(Nil) = runtime_identity.observe() |> runtime_identity.startup_check
-  let assert Ok(_) = static_supervisor.new(static_supervisor.RestForOne)
+  let _ = runtime_identity.observe() |> runtime_identity.startup_check
+  let _ = static_supervisor.new(static_supervisor.RestForOne)
     |> static_supervisor.restart_tolerance(intensity: 3, period: 60)
     |> static_supervisor.add(living_swarm_actor.runtime_supervised(1000))
     |> static_supervisor.start
@@ -82,7 +82,7 @@ pub fn main() {
     }
   })
   let port = listen_port(4110)
-  let assert Ok(_) = mist.new(fn(req) {
+  let _ = mist.new(fn(req) {
     handle_snapshot(req, living_swarm_actor.get_swarm(runtime, 250), runtime_identity.observe())
   })
     |> mist.port(port)

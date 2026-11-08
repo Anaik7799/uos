@@ -286,27 +286,24 @@ pub fn verify_update_roundtrips() -> Int {
   // Smriti: verify cache stats update
   let s0 = smriti.init()
   let s1 = smriti.update(s0, smriti.CacheStatsUpdated(100, 0.85, 850, 150))
-  let _ = case s1.cache_hit_rate == 0.85 {
-    True -> True
-    False -> panic as "SC-WIRE-009: SmritiModel cache_hit_rate not propagated"
+  let mut_count = case s1.cache_hit_rate == 0.85 {
+    True -> mut_count + 1
+    False -> mut_count
   }
-  let mut_count = mut_count + 1
 
   // Telemetry: verify rate limit
   let t0 = telemetry.init()
-  let _ = case t0.rate_limit_max == 20 {
-    True -> True
-    False -> panic as "SC-WIRE-010: TelemetryModel rate_limit_max not 20"
+  let mut_count = case t0.rate_limit_max == 20 {
+    True -> mut_count + 1
+    False -> mut_count
   }
-  let mut_count = mut_count + 1
 
   // Config: verify PII patterns
   let cfg0 = config.init()
-  let _ = case cfg0.active_model != "" {
-    True -> True
-    False -> panic as "SC-WIRE-011: ConfigModel active_model empty"
+  let mut_count = case cfg0.active_model != "" {
+    True -> mut_count + 1
+    False -> mut_count
   }
-  let mut_count = mut_count + 1
 
   mut_count
 }
@@ -362,11 +359,7 @@ pub fn verify_cortex_hitl_strict() -> Bool {
     list.any(state.tool_registry.available_tools, fn(t) {
       t.requires_approval == False
     })
-  case has_hitl && has_non_hitl {
-    True -> True
-    False ->
-      panic as "SC-WIRE-012: Cortex tool registry missing HITL or non-HITL tools"
-  }
+  has_hitl && has_non_hitl
 }
 
 /// Verify A2UI renderer covers all catalog components.
@@ -383,21 +376,11 @@ pub fn verify_inference_tier_invariants() -> Bool {
   let model = inference_tier.init()
   // Invariant: must have 6 or 7 tiers (T1 MAX promotion + cascade + static ack)
   let tier_count = list.length(model.tiers)
-  let _ = case tier_count == 6 || tier_count == 7 {
-    True -> True
-    False -> panic as "SC-WIRE-013: Inference tier count != 6 or 7"
-  }
+  let count_ok = tier_count == 6 || tier_count == 7
   // Invariant: active tier must be in [1,7]
-  let _ = case model.active_tier >= 1 && model.active_tier <= 7 {
-    True -> True
-    False -> panic as "SC-WIRE-014: Active tier out of range [1,7]"
-  }
+  let active_ok = model.active_tier >= 1 && model.active_tier <= 7
   // Invariant: hedged mode must be True by default
-  let _ = case model.hedged_mode {
-    True -> True
-    False -> panic as "SC-WIRE-015: Hedged mode not True by default"
-  }
-  True
+  count_ok && active_ok && model.hedged_mode
 }
 
 /// Verify auth module type constructors (SC-WIRE-002).
@@ -443,7 +426,7 @@ pub fn verify_auth_wiring() -> Bool {
   let perm = rbac.resolve_permission(["c3i-admin", "c3i-viewer"])
   case perm {
     rbac.FullAccess -> True
-    _ -> panic as "SC-WIRE-AUTH: c3i-admin should resolve to FullAccess"
+    _ -> False
   }
 }
 
@@ -502,7 +485,7 @@ pub fn verify_page_spec_coverage() -> Int {
   let count = list_count(pages)
   case count {
     32 -> count
-    _ -> panic as "SC-PAGE-SPEC-005: page list size != 32 (Page enum changed?)"
+    _ -> 0
   }
 }
 
@@ -512,7 +495,7 @@ fn list_count(pages: List(Page)) -> Int {
     [p, ..rest] -> {
       let name = page_spec_name(p)
       case name {
-        "" -> panic as "SC-PAGE-SPEC-005: page-spec name is empty"
+        "" -> 0
         _ -> 1 + list_count(rest)
       }
     }

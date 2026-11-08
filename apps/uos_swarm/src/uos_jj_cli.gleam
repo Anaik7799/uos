@@ -62,13 +62,10 @@ const usage = "usage: gleam run -m uos_jj_cli -- <root> <command> [args...]
   guard-main-move <rev> [lease.json] [decision.json]
   integrate-chain <base> <change>..."
 
-fn open_or_die(root: String) -> jj.Repo {
+fn with_repo(root: String, f: fn(jj.Repo) -> Nil) -> Nil {
   case jj.open(root) {
-    Ok(repo) -> repo
-    Error(e) -> {
-      print_error(e)
-      panic as "jj executable not found on PATH"
-    }
+    Ok(repo) -> f(repo)
+    Error(e) -> print_error(e)
   }
 }
 
@@ -145,7 +142,7 @@ fn diff_stat_json(d: jj.DiffStatEntry) -> Json {
 }
 
 fn log_cmd(root: String, revset: String, limit: Int) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.log(repo, jj.expr(revset), limit) {
     Ok(changes) -> print_ok(json.array(changes, change_json))
     Error(e) -> print_error(e)
@@ -153,7 +150,7 @@ fn log_cmd(root: String, revset: String, limit: Int) -> Nil {
 }
 
 fn workspaces_cmd(root: String) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.workspaces(repo) {
     Ok(ws) -> print_ok(json.array(ws, workspace_json))
     Error(e) -> print_error(e)
@@ -161,7 +158,7 @@ fn workspaces_cmd(root: String) -> Nil {
 }
 
 fn ops_cmd(root: String, limit: Int) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.operations(repo, limit) {
     Ok(ops) -> print_ok(json.array(ops, operation_json))
     Error(e) -> print_error(e)
@@ -169,7 +166,7 @@ fn ops_cmd(root: String, limit: Int) -> Nil {
 }
 
 fn bookmarks_cmd(root: String) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.bookmarks(repo) {
     Ok(bs) -> print_ok(json.array(bs, bookmark_json))
     Error(e) -> print_error(e)
@@ -177,7 +174,7 @@ fn bookmarks_cmd(root: String) -> Nil {
 }
 
 fn show_cmd(root: String, rev: String) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.show(repo, jj.expr(rev)) {
     Ok(c) -> print_ok(change_json(c))
     Error(e) -> print_error(e)
@@ -185,7 +182,7 @@ fn show_cmd(root: String, rev: String) -> Nil {
 }
 
 fn stat_cmd(root: String, from: String, to: String) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.diff_stat(repo, jj.expr(from), jj.expr(to)) {
     Ok(entries) -> print_ok(json.array(entries, diff_stat_json))
     Error(e) -> print_error(e)
@@ -236,7 +233,7 @@ fn guard_main_move_cmd(
   lease_path: Option(String),
   decision_path: Option(String),
 ) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   let lease =
     option.then(lease_path, fn(p) {
       case file_read(p) {
@@ -322,7 +319,7 @@ fn integrate_chain_cmd(
   base: String,
   changes: List(String),
 ) -> Nil {
-  let repo = open_or_die(root)
+  use repo <- with_repo(root)
   case jj.integrate_chain(repo, changes, base) {
     Ok(cs) -> print_ok(json.array(cs, change_json))
     Error(e) -> print_error(e)

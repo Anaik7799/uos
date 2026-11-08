@@ -19,9 +19,9 @@
 
 open Unix
 
-external inotify_init : unit -> int = "caml_c3i_inotify_init"
-external inotify_add_watch : int -> string -> int -> int = "caml_c3i_inotify_add_watch"
-external inotify_read_names : int -> string list = "caml_c3i_inotify_read_names"
+external inotify_init : unit -> Unix.file_descr = "caml_c3i_inotify_init"
+external inotify_add_watch : Unix.file_descr -> string -> int -> int = "caml_c3i_inotify_add_watch"
+external inotify_read_names : Unix.file_descr -> string list = "caml_c3i_inotify_read_names"
 
 let in_modify = 0x00000002
 let in_close_write = 0x00000008
@@ -204,7 +204,7 @@ let main () =
 
   Printf.printf "[OCAML-WATCHER] Inotify kernel watcher armed: %d directories watched across c3i and uos\n%!" !watch_count;
 
-  let inotify_descr = Obj.magic ifd in
+  let inotify_descr = ifd in
   let debounce_sec = float_of_int !debounce_ms /. 1000.0 in
   let pending_events = ref false in
   let last_event_t = ref 0.0 in

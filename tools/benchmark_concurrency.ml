@@ -17,10 +17,10 @@
 
 open Unix
 
-external c3i_inotify_create : unit -> int = "caml_c3i_inotify_create"
-external c3i_inotify_watch : int -> string -> int = "caml_c3i_inotify_watch"
-external c3i_inotify_poll : int -> int -> int = "caml_c3i_inotify_poll"
-external c3i_inotify_drain : int -> int = "caml_c3i_inotify_drain"
+external c3i_inotify_create : unit -> Unix.file_descr = "caml_c3i_inotify_create"
+external c3i_inotify_watch : Unix.file_descr -> string -> int = "caml_c3i_inotify_watch"
+external c3i_inotify_poll : Unix.file_descr -> int -> int = "caml_c3i_inotify_poll"
+external c3i_inotify_drain : Unix.file_descr -> int = "caml_c3i_inotify_drain"
 external c3i_get_time_nanos : unit -> Int64.t = "caml_c3i_get_time_nanos"
 external c3i_get_rss_kb : unit -> Int64.t = "caml_c3i_get_rss_kb"
 external c3i_http_reload : int -> Int64.t = "caml_c3i_http_reload"
@@ -97,7 +97,7 @@ let test_parallel_watch_registration () =
       speedup
       contention;
 
-    Unix.close (Obj.magic ifd : Unix.file_descr)
+    Unix.close ifd
   ) thread_configs;
 
   let _ = run_cmd ("rm -rf " ^ tmp_base) in
@@ -236,7 +236,7 @@ let test_burst_debounce_storm () =
   Printf.printf "[STORM] Inotify events drained: %d (poll=%d)\n%!" drained ready;
   Printf.printf "[STORM] Debounce Coalescing Verification: EXACTLY 1 COMPILATION TRIGGERED (PASS)\n%!";
 
-  Unix.close (Obj.magic ifd : Unix.file_descr);
+  Unix.close ifd;
   let _ = run_cmd ("rm -rf " ^ tmp_storm) in
   ()
 

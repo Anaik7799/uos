@@ -14,10 +14,10 @@
 
 open Unix
 
-external c3i_inotify_create : unit -> int = "caml_c3i_inotify_create"
-external c3i_inotify_watch : int -> string -> int = "caml_c3i_inotify_watch"
-external c3i_inotify_poll : int -> int -> int = "caml_c3i_inotify_poll"
-external c3i_inotify_drain : int -> int = "caml_c3i_inotify_drain"
+external c3i_inotify_create : unit -> Unix.file_descr = "caml_c3i_inotify_create"
+external c3i_inotify_watch : Unix.file_descr -> string -> int = "caml_c3i_inotify_watch"
+external c3i_inotify_poll : Unix.file_descr -> int -> int = "caml_c3i_inotify_poll"
+external c3i_inotify_drain : Unix.file_descr -> int = "caml_c3i_inotify_drain"
 external c3i_get_time_nanos : unit -> Int64.t = "caml_c3i_get_time_nanos"
 external c3i_get_rss_kb : unit -> Int64.t = "caml_c3i_get_rss_kb"
 external c3i_http_reload : int -> Int64.t = "caml_c3i_http_reload"
@@ -108,7 +108,7 @@ let test_correctness () =
   let reload_ms = Int64.to_float reload_us /. 1000.0 in
   Printf.printf "[CORRECTNESS] Test 2.3 (BEAM /api/v1/reload Socket Client): PASS (%.2f ms)\n%!" reload_ms;
 
-  Unix.close (Obj.magic ifd : Unix.file_descr);
+  Unix.close ifd;
   let _ = run_cmd ("rm -rf " ^ tmp_dir) in
   ()
 
@@ -130,7 +130,7 @@ let test_performance () =
     ocaml_latencies := Int64.to_float lat /. 1000.0 :: !ocaml_latencies;
   done;
   let ocaml_avg_reload = (List.fold_left (+.) 0.0 !ocaml_latencies) /. 10.0 in
-  Unix.close (Obj.magic ocaml_ifd : Unix.file_descr);
+  Unix.close ocaml_ifd;
 
   (* Measure Mojo Watcher *)
   let _ = run_cmd "/home/an/NAS-setup/uos/tools/c3i_page_watcher_mojo.exe" in
@@ -203,7 +203,7 @@ let test_scalability () =
       ops_sec
       (Printf.sprintf "+%d KB" rss_delta);
 
-    Unix.close (Obj.magic ifd : Unix.file_descr)
+    Unix.close ifd
   ) dir_tiers;
 
   let _ = run_cmd ("rm -rf " ^ tmp_tree) in

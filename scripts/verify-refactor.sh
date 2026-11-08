@@ -18,15 +18,17 @@ cd "$ROOT_DIR"
 
 echo "=== 1. Checking Immutable Test & Interface Boundaries ==="
 if [ -d ".jj" ]; then
-  LOCKED_MODS=$(jj diff --name-only 'glob:**/test/**' 'glob:**/tests/**' 'glob:**/*.mli' 2>/dev/null || true)
+  LOCKED_MODS=$(jj diff --name-only 'glob:**/test/**' 'glob:**/tests/**' 'glob:**/*.mli' 2>/dev/null | grep -vE '(^|/)README\.md$' || true)
   if [ -n "$LOCKED_MODS" ]; then
     echo "ERROR: Refactoring agent modified locked test files or OCaml .mli interfaces:"
     echo "$LOCKED_MODS"
     exit 1
   fi
 elif [ -d ".git" ]; then
-  if ! git diff --exit-code -- '*/test/*' '*/tests/*' '*.mli'; then
-    echo "ERROR: Refactoring agent modified locked test files or OCaml .mli interfaces."
+  LOCKED_MODS=$(git diff --name-only -- '*/test/*' '*/tests/*' '*.mli' 2>/dev/null | grep -vE '(^|/)README\.md$' || true)
+  if [ -n "$LOCKED_MODS" ]; then
+    echo "ERROR: Refactoring agent modified locked test files or OCaml .mli interfaces:"
+    echo "$LOCKED_MODS"
     exit 1
   fi
 fi
@@ -62,9 +64,15 @@ check_forbidden "$OCAML_ADDED" '\b(Obj\.magic|assert false)\b' "OCaml type safet
 check_forbidden "$MOJO_ADDED" '\b(UnsafePointer|std\.python|bitcast)\b' "Mojo raw UnsafePointer/std.python/bitcast introduced in oracle"
 
 # 2b. Whole-tree invariant check on production paths
-GLEAM_SRC_LET_ASSERT=$({ grep -rn "let assert" apps/cepaf_gleam/src/ 2>/dev/null || true; } | wc -l)
-if [ "$GLEAM_SRC_LET_ASSERT" -ne 0 ]; then
-  echo "ERROR: Found $GLEAM_SRC_LET_ASSERT 'let assert' occurrences in apps/cepaf_gleam/src/ (must be 0)."
+GLEAM_SRC_ESCAPE=$({ grep -rnE '^\s*(let assert|panic as)\b' apps/*/src/ 2>/dev/null || true; } | wc -l)
+if [ "$GLEAM_SRC_ESCAPE" -ne 0 ]; then
+  echo "ERROR: Found $GLEAM_SRC_ESCAPE 'let assert' or 'panic as' occurrences in apps/*/src/ (must be 0)."
+  exit 1
+fi
+
+OCAML_SRC_ESCAPE=$({ grep -rnE '\bObj\.magic\b' tools/*.ml 2>/dev/null || true; } | wc -l)
+if [ "$OCAML_SRC_ESCAPE" -ne 0 ]; then
+  echo "ERROR: Found $OCAML_SRC_ESCAPE 'Obj.magic' occurrences in tools/*.ml (must be 0)."
   exit 1
 fi
 

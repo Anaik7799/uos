@@ -164,42 +164,46 @@ pub fn analyse(
         |> list.sort(fn(a, b) { string.compare(a.0, b.0) })
         |> list.fold(#([], 0, 0, []), fn(acc, entry) {
           let #(accepted, duplicate_count, bad_count, issues) = acc
-          let assert [first, ..rest] = entry.1
-          case
-            list.all(entry.1, valid_message)
-            && list.all(rest, fn(m) {
-              m.digest == first.digest && m.signature == first.signature
-            })
-          {
-            False -> #(
-              accepted,
-              duplicate_count,
-              bad_count + list.length(entry.1),
-              [
-                Finding(
-                  "quarantined_identity",
-                  entry.0,
-                  "Invalid digest or conflicting body/signature; no version selected.",
-                ),
-                ..issues
-              ],
-            )
-            True -> {
-              // Delivery receipts may evolve outside the signed digest. Select a
-              // deterministic representative; they are never authentication proof.
-              let assert Ok(stable) =
-                entry.1
-                |> list.sort(fn(a, b) {
-                  string.compare(board.to_string(a), board.to_string(b))
+          case entry.1 {
+            [] -> acc
+            [first, ..rest] ->
+              case
+                list.all(entry.1, valid_message)
+                && list.all(rest, fn(m) {
+                  m.digest == first.digest && m.signature == first.signature
                 })
-                |> list.first
-              #(
-                [stable, ..accepted],
-                duplicate_count + list.length(rest),
-                bad_count,
-                issues,
-              )
-            }
+              {
+                False -> #(
+                  accepted,
+                  duplicate_count,
+                  bad_count + list.length(entry.1),
+                  [
+                    Finding(
+                      "quarantined_identity",
+                      entry.0,
+                      "Invalid digest or conflicting body/signature; no version selected.",
+                    ),
+                    ..issues
+                  ],
+                )
+                True -> {
+                  // Delivery receipts may evolve outside the signed digest. Select a
+                  // deterministic representative; they are never authentication proof.
+                  let stable =
+                    entry.1
+                    |> list.sort(fn(a, b) {
+                      string.compare(board.to_string(a), board.to_string(b))
+                    })
+                    |> list.first
+                    |> result.unwrap(first)
+                  #(
+                    [stable, ..accepted],
+                    duplicate_count + list.length(rest),
+                    bad_count,
+                    issues,
+                  )
+                }
+              }
           }
         })
       let ordered = list.sort(unique, message_order)
@@ -315,34 +319,38 @@ fn discover(
   |> list.group(fn(m) { m.from.id })
   |> dict.to_list
   |> list.sort(fn(a, b) { string.compare(a.0, b.0) })
-  |> list.map(fn(entry) {
+  |> list.filter_map(fn(entry) {
     let ordered = list.sort(entry.1, message_order)
-    let assert Ok(last) = ordered |> list.reverse |> list.first
-    let heartbeat =
-      ordered
-      |> list.filter(fn(m) { m.kind == board.Heartbeat })
-      |> list.reverse
-      |> list.first
-      |> result.map(fn(m) { m.ts_us })
-      |> option.from_result
-    let fresh =
-      clock_ok
-      && case heartbeat {
-        None -> False
-        Some(ts) -> ts <= query.now_us && query.now_us - ts <= query.ttl_us
+    case ordered |> list.reverse |> list.first {
+      Error(_) -> Error(Nil)
+      Ok(last) -> {
+        let heartbeat =
+          ordered
+          |> list.filter(fn(m) { m.kind == board.Heartbeat })
+          |> list.reverse
+          |> list.first
+          |> result.map(fn(m) { m.ts_us })
+          |> option.from_result
+        let fresh =
+          clock_ok
+          && case heartbeat {
+            None -> False
+            Some(ts) -> ts <= query.now_us && query.now_us - ts <= query.ttl_us
+          }
+        Ok(Agent(
+          entry.0,
+          last.from.model,
+          last.ts_us,
+          heartbeat,
+          fresh,
+          attribute(last, "session"),
+          ordered
+            |> list.flat_map(fn(m) { m.semantics.ontology_concepts })
+            |> list.unique
+            |> list.sort(string.compare),
+        ))
       }
-    Agent(
-      entry.0,
-      last.from.model,
-      last.ts_us,
-      heartbeat,
-      fresh,
-      attribute(last, "session"),
-      ordered
-        |> list.flat_map(fn(m) { m.semantics.ontology_concepts })
-        |> list.unique
-        |> list.sort(string.compare),
-    )
+    }
   })
 }
 
@@ -394,27 +402,31 @@ fn sample_set(
     string.compare(a.0.0 <> "/" <> a.0.1, b.0.0 <> "/" <> b.0.1)
   })
   |> list.fold(#([], []), fn(acc, entry) {
-    let assert [s, ..rest] = entry.1
-    let valid =
-      s.id != ""
-      && s.source_ref != ""
-      && s.service != ""
-      && telemetry.is_hex_id(s.trace_id, 32)
-      && telemetry.is_hex_id(s.span_id, 16)
-      && s.observed_us >= 0
-      && s.observed_us <= query.now_us
-      && query.now_us - s.observed_us <= query.window_us
-      && list.all(rest, fn(other) { other == s })
-    case valid {
-      True -> #([s, ..acc.0], acc.1)
-      False -> #(acc.0, [
-        Finding(
-          "telemetry_sample_rejected",
-          s.id,
-          "Invalid identity, stale/future timestamp, missing provenance or conflicting sample.",
-        ),
-        ..acc.1
-      ])
+    case entry.1 {
+      [] -> acc
+      [s, ..rest] -> {
+        let valid =
+          s.id != ""
+          && s.source_ref != ""
+          && s.service != ""
+          && telemetry.is_hex_id(s.trace_id, 32)
+          && telemetry.is_hex_id(s.span_id, 16)
+          && s.observed_us >= 0
+          && s.observed_us <= query.now_us
+          && query.now_us - s.observed_us <= query.window_us
+          && list.all(rest, fn(other) { other == s })
+        case valid {
+          True -> #([s, ..acc.0], acc.1)
+          False -> #(acc.0, [
+            Finding(
+              "telemetry_sample_rejected",
+              s.id,
+              "Invalid identity, stale/future timestamp, missing provenance or conflicting sample.",
+            ),
+            ..acc.1
+          ])
+        }
+      }
     }
   })
 }

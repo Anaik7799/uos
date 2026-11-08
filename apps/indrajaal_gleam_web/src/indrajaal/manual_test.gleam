@@ -93,13 +93,17 @@ pub fn main() {
   let port = listen_port(0)
   let host = listen_host()
   let report = runtime_identity.observe()
-  let assert True = bounded_target(host, port) && report.runtime_ready
-  let assert Ok(_) =
-    mist.new(handle) |> mist.port(port) |> mist.bind(host) |> mist.start
-  io.println(
-    "Manual testing: http://nas-1.tail55d152.ts.net:"
-    <> int.to_string(port)
-    <> "/homeostasis/evolution",
-  )
-  process.sleep_forever()
+  case bounded_target(host, port) && report.runtime_ready {
+    False -> io.println("Manual testing refused: unbounded target or runtime not ready")
+    True -> {
+      let _ =
+        mist.new(handle) |> mist.port(port) |> mist.bind(host) |> mist.start
+      io.println(
+        "Manual testing: http://nas-1.tail55d152.ts.net:"
+        <> int.to_string(port)
+        <> "/homeostasis/evolution",
+      )
+      process.sleep_forever()
+    }
+  }
 }
