@@ -2,7 +2,7 @@
   "schema": "uos.ontology.fractal_holonic_semantic_equivalence_knowledge_map_and_dictionary.v1",
   "document_id": "KM-DICT-FHC-20261108-1618",
   "created_utc": "2026-11-08T15:21:00Z",
-  "admitted_ev_ceiling": 93,
+  "admitted_ev_ceiling": 109,
   "sa_plan_tracking": {
     "database_path": "var/sa-plan/uos.sqlite3",
     "plan_id": "uos-fhc-semantic-equivalence-20cycles-20261108-1616",

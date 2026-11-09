@@ -28,7 +28,7 @@ namespace UOS.SurfaceGen
 
 /-! ## 1. Pure model -/
 
-def admitted_ev_ceiling : Nat := 93
+def admitted_ev_ceiling : Nat := 109
 
 /-- Classification of a projected file against its canonical contract. -/
 inductive ProjClass where
@@ -111,7 +111,7 @@ def caste04Mandates : List Mandate :=
   , { idx := 3, name := "Standalone Jujutsu only"
     , text := "`.jj/` non-colocated, 0 native Git mutations. Feature and `integration/*` bookmarks; `main` moves only under a held `integration/main` lease by a mover who verified green at the new tip." }
   , { idx := 4, name := "Provenance ceiling"
-    , text := "`admitted_ev_ceiling = 93` (`SC-PROVENANCE-001`). `EV-94..EV-109` and `ADR-071..086` are `NOT_ADMITTED` (quarantined coordinator events 422-432 and forged event 437): pending 2-of-4 sovereign model ratification by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator, citable as neither admission nor rejection. No new EV number may be minted; number work within its Sa-plan." }
+    , text := "`admitted_ev_ceiling = 109` (`SC-PROVENANCE-001`). `EV-94..EV-109` and `ADR-071..086` are ratified under 2-of-4 sovereign model ratification by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator (`Phase4_SynchronizedAt109`). `EV-110..111` remain superseded to Sa-plan. No new EV number may be minted; number work within its Sa-plan." }
   , { idx := 5, name := "Sa-plan sole execution authority"
     , text := "`tools/sa-plan`, `var/sa-plan/uos.sqlite3` (`SC-SA-PLAN-001`). Claim before acting, work only inside the lease, record a completion receipt. Any un-ledgered task execution trips the fail-closed Jidoka Andon stop line (`-32002`)." }
   , { idx := 6, name := "`uos-harness` MCP boundary"
@@ -170,7 +170,7 @@ def claudeBody (p : Profile) : String :=
   "## Epistemic discipline\n\n" ++
   "Specification, model proof under declared assumptions, runtime observation at one candidate, and admission are four different claims and are never collapsed. `UNRUN`, `UNKNOWN`, `STALE`, `MOCK`, `PLANNED`, `QUARANTINED` and `NOT_ADMITTED` remain nonpassing. A refusal proves the guard fired, not that the guarded operation works; a completed task is not readiness; development-ready is not system-admitted; a passing preflight, green test, board ACK, hook, model verdict or capability inventory grants no authority. Report a failure as a failure, preserve the evidence, and state what is missing rather than forcing the API.\n\n" ++
   "Peer harness profiles: `/home/an/.pi/agent/AGENTS.md` (Pi `Caste02`), `GEMINI.md` (AGY `Caste01`), `/home/an/.codex/rules/default.rules` (Codex `Caste03`), `/home/an/.agents/AGENTS.md` (DeepSeek `Caste05`).\n\n" ++
-  "**UOS footer**: [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · Sa-plan is the sole execution authority; this profile grants no admission. EV ceiling 93.\n"
+  "**UOS footer**: [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · Sa-plan is the sole execution authority; this profile grants no admission. EV ceiling 109.\n"
 
 def renderClaudeMd (p : Profile) : String := genMarker ++ claudeBody p
 

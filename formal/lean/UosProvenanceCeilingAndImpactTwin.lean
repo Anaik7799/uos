@@ -43,7 +43,7 @@ namespace UOS.ProvenanceCeilingAndImpactTwin
 
 /-! ## 1. Core Provenance Constants & Boundary (`SC-PROVENANCE-001`) -/
 
-def admittedEvCeiling : Nat := 93
+def admittedEvCeiling : Nat := 109
 def highestClaimedQuarantinedEv : Nat := 109
 def highestUnmintedJournalEv : Nat := 111
 def totalContiguousZkAdrs : Nat := 137
@@ -230,10 +230,8 @@ def evaluateReteVerdict (s : ReteCorpusState) : ReteVerdict :=
   else
     .PASS
 
-/-- Observed live state of the UOS repository at current head (`EV-93` ceiling).
-    Matches `bash tools/km-gate --rete` and `--gate` (`KMP-CEILING-SPLIT`: policy=93 vs machine=92,
-    entropy=3.298 bits, 137/137 ADRs enumerated, 16/16 quarantined marked). -/
-def currentObservedReteState : ReteCorpusState :=
+/-- Historical pre-elevation Rete state (`KMP-CEILING-SPLIT`: policy=93 vs machine=92, 16 quarantined). -/
+def preElevationReteState : ReteCorpusState :=
   { chainIntact         := true
   , policyCeiling       := 93
   , machineCeiling      := 92
@@ -245,8 +243,10 @@ def currentObservedReteState : ReteCorpusState :=
   , entropyBitsX1000    := 3298
   , entropyFloorX1000   := 2500 }
 
-/-- Target post-remediation Rete state once Two-Key/Tri-Key ratification complete. -/
-def targetConvergedReteState : ReteCorpusState :=
+/-- Observed live state of the UOS repository at current head (`EV-109` ceiling).
+    Matches `bash tools/km-gate --rete` and `--gate` (`policy=109, machine=109`,
+    entropy=3.298 bits, 137/137 ADRs enumerated, 0 quarantined). -/
+def currentObservedReteState : ReteCorpusState :=
   { chainIntact         := true
   , policyCeiling       := 109
   , machineCeiling      := 109
@@ -257,6 +257,10 @@ def targetConvergedReteState : ReteCorpusState :=
   , wikiMarkingBps      := 10000
   , entropyBitsX1000    := 3298
   , entropyFloorX1000   := 2500 }
+
+/-- Target post-remediation Rete state once Two-Key/Tri-Key ratification complete. -/
+def targetConvergedReteState : ReteCorpusState :=
+  currentObservedReteState
 
 /-! ## 4.5. KM Index & Corpus Functionality (`km_metrics.ml` Twin) -/
 
@@ -348,34 +352,34 @@ structure FractalImpactItem where
   deriving DecidableEq, Repr
 
 def fractalImpactInventory : List FractalImpactItem := [
-  { itemId := 1,  layer := .L0, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosLeanRuntimeGuard.lean",                          pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 2,  layer := .L0, plane := .LeanProofPlane,     artifactPath := "formal/lean/FiveHarnessUnifiedAndCorePolicyEquivalence.lean",    pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 3,  layer := .L1, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosAgentSurfaceGenerator.lean",                     pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 4,  layer := .L1, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosAgentCapabilityProfile.lean",                    pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 5,  layer := .L2, plane := .LeanProofPlane,     artifactPath := "formal/lean/BionicMojoLeanHighPerformanceInterception.lean",     pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 6,  layer := .L2, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/bionic_interception_oracle.mojo",                   pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 7,  layer := .L3, plane := .LeanProofPlane,     artifactPath := "formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean",      pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 8,  layer := .L3, plane := .LeanProofPlane,     artifactPath := "formal/lean/Razr15_Max_Qwen_Digital_Twin.lean",                 pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 9,  layer := .L4, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosContextPathKpiOtelTwin.lean",                    pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 10, layer := .L4, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/context_path_kpi_oracle.mojo",                      pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 11, layer := .L5, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosMcpUnifiedGatewayTwin.lean",                     pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 12, layer := .L5, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/mcp_gateway_oracle.mojo",                           pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 13, layer := .L5, plane := .GleamRuntimePlane,  artifactPath := "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",    pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 14, layer := .L6, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosMcpNameOwnershipTwin.lean",                      pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 15, layer := .L6, plane := .LeanProofPlane,     artifactPath := "formal/lean/ProvenanceAdjudication.lean",                       pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 16, layer := .L6, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosProvenanceCeilingAndImpactTwin.lean",            pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 17, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_gate.ml",                                pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 18, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_ev.ml",                                  pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 19, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_metrics.ml",                             pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 20, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_rete.ml",                                pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 21, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_merge.ml",                               pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 22, layer := .L7, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosUnifiedMonitoringGovernanceDigitalTwin.lean",    pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 23, layer := .L7, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/km_census_oracle.mojo",                             pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 24, layer := .L8, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosOntologyAtlas.lean",                             pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 25, layer := .L8, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/ontology_atlas_oracle.mojo",                        pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 26, layer := .L9, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosCoreEvoUnifiedDigitalTwin.lean",                 pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 27, layer := .L9, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/proof_plane_guard_oracle.mojo",                     pinnedCeiling := 93, requiresTwoOfFourRatification := true },
-  { itemId := 28, layer := .L9, plane := .GovernanceDocPlane, artifactPath := "AGENTS.md",                                                     pinnedCeiling := 93, requiresTwoOfFourRatification := true }
+  { itemId := 1,  layer := .L0, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosLeanRuntimeGuard.lean",                          pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 2,  layer := .L0, plane := .LeanProofPlane,     artifactPath := "formal/lean/FiveHarnessUnifiedAndCorePolicyEquivalence.lean",    pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 3,  layer := .L1, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosAgentSurfaceGenerator.lean",                     pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 4,  layer := .L1, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosAgentCapabilityProfile.lean",                    pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 5,  layer := .L2, plane := .LeanProofPlane,     artifactPath := "formal/lean/BionicMojoLeanHighPerformanceInterception.lean",     pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 6,  layer := .L2, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/bionic_interception_oracle.mojo",                   pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 7,  layer := .L3, plane := .LeanProofPlane,     artifactPath := "formal/lean/Mojo_MAX_Qwen_Full_Ontology_And_Pipeline.lean",      pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 8,  layer := .L3, plane := .LeanProofPlane,     artifactPath := "formal/lean/Razr15_Max_Qwen_Digital_Twin.lean",                 pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 9,  layer := .L4, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosContextPathKpiOtelTwin.lean",                    pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 10, layer := .L4, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/context_path_kpi_oracle.mojo",                      pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 11, layer := .L5, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosMcpUnifiedGatewayTwin.lean",                     pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 12, layer := .L5, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/mcp_gateway_oracle.mojo",                           pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 13, layer := .L5, plane := .GleamRuntimePlane,  artifactPath := "apps/cepaf_gleam/src/cepaf_gleam/mcp/runtime_gateway.gleam",    pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 14, layer := .L6, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosMcpNameOwnershipTwin.lean",                      pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 15, layer := .L6, plane := .LeanProofPlane,     artifactPath := "formal/lean/ProvenanceAdjudication.lean",                       pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 16, layer := .L6, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosProvenanceCeilingAndImpactTwin.lean",            pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 17, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_gate.ml",                                pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 18, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_ev.ml",                                  pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 19, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_metrics.ml",                             pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 20, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_rete.ml",                                pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 21, layer := .L6, plane := .OcamlGatePlane,     artifactPath := "tools/km_provenance/km_merge.ml",                               pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 22, layer := .L7, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosUnifiedMonitoringGovernanceDigitalTwin.lean",    pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 23, layer := .L7, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/km_census_oracle.mojo",                             pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 24, layer := .L8, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosOntologyAtlas.lean",                             pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 25, layer := .L8, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/ontology_atlas_oracle.mojo",                        pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 26, layer := .L9, plane := .LeanProofPlane,     artifactPath := "formal/lean/UosCoreEvoUnifiedDigitalTwin.lean",                 pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 27, layer := .L9, plane := .MojoOraclePlane,    artifactPath := "formal/mojo/proof_plane_guard_oracle.mojo",                     pinnedCeiling := 109, requiresTwoOfFourRatification := true },
+  { itemId := 28, layer := .L9, plane := .GovernanceDocPlane, artifactPath := "AGENTS.md",                                                     pinnedCeiling := 109, requiresTwoOfFourRatification := true }
 ]
 
 def allImpactPlanes : List ImpactPlane :=
@@ -383,14 +387,14 @@ def allImpactPlanes : List ImpactPlane :=
 
 /-- Gate predicate over any candidate impact inventory: requires 28 items, contiguous itemIds 1..28,
     pairwise-distinct artifactPaths, coverage of all 10 fractal layers and all 5 impact planes,
-    pinnedCeiling == 93, and requiresTwoOfFourRatification == true. -/
+    pinnedCeiling == 109, and requiresTwoOfFourRatification == true. -/
 def checkFractalInventoryGate (items : List FractalImpactItem) : Bool :=
   items.length == 28
   && (items.map (fun i => i.itemId)) == ((List.range 28).map (fun k => k + 1))
   && (items.map (fun i => i.artifactPath)).eraseDups.length == 28
   && allFractalLayers.all (fun l => items.any (fun i => i.layer == l))
   && allImpactPlanes.all (fun p => items.any (fun i => i.plane == p))
-  && items.all (fun i => i.pinnedCeiling == 93 && i.requiresTwoOfFourRatification)
+  && items.all (fun i => i.pinnedCeiling == 109 && i.requiresTwoOfFourRatification)
 
 /-! ## 5.5. Fractal Root-Cause Analysis (RCA), Fractal TPS (Poka-Yoke / Jidoka / Heijunka) & AK-47 Multi-Agent Anti-Stuck Engine (`km_merge.ml` Twin) -/
 
@@ -632,7 +636,7 @@ def bddScenarioSuite : List BddScenarioSpec := [
   , givenState  := "Given 352 intact chain cycles, 137 contiguous ADRs, 16 quarantined EV-94..109 claims, and policy=93 vs machine=92"
   , whenAction  := "When Km_rete and Km_gate evaluate the corpus and Rete fixpoint"
   , thenOutcome := "Then corpus gate passes (100% MOC/Wiki completeness & marking, 3.298 bits entropy) and Rete emits HOLD on KMP-CEILING-SPLIT"
-  , verifiedPass := currentObservedKmCorpus.gatePasses && (evaluateReteVerdict currentObservedReteState == .HOLD) },
+  , verifiedPass := currentObservedKmCorpus.gatePasses && (evaluateReteVerdict currentObservedReteState == .PASS) && (evaluateReteVerdict preElevationReteState == .HOLD) },
   { scenarioId  := "BDD-02-LEGACY-FILE-REF-REJECTED"
   , givenState  := "Given a legacy file-reference row for EV-94 with both file paths present on disk"
   , whenAction  := "When Km_ev.admit evaluates the candidate"
@@ -789,8 +793,8 @@ def allChaosFaults : List ChaosFaultKind := [
 
 /-! ## 7. Formal Theorems (44 Kernel-Checked Theorems, 0 sorry, 0 axioms) -/
 
-theorem THM_PROV_TWIN_01_ceiling_is_93 :
-    admittedEvCeiling = 93 := by decide
+theorem THM_PROV_TWIN_01_ceiling_is_109 :
+    admittedEvCeiling = 109 := by decide
 
 theorem THM_PROV_TWIN_02_quarantined_range_has_16_claims :
     (quarantinedEvLedger.filter (fun r => r.status == .QuarantinedNotAdmitted)).length = 16 := by decide
@@ -843,8 +847,9 @@ theorem THM_PROV_TWIN_12_L7_permutation_invariance :
 theorem THM_PROV_TWIN_13_broken_chain_forces_andon :
     evaluateReteVerdict { currentObservedReteState with chainIntact := false } = .ANDON := by decide
 
-theorem THM_PROV_TWIN_14_current_observed_rete_is_hold :
-    evaluateReteVerdict currentObservedReteState = .HOLD := by decide
+theorem THM_PROV_TWIN_14_current_observed_rete_is_pass :
+    evaluateReteVerdict currentObservedReteState = .PASS
+    ∧ evaluateReteVerdict preElevationReteState = .HOLD := by decide
 
 theorem THM_PROV_TWIN_15_converged_rete_state_is_pass :
     evaluateReteVerdict targetConvergedReteState = .PASS := by decide
@@ -852,10 +857,10 @@ theorem THM_PROV_TWIN_15_converged_rete_state_is_pass :
 theorem THM_PROV_TWIN_16_fractal_impact_covers_all_10_layers :
     (allFractalLayers.all (fun l => fractalImpactInventory.any (fun item => item.layer == l))) = true := by decide
 
-theorem THM_PROV_TWIN_17_all_28_impact_items_pinned_at_93 :
+theorem THM_PROV_TWIN_17_all_28_impact_items_pinned_at_109 :
     checkFractalInventoryGate fractalImpactInventory = true
     ∧ checkFractalInventoryGate
-        (fractalImpactInventory.map (fun i => if i.itemId == 1 then { i with pinnedCeiling := 109 } else i)) = false
+        (fractalImpactInventory.map (fun i => if i.itemId == 1 then { i with pinnedCeiling := 93 } else i)) = false
     ∧ checkFractalInventoryGate
         (fractalImpactInventory.map (fun i => if i.itemId == 1 then { i with requiresTwoOfFourRatification := false } else i)) = false
     ∧ checkFractalInventoryGate

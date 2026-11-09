@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd /home/an/NAS-setup/uos
+exec ./tools/lean --run tools/uos_ev_ceiling_controller.lean "$@"

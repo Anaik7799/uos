@@ -62,6 +62,16 @@ let root =
 
 let oracle_dir = Filename.concat root "formal/mojo"
 
+(* Single canonical source of truth: governance/provenance/admitted_ev_ceiling.txt *)
+let canonical_ev_ceiling =
+  let p = Filename.concat root "governance/provenance/admitted_ev_ceiling.txt" in
+  if Sys.file_exists p then
+    let ic = open_in p in
+    let s = try String.trim (input_line ic) with End_of_file -> "" in
+    close_in ic;
+    match int_of_string_opt s with Some v when v > 0 -> v | _ -> 109
+  else 109
+
 (* ---------- process capture ------------------------------------------- *)
 
 let capture ?(timeout = 900) cmd =
@@ -362,7 +372,7 @@ let () =
       Printf.printf
         "{\"schema\":\"uos.lean-mojo-differential.v1\",\"pairs\":[],\"orphans\":0,\
          \"overall\":\"UNRUN_TOOLCHAIN_UNAVAILABLE\",\"missing\":\"%s\",\
-         \"authority\":\"NONE\",\"ev_ceiling\":93}\n" msg
+         \"authority\":\"NONE\",\"ev_ceiling\":109}\n" msg
     else begin
       Printf.printf "OVERALL: %s\n" (verdict_name Unrun);
       Printf.printf "  unusable toolchain entrypoint(s): %s\n" msg;
@@ -497,13 +507,14 @@ let () =
         oracles ran against. *)
      let oracle_sha = !oracle_sha_locked in
      Printf.fprintf oc
-       "{\"schema\":\"uos.lean_mojo_differential.v1\",\"observed_utc\":\"%04d-%02d-%02dT%02d:%02d:%02dZ\",\"revision\":%S,\"scanner_sha256_16\":%S,\"oracle_set_sha256_16\":%S,\"overall\":\"%s\",\"pairs\":%d,\"orphans\":%d,\"authority\":\"NONE\",\"ev_ceiling\":93,\"results\":["
+       "{\"schema\":\"uos.lean_mojo_differential.v1\",\"observed_utc\":\"%04d-%02d-%02dT%02d:%02d:%02dZ\",\"revision\":%S,\"scanner_sha256_16\":%S,\"oracle_set_sha256_16\":%S,\"overall\":\"%s\",\"pairs\":%d,\"orphans\":%d,\"authority\":\"NONE\",\"ev_ceiling\":%d,\"results\":["
        (t.Unix.tm_year + 1900) (t.Unix.tm_mon + 1) t.Unix.tm_mday
        t.Unix.tm_hour t.Unix.tm_min t.Unix.tm_sec
        (if revision = "" then "UNKNOWN" else revision)
        (if scanner_sha = "" then "UNKNOWN" else scanner_sha)
        (if oracle_sha = "" then "UNKNOWN" else oracle_sha)
-       (verdict_name overall) (List.length results) (List.length orphans);
+       (verdict_name overall) (List.length results) (List.length orphans)
+       canonical_ev_ceiling;
      List.iteri
        (fun i (o, s, v, note, _) ->
           Printf.fprintf oc
@@ -536,8 +547,9 @@ let () =
       print_newline ()
     end;
     Printf.printf "OVERALL: %s\n" (verdict_name overall);
-    print_endline
-      "(specification evidence at one candidate; not runtime admission. authority NONE, EV ceiling 93)"
+    Printf.printf
+      "(specification evidence at one candidate; not runtime admission. authority NONE, EV ceiling %d)\n"
+      canonical_ev_ceiling
   end else begin
     Printf.printf "{\"schema\":\"uos.lean-mojo-differential.v1\",\"pairs\":[";
     List.iteri (fun i (o, s, v, note, _) ->
@@ -545,7 +557,7 @@ let () =
         Printf.printf "{\"oracle\":\"%s\",\"subject\":\"%s\",\"verdict\":\"%s\",\"note\":\"%s\"}"
           o s (verdict_name v) (String.escaped note))
       results;
-    Printf.printf "],\"orphans\":%d,\"overall\":\"%s\",\"authority\":\"NONE\",\"ev_ceiling\":93}\n"
-      (List.length orphans) (verdict_name overall)
+    Printf.printf "],\"orphans\":%d,\"overall\":\"%s\",\"authority\":\"NONE\",\"ev_ceiling\":%d}\n"
+      (List.length orphans) (verdict_name overall) canonical_ev_ceiling
   end;
   exit (exit_of overall)

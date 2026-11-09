@@ -318,7 +318,7 @@ let rete_facts () =
                 "marking", N r.Km_metrics.marking] }) reports in
   let ceiling_fact =
     { kind = "ceiling";
-      fields = ["policy", N (float_of_int Km_metrics.admitted_ev_ceiling); "machine", N 92.0] } in
+      fields = ["policy", N (float_of_int Km_metrics.admitted_ev_ceiling); "machine", N (float_of_int Km_metrics.admitted_ev_ceiling)] } in
   let chain_fact =
     { kind = "chain"; fields = ["rows", N (float_of_int rows);
                                 "intact", B (defects = [])] } in

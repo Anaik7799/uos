@@ -53,6 +53,7 @@ from std.subprocess import run
 
 
 comptime PROBE_TIMEOUT_SECS = 20
+comptime CANONICAL_EV_CEILING_PATH = "governance/provenance/admitted_ev_ceiling.txt"
 
 
 def shell_quote(s: String) -> String:
@@ -116,6 +117,19 @@ def capture(cmd: String, secs: Int = PROBE_TIMEOUT_SECS) -> String:
         return String("")
 def contains(hay: String, needle: String) -> Bool:
     return needle in hay
+
+
+def canonical_ev_ceiling() -> Int:
+    """Read the single canonical admitted EV ceiling from
+    `governance/provenance/admitted_ev_ceiling.txt` (managed by
+    `tools/uos_ev_ceiling_controller.lean`). Eliminates scattered magic numbers."""
+    var raw = capture("cat " + String(CANONICAL_EV_CEILING_PATH) + " 2>/dev/null")
+    if raw.byte_length() == 0:
+        return 109
+    try:
+        return Int(raw)
+    except:
+        return 109
 
 
 
@@ -693,6 +707,7 @@ struct Receipt(Copyable, Movable):
         return String("PASS")
 
     def emit(self):
+        var ev_ceil = canonical_ev_ceiling()
         print(
             '{"schema":"', self.schema,
             '","subject":"', self.subject,
@@ -706,7 +721,7 @@ struct Receipt(Copyable, Movable):
             ',"vacuous":', self.vacuous,
             ',"detail":[', self.detail,
             '],"status":"', self.status(),
-            '","authority":"NONE","ev_ceiling":93}',
+            '","authority":"NONE","ev_ceiling":', ev_ceil, '}',
             sep="",
         )
 

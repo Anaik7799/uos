@@ -11,7 +11,7 @@
 # subsystems are VERIFIED with live empirical checks.
 
 from std.sys import exit
-from oracle_substrate import Receipt, capture, contains
+from oracle_substrate import Receipt, canonical_ev_ceiling, capture, contains
 from lean_ffi_bridge import (
     verify_lean_c_abi_14_exports,
     verify_lean_mojo_failover_32_states,
@@ -426,8 +426,8 @@ def main() raises:
             nif_echild_valid(False, echild_fix_count >= 2, echild_fix_count)
             and not nif_echild_valid(False, True, 0))
         r.algebra(
-            String("fsys-ceiling-matches-canonical-93"),
-            twin_ceiling == 93)
+            String("fsys-ceiling-matches-canonical-109"),
+            twin_ceiling == canonical_ev_ceiling())
         r.algebra(
             String("fsys-failover-cascade-minimizes-supervisor-and-falls-back"),
             select_failover_code(False, False, False, lean_mojo_32_states == 32, True) == 3

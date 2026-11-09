@@ -5,7 +5,7 @@
   Canonical Workspace: /home/an/NAS-setup/uos
   File: formal/lean/Razr15_Max_Qwen_Digital_Twin.lean
   Sa-Plan Authority: uos/razr15-1-qwen-max-serve/20261105-0626 (SC-SA-PLAN-001)
-  Admitted EV Ceiling: EV-93 (SC-PROVENANCE-001)
+  Admitted EV Ceiling: EV-109 (SC-PROVENANCE-001)
 
   This Lean 4 module serves two dual roles:
   1. Mathematical & Architectural Authority:
@@ -26,7 +26,7 @@ namespace UOS.Razr15MaxQwen
 /-! ## Section 1: Constitutional & Provenance Invariants (`SC-PROVENANCE-001`) -/
 
 /-- Canonical admitted EV ceiling across UOS (`INV-PROV-05`). -/
-def admittedEvCeiling : Nat := 93
+def admittedEvCeiling : Nat := 109
 
 /-- Locked host OS NVMe serial (`ops/kubernetes/nas-k8s-lab/src/spec.rs`). -/
 def hardDeniedSystemOsSerial : String := "25503L801736"
@@ -438,9 +438,9 @@ def FiveDomainBenchmark.weightedSum (b : FiveDomainBenchmark) : Nat :=
 
 /-! ## Section 8: 22 Formal Machine-Checked Theorems (`0 sorry`, `0 axioms`) -/
 
-/-- Theorem 1: Admitted EV ceiling is pinned to 93 (`SC-PROVENANCE-001`). -/
-theorem t01_admitted_ev_ceiling_is_93 :
-    admittedEvCeiling = 93 := by
+/-- Theorem 1: Admitted EV ceiling is pinned to 109 (`SC-PROVENANCE-001`). -/
+theorem t01_admitted_ev_ceiling_is_109 :
+    admittedEvCeiling = 109 := by
   rfl
 
 /-- Theorem 2: RTX 2070 Max-Q compute capability code is `75` (`sm_75`). -/
@@ -603,7 +603,7 @@ structure DualPlaneObservabilityTwinSpec where
   allDataPlaneSlosPass      : Bool := true
   allControlPlaneSlosPass   : Bool := true
   rogueAuthorityVetoed      : Bool := true
-  admittedEvCeiling         : Nat := 93
+  admittedEvCeiling         : Nat := 109
   remoteTokensBilled        : Nat := 0
   deriving DecidableEq, Repr
 
@@ -618,7 +618,7 @@ def DualPlaneObservabilityTwinSpec.isDualPlaneVerified (d : DualPlaneObservabili
   d.allDataPlaneSlosPass &&
   d.allControlPlaneSlosPass &&
   d.rogueAuthorityVetoed &&
-  d.admittedEvCeiling == 93 &&
+  d.admittedEvCeiling == 109 &&
   d.remoteTokensBilled == 0
 
 /-- Theorem 25: The live Razr15-1 Dual-Plane 14-Stage Observability & Denotational Intent
@@ -799,7 +799,7 @@ def verifyDualPlaneObservation (obs : DualPlaneObservation) : Bool :=
   obs.profileLockThreadSafe &&
   obs.rogueAuthorityVetoed &&
   obs.sanctionedApproved &&
-  obs.admittedEvCeiling == 93 &&
+  obs.admittedEvCeiling == 109 &&
   obs.remoteTokensBilled == 0
 
 /-- THM_OBS_01: Fail-closed on unobserved or non-200 dual-plane telemetry. -/
@@ -810,7 +810,7 @@ theorem THM_OBS_01_fail_closed_on_unobserved_dual_plane
   simp [h]
 
 /-- THM_OBS_02: Soundness of `verifyDualPlaneObservation` — passing requires all 7+7 stages,
-    both positive (sanctioned approved) and negative (rogue vetoed) intent checks, and EV-93. -/
+    both positive (sanctioned approved) and negative (rogue vetoed) intent checks, and EV-109. -/
 theorem THM_OBS_02_verified_observation_entails_all_controls
     (obs : DualPlaneObservation) (h : verifyDualPlaneObservation obs = true) :
     obs.observed = true ∧
@@ -819,7 +819,7 @@ theorem THM_OBS_02_verified_observation_entails_all_controls
     obs.controlPlaneStagesOk = 7 ∧
     obs.rogueAuthorityVetoed = true ∧
     obs.sanctionedApproved = true ∧
-    obs.admittedEvCeiling = 93 ∧
+    obs.admittedEvCeiling = 109 ∧
     obs.remoteTokensBilled = 0 := by
   unfold verifyDualPlaneObservation at h
   simp only [Bool.and_eq_true, beq_iff_eq] at h

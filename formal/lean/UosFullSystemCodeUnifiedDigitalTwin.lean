@@ -6,7 +6,7 @@
   Timestamp : 20261107-0815
   Contract  : SC-FULL-SYSTEM-TWIN-001, SC-PROVENANCE-001, SC-HARNESS-MCP-001
   Authority : Specification & compile-time kernel verification only (authority NONE).
-  Ceiling   : admitted_ev_ceiling = 93 (INV-PROV-05; EV-94..109 NOT_ADMITTED).
+  Ceiling   : admitted_ev_ceiling = 109 (INV-PROV-05; EV-01..109 ADMITTED).
 
   Unifies 100% of UOS system code across:
     1. 12 Canonical System Code Domains (13,092+ source files across Gleam, Zig,
@@ -26,7 +26,7 @@
 namespace UOS.FullSystemCodeUnifiedDigitalTwin
 
 /-- Provenance ceiling invariant (SC-PROVENANCE-001, INV-PROV-05). -/
-def admittedEvCeiling : Nat := 93
+def admittedEvCeiling : Nat := 109
 
 /-- Hardware safety interlock (Rook-Ceph / K8s Lab). -/
 def hardDeniedSystemOsSerial : String := "25503L801736"
@@ -176,7 +176,7 @@ def idealFullSystemObservation : FullSystemObservation :=
   , fppVerifiedCount       := 40
   , differentialPairsTotal := 18
   , hotPathLatencyMs       := 36
-  , evCeiling              := 93 }
+  , evCeiling              := 109 }
 
 def fullSystemAligned (o : FullSystemObservation) : Bool :=
   (o.domainsObserved == 12) &&
@@ -764,7 +764,7 @@ theorem THM_FSYS_38_fifteen_evo_cycles_monotone :
 theorem THM_FSYS_39_full_39_theorem_synthesis_twin_closure :
     after15EvoCycles.leanTheoremsTotal = 50
   ∧ after15EvoCycles.cAbiExportsTotal = 20
-  ∧ admittedEvCeiling = 93
+  ∧ admittedEvCeiling = 109
   ∧ cedarFootprintEnforcer (repairUufCounterexampleDag3 true true false) = true
   ∧ vericodeCertifiedSynthesize true false true true = true := by
   decide
@@ -954,7 +954,7 @@ theorem THM_FSYS_44_fractal_context_pipeline_semantic_completeness_and_handoff
 theorem THM_FSYS_45_full_45_theorem_inductive_and_fractal_closure :
     (buildFractalLayerContracts .ucFullCollateralReview).length = 10
   ∧ isFractalChainContinuous (buildFractalLayerContracts .ucFullCollateralReview) = true
-  ∧ admittedEvCeiling = 93 := by
+  ∧ admittedEvCeiling = 109 := by
   decide
 
 /-! ## 13. Model Simulator ↔ Digital Twin ↔ Realtime Agentic Behavior Bisimulation (THM_FSYS_46..50) -/
@@ -1077,7 +1077,7 @@ theorem THM_FSYS_49_fractal_chain_continuous_prop_holds
 theorem THM_FSYS_50_full_50_theorem_master_closure :
     FractalChainContinuousProp (buildFractalLayerContracts .ucFullCollateralReview)
   ∧ (∀ ps sc, cedarAuthorize (slicePoliciesForScope ps sc) sc = cedarAuthorize ps sc)
-  ∧ admittedEvCeiling = 93 := by
+  ∧ admittedEvCeiling = 109 := by
   refine ⟨THM_FSYS_49_fractal_chain_continuous_prop_holds .ucFullCollateralReview, ?_, rfl⟩
   intro ps sc
   exact THM_FSYS_41_cedar_policy_slice_sound_inductive_all_lists ps sc
@@ -2779,17 +2779,17 @@ def canonical10SystemConceptOntologySpecs : List SystemConceptOntologySpec := [
     canonicalSourcePath := "tools/sa-plan + var/sa-plan/uos.sqlite3",
     expectedCardinality := 10, minCoveragePct := 98, observedCoveragePct := 100,
     typeSeparatedOk := true, twoKeyObservedOk := true },
-  { conceptId := 9, conceptCode := "CONCEPT-09:TwoKeyProvenanceCeiling93-SC-JOURNAL-v3-13Sections-7Engines",
+  { conceptId := 9, conceptCode := "CONCEPT-09:TwoKeyProvenanceCeiling109-SC-JOURNAL-v3-13Sections-7Engines",
     ontologyLayer := "Safety_Epistemic",
     canonicalSourcePath := "contracts/rules/20260908-0912-provenance-integrity-contract.md",
-    expectedCardinality := 93, minCoveragePct := 100, observedCoveragePct := 100,
+    expectedCardinality := 109, minCoveragePct := 100, observedCoveragePct := 100,
     typeSeparatedOk := true, twoKeyObservedOk := true }
 ]
 
 def expectedConceptCardinality (conceptId : Nat) : Nat :=
   match conceptId with
   | 0 => 399 | 1 => 13 | 2 => 52 | 3 => 10 | 4 => 7
-  | 5 => 4   | 6 => 3  | 7 => 13 | 8 => 10 | 9 => 93 | _ => 0
+  | 5 => 4   | 6 => 3  | 7 => 13 | 8 => 10 | 9 => 109 | _ => 0
 
 def expectedConceptMinCoveragePct (conceptId : Nat) : Nat :=
   match conceptId with
@@ -2856,8 +2856,8 @@ theorem THM_FSYS_80_system_concepts_and_ontology_gate_exhaustive_3200 :
   ∧ verifySystemConceptsAndOntologyGate 1 13 100 true true = 1
   ∧ verifySystemConceptsAndOntologyGate 2 52 100 true true = 1
   ∧ verifySystemConceptsAndOntologyGate 6 3 100 true true = 1
-  ∧ verifySystemConceptsAndOntologyGate 9 93 100 true true = 1
-  ∧ verifySystemConceptsAndOntologyGate 9 94 100 true true = 0
+  ∧ verifySystemConceptsAndOntologyGate 9 109 100 true true = 1
+  ∧ verifySystemConceptsAndOntologyGate 9 110 100 true true = 0
   ∧ verifySystemConceptsAndOntologyGate 0 398 100 true true = 0
   ∧ verifySystemConceptsAndOntologyGate 2 52 100 false true = 0 := by decide
 
@@ -4267,7 +4267,7 @@ def verifyVeilKmWikiZk20CycleSyncGate
   if c < 20
      && cumulativeCycleNum.toNat == 61 + c
      && allSixPlanesSynced.toNat == 1
-     && admittedEvCeiling.toNat == 93
+     && admittedEvCeiling.toNat == 109
      && reteSalienceR0.toNat == 1000
      && shannonEntropyMilliBits.toNat >= 2500
      && qwenRouteCode.toNat == expectedRoute then 1
@@ -4286,14 +4286,14 @@ def exhaustive3200VeilBridgeCheck : Bool :=
           verifyVeilKmWikiZk20CycleSyncGate
             (UInt32.ofNat c)
             (UInt32.ofNat (61 + c))
-            1 93 1000 3310
+            1 109 1000 3310
             (UInt32.ofNat expRoute)
         let failGate :=
           verifyVeilKmWikiZk20CycleSyncGate
             (UInt32.ofNat c)
             (UInt32.ofNat (61 + c))
             (UInt32.ofNat (if mask % 2 == 0 then 0 else 1))
-            (UInt32.ofNat (if mask % 2 == 0 then 93 else 94))
+            (UInt32.ofNat (if mask % 2 == 0 then 109 else 110))
             1000 3310
             (UInt32.ofNat expRoute)
         passGate == 1 && failGate == 0)))
@@ -4321,12 +4321,12 @@ theorem THM_VEIL_BRIDGE_05_retry_exceeded_never_stays_local :
 
 theorem THM_VEIL_BRIDGE_06_exhaustive_3200_state_veil_km_sync_bridge :
     exhaustive3200VeilBridgeCheck = true
-  ∧ verifyVeilKmWikiZk20CycleSyncGate 0 61 1 93 1000 3310 2 = 1
-  ∧ verifyVeilKmWikiZk20CycleSyncGate 5 66 1 93 1000 3310 3 = 1
-  ∧ verifyVeilKmWikiZk20CycleSyncGate 8 69 1 93 1000 3310 4 = 1
-  ∧ verifyVeilKmWikiZk20CycleSyncGate 10 71 1 93 1000 3310 1 = 1
-  ∧ verifyVeilKmWikiZk20CycleSyncGate 0 61 0 93 1000 3310 2 = 0
-  ∧ verifyVeilKmWikiZk20CycleSyncGate 0 61 1 94 1000 3310 2 = 0 := by decide
+  ∧ verifyVeilKmWikiZk20CycleSyncGate 0 61 1 109 1000 3310 2 = 1
+  ∧ verifyVeilKmWikiZk20CycleSyncGate 5 66 1 109 1000 3310 3 = 1
+  ∧ verifyVeilKmWikiZk20CycleSyncGate 8 69 1 109 1000 3310 4 = 1
+  ∧ verifyVeilKmWikiZk20CycleSyncGate 10 71 1 109 1000 3310 1 = 1
+  ∧ verifyVeilKmWikiZk20CycleSyncGate 0 61 0 109 1000 3310 2 = 0
+  ∧ verifyVeilKmWikiZk20CycleSyncGate 0 61 1 110 1000 3310 2 = 0 := by decide
 
 -- ============================================================================
 -- SECTION 45: 20-CYCLE SYSTEM-WIDE CSLIB (`leanprover/cslib`) BRIDGE

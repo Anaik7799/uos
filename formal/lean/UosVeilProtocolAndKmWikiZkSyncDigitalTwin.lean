@@ -61,9 +61,9 @@ def allSixPlanesEpochAligned (s : VeilState) : Bool :=
   (s.commentEpoch == s.wikiZkEpoch) &&
   (s.wikiZkEpoch == s.memoryEpoch)
 
-/-- Predicate: all KM/Wiki/ZK structural and provenance invariants hold. -/
+/-- Predicate: all KM/Wiki/ZK structural and provenance invariants hold (`admitted_ev_ceiling = 109`). -/
 def allKmWikiZkInvariantsHold (s : VeilState) : Bool :=
-  (s.admittedEvCeiling == 93) &&
+  (s.admittedEvCeiling == 109) &&
   s.quarantineMarked &&
   s.chainIntact &&
   s.wikiDagAcyclic
@@ -72,7 +72,7 @@ def allKmWikiZkInvariantsHold (s : VeilState) : Bool :=
 def allSixPlanesSynced (s : VeilState) : Bool :=
   allSixPlanesEpochAligned s && allKmWikiZkInvariantsHold s
 
-/-- Initial Veil state at Cycle 80 (`epoch = 80`, `admittedEvCeiling = 93`). -/
+/-- Initial Veil state at Cycle 80 (`epoch = 80`, `admittedEvCeiling = 109`). -/
 def veilInit (epoch : Nat) : VeilState :=
   { specEpoch         := epoch
   , twinEpoch         := epoch
@@ -80,7 +80,7 @@ def veilInit (epoch : Nat) : VeilState :=
   , commentEpoch      := epoch
   , wikiZkEpoch       := epoch
   , memoryEpoch       := epoch
-  , admittedEvCeiling := 93
+  , admittedEvCeiling := 109
   , quarantineMarked  := true
   , chainIntact       := true
   , wikiDagAcyclic    := true
@@ -132,7 +132,7 @@ def veilStep (s : VeilState) (a : VeilAction) : VeilState :=
         , commentEpoch      := targetEpoch
         , wikiZkEpoch       := targetEpoch
         , memoryEpoch       := targetEpoch
-        , admittedEvCeiling := 93
+        , admittedEvCeiling := 109
         , quarantineMarked  := true
         , chainIntact       := true
         , wikiDagAcyclic    := true

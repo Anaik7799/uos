@@ -90,7 +90,7 @@ def allSixPlanesEpochAligned (s : VeilState) : Bool :=
   (s.wikiZkEpoch == s.memoryEpoch)
 
 def allKmWikiZkInvariantsHold (s : VeilState) : Bool :=
-  (s.admittedEvCeiling == 93) && s.quarantineMarked && s.chainIntact && s.wikiDagAcyclic
+  (s.admittedEvCeiling == 109) && s.quarantineMarked && s.chainIntact && s.wikiDagAcyclic
 
 def allSixPlanesSynced (s : VeilState) : Bool :=
   allSixPlanesEpochAligned s && allKmWikiZkInvariantsHold s
@@ -98,7 +98,7 @@ def allSixPlanesSynced (s : VeilState) : Bool :=
 def veilInit (epoch : Nat) : VeilState :=
   { specEpoch := epoch, twinEpoch := epoch, codeEpoch := epoch
   , commentEpoch := epoch, wikiZkEpoch := epoch, memoryEpoch := epoch
-  , admittedEvCeiling := 93, quarantineMarked := true
+  , admittedEvCeiling := 109, quarantineMarked := true
   , chainIntact := true, wikiDagAcyclic := true, andonStopLine := false }
 
 inductive VeilAction where
@@ -130,7 +130,7 @@ def veilRaw (s : VeilState) (a : VeilAction) : VeilState :=
   | .InjectWikiTransclusionCycle => { s with wikiDagAcyclic := false }
   | .RepairDriftToTargetEpoch t =>
       { specEpoch := t, twinEpoch := t, codeEpoch := t, commentEpoch := t
-      , wikiZkEpoch := t, memoryEpoch := t, admittedEvCeiling := 93
+      , wikiZkEpoch := t, memoryEpoch := t, admittedEvCeiling := 109
       , quarantineMarked := true, chainIntact := true, wikiDagAcyclic := true
       , andonStopLine := s.andonStopLine }
   | .ResetAndonWithVerifiedSync =>
@@ -213,7 +213,7 @@ def repairRel (s t : VeilState) : Prop :=
 theorem repair_eq (s : VeilState) (n : Nat) :
     veilStep s (.RepairDriftToTargetEpoch n) =
       { specEpoch := n, twinEpoch := n, codeEpoch := n, commentEpoch := n
-      , wikiZkEpoch := n, memoryEpoch := n, admittedEvCeiling := 93
+      , wikiZkEpoch := n, memoryEpoch := n, admittedEvCeiling := 109
       , quarantineMarked := true, chainIntact := true, wikiDagAcyclic := true
       , andonStopLine := s.andonStopLine } := by
   simp [veilStep, veilRaw, andonGuard, allSixPlanesSynced, allSixPlanesEpochAligned,

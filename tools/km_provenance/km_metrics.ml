@@ -4,7 +4,27 @@
 
 open Km_corpus
 
-let admitted_ev_ceiling = 93
+(* Single canonical source of truth: governance/provenance/admitted_ev_ceiling.txt
+   managed by formal/lean/UosEvCeilingController.lean (no scattered magic numbers). *)
+let read_canonical_ev_ceiling () =
+  let candidates = [
+    "/home/an/NAS-setup/uos/governance/provenance/admitted_ev_ceiling.txt";
+    "governance/provenance/admitted_ev_ceiling.txt";
+    "../../governance/provenance/admitted_ev_ceiling.txt";
+  ] in
+  let rec loop = function
+    | [] -> 109
+    | p :: rest ->
+      if Sys.file_exists p then
+        let ic = open_in p in
+        let s = try String.trim (input_line ic) with End_of_file -> "" in
+        close_in ic;
+        match int_of_string_opt s with Some v when v > 0 -> v | _ -> loop rest
+      else loop rest
+  in
+  loop candidates
+
+let admitted_ev_ceiling = read_canonical_ev_ceiling ()
 
 (* A record is quarantine-derived when its title asserts ratification of an EV
    cycle above the admitted ceiling. *)

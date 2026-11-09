@@ -700,7 +700,7 @@ def main() raises:
             '"profiles_verified":5,"kv_cached_tokens":'
         )
         + String(cached_tok_b)
-        + String(',"admitted_ev_ceiling":93,"remote_tokens_billed":0}')
+        + String(',"admitted_ev_ceiling":109,"remote_tokens_billed":0}')
     )
     var z_put = capture(
         "curl -s -o /dev/null -w '%{http_code}' --max-time 5 -X PUT "

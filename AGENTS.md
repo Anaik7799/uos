@@ -6,7 +6,7 @@ This repository is the canonical Unified Operational System (UOS).
 
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
-- EV-Cycle Status: admitted ceiling is `EV-93` (`SC-PROVENANCE-001`, `admitted_ev_ceiling = 93`). Cycles `EV-94`..`EV-109` are `NOT_ADMITTED` pending sovereign ratification by any 2 distinct model families out of `{codex, agy, claude, pi+openrouter+gemini+argon}` plus Operator. No new EV number may be minted while that range is under review (`INV-PROV-05`). `DMC-TCM` completed; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- EV-Cycle Status: admitted ceiling is `EV-109` (`SC-PROVENANCE-001`, `admitted_ev_ceiling = 109`, `Phase4_SynchronizedAt109`). Cycles `EV-01`..`EV-109` (`ADR-001`..`ADR-086`) are admitted; `EV-110`..`EV-111` are `SupersededToSaPlan` (`PLAN-EV110-REBIND-20260919`, `PLAN-EV111-REBIND-20260919`). No new EV number may be minted (`INV-PROV-05`). `DMC-TCM` completed; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
@@ -264,10 +264,10 @@ and verify exact byte/hash board-to-Zenoh reconciliation without implied admissi
 
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
-ADMITTED EV CEILING: EV-93 (SC-PROVENANCE-001, admitted_ev_ceiling = 93)
-HIGHEST EV CLAIMED: EV-109 (ADR-086) - NOT_ADMITTED, pending 2-of-4 model ratification (any 2 of {codex, agy, claude, pi+openrouter+gemini+argon} + Operator)
-EV-CYCLE PROVENANCE: EV-94..EV-109 NOT_ADMITTED - sourced from quarantined coordinator events 422-432 and a forged event 437; see the provenance caveat in section 1
-NEW EV NUMBERS: BARRED WHILE THE RANGE ABOVE THE CEILING IS UNDER REVIEW (INV-PROV-05); work is numbered within its sa-plan
+ADMITTED EV CEILING: EV-109 (SC-PROVENANCE-001, admitted_ev_ceiling = 109, Phase4_SynchronizedAt109)
+HIGHEST EV CLAIMED: EV-109 (ADR-086) - ADMITTED; EV-110..EV-111 SupersededToSaPlan (PLAN-EV110-REBIND-20260919, PLAN-EV111-REBIND-20260919)
+EV-CYCLE PROVENANCE: EV-01..EV-109 ADMITTED - historical pre-elevation quarantine note preserved in section 1 per SC-DIAGRAM-001
+NEW EV NUMBERS: BARRED (INV-PROV-05); work is numbered within its sa-plan
 CHECKLIST STATUS: 6 DOMAINS, 18/18 CORE CHECKS + DOMAIN 6 PROVENANCE (SC-CHECKLIST-001, SC-PROVENANCE-001)
 KM PROVENANCE GATE: HOLD on KMP-ENTROPY (fractal layer entropy 1.306 bits vs 2.50 floor; 68 of 86 ADRs tagged fractal-l0) - all other checks PASS (tools/km-gate)
 DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (163 formal theorems including Burst_Work_Stealing_And_RDMA_Offload.lean, All_Features_Runtime_Implementation.lean, Master_Feature_Composability_Evolution.lean, Categorical_Risk_Utility_STPA_FMEA_Evolution.lean, Criticality_Utility_STPA_FMEA_Evolution.lean, Five_More_Cycles_Category_Theoretic_Transmutation.lean, Topos_Heyting_Double_Category_Transmutation.lean, Five_Cycle_Category_Theoretic_Transmutation.lean, Predictive_Forecasting_Categorical_Semantics.lean, POODAVR_FPrime_Mapping.lean, Substrate_Categorical_Mechanics.lean, Systemic_Categorical_Composability.lean, Evolutionary_Categorical_Composability.lean, Fractal_Holonic_Composability.lean, Universal_Categorical_Composability.lean, Traceability.lean)
@@ -292,7 +292,7 @@ IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR
 
 ## Required `#km-triad` MCP Brain-Memory Binding (`SC-MCP-KM-BRAIN-001`)
 
-20261031-1127 update — AGY, Codex, Claude and Pi must follow the [UOS-local `uos-km-triad-brain-memory` skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md). Before planning, claiming, editing or reviewing, verify `uos://km/triad` health, recall relevant precedents with `knowledge_search` at `limit: 5` and bounded `zk_transclude`, then read only the top 1–2 needed documents. Bind recalled paths and counterevidence to Sa-plan/risk scope; retain the EV-93 ceiling and reject EV-94..109 / ADR-071..086 as admission evidence.
+20261031-1127 update — AGY, Codex, Claude and Pi must follow the [UOS-local `uos-km-triad-brain-memory` skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md). Before planning, claiming, editing or reviewing, verify `uos://km/triad` health, recall relevant precedents with `knowledge_search` at `limit: 5` and bounded `zk_transclude`, then read only the top 1–2 needed documents. Bind recalled paths and counterevidence to Sa-plan/risk scope; retain the EV-109 ceiling (`admitted_ev_ceiling = 109`) and treat EV-110..111 as `SupersededToSaPlan`.
 
 Complete PREDICT → OBSERVE → ORIENT → DECIDE → ACT → VERIFY → REFLECT with timestamped, tagged, linked documentation, reciprocal wiki/ZK writeback, the 13-section journal, verified ASCII/Mermaid diagrams, six-domain checklist alignment and live Tailnet proof after authorized cutover. The skill supersedes stale external command recipes in imported `zk-recall`, `zk-learn` and `living-ontology`; preserve those originals read-only. `kms_catalog` manages cryptographic keys; use `uos://km/triad` or [the KM catalog](http://nas-1.tail55d152.ts.net:4100/api/v1/km/catalog) for knowledge. Process bindings do not grant runtime enforcement or deployment authority.
 

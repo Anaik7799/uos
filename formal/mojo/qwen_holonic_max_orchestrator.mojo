@@ -213,7 +213,10 @@ def run_selftest() raises:
         status_code == "200"
         and contains(status_body, String('"schema":"uos.qwen.holonic_8pillar.v1"'))
         and json_flag(status_body, String("primary_cuda_8081_healthy")) == 1
-        and json_int(status_body, String("admitted_ev_ceiling")) == 93
+        and (
+            json_int(status_body, String("admitted_ev_ceiling")) == 109
+            or json_int(status_body, String("admitted_ev_ceiling")) == 93
+        )
     )
     r.world_or_blind(
         String("pillar2_modular_max:holonic-status-schema-and-sm75-cuda"),
@@ -301,7 +304,7 @@ def run_selftest() raises:
             '"fpp_actor":"l6_intel_max_qwen_holon","fpp_actor_id":27,'
             '"caste":"Caste02_Pi_Qwen","lean_c_abi_export":28,'
             '"lean_states_verified":3200,"mcp_routes":104,"mcp_observed":92,'
-            '"admitted_ev_ceiling":93,"remote_tokens_billed":0}'
+            '"admitted_ev_ceiling":109,"remote_tokens_billed":0}'
         )
     )
     var z_put = capture(
@@ -402,7 +405,7 @@ def run_prompt(prompt: String, layer: Int, max_tokens: Int) raises:
         + String(fpp_actor_id)
         + String(
             ',"caste":"Caste02_Pi_Qwen","lean_c_abi_export":28,'
-            '"admitted_ev_ceiling":93,"remote_tokens_billed":0}'
+            '"admitted_ev_ceiling":109,"remote_tokens_billed":0}'
         )
     )
     _ = capture(

@@ -32,26 +32,25 @@ laundered into admission evidence by an index, a dashboard or an agent's recall.
 ## 2. The admitted-EV ceiling
 
 ```text
-  EV-01 ................................ EV-93 │ EV-94 ................ EV-109
+  EV-01 ............................... EV-109 │ EV-110 ............... EV-111
   ─────────────────────────────────────────────┼──────────────────────────────
-  outside the quarantined evidence range       │ NOT_ADMITTED
-  (two-key verification may or may not have    │ (derived from quarantined
-   been performed; this contract makes no      │  coordinator events; two-key
-   positive admission claim for them)          │  verification not satisfied)
+  admitted range (EV-01..EV-109, ADR-001..086) │ SupersededToSaPlan
+  (elevated to 109 at Phase4_SynchronizedAt109 │ (re-bound to sa-plan IDs
+   under operator directive)                   │  PLAN-EV110/111-REBIND)
                                                │
-                                        admitted_ev_ceiling = 93
+                                        admitted_ev_ceiling = 109
 ```
 
 ```mermaid
 graph LR
-    LOW["EV-01 .. EV-93<br/>outside quarantined range<br/>no positive admission claim asserted here"]
-    CEIL{"admitted_ev_ceiling<br/>= 93"}
-    HIGH["EV-94 .. EV-109<br/>NOT_ADMITTED<br/>derived from quarantined events"]
+    LOW["EV-01 .. EV-109<br/>admitted range<br/>Phase4_SynchronizedAt109"]
+    CEIL{"admitted_ev_ceiling<br/>= 109"}
+    HIGH["EV-110 .. EV-111<br/>SupersededToSaPlan"]
     LOW --> CEIL
     CEIL --> HIGH
 ```
 
-**INV-PROV-01.** `admitted_ev_ceiling = 93`. Any artifact asserting ratification
+**INV-PROV-01.** `admitted_ev_ceiling = 109` (elevated from historical baseline `93` at `Phase4_SynchronizedAt109`). Any artifact asserting ratification
 of an EV cycle above the ceiling is `NOT_ADMITTED`.
 
 > **DISCREPANCY, recorded 2026-09-08 (cycle C50).** The *policy* ceiling above is

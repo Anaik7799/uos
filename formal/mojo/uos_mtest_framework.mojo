@@ -239,7 +239,7 @@ def print_system_concepts_and_ontology_explorer() raises:
     var c6 = Int(fn36(6, 3, 100, 1, 1))
     var c7 = Int(fn36(7, 13, 100, 1, 1))
     var c8 = Int(fn36(8, 10, 100, 1, 1))
-    var c9 = Int(fn36(9, 93, 100, 1, 1))
+    var c9 = Int(fn36(9, 109, 100, 1, 1))
     print(" 0 | Lexical Ontology (399 entries, 16 domains, 12 performatives)| Lexical_Layer      |  399 | 100% |  " + String(c0))
     print(" 1 | Structural Axis Registry (13 axes, SC-FRACTAL-TAXONOMY-001) | Structural_Layer   |   13 | 100% |  " + String(c1))
     print(" 2 | Formal Ontology Atlas (52 zero-axiom thms, fibration)       | Formal_Atlas_Layer |   52 | 100% |  " + String(c2))
@@ -249,7 +249,7 @@ def print_system_concepts_and_ontology_explorer() raises:
     print(" 6 | Epistemic Condensation (Rete-UL -> Ruliad -> Agent)         | Safety_Epistemic   |    3 | 100% |  " + String(c6))
     print(" 7 | 13D Traceability Conservation + Two-Lattice STM             | Formal_Atlas_Layer |   13 | 100% |  " + String(c7))
     print(" 8 | Fractal Jidoka TPS + Sa-Plan Exclusivity + Append-Only WAL  | Cybernetic_Control |   10 | 100% |  " + String(c8))
-    print(" 9 | Two-Key Provenance (EV=93) + SC-JOURNAL-v3 (13s, 7 engines) | Safety_Epistemic   |   93 | 100% |  " + String(c9))
+    print(" 9 | Two-Key Provenance (EV=109) + SC-JOURNAL-v3 (13s, 7 engines)| Safety_Epistemic   |  109 | 100% |  " + String(c9))
 
 
 def print_polyglot_languages_explorer() raises:
@@ -1210,8 +1210,8 @@ def main() raises:
         and Int(fn36(5, 4, 100, 1, 1)) == 1
         and Int(fn36(7, 13, 100, 1, 1)) == 1
         and Int(fn36(8, 10, 100, 1, 1)) == 1
-        and Int(fn36(9, 93, 100, 1, 1)) == 1
-        and Int(fn36(9, 94, 100, 1, 1)) == 0
+        and Int(fn36(9, 109, 100, 1, 1)) == 1
+        and Int(fn36(9, 110, 100, 1, 1)) == 0
     )
     r.observe_int(String("sqlite-append-only-triggers"), wal_triggers)
     r.world_or_blind(
@@ -1444,8 +1444,8 @@ def main() raises:
         + String(Int(sm75_fn(8, 8333, 42, 310, 8, 2))) + String(",")
         + String(Int(bm_fn(3, 100, 2, 1, 1))) + String(",")
         + String(Int(bm_fn(3, 100, 8, 1, 1))) + String(",")
-        + String(Int(fn36(9, 93, 100, 1, 1))) + String(",")
-        + String(Int(fn36(9, 94, 100, 1, 1))) + String(",")
+        + String(Int(fn36(9, 109, 100, 1, 1))) + String(",")
+        + String(Int(fn36(9, 110, 100, 1, 1))) + String(",")
         + String(Int(fn37(5, 125, 100, 18, 1, 1))) + String(",")
         + String(Int(fn37(5, 110, 100, 18, 1, 1))) + String(",")
         + String(Int(fn38(0, 3, 100, 62, 81, 2, 1))) + String(",")

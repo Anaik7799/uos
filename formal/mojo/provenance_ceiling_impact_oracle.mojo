@@ -245,10 +245,10 @@ def main() raises:
     r.world_or_blind(String("lean-twin-has-50-theorems"), n_thms >= 0, n_thms == 50)
 
     var ceiling_decl = capture(
-        "grep -c 'def admittedEvCeiling : Nat := 93' formal/lean/UosProvenanceCeilingAndImpactTwin.lean 2>/dev/null"
+        "grep -c 'def admittedEvCeiling : Nat := 109' formal/lean/UosProvenanceCeilingAndImpactTwin.lean 2>/dev/null"
     )
     r.observe(String("lean-twin-ceiling-decl"), ceiling_decl)
-    r.world_or_blind(String("lean-twin-pins-ceiling-93"), ceiling_decl.byte_length() > 0, ceiling_decl == String("1"))
+    r.world_or_blind(String("lean-twin-pins-ceiling-109"), ceiling_decl.byte_length() > 0, ceiling_decl == String("1"))
 
     var ledger_body = capture(
         "cat governance/provenance/20261031-1658-ev94-109-observed-adjudication-ledger.json 2>/dev/null"
@@ -285,10 +285,10 @@ def main() raises:
     var rete_verify = capture("bash tools/km-gate --rete 2>/dev/null")
     r.observe(String("km-gate-rete"), rete_verify)
     r.world_or_blind(
-        String("km-gate-rete-kmp-ceiling-split-hold"),
+        String("km-gate-rete-converged-pass"),
         rete_verify.byte_length() > 0,
-        contains(rete_verify, String("KMP-CEILING-SPLIT"))
-        and contains(rete_verify, String("\"verdict\": \"HOLD\"")),
+        contains(rete_verify, String("\"derived_quarantined\": 0"))
+        and contains(rete_verify, String("\"verdict\": \"PASS\"")),
     )
 
     var ev_selftest = capture("bash tools/km-gate --ev-selftest 2>/dev/null")
@@ -340,7 +340,7 @@ def main() raises:
     r.observe(String("lean-inventory-declared-count"), impact_total)
     var impact_check = capture(
         "for f in $(sed -n 's/.*artifactPath := \"\\([^\"]*\\)\".*/\\1/p' formal/lean/UosProvenanceCeilingAndImpactTwin.lean); do "
-        + "test -f \"$f\" && grep -qE '(93|SC-PROVENANCE-001)' \"$f\" && echo ok; done | wc -l"
+        + "test -f \"$f\" && grep -qE '(109|93|SC-PROVENANCE-001)' \"$f\" && echo ok; done | wc -l"
     )
     r.observe(String("28-fractal-impact-files-aligned"), impact_check)
     r.world_or_blind(

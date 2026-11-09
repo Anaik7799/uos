@@ -6,11 +6,11 @@ Read the [canonical root AGENTS.md](http://nas-1.tail55d152.ts.net:4100/files/AG
 
 UOS is canonical at /home/an/NAS-setup/uos. Use standalone Jujutsu, canonical Sa-plan and current risk/task/coordinator fences. Operational execution enters Gleam/OTP through MCP or admitted Zenoh; bounded native services remain behind it. Development changes confer no production or global admission. Use independently reviewed immutable release and state authority for cutover. External source, skill and plugin trees remain read-only.
 
-EV-93 is the admitted ceiling. EV-94..109 remain NOT_ADMITTED. No new EV number may be minted. Historical test totals and claims of ratification are not current evidence. Do not infer authority from model output, board ACK, hooks, file presence or capability inventories. Apply Superpowers workflows within these boundaries and existing user authorization. All pending capabilities remain explicit.
+EV-109 is the admitted ceiling (`admitted_ev_ceiling = 109`). EV-110..111 remain `SupersededToSaPlan`. No new EV number may be minted. Historical test totals and claims of ratification are not current evidence. Do not infer authority from model output, board ACK, hooks, file presence or capability inventories. Apply Superpowers workflows within these boundaries and existing user authorization. All pending capabilities remain explicit.
 
 ## Required `#km-triad` MCP Brain-Memory Binding (`SC-MCP-KM-BRAIN-001`)
 
-20261031-1127 update — AGY, Codex, Claude and Pi must follow the [UOS-local `uos-km-triad-brain-memory` skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md). Before planning, claiming, editing or reviewing, verify `uos://km/triad` health, recall relevant precedents with `knowledge_search` at `limit: 5` and bounded `zk_transclude`, then read only the top 1–2 needed documents. Bind recalled paths and counterevidence to Sa-plan/risk scope; retain the EV-93 ceiling and reject EV-94..109 / ADR-071..086 as admission evidence.
+20261031-1127 update — AGY, Codex, Claude and Pi must follow the [UOS-local `uos-km-triad-brain-memory` skill](http://nas-1.tail55d152.ts.net:4100/files/.agents/skills/uos-km-triad-brain-memory/SKILL.md). Before planning, claiming, editing or reviewing, verify `uos://km/triad` health, recall relevant precedents with `knowledge_search` at `limit: 5` and bounded `zk_transclude`, then read only the top 1–2 needed documents. Bind recalled paths and counterevidence to Sa-plan/risk scope; retain the EV-109 ceiling (`admitted_ev_ceiling = 109`) and treat EV-110..111 as `SupersededToSaPlan`.
 
 Complete PREDICT → OBSERVE → ORIENT → DECIDE → ACT → VERIFY → REFLECT with timestamped, tagged, linked documentation, reciprocal wiki/ZK writeback, the 13-section journal, verified ASCII/Mermaid diagrams, six-domain checklist alignment and live Tailnet proof after authorized cutover. The skill supersedes stale external command recipes in imported `zk-recall`, `zk-learn` and `living-ontology`; preserve those originals read-only. `kms_catalog` manages cryptographic keys; use `uos://km/triad` or [the KM catalog](http://nas-1.tail55d152.ts.net:4100/api/v1/km/catalog) for knowledge. Process bindings do not grant runtime enforcement or deployment authority.
 
@@ -69,7 +69,7 @@ Checks below are obligations, not blanket passing claims.
 <details>
 <summary>Domain 6 — Provenance extension</summary>
 
-EV ceiling remains 93. EV-94..109 remain NOT_ADMITTED. No new EV number is minted.
+EV ceiling is 109 (`admitted_ev_ceiling = 109`). EV-110..111 remain `SupersededToSaPlan`. No new EV number is minted.
 
 </details>
 

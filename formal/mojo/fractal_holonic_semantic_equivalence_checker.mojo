@@ -22,7 +22,7 @@
 #      `20261106-0402-uos-indexed-axis-registry.json`, Wiki, ZK, SOP, and 13-Section Journal).
 
 from std.sys import exit
-from oracle_substrate import Receipt, capture, contains
+from oracle_substrate import Receipt, canonical_ev_ceiling, capture, contains
 from lean_ffi_bridge import (
     fpp_actor_explicit_caste_owner_mojo,
     verify_lean_mojo_fhc_20_cycles_3200_parity,
@@ -72,11 +72,12 @@ def verify_full_semantic_equivalence_gate_mojo(
         and stpa_ucas == 4
         and fmea_entries_l0_l9 == 30
         and sa_plan_tasks_tracked == 20
-        and ev_ceiling == 93
+        and ev_ceiling == canonical_ev_ceiling()
     )
 
 
 def verify_exhaustive_6400_semantic_equivalence_states_mojo() -> Int:
+    var canon_ev = canonical_ev_ceiling()
     var matched: Int = 0
     for c in range(20):
         var exp_lyr = c % 10
@@ -93,7 +94,7 @@ def verify_exhaustive_6400_semantic_equivalence_states_mojo() -> Int:
                 var cst_val = exp_cst if cst_ok == 1 else ((exp_cst % 5) + 1)
                 var hol_val = 170 if hol_ok == 1 else (160 + band)
                 var fmea_val = 30 if fmea_ok == 1 else 20
-                var ev_val = 93 if ev_ok == 1 else 94
+                var ev_val = canon_ev if ev_ok == 1 else (canon_ev + 1)
                 var got = verify_full_semantic_equivalence_gate_mojo(
                     c, cyc_val, exp_lyr, exp_act, cst_val, hol_val, 11, 4, fmea_val, 20, ev_val
                 )
@@ -196,10 +197,10 @@ def main() raises:
     # ── 5. Negative Controls (SC-VP-04: boundary & provenance discrimination)
     r.mutation_probe(
         String("ev94-and-caste-spoofing-and-truncated-fmea-rejected"),
-        not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 1, 170, 11, 4, 30, 20, 94)
-        and not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 2, 170, 11, 4, 30, 20, 93)
-        and not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 1, 170, 11, 4, 20, 20, 93)
-        and not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 1, 170, 11, 4, 30, 19, 93),
+        not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 1, 170, 11, 4, 30, 20, 110)
+        and not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 2, 170, 11, 4, 30, 20, 109)
+        and not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 1, 170, 11, 4, 20, 20, 109)
+        and not verify_full_semantic_equivalence_gate_mojo(0, 41, 0, 0, 1, 170, 11, 4, 30, 19, 109),
     )
 
     print("# ── 20-Cycle Fractal Holonic Semantic-Equivalence Checker (Pair #21) ──")

@@ -25,7 +25,7 @@
 # `Caste03` Codex vs `Caste04` Claude vs `Caste01` AGY).
 
 from std.sys import exit
-from oracle_substrate import Receipt, capture, contains
+from oracle_substrate import Receipt, canonical_ev_ceiling, capture, contains
 
 
 comptime VEIL_TWIN = "formal/lean/UosVeilProtocolAndKmWikiZkSyncDigitalTwin.lean"
@@ -191,6 +191,7 @@ def main() raises:
     r.world_count(String("sa-plan-40-cumulative-tasks-completed-cycles-41-to-80"), veil_completed + fhc_completed, 40)
 
     # ── 4. Gleam/OTP BEAM Runtime Classifier & 30-Vector Bridge Parity
+    var canon_ev = String(canonical_ev_ceiling())
     var beam_classifier_probe = capture(
         "erl -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -noshell -eval '"
         + "R0 = cepaf_gleam@harness@agent_ecology:classify_pi_qwen_review_and_escalation(0, 92, 1, 0), "
@@ -199,7 +200,7 @@ def main() raises:
         + "R5 = cepaf_gleam@harness@agent_ecology:classify_pi_qwen_review_and_escalation(5, 92, 0, 2), "
         + "R8 = cepaf_gleam@harness@agent_ecology:classify_pi_qwen_review_and_escalation(8, 92, 0, 3), "
         + "R10 = cepaf_gleam@harness@agent_ecology:classify_pi_qwen_review_and_escalation(10, 92, 0, 2), "
-        + "G = cepaf_gleam@harness@agent_ecology:verify_veil_km_wiki_zk_20cycle_sync_gate(0, 61, 1, 93, 1000, 3310, 2), "
+        + "G = cepaf_gleam@harness@agent_ecology:verify_veil_km_wiki_zk_20cycle_sync_gate(0, 61, 1, " + canon_ev + ", 1000, 3310, 2), "
         + "Vec = length(cepaf_gleam@harness@agent_ecology:evaluate_cross_plane_bridge_vectors_28_to_44()), "
         + "io:format(\"~s|~s|~s|~s|~s|~s|~p|~p\", [R0, R0Low, R0Retry, R5, R8, R10, G, Vec]), halt(0).' 2>/dev/null"
     )
@@ -234,10 +235,10 @@ def main() raises:
         + "e1=$(grep -oE 'admittedEvCeiling := [0-9]+' " + String(VEIL_TWIN) + " | head -n 1 | grep -oE '[0-9]+$'); "
         + "e2=$(grep -oE 'admitted_ev_ceiling == [0-9]+' apps/cepaf_gleam/src/cepaf_gleam/harness/agent_ecology.gleam | head -n 1 | grep -oE '[0-9]+$'); "
         + "e3=$(grep -oE 'admitted_ev_ceiling = [0-9]+' " + String(VEIL_TWIN) + " | head -n 1 | grep -oE '[0-9]+$'); "
-        + "e4=$(jq -r '.admitted_ev_ceiling // 93' " + String(KM_DICT_JSON) + " 2>/dev/null); "
-        + "e5=$(jq -r '.admitted_ev_ceiling // 93' " + String(QWEN_RECEIPT) + " 2>/dev/null); "
+        + "e4=$(jq -r '.admitted_ev_ceiling // 0' " + String(KM_DICT_JSON) + " 2>/dev/null); "
+        + "e5=$(jq -r '.admitted_ev_ceiling // 0' " + String(QWEN_RECEIPT) + " 2>/dev/null); "
         + "c=0; "
-        + "[ \"$e0\" = \"93\" ] && [ \"$e0\" = \"$e1\" ] && c=$((c+1)); "
+        + "[ \"$e0\" = \"" + canon_ev + "\" ] && [ \"$e0\" = \"$e1\" ] && c=$((c+1)); "
         + "[ \"$e1\" = \"$e2\" ] && c=$((c+1)); "
         + "[ \"$e2\" = \"$e3\" ] && c=$((c+1)); "
         + "[ \"$e3\" = \"$e4\" ] && c=$((c+1)); "

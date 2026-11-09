@@ -29,7 +29,7 @@ namespace UOS.FractalHolonicSemanticEquivalence20CycleDigitalTwin
 set_option maxRecDepth 200000
 
 /-- Constitutional Provenance Ceiling (`SC-PROVENANCE-001`). -/
-def admittedEvCeiling : Nat := 93
+def admittedEvCeiling : Nat := 109
 
 /-- 4 Root OTP 29.0.5 Supervision Domains (`uos_sup.gleam`). -/
 inductive SupervisionDomain where
@@ -279,7 +279,7 @@ def verifyFullSemanticEquivalenceGate
   && stpaUcas == 4
   && fmeaEntriesL0L9 == 30
   && saPlanTasksTracked == 20
-  && evCeiling == 93
+  && evCeiling == 109
 
 /-- Exhaustive 6,400-state (`20 cycles × 10 layers × 32 equivalence masks`) semantic-equivalence checker. -/
 def exhaustive6400SemanticEquivalenceCheck : Bool :=
@@ -298,7 +298,7 @@ def exhaustive6400SemanticEquivalenceCheck : Bool :=
         let cstVal  := if cstOk  then expCst else (expCst % 5) + 1
         let holVal  := if holOk  then 170    else 160 + band
         let fmeaVal := if fmeaOk then 30     else 20
-        let evVal   := if evOk   then 93     else 94
+        let evVal   := if evOk   then 109    else 110
         let got :=
           verifyFullSemanticEquivalenceGate
             c cycVal expLyr expAct cstVal holVal 11 4 fmeaVal 20 evVal
@@ -401,17 +401,17 @@ theorem THM_FHC_EQ_15_l8_evolutionary_and_l9_sovereign_actors_match_wiki_and_gle
   ∧ explicitCasteForActorIdx 39 = 1 := by decide
 
 theorem THM_FHC_EQ_16_provenance_ev93_ceiling_enforced_fail_closed :
-    admittedEvCeiling = 93
-  ∧ verifyFullSemanticEquivalenceGate 0 41 0 0 1 170 11 4 30 20 93 = true
-  ∧ verifyFullSemanticEquivalenceGate 0 41 0 0 1 170 11 4 30 20 94 = false := by decide
+    admittedEvCeiling = 109
+  ∧ verifyFullSemanticEquivalenceGate 0 41 0 0 1 170 11 4 30 20 109 = true
+  ∧ verifyFullSemanticEquivalenceGate 0 41 0 0 1 170 11 4 30 20 110 = false := by decide
 
 theorem THM_FHC_EQ_17_fmea_l0_l9_30_entry_requirement_enforced_fail_closed :
-    verifyFullSemanticEquivalenceGate 5 46 5 10 5 170 11 4 30 20 93 = true
-  ∧ verifyFullSemanticEquivalenceGate 5 46 5 10 5 170 11 4 20 20 93 = false := by decide
+    verifyFullSemanticEquivalenceGate 5 46 5 10 5 170 11 4 30 20 109 = true
+  ∧ verifyFullSemanticEquivalenceGate 5 46 5 10 5 170 11 4 20 20 109 = false := by decide
 
 theorem THM_FHC_EQ_18_sa_plan_20_tasks_requirement_enforced_fail_closed :
-    verifyFullSemanticEquivalenceGate 19 60 9 38 1 170 11 4 30 20 93 = true
-  ∧ verifyFullSemanticEquivalenceGate 19 60 9 38 1 170 11 4 30 19 93 = false := by decide
+    verifyFullSemanticEquivalenceGate 19 60 9 38 1 170 11 4 30 20 109 = true
+  ∧ verifyFullSemanticEquivalenceGate 19 60 9 38 1 170 11 4 30 19 109 = false := by decide
 
 theorem THM_FHC_EQ_19_caste_spoofing_rejected_across_all_20_cycles :
     (List.range 20).all (fun c =>
@@ -419,8 +419,8 @@ theorem THM_FHC_EQ_19_caste_spoofing_rejected_across_all_20_cycles :
       let act := (c * 2) % 40
       let cst := explicitCasteForActorIdx act
       let badCst := (cst % 5) + 1
-      verifyFullSemanticEquivalenceGate c (41 + c) lyr act cst 170 11 4 30 20 93 == true
-      && verifyFullSemanticEquivalenceGate c (41 + c) lyr act badCst 170 11 4 30 20 93 == false) = true := by decide
+      verifyFullSemanticEquivalenceGate c (41 + c) lyr act cst 170 11 4 30 20 109 == true
+      && verifyFullSemanticEquivalenceGate c (41 + c) lyr act badCst 170 11 4 30 20 109 == false) = true := by decide
 
 theorem THM_FHC_EQ_20_exhaustive_6400_state_semantic_equivalence_verified :
     exhaustive6400SemanticEquivalenceCheck = true := by decide

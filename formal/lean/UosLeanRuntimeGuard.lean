@@ -12,7 +12,7 @@ namespace UOS.LeanRuntimeGuard
     Enforces:
     - saPlanBound == 1 (SC-SA-PLAN-001)
     - nvmeSafe == 1 (HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" protected)
-    - evId <= 93 (INV-PROV-05, EV-94..109 NOT_ADMITTED)
+    - evId <= 109 (INV-PROV-05, EV-01..109 ADMITTED)
     - healthPct >= 85
     - vramMib <= 7600 (8,192 MiB Turing sm_75 ceiling) -/
 @[export uos_lean_check_intent]
@@ -22,7 +22,7 @@ def uosLeanCheckIntent
     (evId        : UInt32)
     (healthPct   : UInt32)
     (vramMib     : UInt32) : UInt8 :=
-  if saPlanBound == 1 && nvmeSafe == 1 && evId <= 93 && healthPct >= 85 && vramMib <= 7600 then
+  if saPlanBound == 1 && nvmeSafe == 1 && evId <= 109 && healthPct >= 85 && vramMib <= 7600 then
     1
   else
     0
@@ -112,14 +112,14 @@ def uosLeanShouldFoldContext
 
 /-! ## Formal Proofs of C-ABI Guard Soundness (0 sorry, 0 axioms) -/
 
-theorem THM_GUARD_01_ev_above_93_always_vetoed :
-    uosLeanCheckIntent 1 1 94 100 5446 = 0
-  ∧ uosLeanCheckIntent 1 1 108 100 5446 = 0
+theorem THM_GUARD_01_ev_above_109_always_vetoed :
+    uosLeanCheckIntent 1 1 110 100 5446 = 0
+  ∧ uosLeanCheckIntent 1 1 109 100 5446 = 1
   ∧ uosLeanCheckIntent 1 1 93 100 5446 = 1 := by decide
 
 theorem THM_GUARD_02_nvme_or_saplan_violation_vetoed :
-    uosLeanCheckIntent 0 1 93 100 5446 = 0
-  ∧ uosLeanCheckIntent 1 0 93 100 5446 = 0 := by decide
+    uosLeanCheckIntent 0 1 109 100 5446 = 0
+  ∧ uosLeanCheckIntent 1 0 109 100 5446 = 0 := by decide
 
 theorem THM_GUARD_03_local_cascade_zero_remote_when_gpu_ok :
     uosLeanRouteCascade 920 1 1 = 0
@@ -312,7 +312,7 @@ def uosLeanSelectFailoverAgent
     - nifs == 11 (all 11 native Rust/OCaml/C NIFs built)
     - fppActors == 40 (all 40 FPP subsystem actors VERIFIED across L0..L9 x 5 Castes)
     - pairsGreen == 18 (all 18/18 Lean 4 <-> Mojo differential pairs PASS)
-    - ceiling == 93 (INV-PROV-05 admitted EV ceiling) -/
+    - ceiling == 109 (INV-PROV-05 admitted EV ceiling) -/
 @[export uos_lean_verify_full_system_twin]
 def uosLeanVerifyFullSystemTwin
     (domains    : UInt32)
@@ -320,7 +320,7 @@ def uosLeanVerifyFullSystemTwin
     (fppActors  : UInt32)
     (pairsGreen : UInt32)
     (ceiling    : UInt32) : UInt8 :=
-  if domains == 12 && nifs == 11 && fppActors == 40 && pairsGreen == 18 && ceiling == 93 then
+  if domains == 12 && nifs == 11 && fppActors == 40 && pairsGreen == 18 && ceiling == 109 then
     1
   else
     0
@@ -334,14 +334,14 @@ theorem THM_GUARD_13_failover_cascade_and_supervisor_minimization :
   ∧ uosLeanSelectFailoverAgent 0 0 0 0 1 = 0 := by decide
 
 theorem THM_GUARD_14_full_system_twin_gate_sound :
-    uosLeanVerifyFullSystemTwin 12 11 40 18 93 = 1
-  ∧ uosLeanVerifyFullSystemTwin 11 11 40 18 93 = 0
-  ∧ uosLeanVerifyFullSystemTwin 12 11 40 18 94 = 0 := by decide
+    uosLeanVerifyFullSystemTwin 12 11 40 18 109 = 1
+  ∧ uosLeanVerifyFullSystemTwin 11 11 40 18 109 = 0
+  ∧ uosLeanVerifyFullSystemTwin 12 11 40 18 110 = 0 := by decide
 
 /-- 15. Cedar VGD MCP Tool Authorization Guard (arXiv:2407.01688 + cedar-for-agents)
-    Enforces forbid_trumps_permit ∧ default_deny ∧ NVMe/secret/EV-93 forbid rules:
+    Enforces forbid_trumps_permit ∧ default_deny ∧ NVMe/secret/EV-109 forbid rules:
     - anyForbid == 1 => 0 (Deny: forbid trumps permit)
-    - anyPermit == 1 && evId <= 93 && nvmeSafe == 1 => 1 (Allow)
+    - anyPermit == 1 && evId <= 109 && nvmeSafe == 1 => 1 (Allow)
     - otherwise => 0 (Deny: default deny) -/
 @[export uos_lean_cedar_authorize_mcp]
 def uosLeanCedarAuthorizeMcp
@@ -350,7 +350,7 @@ def uosLeanCedarAuthorizeMcp
     (nvmeSafe  : UInt8)
     (evId      : UInt32) : UInt8 :=
   if anyForbid == 1 then 0
-  else if anyPermit == 1 && nvmeSafe == 1 && evId <= 93 then 1
+  else if anyPermit == 1 && nvmeSafe == 1 && evId <= 109 then 1
   else 0
 
 /-- 16. Cedar SymCC (SymCert FMCAD '25) Policy Analysis Verifier
@@ -373,10 +373,10 @@ def uosLeanCedarSymccVerify
   bNeverErr + bImplies + bEquiv + bDisjoint + bDenyAll
 
 theorem THM_GUARD_15_cedar_forbid_trumps_permit_and_default_deny :
-    uosLeanCedarAuthorizeMcp 1 0 1 93 = 1
-  ∧ uosLeanCedarAuthorizeMcp 1 1 1 93 = 0
-  ∧ uosLeanCedarAuthorizeMcp 0 0 1 93 = 0
-  ∧ uosLeanCedarAuthorizeMcp 1 0 1 94 = 0 := by decide
+    uosLeanCedarAuthorizeMcp 1 0 1 109 = 1
+  ∧ uosLeanCedarAuthorizeMcp 1 1 1 109 = 0
+  ∧ uosLeanCedarAuthorizeMcp 0 0 1 109 = 0
+  ∧ uosLeanCedarAuthorizeMcp 1 0 1 110 = 0 := by decide
 
 theorem THM_GUARD_16_cedar_symcc_verify_sound :
     uosLeanCedarSymccVerify 1 1 0 0 1 = 9
@@ -1042,7 +1042,7 @@ def expectedConceptCardinalityU32 (conceptId : UInt8) : UInt32 :=
   else if conceptId == 6 then 3
   else if conceptId == 7 then 13
   else if conceptId == 8 then 10
-  else if conceptId == 9 then 93
+  else if conceptId == 9 then 109
   else 0
 
 def expectedConceptMinCoverageU8 (conceptId : UInt8) : UInt8 :=
@@ -1081,8 +1081,8 @@ theorem THM_GUARD_36_verify_system_concepts_and_ontology_gate_sound :
   ∧ uosLeanVerifySystemConceptsAndOntologyGate 2 52 100 1 1 = 1
   ∧ uosLeanVerifySystemConceptsAndOntologyGate 3 10 100 1 1 = 1
   ∧ uosLeanVerifySystemConceptsAndOntologyGate 6 3 100 1 1 = 1
-  ∧ uosLeanVerifySystemConceptsAndOntologyGate 9 93 100 1 1 = 1
-  ∧ uosLeanVerifySystemConceptsAndOntologyGate 9 94 100 1 1 = 0
+  ∧ uosLeanVerifySystemConceptsAndOntologyGate 9 109 100 1 1 = 1
+  ∧ uosLeanVerifySystemConceptsAndOntologyGate 9 110 100 1 1 = 0
   ∧ uosLeanVerifySystemConceptsAndOntologyGate 0 398 100 1 1 = 0
   ∧ uosLeanVerifySystemConceptsAndOntologyGate 2 52 100 0 1 = 0
   ∧ uosLeanVerifySystemConceptsAndOntologyGate 2 52 100 1 0 = 0
