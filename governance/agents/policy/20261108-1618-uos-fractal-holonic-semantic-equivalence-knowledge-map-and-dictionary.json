@@ -11,14 +11,46 @@
     "veil_plan_name": "uos/veil-km-wiki-zk-sync-20cycles/20261108-1632",
     "tasks_total": 40,
     "task_ids": [
-      "evol-fhc-01", "evol-fhc-02", "evol-fhc-03", "evol-fhc-04", "evol-fhc-05",
-      "evol-fhc-06", "evol-fhc-07", "evol-fhc-08", "evol-fhc-09", "evol-fhc-10",
-      "evol-fhc-11", "evol-fhc-12", "evol-fhc-13", "evol-fhc-14", "evol-fhc-15",
-      "evol-fhc-16", "evol-fhc-17", "evol-fhc-18", "evol-fhc-19", "evol-fhc-20",
-      "evol-veil-01", "evol-veil-02", "evol-veil-03", "evol-veil-04", "evol-veil-05",
-      "evol-veil-06", "evol-veil-07", "evol-veil-08", "evol-veil-09", "evol-veil-10",
-      "evol-veil-11", "evol-veil-12", "evol-veil-13", "evol-veil-14", "evol-veil-15",
-      "evol-veil-16", "evol-veil-17", "evol-veil-18", "evol-veil-19", "evol-veil-20"
+      "evol-fhc-01",
+      "evol-fhc-02",
+      "evol-fhc-03",
+      "evol-fhc-04",
+      "evol-fhc-05",
+      "evol-fhc-06",
+      "evol-fhc-07",
+      "evol-fhc-08",
+      "evol-fhc-09",
+      "evol-fhc-10",
+      "evol-fhc-11",
+      "evol-fhc-12",
+      "evol-fhc-13",
+      "evol-fhc-14",
+      "evol-fhc-15",
+      "evol-fhc-16",
+      "evol-fhc-17",
+      "evol-fhc-18",
+      "evol-fhc-19",
+      "evol-fhc-20",
+      "evol-veil-01",
+      "evol-veil-02",
+      "evol-veil-03",
+      "evol-veil-04",
+      "evol-veil-05",
+      "evol-veil-06",
+      "evol-veil-07",
+      "evol-veil-08",
+      "evol-veil-09",
+      "evol-veil-10",
+      "evol-veil-11",
+      "evol-veil-12",
+      "evol-veil-13",
+      "evol-veil-14",
+      "evol-veil-15",
+      "evol-veil-16",
+      "evol-veil-17",
+      "evol-veil-18",
+      "evol-veil-19",
+      "evol-veil-20"
     ],
     "cumulative_cycles_range": "41..80"
   },
@@ -190,21 +222,114 @@
     }
   ],
   "caste_to_fpp_actor_bijection_8x5": {
-    "CASTE-01_QueenConductor_AGY": [0, 2, 14, 20, 23, 27, 38, 39],
-    "CASTE-02_ForagerBuilder_PiArgonQwen": [4, 8, 18, 19, 26, 30, 31, 37],
-    "CASTE-03_SovereignSentinel_Codex": [1, 7, 11, 15, 21, 33, 34, 35],
-    "CASTE-04_ArchitectSynthesizer_Claude": [3, 9, 13, 16, 24, 28, 32, 36],
-    "CASTE-05_NurseDiagnostician_DeepSeekDSH": [5, 6, 10, 12, 17, 22, 25, 29]
+    "CASTE-01_QueenConductor_AGY": [
+      0,
+      2,
+      14,
+      20,
+      23,
+      27,
+      38,
+      39
+    ],
+    "CASTE-02_ForagerBuilder_PiArgonQwen": [
+      4,
+      8,
+      18,
+      19,
+      26,
+      30,
+      31,
+      37
+    ],
+    "CASTE-03_SovereignSentinel_Codex": [
+      1,
+      7,
+      11,
+      15,
+      21,
+      33,
+      34,
+      35
+    ],
+    "CASTE-04_ArchitectSynthesizer_Claude": [
+      3,
+      9,
+      13,
+      16,
+      24,
+      28,
+      32,
+      36
+    ],
+    "CASTE-05_NurseDiagnostician_DeepSeekDSH": [
+      5,
+      6,
+      10,
+      12,
+      17,
+      22,
+      25,
+      29
+    ]
   },
   "cslib_domain_to_fpp_actor_partition_8x5": {
-    "Pillar0_Cslib_FLTS_LTS_Bisimulation": [0, 8, 16, 24, 32],
-    "Pillar1_Cslib_Relation_Confluence_Newman": [1, 9, 17, 25, 33],
-    "Pillar2_Cslib_Automata_DA_FinAcc_Buchi_Muller": [2, 10, 18, 26, 34],
-    "Pillar3_Cslib_Circuits_Boolean_Wiring_Depth": [3, 11, 19, 27, 35],
-    "Pillar4_Cslib_Logics_HML_Modal": [4, 12, 20, 28, 36],
-    "Pillar5_Cslib_Logics_LinearLogic_CLL_Heijunka": [5, 13, 21, 29, 37],
-    "Pillar6_Cslib_Languages_Mech_Choreography": [6, 14, 22, 30, 38],
-    "Pillar7_Cslib_TimeM_PACLearning_PMF": [7, 15, 23, 31, 39]
+    "Pillar0_Cslib_FLTS_LTS_Bisimulation": [
+      0,
+      8,
+      16,
+      24,
+      32
+    ],
+    "Pillar1_Cslib_Relation_Confluence_Newman": [
+      1,
+      9,
+      17,
+      25,
+      33
+    ],
+    "Pillar2_Cslib_Automata_DA_FinAcc_Buchi_Muller": [
+      2,
+      10,
+      18,
+      26,
+      34
+    ],
+    "Pillar3_Cslib_Circuits_Boolean_Wiring_Depth": [
+      3,
+      11,
+      19,
+      27,
+      35
+    ],
+    "Pillar4_Cslib_Logics_HML_Modal": [
+      4,
+      12,
+      20,
+      28,
+      36
+    ],
+    "Pillar5_Cslib_Logics_LinearLogic_CLL_Heijunka": [
+      5,
+      13,
+      21,
+      29,
+      37
+    ],
+    "Pillar6_Cslib_Languages_Mech_Choreography": [
+      6,
+      14,
+      22,
+      30,
+      38
+    ],
+    "Pillar7_Cslib_TimeM_PACLearning_PMF": [
+      7,
+      15,
+      23,
+      31,
+      39
+    ]
   },
   "knowledge_map_links": {
     "agents_policy": "AGENTS.md",

@@ -8,11 +8,14 @@
 
 namespace UOS.LeanRuntimeGuard
 
+/-- Canonical Admitted EV Ceiling (`SC-PROVENANCE-001`) — Single In-Process Kernel Constant. -/
+def admittedEvCeilingU32 : UInt32 := 109
+
 /-- 1. Denotational Intent & Constitutional Interlock Gate (< 50 ns unboxed C-ABI)
     Enforces:
     - saPlanBound == 1 (SC-SA-PLAN-001)
     - nvmeSafe == 1 (HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" protected)
-    - evId <= 109 (INV-PROV-05, EV-01..109 ADMITTED)
+    - evId <= admittedEvCeilingU32 (INV-PROV-05, EV-01..109 ADMITTED)
     - healthPct >= 85
     - vramMib <= 7600 (8,192 MiB Turing sm_75 ceiling) -/
 @[export uos_lean_check_intent]
@@ -22,7 +25,7 @@ def uosLeanCheckIntent
     (evId        : UInt32)
     (healthPct   : UInt32)
     (vramMib     : UInt32) : UInt8 :=
-  if saPlanBound == 1 && nvmeSafe == 1 && evId <= 109 && healthPct >= 85 && vramMib <= 7600 then
+  if saPlanBound == 1 && nvmeSafe == 1 && evId <= admittedEvCeilingU32 && healthPct >= 85 && vramMib <= 7600 then
     1
   else
     0
@@ -320,7 +323,7 @@ def uosLeanVerifyFullSystemTwin
     (fppActors  : UInt32)
     (pairsGreen : UInt32)
     (ceiling    : UInt32) : UInt8 :=
-  if domains == 12 && nifs == 11 && fppActors == 40 && pairsGreen == 18 && ceiling == 109 then
+  if domains == 12 && nifs == 11 && fppActors == 40 && pairsGreen == 18 && ceiling == admittedEvCeilingU32 then
     1
   else
     0
@@ -350,7 +353,7 @@ def uosLeanCedarAuthorizeMcp
     (nvmeSafe  : UInt8)
     (evId      : UInt32) : UInt8 :=
   if anyForbid == 1 then 0
-  else if anyPermit == 1 && nvmeSafe == 1 && evId <= 109 then 1
+  else if anyPermit == 1 && nvmeSafe == 1 && evId <= admittedEvCeilingU32 then 1
   else 0
 
 /-- 16. Cedar SymCC (SymCert FMCAD '25) Policy Analysis Verifier
@@ -1042,7 +1045,7 @@ def expectedConceptCardinalityU32 (conceptId : UInt8) : UInt32 :=
   else if conceptId == 6 then 3
   else if conceptId == 7 then 13
   else if conceptId == 8 then 10
-  else if conceptId == 9 then 109
+  else if conceptId == 9 then admittedEvCeilingU32
   else 0
 
 def expectedConceptMinCoverageU8 (conceptId : UInt8) : UInt8 :=

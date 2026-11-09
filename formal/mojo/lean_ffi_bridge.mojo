@@ -10,6 +10,7 @@
 from std.ffi import OwnedDLHandle
 
 comptime LEAN_GUARD_SO = "/home/an/NAS-setup/uos/var/zlp/libuos_lean_guard.so"
+comptime ADMITTED_EV_CEILING: Int = 109
 
 def select_failover_mojo(
     is_supervisor: UInt8,
@@ -70,8 +71,8 @@ def verify_lean_c_abi_14_exports() -> Bool:
         var verify_sys_dir = handle.get_function[UInt8]("uos_lean_verify_system_directory_object")
         var verify_sdlc_sre = handle.get_function[UInt8]("uos_lean_verify_sdlc_sre_feature_aspect_gate")
 
-        var ok1 = check_intent(UInt8(1), UInt8(1), UInt32(109), UInt32(95), UInt32(5446), UInt32(8192), UInt8(1))
-        var veto94 = check_intent(UInt8(1), UInt8(1), UInt32(110), UInt32(95), UInt32(5446), UInt32(8192), UInt8(1))
+        var ok1 = check_intent(UInt8(1), UInt8(1), UInt32(ADMITTED_EV_CEILING), UInt32(95), UInt32(5446), UInt32(8192), UInt8(1))
+        var veto94 = check_intent(UInt8(1), UInt8(1), UInt32(ADMITTED_EV_CEILING + 1), UInt32(95), UInt32(5446), UInt32(8192), UInt8(1))
         var tier0 = route_cascade(UInt32(920), ok1, UInt8(1))
         var stage14 = verify_14stage(UInt32(7), UInt32(7), UInt64(0), UInt32(5446), UInt8(1))
         var atlas0 = solve_atlas(UInt8(0))
@@ -85,10 +86,10 @@ def verify_lean_c_abi_14_exports() -> Bool:
         var otel1 = verify_otel(UInt8(1), UInt8(1), UInt8(3), UInt8(9), UInt8(1), UInt32(120), UInt32(72), UInt32(500))
         var sla1 = eval_sla(UInt32(9590), UInt32(6039), UInt32(49), UInt32(16), UInt32(12))
         var fail_qwen = select_failover(UInt8(0), UInt8(0), UInt8(0), UInt8(1), UInt8(1))
-        var fsys1 = verify_fsys(UInt32(12), UInt32(11), UInt32(40), UInt32(18), UInt32(109))
-        var c_allow = cedar_auth(UInt8(1), UInt8(0), UInt8(1), UInt32(109))
-        var c_forbid = cedar_auth(UInt8(1), UInt8(1), UInt8(1), UInt32(109))
-        var c_defdeny = cedar_auth(UInt8(0), UInt8(0), UInt8(1), UInt32(109))
+        var fsys1 = verify_fsys(UInt32(12), UInt32(11), UInt32(40), UInt32(18), UInt32(ADMITTED_EV_CEILING))
+        var c_allow = cedar_auth(UInt8(1), UInt8(0), UInt8(1), UInt32(ADMITTED_EV_CEILING))
+        var c_forbid = cedar_auth(UInt8(1), UInt8(1), UInt8(1), UInt32(ADMITTED_EV_CEILING))
+        var c_defdeny = cedar_auth(UInt8(0), UInt8(0), UInt8(1), UInt32(ADMITTED_EV_CEILING))
         var sym_disj = cedar_symcc(UInt8(1), UInt8(1), UInt8(0), UInt8(0), UInt8(1))
         var dag_ok = cedar_dag(UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(1))
         var dag_rep = cedar_dag(UInt8(1), UInt8(0), UInt8(1), UInt8(0), UInt8(0), UInt8(0), UInt8(1))
@@ -712,7 +713,7 @@ def expected_concept_cardinality_mojo(cid: Int) -> Int:
     elif cid == 8:
         return 10
     elif cid == 9:
-        return 109
+        return ADMITTED_EV_CEILING
     else:
         return 0
 
@@ -1213,7 +1214,7 @@ def verify_veil_km_wiki_zk_20cycle_sync_gate_mojo(
         and veil_cycle_idx < 20
         and cumulative_cycle_num == 61 + veil_cycle_idx
         and all_six_planes_synced == 1
-        and admitted_ev_ceiling == 109
+        and admitted_ev_ceiling == ADMITTED_EV_CEILING
         and rete_salience_r0 == 1000
         and shannon_entropy_milli_bits >= 2500
         and qwen_route_code == exp_route
@@ -1234,7 +1235,7 @@ def verify_lean_mojo_veil_20_cycles_3200_parity() -> Int:
                 var route_ok = mask & 1
                 var cyc_val = (61 + c) if cyc_ok == 1 else (62 + c + (lyr % 3))
                 var sync_val = 1 if sync_ok == 1 else 0
-                var ev_val = 109 if ev_ok == 1 else 110
+                var ev_val = ADMITTED_EV_CEILING if ev_ok == 1 else (ADMITTED_EV_CEILING + 1)
                 var route_val = exp_route if route_ok == 1 else ((exp_route % 4) + 1)
                 var got = verify_veil_km_wiki_zk_20cycle_sync_gate_mojo(
                     c, cyc_val, sync_val, ev_val, 1000, 3310, route_val
